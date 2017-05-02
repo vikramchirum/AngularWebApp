@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {UserService} from "../shared/user.service";
+import {Router} from "@angular/router";
 
 @Component({
   templateUrl: './login.component.html',
@@ -7,7 +9,15 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() { }
+  user_name: string;
+  password: string;
+
+  constructor(private user_service: UserService, private router: Router) {  }
+
+  login(){
+    this.user_service.login(this.user_name, this.password);
+    this.router.navigate(['/my-account']);
+  }
 
   ngOnInit() {
 

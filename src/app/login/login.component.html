@@ -6,11 +6,12 @@
           <h2>Sign in to myGexa</h2>
           <div class="form-group">
             <label>Username</label>
-            <input type="text" class="form-control" placeholder="Username">
+            <input [(ngModel)]="user_name" name="user_name" type="text" class="form-control" placeholder="Username" required #em="ngModel">
+            <small [hidden]="em.valid || em.pristine" class="text-danger">Username is required</small>
           </div>
           <div class="form-group">
             <label>Password</label>
-            <input type="password" class="form-control" placeholder="Password">
+            <input [(ngModel)]="password" name="password" type="password" class="form-control" placeholder="Password">
           </div>
           <div class="checkbox">
             <label>
@@ -19,7 +20,7 @@
             </label>
           </div>
           <div class="form-group">
-            <button type="submit" class="btn btn-primary">Sign In</button>
+            <button type="submit" class="btn btn-primary" (click)="login()">Sign In</button>
           </div>
           <div class="form-group">
             <button type="button" class="btn btn-default">
