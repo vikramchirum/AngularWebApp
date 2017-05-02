@@ -7,9 +7,16 @@ import {CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot} from '
 
 @Injectable()
 export class UserService implements CanActivate {
-  user_logged_in: boolean = false;
-  logged_in_user: string;
-  auth_user: any;
+
+  get logged_in_user(): string {
+    return localStorage.getItem('gexa_auth_token');
+  };
+
+  get user_logged_in(): boolean {
+    if (this.logged_in_user)
+      return true;
+    return false;
+  };
 
   constructor(private router: Router) {
   }
@@ -28,12 +35,10 @@ export class UserService implements CanActivate {
   }
 
   login(user_name: string, password: string) {
-    this.user_logged_in = true;
-    this.logged_in_user = user_name;
-    this.auth_user = {user_name: user_name, password: password};
+    localStorage.setItem('gexa_auth_token', user_name);
   }
 
-  logout(){
-    this.user_logged_in = false;
+  logout() {
+    localStorage.removeItem('gexa_auth_token');
   }
 }

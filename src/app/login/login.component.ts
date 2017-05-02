@@ -12,6 +12,7 @@ export class LoginComponent implements OnInit {
   user_name: string;
   password: string;
 
+
   constructor(private user_service: UserService, private router: Router) {  }
 
   login(){
@@ -20,7 +21,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    console.log('Login local storage: ' + localStorage.getItem('gexa_auth_token'));
   }
 
 }

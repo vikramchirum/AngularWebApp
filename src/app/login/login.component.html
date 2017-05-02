@@ -11,7 +11,8 @@
           </div>
           <div class="form-group">
             <label>Password</label>
-            <input [(ngModel)]="password" name="password" type="password" class="form-control" placeholder="Password">
+            <input [(ngModel)]="password" name="password" type="password" class="form-control" placeholder="Password" required #em="ngModel">
+            <small [hidden]="em.valid || em.pristine" class="text-danger">Password is required</small>
           </div>
           <div class="checkbox">
             <label>
