@@ -12,13 +12,25 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li [routerLinkActive]="['active']"><a [routerLink]="['/account']"><i class="fa fa-user-circle"></i> Account</a></li>
-            <li [routerLinkActive]="['active']"><a [routerLink]="['/payments']"><i class="fa fa-credit-card"></i> Payment Center</a></li>
+            <li [routerLinkActive]="['active']"> <a [routerLink]="['/home']">Home</a></li>
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/account']"> Account</a></li>
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/payments']">Payment Center</a></li>
+            <li><a [routerLink]="">Control and Insights</a></li>
           </ul>
+
           <ul class="nav navbar-nav navbar-right">
-            <li><a href (click)="logout()">Log Out</a></li>
+            <!--<li> <form  role="search">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search">
+              </div>              
+            </form><li>-->
+            <li><a href="#"><span class="fa fa-bell"></span></a></li>
+            <li><a href="#"><span class="fa fa-user-circle"></span></a></li>
+            <li><a href="#"><span class="fa fa-sign-out"></span></a></li>
+             <!--<a href (click)="logout()"></i></a>-->          
           </ul>
-          <p class="nav navbar-text navbar-right">Hello, {{user}}</p>
+
+          <!--<p class="nav navbar-text navbar-right">Hello, {{user}}</p>-->
         </div>
       </div>
     </div>
@@ -28,4 +40,3 @@
 <div class="container-fluid">
   <router-outlet></router-outlet>
 </div>
-
