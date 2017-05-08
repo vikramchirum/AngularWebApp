@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
 
   login(){
     this.user_service.login(this.user_name, this.password);
-    this.router.navigate(['/my-account']);
+    this.router.navigate(['/account']);
   }
 
   ngOnInit() {
