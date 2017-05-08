@@ -16,7 +16,7 @@ const routes: Routes = [
     canActivate: [UserService],
     children: [
       {path:'home',  loadChildren: () => HomeModule},
-      {path: 'account', loadChildren: () => MyAccountModule},
+      {path: 'my-account', loadChildren: () => MyAccountModule},
       {path: 'payments', loadChildren: () => PaymentsModule}
     ]
   }

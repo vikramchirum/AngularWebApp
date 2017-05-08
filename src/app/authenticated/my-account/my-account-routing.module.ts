@@ -10,7 +10,7 @@ import {ReferFriendComponent} from './refer-friend/refer-friend.component';
 import {OrderStatusComponent} from './order-status/order-status.component';
 import {TransferServiceComponent} from './transfer-service/transfer-service.component';
 
-const routes: Route[] = [
+const routes : Route[] = [
 
   {path: '', component: MyAccountComponent,
   children: [
