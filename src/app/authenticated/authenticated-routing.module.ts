@@ -2,14 +2,14 @@
  * Created by patrick.purcell on 5/3/2017.
  */
 
-import {RouterModule, Routes} from "@angular/router";
+import {RouterModule, Route} from "@angular/router";
 import {RootComponent} from "./root/root.component";
 import {UserService} from "../shared/user.service";
 import {PaymentsModule} from "./payments/payments.module";
 import {MyAccountModule} from "./my-account/my-account.module";
 import {HomeModule} from "./home/home.module";
 
-const routes: Routes = [
+const routes: Route[] = [
   {
     path: '',
     component: RootComponent,
@@ -23,3 +23,4 @@ const routes: Routes = [
 ];
 
 export const authenticated_routes = RouterModule.forChild(routes);
+
