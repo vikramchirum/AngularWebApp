@@ -1,6 +1,23 @@
 @import 'styles/bootstrap/stylesheets/bootstrap/_variables';
 .sidenav {
-    background-color: $gray-lighter;
+    background-color:#000000;
     height: 100vh;
-    padding:40px;
+    padding: 30px;
+    li{
+        list-style-type: none;
+        margin-bottom:10px;
+       h4{
+           color:#ffffff;
+       }
+       a {
+            color:#ffffff;
+        }
+      
+    }
+}
+
+.status-bar {
+    height:30px;
+    border:1px solid #000000;
+    margin:15px;
 }
