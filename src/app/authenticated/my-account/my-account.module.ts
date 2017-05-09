@@ -14,6 +14,7 @@ import { DocumentsComponent } from './plan-information/documents/documents.compo
 import { ChangeYourPlanComponent } from './plan-information/change-your-plan/change-your-plan.component';
 import {MdCardModule,MaterialModule} from '@angular/material';
 import { ChangeYourPlanCardComponent } from './plan-information/change-your-plan/change-your-plan-card/change-your-plan-card.component';
+import { ServiceEnrollmentStatusComponent } from './order-status/service-enrollment-status/service-enrollment-status.component';
 
 
 @NgModule({
@@ -23,6 +24,6 @@ import { ChangeYourPlanCardComponent } from './plan-information/change-your-plan
     MdCardModule,
     MaterialModule
   ],
-  declarations: [ ProfileComponent, PlanInformationComponent, MyAccountComponent, ReferFriendComponent, OrderStatusComponent, TransferServiceComponent, SecurityInformationComponent, PaperlessSettingsComponent, MyCurrentPlanComponent, DocumentsComponent, ChangeYourPlanComponent, ChangeYourPlanCardComponent]
+  declarations: [ ProfileComponent, PlanInformationComponent, MyAccountComponent, ReferFriendComponent, OrderStatusComponent, TransferServiceComponent, SecurityInformationComponent, PaperlessSettingsComponent, MyCurrentPlanComponent, DocumentsComponent, ChangeYourPlanComponent, ChangeYourPlanCardComponent, ServiceEnrollmentStatusComponent]
 })
 export class MyAccountModule { }

@@ -1,3 +1,4 @@
+
 /**
  * Created by patrick.purcell on 5/3/2017.
  */
@@ -15,12 +16,13 @@ const routes: Route[] = [
     component: RootComponent,
     canActivate: [UserService],
     children: [
-      {path:'home',  loadChildren: () => HomeModule},
-      {path: 'account', loadChildren: () => MyAccountModule},
-      {path: 'payments', loadChildren: () => PaymentsModule}
+      {path:'home',  loadChildren: 'app/authenticated/home/home.module#HomeModule'},
+      {path: 'account', loadChildren: 'app/authenticated/my-account/my-account.module#MyAccountModule'},
+      {path: 'payments', loadChildren: 'app/authenticated/payments/payments.module#PaymentsModule'}
+    //   {path: 'account', loadChildren: () => MyAccountModule},
+    //   {path: 'payments', loadChildren: () => PaymentsModule}
     ]
   }
 ];
 
 export const authenticated_routes = RouterModule.forChild(routes);
-

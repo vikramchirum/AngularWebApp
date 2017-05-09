@@ -1,14 +1,16 @@
 <div class="container-fluid">
-  <div class="row hidden-xs">
-    <div class="status-bar">
+  <section class="status-bar hidden-xs">
+  <div class="row ">
+    
       <div class="col-md-2">
         <p>status</p>
       </div>
       <div class="col-md-10">
         Lorem Ipsum
       </div>
-    </div>
+
   </div>
+  </section>
   <div class="row">
     <div class="col-md-3">
       <ul class="sidenav">
@@ -20,7 +22,7 @@
         <li [routerLinkActive]="['active']"><a routerLink="transfer-service">Transfer Service</a></li>
       </ul>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-9 my-account">
       <router-outlet></router-outlet>
     </div>
   </div>

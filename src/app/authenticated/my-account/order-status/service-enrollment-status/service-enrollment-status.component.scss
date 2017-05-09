@@ -1,0 +1,35 @@
+.service-enrollment {
+    border:1px solid #000000;
+    margin:20px 0px;
+li {
+  width: 18%;
+//  height: 2em;
+  text-align: center;
+//   line-height: 2em;
+//   border-radius: 1em;
+//    margin: 0 1em;
+  display: inline-block;
+  position: relative;
+p{
+   // width:18%;
+    font-size:12px;
+}
+}
+
+ li::before{
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: -47%;
+    width: 92%;
+    height: 2px;
+  background: black;
+  z-index: -1;
+ }
+
+
+
+li:first-child::before {
+  display: none;
+}
+}

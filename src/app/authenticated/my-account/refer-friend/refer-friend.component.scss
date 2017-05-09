@@ -1,15 +1,23 @@
-input[type="text"] {
-    width: 200px;
-    height: 20px;
-    padding-right: 50px;
-}
-
-input[type="submit"] {
-    margin-left: -50px;
-    height: 25px;
-    width: 50px;
-    background: black;
-    color: white;
-    border: 0;
-    -webkit-appearance: none;
+.refer-friend-description{
+    p{
+        text-align: justify;
+    }
+   #referal-code{
+       margin:40px 0;
+    .refer-friend{
+        margin: 10px 0px;    
+        input[type="text"] {
+            width:70%;
+        }
+        button[type="submit"] {
+            margin-left: -4px;
+            height: 26px;
+            background: black;
+            color: white;
+            border-color: black;
+            -webkit-appearance: none;
+            width: 30%
+        }
+    }
+   }
 }
