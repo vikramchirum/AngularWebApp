@@ -3,3 +3,21 @@ body {
   background: inherit;
   margin: 0;
 }
+.overlay-menu{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 30;
+    top: 0;
+    left: 0;
+    background-color: #000;
+    overflow-y: hidden;
+    .accordion-panel{
+      padding:60px;
+      margin-left:0px;
+      margin-right:0px;
+    }
+    a{
+      color:white;
+    }
+}

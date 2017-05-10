@@ -28,9 +28,9 @@ const routes: Route[] = [
     component: RootComponent,
     canActivate: [UserService],
     children: [
-      //{path:'home',  loadChildren: 'app/authenticated/home/home.module#HomeModule'},
-      //{path: 'account', loadChildren: 'app/authenticated/my-account/my-account.module#MyAccountModule'},
-      //{path: 'payments', loadChildren: 'app/authenticated/payments/payments.module#PaymentsModule'}
+      // {path:'home',  loadChildren: 'app/authenticated/home/home.module#HomeModule'},
+      // {path: 'account', loadChildren: 'app/authenticated/my-account/my-account.module#MyAccountModule'},
+      // {path: 'payments', loadChildren: 'app/authenticated/payments/payments.module#PaymentsModule'}
     
       {path:'home',  loadChildren: loadHomeModule},
       {path: 'account', loadChildren: loadMyAccountModule},
