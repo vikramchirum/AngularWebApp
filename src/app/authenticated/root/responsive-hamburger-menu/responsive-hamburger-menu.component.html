@@ -1,27 +1,27 @@
 <div class="panel-group" id="accordion">
   <div class="panel dx-panel-default">
-    <div class="dx-panel-heading">
+    <div class="dx-panel-heading">       
       <h4 class="dx-panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">My Account</a>
+        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse1">My Account</a>
       </h4>
     </div>
     <div id="collapse1" class="panel-collapse collapse in">
       <div class="panel-body">
         <ul>
           <li>
-            <h5><a [routerLink]="['/account/profile']">Profile</a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/account/profile']">Profile</a></h5>
           </li>
           <li>
-            <h5><a [routerLink]="['/account/plan-information']">Plan Information</a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/account/plan-information']">Plan Information</a></h5>
           </li>
           <li>
-            <h5><a [routerLink]="['/account/refer-a-friend']">Refer a Friend</a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/account/refer-a-friend']">Refer a Friend</a></h5>
           </li>
           <li>
-            <h5><a [routerLink]="['/account/order-status']">Order Status</a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/account/order-status']">Order Status</a></h5>
           </li>
           <li>
-            <h5><a [routerLink]="['/account/transfer-service']">Transfer Service</a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/account/transfer-service']">Transfer Service</a></h5>
           </li>
         </ul>
       </div>
@@ -30,7 +30,7 @@
   <div class="panel dx-panel-default">
     <div class="dx-panel-heading">
       <h4 class="dx-panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Payments Center</a>
+        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse2">Payments Center</a>
       </h4>
     </div>
     <div id="collapse2" class="panel-collapse collapse">
@@ -40,7 +40,7 @@
             <h5><a>Payment History</a></h5>
           </li>
           <li>
-            <h5><a>view My bilL</a></h5>
+            <h5><a>view My bill</a></h5>
           </li>
           <li>
             <h5><a>Services </a></h5>

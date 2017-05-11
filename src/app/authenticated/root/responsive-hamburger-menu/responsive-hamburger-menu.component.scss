@@ -1,9 +1,33 @@
+@import 'src/styles';
+
 .dx-panel-default{
     background:black;
     color:white;
     .dx-panel-heading {
         h4 {
-            margin-left:20px;
+            margin-left:40px;
+        }
+        
+        .accordion-toggle{
+        &:after {
+            font-family: 'Glyphicons Halflings';
+            content: "\e252";
+            color:white;
+            margin-left:15px;
+            font-size:15px;
+        }
+        &.collapsed {
+            &:after {
+            content: "\e250";
+            }
+        } 
+        }
+    }   
+   
+    .panel-body {
+        padding:0;
+        li {
+            list-style: none;
         }
     }
 }

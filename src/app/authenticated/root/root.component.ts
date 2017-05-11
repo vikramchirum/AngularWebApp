@@ -26,18 +26,17 @@ export class RootComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-    toogleAccordian(evt) {
+    toggleAccordian(evt) {
         if (this.accordianVisible) {
             this.accordianVisible = false;
-            //jQuery('body').removeClass('noscroll');
         }
         else {
-            //jQuery('body').removeClass('noscroll');
-            this.accordianVisible = true;        
-        //     jQuery('body').addClass('noscroll');
-        // 
+            this.accordianVisible = true;
       }
 
     }
+    onNotify(message:string):void {
+     this.accordianVisible=false;
+  }
 
 }

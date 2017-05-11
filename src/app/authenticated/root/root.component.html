@@ -1,9 +1,7 @@
-<div class="navbar navbar-default navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-xs-10 col-xs-offset-1">
+<nav class="navbar custom-nav">
+  <div class="container container-relaxed">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle pull-left" (click)="toogleAccordian($event)"><span> &#9776;</span>        
+          <button type="button" class="navbar-toggle pull-left" (click)="toggleAccordian($event)"><span> &#9776;</span>        
           </button>
           <a class="navbar-brand" [routerLink]="['/']">My Gexa ({{env}})</a>
         </div>
@@ -25,26 +23,21 @@
             <li><a href="#"><span class="fa fa-user-circle"></span></a></li>
             <li><a href="#"><span class="fa fa-sign-out"></span></a></li>
              <!--<a href (click)="logout()"></i></a>-->          
-          </ul>
-
-          <!--<p class="nav navbar-text navbar-right">Hello, {{user}}</p>-->
-        </div>
-      </div>
+          </ul>      
     </div>
   </div>
-</div>
+</nav>
 
 <div class="container-fluid" *ngIf="accordianVisible">
  <!-- <div class="container"> -->
   <div class="overlay-menu">
         <div class="row accordion-panel">
-
           <div class="xs-4">
-              <a  id="accordianToggle" class="closebtn pull-right"  (click)="toogleAccordian($event)">&times;</a>
+              <a  id="accordianToggle" class="closebtn pull-right nav-close"  (click)="toggleAccordian($event)">&times;</a>
           </div>
         </div>
         <div class="row" style="height:100%">
-        <mygexa-responsive-hamburger-menu></mygexa-responsive-hamburger-menu>
+        <mygexa-responsive-hamburger-menu (notify)='onNotify($event)'></mygexa-responsive-hamburger-menu>
         </div>
  <!-- </div> -->
   </div>
