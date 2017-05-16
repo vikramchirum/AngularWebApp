@@ -7,6 +7,9 @@
   </div>  
 </div>
 <div>
-  <button>Bills</button>
-  <button>Payments</button>
+  <button [routerLinkActive]="['active']" routerLink="bills">Bills</button>
+  <button [routerLinkActive]="['active']" routerLink="payments">Payments</button>
+</div>
+<div>
+   <router-outlet></router-outlet>
 </div>

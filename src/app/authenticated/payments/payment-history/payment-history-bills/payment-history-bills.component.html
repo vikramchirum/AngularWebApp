@@ -1,3 +1,45 @@
-<p>
-  payment-history-bills works!
-</p>
+<!--<div class="row">
+  <div class="col-md-12 col-sm-12 hidden-xs">
+    <table>
+      <tbody>
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Charges</th>
+        <th>Status</th>
+        <th>Invoice</th>
+        <th>TDU charges</th>
+        <th>Bill</th>
+      </tr>
+      <tr>
+        </tbody>
+      </table>
+    </div>
+</div>-->
+<br>
+<div class="row">
+  <div class="col-md-4">
+    <input *ngIf="config.filtering" placeholder="Filter all columns"
+           [ngTableFiltering]="config.filtering"
+           class="form-control"
+           (tableChanged)="onChangeTable(config)"/>
+  </div>
+</div>
+
+<br>
+<ng-table [config]="config"
+          (tableChanged)="onChangeTable(config)"
+          (cellClicked)="onCellClick($event)"
+          [rows]="rows" [columns]="columns">
+</ng-table>
+<pagination *ngIf="config.paging"
+            class="pagination-sm"
+            [(ngModel)]="page"
+            [totalItems]="length"
+            [itemsPerPage]="itemsPerPage"
+            [maxSize]="maxSize"
+            [boundaryLinks]="true"
+            [rotate]="false"
+            (pageChanged)="onChangeTable(config, $event)"
+            (numPages)="numPages = $event">
+</pagination>

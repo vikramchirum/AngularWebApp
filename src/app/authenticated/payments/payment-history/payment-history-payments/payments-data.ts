@@ -1,0 +1,131 @@
+
+export const paymentsData:Array<any> = [
+  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Master Card'
+  },  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Visa'
+  }, {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Master Card'
+  },  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Visa'
+  },  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Master Card'
+  },  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Visa'
+  },  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Master Card'
+  },  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Visa'
+  },  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Master Card'
+  },  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Visa'
+  },  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Master Card'
+  },  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Visa'
+  },  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Master Card'
+  },  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Visa'
+  },  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Master Card'
+  },  {
+    'date': '2017/05/16',
+    'type': 'Payments',
+    'charges': '$101',
+    'credits': '$0',
+    'balance': '$0',
+    'status': 'processing',
+    'paymentMethod':'Visa'
+  }];
