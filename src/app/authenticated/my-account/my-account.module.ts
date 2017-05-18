@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {my_account_routes} from "./my-account-routing.module";
 import { ProfileComponent } from './profile/profile.component';
@@ -15,6 +16,7 @@ import { ChangeYourPlanComponent } from './plan-information/change-your-plan/cha
 import {MdCardModule,MaterialModule} from '@angular/material';
 import { ChangeYourPlanCardComponent } from './plan-information/change-your-plan/change-your-plan-card/change-your-plan-card.component';
 import { ServiceEnrollmentStatusComponent } from './order-status/service-enrollment-status/service-enrollment-status.component';
+import { PersonalInformationComponent } from './profile/personal-information/personal-information.component';
 
 
 @NgModule({
@@ -22,8 +24,10 @@ import { ServiceEnrollmentStatusComponent } from './order-status/service-enrollm
     my_account_routes,
     CommonModule,
     MdCardModule,
-    MaterialModule
+    MaterialModule,
+    FormsModule,
+    ReactiveFormsModule 
   ],
-  declarations: [ ProfileComponent, PlanInformationComponent, MyAccountComponent, ReferFriendComponent, OrderStatusComponent, TransferServiceComponent, SecurityInformationComponent, PaperlessSettingsComponent, MyCurrentPlanComponent, DocumentsComponent, ChangeYourPlanComponent, ChangeYourPlanCardComponent, ServiceEnrollmentStatusComponent]
+  declarations: [ ProfileComponent, PlanInformationComponent, MyAccountComponent, ReferFriendComponent, OrderStatusComponent, TransferServiceComponent, SecurityInformationComponent, PaperlessSettingsComponent, MyCurrentPlanComponent, DocumentsComponent, ChangeYourPlanComponent, ChangeYourPlanCardComponent, ServiceEnrollmentStatusComponent, PersonalInformationComponent]
 })
 export class MyAccountModule { }
