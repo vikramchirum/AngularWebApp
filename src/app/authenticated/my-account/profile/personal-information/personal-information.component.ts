@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { validateEmail, equalityCheck } from '../../../../validators/validator'
 
 @Component({
   selector: 'mygexa-personal-information',
@@ -13,18 +14,11 @@ openEmailPanel : boolean;
   changeEmailForm: FormGroup;
   submitAttempt: boolean = false;
    constructor(fb: FormBuilder) {
-     function validateEmail(c: FormControl) {
-      let EMAIL_REGEXP = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return EMAIL_REGEXP.test(c.value) ? null : {
-        validateEmail: {
-          valid: false
-        }
-      }
-    }
+    
      this.changeEmailForm = fb.group({
       'email': [null, Validators.compose([Validators.required, validateEmail])],
       'confirmEmail': [null, Validators.compose([Validators.required, validateEmail])]
-   });
+   }, {validator: equalityCheck('email', 'confirmEmail')});
    }
 
   ngOnInit() {
@@ -45,8 +39,10 @@ openEmailPanel : boolean;
     this.submitAttempt = true;
     console.log("value", value);
      console.log("valid", valid);
-    //this.emailAddress = value.email;
-    //this.openEmailPanel = false;
+     if(valid){
+      this.emailAddress = value.confirmEmail;
+      this.openEmailPanel = false;
+     }  
 
   }
 

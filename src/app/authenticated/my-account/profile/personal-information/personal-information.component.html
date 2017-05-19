@@ -23,15 +23,17 @@
       <h5>Email Address</h5>
       <div class="profile-inline">
         <h4>{{emailAddress}}</h4>
-        <a (click)="toggleEmailPanel($event)">edit</a></div>
+        <a *ngIf="!openEmailPanel" (click)="toggleEmailPanel($event)">edit</a>
+        <a *ngIf="openEmailPanel" (click)="resetEmail()">close</a></div>
     </div>
   </div>
 
-  <div *ngIf="openEmailPanel" class="row">
-  <div class="col-md-6 col-md-offset-3">
-    <form id="changeEmailForm" [formGroup]="changeEmailForm" (ngSubmit)="submitForm(changeEmailForm.value)" align="center">
+  <div *ngIf="openEmailPanel" class="row emailPanel">
+  <div class="col-md-6 col-md-offset-4 col-xs-offset-2">
+    <h3>Change Email Address</h3>
+    <form id="changeEmailForm" novalidate  [formGroup]="changeEmailForm" (ngSubmit)="submitForm(changeEmailForm.value, changeEmailForm.valid)" align="center">
       <div class="form-group" [ngClass]="{'has-error':!changeEmailForm.controls['email'].valid && submitAttempt}">
-        <input id="register.email" name="email" class="form-control js-secureportal-orignal-register-email form-control" type="text"
+        <input id="register.email" name="email" class="form-control" type="text"
           [formControl]="changeEmailForm.controls['email']" placeholder="Enter new email Address">
         <div class="has-error" *ngIf="changeEmailForm.controls['email'].hasError('required') && submitAttempt">
           <span class="help-block">Required</span>
@@ -42,7 +44,7 @@
       </div>
       <div class="form-group" [ngClass]="{'has-error':!changeEmailForm.controls['confirmEmail'].valid && submitAttempt}">
 
-        <input class="form-control js-secureportal-confirm-register-email" id="register.confirm.email" validateEqual="email" name="confirmEmail"
+        <input class="form-control" id="register.confirm.email" validateEqual="email" name="confirmEmail"
           [formControl]="changeEmailForm.controls['confirmEmail']" placeholder="Confirm email Address">
         <div class="has-error" *ngIf="changeEmailForm.controls['confirmEmail'].hasError('required') && submitAttempt">
           <span class="help-block">Required</span>
