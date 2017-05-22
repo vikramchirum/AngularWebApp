@@ -31,7 +31,7 @@
   <div *ngIf="openEmailPanel" class="row emailPanel">
   <div class="col-md-6 col-md-offset-4 col-xs-offset-2">
     <h3>Change Email Address</h3>
-    <form id="changeEmailForm" novalidate  [formGroup]="changeEmailForm" (ngSubmit)="submitForm(changeEmailForm.value, changeEmailForm.valid)" align="center">
+    <form id="changeForm" novalidate  [formGroup]="changeEmailForm" (ngSubmit)="submitForm(changeEmailForm.value, changeEmailForm.valid)" align="center">
       <div class="form-group" [ngClass]="{'has-error':!changeEmailForm.controls['email'].valid && submitAttempt}">
         <input id="register.email" name="email" class="form-control" type="text"
           [formControl]="changeEmailForm.controls['email']" placeholder="Enter new email Address">

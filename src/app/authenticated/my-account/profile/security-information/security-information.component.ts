@@ -10,16 +10,25 @@ import { equalityCheck } from '../../../../validators/validator'
 export class SecurityInformationComponent implements OnInit {
 
 openUserNamePanel : boolean;
+openPasswordPanel : boolean;
   userName : string;
   
   changeUserNameForm: FormGroup;
+  changePasswordForm: FormGroup;
   submitAttempt: boolean = false;
    constructor(fb: FormBuilder) {
     
      this.changeUserNameForm = fb.group({
       'userName': [null, Validators.required],
       'confirmUserName': [null, Validators.required]
-   }, {validator: equalityCheck('userName', 'userName')});
+   }, {validator: equalityCheck('userName', 'confirmUserName')});
+
+   
+     this.changePasswordForm = fb.group({
+      'currentPassword': [null, Validators.required],
+      'password': [null, Validators.required],
+      'confirmPassword': [null, Validators.required]
+   }, {validator: equalityCheck('password', 'confirmPassword')});
    }
 
   ngOnInit() {
@@ -27,8 +36,17 @@ openUserNamePanel : boolean;
    
   }
   togglePanel(event) {
+    this.openPasswordPanel = false; 
     this.openUserNamePanel = true;    
 
+  }
+   togglePasswordPanel(event) {
+    this.openUserNamePanel = false;
+    this.openPasswordPanel = true;    
+
+  }
+  closePasswordPanel() {
+     this.openPasswordPanel = false;    
   }
  
   closePanel() {
