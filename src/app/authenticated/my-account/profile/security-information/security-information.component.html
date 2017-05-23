@@ -1,0 +1,116 @@
+<section class="security-info">
+  <h3>Security Information</h3>
+  <div class="row">
+    <div class="col-md-6 col-xs-12">
+      <p>Username</p>
+      <div class="profile-inline">
+        <h4>{{userName}}</h4>
+        <a *ngIf="!openUserNamePanel" (click)="togglePanel($event)">edit</a>
+        <a *ngIf="openUserNamePanel" (click)="closePanel()">close</a></div>
+    </div>
+    <div class="col-md-6 hidden-xs">
+      <p>Password</p>
+      <div class="profile-inline">
+        <h4>***************</h4> 
+        <a *ngIf="!openPasswordPanel" (click)="togglePasswordPanel($event)">edit</a>
+        <a *ngIf="openPasswordPanel" (click)="closePasswordPanel()">Close</a></div> 
+    </div>
+  </div>
+
+  <div *ngIf="openUserNamePanel" class="row userPanel">
+     <!--<mygexa-change-user-name (changedUserName)='getUserName($event)'></mygexa-change-user-name>-->
+    <div class="col-md-6 col-md-offset-4 col-xs-offset-2">
+      <h3>Change UserName</h3>
+      <form id="changeForm" novalidate [formGroup]="changeUserNameForm" (ngSubmit)="submitForm(changeUserNameForm.value, changeUserNameForm.valid)"
+        align="center">
+        <div class="form-group" [ngClass]="{'has-error':!changeUserNameForm.controls['userName'].valid && submitAttempt}">
+          <input id="register.userName" name="userName" class="form-control" type="text" [formControl]="changeUserNameForm.controls['userName']"
+            placeholder="Enter new User Name">
+          <div class="has-error" *ngIf="changeUserNameForm.controls['userName'].hasError('required') && submitAttempt">
+            <span class="help-block">Required</span>
+          </div>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error':!changeUserNameForm.controls['confirmUserName'].valid && submitAttempt}">
+          <input class="form-control" id="register.confirm.userName" validateEqual="userName" name="confirmUserName" [formControl]="changeUserNameForm.controls['confirmUserName']"
+            placeholder="Confirm User Name ">
+          <div class="has-error" *ngIf="changeUserNameForm.controls['confirmUserName'].hasError('required') && submitAttempt">
+            <span class="help-block">Required</span>
+          </div>
+
+          <div class="has-error" *ngIf="!changeUserNameForm.controls['confirmUserName'].hasError('required') && submitAttempt && !(changeUserNameForm.controls['confirmUserName'].value == changeUserNameForm.controls['userName'].value)">
+            <span class="help-block">User Name mismatch</span>
+          </div>
+        </div>
+
+        <div class="register-form-action row">
+          <div class="col-xs-6 col-md-6 pull-left"><a (click)="closePanel()">Cancel</a></div>
+          <div class="col-xs-6 col-md-6 pull-right">
+            <button class="btn btn-default" [disabled]="">Save</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <br>
+  <div class="row  hidden-md hidden-lg">
+    <div class="col-xs-12">
+      <p>Password</p>
+      <div class="profile-inline">
+        <h4>***************</h4>
+        <a *ngIf="!openPasswordPanel" (click)="togglePasswordPanel($event)">edit</a>
+        <a *ngIf="openPasswordPanel" (click)="closePasswordPanel()">Close</a></div>
+    </div>
+  </div>
+
+  
+  <div *ngIf="openPasswordPanel" class="row userPanel">    
+    <div class="col-md-6">
+      <h3>Change Password</h3>
+      <form id="changeForm" novalidate [formGroup]="changePasswordForm" (ngSubmit)="submitForm(changePasswordForm.value, changePasswordForm.valid)"
+        align="center">
+          <div class="form-group" [ngClass]="{'has-error':!changePasswordForm.controls['currentPassword'].valid && submitAttempt}">
+          <input  type="password" id="register.currentPassword" name="currentPassword" class="form-control" [formControl]="changePasswordForm.controls['currentPassword']"
+            placeholder="Typer your current password">
+          <div class="has-error" *ngIf="changePasswordForm.controls['currentPassword'].hasError('required') && submitAttempt">
+            <span class="help-block">Required</span>
+          </div>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error':!changePasswordForm.controls['password'].valid && submitAttempt}">
+          <input  type="password" id="register.password" name="password" class="form-control" [formControl]="changePasswordForm.controls['password']"
+            placeholder="Typer your new password">
+          <div class="has-error" *ngIf="changePasswordForm.controls['password'].hasError('required') && submitAttempt">
+            <span class="help-block">Required</span>
+          </div>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error':!changePasswordForm.controls['confirmPassword'].valid && submitAttempt}">
+          <input type="password" class="form-control" id="register.confirm.password" validateEqual="password" name="confirmPassword" [formControl]="changePasswordForm.controls['confirmPassword']"
+            placeholder="Retype your new password">
+          <div class="has-error" *ngIf="changePasswordForm.controls['confirmPassword'].hasError('required') && submitAttempt">
+            <span class="help-block">Required</span>
+          </div>
+
+          <div class="has-error" *ngIf="!changePasswordForm.controls['confirmPassword'].hasError('required') && submitAttempt && !(changePasswordForm.controls['confirmPassword'].value == changePasswordForm.controls['password'].value)">
+            <span class="help-block">Password mismatch</span>
+          </div>
+        </div>
+
+        <div class="register-form-action row"> 
+           <div class="col-xs-6 col-md-6 pull-left"><a (click)="closePasswordPanel()">Cancel</a></div>        
+          <div class="col-xs-6 col-md-6 pull-right">
+            <button class="btn btn-default" [disabled]="">Save</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-6 password-hint hidden-xs">
+      <h4>Password Hint</h4>
+      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium </p>
+      <p>At vero eos et accusamus et iusto odio dignissimos ducimus </p>
+      <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+  </div>
+
+
+<mygexa-security-question></mygexa-security-question>
+
+</section>

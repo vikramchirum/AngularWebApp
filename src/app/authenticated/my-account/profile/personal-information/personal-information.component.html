@@ -1,0 +1,76 @@
+<section class="account-profile">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>
+        Personal Information
+        <!--<i class="fa fa-user-circle fa-spin"></i>-->
+      </h2>
+    </div>
+  </div>
+  <div class="account-info">
+    <h3>Charlie Brown</h3>
+    <p>Account No: 1370351-3 </p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-xs-12">
+      <h5>Service Address</h5>
+      <h4>20455 - TX-249 #200,</h4>
+      <h4>Houston</h4>
+      <h4>TX - 77-70 </h4>
+    </div>
+    <div class="col-md-6 col-xs-12">
+      <h5>Email Address</h5>
+      <div class="profile-inline">
+        <h4>{{emailAddress}}</h4>
+        <a *ngIf="!openEmailPanel" (click)="toggleEmailPanel($event)">edit</a>
+        <a *ngIf="openEmailPanel" (click)="resetEmail()">close</a></div>
+    </div>
+  </div>
+
+  <div *ngIf="openEmailPanel" class="row emailPanel">
+  <div class="col-md-6 col-md-offset-4 col-xs-offset-2">
+    <h3>Change Email Address</h3>
+    <form id="changeForm" novalidate  [formGroup]="changeEmailForm" (ngSubmit)="submitForm(changeEmailForm.value, changeEmailForm.valid)" align="center">
+      <div class="form-group" [ngClass]="{'has-error':!changeEmailForm.controls['email'].valid && submitAttempt}">
+        <input id="register.email" name="email" class="form-control" type="text"
+          [formControl]="changeEmailForm.controls['email']" placeholder="Enter new email Address">
+        <div class="has-error" *ngIf="changeEmailForm.controls['email'].hasError('required') && submitAttempt">
+          <span class="help-block">Required</span>
+        </div>
+        <div class="has-error" *ngIf="!changeEmailForm.controls['email'].hasError('required') && changeEmailForm.controls['email'].hasError('validateEmail') && submitAttempt">
+          <span class="help-block">Enter a valid email</span>
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{'has-error':!changeEmailForm.controls['confirmEmail'].valid && submitAttempt}">
+
+        <input class="form-control" id="register.confirm.email" validateEqual="email" name="confirmEmail"
+          [formControl]="changeEmailForm.controls['confirmEmail']" placeholder="Confirm email Address">
+        <div class="has-error" *ngIf="changeEmailForm.controls['confirmEmail'].hasError('required') && submitAttempt">
+          <span class="help-block">Required</span>
+        </div>
+        <div class="has-error" *ngIf="!changeEmailForm.controls['confirmEmail'].hasError('required') && changeEmailForm.controls['confirmEmail'].hasError('validateEmail') && submitAttempt">
+          <span class="help-block">Enter a valid email</span>
+        </div>
+        <div class="has-error" *ngIf="!changeEmailForm.controls['confirmEmail'].hasError('required') && !changeEmailForm.controls['confirmEmail'].hasError('validateEmail') && submitAttempt && !(changeEmailForm.controls['confirmEmail'].value == changeEmailForm.controls['email'].value)">
+          <span class="help-block">Email mismatch</span>
+        </div>
+      </div>
+
+      <div class="register-form-action row">
+        <div class="col-xs-6 col-md-6 pull-left"><a (click)="resetEmail()">cancel</a></div>
+        <div class="col-xs-6 col-md-6 pull-right">
+          <button class="btn btn-default" [disabled]="">
+                        Save</button>
+        </div>
+      </div>
+
+    </form></div></div>
+  <!--<div *ngIf="editClicked" class="row">
+    <h2>Change Email Address</h2>
+    <input type="text" class="form-control"  placeholder="Enter new Email Address" [(ngModel)]="email_address" />
+    <input type="text" class="form-control" placeholder="Confirm Email Address"/>
+    <a (click)="resetEmail()">Cancel</a><button (click)="saveEmail()">Save</button>
+    </div>-->
+
+</section>

@@ -1,0 +1,18 @@
+<div class="container-fluid"> 
+  <div class="row">
+    <div class="col-md-3 hidden-sm hidden-xs">
+      <ul class="sidenav">
+        <li><h4>Payment Center</h4></li>
+        <li [routerLinkActive]="['active']"><a routerLink="payment-history/bills">Payment History</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="view-my-bill">View My Bill</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="auto-bill-payment">Setup Auto Bill Payment</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="budget-billing">Budget Billing</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="payment-extension">Payment Extension</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="make-payment">Make a Payment</a></li> 
+       </ul>
+    </div>
+    <div class="col-md-9 payments">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

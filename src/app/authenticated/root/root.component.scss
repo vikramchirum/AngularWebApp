@@ -1,0 +1,24 @@
+.overlay-menu{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 30;
+    top: 0;
+    left: 0;
+    background-color: #000;    
+    .accordion-panel{
+        padding: 5px 40px 0 60px;
+        .nav-close {
+          font-size:40px;
+        }
+    }
+    a{      
+      display: block;
+      color:white;
+    }
+}
+.custom-nav {
+  background: transparent;
+  border-width:0;
+  border-bottom: thin solid #000000;
+}

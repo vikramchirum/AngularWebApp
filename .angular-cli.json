@@ -23,7 +23,10 @@
         "../styles/font-awesome/scss/font-awesome.scss",
         "styles.scss"
       ],
-      "scripts": [],
+      "scripts": [
+        "../node_modules/jquery/dist/jquery.js",
+        "../styles/bootstrap/javascripts/bootstrap.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "local": "environments/environment.local.ts",

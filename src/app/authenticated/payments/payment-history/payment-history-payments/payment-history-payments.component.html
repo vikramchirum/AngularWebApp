@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-md-12 col-sm-12 hidden-xs">
+    <table>
+      <tbody>
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Charges</th>
+        <th>Credits</th>
+        <th>Balance</th>
+        <th>Status</th>
+        <th>Payment method</th>
+      </tr>
+     <tr *ngFor="let payment of paymentData">
+       <td>{{payment.date}}</td>
+       <td>{{payment.type}}</td>
+       <td>{{payment.charges}}</td>
+       <td>{{payment.credits}}</td>
+       <td>{{payment.balance}}</td>
+       <td>{{payment.status}}</td>
+       <td>{{payment.paymentMethod}}</td>
+       </tr>
+        </tbody>
+      </table>
+    </div>
+</div>

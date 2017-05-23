@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'mygexa-root',
+  selector: 'mygexa-app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
