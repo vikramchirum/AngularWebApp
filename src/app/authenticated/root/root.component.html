@@ -1,7 +1,7 @@
 <nav class="navbar custom-nav">
   <div class="container container-relaxed">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle pull-left" (click)="toggleAccordian($event)"><span> &#9776;</span>        
+          <button type="button" class="navbar-toggle pull-left" (click)="toggleAccordian($event)"><span> &#9776;</span>
           </button>
           <a class="navbar-brand" [routerLink]="['/']">My Gexa ({{env}})</a>
         </div>
@@ -17,13 +17,13 @@
             <!--<li> <form  role="search">
               <div class="form-group">
                 <input type="text" class="form-control" placeholder="Search">
-              </div>              
+              </div>
             </form><li>-->
             <li><a href="#"><span class="fa fa-bell"></span></a></li>
             <li><a href="#"><span class="fa fa-user-circle"></span></a></li>
-            <li><a href="#"><span class="fa fa-sign-out"></span></a></li>
-             <!--<a href (click)="logout()"></i></a>-->          
-          </ul>      
+            <li><a href="#"><span class="fa fa-sign-out" (click)="logout()"></span></a></li>
+             <!--<a href (click)="logout()"></i></a>-->
+          </ul>
     </div>
   </div>
 </nav>

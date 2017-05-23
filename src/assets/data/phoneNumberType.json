@@ -1,0 +1,5 @@
+[
+    {"phoneId": 1, "phoneType": "Home"},
+    {"phoneId": 2, "phoneType": "Cell"},
+    {"phoneId": 3, "phoneType": "Work"}
+]
