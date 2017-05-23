@@ -47,7 +47,7 @@ export class UserService implements CanActivate {
     }
     this.router.navigate(['/login']);
     return false;
-  }
+  } 
 
   private handleError (error: Response | any) {
     // In a real world app, you might use a remote logging infrastructure
