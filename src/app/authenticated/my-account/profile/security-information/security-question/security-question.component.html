@@ -1,19 +1,19 @@
 <div class="security-question">
   <p>Security Question 1</p>
   <h4>whats your mothers maiden name ? </h4>
-  <a href="">edit</a>
+  <a href="#" (click)="toggleEdit($event)">{{ editing ? 'Close' : 'Edit'}}</a>
 </div><br>
 <div class="security-question">
   <p>Security Question 2</p>
   <h4>whats your favourite movie title ? </h4>
-  <a href="">edit</a>
+  <a href="#" (click)="toggleEdit($event)">{{ editing ? 'Close' : 'Edit'}}</a>
 </div>
 
-<div class="row questionPanel">
+<div [hidden]="!editing" class="row questionPanel">
   <div class="col-md-6 col-md-offset-3">
     <h3>Answer questions to continue</h3>
     <form id="changeForm" novalidate [formGroup]="securityQuestionForm" (ngSubmit)="submitForm(securityQuestionForm.value, securityQuestionForm.valid)">
-      <div class="form-group" [ngClass]="{'has-error':!changePasswordForm.controls['question1'].valid && submitAttempt}">
+      <div class="form-group" [ngClass]="{'has-error':!securityQuestionForm.controls['question1'].valid && submitAttempt}">
         <p>Security Question 1</p>
         <label class="control-label">whats your mothers maiden name ?</label>
         <input type="text" name="question1" class="form-control" [formControl]="securityQuestionForm.controls['question1']" placeholder="">
@@ -21,7 +21,7 @@
           <span class="help-block">Required</span>
         </div>
       </div>
-      <div class="form-group" [ngClass]="{'has-error':!changePasswordForm.controls['question2'].valid && submitAttempt}">
+      <div class="form-group" [ngClass]="{'has-error':!securityQuestionForm.controls['question2'].valid && submitAttempt}">
         <p>Security Question 2</p>
         <label class="control-label">whats your favourite movie title ?</label>
         <input type="text" name="question2" class="form-control" [formControl]="securityQuestionForm.controls['question2']" placeholder="">
@@ -29,11 +29,11 @@
           <span class="help-block">Required</span>
         </div>
       </div>
-
-
       <div class="row">
-        <div class="col-xs-6 col-md-6 pull-left"><a>Cancel</a></div>
-        <div class="col-xs-6 col-md-6 pull-right">
+        <div class="col-xs-6">
+          <a href="#" (click)="toggleEdit($event)">Cancel</a>
+        </div>
+        <div class="col-xs-6 text-right">
           <button class="btn btn-default" [disabled]="">continue</button>
         </div>
       </div><br>
