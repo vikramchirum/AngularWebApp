@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'mygexa-security-question',
@@ -7,9 +8,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SecurityQuestionComponent implements OnInit {
 
-  constructor() { }
+  securityQuestionForm: FormGroup;
+  editing: boolean;
 
-  ngOnInit() {
+  constructor(fb: FormBuilder) {
+    this.editing = false;
+    this.securityQuestionForm = fb.group({
+      'question1': [null, Validators.required],
+      'question2': [null, Validators.required]
+    }, { /* Validate security questions here. */ });
+  }
+
+  ngOnInit() { }
+
+  toggleEdit($event) {
+    $event.preventDefault();
+    this.editing = !this.editing;
   }
 
 }
