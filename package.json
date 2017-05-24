@@ -9,8 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build-local": "ng build --environment dev --output-path C:\\inetpub\\wwwroot\\DEV\\test",
-    "build-dev": "ng build --environment dev --output-path \\\\gesvr1090\\e$\\inetpub\\wwwroot\\DEV\\mygexa.gexaenergy.com"
+    "build-local": "ng build --environment dev --output-path C:\\inetpub\\wwwroot\\DEV\\test --output-hashing all",
+    "build-dev": "ng build --environment dev --output-path \\\\gesvr1090\\e$\\inetpub\\wwwroot\\DEV\\mygexa.gexaenergy.com --output-hashing all"
   },
   "private": true,
   "dependencies": {
