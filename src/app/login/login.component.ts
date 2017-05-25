@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
     console.log('Login local storage: ' + localStorage.getItem('gexa_auth_token'));
 
     if(localStorage.getItem("gexa_auth_token") != null)
-      this.router.navigate(['/account']);
+      this.router.navigate(['/account/profile']);
   }
 
   register() {
