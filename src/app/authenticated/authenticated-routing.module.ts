@@ -10,6 +10,18 @@ import { PaymentsModule } from './payments/payments.module';
 import { MyAccountModule } from './my-account/my-account.module';
 import { HomeModule } from './home/home.module';
 
+export function loadHomeModule() {
+  return HomeModule;
+};
+
+export function loadMyAccountModule() {
+  return MyAccountModule;
+};
+
+export function loadPaymentModule() {
+  return PaymentsModule;
+};
+
 const routes: Route[] = [
   {
     path: '',
@@ -19,9 +31,9 @@ const routes: Route[] = [
       // {path:'home',  loadChildren: 'app/authenticated/home/home.module#HomeModule'},
       // {path: 'account', loadChildren: 'app/authenticated/my-account/my-account.module#MyAccountModule'},
       // {path: 'payments', loadChildren: 'app/authenticated/payments/payments.module#PaymentsModule'}
-      { path: 'home', loadChildren: () => HomeModule },
-      { path: 'account', loadChildren: () => MyAccountModule },
-      { path: 'payments', loadChildren: () => PaymentsModule }
+      { path: 'home', loadChildren: loadHomeModule },
+      { path: 'account', loadChildren: loadMyAccountModule },
+      { path: 'payments', loadChildren: loadPaymentModule }
     ]
   }
 ];

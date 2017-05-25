@@ -1,14 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Routes, RouterModule } from '@angular/router';
 import { payment_routes } from './payments-routing.module';
 import { PaymentsComponent } from './payments.component';
 import { ViewMyBillComponent } from './view-my-bill/view-my-bill.component';
 import { PaymentAccountsComponent } from './payment-accounts/payment-accounts.component';
 import { PaymentOptionsComponent } from './payment-options/payment-options.component';
-import { AutoBillPaymentComponent } from './auto-bill-payment/auto-bill-payment.component';
-import { BudgetBillingComponent } from './budget-billing/budget-billing.component';
-import { PaymentExtensionComponent } from './payment-extension/payment-extension.component';
 import { MakePaymentComponent } from './make-payment/make-payment.component';
 
 @NgModule({
@@ -20,10 +16,6 @@ import { MakePaymentComponent } from './make-payment/make-payment.component';
     PaymentsComponent,
     ViewMyBillComponent,
     PaymentAccountsComponent,
-    PaymentOptionsComponent,
-    AutoBillPaymentComponent,
-    BudgetBillingComponent,
-    PaymentExtensionComponent,
     MakePaymentComponent
   ]
 })
