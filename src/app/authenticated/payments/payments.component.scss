@@ -1,21 +1,25 @@
+@import '../../../../styles/bootstrap/stylesheets/bootstrap/_variables.scss';
+
 .sidenav {
-    background-color:#000000;
-    height: 100vh;
-    padding: 30px;
-    li{
-        list-style-type: none;
-        margin-bottom:10px;
-       h4{
-           color:#ffffff;
-       }
-       a {
-            color:#ffffff;
-        }
-      
+  background-color:#000000;
+  height: 100vh;
+  padding: 30px;
+  li {
+    list-style-type: none;
+    margin-bottom: 10px;
+    h4 {
+      color: #ffffff;
     }
+    a {
+      color: #ffffff;
+    }
+  }
+  @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+    height: inherit;
+  }
 }
 
 .status-bar {
-    border:1px solid #000000;
-     margin: 20px -15px 20px 0px;
+  border:1px solid #000000;
+  margin: 20px -15px 20px 0px;
 }
