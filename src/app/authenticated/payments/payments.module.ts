@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Routes, RouterModule } from "@angular/router";
-import { payment_routes } from "./payments-routing.module";
+import { payment_routes } from './payments-routing.module';
+import { BillService } from '../../shared/bill';
+import { NumberToMoneyPipe } from '../../pipes/NumberToMoney.pipe';
 import { PaymentsComponent } from './payments.component';
 import { ViewMyBillComponent } from './view-my-bill/view-my-bill.component';
 import { AutoBillPaymentComponent } from './auto-bill-payment/auto-bill-payment.component';
@@ -14,7 +15,18 @@ import { MakePaymentComponent } from './make-payment/make-payment.component';
     payment_routes,
     CommonModule
   ],
-  declarations: [PaymentsComponent, ViewMyBillComponent, AutoBillPaymentComponent, BudgetBillingComponent, PaymentExtensionComponent, MakePaymentComponent]
+  declarations: [
+    PaymentsComponent,
+    ViewMyBillComponent,
+    AutoBillPaymentComponent,
+    BudgetBillingComponent,
+    PaymentExtensionComponent,
+    MakePaymentComponent,
+    NumberToMoneyPipe
+  ],
+  providers: [
+    BillService
+  ]
 })
 export class PaymentsModule {
 }

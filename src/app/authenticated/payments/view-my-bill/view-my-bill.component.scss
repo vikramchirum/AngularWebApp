@@ -1,0 +1,83 @@
+.view-my-bill {
+  border: 2px solid black;
+  padding: 4rem 8rem;
+}
+
+.view-my-bill-bill {
+  border: 2px solid black;
+  margin-bottom: 4rem;
+  padding: 2rem 4rem;
+
+  .bill-breaker {
+    background: black;
+    height: 2px;
+    margin: 3rem 0;
+  }
+  td {
+    font-size: 2rem;
+    line-height: 4rem;
+  }
+  .bill-amount {
+    font-weight: bold;
+    text-align: right;
+  }
+  .bill-name {
+    color: #555555;
+  }
+  .bill-uasge {
+    float: right;
+  }
+}
+
+.view-my-bill-billing-payment-preferences,
+.view-my-bill-billing-meter-information,
+.view-my-bill-billing-power-outage {
+  border: 2px solid black;
+  margin-bottom: 4rem;
+}
+
+.view-my-bill-billing-pad {
+  padding: 4rem;
+}
+
+.view-my-bill-billing-payment-preferences {
+  p {
+    font-weight: bold;
+    text-align: center;
+  }
+  a {
+    clear: both;
+    display: block;
+    font-size: 1.2em;
+    line-height: 4rem;
+
+    i {
+      line-height: 4rem;
+    }
+  }
+}
+
+.view-my-bill-billing-meter-information {
+  .view-my-bill-billing-header {
+    background: black;
+    color: white;
+    font-size: 1.4em;
+    line-height: 6rem;
+
+    i {
+      width: 4rem;
+    }
+  }
+}
+
+.view-my-bill-billing-power-outage {
+  background: black;
+  color: white;
+
+  p, h1, h2 {
+    font-weight: bold;
+  }
+  p {
+    padding: 2rem 0;
+  }
+}
