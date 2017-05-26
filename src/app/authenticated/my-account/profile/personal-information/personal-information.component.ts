@@ -8,42 +8,24 @@ import { validateEmail, equalityCheck } from '../../../../validators/validator'
   styleUrls: ['./personal-information.component.scss']
 })
 export class PersonalInformationComponent implements OnInit {
-openEmailPanel : boolean;
-  emailAddress : string;
-  
-  changeEmailForm: FormGroup;
-  submitAttempt: boolean = false;
-   constructor(fb: FormBuilder) {
-    
-     this.changeEmailForm = fb.group({
-      'email': [null, Validators.compose([Validators.required, validateEmail])],
-      'confirmEmail': [null, Validators.compose([Validators.required, validateEmail])]
-   }, {validator: equalityCheck('email', 'confirmEmail')});
-   }
 
+  emailAddress : string;
+  emailEditing : boolean;
+  
+  constructor() {
+     this.emailEditing = false;
+   }
+   
   ngOnInit() {
     this.emailAddress = "cbrown@gmail.com";
    
   }
-  toggleEmailPanel(event) {
-    this.openEmailPanel = true;    
 
+   toggleEmailEdit($event) {
+    $event.preventDefault();
+    this.emailEditing = !this.emailEditing;
   }
  
-  resetEmail() {
-     this.openEmailPanel = false;
-  }
-   
 
-   submitForm(value: any, valid:boolean) {
-    this.submitAttempt = true;
-    console.log("value", value);
-     console.log("valid", valid);
-     if(valid){
-      this.emailAddress = value.confirmEmail;
-      this.openEmailPanel = false;
-     }  
-
-  }
 
 }
