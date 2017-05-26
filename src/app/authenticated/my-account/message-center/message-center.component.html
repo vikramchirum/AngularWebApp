@@ -1,24 +1,29 @@
-<section class="contact-address">  
-    <div>
-      <h2>Contact Us</h2>
-      <p>veritatis et quasi architecto beatae vitae dicta sunt explicabo.Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. </p>
-    </div>
-
-  <div class="account-info">
-    <h3>Charlie Brown</h3> 
+<section class="contact-address">
+  <div>
+    <h2>Contact Us</h2>
+    <p>veritatis et quasi architecto beatae vitae dicta sunt explicabo.Nemo enim ipsam voluptatem quia voluptas sit aspernatur
+      aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. </p>
   </div>
 
-    <div>
-      <h5>Service Address</h5>
-      <h4>20455 - TX-249 #200,</h4>
-      <h4>Houston</h4>
-      <h4>TX - 77-70 </h4>
-    </div><br>
-    <div>
-      <h5>Email</h5>
-      <div class="profile-inline">
-        <h4>c.brown@gmail.com</h4>
-       <a href="#">edit</a>        
-    </div></div>
+  <div class="account-info">
+    <h3>Charlie Brown</h3>
+  </div>
+
+  <div>
+    <h5>Service Address</h5>
+    <h4>20455 - TX-249 #200,</h4>
+    <h4>Houston</h4>
+    <h4>TX - 77-70 </h4>
+  </div><br>
+  <div>
+    <h5>Email</h5>
+    <div class="profile-inline">
+      <h4>c.brown@gmail.com</h4>
+      <a (click)="toggleUserNameEdit($event)">{{ userNameEditing ? 'Close' : 'Edit'}}</a>
+    </div>
+  </div>
+  <div *ngIf="userNameEditing">
+    <mygexa-change-user-name></mygexa-change-user-name>
+  </div>
 </section>
 <mygexa-contact-form></mygexa-contact-form>
