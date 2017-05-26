@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ChangeUserNameComponent } from './change-user-name/change-user-name.component'
+import { ChangeUserNameComponent } from './components/change-user-name/change-user-name.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
 @NgModule({
     imports: [
@@ -10,10 +11,12 @@ import { ChangeUserNameComponent } from './change-user-name/change-user-name.com
         CommonModule
     ],
     declarations: [
-        ChangeUserNameComponent
+        ChangeUserNameComponent,
+        ChangePasswordComponent
     ],
     exports :[
-        ChangeUserNameComponent
+        ChangeUserNameComponent,
+        ChangePasswordComponent
     ]
   
 })

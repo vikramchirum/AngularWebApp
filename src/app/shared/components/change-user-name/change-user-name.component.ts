@@ -11,8 +11,6 @@ import { equalityCheck } from '../../../validators/validator'
 export class ChangeUserNameComponent implements OnInit {
     @Output() changedUserName = new EventEmitter<string>();
 
-openUserNamePanel : boolean;
-
   changeUserNameForm: FormGroup;
   submitAttempt: boolean = false;
    constructor(fb: FormBuilder) {
@@ -25,20 +23,14 @@ openUserNamePanel : boolean;
 
   ngOnInit() {
    
-  }
- 
-  closePanel() {
-     this.openUserNamePanel = false;
-  }
-   
+  } 
 
    submitForm(value: any, valid:boolean) {
     this.submitAttempt = true;
     console.log("value", value);
      console.log("valid", valid);
      if(valid){
-      this.changedUserName = value.confirmUserName;
-      this.openUserNamePanel = false;
+      /**send the form values to api */
      }  
 
   }

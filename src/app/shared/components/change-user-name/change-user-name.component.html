@@ -1,0 +1,34 @@
+<div class="row userPanel">
+  <div class="col-md-6 col-md-offset-3">
+    <h3>Change UserName</h3>
+    <form id="changeForm" novalidate [formGroup]="changeUserNameForm" (ngSubmit)="submitForm(changeUserNameForm.value, changeUserNameForm.valid)"
+      align="center">
+      <div class="form-group" [ngClass]="{'has-error':!changeUserNameForm.controls['userName'].valid && submitAttempt}">
+        <input  name="userName" class="form-control" type="text" [formControl]="changeUserNameForm.controls['userName']"
+          placeholder="Enter new User Name">
+        <div class="has-error" *ngIf="changeUserNameForm.controls['userName'].hasError('required') && submitAttempt">
+          <span class="help-block">Required</span>
+        </div>
+      </div>
+      <div class="form-group" [ngClass]="{'has-error':!changeUserNameForm.controls['confirmUserName'].valid && submitAttempt}">
+        <input class="form-control"  validateEqual="userName" name="confirmUserName" [formControl]="changeUserNameForm.controls['confirmUserName']"
+          placeholder="Confirm User Name ">
+        <div class="has-error" *ngIf="changeUserNameForm.controls['confirmUserName'].hasError('required') && submitAttempt">
+          <span class="help-block">Required</span>
+        </div>
+
+        <div class="has-error" *ngIf="!changeUserNameForm.controls['confirmUserName'].hasError('required') && submitAttempt && !(changeUserNameForm.controls['confirmUserName'].value == changeUserNameForm.controls['userName'].value)">
+          <span class="help-block">User Name mismatch</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6 text-left">
+          <a>Cancel</a>
+        </div>
+        <div class="col-xs-6 text-right">
+          <button class="btn btn-default" [disabled]="">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
