@@ -1,9 +1,8 @@
 
 export interface IUser {
-  email_address: string;
-  zip_code: string;
-  customer_account_id: string;
-  user_name: string;
-  password: string;
-  confirm_password: string;
+  Email_Address: string;
+  Zip: string;
+  Billing_Account_Id: string;
+  User_name: string;
+  Password: string;
 }
