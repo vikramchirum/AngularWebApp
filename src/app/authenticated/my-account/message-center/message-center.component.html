@@ -19,11 +19,10 @@
     <h5>Email</h5>
     <div class="profile-inline">
       <h4>c.brown@gmail.com</h4>
-      <a (click)="toggleUserNameEdit($event)">{{ userNameEditing ? 'Close' : 'Edit'}}</a>
+        <a (click)="toggleEmailEdit($event)">{{ emailEditing ? 'Close' : 'Edit'}}</a></div>
     </div>
-  </div>
-  <div *ngIf="userNameEditing">
-    <mygexa-change-user-name></mygexa-change-user-name>
+  <div *ngIf="emailEditing">
+    <mygexa-change-email-address></mygexa-change-email-address>
   </div>
 </section>
 <mygexa-contact-form></mygexa-contact-form>

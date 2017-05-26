@@ -6,16 +6,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./message-center.component.scss']
 })
 export class MessageCenterComponent implements OnInit {
-  userNameEditing: boolean;
+  emailEditing: boolean;
   constructor() {
-     this.userNameEditing = false;
+     this.emailEditing = false;
    }
 
   ngOnInit() {
   }
-  toggleUserNameEdit($event) {
+ 
+   toggleEmailEdit($event) {
     $event.preventDefault();
-    this.userNameEditing = !this.userNameEditing;
+    this.emailEditing = !this.emailEditing;
   }
 
 }
