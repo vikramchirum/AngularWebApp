@@ -21,6 +21,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { SecurityQuestionComponent } from './profile/security-information/security-question/security-question.component';
 import { MessageCenterComponent } from './message-center/message-center.component';
 import { ContactFormComponent } from './message-center/contact-form/contact-form.component';
+import { ReferralOptionsComponent } from './refer-friend/referral-options/referral-options.component';
+import { MyRewardsComponent } from './refer-friend/my-rewards/my-rewards.component';
 
 @NgModule({
   imports: [
@@ -32,6 +34,6 @@ import { ContactFormComponent } from './message-center/contact-form/contact-form
     ReactiveFormsModule,
     SharedModule
   ],
-  declarations: [ProfileComponent, PlanInformationComponent, MyAccountComponent, ReferFriendComponent, OrderStatusComponent, TransferServiceComponent, SecurityInformationComponent, PaperlessSettingsComponent, MyCurrentPlanComponent, DocumentsComponent, ChangeYourPlanComponent, ChangeYourPlanCardComponent, ServiceEnrollmentStatusComponent, PersonalInformationComponent, SecurityQuestionComponent, MessageCenterComponent, ContactFormComponent]
+  declarations: [ProfileComponent, PlanInformationComponent, MyAccountComponent, ReferFriendComponent, OrderStatusComponent, TransferServiceComponent, SecurityInformationComponent, PaperlessSettingsComponent, MyCurrentPlanComponent, DocumentsComponent, ChangeYourPlanComponent, ChangeYourPlanCardComponent, ServiceEnrollmentStatusComponent, PersonalInformationComponent, SecurityQuestionComponent, MessageCenterComponent, ContactFormComponent, ReferralOptionsComponent, MyRewardsComponent]
 })
 export class MyAccountModule { }

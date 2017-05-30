@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {Router} from '@angular/router';
+
 
 @Component({
   selector: 'mygexa-refer-friend',
@@ -7,8 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReferFriendComponent implements OnInit {
 
-  constructor() { }
+  flipButton: boolean = false;
 
+  constructor(private router: Router) { }
+
+  toggleButton(): void {
+    this.flipButton = !this.flipButton;
+  }
+  onEnroll() {
+    this.router.navigate(['/referral-options']);
+  }
   ngOnInit() {
   }
 
