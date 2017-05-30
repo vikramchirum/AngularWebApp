@@ -1,0 +1,20 @@
+
+.billing-payment-preference {
+  background: transparent;
+  border: none;
+  clear: both;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  font-size: 1.2em;
+  line-height: 4rem;
+  text-align: left;
+
+  i {
+    line-height: 4rem;
+  }
+}
+
+.billing-payment-preference:hover {
+  text-decoration: underline !important;
+}

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Bill, BillService } from '../../../shared/bill';
+import { Bill, BillService } from '../../../shared/Bill';
 
 @Component({
   selector: 'mygexa-view-my-bill',
@@ -9,8 +9,10 @@ import { Bill, BillService } from '../../../shared/bill';
 export class ViewMyBillComponent implements OnInit {
 
   private date_today: Date;
+  private balance_forward: number;
   private bills: Bill[];
   private requestingBillData: boolean;
+  private openCharges;
 
   /**
    * Provide the view the notice that we're done requesting.
@@ -26,7 +28,8 @@ export class ViewMyBillComponent implements OnInit {
     this.bills = [];
     this.BillService.getBills()
       .then((bills: Bill[]) => {
-        this.bills = bills;
+        // Get the first bill.
+        this.bills = [bills[0]];
         this.getBillInformationDone();
       })
       .catch((err: any) => {
@@ -55,7 +58,7 @@ export class ViewMyBillComponent implements OnInit {
    * @param bill
    * @returns {number}
    */
-  private total(bill: Bill) {
+  private total(bill: Bill): number {
     let total = 0;
     for (const charge in bill.charges) {
       if (bill.charges[charge]) { total += this.subtotal(bill.charges[charge]); }
@@ -63,11 +66,30 @@ export class ViewMyBillComponent implements OnInit {
     return total;
   }
 
+  private chargeOpened(charge) {
+    return this.openCharges.indexOf(charge) >= 0;
+  }
+
+  private chargeToggle(charge) {
+    const indexOf = this.openCharges.indexOf(charge);
+    if (indexOf < 0) {
+      this.openCharges.push(charge);
+    } else {
+      this.openCharges.splice(indexOf, 1);
+    }
+  }
+
+  current_charges(): number {
+    return (this.bills.length > 0 ? this.total(this.bills[0]) : 0) + this.balance_forward;
+  }
+
   constructor(
     private BillService: BillService
   ) {
+    this.balance_forward = 2000;
     this.date_today = new Date;
     this.requestingBillData = true;
+    this.openCharges = [];
     this.getBillInformation();
   }
 

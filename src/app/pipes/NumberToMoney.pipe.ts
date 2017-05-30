@@ -6,6 +6,8 @@ export class NumberToMoneyPipe implements PipeTransform {
 
     const string = (Math.ceil(value) / 100).toString();
 
+    if (string.indexOf('.') < 0 ) { return `${string}.00`; }
+
     if (string.length === 1) { return `${string}.00`; }
 
     if (string[string.length - 2] === '.') { return `${string}0`; }

@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 
-import MockData from './bill.mock-data.json';
+import MockData from './Bill.mock-data.json';
 
 interface IBillCharges {
   title: string;

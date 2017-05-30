@@ -8,7 +8,7 @@
         "title": "Gexa Charges",
         "items": [
           { "amount": 10220, "name": "Energy Charge", "usage": "1526kwh" },
-          { "amount": 9645, "name": "Base Charge", "usage": "1526kwh" }
+          { "amount": 9645, "name": "Base Charge" }
         ]
       },
       {
@@ -39,7 +39,7 @@
         "title": "Gexa Charges",
         "items": [
           { "amount": 0, "name": "Energy Charge", "usage": "0kwh" },
-          { "amount": 0, "name": "Base Charge", "usage": "0kwh" }
+          { "amount": 0, "name": "Base Charge" }
         ]
       },
       {
