@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ServicePlanUpgradeModalComponent } from './service-plan-upgrade-modal/service-plan-upgrade-modal.component'
 
 @Component({
   selector: 'mygexa-change-your-plan-card',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChangeYourPlanCardComponent implements OnInit {
 
-  constructor() { }
 
   ngOnInit() {
   }
 
+  @ViewChild('serviceUpgradeModal') serviceUpgradeModal :ServicePlanUpgradeModalComponent;
+  constructor(private viewContainerRef: ViewContainerRef) {
+  }
+showServiceUpgradeModal() {
+  this.serviceUpgradeModal.show();
+
+}
 }

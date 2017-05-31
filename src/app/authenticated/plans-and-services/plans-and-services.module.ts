@@ -14,6 +14,9 @@ import { DocumentsComponent } from './my-service-plans/documents/documents.compo
 import { ChangeYourPlanComponent } from './my-service-plans/change-your-plan/change-your-plan.component';
 import { ChangeYourPlanCardComponent } from './my-service-plans/change-your-plan/change-your-plan-card/change-your-plan-card.component';
 import { MovingServiceComponent } from './moving-service/moving-service.component';
+import { ModalModule } from 'ngx-bootstrap';
+import { ServicePlanUpgradeModalComponent } from './my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
+
 @NgModule({
   imports: [
     plans_services_routes,
@@ -22,7 +25,8 @@ import { MovingServiceComponent } from './moving-service/moving-service.componen
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    ModalModule.forRoot()
   ],
   declarations: [
       PlansAndServicesComponent,
@@ -34,7 +38,8 @@ import { MovingServiceComponent } from './moving-service/moving-service.componen
       DocumentsComponent,
       ChangeYourPlanComponent,
       ChangeYourPlanCardComponent,
-      MovingServiceComponent
+      MovingServiceComponent,
+      ServicePlanUpgradeModalComponent
       ]
 })
 export class PlansAndServicesModule { }
