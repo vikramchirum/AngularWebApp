@@ -2,34 +2,33 @@
  * Created by patrick.purcell on 5/2/2017.
  */
 import {Injectable} from '@angular/core';
-import {Http, Response, Headers, URLSearchParams, RequestOptions, Request, RequestMethod} from '@angular/http';
+import { Http, Response, Headers, URLSearchParams, RequestOptions, Request, RequestMethod } from '@angular/http';
 import {CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import {IToken} from "app/login/login.component.token";
-import {IUser} from "app/register/register";
+import { IToken } from "app/login/login.component.token";
+import { IUser } from "app/register/register";
 
 @Injectable()
 export class UserService implements CanActivate {
   token: IToken[];
   result: string;
   errorMessage: string;
-  private actionUrl: string;
-  private registerUrl: string;
+  private actionUrl: string; private registerUrl: string;
 
   get logged_in_user(): string {
     return localStorage.getItem('gexa_auth_token');
   };
 
   get user_logged_in(): boolean {
-    if (this.logged_in_user)
+    if(this.logged_in_user)
       return true;
     return false;
   };
 
   constructor(private router: Router, private _http: Http) {
-    this.actionUrl = "http://localhost:50981/token";
+    this.actionUrl = "http://localhost:62204/api/Login/authorizeUser";
     this.registerUrl = "http://localhost:50981/api/Login/register";
 
     // set token if saved in local storage
@@ -50,7 +49,7 @@ export class UserService implements CanActivate {
     return false;
   }
 
-  private handleError(error: Response | any) {
+  private handleError (error: Response | any) {
     // In a real world app, you might use a remote logging infrastructure
     let errMsg: string;
     if (error instanceof Response) {
@@ -66,30 +65,44 @@ export class UserService implements CanActivate {
 
   login(user_name: string, password: string): Observable<IToken> {
 
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    // Parameters obj-
+    let params: URLSearchParams = new URLSearchParams();
+    params.set('username', user_name);
+    params.set('password', password);
 
-    const urlSearchParams = new URLSearchParams();
-    urlSearchParams.append("username", user_name);
-    urlSearchParams.append("password", password);
-    urlSearchParams.append("grant_type", "password");
+    return this._http.get(this.actionUrl + '?username=' +  user_name + '&password=' + password + '', {search: params})
+        .map((response: Response) => <IToken> response.json()).
+        do(data => localStorage.setItem('gexa_auth_token', data.Data)).
+        catch(this.handleError);
 
-    let body = urlSearchParams.toString();
-
-    return this._http.post(this.actionUrl, body, {headers: headers})
-      .map((response: Response) => <IToken> response.json()).do(data => localStorage.setItem('gexa_auth_token', data.access_token)).catch(this.handleError);
-
-    //ocalStorage.setItem('gexa_auth_token', IToken.access_token);
   }
+  // login(user_name: string, password: string): Observable<IToken> {
+  //
+  //   let headers = new Headers();
+  //   headers.append('Content-Type', 'application/x-www-form-urlencoded');
+  //
+  //   const urlSearchParams = new URLSearchParams();
+  //   urlSearchParams.append("username", user_name);
+  //   urlSearchParams.append("password", password);
+  //   urlSearchParams.append("grant_type", "password");
+  //
+  //    let body = urlSearchParams.toString();
+  //   console.log("Hi");
+  //   return this._http.post(this.actionUrl, body, { headers: headers })
+  //     .map((response: Response) => <IToken> response.json()).
+  //   do(data => localStorage.setItem('gexa_auth_token', data.access_token)).
+  //   catch(this.handleError);
+  //
+  //   //ocalStorage.setItem('gexa_auth_token', IToken.access_token);
+  // }
 
   signup(user: IUser) {
     this._http.post(this.registerUrl, user)
       .map((res: Response) => res.json())
-      .subscribe(res => {
-        this.result = res;
-        console.log(this.result);
-      });
-  }
+      .subscribe(res => { this.result = res;
+      console.log(this.result);
+    });
+}
 
   logout() {
     // clear token remove user from local storage to log user out

@@ -9,60 +9,31 @@ import { equalityCheck } from '../../../../validators/validator'
 })
 export class SecurityInformationComponent implements OnInit {
 
-openUserNamePanel : boolean;
-openPasswordPanel : boolean;
-  userName : string;
-  
-  changeUserNameForm: FormGroup;
-  changePasswordForm: FormGroup;
-  submitAttempt: boolean = false;
-   constructor(fb: FormBuilder) {
-    
-     this.changeUserNameForm = fb.group({
-      'userName': [null, Validators.required],
-      'confirmUserName': [null, Validators.required]
-   }, {validator: equalityCheck('userName', 'confirmUserName')});
+  userName: string;
+  userNameEditing: boolean;
+  passwordEditing: boolean;
 
-   
-     this.changePasswordForm = fb.group({
-      'currentPassword': [null, Validators.required],
-      'password': [null, Validators.required],
-      'confirmPassword': [null, Validators.required]
-   }, {validator: equalityCheck('password', 'confirmPassword')});
-   }
+  submitAttempt: boolean = false;
+  constructor(fb: FormBuilder) {
+    this.userNameEditing = false;
+    this.passwordEditing = false;   
+  }
 
   ngOnInit() {
     this.userName = "cbrown_2371";
-   
-  }
-  togglePanel(event) {
-    this.openPasswordPanel = false; 
-    this.openUserNamePanel = true;    
 
   }
-   togglePasswordPanel(event) {
-    this.openUserNamePanel = false;
-    this.openPasswordPanel = true;    
 
+  toggleUserNameEdit($event) {
+    $event.preventDefault();
+    this.passwordEditing = false;
+    this.userNameEditing = !this.userNameEditing;
   }
-  closePasswordPanel() {
-     this.openPasswordPanel = false;    
+  togglePasswordEdit($event) {
+    $event.preventDefault();
+    this.userNameEditing = false;
+    this.passwordEditing = !this.passwordEditing;
   }
- 
-  closePanel() {
-     this.openUserNamePanel = false;
-  }
-   
 
-   submitForm(value: any, valid:boolean) {
-    this.submitAttempt = true;
-    console.log("value", value);
-     console.log("valid", valid);
-     if(valid){
-      this.userName = value.confirmUserName;
-      this.openUserNamePanel = false;
-     }  
-
-  }
 
 }
