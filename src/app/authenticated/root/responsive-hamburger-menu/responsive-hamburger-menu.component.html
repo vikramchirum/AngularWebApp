@@ -1,6 +1,6 @@
 <div class="panel-group" id="accordion">
   <div class="panel dx-panel-default">
-    <div class="dx-panel-heading">       
+    <div class="dx-panel-heading">
       <h4 class="dx-panel-title">
         <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse1">My Account</a>
       </h4>
@@ -9,11 +9,11 @@
       <div class="panel-body">
         <ul>
           <li>
-            <h5><a (click)='routerOnClick()' [routerLink]="['/account/profile']">Profile & Preferences</a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/account/profile']">Profile &amp; Preferences</a></h5>
           </li>
           <li>
             <h5><a (click)='routerOnClick()' [routerLink]="['/account/message-center']">Message Center</a></h5>
-          </li>           
+          </li>
           <li>
             <h5><a (click)='routerOnClick()' [routerLink]="['/account/plan-information']">Plan Information</a></h5>
           </li>
@@ -30,13 +30,40 @@
       </div>
     </div>
   </div>
+
   <div class="panel dx-panel-default">
     <div class="dx-panel-heading">
       <h4 class="dx-panel-title">
-        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse2">Payments Center</a>
+        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse2">Plans &amp; Services</a>
       </h4>
     </div>
     <div id="collapse2" class="panel-collapse collapse">
+      <div class="panel-body">
+        <ul>
+          <li>
+            <h5><a>My Service Plans</a></h5>
+          </li>
+          <li>
+            <h5><a>Add Service</a></h5>
+          </li>
+          <li>
+            <h5><a>Moving </a></h5>
+          </li>
+          <li>
+            <h5><a>Order Status</a></h5>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel dx-panel-default">
+    <div class="dx-panel-heading">
+      <h4 class="dx-panel-title">
+        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse3">Payments Center</a>
+      </h4>
+    </div>
+    <div id="collapse3" class="panel-collapse collapse">
       <div class="panel-body">
         <ul>
           <li>
@@ -57,7 +84,7 @@
           <li>
             <h5><a>Payment Extension</a></h5>
           </li>
-           <li>
+          <li>
             <h5><a>Make a Payment</a></h5>
           </li>
         </ul>

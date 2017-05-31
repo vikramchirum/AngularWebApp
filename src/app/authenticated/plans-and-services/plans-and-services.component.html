@@ -1,0 +1,17 @@
+<div class="container-fluid"> 
+<mygexa-status-bar></mygexa-status-bar>
+ <div class="row">
+    <div class="col-md-3 col-sm-3 hidden-xs">
+      <ul class="sidenav">
+        <li><h4>Plans &amp; Services</h4></li>
+        <li [routerLinkActive]="['active']"><a routerLink="my-services-plans">My Service Plans</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="add-services">Add Service</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="moving-service">Moving</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="order-status">Order Status</a></li>
+      </ul>
+    </div>
+    <div class="col-md-9 col-sm-9 plans-services">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
