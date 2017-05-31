@@ -1,34 +1,31 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { payment_routes } from './payments-routing.module';
+import { ViewMyBillComponent } from './view-my-bill/view-my-bill.component';
+import { PreferenceComponent } from './view-my-bill/preference/preference.component';
 import { BillService } from '../../shared/Bill';
 import { NumberToMoneyPipe } from '../../pipes/NumberToMoney.pipe';
 import { PaymentsComponent } from './payments.component';
-import { ViewMyBillComponent } from './view-my-bill/view-my-bill.component';
-import { PreferenceComponent } from './view-my-bill/preference/preference.component';
-import { AutoBillPaymentComponent } from './auto-bill-payment/auto-bill-payment.component';
-import { BudgetBillingComponent } from './budget-billing/budget-billing.component';
-import { PaymentExtensionComponent } from './payment-extension/payment-extension.component';
+import { PaymentAccountsComponent } from './payment-accounts/payment-accounts.component';
+import { PaymentOptionsModule } from './payment-options/payment-options.module';
 import { MakePaymentComponent } from './make-payment/make-payment.component';
 
 @NgModule({
   imports: [
+    CommonModule,
     payment_routes,
-    CommonModule
+    PaymentOptionsModule
   ],
   declarations: [
     PaymentsComponent,
     ViewMyBillComponent,
     PreferenceComponent,
-    AutoBillPaymentComponent,
-    BudgetBillingComponent,
-    PaymentExtensionComponent,
     MakePaymentComponent,
+    PaymentAccountsComponent,
     NumberToMoneyPipe
   ],
   providers: [
     BillService
   ]
 })
-export class PaymentsModule {
-}
+export class PaymentsModule { }
