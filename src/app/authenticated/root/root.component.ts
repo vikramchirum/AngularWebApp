@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 
-import {UserService} from "../../shared/user.service";
-import {Router} from "@angular/router";
-import {environment} from "../../../environments/environment";
+import {UserService} from '../../shared/user.service';
+import {Router} from '@angular/router';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'mygexa-root',
@@ -14,7 +14,7 @@ export class RootComponent implements OnInit {
 
   env = environment.Name;
   user: string;
-  accordianVisible: boolean = false;
+  accordionVisible: boolean = false;
 
   constructor(private user_service: UserService, private router: Router) { }
 
@@ -22,22 +22,17 @@ export class RootComponent implements OnInit {
     this.user = this.user_service.logged_in_user;
   }
 
-  logout(){
+  logout() {
     this.user_service.logout();
     this.router.navigate(['/login']);
   }
 
-    toggleAccordian(evt) {
-        if (this.accordianVisible) {
-            this.accordianVisible = false;
-        }
-        else {
-            this.accordianVisible = true;
-      }
+  toggleAccordion(evt) {
+    this.accordionVisible = !this.accordionVisible;
+  }
 
-    }
-    onNotify(message:string):void {
-     this.accordianVisible=false;
+  onNotify(message: string): void {
+    this.accordionVisible = false;
   }
 
 }
