@@ -6,10 +6,26 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./my-rewards.component.scss']
 })
 export class MyRewardsComponent implements OnInit {
+  streetAddress: string;
+  city: string;
+  state: string;
+  zip: number;
+  addressEditing: boolean;
 
-  constructor() { }
+  constructor() {
+    this.addressEditing = false;
+  }
 
   ngOnInit() {
+    this.streetAddress = "20455 - TX-249 #200,";
+    this.city = "Houston,";
+    this.state = "TX";
+    this.zip = 77070;
+  }
+
+  toggleAddressEdit($event){
+    if ($event && $event.preventDefault) { $event.preventDefault(); }
+    this.addressEditing = !this.addressEditing;
   }
 
 }

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Router, RouterModule } from '@angular/router';
 
 
 @Component({
@@ -10,16 +10,19 @@ import {Router} from '@angular/router';
 export class ReferFriendComponent implements OnInit {
 
   flipButton: boolean = false;
-
+  enrolled: boolean = false;
   constructor(private router: Router) { }
 
+  testing() {
+    this.enrolled = !this.enrolled
+  }
   toggleButton(): void {
     this.flipButton = !this.flipButton;
   }
   onEnroll() {
-    this.router.navigate(['/referral-options']);
+    this.enrolled = true;
+    //this.router.navigate(['/account/refer-a-friend/my-rewards']);
   }
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
 }

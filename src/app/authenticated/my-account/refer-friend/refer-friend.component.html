@@ -1,4 +1,4 @@
-<section class="refer-friend-description">
+<section *ngIf="!enrolled" class="refer-friend-description">
 <div class="row">
   <div class="col-md-6 col-xs-12">
     <h3>Refer a friend</h3>
@@ -9,19 +9,12 @@
       numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
     <form id="referal-code">
 
-      <!--<p><label for="referfriend">Refer a Friend</label></p>-->
-      <!--<div class="row refer-friend">-->
-        <!--<input type="text" />-->
-        <!--<button type="submit">-->
-          <!--<i class="material-icons pull-right">trending_flat</i> Share-->
-       <!--</button></div>-->
-
       <div class="col-sm-12" style="background-color:#eeeeee">
         <div class="checkbox">
           <label style="font-size: 1.5em">
             <input type="checkbox" value="" (click) = toggleButton()>
             <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-            To continue your enrollment in My Rewards and Referrals, please read and agree to our Terms and Conditions.
+            <p  style="font-size: 0.9em">To continue your enrollment in My Rewards and Referrals, please read and agree to our Terms and Conditions.</p>
           </label>
         </div>
       </div>
@@ -34,3 +27,25 @@
     </div>
   </div>
 </section>
+
+<section *ngIf="enrolled" class="rewards-and-referrals">
+  <div class="row">
+    <div class="col-md-12">
+      <h3>
+        <b>My Rewards & Referrals</b>
+      </h3>
+      <div class="text-center">
+        <div class="btn-group">
+          <button type="button" [routerLinkActive]="['active']" class="btn btn-primary active" routerLink="referral-options">Refer a Friend</button>
+          <button type="button" [routerLinkActive]="['active']"  class="btn btn-primary" routerLink="my-rewards">My Rewards</button>
+        </div>
+      </div>
+      <div>
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+

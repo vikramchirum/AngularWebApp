@@ -1,0 +1,51 @@
+<div class="row addressPanel text-center">
+  <a (click)="toggleEvent($event)" style="float:right"><i class="fa fa-times fa-2x" aria-hidden="true"></i></a>
+  <div class="col-md-6 col-md-offset-3 col-xs-offset-2">
+    <h3>Change Address</h3>
+    <form id="changeForm" novalidate [formGroup]="changeAddressForm" (ngSubmit)="submitForm(changeAddressForm.value, changeAddressForm.valid)"
+          align="center">
+
+      <div class="form-group" [ngClass]="{'has-error':!changeAddressForm.controls['streetAddress'].valid && submitAttempt}">
+        <input name="streetAddress" class="form-control" type="text" [formControl]="changeAddressForm.controls['streetAddress']" placeholder="Enter new street address">
+        <div class="has-error" *ngIf="changeAddressForm.controls['streetAddress'].hasError('required') && submitAttempt">
+          <span class="help-block">Required</span>
+        </div>
+      </div>
+
+
+      <div class="form-group" [ngClass]="{'has-error':!changeAddressForm.controls['city'].valid && submitAttempt}">
+        <input name="city" class="form-control" type="text" [formControl]="changeAddressForm.controls['city']" placeholder="Enter new city">
+
+        <div class="has-error" *ngIf="changeAddressForm.controls['city'].hasError('required') && submitAttempt">
+          <span class="help-block">Required</span>
+        </div>
+      </div>
+
+      <div class="form-group" [ngClass]="{'has-error':!changeAddressForm.controls['state'].valid && submitAttempt}">
+        <input name="state" class="form-control" type="text" [formControl]="changeAddressForm.controls['state']" placeholder="Enter new state">
+
+        <div class="has-error" *ngIf="changeAddressForm.controls['state'].hasError('required') && submitAttempt">
+          <span class="help-block">Required</span>
+        </div>
+      </div>
+
+      <div class="form-group" [ngClass]="{'has-error':!changeAddressForm.controls['zip'].valid && submitAttempt}">
+        <input name="zip" class="form-control" type="text" [formControl]="changeAddressForm.controls['zip']" placeholder="Enter new zip">
+
+        <div class="has-error" *ngIf="changeAddressForm.controls['zip'].hasError('required') && submitAttempt">
+          <span class="help-block">Required</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-6 text-left">
+          <a>Cancel</a>
+        </div>
+        <div class="col-xs-6 text-right">
+          <button class="btn btn-default" [disabled]="">Save</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

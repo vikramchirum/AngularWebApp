@@ -11,7 +11,6 @@ import { UserService } from './shared/user.service';
 import { AuthenticatedModule } from './authenticated/authenticated.module';
 import { RegisterComponent } from './register/register.component';
 import { EqualValidator } from "./register/equal-validator.directive";
-import { ReferralOptionsComponent } from './my-account/refer-friend/referral-options/referral-options.component';
 
 
 @NgModule({
@@ -19,8 +18,7 @@ import { ReferralOptionsComponent } from './my-account/refer-friend/referral-opt
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    EqualValidator,
-    ReferralOptionsComponent
+    EqualValidator
   ],
   imports: [
     BrowserAnimationsModule,

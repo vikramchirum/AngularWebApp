@@ -7,7 +7,7 @@
           <div class="form-group">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-              <input [(ngModel)]="user.Email_Address" name="Email_Address" type="text" class="form-control" placeholder="Email Address"
+              <input (ngModel)="user.Email_Address" name="Email_Address" type="text" class="form-control" placeholder="Email Address"
                      required  #email="ngModel">
             </div>
             <small [hidden]="email.valid || (email.pristine && !f.submitted)" class="text-danger">Email is required and format should be <i>john@doe.com</i>.</small>
