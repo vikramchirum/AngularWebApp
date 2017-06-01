@@ -7,8 +7,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PaymentsComponent implements OnInit {
 
+  accounts;
+  account_active;
+
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    // Get all the accounts:
+    this.accounts = [];
+    if (Math.round(Math.random()) === 1) { this.accounts.push() }
+    // Get the active account:
+    this.account_active = 'account_id';
+  }
 
 }
