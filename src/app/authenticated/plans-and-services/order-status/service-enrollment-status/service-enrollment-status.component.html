@@ -33,7 +33,14 @@
       <p>Confirmation No: 384652389583670</p>
     </div>
     <div class="col-md-6 col-xs-6">
-      <p class="pull-right"><a>View transaction</a></p>
+      <p class="pull-right">
+        <a (click)="toggleViewTransaction($event)">{{ isTransactionDisplay ? 'Close' : 'View'}} Transaction Details</a>
+      </p>
     </div>
   </div>
+
+  <div *ngIf="isTransactionDisplay">
+    <mygexa-transfer-service-info></mygexa-transfer-service-info>
+  </div>
+
 </div>

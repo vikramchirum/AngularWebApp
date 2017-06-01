@@ -1,0 +1,46 @@
+.circle {
+	content:"\00a0";
+	position: relative;
+	border: solid 15px #000;
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	height: 0;
+	width: 0;
+	display: block;
+	margin-top: 50px;
+	&:before {
+		position: absolute;
+		border: 1px solid #999;
+		width: 0;
+		height: 50px;
+		display: block;
+		content: '';
+		left: 50%;
+		z-index: 1;
+		top: -65px;
+		margin-left: -1px;
+	}
+	.checkmark {
+		height: 15px;
+		width: 10px;
+		border: solid #FFFFFF;
+		border-width: 0px 2px 2px 0px;
+		-webkit-transform: rotate(45deg);
+		-moz-transform: rotate(45deg);
+		-o-transform: rotate(45deg);
+		display: block;
+		margin-top: -10px;
+		margin-left: -5px;
+	}
+}
+.status-details {
+	margin-left:10px;
+	p{
+		margin-left:20px;
+		margin-top:-15px;
+	}
+}
+.circle:first-child:before {
+	//display: none;
+}

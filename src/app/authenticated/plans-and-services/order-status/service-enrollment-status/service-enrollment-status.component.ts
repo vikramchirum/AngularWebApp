@@ -6,10 +6,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./service-enrollment-status.component.scss']
 })
 export class ServiceEnrollmentStatusComponent implements OnInit {
-
+  isTransactionDisplay : boolean = false;
   constructor() { }
 
   ngOnInit() {
   }
 
+  toggleViewTransaction($event) {
+    $event.preventDefault();
+    this.isTransactionDisplay = !this.isTransactionDisplay;
+  }
 }

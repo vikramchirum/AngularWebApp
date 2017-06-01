@@ -16,6 +16,7 @@ import { ChangeYourPlanCardComponent } from './my-service-plans/change-your-plan
 import { MovingServiceComponent } from './moving-service/moving-service.component';
 import { ModalModule } from 'ngx-bootstrap';
 import { ServicePlanUpgradeModalComponent } from './my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
+import { TransferServiceInfoComponent } from './order-status/service-enrollment-status/transfer-service-info/transfer-service-info.component';
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import { ServicePlanUpgradeModalComponent } from './my-service-plans/change-your
       ChangeYourPlanComponent,
       ChangeYourPlanCardComponent,
       MovingServiceComponent,
-      ServicePlanUpgradeModalComponent
+      ServicePlanUpgradeModalComponent,
+      TransferServiceInfoComponent
       ]
 })
 export class PlansAndServicesModule { }
