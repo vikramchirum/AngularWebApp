@@ -55,3 +55,23 @@
     }  
 
 }
+.plan-info {
+    margin-left:30px;
+    .plan-header{
+        font-size:24px;
+    }
+    .plan-info-container {
+    border: 2px solid black;
+    text-align: center;
+    border-radius: 20px;
+    padding: 20px;
+    background:#000000;
+    color:#fff;
+    .unit-cost{
+        font-size:2em;
+    }    
+    }    
+}
+.plan-info-enquire{
+        margin-top:3%;
+    }
