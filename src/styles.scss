@@ -16,6 +16,8 @@
  * Breakpoints for my-gexa below:
  */
 
+.test-stuff{color: #31708f;}
+
 /* Portrait phones and smaller */
 @mixin phones {
   @media (max-width: #{$screen-xs-min}) {
