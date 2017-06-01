@@ -2,6 +2,15 @@
 
 @import 'styles/bootstrap/stylesheets/bootstrap/_variables';
 
+.btn-wireframe {
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.3333333;
+  border: 2px solid black;
+  border-bottom-width: 4px;
+  border-right-width: 4px;
+  border-radius: 6px;
+}
 
 //custom breakpoints  for my-gexa
 
