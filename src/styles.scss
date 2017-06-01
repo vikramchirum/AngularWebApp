@@ -23,34 +23,32 @@
 
 /* Landscape phones and portrait tablets */
 @mixin phone-landscape {
-@media (max-width: #{$screen-xs-max}) {
-    @content;
-}
+  @media (max-width: #{$screen-xs-max}) {
+      @content;
+  }
 }
 
 /* Portrait tablets and small desktops */
 @mixin tablets-only {
-@media (min-width: #{$screen-tablet}) and (max-width: #{$screen-sm-max}) {
- @content;
+  @media (min-width: #{$screen-tablet}) and (max-width: #{$screen-sm-max}) {
+    @content;
   }
 }
 
 
 /* Landscape tablets and medium desktops */
 @mixin desktops-only{
-@media (min-width: #{$screen-desktop}) and (max-width: #{$screen-md-max}) {
-     @content;
-}
+  @media (min-width: #{$screen-desktop}) and (max-width: #{$screen-md-max}) {
+    @content;
+  }
 }
 
 /* Large desktops and laptops */
 @mixin large-screen {
-@media (min-width: #{$screen-lg-min}) {
- @content;
+  @media (min-width: #{$screen-lg-min}) {
+   @content;
+  }
 }
-}
-
-
 
 // /* Large desktops and laptops */
 // @media (min-width: 1200px) {
