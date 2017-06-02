@@ -11,7 +11,7 @@ const routes: Route[] = [
     path: '', component: PlansAndServicesComponent,
     children: [
       { path: 'my-services-plans', component: MyServicePlansComponent },
-      { path: 'add-services', component: AddServicesComponent },
+      { path: 'add-service-location', component: AddServicesComponent },
       { path: 'order-status', component: OrderStatusComponent },
       { path: 'moving-service', component: MovingServiceComponent}
     ]

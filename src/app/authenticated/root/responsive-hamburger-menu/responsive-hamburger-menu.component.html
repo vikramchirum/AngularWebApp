@@ -15,14 +15,8 @@
             <h5><a (click)='routerOnClick()' [routerLink]="['/account/message-center']">Message Center</a></h5>
           </li>         
           <li>
-            <h5><a (click)='routerOnClick()' [routerLink]="['/account/refer-a-friend']">Refer a Friend</a></h5>
-          </li>
-          <li>
-            <h5><a (click)='routerOnClick()' [routerLink]="['/account/order-status']">Order Status</a></h5>
-          </li>
-          <li>
-            <h5><a (click)='routerOnClick()' [routerLink]="['/account/transfer-service']">Transfer Service</a></h5>
-          </li>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/account/refer-a-friend']">Refer a Friend</a></h5></li>
+          
         </ul>
       </div>
     </div>
@@ -38,16 +32,16 @@
       <div class="panel-body">
         <ul>
           <li>
-            <h5><a>My Service Plans</a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/plans-and-services/my-services-plans']">My Service Plans</a></h5>
           </li>
           <li>
-            <h5><a>Add Service</a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/plans-and-services/add-service-location']">Add Service</a></h5>
           </li>
           <li>
-            <h5><a>Moving </a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/plans-and-services/moving-service']">Moving </a></h5>
           </li>
           <li>
-            <h5><a>Order Status</a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/plans-and-services/order-status']">Order Status</a></h5>
           </li>
         </ul>
       </div>
