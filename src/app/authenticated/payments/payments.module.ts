@@ -5,6 +5,7 @@ import { payment_routes } from './payments-routing.module';
 import { ViewMyBillComponent } from './view-my-bill/view-my-bill.component';
 import { PreferenceComponent } from './view-my-bill/preference/preference.component';
 import { BillService } from 'services/Bill';
+import { BillingAccountService } from 'services/BillingAccount';
 import { NumberToMoneyPipe } from 'pipes/NumberToMoney.pipe';
 import { PaymentsComponent } from './payments.component';
 import { PaymentAccountsComponent } from './payment-accounts/payment-accounts.component';
@@ -26,7 +27,8 @@ import { MakePaymentComponent } from './make-payment/make-payment.component';
     NumberToMoneyPipe
   ],
   providers: [
-    BillService
+    BillService,
+    BillingAccountService
   ]
 })
 export class PaymentsModule { }

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { BillingAccount, BillingAccountService } from 'services/BillingAccount';
+
 @Component({
   selector: 'mygexa-payments',
   templateUrl: './payments.component.html',
@@ -7,17 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PaymentsComponent implements OnInit {
 
-  accounts;
-  account_active;
+  BillingAccounts: BillingAccount[];
+  activeBillingAccount: string;
 
-  constructor() { }
+  constructor(
+    private BillingAccountService: BillingAccountService
+  ) { }
 
   ngOnInit() {
-    // Get all the accounts:
-    this.accounts = [];
-    if (Math.round(Math.random()) === 1) { this.accounts.push() }
-    // Get the active account:
-    this.account_active = 'account_id';
+    this.BillingAccountService.getBillingAccounts()
+      .then(data => this.BillingAccounts = data)
+      .then(() => this.activeBillingAccount = this.BillingAccounts[0].Id);
   }
 
 }

@@ -1,0 +1,136 @@
+[
+  {
+    "Entity_id": "445091",
+    "Id": "1141758",
+    "Past_Due": 0,
+    "Current_Due": 0,
+    "UAN": "1008901015118052300100",
+    "TDU_Name": "CenterPoint Energy",
+    "TDU_DUNS_Number": "957877905",
+    "Service_Address": {
+      "Line1": "1307 PINE CHASE DR",
+      "Line2": null,
+      "City": "HOUSTON",
+      "State": "TX",
+      "Zip": "77055",
+      "Zip_4": "6721"
+    },
+    "Mailing_Address": {
+      "Line1": "1307 PINE CHASE DR",
+      "Line2": null,
+      "City": "HOUSTON",
+      "State": "TX",
+      "Zip": "77055",
+      "Zip_4": null
+    },
+    "Paperless_Billing": false,
+    "Budget_Billing": false,
+    "Service_Stop_Request_date": null,
+    "Status_Id": null,
+    "Status": null,
+    "Terminate_Switch": false,
+    "Switch_Hold": false,
+    "Contract_Start_Date": "0001-01-01T00:00:00",
+    "Contract_End_Date": "0001-01-01T00:00:00",
+    "Last_payment_amount": 0,
+    "Last_payment_date": "0001-01-01T00:00:00",
+    "Plan_History": [
+      {
+        "StartDate": "2009-08-20T00:00:00",
+        "StopDate": "2011-08-20T00:00:00",
+        "CSP_Status": "Active",
+        "Offer": {
+          "Rate_Code": "RRST24TB1016",
+          "Client_Key": "10720|1560|1002|18771",
+          "Promotion_Name": " test",
+          "Promotion_Code": "TEST458979",
+          "Product_Name": "Gexa Stable",
+          "Product_Description": "Get financial peace-of-mind with a Gexa Energy fixed rate plan. You can secure protection from escalating electricity generation costs for the life of your term.* The Energy Charge by Gexa Energy is fixed and will not change during the term of your plan. This means you can have less worry about your electricity bill.",
+          "RateAt500kwh": 0.14437,
+          "RateAt1000kwh": 0.119,
+          "RateAt2000kwh": 0.116265,
+          "Term": 24,
+          "TDU_Name": "CPE",
+          "TDU_DUNS_Number": "957877905",
+          "Meter_Charge": 5.47,
+          "Delivery_Charge": 0.040512,
+          "Early_Termination_Fee": 295,
+          "Base_Charge": 9.95,
+          "Energy_Charges": [],
+          "Usage_Credits": [],
+          "Usage_Charges": [],
+          "Start_Date": "2016-10-24T18:14:13",
+          "End_Date": "2013-10-13T15:11:05"
+        },
+        "OfferingName": "RRST24TB1016"
+      }
+    ]
+  },
+  {
+    "Entity_id": "445091",
+    "Id": "1141770",
+    "Past_Due": 0,
+    "Current_Due": 0,
+    "UAN": "1008901023815337440104",
+    "TDU_Name": "CenterPoint Energy",
+    "TDU_DUNS_Number": "957877905",
+    "Service_Address": {
+      "Line1": "1307 PINE CHASE DR A",
+      "Line2": null,
+      "City": "HOUSTON",
+      "State": "TX",
+      "Zip": "77055",
+      "Zip_4": "6721"
+    },
+    "Mailing_Address": {
+      "Line1": "1307 PINE CHASE DR",
+      "Line2": null,
+      "City": "HOUSTON",
+      "State": "TX",
+      "Zip": "77055",
+      "Zip_4": null
+    },
+    "Paperless_Billing": false,
+    "Budget_Billing": false,
+    "Service_Stop_Request_date": null,
+    "Status_Id": null,
+    "Status": null,
+    "Terminate_Switch": false,
+    "Switch_Hold": false,
+    "Contract_Start_Date": "0001-01-01T00:00:00",
+    "Contract_End_Date": "0001-01-01T00:00:00",
+    "Last_payment_amount": 0,
+    "Last_payment_date": "0001-01-01T00:00:00",
+    "Plan_History": [
+      {
+        "StartDate": "2009-08-20T00:00:00",
+        "StopDate": "2011-08-20T00:00:00",
+        "CSP_Status": "Active",
+        "Offer": {
+          "Rate_Code": "RRST24TB1016",
+          "Client_Key": "10720|1560|1002|18771",
+          "Promotion_Name": " test",
+          "Promotion_Code": "TEST458979",
+          "Product_Name": "Gexa Stable",
+          "Product_Description": "Get financial peace-of-mind with a Gexa Energy fixed rate plan. You can secure protection from escalating electricity generation costs for the life of your term.* The Energy Charge by Gexa Energy is fixed and will not change during the term of your plan. This means you can have less worry about your electricity bill.",
+          "RateAt500kwh": 0.14437,
+          "RateAt1000kwh": 0.119,
+          "RateAt2000kwh": 0.116265,
+          "Term": 24,
+          "TDU_Name": "CPE",
+          "TDU_DUNS_Number": "957877905",
+          "Meter_Charge": 5.47,
+          "Delivery_Charge": 0.040512,
+          "Early_Termination_Fee": 295,
+          "Base_Charge": 9.95,
+          "Energy_Charges": [],
+          "Usage_Credits": [],
+          "Usage_Charges": [],
+          "Start_Date": "2016-10-24T18:14:13",
+          "End_Date": "2013-10-13T15:11:05"
+        },
+        "OfferingName": "RRST24TB1016"
+      }
+    ]
+  }
+]

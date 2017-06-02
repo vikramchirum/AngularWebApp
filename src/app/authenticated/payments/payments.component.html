@@ -12,11 +12,13 @@
     </div>
     <div class="col-sm-9 payments">
 
-      <div class="active-account">
-        <label>Your Active Account:</label>
-        <select class="form-control input-lg">
-          <option value="">11111 Streetname Lane, Houston, TX 77777</option>
-        </select>
+      <div class="active-account row">
+        <div class="col-md-6">
+          <label>Your Service Address:</label>
+          <select class="form-control">
+            <option *ngFor="let BillingAccount of BillingAccounts" [value]="BillingAccount.Id">{{ BillingAccount.serviceAddressString() }}</option>
+          </select>
+        </div>
       </div>
 
       <router-outlet></router-outlet>
