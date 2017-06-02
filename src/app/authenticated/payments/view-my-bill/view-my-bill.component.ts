@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Bill, BillService } from '../../../shared/Bill';
+
+import { Bill, BillService } from 'services/Bill';
 
 @Component({
   selector: 'mygexa-view-my-bill',
