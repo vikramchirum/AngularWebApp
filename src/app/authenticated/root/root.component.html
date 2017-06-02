@@ -29,19 +29,19 @@
   </div>
 </nav>
 
-<div class="container-fluid" *ngIf="accordianVisible">
- <!-- <div class="container"> -->
+<div class="container-fluid" *ngIf="accordionVisible">
+  <!-- <div class="container"> -->
   <div class="overlay-menu">
-        <div class="row accordion-panel">
-          <div class="xs-4">
-              <a  id="accordianToggle" class="closebtn pull-right nav-close"  (click)="toggleAccordian($event)">&times;</a>
-          </div>
-        </div>
-        <div class="row" style="height:100%">
-        <mygexa-responsive-hamburger-menu (notify)='onNotify($event)'></mygexa-responsive-hamburger-menu>
-        </div>
- <!-- </div> -->
+    <div class="row accordion-panel">
+      <div class="xs-4">
+        <a id="accordionToggle" class="closebtn pull-right nav-close" (click)="toggleAccordion($event)">&times;</a>
+      </div>
+    </div>
+    <div class="row" style="height:100%">
+      <mygexa-responsive-hamburger-menu (notify)='onNotify($event)'></mygexa-responsive-hamburger-menu>
+    </div>
   </div>
+  <!-- </div> -->
 </div>
 
 <div class="container-fluid">

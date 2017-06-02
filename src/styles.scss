@@ -2,8 +2,19 @@
 
 @import 'styles/bootstrap/stylesheets/bootstrap/_variables';
 
+.btn-wireframe {
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.3333333;
+  border: 2px solid black;
+  border-bottom-width: 4px;
+  border-right-width: 4px;
+  border-radius: 6px;
+}
 
-//custom breakpoints  for my-gexa
+/**
+ * Breakpoints for my-gexa below:
+ */
 
 /* Portrait phones and smaller */
 @mixin phones {
@@ -14,34 +25,32 @@
 
 /* Landscape phones and portrait tablets */
 @mixin phone-landscape {
-@media (max-width: #{$screen-xs-max}) {
-    @content;
-}
+  @media (max-width: #{$screen-xs-max}) {
+      @content;
+  }
 }
 
 /* Portrait tablets and small desktops */
 @mixin tablets-only {
-@media (min-width: #{$screen-tablet}) and (max-width: #{$screen-sm-max}) {
- @content;
+  @media (min-width: #{$screen-tablet}) and (max-width: #{$screen-sm-max}) {
+    @content;
   }
 }
 
 
 /* Landscape tablets and medium desktops */
 @mixin desktops-only{
-@media (min-width: #{$screen-desktop}) and (max-width: #{$screen-md-max}) {
-     @content;
-}
+  @media (min-width: #{$screen-desktop}) and (max-width: #{$screen-md-max}) {
+    @content;
+  }
 }
 
 /* Large desktops and laptops */
 @mixin large-screen {
-@media (min-width: #{$screen-lg-min}) {
- @content;
+  @media (min-width: #{$screen-lg-min}) {
+   @content;
+  }
 }
-}
-
-
 
 // /* Large desktops and laptops */
 // @media (min-width: 1200px) {
@@ -67,15 +76,3 @@
 // @media (max-width: 480px) {
 
 // }
-
-
-.btn-wireframe,
-button {
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.3333333;
-  border: 2px solid black;
-  border-bottom-width: 4px;
-  border-right-width: 4px;
-  border-radius: 6px;
-}

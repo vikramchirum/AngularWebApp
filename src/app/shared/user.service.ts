@@ -76,25 +76,6 @@ export class UserService implements CanActivate {
         catch(this.handleError);
 
   }
-  // login(user_name: string, password: string): Observable<IToken> {
-  //
-  //   let headers = new Headers();
-  //   headers.append('Content-Type', 'application/x-www-form-urlencoded');
-  //
-  //   const urlSearchParams = new URLSearchParams();
-  //   urlSearchParams.append("username", user_name);
-  //   urlSearchParams.append("password", password);
-  //   urlSearchParams.append("grant_type", "password");
-  //
-  //    let body = urlSearchParams.toString();
-  //   console.log("Hi");
-  //   return this._http.post(this.actionUrl, body, { headers: headers })
-  //     .map((response: Response) => <IToken> response.json()).
-  //   do(data => localStorage.setItem('gexa_auth_token', data.access_token)).
-  //   catch(this.handleError);
-  //
-  //   //ocalStorage.setItem('gexa_auth_token', IToken.access_token);
-  // }
 
   signup(user: IUser) {
     this._http.post(this.registerUrl, user)

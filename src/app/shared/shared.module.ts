@@ -5,6 +5,7 @@ import { ChangeUserNameComponent } from './components/change-user-name/change-us
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { ChangeEmailAddressComponent } from './components/change-email-address/change-email-address.component';
 import { StatusBarComponent } from './components/status-bar/status-bar.component';
+import { ChangeAddressComponent } from './components/change-address/change-address.component';
 
 @NgModule({
     imports: [
@@ -16,14 +17,15 @@ import { StatusBarComponent } from './components/status-bar/status-bar.component
         ChangeUserNameComponent,
         ChangePasswordComponent,
         ChangeEmailAddressComponent,
-        StatusBarComponent
+        StatusBarComponent,
+        ChangeAddressComponent
     ],
     exports :[
         ChangeUserNameComponent,
         ChangePasswordComponent,
         ChangeEmailAddressComponent,
-        StatusBarComponent
+        StatusBarComponent,
+        ChangeAddressComponent
     ]
-  
 })
 export class SharedModule { }

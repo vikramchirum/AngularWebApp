@@ -1,0 +1,82 @@
+<section class="account-profile">
+
+  <div class="row" style="padding:45px 0px 0px 0px;">
+    <div class="col-md-3 col-xs-6">
+      <h5>Your service Referral ID#</h5>
+      <h4>695074</h4>
+    </div>
+    <div class="col-md-3 col-xs-6">
+      <h5>Address to which your bill</h5>
+      <h4>{{streetAddress}}</h4>
+      <h4>{{city}}</h4>
+      <h4>{{state}}</h4>
+      <h4>{{zip}}</h4>
+     <a href="#" *ngIf="!addressEditing"(click)="toggleAddressEdit($event)">Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+    </div>
+  </div>
+
+  <div *ngIf="addressEditing" class="text-center addressPanel">
+    <!--<div>visible: {{addressEditing}}</div>-->
+    <mygexa-change-address [addressEditing]="addressEditing" (toggleEventClicked) = 'toggleAddressEdit()'></mygexa-change-address>
+  </div>
+</section>
+
+<hr style="color: #cccccc; width:70%">
+
+<section class="details">
+
+  <div class="row">
+  <div class="col-md-3 col-xs-6">
+    <h5>Total Current referrals</h5>
+  </div>
+  <div class="col-md-3 col-xs-6" >
+    <label>0</label>
+  </div>
+</div>
+
+  <div class="row">
+    <div class="col-md-3 col-xs-6">
+      <h5><b>Names of all current referrals</b></h5>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 col-xs-6">
+      <h5>Total Current referrals</h5>
+    </div>
+    <div class="col-md-3 col-xs-6" >
+      <label>0</label>
+    </div>
+
+  </div>  <div class="row">
+  <div class="col-md-3 col-xs-6">
+    <h5>Total Share & Save bill credits this month</h5>
+  </div>
+  <div class="col-md-3 col-xs-6" >
+    <label>0</label>
+  </div>
+
+</div>  <div class="row">
+  <div class="col-md-3 col-xs-6">
+    <h5>Total referrals till date</h5>
+  </div>
+  <div class="col-md-3 col-xs-6" >
+    <label>0</label>
+  </div>
+
+</div>  <div class="row">
+  <div class="col-md-3 col-xs-6">
+    <h4><b>TOTAL SAVINGS TO DATE</b></h4>
+  </div>
+  <div class="col-md-3 col-xs-6" >
+    <label>0</label>
+  </div>
+</div>
+<br>
+  <div style="padding: 0px 50px 0px 50px">
+  <div class="row note text-center">
+      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
+        eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+  </div>
+  </div>
+</section>

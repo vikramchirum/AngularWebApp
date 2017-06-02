@@ -1,0 +1,59 @@
+[
+  {
+    "id": "unique_id_1",
+    "date_due": "2017-04-25T15:56:45.717Z",
+    "invoice_number": "456901234",
+    "charges": [
+      {
+        "title": "Gexa Charges",
+        "items": [
+          { "amount": 10220, "name": "Energy Charge", "usage": "1526kwh" },
+          { "amount": 9645, "name": "Base Charge" }
+        ]
+      },
+      {
+        "title": "TDU Charges",
+        "items": [
+          { "amount": 8, "name": "Afit Credit" },
+          { "amount": 162, "name": "Customer Charge" },
+          { "amount": 681, "name": "Customer Charge" },
+          { "amount": 33, "name": "Distribution Cost Recovery Factor" },
+          { "amount": 385, "name": "Energy Efficiency" },
+          { "amount": 36, "name": "Meter Charge" },
+          { "amount": 2, "name": "Transition Charge 4" },
+          { "amount": 202, "name": "TCRF" },
+          { "amount": 118, "name": "Transition Charge 2" },
+          { "amount": 16, "name": "Transition Charge 3" },
+          { "amount": 45, "name": "Transition Charge 5" },
+          { "amount": 349, "name": "Transition Charge" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique_id_1",
+    "date_due": "2017-03-25T15:56:45.717Z",
+    "invoice_number": "345690123",
+    "charges": [
+      {
+        "title": "Gexa Charges",
+        "items": [
+          { "amount": 0, "name": "Energy Charge", "usage": "0kwh" },
+          { "amount": 0, "name": "Base Charge" }
+        ]
+      },
+      {
+        "title": "TDU Charges",
+        "items": [
+          { "amount": 1, "name": "Charge 1" },
+          { "amount": 10, "name": "Charge 2" },
+          { "amount": 11, "name": "Charge 3" },
+          { "amount": 100, "name": "Charge 4" },
+          { "amount": 101, "name": "Charge 5" },
+          { "amount": 110, "name": "Charge 6" },
+          { "amount": 111, "name": "Charge 7" }
+        ]
+      }
+    ]
+  }
+]

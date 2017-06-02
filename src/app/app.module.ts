@@ -8,10 +8,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { UserService } from './shared/user.service';
+import { BillService } from './shared/Bill';
 import { AuthenticatedModule } from './authenticated/authenticated.module';
 import { RegisterComponent } from './register/register.component';
-import { EqualValidator } from "./register/equal-validator.directive";
-
+import { EqualValidator } from './register/equal-validator.directive';
 
 @NgModule({
   declarations: [
@@ -24,12 +24,14 @@ import { EqualValidator } from "./register/equal-validator.directive";
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
-    //ReactiveFormsModule,
     HttpModule,
     AuthenticatedModule,
     AppRoutingModule
   ],
-  providers: [UserService],
+  providers: [
+    UserService,
+    BillService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
