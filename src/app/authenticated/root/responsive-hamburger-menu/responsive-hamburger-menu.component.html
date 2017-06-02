@@ -1,6 +1,6 @@
 <div class="panel-group" id="accordion">
   <div class="panel dx-panel-default">
-    <div class="dx-panel-heading">       
+    <div class="dx-panel-heading">
       <h4 class="dx-panel-title">
         <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse1">My Account</a>
       </h4>
@@ -9,57 +9,71 @@
       <div class="panel-body">
         <ul>
           <li>
-            <h5><a (click)='routerOnClick()' [routerLink]="['/account/profile']">Profile</a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/account/profile']">Profile &amp; Preferences</a></h5>
           </li>
           <li>
-            <h5><a (click)='routerOnClick()' [routerLink]="['/account/plan-information']">Plan Information</a></h5>
-          </li>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/account/message-center']">Message Center</a></h5>
+          </li>         
           <li>
-            <h5><a (click)='routerOnClick()' [routerLink]="['/account/refer-a-friend']">Refer a Friend</a></h5>
-          </li>
-          <li>
-            <h5><a (click)='routerOnClick()' [routerLink]="['/account/order-status']">Order Status</a></h5>
-          </li>
-          <li>
-            <h5><a (click)='routerOnClick()' [routerLink]="['/account/transfer-service']">Transfer Service</a></h5>
-          </li>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/account/refer-a-friend']">Refer a Friend</a></h5></li>
+          
         </ul>
       </div>
     </div>
   </div>
+
   <div class="panel dx-panel-default">
     <div class="dx-panel-heading">
       <h4 class="dx-panel-title">
-        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse2">Payments Center</a>
+        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse2">Plans &amp; Services</a>
       </h4>
     </div>
     <div id="collapse2" class="panel-collapse collapse">
       <div class="panel-body">
         <ul>
           <li>
-            <h5><a>Payment History</a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/plans-and-services/my-services-plans']">My Service Plans</a></h5>
           </li>
           <li>
-            <h5><a>view My bill</a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/plans-and-services/add-service-location']">Add Service Locations</a></h5>
           </li>
           <li>
-            <h5><a>Services </a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/plans-and-services/moving-service']">Moving </a></h5>
           </li>
           <li>
-            <h5><a>setup Auto Bill Payment</a></h5>
-          </li>
-          <li>
-            <h5><a>Budget Billing</a></h5>
-          </li>
-          <li>
-            <h5><a>Payment Extension</a></h5>
-          </li>
-           <li>
-            <h5><a>Make a Payment</a></h5>
+            <h5><a (click)='routerOnClick()' [routerLink]="['/plans-and-services/order-status']">Order Status</a></h5>
           </li>
         </ul>
       </div>
     </div>
   </div>
 
+  <div class="panel dx-panel-default">
+    <div class="dx-panel-heading">
+      <h4 class="dx-panel-title">
+        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse3">Payments Center</a>
+      </h4>
+    </div>
+    <div id="collapse3" class="panel-collapse collapse">
+      <div class="panel-body">
+        <ul>
+          <li>
+            <h5><a (click)="routerOnClick()" routerLink="/payments/view-my-bill">View My Bill</a></h5>
+          </li>
+          <li>
+            <h5><a (click)="routerOnClick()" routerLink="/payments/make-payment">Make a Payment</a></h5>
+          </li>
+          <li>
+            <h5><a (click)="routerOnClick()" routerLink="/payments/payment-accounts">Payment Accounts</a></h5>
+          </li>
+          <li>
+            <h5><a (click)="routerOnClick()" routerLink="/payments/payment-options">Payment Options</a></h5>
+          </li>
+          <li>
+            <h5><a (click)="routerOnClick()" routerLink="/payments/payment-history/bills">Payment History</a></h5>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>

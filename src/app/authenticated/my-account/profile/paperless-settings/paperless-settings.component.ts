@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'mygexa-paperless-settings',
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PaperlessSettingsComponent implements OnInit {
 
+paperlessEditing: boolean = false;
+
   constructor() { }
 
   ngOnInit() {
   }
+
+  togglePaperlessEdit($event) {
+    $event.preventDefault();
+    this.paperlessEditing = !this.paperlessEditing;
+  }
+
 
 }

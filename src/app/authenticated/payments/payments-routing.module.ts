@@ -1,29 +1,25 @@
 
-import { Route, RouterModule } from "@angular/router";
-import { PaymentHistoryComponent } from "./payment-history/payment-history.component";
+import { Route, RouterModule } from '@angular/router';
 import { PaymentsComponent } from './payments.component';
 import { ViewMyBillComponent } from './view-my-bill/view-my-bill.component';
-import { AutoBillPaymentComponent } from './auto-bill-payment/auto-bill-payment.component';
-import { BudgetBillingComponent } from './budget-billing/budget-billing.component';
-import { PaymentExtensionComponent } from './payment-extension/payment-extension.component';
 import { MakePaymentComponent } from './make-payment/make-payment.component';
-import { PaymentsHistoryModule } from "./payment-history/payments-history.module";
+import { PaymentAccountsComponent } from './payment-accounts/payment-accounts.component';
+import { PaymentOptionsModule } from './payment-options/payment-options.module';
+import { PaymentsHistoryModule } from './payment-history/payments-history.module';
 
+export function loadPaymentOptionsModule() { return PaymentOptionsModule; }
 
-export function loadPaymentHistoryModule() {
-  return PaymentsHistoryModule;
-};
+export function loadPaymentHistoryModule() { return PaymentsHistoryModule; }
 
 const routes: Route[] = [
   {
     path: '', component: PaymentsComponent,
     children: [
-      { path: 'payment-history', loadChildren: loadPaymentHistoryModule },
       { path: 'view-my-bill', component: ViewMyBillComponent },
-      { path: 'auto-bill-payment', component: AutoBillPaymentComponent },
-      { path: 'budget-billing', component: BudgetBillingComponent },
-      { path: 'payment-extension', component: PaymentExtensionComponent },
-      { path: 'make-payment', component: MakePaymentComponent }
+      { path: 'make-payment', component: MakePaymentComponent },
+      { path: 'payment-accounts', component: PaymentAccountsComponent  },
+      { path: 'payment-options', loadChildren: loadPaymentOptionsModule },
+      { path: 'payment-history', loadChildren: loadPaymentHistoryModule }
     ]
   }
 ];

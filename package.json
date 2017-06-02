@@ -9,9 +9,11 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build-local": "ng build --environment dev --output-path C:\\inetpub\\wwwroot\\DEV\\test --output-hashing all",
-    "build-dev": "ng build --environment dev --output-path \\\\gesvr1090.gexa.gexaenergy.com\\e$\\inetpub\\wwwroot\\DEV\\mygexa.gexaenergy.com --output-hashing all",
-    "build-qa": "ng build --environment qa --output-path \\\\gesvr1090.gexa.gexaenergy.com\\e$\\inetpub\\wwwroot\\QA\\mygexa.gexaenergy.com --output-hashing all"
+    "build-dev": "ng build --environment dev --output-hashing all",
+    "build-qa": "ng build --environment qa --output-hashing all",
+    "deploy-local": "ng build --environment dev --output-path C:\\inetpub\\wwwroot\\DEV\\test --output-hashing all",
+    "deploy-dev": "ng build --environment dev --output-path \\\\gesvr1090.gexa.gexaenergy.com\\e$\\inetpub\\wwwroot\\DEV\\mygexa.gexaenergy.com --output-hashing all",
+    "deploy-qa": "ng build --environment qa --output-path \\\\gesvr1090.gexa.gexaenergy.com\\e$\\inetpub\\wwwroot\\QA\\mygexa.gexaenergy.com --output-hashing all"
   },
   "private": true,
   "dependencies": {
@@ -28,7 +30,10 @@
     "bootstrap-sass": "^3.3.7",
     "core-js": "^2.4.1",
     "font-awesome": "^4.7.0",
+    "grunt": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
     "jquery": "^3.2.1",
+    "load-grunt-tasks": "^3.5.2",
     "ng2-table": "^1.3.2",
     "ngx-bootstrap": "^1.6.6",
     "rxjs": "^5.1.0",
