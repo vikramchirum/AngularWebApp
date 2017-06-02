@@ -1,0 +1,15 @@
+.plan-card-container{
+    border: 2px solid black;
+    text-align: center;
+    border-radius: 20px;
+    padding: 20px;
+    .sup-text {
+        font-size: 12px;
+        top: -1.5em;
+    }
+    .sub-text {
+        font-size:12px;
+        right:0.5em;
+    }
+
+}
