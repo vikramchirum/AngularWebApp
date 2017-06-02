@@ -3,18 +3,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { my_account_routes } from "./my-account-routing.module";
 import { ProfileComponent } from './profile/profile.component';
-import { PlanInformationComponent } from './plan-information/plan-information.component';
 import { MyAccountComponent } from './my-account.component';
-import { OrderStatusComponent } from './order-status/order-status.component';
-import { TransferServiceComponent } from './transfer-service/transfer-service.component';
 import { SecurityInformationComponent } from './profile/security-information/security-information.component';
 import { PaperlessSettingsComponent } from './profile/paperless-settings/paperless-settings.component';
-import { MyCurrentPlanComponent } from './plan-information/my-current-plan/my-current-plan.component';
-import { DocumentsComponent } from './plan-information/documents/documents.component';
-import { ChangeYourPlanComponent } from './plan-information/change-your-plan/change-your-plan.component';
 import { MdCardModule, MaterialModule } from '@angular/material';
-import { ChangeYourPlanCardComponent } from './plan-information/change-your-plan/change-your-plan-card/change-your-plan-card.component';
-import { ServiceEnrollmentStatusComponent } from './order-status/service-enrollment-status/service-enrollment-status.component';
 import { PersonalInformationComponent } from './profile/personal-information/personal-information.component';
 import { SharedModule } from '../../shared/shared.module';
 import { SecurityQuestionComponent } from './profile/security-information/security-question/security-question.component';
@@ -38,8 +30,13 @@ import { ContactFormComponent } from './message-center/contact-form/contact-form
     ProfileComponent,
     // ReferFriendComponent,
     // MyRewardsComponent,
-    // ReferralOptionsComponent,
-    PlanInformationComponent,
-    MyAccountComponent, OrderStatusComponent, TransferServiceComponent, SecurityInformationComponent, PaperlessSettingsComponent, MyCurrentPlanComponent, DocumentsComponent, ChangeYourPlanComponent, ChangeYourPlanCardComponent, ServiceEnrollmentStatusComponent, PersonalInformationComponent, SecurityQuestionComponent, MessageCenterComponent, ContactFormComponent]
+    // ReferralOptionsComponent,    
+    MyAccountComponent, 
+    SecurityInformationComponent, 
+    PaperlessSettingsComponent, 
+    PersonalInformationComponent, 
+    SecurityQuestionComponent, 
+    MessageCenterComponent, 
+    ContactFormComponent]
 })
 export class MyAccountModule { }
