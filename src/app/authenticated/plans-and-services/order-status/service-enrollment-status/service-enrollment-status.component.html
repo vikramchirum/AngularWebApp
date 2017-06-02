@@ -4,10 +4,11 @@
       <p>Service type: Transfer Of Service</p>
     </div>
     <div class="col-md-6 col-xs-6">
-      <p class="pull-right">20 July 2016</p>
+      <p class="text-right">20 July 2016</p>
     </div>
   </div>
   <div class="row hidden-xs hidden-sm">
+    <div class="col-md-12">
     <ul class="">
       <!-- li tag should be in a for loop. since we dont have mock json, li is repeated so many times
   Once we get the data, use *ngFor -->
@@ -27,13 +28,14 @@
         <p>Complete</p>
       </li>
     </ul>
+    </div>
   </div>
   <div class="row service-type">
     <div class="col-md-6 col-xs-6">
       <p>Confirmation No: 384652389583670</p>
     </div>
     <div class="col-md-6 col-xs-6">
-      <p class="pull-right">
+      <p class="text-right">
         <a (click)="toggleViewTransaction($event)">{{ isTransactionDisplay ? 'Close' : 'View'}} Transaction Details</a>
       </p>
     </div>
@@ -42,5 +44,4 @@
   <div *ngIf="isTransactionDisplay">
     <mygexa-transfer-service-info></mygexa-transfer-service-info>
   </div>
-
 </div>
