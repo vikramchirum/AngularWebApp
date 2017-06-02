@@ -20,9 +20,11 @@
   </div>
 
   <!-- Enter New Service Address -->
-   <div class="row">
+  <div class="row">
     <div class="col-md-6 new-service-address">
-      <h5><u>Enter New Service Address</u></h5>
+      <h5>
+        <u>Enter New Service Address</u>
+      </h5>
       <input type="text" class="form-control" placeholder="Enter New Address">
     </div>
   </div>
@@ -31,6 +33,60 @@
   <div class="row">
     <div class="col-md-6">
       <h5>When would you like start service?</h5>
+      <div class="input-group">
+        <input type="text" id="datepicker-my" class="form-control" placeholder="Select Date" />
+        <span class="input-group-addon" id="btn" style="cursor:pointer;">
+                    <span class="glyphicon glyphicon-calendar"></span>
+        </span>
       </div>
+    </div>
+  </div>
+
+  <!-- Service Type Selection -->
+  <div class="row">
+    <div class="col-md-6  new-service-address">
+      <h5>Service Type</h5>
+      <form>
+        <label class="radio-inline">
+         <input type="radio" name="move">Move
+        </label>
+        <label class="radio-inline">
+         <input type="radio" name="switch">Switch
+       </label>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Select Plan -->
+   <h4>Select a Plan</h4>
+  <div class="row">   
+    <div class="col-md-4" *ngFor="let i of [0, 1, 2, 3, 4, 5, 6, 7, 8]">    
+      <mygexa-select-plan></mygexa-select-plan>
+    </div>
+  </div>
+
+
+  <!-- Credit Check -->
+  <h4>Credit Check</h4>
+  <mygexa-credit-check></mygexa-credit-check>
+
+  <div class="add-services-verify-info">
+  <hr class="divider-line">
+  <div class="row">
+    <div class="col-md-9">
+      <p>Please review all your information and make it is accurate before submitting </p>
+    </div>
+    <div class="col-md-3">
+      <i class="fa fa-arrow-up pull-right" aria-hidden="true" (click)="scrollTop()"></i>
+    </div> 
+  </div>
+  <br/>
+  <div class="row">
+    <div class="col-md-12 col-xs-12">
+      <a class="text-left" href="">Cancel</a>
+      <button class="btn btn-default btn-wireframe disabled pull-right">Submit</button>
+    </div>
+  </div>
   </div>
 </div>
