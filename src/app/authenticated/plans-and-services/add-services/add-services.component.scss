@@ -1,0 +1,21 @@
+.add-services {
+    .progress {
+        margin-top:2em;
+        border : 2px solid #000;
+        .progress-bar {
+            background-color:#ccc;
+        }
+    }
+
+}
+.current-service-address {
+    p {
+        font-weight:bold;
+        margin:0;
+        font-size: 1.3em;
+    }
+
+}
+.new-service-address {
+    margin:3em 0;
+}
