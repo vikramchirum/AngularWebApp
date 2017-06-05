@@ -18,10 +18,8 @@ export class CurrentChargesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Get the bills to show the current.
-    this.BillService.getBills()
-      .then((bills: Bill[]) => this.Bill = bills[0])
-      .catch((err: any) => console.log(err));
+    this.BillService.getCurrentBill()
+      .then((Bill: Bill) => this.Bill = Bill);
   }
 
   make_a_payment() {
