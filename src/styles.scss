@@ -3,6 +3,8 @@
 @import 'styles/bootstrap/stylesheets/bootstrap/_variables';
 
 .btn-wireframe {
+  background: white;
+  cursor: pointer !important;
   padding: 10px 16px;
   font-size: 18px;
   line-height: 1.3333333;
@@ -10,6 +12,15 @@
   border-bottom-width: 4px;
   border-right-width: 4px;
   border-radius: 6px;
+}
+
+hr.breaker {
+  border-top: 2px solid black;
+}
+
+section.section-container {
+  border: 2px solid black;
+  padding: 4rem 8rem;
 }
 
 /**

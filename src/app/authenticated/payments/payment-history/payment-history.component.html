@@ -1,15 +1,11 @@
-<div class="row">
-  <div class="col-md-12">
-    <h2>
-      Payment History
-    </h2>
-    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
-  </div>  
-</div>
-<div>
-  <button [routerLinkActive]="['active']" routerLink="bills">Bills</button>
-  <button [routerLinkActive]="['active']" routerLink="payments">Payments</button>
-</div>
-<div>
-   <router-outlet></router-outlet>
-</div>
+<section class="section-container">
+  <h2>Payment History</h2>
+  <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
+  <div>
+    <button [routerLinkActive]="['active']" routerLink="bills">Bills</button>
+    <button [routerLinkActive]="['active']" routerLink="payments">Payments</button>
+  </div>
+  <div>
+    <router-outlet></router-outlet>
+  </div>
+</section>
