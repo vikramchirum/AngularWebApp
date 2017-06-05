@@ -11,7 +11,18 @@
        </ul>
     </div>
     <div class="col-sm-9 payments">
+
+      <div class="active-account row">
+        <div class="col-md-6">
+          <label>Your Service Address:</label>
+          <select class="form-control" [(ngModel)]="BillingAccountSelected" (change)="changeBillingAccount()">
+            <option *ngFor="let BillingAccount of BillingAccountService.BillingAccounts" [value]="BillingAccount.Id">{{ BillingAccount.serviceAddressString() }}</option>
+          </select>
+        </div>
+      </div>
+
       <router-outlet></router-outlet>
+
     </div>
   </div>
 </div>

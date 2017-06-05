@@ -1,17 +1,17 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { UserService } from './shared/user.service';
-import { BillService } from './shared/Bill';
 import { AuthenticatedModule } from './authenticated/authenticated.module';
 import { RegisterComponent } from './register/register.component';
 import { EqualValidator } from './register/equal-validator.directive';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [
@@ -26,11 +26,11 @@ import { EqualValidator } from './register/equal-validator.directive';
     FormsModule,
     HttpModule,
     AuthenticatedModule,
-    AppRoutingModule
+    AppRoutingModule,
+    CoreModule
   ],
   providers: [
-    UserService,
-    BillService
+    UserService
   ],
   bootstrap: [AppComponent]
 })

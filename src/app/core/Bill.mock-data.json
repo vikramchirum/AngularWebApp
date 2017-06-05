@@ -1,6 +1,7 @@
 [
   {
-    "id": "unique_id_1",
+    "Id": "unique_id_1",
+    "balance_forward": 2000,
     "date_due": "2017-04-25T15:56:45.717Z",
     "invoice_number": "456901234",
     "charges": [
@@ -31,7 +32,8 @@
     ]
   },
   {
-    "id": "unique_id_1",
+    "Id": "unique_id_1",
+    "balance_forward": 0,
     "date_due": "2017-03-25T15:56:45.717Z",
     "invoice_number": "345690123",
     "charges": [
