@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 
 import * as $ from 'jquery';
+import { PaymentMethodService } from 'app/core/PaymentMethod';
 
 declare const jQuery: $;
 
@@ -15,9 +16,14 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
   $modal: $ = null;
   changing = false;
 
-  constructor() { }
+  constructor(
+    private PaymentMethodService: PaymentMethodService
+  ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.PaymentMethodService.getPaymentMethods()
+      .then(data => console.log(data))
+  }
 
   ngAfterViewInit() {
     this.$modal = jQuery(this.modal_delete.nativeElement)

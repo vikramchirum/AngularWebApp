@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { BillService } from './Bill';
 import { BillingAccountService } from './BillingAccount';
 import { CustomerAccountService } from './CustomerAccount';
+import { PaymentMethodService } from './PaymentMethod';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { CustomerAccountService } from './CustomerAccount';
   providers: [
     BillService,
     BillingAccountService,
-    CustomerAccountService
+    CustomerAccountService,
+    PaymentMethodService
   ]
 })
 export class CoreModule { }
