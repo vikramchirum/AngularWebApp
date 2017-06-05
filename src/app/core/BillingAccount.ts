@@ -71,6 +71,10 @@ export class BillingAccount {
   Last_payment_date: string;
   Plan_History: [ IBillingAccountPlanHistory ];
 
+  /**
+   * Construct a new Billing_Account passing in values (opts) to use.
+   * @param opts
+   */
   constructor(opts: any) {
     for (const key in opts) {
       if (opts[key] !== undefined) {
@@ -79,6 +83,11 @@ export class BillingAccount {
     }
   }
 
+  /**
+   * Returns back a formatted string of either the 'Service_Address' or 'Mailing_Address'.
+   * @param type
+   * @returns {string | null}
+   */
   addressString(type: string): string {
 
     if (
@@ -102,54 +111,99 @@ export class BillingAccount {
 
   }
 
+  /**
+   * Returns back the formatted string of the 'Service_Address'.
+   * @returns {string}
+   */
   serviceAddressString(): string {
     return this.addressString('Service_Address');
   }
 
+  /**
+   * Returns back the formatted string of the 'Mailing_Address'.
+   * @returns {string}
+   */
   mailingAddressString(): string {
     return this.addressString('Mailing_Address');
   }
+
 }
 
 @Injectable()
 export class BillingAccountService {
 
-  public BillingAccounts: BillingAccount[];
+  public BillingAccounts: BillingAccount[] = null;
+  private CurrentBillingAccount: BillingAccount = null;
   private BillingAccountUrl = 'api/Billing_Account';
 
   constructor(
     private http: Http
-  ) {
-    this.BillingAccounts = null;
+  ) { }
+
+  /**
+   * Returns the current billing account and sets it if it is not already set.
+   * @returns {BillingAccount}
+   */
+  getCurrentBillingAccount(): Promise<BillingAccount> {
+
+    // Reset the current bill.
+    this.CurrentBillingAccount = null;
+
+    // Set the current bill, getting the bills if we haven't already.
+    return this.getBillingAccounts()
+      .then((Bills: BillingAccount[]) => this.CurrentBillingAccount = Bills[0])
+      .catch(error => this.handleError(error))
+      .then(() => this.CurrentBillingAccount);
   }
 
+  /**
+   * Returns the array of billing accounts and requests them if they have not been already requested.
+   * @returns {Promise<BillingAccount[]>}
+   */
   getBillingAccounts(): Promise<BillingAccount[]> {
+
     // If we have the Billing Accounts, return them:
     // To-do Maybe look them up again?
     if (this.BillingAccounts !== null) { return Promise.resolve(this.BillingAccounts); }
+
     // If we did not have them, look them up:
     return Promise.resolve(MockData)
       .then(data => this.processApiData(data))
-      .catch(this.handleError);
+      .catch(error => this.handleError(error));
     // return this.http.get(this.BillingAccountUrl)
     //   .toPromise()
     //   .then(response => response.json().data)
     //   .then(data => this.processApiData(data))
-    //   .catch(this.handleError);
+    //   .catch(error => this.handleError(error));
+
   }
 
-  getBillingAccount(id: string): Promise<BillingAccount> {
-    for (const index in MockData) {
-      if (!MockData[index]) { continue; }
-      if (MockData[index].id === id) { return Promise.resolve(MockData[index]); }
+  /**
+   * Returns the identified billing account and requests it if it has not already been requested.
+   * @param id
+   * @returns {Promise<BillingAccount>}
+   */
+  getBillingAccount(Id: string): Promise<BillingAccount> {
+
+    // If we have not gotten the billing accounts, get them and return the specified:
+    if (this.BillingAccounts === null) {
+      return this.getBillingAccounts()
+        .then(() => this.getBillingAccount(Id));
     }
+
+    // We have the billing accounts, so find the one with the matching Id and then return it:
+    for (const index in this.BillingAccounts) {
+      if (
+        this.BillingAccounts[index]
+        && this.BillingAccounts[index].Id === Id
+      ) {
+        return Promise.resolve(this.BillingAccounts[index]);
+      }
+    }
+
+    // Otherwise no billing account was found, return null:
     return Promise.reject(null);
-    /* For API:
-     return this.http.get(`${this.BillingAccountUrl}/${id}`)
-     .toPromise()
-     .then(response => response.json().data as BillingAccount)
-     .catch(this.handleError);
-     */
+
   }
 
   private handleError(error: any): Promise<any> {
@@ -157,13 +211,20 @@ export class BillingAccountService {
   }
 
   private processApiData(data: BillingAccount[]) {
+
+    // Reset the current billing accounts:
     this.BillingAccounts = [];
-    for (var index in data) {
+
+    // Add new billing accounts applying the provided data:
+    for (const index in data) {
       if (data[index]) {
         this.BillingAccounts.push(new BillingAccount(data[index]));
       }
     }
+
+    // Return all of what we added:
     return this.BillingAccounts;
+
   }
 
 }

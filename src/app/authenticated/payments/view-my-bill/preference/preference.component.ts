@@ -6,10 +6,10 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./preference.component.scss']
 })
 export class PreferenceComponent implements OnInit {
-  @Input() preference: String;
+  @Input() preference: string;
 
-  private active: Boolean;
-  private preference_text: String;
+  private active: boolean;
+  private preference_text: string;
 
   constructor() {
     // Make 'null' to tell the view we're loading:

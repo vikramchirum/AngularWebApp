@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { BillingAccount, BillingAccountService } from 'services/BillingAccount';
+import { BillingAccount, BillingAccountService } from 'app/core/BillingAccount';
 
 @Component({
   selector: 'mygexa-payments',
@@ -10,16 +10,19 @@ import { BillingAccount, BillingAccountService } from 'services/BillingAccount';
 export class PaymentsComponent implements OnInit {
 
   BillingAccounts: BillingAccount[];
-  activeBillingAccount: string;
+  BillingAccountSelected: string;
 
   constructor(
     private BillingAccountService: BillingAccountService
   ) { }
 
+  changeBillingAccount() {
+    alert(this.BillingAccountSelected);
+  }
+
   ngOnInit() {
-    this.BillingAccountService.getBillingAccounts()
-      .then(data => this.BillingAccounts = data)
-      .then(() => this.activeBillingAccount = this.BillingAccounts[0].Id);
+    this.BillingAccountService.getCurrentBillingAccount()
+      .then((BillingAccount: BillingAccount) => this.BillingAccountSelected = BillingAccount.Id);
   }
 
 }

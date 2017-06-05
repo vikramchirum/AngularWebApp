@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { payment_routes } from './payments-routing.module';
 import { ViewMyBillComponent } from './view-my-bill/view-my-bill.component';
 import { PreferenceComponent } from './view-my-bill/preference/preference.component';
-import { BillService } from 'services/Bill';
-import { BillingAccountService } from 'services/BillingAccount';
+import { CurrentChargesComponent } from './components/current-charges.component';
+import { ViewBillComponent } from './components/view-bill.component';
 import { NumberToMoneyPipe } from 'pipes/NumberToMoney.pipe';
 import { PaymentsComponent } from './payments.component';
 import { PaymentAccountsComponent } from './payment-accounts/payment-accounts.component';
@@ -15,6 +16,7 @@ import { MakePaymentComponent } from './make-payment/make-payment.component';
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     payment_routes,
     PaymentOptionsModule
   ],
@@ -22,13 +24,12 @@ import { MakePaymentComponent } from './make-payment/make-payment.component';
     PaymentsComponent,
     ViewMyBillComponent,
     PreferenceComponent,
+    CurrentChargesComponent,
+    ViewBillComponent,
     MakePaymentComponent,
     PaymentAccountsComponent,
     NumberToMoneyPipe
   ],
-  providers: [
-    BillService,
-    BillingAccountService
-  ]
+  providers: []
 })
 export class PaymentsModule { }
