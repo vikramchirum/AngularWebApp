@@ -4,21 +4,23 @@
       <div class="jumbotron">
         <h2>My Gexa</h2>
         <form>
-          <div class="form-group">
+          <div class="form-group" [ngClass]="{ 'has-error': error !== null }">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-user"></i></span>
               <input [(ngModel)]="user_name" name="user_name" type="text" class="form-control" placeholder="Username" required #em="ngModel">
             </div>
             <small [hidden]="em.valid || em.pristine" class="text-danger">Username is required</small>
           </div>
-          <div class="form-group">
+          <div class="form-group" [ngClass]="{ 'has-error': error !== null }">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-key"></i></span>
               <input [(ngModel)]="password" name="password" type="password" class="form-control" placeholder="Password" required #em="ngModel">
             </div>
-            <small [hidden]="em.valid || em.pristine" class="text-danger">Username is required</small>
-          </div>        
-
+            <small [hidden]="em.valid || em.pristine" class="text-danger">Password is required</small>
+          </div>
+          <div *ngIf="error != null">
+            <small class="text-danger">Either username or password is wrong</small>
+          </div>
           <div>
               <a href="">Forgot Password?</a>
               <button type="submit" class="btn btn-primary pull-right" (click)="login()">Login</button>
@@ -46,45 +48,6 @@
     </div>
     <div class="col-md-8">
       <!--placeholder for video and text -->
-
     </div>
   </div>
 </div>
-
-<!--<div class="container">
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3">
-      <div class="jumbotron">
-        <form>
-          <h2>Sign in to myGexa</h2>
-
-          <div class="form-group">
-            <label>Username</label>
-            <input [(ngModel)]="user_name" name="user_name" type="text" class="form-control" placeholder="Username" required #em="ngModel">
-            <small [hidden]="em.valid || em.pristine" class="text-danger">Username is required</small>
-          </div>
-          <div class="form-group">
-            <label>Password</label>
-            <input [(ngModel)]="password" name="password" type="password" class="form-control" placeholder="Password" required #em="ngModel">
-            <small [hidden]="em.valid || em.pristine" class="text-danger">Password is required</small>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox"/>
-              Remember Me
-            </label>
-          </div>
-          <div class="form-group">
-            <button type="submit" class="btn btn-primary" (click)="login()">Sign In</button>
-          </div>
-          <div class="form-group">
-            <button type="button" class="btn btn-default">
-              <i class="fa fa-facebook-official"></i> Sign in with facebook
-            </button>
-          </div>
-
-        </form>
-      </div>
-    </div>
-  </div>
-</div>-->
