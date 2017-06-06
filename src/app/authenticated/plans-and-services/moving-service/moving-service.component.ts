@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { MovingServiceModalDialogComponent } from './moving-service-modal-dialog/moving-service-modal-dialog.component';
 
 @Component({
   selector: 'mygexa-moving-service',
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MovingServiceComponent implements OnInit {
 
-  constructor() { }
+
 
   ngOnInit() {
+  }
+  
+  @ViewChild('movingServiceModal') movingServiceModal: MovingServiceModalDialogComponent;
+  constructor(private viewContainerRef: ViewContainerRef) {
+  }
+  openMovingServiceModal() {
+    this.movingServiceModal.show();
+
   }
 
 }

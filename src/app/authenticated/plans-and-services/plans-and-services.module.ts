@@ -20,6 +20,7 @@ import { TransferServiceInfoComponent } from './order-status/service-enrollment-
 import { SelectPlanComponent } from './add-services/select-plan/select-plan.component';
 import { CreditCheckComponent } from './add-services/credit-check/credit-check.component';
 import { DatePickerModule } from 'ng2-datepicker';
+import { MovingServiceModalDialogComponent } from './moving-service/moving-service-modal-dialog/moving-service-modal-dialog.component';
 
 @NgModule({
   imports: [
@@ -47,7 +48,8 @@ import { DatePickerModule } from 'ng2-datepicker';
       ServicePlanUpgradeModalComponent,
       TransferServiceInfoComponent,
       SelectPlanComponent,
-      CreditCheckComponent
+      CreditCheckComponent,
+      MovingServiceModalDialogComponent
       ]
 })
 export class PlansAndServicesModule { }

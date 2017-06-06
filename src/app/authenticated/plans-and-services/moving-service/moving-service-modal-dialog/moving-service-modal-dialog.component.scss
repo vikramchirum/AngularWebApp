@@ -1,0 +1,48 @@
+.moving-service-modal {
+   // margin:1em;
+    .moving-service-title {
+        display: inline-block;
+    }
+    .close-btn {
+        font-size: 40px;
+    } 
+    .modal-body {
+        padding:4em;
+    }
+.progress {  
+    border : 2px solid #000;
+    .progress-bar {
+        background-color:#ccc;
+        }
+    }
+    .address-details{
+        p {
+            margin:0;
+            font-weight:bold;
+        }
+    }
+    .auto-bill-payment {
+        .card-container{
+            border-radius: 1rem;
+            background: black;
+            color: white;
+            padding: 1rem;
+
+            .card-number {
+                padding: 1rem 0;
+            }
+
+        }
+    }
+    .plan-info {
+        .current-plan-info-container{
+            border: 2px solid black;
+            text-align: center;
+            border-radius: 20px;
+            padding: 20px;
+            background:#000000;
+            color:#fff;
+        }
+    }
+
+}
