@@ -11,9 +11,9 @@
     "e2e": "ng e2e",
     "build-dev": "ng build --environment dev --output-hashing all",
     "build-qa": "ng build --environment qa --output-hashing all",
-    "deploy-local": "ng build --environment dev --output-path C:\\inetpub\\wwwroot\\DEV\\test --output-hashing all",
-    "deploy-dev": "ng build --environment dev --output-path \\\\gesvr1090.gexa.gexaenergy.com\\e$\\inetpub\\wwwroot\\DEV\\mygexa.gexaenergy.com --output-hashing all",
-    "deploy-qa": "ng build --environment qa --output-path \\\\gesvr1090.gexa.gexaenergy.com\\e$\\inetpub\\wwwroot\\QA\\mygexa.gexaenergy.com --output-hashing all"
+    "build-stg": "ng build --environment stg --output-hashing all",
+    "build-prd": "ng build --environment prd --output-hashing all",
+    "deploy-local": "ng build --environment dev --output-path C:\\inetpub\\wwwroot\\DEV\\test --output-hashing all"
   },
   "private": true,
   "dependencies": {
