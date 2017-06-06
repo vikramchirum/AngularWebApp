@@ -5,7 +5,7 @@
 
 import { RouterModule, Route } from "@angular/router";
 import { RootComponent } from "./root/root.component";
-import { UserService } from "../shared/user.service";
+import { UserService } from "../core/user.service";
 import { PaymentsModule } from "./payments/payments.module";
 import { MyAccountModule } from "./my-account/my-account.module";
 import { HomeModule } from "./home/home.module";

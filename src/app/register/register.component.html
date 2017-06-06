@@ -40,24 +40,20 @@
           </div>
           <small [hidden]="password.valid || (password.pristine && !f.submitted)" class="text-danger">Password is required.</small>
         </div>
-<!--          <div class="form-group">
+
+          <div class="form-group">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-key"></i></span>
-              <input [(ngModel)]="user.confirm_password" name="confirmPassword" type="password" class="form-control" placeholder="Confirm Password" required validateEqual="password"
-                     #confirmPassword="ngModel">
+              <input [(ngModel)]="securityQues.Security_Id" class="form-control" placeholder="Password" required validateEqual="confirmPassword" reverse="true" #password="ngModel">
             </div>
-            <small [hidden]="confirmPassword.valid || (confirmPassword.pristine && !f.submitted) " class="text-danger">Password mismatch.</small>
-          </div>-->
+            <small [hidden]="password.valid || (password.pristine && !f.submitted)" class="text-danger">Password is required.</small>
+          </div>
+
           <div class="text-center">
             <button type="submit" [disabled]="!myForm.valid" class="btn btn-primary btn-sx">Sign Up</button>
           </div>
-
         </form>
       </div>
-    </div>
-    <div class="col-md-8">
-      <!--placeholder for video and text -->
-
     </div>
   </div>
 </div>

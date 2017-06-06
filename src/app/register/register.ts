@@ -6,3 +6,8 @@ export interface IUser {
   User_name: string;
   Password: string;
 }
+
+export interface ISecurityQuestions {
+  Security_Id: number;
+  Security_Question: string;
+}
