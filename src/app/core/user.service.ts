@@ -29,8 +29,8 @@ export class UserService implements CanActivate {
 
   constructor(private router: Router, private _http: Http) {
 
-    this.actionUrl = environment.Api_Url + "/Login/authorizeUser";
-    this.registerUrl = environment.Api_Url + "/Login/register";
+    this.actionUrl = environment.Api_Url + "/user/authentication";
+    this.registerUrl = environment.Api_Url + "/user/register";
 
     // set token if saved in local storage
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
