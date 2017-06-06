@@ -12,11 +12,11 @@ export class ChangeYourPlanCardComponent implements OnInit {
   ngOnInit() {
   }
 
-  @ViewChild('serviceUpgradeModal') serviceUpgradeModal :ServicePlanUpgradeModalComponent;
+  @ViewChild('serviceUpgradeModal') serviceUpgradeModal: ServicePlanUpgradeModalComponent;
   constructor(private viewContainerRef: ViewContainerRef) {
   }
-showServiceUpgradeModal() {
-  this.serviceUpgradeModal.show();
+  showServiceUpgradeModal() {
+    this.serviceUpgradeModal.show();
 
-}
+  }
 }

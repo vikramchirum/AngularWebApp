@@ -19,6 +19,7 @@ import { ServicePlanUpgradeModalComponent } from './my-service-plans/change-your
 import { TransferServiceInfoComponent } from './order-status/service-enrollment-status/transfer-service-info/transfer-service-info.component';
 import { SelectPlanComponent } from './add-services/select-plan/select-plan.component';
 import { CreditCheckComponent } from './add-services/credit-check/credit-check.component';
+import { DatePickerModule } from 'ng2-datepicker';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { CreditCheckComponent } from './add-services/credit-check/credit-check.c
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    DatePickerModule
   ],
   declarations: [
       PlansAndServicesComponent,
