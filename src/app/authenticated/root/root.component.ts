@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 
-import {UserService} from '../../shared/user.service';
+import {UserService} from '../../core/user.service';
 import {Router} from '@angular/router';
 import {environment} from '../../../environments/environment';
 
@@ -22,7 +22,8 @@ export class RootComponent implements OnInit {
     this.user = this.user_service.logged_in_user;
   }
 
-  logout() {
+  logout($event) {
+    if ($event && $event.preventDefault) { $event.preventDefault(); }
     this.user_service.logout();
     this.router.navigate(['/login']);
   }
