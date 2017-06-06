@@ -14,8 +14,8 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
   @ViewChild('modal_delete') modal_delete;
 
   $modal: $ = null;
-  changing = false;
-  selectedPaymentMethod: PaymentMethod = null;
+  changingPaymentMethod: PaymentMethod = null;
+  deletePaymentMethod: PaymentMethod = null;
 
   constructor(
     private PaymentMethodService: PaymentMethodService
@@ -30,21 +30,32 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
     this.$modal = jQuery(this.modal_delete.nativeElement);
   }
 
+  isInactive(paymentMethod: PaymentMethod): boolean {
+    return (this.changingPaymentMethod !== null && this.changingPaymentMethod !== paymentMethod);
+  }
+
   change($event, paymentMethod) {
 
     if ($event && $event.preventDefault) { $event.preventDefault(); }
 
-    this.selectedPaymentMethod = paymentMethod;
+    this.changingPaymentMethod = paymentMethod;
 
-    this.changing = true;
+  }
 
+  changeCancel() {
+    this.changingPaymentMethod = null;
+  }
+
+  changeSubmit() {
+    alert ('Work with Forte.');
+    this.changeCancel();
   }
 
   delete($event, paymentMethod) {
 
     if ($event && $event.preventDefault) { $event.preventDefault(); }
 
-    this.selectedPaymentMethod = paymentMethod;
+    this.deletePaymentMethod = paymentMethod;
 
     this.$modal.modal('show');
 
@@ -52,7 +63,9 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
 
   delete_confirm() {
 
-    this.PaymentMethodService.deletePaymentMethod(this.selectedPaymentMethod.Id);
+    this.PaymentMethodService.deletePaymentMethod(this.deletePaymentMethod.Id);
+
+    if (this.changingPaymentMethod === this.deletePaymentMethod) { this.changingPaymentMethod = null; }
 
     this.$modal.modal('hide');
 
