@@ -23,6 +23,24 @@ export class PaymentMethod {
     }
   }
 
+  /**
+   * Returns the Font Awesome tag or a general credit card icon.
+   * @returns {string}
+   */
+  getFontAwesomeTag(): string {
+    switch (this.Card_Brand) {
+      case 'amex': return 'fa-cc-amex';
+      case 'diners-club': return 'fa-cc-diners-club';
+      case 'discover': return 'fa-cc-discover';
+      case 'jcb': return 'fa-cc-jcb';
+      case 'mastercard': return 'fa-cc-mastercard';
+      case 'paypal': return 'fa-cc-paypal';
+      case 'stripe': return 'fa-cc-stripe';
+      case 'visa': return 'fa-cc-visa';
+    }
+    return 'fa-credit-card';
+  }
+
 }
 
 @Injectable()
@@ -99,6 +117,37 @@ export class PaymentMethodService {
 
     // Otherwise no payment method was found, return null:
     return Promise.reject(null);
+
+  }
+
+  /**
+   * Loops through the payment methods removing those with matching Id values.
+   * @param Id
+   * @returns {Promise<PaymentMethod[]>}
+   */
+  deletePaymentMethod(Id: string): Promise<PaymentMethod[]> {
+
+    // Use the gotten payment methods, otherwise get them.
+    return this.getPaymentMethods()
+    // Start removing matching payment methods.
+      .then(() => {
+        // Cache the length of payment methods.
+        const length = this.PaymentMethods.length;
+        for (let index = 0; index < length; index++) {
+          // If the valid payment method's Id matches...
+          if (
+            this.PaymentMethods[index]
+            && this.PaymentMethods[index].Id === Id
+          ) {
+            // ... then remove the payment method from the array.
+            this.PaymentMethods.splice(index, 1);
+            // TODO: call out to the API to delete here.
+          }
+        }
+        // Return back the current array of payment methods for anyone asking.
+        return this.PaymentMethods;
+      })
+      .catch((error) => this.handleError(error));
 
   }
 

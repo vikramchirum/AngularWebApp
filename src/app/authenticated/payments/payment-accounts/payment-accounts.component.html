@@ -3,43 +3,19 @@
   <h2>Payment Accounts</h2>
   <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
 
-  <div style="padding-top:4rem;"></div>
+  <br/>
 
-  <div class="row">
+  <div *ngIf="PaymentMethodService.PaymentMethods" class="row">
 
-    <div class="col-md-4">
+    <div *ngFor="let paymentMethod of PaymentMethodService.PaymentMethods" class="col-md-4">
       <div class="card-container">
-        <h4>Card<span class="pull-right">Debit</span></h4>
-        <h4 class="card-number">&times;&times;&times;&times; &times;&times;&times;&times; &times;&times;&times;&times; 1111</h4>
-        <h4>John Doe<i class="fa fa-fw fa-cc-visa pull-right"></i></h4>
+        <h4>Card<span class="pull-right">{{ paymentMethod.Card_Type === 'debit' ? 'Debit' : 'Credit' }}</span></h4>
+        <h4 class="card-number">&times;&times;&times;&times; &times;&times;&times;&times; &times;&times;&times;&times; {{ paymentMethod.Card_Last }}</h4>
+        <h4>{{ paymentMethod.Card_Name }}<i [ngClass]="'fa fa-fw pull-right ' + paymentMethod.getFontAwesomeTag()"></i></h4>
       </div>
       <div class="card-options">
-        <a href (click)="delete($event)">Delete</a>
-        <a href (click)="change($event)">Change</a>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card-container">
-        <h4>Card<span class="pull-right">Debit</span></h4>
-        <h4 class="card-number">&times;&times;&times;&times; &times;&times;&times;&times; &times;&times;&times;&times; 1111</h4>
-        <h4>John Doe<i class="fa fa-fw fa-cc-visa pull-right"></i></h4>
-      </div>
-      <div class="card-options">
-        <a href (click)="delete($event)">Delete</a>
-        <a href (click)="change($event)">Change</a>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card-container">
-        <h4>Card<span class="pull-right">Debit</span></h4>
-        <h4 class="card-number">&times;&times;&times;&times; &times;&times;&times;&times; &times;&times;&times;&times; 1111</h4>
-        <h4>John Doe<i class="fa fa-fw fa-cc-visa pull-right"></i></h4>
-      </div>
-      <div class="card-options">
-        <a href (click)="delete($event)">Delete</a>
-        <a href (click)="change($event)">Change</a>
+        <a href (click)="delete($event,paymentMethod)">Delete</a>
+        <a href (click)="change($event,paymentMethod)">Change</a>
       </div>
     </div>
 
@@ -47,7 +23,7 @@
 </section>
 
 <div #modal_delete class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
+  <div *ngIf="selectedPaymentMethod" class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h2>
@@ -58,7 +34,7 @@
         </h2>
       </div>
       <div class="modal-body text-center">
-        <p>Are you sure you want to delete card number ending 2109?</p>
+        <p>Are you sure you want to delete card number ending <b>{{ selectedPaymentMethod.Card_Last }}</b>?</p>
         <p>Once this card is deleted we will completely remove it from our system, you will have to re-add this card again.</p>
       </div>
       <div class="modal-body text-center">

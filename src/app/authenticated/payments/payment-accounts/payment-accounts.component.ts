@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 
 import * as $ from 'jquery';
-import { PaymentMethodService } from 'app/core/PaymentMethod';
+import { PaymentMethod, PaymentMethodService } from 'app/core/PaymentMethod';
 
 declare const jQuery: $;
 
@@ -15,6 +15,7 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
 
   $modal: $ = null;
   changing = false;
+  selectedPaymentMethod: PaymentMethod = null;
 
   constructor(
     private PaymentMethodService: PaymentMethodService
@@ -22,24 +23,28 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.PaymentMethodService.getPaymentMethods()
-      .then(data => console.log(data))
+      .then(data => console.log(data));
   }
 
   ngAfterViewInit() {
-    this.$modal = jQuery(this.modal_delete.nativeElement)
+    this.$modal = jQuery(this.modal_delete.nativeElement);
   }
 
-  change($event) {
+  change($event, paymentMethod) {
 
     if ($event && $event.preventDefault) { $event.preventDefault(); }
+
+    this.selectedPaymentMethod = paymentMethod;
 
     this.changing = true;
 
   }
 
-  delete($event) {
+  delete($event, paymentMethod) {
 
     if ($event && $event.preventDefault) { $event.preventDefault(); }
+
+    this.selectedPaymentMethod = paymentMethod;
 
     this.$modal.modal('show');
 
@@ -47,7 +52,7 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
 
   delete_confirm() {
 
-    alert('Delete this account.');
+    this.PaymentMethodService.deletePaymentMethod(this.selectedPaymentMethod.Id);
 
     this.$modal.modal('hide');
 
