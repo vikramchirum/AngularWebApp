@@ -8,8 +8,8 @@ import { ServicePlanUpgradeModalComponent } from './service-plan-upgrade-modal/s
 })
 export class ChangeYourPlanCardComponent implements OnInit {
 
-  selectCheckBox:boolean = false;
-  enableSelect:boolean = false;
+  selectCheckBox: boolean = false;
+  enableSelect: boolean = false;
   ngOnInit() {
   }
 
@@ -21,12 +21,15 @@ export class ChangeYourPlanCardComponent implements OnInit {
 
   }
   onSelect(event) {
-    event.preventDefault();  
-    this.selectCheckBox = true;   
+    event.preventDefault();
+    this.selectCheckBox = true;
   }
 
-  toggleButton(){
-    this.enableSelect=!this.enableSelect;
-    console.log(this.enableSelect);
+  toggleButton() {
+    this.enableSelect = !this.enableSelect;
+  }
+  closeCheckBox() {
+    this.selectCheckBox = false;
+    this.enableSelect = false;
   }
 }

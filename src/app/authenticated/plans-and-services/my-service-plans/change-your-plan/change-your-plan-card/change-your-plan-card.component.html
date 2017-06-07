@@ -19,8 +19,11 @@
     </div>
     <hr>
   </div>
+  <div class="row">
   <div style="text-align:center">
     <button class="btn btn-default btn-wireframe" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>Select</button>
+    <i *ngIf= "selectCheckBox" class="fa fa-times fa-2x" style="margin-left:.5em" (click)="closeCheckBox()" aria-hidden="true"></i>
+  </div>
   </div>
 
 </div>
