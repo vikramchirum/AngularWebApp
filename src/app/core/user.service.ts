@@ -13,32 +13,25 @@ import { environment } from 'environments/environment';
 
 @Injectable()
 export class UserService implements CanActivate {
-  token: IToken;
+
   state: string = null;
   result: string;
   errorMessage: string;
   private actionUrl: string; private registerUrl: string;
 
-  get logged_in_user(): string {
+  get user_token(): string {
     return localStorage.getItem('gexa_auth_token');
   };
 
   get user_logged_in(): boolean {
-    return !!this.logged_in_user;
+    return !!this.user_token;
   };
 
   constructor(private router: Router, private _http: Http) {
 
-    //this.actionUrl = environment.Api_Url + "/user/authentication";
+    //his.actionUrl = environment.Api_Url + "/user/authentication";
     this.actionUrl = "http://localhost:58894/api/user/authentication";
-
-
     this.registerUrl = environment.Api_Url + "/user/register";
-
-    // set token if saved in local storage
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-    this.token = currentUser && currentUser.token;
 
   }
 
@@ -70,9 +63,7 @@ export class UserService implements CanActivate {
     return Observable.throw(errMsg);
   }
 
-  login(user_name: string, password: string): Observable<IToken> {
-
-
+  login(user_name: string, password: string): Observable<string> {
     let urlSearchParams = new URLSearchParams();
     urlSearchParams.append('username', user_name);
     urlSearchParams.append('password', password);
@@ -81,27 +72,26 @@ export class UserService implements CanActivate {
     headerParam.append("Content-Type","application/x-www-form-urlencoded");
 
     let requestOptions = new RequestOptions({headers: headerParam});
-
-
     return this._http.post(this.actionUrl, urlSearchParams.toString(), requestOptions)
+    //return this._http.get(`${this.actionUrl}?username=${user_name}&password=${password}`)
       .map((response: Response) => {
-        const token = response.json() as IToken;
-        if (token && token.Code === 'OK') {
-          localStorage.setItem('gexa_auth_token', token.Data)
-          this.token = token;
+        const token = response.json();
+        if (token && token.length) {
+          localStorage.setItem('gexa_auth_token', token);
           return token;
         }
         return null;
-      });
+      })
+      .catch((error:any) => Observable.throw({Code: error.status, Message: error.statusText}));
   }
 
   signup(user: IUser) {
     this._http.post(this.registerUrl, user)
       .map((res: Response) => res.json())
       .subscribe(res => { this.result = res;
-      console.log(this.result);
-    });
-}
+        console.log(this.result);
+      });
+  }
 
   logout() {
     // clear token remove user from local storage to log user out
