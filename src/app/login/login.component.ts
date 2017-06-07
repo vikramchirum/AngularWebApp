@@ -22,12 +22,13 @@ export class LoginComponent implements OnInit {
     this.error = null;
     this.user_service.login(this.user_name, this.password)
       .subscribe(token => {
+        console.log("token", this.user_service.token);
         if (this.user_service.token) {
           this.router.navigate(this.user_service.state ? [this.user_service.state] : ['/account/profile']);
         } else {
           this.error = "error";
           this.router.navigate(['/login']);
-        }
+      }
       });
 
   }

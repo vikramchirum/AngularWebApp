@@ -29,7 +29,10 @@ export class UserService implements CanActivate {
 
   constructor(private router: Router, private _http: Http) {
 
-    this.actionUrl = environment.Api_Url + "/user/authentication";
+    //this.actionUrl = environment.Api_Url + "/user/authentication";
+    this.actionUrl = "http://localhost:58894/api/user/authentication";
+
+
     this.registerUrl = environment.Api_Url + "/user/register";
 
     // set token if saved in local storage
@@ -69,18 +72,27 @@ export class UserService implements CanActivate {
 
   login(user_name: string, password: string): Observable<IToken> {
 
-    return this._http.get(`${this.actionUrl}?username=${user_name}&password=${password}`)
+
+    let urlSearchParams = new URLSearchParams();
+    urlSearchParams.append('username', user_name);
+    urlSearchParams.append('password', password);
+
+    let headerParam = new Headers();
+    headerParam.append("Content-Type","application/x-www-form-urlencoded");
+
+    let requestOptions = new RequestOptions({headers: headerParam});
+
+
+    return this._http.post(this.actionUrl, urlSearchParams.toString(), requestOptions)
       .map((response: Response) => {
         const token = response.json() as IToken;
         if (token && token.Code === 'OK') {
           localStorage.setItem('gexa_auth_token', token.Data)
           this.token = token;
-          return this.token;
+          return token;
         }
-
         return null;
       });
-
   }
 
   signup(user: IUser) {
