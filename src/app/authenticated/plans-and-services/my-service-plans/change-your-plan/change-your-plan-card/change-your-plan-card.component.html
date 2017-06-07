@@ -1,12 +1,26 @@
-  <div class="plan-card-container">
+<div class="plan-card-container">
+  <div class="card-content">
     <h5>Gexa Prime 1000 12</h5>
-    <div class="card-content">
     <h2>3.9<sup class="sup-text">c</sup><sub class="sub-text">pkw/hr</sub>
-     <i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></h2>
-     <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
-      <p>at 1000kwh</p>
-      <p>TERM:12 months</p>
-      <p>No Sign Up Bonus</p>
-      <button class="btn btn-default btn-wireframe">Sign Up</button>
+      <i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></h2>
+    <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
+    <p>at 1000kwh</p>
+    <p>TERM:12 months</p>
+    <p>No Sign Up Bonus</p>
   </div>
+  <div *ngIf= "selectCheckBox" class="agreement-section">
+    <hr>
+    <div class="checkbox">
+      <label>
+            <input type="checkbox" value="" (click) = "toggleButton()">
+            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+            <p>By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP(Gexa energy).<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
+          </label>
+    </div>
+    <hr>
   </div>
+  <div style="text-align:center">
+    <button class="btn btn-default btn-wireframe" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>Select</button>
+  </div>
+
+</div>

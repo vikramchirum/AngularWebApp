@@ -1,15 +1,11 @@
 <section>
-<h4> Want to Change your Plan? </h4>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-<div class="row">
-  <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
-  <div class="col-md-4 plan-card">
-<mygexa-change-your-plan-card></mygexa-change-your-plan-card></div>
-<div class="col-md-4 plan-card">
-<mygexa-change-your-plan-card></mygexa-change-your-plan-card>
-</div> <div class="col-md-4 plan-card">
-<mygexa-change-your-plan-card></mygexa-change-your-plan-card></div>
-<div class="col-md-4 plan-card">
-<mygexa-change-your-plan-card></mygexa-change-your-plan-card>
-</div></div>
+  <h4> Want to Change your Plan? </h4>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+  <div class="row">
+    <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
+    <div class="col-md-4 plan-card" *ngFor="let i of [0, 1, 2, 3, 4]">
+      <mygexa-change-your-plan-card></mygexa-change-your-plan-card>
+    </div>
+  </div>
 </section>
