@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {UserService} from "../shared/user.service";
+import {UserService} from "../core/user.service";
 import {Router} from "@angular/router";
 import { IToken } from "./login.component.token";
 
@@ -11,6 +11,7 @@ import { IToken } from "./login.component.token";
 export class LoginComponent implements OnInit {
 
   user_name: string;
+  error: string = null;
   password: string;
   token: IToken;
   tokencontent: string;
@@ -18,12 +19,17 @@ export class LoginComponent implements OnInit {
   constructor(private user_service: UserService, private router: Router) {  }
 
   login() {
-    this.user_service.login(this.user_name, this.password).subscribe(res => this.token = res );
+    this.error = null;
+    this.user_service.login(this.user_name, this.password)
+      .subscribe(token => {
+        if (this.user_service.token) {
+          this.router.navigate(this.user_service.state ? [this.user_service.state] : ['/account/profile']);
+        } else {
+          this.error = "error";
+          this.router.navigate(['/login']);
+        }
+      });
 
-    console.log('Login local storage: ' + localStorage.getItem('gexa_auth_token'));
-
-    if(localStorage.getItem("gexa_auth_token") != null)
-      this.router.navigate(['/account/profile']);
   }
 
   register() {
@@ -31,7 +37,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('Login local storage: ' + localStorage.getItem('gexa_auth_token'));
+    // console.log('Login local storage: ' + localStorage.getItem('gexa_auth_token'));
   }
 
 }

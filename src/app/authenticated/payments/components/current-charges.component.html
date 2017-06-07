@@ -1,0 +1,34 @@
+<div *ngIf="Bill" class="current-charges-container">
+
+  <table class="current-charges-make-a-payment" border="0" width="100%">
+    <colgroup>
+      <col width="75%"/>
+      <col width="20%"/>
+      <col width="5%"/>
+    </colgroup>
+    <tbody>
+    <tr>
+      <td>Current Charges</td>
+      <td colspan="2">${{ Bill.total() | NumberToMoneyPipe }}</td>
+    </tr>
+    <tr *ngIf="Bill.balance_forward">
+      <td>Balance Forward</td>
+      <td colspan="2">${{ Bill.balance_forward | NumberToMoneyPipe }}</td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        <hr class="breaker"/>
+      </td>
+    </tr>
+    <tr>
+      <td><h2 class="text-muted">Total</h2></td>
+      <td colspan="2"><h2>${{ Bill.current_charges() | NumberToMoneyPipe }}</h2></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="current-charges-make-a-payment-container">
+    <a class="btn-wireframe" (click)="make_a_payment()">Make a Payment</a>
+  </div>
+
+</div>
