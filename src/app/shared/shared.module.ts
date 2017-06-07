@@ -6,26 +6,29 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
 import { ChangeEmailAddressComponent } from './components/change-email-address/change-email-address.component';
 import { StatusBarComponent } from './components/status-bar/status-bar.component';
 import { ChangeAddressComponent } from './components/change-address/change-address.component';
+import { ServiceAccountSelectorComponent } from './components/service-account-selector/service-account-selector.component';
 
 @NgModule({
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        CommonModule
-    ],
-    declarations: [
-        ChangeUserNameComponent,
-        ChangePasswordComponent,
-        ChangeEmailAddressComponent,
-        StatusBarComponent,
-        ChangeAddressComponent
-    ],
-    exports :[
-        ChangeUserNameComponent,
-        ChangePasswordComponent,
-        ChangeEmailAddressComponent,
-        StatusBarComponent,
-        ChangeAddressComponent
-    ]
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule
+  ],
+  declarations: [
+    ChangeUserNameComponent,
+    ChangePasswordComponent,
+    ChangeEmailAddressComponent,
+    StatusBarComponent,
+    ChangeAddressComponent,
+    ServiceAccountSelectorComponent
+  ],
+  exports :[
+    ChangeUserNameComponent,
+    ChangePasswordComponent,
+    ChangeEmailAddressComponent,
+    StatusBarComponent,
+    ChangeAddressComponent,
+    ServiceAccountSelectorComponent
+  ]
 })
 export class SharedModule { }
