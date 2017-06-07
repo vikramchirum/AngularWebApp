@@ -2,6 +2,18 @@
 
 @import 'styles/bootstrap/stylesheets/bootstrap/_variables';
 
+.form-control-wireframe {
+  background: white !important;
+  border: 2px solid black !important;
+  border-radius: 0px !important;
+}
+
+.btn-blank {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: inherit !important;
+}
+
 .btn-wireframe {
   background: white;
   cursor: pointer !important;
