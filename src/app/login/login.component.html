@@ -23,8 +23,8 @@
           </div>
           <div>
               <a href="">Forgot Password?</a>
-              <button type="submit" class="btn btn-primary pull-right" [hidden]="processing" (click)="login()">Login</button>
-            <button type="button" class="btn btn-primary pull-right"  [hidden]="!processing" ><i class="fa fa-spin fa-cog"></i> Logging in...</button>
+              <button type="submit" class="btn btn-primary pull-right" [ngClass]="{'hidden': processing }"(click)="login()">Login</button>
+            <button type="button" class="btn btn-primary pull-right"  [ngClass]="{'hidden': !processing }" ><i class="fa fa-spin fa-cog"></i> Logging in...</button>
            </div>
           <hr class="line-border  hidden-sm hidden-xs">
           <div class="form-group">
