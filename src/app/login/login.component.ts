@@ -8,15 +8,18 @@ import {Router} from "@angular/router";
   encapsulation: ViewEncapsulation.None
 })
 export class LoginComponent implements OnInit {
-
+  processing: boolean;
   user_name: string;
   error: string = null;
   password: string;
 
   constructor(private user_service: UserService, private router: Router) {
+    this.processing = false;
   }
 
+
   login() {
+    this.processing = true;
     this.error = null;
     this.user_service.login(this.user_name, this.password)
       .subscribe(
@@ -25,6 +28,7 @@ export class LoginComponent implements OnInit {
         },
         error => {
           this.error = error.Message;
+          this.processing = false;
         });
 
   }
