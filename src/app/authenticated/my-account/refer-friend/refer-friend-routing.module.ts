@@ -1,8 +1,8 @@
-import { Route, RouterModule } from "@angular/router";
-import { ReferFriendComponent } from "./refer-friend.component";
+import { Route, RouterModule } from '@angular/router';
+
+import { ReferFriendComponent } from './refer-friend.component';
 import { ReferralOptionsComponent } from './referral-options/referral-options.component';
 import { MyRewardsComponent } from './my-rewards/my-rewards.component';
-
 
 const routes: Route[] = [
   {
