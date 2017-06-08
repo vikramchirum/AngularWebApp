@@ -1,3 +1,97 @@
-<p>
-  payment-accounts works!
-</p>
+<section class="section-container">
+
+  <h2>Payment Accounts</h2>
+  <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
+
+  <br/>
+
+  <div *ngIf="PaymentMethodService.PaymentMethods" class="row">
+
+    <div *ngFor="let paymentMethod of PaymentMethodService.PaymentMethods" class="col-md-4">
+      <div class="card-container" [ngClass]="{ 'card-container-inactive': isInactive(paymentMethod) }">
+        <h4>Card<span class="pull-right">{{ paymentMethod.Card_Type === 'debit' ? 'Debit' : 'Credit' }}</span></h4>
+        <h4 class="card-number">&times;&times;&times;&times; &times;&times;&times;&times; &times;&times;&times;&times; {{ paymentMethod.Card_Last }}</h4>
+        <h4>{{ paymentMethod.Card_Name }}<i [ngClass]="'fa fa-fw pull-right ' + paymentMethod.getFontAwesomeTag()"></i></h4>
+      </div>
+      <div class="card-options">
+        <a href (click)="delete($event,paymentMethod)">Delete</a>
+        <a href (click)="change($event,paymentMethod)">Change</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div *ngIf="changingPaymentMethod" class="jumbotron changing-jumbotron">
+    <h2 class="text-center">
+      <i class="fa fa-fw fa-cc-visa"></i>
+      <i class="fa fa-fw fa-cc-mastercard"></i>
+      <i class="fa fa-fw fa-cc-discover"></i>
+      <i class="fa fa-fw fa-cc-jcb"></i>
+      <i class="fa fa-fw fa-cc-diners-club"></i>
+      <i class="fa fa-fw fa-cc-paypal"></i>
+    </h2>
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+        <div class="form-group-lg">
+          <input class="form-control form-control-wireframe" type="text" placeholder="Cardholder's Name (As it appears on your card)"/>
+        </div>
+        <div class="form-group-lg">
+          <input class="form-control form-control-wireframe" type="text" placeholder="Credit Card Number (No spaces or dashes)"/>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group-lg">
+              <input class="form-control form-control-wireframe" type="text" placeholder="Expiration Date MM/YY"/>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group-lg">
+              <input class="form-control form-control-wireframe" type="text" placeholder="CVV"/>
+            </div>
+          </div>
+        </div>
+        <div class="row changing-storing-container">
+          <div class="col-xs-2 text-right">
+            <button class="btn btn-blank" type="button">
+              <i class="fa fa-fw fa-2x fa-check-square-o"></i>
+            </button>
+          </div>
+          <div class="col-xs-10">
+            <h4>Store this card for future payments.<br/>By Storing the card, you agree to the store payment methods Terms of Service.</h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-4">
+            <button class="btn btn-blank" (click)="changeCancel()">cancel</button>
+          </div>
+          <div class="col-xs-8 text-right">
+            <button class="btn btn-wireframe" (click)="changeSubmit()">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div #modal_delete class="modal fade" tabindex="-1" role="dialog">
+  <div *ngIf="deletePaymentMethod" class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>
+          <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+            <i class="fa fa-fw fa-2x fa-times" aria-hidden="true"></i>
+          </button>
+          Card Deletion
+        </h2>
+      </div>
+      <div class="modal-body text-center">
+        <p>Are you sure you want to delete card number ending <b>{{ deletePaymentMethod.Card_Last }}</b>?</p>
+        <p>Once this card is deleted we will completely remove it from our system, you will have to re-add this card again.</p>
+      </div>
+      <div class="modal-body text-center">
+        <button class="btn btn-wireframe" data-dismiss="modal" aria-label="No">No</button>
+        <button class="btn btn-wireframe" (click)="delete_confirm()" aria-label="Yes">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
