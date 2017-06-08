@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
 import { DatePickerOptions, DateModel } from 'ng2-datepicker';
+declare let $: any;
 
 @Component({
   selector: 'mygexa-moving-service-modal-dialog',
@@ -21,11 +22,11 @@ export class MovingServiceModalDialogComponent implements OnInit {
     this.movingServiceModal.show();
   }
 
-  public hideMovingServiceModal():void {
+  public hideMovingServiceModal(): void {
     this.movingServiceModal.hide();
   }
-   scrollTop() {
-    window.scrollTo(0,0);
+  scrollTop() {
+    $('#movingServiceDialog').scrollTop(0);
   }
 
 }
