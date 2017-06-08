@@ -1,4 +1,11 @@
 section {
+    .change-plans-grid {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display:         flex;
+        flex-wrap: wrap;
+    }
     .plan-card{
         margin-bottom:30px;
     }
