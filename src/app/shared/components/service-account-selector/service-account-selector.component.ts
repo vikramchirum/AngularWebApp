@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { BillingAccount, BillingAccountService } from 'app/core/BillingAccount';
 
@@ -12,6 +12,8 @@ export class ServiceAccountSelectorComponent implements OnInit {
   BillingAccounts: BillingAccount[];
   BillingAccountSelected: string;
 
+  @Input() selectedBillingAccount: string = null;
+  @Input() selectorLabel: string = null;
   @Output() changedBillingAccount: EventEmitter<any> =  new EventEmitter<any>();
 
   constructor(
@@ -19,8 +21,15 @@ export class ServiceAccountSelectorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.BillingAccountService.getCurrentBillingAccount()
-      .then((BillingAccount: BillingAccount) => this.BillingAccountSelected = BillingAccount.Id);
+    if (this.selectedBillingAccount) {
+      this.BillingAccountService
+        .getBillingAccount(this.selectedBillingAccount)
+        .then((BillingAccount: BillingAccount) => this.BillingAccountSelected = BillingAccount.Id);
+    } else {
+      this.BillingAccountService
+        .getCurrentBillingAccount()
+        .then((BillingAccount: BillingAccount) => this.BillingAccountSelected = BillingAccount.Id);
+    }
   }
 
   changeBillingAccount() {
