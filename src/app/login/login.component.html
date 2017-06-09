@@ -11,7 +11,7 @@
                      required #em="ngModel">
             </div>
             <small [hidden]="em.valid || em.pristine" class="text-danger">Username is required</small>
-          </div>
+          </div><br>
           <div class="form-group" [ngClass]="{ 'has-error': error !== null }">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-key"></i></span>
@@ -22,7 +22,7 @@
           </div>
           <div *ngIf="error != null">
             <small class="text-danger">Either username or password is wrong</small>
-          </div>
+          </div><br>
           <div>
             <a href="">Forgot Password?</a>
             <button type="submit" class="btn btn-wireframe pull-right" [ngClass]="{'hidden': processing }"
@@ -53,15 +53,20 @@
             <label>Do you have an account?</label>
           </div>
           <div class="form-group">
-            <button type="submit" class="btn btn-wireframegit s - " data-toggle="modal" data-target="#register">Sign
+            <button type="submit" class="btn btn-wireframe" data-toggle="modal" data-target="#register">Sign
               Up
             </button>
           </div>
         </form>
       </div>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-8 hidden-xs">
       <!--placeholder for video and text -->
+      <video class="my-gexa-video" muted loop playsinline controls preload="none" poster="assets/home/my-gexa.jpg">
+      <source src="assets/home/my-gexa.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
+    Your browser does not support the video tag.
+    </video>
+
     </div>
   </div>
 </div>

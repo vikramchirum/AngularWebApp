@@ -4,10 +4,11 @@
   border-radius: 1rem;
   background: black;
   color: white;
-  padding: 1rem;
+  padding: 5%;
+  width:100%;
 
   .card-number {
-    padding: 1rem 0;
+    padding: 5% 0;
   }
 }
 .card-container-inactive {
@@ -16,8 +17,8 @@
 
 .card-options {
   text-align: right;
-  padding-bottom: 2rem;
-  padding-top: 1rem;
+  padding-bottom: 10%;
+  padding-top: 5%;
 
   a {
     margin-left: 1rem;

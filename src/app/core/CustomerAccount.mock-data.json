@@ -18,38 +18,12 @@
     "Past_Due": 0,
     "Bad_Debt_Balance": 0,
     "Pledge_On_Entity": true,
+    "Enrolled_In_My_Rewards_And_Referrals": false,
     "Contacts": [
       {
         "First_Name": "Cly",
         "Last_Name": "Winslet",
         "Password": "e1geRljEcYr"
-      }
-    ]
-  },
-  {
-    "Id": "4556c9861d40cb6c6a57c6b485890e9d",
-    "Date_Of_Birth": "2017-06-02T18:15:00.217Z",
-    "Email": "dcassels1@bbc.co.uk",
-    "Prefix": "Honorable",
-    "Suffix": "IV",
-    "First_Name": "Danella",
-    "Middle_Name": "string",
-    "Last_Name": "Cassels",
-    "Language": "English",
-    "Drivers_License": {
-      "Number": "16206350",
-      "State": "Massachusetts"
-    },
-    "Social_Security_Number": "171-19-9548",
-    "Phone": "(508)594-7313",
-    "Past_Due": 0,
-    "Bad_Debt_Balance": 0,
-    "Pledge_On_Entity": true,
-    "Contacts": [
-      {
-        "First_Name": "Danella",
-        "Last_Name": "Cassels",
-        "Password": "q8qOHS506z"
       }
     ]
   }

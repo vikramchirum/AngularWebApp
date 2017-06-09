@@ -8,15 +8,28 @@ import { ServicePlanUpgradeModalComponent } from './service-plan-upgrade-modal/s
 })
 export class ChangeYourPlanCardComponent implements OnInit {
 
-
+  selectCheckBox: boolean = false;
+  enableSelect: boolean = false;
   ngOnInit() {
   }
 
-  @ViewChild('serviceUpgradeModal') serviceUpgradeModal :ServicePlanUpgradeModalComponent;
+  @ViewChild('serviceUpgradeModal') serviceUpgradeModal: ServicePlanUpgradeModalComponent;
   constructor(private viewContainerRef: ViewContainerRef) {
   }
-showServiceUpgradeModal() {
-  this.serviceUpgradeModal.show();
+  showServiceUpgradeModal() {
+    this.serviceUpgradeModal.show();
 
-}
+  }
+  onSelect(event) {
+    event.preventDefault();
+    this.selectCheckBox = true;
+  }
+
+  toggleButton() {
+    this.enableSelect = !this.enableSelect;
+  }
+  closeCheckBox() {
+    this.selectCheckBox = false;
+    this.enableSelect = false;
+  }
 }

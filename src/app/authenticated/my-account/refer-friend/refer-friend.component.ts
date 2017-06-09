@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router, RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 
+import { CustomerAccountService } from 'app/core/CustomerAccount';
 
 @Component({
   selector: 'mygexa-refer-friend',
@@ -9,20 +9,30 @@ import {Router, RouterModule } from '@angular/router';
 })
 export class ReferFriendComponent implements OnInit {
 
-  flipButton: boolean = false;
-  enrolled: boolean = false;
-  constructor(private router: Router) { }
+  flipButton: boolean = null;
+  enrolled: boolean = null;
 
-  testing() {
-    this.enrolled = !this.enrolled
+  constructor(
+    private CustomerAccountService: CustomerAccountService
+  ) {
+    this.CustomerAccountService.getCurrentCustomerAccount()
+      .then(data => this.enrolled = data.Enrolled_In_My_Rewards_And_Referrals);
   }
+
   toggleButton(): void {
     this.flipButton = !this.flipButton;
   }
+
   onEnroll() {
-    this.enrolled = true;
-    //this.router.navigate(['/account/refer-a-friend/my-rewards']);
+    this.CustomerAccountService
+      .enrollMyRewardsAndReferrals()
+      .then(() => {
+        // We will not need to update the enroll variable ourselves,
+        // once we utilize observables.
+        this.enrolled = true;
+      });
   }
+
   ngOnInit() { }
 
 }

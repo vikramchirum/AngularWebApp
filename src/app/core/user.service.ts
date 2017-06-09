@@ -73,7 +73,6 @@ export class UserService implements CanActivate {
 
     let requestOptions = new RequestOptions({headers: headerParam});
     return this._http.post(this.actionUrl, urlSearchParams.toString(), requestOptions)
-    //return this._http.get(`${this.actionUrl}?username=${user_name}&password=${password}`)
       .map((response: Response) => {
         const token = response.json();
         if (token && token.length) {
