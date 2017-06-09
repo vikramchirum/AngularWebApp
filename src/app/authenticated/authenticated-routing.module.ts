@@ -3,43 +3,38 @@
  * Created by patrick.purcell on 5/3/2017.
  */
 
-import { RouterModule, Route } from "@angular/router";
-import { RootComponent } from "./root/root.component";
-import { UserService } from "../core/user.service";
-import { PaymentsModule } from "./payments/payments.module";
-import { MyAccountModule } from "./my-account/my-account.module";
-import { HomeModule } from "./home/home.module";
-import { PlansAndServicesModule } from "./plans-and-services/plans-and-services.module";
+import { RouterModule, Route } from '@angular/router';
 
-export function loadHomeModule() {
-  return HomeModule;
-};
+import { RootComponent } from './root/root.component';
+import { UserService } from 'app/core/user.service';
+import { PaymentsModule } from './payments/payments.module';
+import { MyAccountModule } from './my-account/my-account.module';
+import { HomeModule } from './home/home.module';
+import { PlansAndServicesModule } from './plans-and-services/plans-and-services.module';
 
-export function loadMyAccountModule() {
-  return MyAccountModule;
-};
+export function loadHomeModule() { return HomeModule; }
 
-export function loadPaymentModule() {
-  return PaymentsModule;
-};
+export function loadMyAccountModule() { return MyAccountModule; }
 
-export function loadPlansAndServicesModule() {
-  return PlansAndServicesModule;
-}
+export function loadPaymentModule() { return PaymentsModule; }
+
+export function loadPlansAndServicesModule() { return PlansAndServicesModule; }
 
 const routes: Route[] = [
   {
-    path: '',
-    component: RootComponent,
-    canActivate: [UserService],
+    path: '', component: RootComponent,
+    canActivate: [
+      UserService
+    ],
     children: [
-      // {path:'home',  loadChildren: 'app/authenticated/home/home.module#HomeModule'},
-      // {path: 'account', loadChildren: 'app/authenticated/my-account/my-account.module#MyAccountModule'},
-      // {path: 'payments', loadChildren: 'app/authenticated/payments/payments.module#PaymentsModule'}
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', loadChildren: loadHomeModule },
+      { path: 'account', redirectTo: 'account/profile', pathMatch: 'full' },
       { path: 'account', loadChildren: loadMyAccountModule },
+      { path: 'payments', redirectTo: 'payments/view-my-bill', pathMatch: 'full' },
       { path: 'payments', loadChildren: loadPaymentModule },
-      { path: 'plans-and-services', loadChildren: loadPlansAndServicesModule}
+      { path: 'plans-and-services', redirectTo: 'plans-and-services/my-services-plans', pathMatch: 'full' },
+      { path: 'plans-and-services', loadChildren: loadPlansAndServicesModule }
     ]
   }
 ];

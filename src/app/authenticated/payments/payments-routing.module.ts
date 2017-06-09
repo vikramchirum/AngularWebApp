@@ -20,6 +20,7 @@ const routes: Route[] = [
       { path: 'make-payment', component: MakePaymentComponent },
       { path: 'payment-accounts', component: PaymentAccountsComponent  },
       { path: 'payment-options', loadChildren: loadPaymentOptionsModule },
+      { path: 'payment-history', redirectTo: 'payment-history/bills', pathMatch: 'full' },
       { path: 'payment-history', loadChildren: loadPaymentHistoryModule }
     ]
   }
