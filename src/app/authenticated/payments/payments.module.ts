@@ -12,13 +12,15 @@ import { PaymentsComponent } from './payments.component';
 import { PaymentAccountsComponent } from './payment-accounts/payment-accounts.component';
 import { PaymentOptionsModule } from './payment-options/payment-options.module';
 import { MakePaymentComponent } from './make-payment/make-payment.component';
+import { SharedModule } from 'app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     payment_routes,
-    PaymentOptionsModule
+    PaymentOptionsModule,
+    SharedModule
   ],
   declarations: [
     PaymentsComponent,
