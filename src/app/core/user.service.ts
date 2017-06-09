@@ -8,7 +8,7 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import { IToken } from "app/login/login.component.token";
-import { IUser } from "app/register/register";
+import { IUser } from "app/login/register";
 import { environment } from 'environments/environment';
 
 @Injectable()
