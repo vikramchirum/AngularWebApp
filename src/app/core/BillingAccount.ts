@@ -1,8 +1,10 @@
 
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import { Subscriber } from 'rxjs/Subscriber';
 
-import MockData from './BillingAccount.mock-data.json';
+import { environment } from 'environments/environment';
 
 interface IBillingAccountAddress {
   Line1: string;
@@ -132,98 +134,104 @@ export class BillingAccount {
 @Injectable()
 export class BillingAccountService {
 
+  public ActiveBillingAccount: BillingAccount = null;
   public BillingAccounts: BillingAccount[] = null;
-  private CurrentBillingAccount: BillingAccount = null;
-  private BillingAccountUrl = 'api/Billing_Account';
+  public BillingAccountsObservable: Observable<BillingAccount[]> = null;
+
+  private BillingAccountsSubscribers: Subscriber<any>[] = [];
+  private BillingAccountsRequesting: boolean = null;
 
   constructor(
-    private http: Http
-  ) { }
+    private Http: Http
+  ) {
 
-  /**
-   * Returns the current billing account and sets it if it is not already set.
-   * @returns {BillingAccount}
-   */
-  getCurrentBillingAccount(): Promise<BillingAccount> {
+    // Make an Observable for others to listen to.
+    this.BillingAccountsObservable = Observable.create((subscriber: Subscriber<any>) => {
 
-    // Reset the current bill.
-    this.CurrentBillingAccount = null;
+      // We want to collect our subscribers for future emits.
+      this.BillingAccountsSubscribers.push(subscriber);
 
-    // Set the current bill, getting the bills if we haven't already.
-    return this.getBillingAccounts()
-      .then((Bills: BillingAccount[]) => this.CurrentBillingAccount = Bills[0])
-      .catch(error => this.handleError(error))
-      .then(() => this.CurrentBillingAccount);
-  }
-
-  /**
-   * Returns the array of billing accounts and requests them if they have not been already requested.
-   * @returns {Promise<BillingAccount[]>}
-   */
-  getBillingAccounts(): Promise<BillingAccount[]> {
-
-    // If we have the Billing Accounts, return them:
-    // To-do Maybe look them up again?
-    if (this.BillingAccounts !== null) { return Promise.resolve(this.BillingAccounts); }
-
-    // If we did not have them, look them up:
-    return Promise.resolve(MockData)
-      .then(data => this.processApiData(data))
-      .catch(error => this.handleError(error));
-    // return this.http.get(this.BillingAccountUrl)
-    //   .toPromise()
-    //   .then(response => response.json().data)
-    //   .then(data => this.processApiData(data))
-    //   .catch(error => this.handleError(error));
-
-  }
-
-  /**
-   * Returns the identified billing account and requests it if it has not already been requested.
-   * @param id
-   * @returns {Promise<BillingAccount>}
-   */
-  getBillingAccount(Id: string): Promise<BillingAccount> {
-
-    // If we have not gotten the billing accounts, get them and return the specified:
-    if (this.BillingAccounts === null) {
-      return this.getBillingAccounts()
-        .then(() => this.getBillingAccount(Id));
-    }
-
-    // We have the billing accounts, so find the one with the matching Id and then return it:
-    for (const index in this.BillingAccounts) {
+      // There are no billing accounts and we are not requesting, so make a request.
       if (
-        this.BillingAccounts[index]
-        && this.BillingAccounts[index].Id === Id
+        this.BillingAccounts === null
+        && this.BillingAccountsRequesting === false
       ) {
-        return Promise.resolve(this.BillingAccounts[index]);
+        this.BillingAccountsUpdate();
       }
-    }
 
-    // Otherwise no billing account was found, return null:
-    return Promise.reject(null);
+      // If we do have our billing accounts, send them to the new subscriber.
+      if (this.BillingAccounts !== null) {
+        subscriber.next(this.BillingAccounts);
+      }
+
+      // Provide the clean-up function to avoid memory leaks.
+      // Find the subscriber and remove them from the collection.
+      return () => {
+        const length = this.BillingAccountsSubscribers.length;
+        for (let index = 0; index < length; index++) {
+          if (this.BillingAccountsSubscribers[index] === subscriber) {
+            this.BillingAccountsSubscribers.splice(index, 1);
+            break;
+          }
+        }
+      };
+
+    });
+
+    this.BillingAccountsUpdate();
 
   }
 
-  private handleError(error: any): Promise<any> {
-    return Promise.reject(error.message || error);
-  }
+  /**
+   * Force the API lookup and then emit to all of our subscribers.
+   * @returns {Observable<Response>}
+   */
+  BillingAccountsUpdate(): Observable<Response> {
 
-  private processApiData(data: BillingAccount[]) {
+    // Turn on the updating flag to prevent new subscribers from making new requests.
+    this.BillingAccountsRequesting = true;
 
-    // Reset the current billing accounts:
-    this.BillingAccounts = [];
+    const response = this.Http.get(`${environment.Api_Url}/billing_accounts?search_option.customer_Account_Id=962786`)
+      .map(data => data.json())
+      .catch(error => error);
 
-    // Add new billing accounts applying the provided data:
-    for (const index in data) {
-      if (data[index]) {
-        this.BillingAccounts.push(new BillingAccount(data[index]));
+    response.subscribe(
+      // Process our results into classes.
+      data => {
+        // Populate our new billing account collection with new billing account classes using our new data.
+        const BillingAccounts: BillingAccount[] = [];
+        for (const index in data) {
+          if (data[index]) {
+            BillingAccounts.push(new BillingAccount(data[index]));
+          }
+        }
+        // Update with the new billing accounts.
+        this.BillingAccounts = BillingAccounts;
+        // If there is no active billing account, or it is not included, then set a new active billing account.
+        if (
+          this.ActiveBillingAccount === null
+          || this.BillingAccounts.indexOf(this.ActiveBillingAccount) < 0
+        ) {
+          this.ActiveBillingAccount = this.BillingAccounts.length > 0 ? this.BillingAccounts[0] : null;
+        }
+      },
+      // TODO: handle errors.
+      error => {
+        console.log(`Error with ${environment.Api_Url}/billing_accounts\nUsing MockData...\n`, error);
+      },
+      // Emit our new data to all of our subscribers.
+      () => {
+        for (const index in this.BillingAccountsSubscribers) {
+          if (this.BillingAccountsSubscribers[index]) {
+            this.BillingAccountsSubscribers[index].next(this.BillingAccounts);
+          }
+        }
+        // Reset the updating flag - allow new API subscribers to request:
+        this.BillingAccountsRequesting = false;
       }
-    }
+    );
 
-    // Return all of what we added:
-    return this.BillingAccounts;
+    return response;
 
   }
 
