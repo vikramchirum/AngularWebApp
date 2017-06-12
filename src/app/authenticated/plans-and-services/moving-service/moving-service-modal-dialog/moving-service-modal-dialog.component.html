@@ -1,0 +1,152 @@
+<div class="moving-service-modal">
+<div bsModal #movingServiceModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" id="movingServiceDialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="plan-header">
+          <h1 class="moving-service-title">Moving Service</h1>
+          <button type="button" class="close text-right" aria-label="Close" (click)="hideMovingServiceModal()">
+          <span class="close-btn" aria-hidden="true">&times;</span></button></div><br>
+        <!-- progres bar -->
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:50%">
+            <span class="sr-only">70% Complete</span>
+          </div>
+        </div>
+        <!-- Current Service Address -->
+        <div class="row  current-service-address address-details">
+          <div class="col-md-12">
+            <h5>Current Service Address</h5>
+            <p>20455 TX-249 #200,</p>
+            <p>Houston,</p>
+            <p>TX 77070</p>
+          </div>
+        </div>
+        <br/>
+        <!-- start service -->
+        <div class="row start-service">
+          <div class="col-md-12">
+            <h5>When would you like service at your current address turned off?</h5>
+            <ng2-datepicker [options]="options" [(ngModel)]="date"></ng2-datepicker>
+            <!--<div class="input-group">
+              <input type="text" id="datepicker-my" class="form-control" placeholder="Select Date" />
+              <span class="input-group-addon" id="btn" style="cursor:pointer;">
+                          <span class="glyphicon glyphicon-calendar"></span>
+              </span>
+            </div>-->
+          </div>
+        </div>
+         <br/>
+        <div class="row">
+          <div class="col-md-12">
+            <h5>When would you like us to send your final bill?</h5>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 address-details">
+            <h5>Select Current Address</h5>
+            <p>20455 TX-249 #200,</p>
+            <p>Houston,</p>
+            <p>TX 77070</p>
+          </div>
+          <div class="col-md-6">
+            <h5>New Address</h5>
+            <input type="text" placeholder="Enter New Address" />
+          </div>
+        </div>
+         <br/>
+        <!--Instruction for TDSP -->
+        <div class="row tdsp-instruction">
+          <div class="col-md-12">
+            <h5>Do you have any special instruction for your TDSP to have access to your service meter<i class="fa fa-question-circle"
+                aria-hidden="true"></i> </h5>
+            <textarea placeholder="Enter Message here" class="" rows="5" name="comment" style="width:100%" required>
+              </textarea>
+          </div>
+        </div>
+         <br/>
+        <!-- Begin service at new address -->
+        <div class="row begin-service-at-new-address">
+          <div class="col-md-6 address-details">
+            <h5>When will you like to begin service at your new address?</h5>
+            <p>20455 TX-249 #200,</p>
+            <p>Houston,</p>
+            <p>TX 77070</p>
+            <br/>
+            <ng2-datepicker [options]="options" [(ngModel)]="date"></ng2-datepicker>
+          </div>
+          <div class="col-md-6">
+            <div class="jumbotron">
+              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque
+              ipsa quae ab illo inventore veritatis
+            </div>
+          </div>
+        </div>
+
+         <br/>
+        <!--Plan information -->
+        <div class="row plan-info">
+          <div class="col-md-4 col-xs-12 current-paln-info">
+            <h5>Current Plan Information</h5>
+            <div class="current-plan-info-container">
+              <h4><span>Gexa Classic 12</span><i aria-hidden="true" class="fa fa-info-circle pull-right"></i></h4>
+              <h2><sup>$</sup><span class="unit-cost">0.082</span><sub>pkw/hr</sub></h2>
+              <p>TERM:12 months</p>
+              <p>Start:03/31/2017</p>
+              <p>End:03/30/2018</p>
+              <i aria-hidden="true" class="fa fa-check-circle pull-right"></i>
+            </div>
+          </div>
+          <div class="col-md-offset-1 col-md-4 col-xs-12 change-plan">
+            <h5>Do you want to change plans ?</h5>
+            <button class="btn-wireframe">Change Plan</button>
+            <br/><br/>
+            <h5>Language Preferences</h5>
+            <h4>Do you prefer to receive information from us in English or Spanish?</h4>
+            <select>
+                <option value="english">English</option>
+                <option value="spanish">Spanish</option>
+              </select>
+          </div>
+        </div>
+         <br/><br/>
+        <!-- Auto Bill Payment Details -->
+        <div class="row auto-bill-payment">
+          <div class="col-md-5 col-xs-12">
+            <h5>Auto Bill Payment Details </h5>
+            <h4>This account has auto bill payments activated</h4>
+            <div class="card-container">
+              <h4>Card<span class="pull-right">Debit</span></h4>
+              <h4 class="card-number">5533 &times;&times;&times;&times; &times;&times;&times;&times; 2109</h4>
+              <h4>James Smith<i class="fa fa-fw fa-cc-visa pull-right"></i></h4>
+            </div>
+            <div class="card-options">
+              <a href class="pull-right">Change</a>
+            </div>
+          </div>
+        </div>
+         <br/>
+        <div class="moving-service-footer">
+          <hr>
+          <div class="row">
+            <div class="col-md-9">
+              <p>Please review all your information and make it is accurate before submitting </p>
+            </div>
+            <div class="col-md-3">
+              <i class="fa fa-arrow-up pull-right" aria-hidden="true" (click)="scrollTop()"></i>
+            </div>
+          </div>
+          <br/>
+          <div class="row">
+            <div class="col-md-12 col-xs-12">
+              <a class="text-left" (click)="hideMovingServiceModal()">Cancel</a>
+              <button class="btn btn-default btn-wireframe disabled pull-right">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

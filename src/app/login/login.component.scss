@@ -8,3 +8,52 @@ body {
   border-top: 1px solid #000000;
   margin: 40px 0px;
 } 
+
+.my-gexa-login-form {
+  padding:2em 4em;
+  //height:100%;
+  //width:100%;
+  input,
+  .input-group-addon {
+    border:0;
+    border-radius: 0;
+    border-bottom: 1px solid #000;
+    box-shadow: none;
+    outline: 0;
+    background: transparent;
+  }
+  .form-control:focus {
+    box-shadow: none;
+    border-color:#000;
+  }
+ 
+  .social-media-icon {
+    a{
+    margin-left:.4em;
+    text-decoration: underline;
+    }
+  }
+  .btn-wireframe{
+    padding:4px 20px;
+  }
+
+}
+.my-gexa-video{
+  object-fit:cover;
+  //width:100%;
+  position:absolute;
+  left:0;
+  top:0;
+  height:auto;
+}
+.row {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display:         flex;
+  flex-wrap: wrap;
+}
+.row > [class*='col-'] {
+  display: flex;
+  flex-direction: column;
+}
