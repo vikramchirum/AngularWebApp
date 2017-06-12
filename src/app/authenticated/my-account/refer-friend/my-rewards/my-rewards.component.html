@@ -7,7 +7,7 @@
     </div>
     <div class="col-md-9 col-xs-6">
       <h5>Address to which your bill</h5>
-      <div *ngIf="BillingAccount">
+      <div *ngIf="BillingAccountService && BillingAccount">
         <div *ngIf="addressEditing">
           <mygexa-service-account-selector
             [selectedBillingAccount]="BillingAccount.Id"
@@ -19,7 +19,7 @@
         <div *ngIf="!addressEditing">
           <h4>{{BillingAccount.Service_Address.Line1}} {{BillingAccount.Service_Address.Line2}}</h4>
           <h4>{{BillingAccount.Service_Address.City}}, {{BillingAccount.Service_Address.State}} {{BillingAccount.Service_Address.Zip}}</h4>
-          <button class="btn btn-wireframe" (click)="toggleAddressEdit()">Change Account</button>
+          <button class="btn btn-wireframe" [hidden]="BillingAccountService.BillingAccounts.length < 2" (click)="toggleAddressEdit()">Change Account</button>
         </div>
       </div>
     </div>
