@@ -4,6 +4,10 @@ body {
   background: $brand-primary;
 }
 
+.modal-content{
+  width:550px; height: 850px;
+}
+
 .modal-header {
   padding-top:70px;
   border-bottom: 0px white;
@@ -66,12 +70,13 @@ body {
   }
 
   .inputRow{
-    padding:10px 70px 10px 70px;
+    padding:10px 50px 10px 70px;
     width:450px;
     input{
       border:none;
       border-bottom: 1px solid #000000;
       border-bottom-color: #000000;
+      width:400px;
     }
   }
 
@@ -172,7 +177,7 @@ body {
 
 .line-border {
   border-top: 1px solid #000000;
-  margin: 40px 0px;
+  //margin: 40px 0px;
 }
 
 .my-gexa-login-form {

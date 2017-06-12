@@ -2,6 +2,8 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {UserService} from "../core/user.service";
 import {Router} from "@angular/router";
 import {IUser, ISecurityQuestions} from "./register";
+import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import {validateEmail, equalityCheck} from "app/validators/validator";
 
 @Component({
   templateUrl: './login.component.html',
@@ -10,15 +12,26 @@ import {IUser, ISecurityQuestions} from "./register";
 })
 export class LoginComponent implements OnInit {
   processing: boolean;
-
- public user: IUser;
+  registerForm: FormGroup;
+  formSubmitted: boolean = false;
+   public user: IUser;
   user_name: string;
   error: string = null;
   password: string;
   public securityQues: ISecurityQuestions;
 
-  constructor(private user_service: UserService, private router: Router) {
+  constructor(private user_service: UserService, private router: Router, private fb: FormBuilder) {
     this.processing = false;
+    this.registerForm = fb.group({
+      'Billing_Account_Id': ['', Validators.compose([Validators.required])],
+      'Zip': ['', Validators.compose([Validators.required])],
+      'User_name': ['', Validators.compose([Validators.required])],
+      'Password': ['', Validators.compose([Validators.required])],
+      'ConfirmPassword': ['', Validators.compose([Validators.required])],
+      'Email_Address': ['', Validators.compose([Validators.required, validateEmail])],
+      'Security_Question_Id': ['', Validators.compose([Validators.required])]
+    });
+    // , {validator: equalityCheck('email', 'confirmEmail')});
   }
 
 
@@ -37,20 +50,17 @@ export class LoginComponent implements OnInit {
 
   }
 
-  save(model: IUser, isValid: boolean) {
+  save(model: any, isValid: boolean) {
+    this.formSubmitted = true;
     // call API to save customer
-    this.user_service.signup(model);
-    console.log(model, isValid);
+    if (isValid) {
+      //this.user_service.signup(model);
+    }
+    // console.log("Isvalid",isValid);
+   // this.registerForm.reset();
   }
 
   ngOnInit() {
-    this.user = {
-      Email_Address: '',
-      Zip: '',
-      Billing_Account_Id: '',
-      User_name: '',
-      Password: '',
-      ConfirmPassword: ''
-    };
+
   }
 }
