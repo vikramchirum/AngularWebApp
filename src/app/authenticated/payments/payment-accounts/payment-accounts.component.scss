@@ -1,24 +1,7 @@
 @import "../../../../../styles/bootstrap/stylesheets/bootstrap/_variables";
 
-.card-container {
-  border-radius: 1rem;
-  background: black;
-  color: white;
-  padding: 5%;
-  width:100%;
-
-  .card-number {
-    padding: 5% 0;
-  }
-}
-.card-container-inactive {
-  background: grey;
-}
-
 .card-options {
-  text-align: right;
-  padding-bottom: 10%;
-  padding-top: 5%;
+  padding: 10px 0;
 
   a {
     margin-left: 1rem;
