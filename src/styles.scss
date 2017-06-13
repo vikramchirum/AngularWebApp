@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import 'styles/bootstrap/stylesheets/bootstrap/_variables';
+@import '../styles/bootstrap/stylesheets/bootstrap/_variables';
 
 .form-control-wireframe {
   background: white !important;
@@ -28,6 +28,10 @@
   border-bottom-width: 4px;
   border-right-width: 4px;
   border-radius: 6px;
+}
+.btn-wireframe.disabled,
+.btn-wireframe[disabled] {
+  cursor: not-allowed !important;
 }
 
 hr.breaker {

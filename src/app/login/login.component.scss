@@ -209,22 +209,32 @@ body {
   }
 
 }
+.video-container{
+  background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+	//width: 100%;
+	height: 100vh;
+	position: relative;
+  overflow: hidden;
 .my-gexa-video{
-  object-fit:cover;
-  //width:100%;
-  position:absolute;
-  left:0;
-  top:0;
-  height:auto;
+   width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  z-index:100;
 }
-.row {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display:         flex;
-  flex-wrap: wrap;
 }
-.row > [class*='col-'] {
-  display: flex;
-  flex-direction: column;
-}
+// .row {
+//   display: -webkit-box;
+//   display: -webkit-flex;
+//   display: -ms-flexbox;
+//   display:         flex;
+//   flex-wrap: wrap;
+// }
+// .row > [class*='col-'] {
+//   display: flex;
+//   flex-direction: column;
+// }

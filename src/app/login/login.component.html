@@ -3,36 +3,29 @@
     <div class="col-md-4">
       <div class="my-gexa-login-form">
         <h1>myGexa</h1><br><br>
-        <form id="login">
+        <form (ngSubmit)="login()" #myGexaLoginForm="ngForm" >
           <div class="form-group" [ngClass]="{ 'has-error': error !== null }">
             <div class="input-group">
-              <span class="input-group-addon"><i class="fa fa-user"></i></span>
-              <input [(ngModel)]="user_name" name="user_name" type="text" class="form-control" placeholder="Username"
-                     required #em="ngModel">
+              <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+              <input [(ngModel)]="user_name" [disabled]="processing" name="user_name" type="text" class="form-control" placeholder="Username" required #username="ngModel">
             </div>
-            <small [hidden]="em.valid || em.pristine" class="text-danger">Username is required</small>
-          </div><br>
+            <small [hidden]="username.valid || username.pristine || processing" class="text-danger">Username is required</small>
+          </div>
           <div class="form-group" [ngClass]="{ 'has-error': error !== null }">
             <div class="input-group">
-              <span class="input-group-addon"><i class="fa fa-key"></i></span>
-              <input [(ngModel)]="password" name="password" type="password" class="form-control" placeholder="Password"
-                     required #em="ngModel">
+              <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
+              <input [(ngModel)]="password" [disabled]="processing" name="password" type="password" class="form-control" placeholder="Password" required #em="ngModel">
             </div>
-            <small [hidden]="em.valid || em.pristine" class="text-danger">Password is required</small>
+            <small [hidden]="em.valid || em.pristine || processing" class="text-danger">Password is required</small>
           </div>
           <div *ngIf="error != null">
             <small class="text-danger">Either username or password is wrong</small>
           </div><br>
           <div>
-            <a href="">Forgot Password?</a>
-            <button type="submit" class="btn btn-wireframe pull-right" [ngClass]="{'hidden': processing }"
-                    (click)="login()">Login
-            </button>
-            <button type="button" class="btn btn-wireframe pull-right" [ngClass]="{'hidden': !processing }"><i
-              class="fa fa-spin fa-cog"></i> Logging in...
-            </button>
-          </div>
-          <br><br>
+              <a href="">Forgot Password?</a>
+              <button type="submit" class="btn btn-wireframe pull-right" [ngClass]="{'hidden': processing }" [disabled]="!myGexaLoginForm.form.valid">Login</button>
+            <button type="button" class="btn btn-wireframe pull-right"  [ngClass]="{'hidden': !processing }" ><i class="fa fa-spin fa-cog"></i> Logging in...</button>
+           </div><br>
           <hr class="hidden-sm hidden-xs">
           <div>
             <a href="" style="font-size: small">Forgot Username?</a>
@@ -45,7 +38,7 @@
           </div>
           <div class="form-group">
             <div class="social-media-icon">
-              <i class="fa fa-linkedin-square fa-2x" aria-hidden="true"></i> <a>Login with Linkedin</a>
+             <i class="fa fa-linkedin-square fa-2x" aria-hidden="true"></i> <a>Login with Linkedin</a>
             </div>
           </div>
           <hr class="line-border  hidden-sm hidden-xs">
@@ -53,20 +46,16 @@
             <label>Do you have an account?</label>
           </div>
           <div class="form-group">
-            <button type="submit" class="btn btn-wireframe" data-toggle="modal" data-target="#register">Sign
-              Up
-            </button>
+            <button type="submit" class="btn btn-wireframe" (click)="register()">Sign Up</button>
           </div>
         </form>
       </div>
     </div>
-    <div class="col-md-8 hidden-xs">
-      <!--placeholder for video and text -->
-      <video class="my-gexa-video" muted loop playsinline controls preload="none" poster="assets/home/my-gexa.jpg">
-      <source src="assets/home/my-gexa.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
+    <div class="col-md-8 hidden-xs video-container">
+      <video class="my-gexa-video" muted loop playsinline controls preload="none" poster="assets/login/my-gexa.jpg">
+      <source src="assets/login/my-gexa.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
     Your browser does not support the video tag.
     </video>
-
     </div>
   </div>
 </div>

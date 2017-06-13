@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { refer_friend_routes } from './refer-friend-routing.module';
@@ -12,6 +13,8 @@ import { SharedModule } from 'app/shared/shared.module';
   imports: [
     refer_friend_routes,
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     SharedModule
   ],
   declarations: [

@@ -1,0 +1,8 @@
+<div class="credit-card-container" [ngClass]="{ 'credit-card-container-inactive': Inactive === true }">
+  <h4>Card<span class="pull-right">{{ Type === 'debit' ? 'Debit' : 'Credit' }}</span></h4>
+  <h4 class="credit-card-number">&times;&times;&times;&times; &times;&times;&times;&times; &times;&times;&times;&times; {{ Last ? Last : '????' }}</h4>
+  <h4>
+    <i [ngClass]="fontAwesomeTags"></i>
+    <div class="credit-card-name">{{ Name ? Name : 'Your Card' }}</div>
+  </h4>
+</div>
