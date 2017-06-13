@@ -5,9 +5,11 @@ export interface IUser {
   Billing_Account_Id: string;
   User_name: string;
   Password: string;
+  ConfirmPassword: string;
+
 }
 
 export interface ISecurityQuestions {
-  Security_Id: number;
-  Security_Question: string;
+  Id: number;
+  Question: string;
 }

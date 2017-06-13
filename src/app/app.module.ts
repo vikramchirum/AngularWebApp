@@ -1,8 +1,11 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+// import {TooltipDirective} from 'ng2-tooltip-directive/components';
+//import { ToolTipModule } from 'angular2-tooltip';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,7 +15,6 @@ import { AuthenticatedModule } from './authenticated/authenticated.module';
 import { RegisterComponent } from './register/register.component';
 import { EqualValidator } from './register/equal-validator.directive';
 import { CoreModule } from './core/core.module';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,10 +26,15 @@ import { CoreModule } from './core/core.module';
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     AuthenticatedModule,
     AppRoutingModule,
-    CoreModule
+    CoreModule,
+    TooltipModule.forRoot()
+  ],
+  exports: [
+    ReactiveFormsModule
   ],
   providers: [
     UserService
