@@ -9,36 +9,39 @@ import { BillingAccount, BillingAccountService } from 'app/core/BillingAccount';
 })
 export class MyRewardsComponent implements OnInit {
 
-  BillingAccount: BillingAccount = null;
-  addressEditing: boolean;
-  serviceChangedId: string = null;
+  public selectedBillingAccount: BillingAccount = null;
+  public editingBillingAccount: BillingAccount = null;
+  public editingAddress: boolean = null;
+
+  private BillingAccounts: BillingAccount[] = null;
 
   constructor(
     private BillingAccountService: BillingAccountService
   ) {
-    this.addressEditing = false;
+    this.editingAddress = false;
   }
 
-  serviceChanged(Id) {
-    this.serviceChangedId = Id;
+  serviceChanged(newBillingAccount: BillingAccount) {
+    this.editingBillingAccount = newBillingAccount;
   }
 
   serviceUse() {
-    this.BillingAccountService
-      .getBillingAccount(this.serviceChangedId)
-      .then(BillingAccount => this.BillingAccount = BillingAccount);
-    this.addressEditing = !this.addressEditing;
+    this.selectedBillingAccount = this.editingBillingAccount;
+    this.editingAddress = !this.editingAddress;
   }
 
   ngOnInit() {
-    this.BillingAccountService
-      .getCurrentBillingAccount()
-      .then(BillingAccount => this.BillingAccount = BillingAccount);
+    this.BillingAccountService.BillingAccountsObservable.subscribe(
+      (BillingAccounts: BillingAccount[]) => {
+        this.selectedBillingAccount = this.BillingAccountService.ActiveBillingAccount;
+        this.BillingAccounts = BillingAccounts;
+      }
+    );
   }
 
-  toggleAddressEdit($event){
-    if ($event && $event.preventDefault) { $event.preventDefault(); }
-    this.addressEditing = !this.addressEditing;
+  toggleAddressEdit() {
+    this.editingBillingAccount = this.selectedBillingAccount;
+    this.editingAddress = !this.editingAddress;
   }
 
 }

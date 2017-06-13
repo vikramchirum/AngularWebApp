@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import '../styles/bootstrap/stylesheets/bootstrap/_variables';
+@import './breakpoints';
 
 .form-control-wireframe {
   background: white !important;
@@ -21,13 +22,13 @@
 .btn-wireframe {
   background: white;
   cursor: pointer !important;
-  padding: 10px 16px;
-  font-size: 18px;
+  padding: 0.6em 1em;
+  font-size: 1.1em;
   line-height: 1.3333333;
   border: 2px solid black;
-  border-bottom-width: 4px;
-  border-right-width: 4px;
-  border-radius: 6px;
+  border-bottom-width: .25em;
+  border-right-width: .25em;
+  border-radius: 0.3em;
 }
 .btn-wireframe.disabled,
 .btn-wireframe[disabled] {
@@ -54,67 +55,35 @@ section.section-container {
   }
 }
 
-/**
- * Breakpoints for my-gexa below:
- */
-
-/* Portrait phones and smaller */
-@mixin phones {
-  @media (max-width: #{$screen-xs-min}) {
-    @content;
+.card-container {
+  border: 2px solid black;
+  padding: 2rem 4rem;
+  margin-bottom:4rem;
+  display: block;
+  width:100%;
+  position:relative;  
+  &.card-container-height{
+    height:20em;
+     @include phone-landscape {
+         height:auto;
+     }
+  }
+  .card-content {
+    height:12.5em;
+     @include phone-landscape {
+         height:auto;
+     }
+  }
+  .card-button{
+    position:absolute;
+    bottom:0;
+    right:0;
+    @include phone-landscape {
+          position: inherit;
+      }
   }
 }
 
-/* Landscape phones and portrait tablets */
-@mixin phone-landscape {
-  @media (max-width: #{$screen-xs-max}) {
-      @content;
-  }
+.position-relative{
+  position: relative;
 }
-
-/* Portrait tablets and small desktops */
-@mixin tablets-only {
-  @media (min-width: #{$screen-tablet}) and (max-width: #{$screen-sm-max}) {
-    @content;
-  }
-}
-
-
-/* Landscape tablets and medium desktops */
-@mixin desktops-only{
-  @media (min-width: #{$screen-desktop}) and (max-width: #{$screen-md-max}) {
-    @content;
-  }
-}
-
-/* Large desktops and laptops */
-@mixin large-screen {
-  @media (min-width: #{$screen-lg-min}) {
-   @content;
-  }
-}
-
-// /* Large desktops and laptops */
-// @media (min-width: 1200px) {
-
-// }
-
-// /* Landscape tablets and medium desktops */
-// @media (min-width: 992px) and (max-width: 1199px) {
-
-// }
-
-// /* Portrait tablets and small desktops */
-// @media (min-width: 768px) and (max-width: 991px) {
-
-// }
-
-// /* Landscape phones and portrait tablets */
-// @media (max-width: 767px) {
-
-// }
-
-// /* Portrait phones and smaller */
-// @media (max-width: 480px) {
-
-// }
