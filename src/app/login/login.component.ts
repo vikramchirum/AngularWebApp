@@ -3,7 +3,7 @@ import {UserService} from "../core/user.service";
 import {Router} from "@angular/router";
 import {IUser, ISecurityQuestions} from "./register";
 import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
-import {validateEmail, equalCheck} from "app/validators/validator";
+import {validateEmail, equalCheck, validateInteger} from "app/validators/validator";
 
 @Component({
   templateUrl: './login.component.html',
@@ -24,12 +24,12 @@ export class LoginComponent implements OnInit {
     this.processing = false;
     this.registerForm = fb.group({
       'Billing_Account_Id': ['', Validators.compose([Validators.required])],
-      'Zip': ['', Validators.compose([Validators.required])],
+      'Zip': ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(5), validateInteger])],
       'User_name': ['', Validators.compose([Validators.required])],
       'Password': ['', Validators.compose([Validators.required])],
       'ConfirmPassword': ['', Validators.compose([Validators.required])],
       'Email_Address': ['', Validators.compose([Validators.required, validateEmail])],
-      'Security_Question_Id': ['0', Validators.compose([Validators.required])],
+      'Security_Question_Id': ['', Validators.compose([Validators.required])],
       'Security_Question_Answer': ['', Validators.required]
     }, {validator: equalCheck('Password', 'ConfirmPassword')});
   }
