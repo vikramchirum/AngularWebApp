@@ -34,7 +34,7 @@ export class UserService implements CanActivate {
     this.actionUrl = environment.Api_Url + "/user/authentication";
     //this.actionUrl = "http://localhost:58894/api/user/authentication";
     this.registerUrl = environment.Api_Url + "/user/register";
-    this.secQuesUrl = "http://localhost:58894/api/user/securityQues"
+    this.secQuesUrl = environment.Api_Url + "/user/securityQues";
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
