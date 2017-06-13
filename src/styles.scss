@@ -48,11 +48,28 @@ section.section-container {
   border: 2px solid black;
   padding: 2rem 4rem;
   margin-bottom:4rem;
+  display: block;
+  width:100%;
+  position:relative;  
   &.card-container-height{
     height:20em;
      @include phone-landscape {
          height:auto;
      }
+  }
+  .card-content {
+    height:12.5em;
+     @include phone-landscape {
+         height:auto;
+     }
+  }
+  .card-button{
+    position:absolute;
+    bottom:0;
+    right:0;
+    @include phone-landscape {
+          position: inherit;
+      }
   }
 }
 

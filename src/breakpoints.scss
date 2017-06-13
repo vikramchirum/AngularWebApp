@@ -23,6 +23,13 @@
   }
 }
 
+/* Portrait tablets and small desktops */
+@mixin tablets-portrait {
+  @media (min-width: #{$screen-tablet}) and (max-width: #{$screen-sm-max}) and (orientation:portrait) {
+    @content;
+  }
+}
+
 
 /* Landscape tablets and medium desktops */
 @mixin desktops-only{

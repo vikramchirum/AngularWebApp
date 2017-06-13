@@ -7,9 +7,6 @@
   .view-more-button{
       position: absolute;
       bottom:0;
-      right:0;
-      @include phone-landscape {
-          position: inherit;
-      }
+      right:0;      
   }
 }
