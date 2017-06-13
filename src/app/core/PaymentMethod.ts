@@ -11,6 +11,7 @@ export class PaymentMethod {
   Card_Expires: string;
   Card_Last: string;
   Card_Name: string;
+  Used_For_Auto_Pay: boolean;
 
   /**
    * Construct a new Payment_Method passing in values (opts) to use.
