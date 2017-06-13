@@ -22,16 +22,7 @@ export class LoginComponent implements OnInit {
   secQuesArray: ISecurityQuestions[];
   constructor(private user_service: UserService, private router: Router, private fb: FormBuilder) {
     this.processing = false;
-    this.registerForm = fb.group({
-      'Billing_Account_Id': ['', Validators.compose([Validators.required])],
-      'Zip': ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(5), validateInteger])],
-      'User_name': ['', Validators.compose([Validators.required])],
-      'Password': ['', Validators.compose([Validators.required])],
-      'ConfirmPassword': ['', Validators.compose([Validators.required])],
-      'Email_Address': ['', Validators.compose([Validators.required, validateEmail])],
-      'Security_Question_Id': ['', Validators.compose([Validators.required])],
-      'Security_Question_Answer': ['', Validators.required]
-    }, {validator: equalCheck('Password', 'ConfirmPassword')});
+    this.registerForm = this.registerFormInit();
   }
 
 
@@ -58,6 +49,23 @@ export class LoginComponent implements OnInit {
     }
     // console.log("Isvalid",isValid);
    // this.registerForm.reset();
+  }
+  reset() {
+    this.formSubmitted = false;
+    this.registerForm = this.registerFormInit();
+  }
+
+  registerFormInit(): FormGroup {
+    return this.fb.group({
+      'Billing_Account_Id': ['', Validators.compose([Validators.required])],
+      'Zip': ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(5), validateInteger])],
+      'User_name': ['', Validators.compose([Validators.required])],
+      'Password': ['', Validators.compose([Validators.required])],
+      'ConfirmPassword': ['', Validators.compose([Validators.required])],
+      'Email_Address': ['', Validators.compose([Validators.required, validateEmail])],
+      'Security_Question_Id': ['none', Validators.compose([Validators.required])],
+      'Security_Question_Answer': ['', Validators.required]
+    }, {validator: equalCheck('Password', 'ConfirmPassword')});
   }
 
   // ngOnInit() {
