@@ -18,8 +18,10 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
 
   PaymentMethods: PaymentMethod[] = [];
 
-  addingCreditCardNow: Date = new Date;
+  addingEcheck: boolean = null;
+  addingEcheckForm: FormGroup = null;
   addingCreditCard: boolean = null;
+  addingCreditCardNow: Date = new Date;
   addingCreditCardForm: FormGroup = null;
   addingCreditCardMonths: any[] = [
     ['01', 'January'],
@@ -46,6 +48,8 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
     for (let count = 0; count <= 5; this.addingCreditCardYears.push(`${thisYear + count}`), count++) {}
     // Prepare the credit card form.
     this.addingCreditCardForm = this.addingCreditCardFormInit();
+    // Prepare the Echeck form.
+    this.addingEcheckForm = this.addingEcheckFormInit();
   }
 
   ngOnInit() {
@@ -81,6 +85,29 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
     console.log('this.addingCreditCardForm.value', this.addingCreditCardForm.value);
     alert('Add card to Forte now.\nCheck the console for the user\'s input.');
     this.addingCreditCard = false;
+  }
+
+  addingEcheckToggle(open: boolean): void {
+    const doOpen = open !== false;
+    if (doOpen) {
+      this.addingEcheckForm = this.addingEcheckFormInit();
+    }
+    this.addingEcheck = doOpen;
+  }
+
+  addingEcheckFormInit(): FormGroup {
+    return this.FormBuilder.group({
+      Check_Name: ['', Validators.required],
+      Check_Routing: ['', Validators.compose([Validators.required, Validators.minLength(9), CustomValidators.digits])],
+      Check_Accounting: ['', Validators.compose([Validators.required, Validators.minLength(9), CustomValidators.digits])],
+      Check_Info: ['']
+    });
+  }
+
+  addingEcheckSubmit() {
+    console.log('this.addingEcheckForm.value', this.addingEcheckForm.value);
+    alert('Add Echeck now.\nCheck the console for the user\'s input.');
+    this.addingEcheck = false;
   }
 
 }
