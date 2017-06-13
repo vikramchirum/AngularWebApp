@@ -3,7 +3,7 @@ import {UserService} from "../core/user.service";
 import {Router} from "@angular/router";
 import {IUser, ISecurityQuestions} from "./register";
 import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
-import {validateEmail, equalityCheck} from "app/validators/validator";
+import {validateEmail, equalCheck} from "app/validators/validator";
 
 @Component({
   templateUrl: './login.component.html',
@@ -31,8 +31,7 @@ export class LoginComponent implements OnInit {
       'Email_Address': ['', Validators.compose([Validators.required, validateEmail])],
       'Security_Question_Id': ['0', Validators.compose([Validators.required])],
       'Security_Question_Answer': ['', Validators.required]
-    });
-    // , {validator: equalityCheck('email', 'confirmEmail')});
+    }, {validator: equalCheck('Password', 'ConfirmPassword')});
   }
 
 
@@ -75,7 +74,6 @@ export class LoginComponent implements OnInit {
     let self = this;
     self.user_service.getSecurityQuestions().subscribe(response => {
         this.secQuesArray = response;
-        console.log("Data 2", this.secQuesArray);
     }, error => this.error = < any > error);
   }
 }

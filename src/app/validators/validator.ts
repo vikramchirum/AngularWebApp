@@ -26,3 +26,18 @@ export function equalityCheck (emailKey: string, confirmEmailKey: string) {
     }
   };
 }
+
+ export function equalCheck (Key: string, confirmKey: string) {
+   return (group: FormGroup): {[key: string]: any} => {
+     const entry = group.controls[Key];
+     const confirmEntry = group.controls[confirmKey];
+     if (entry.value !== confirmEntry.value) {
+       return {
+         equalCheck: {
+           valid: false
+         }
+       };
+     }
+   };
+ }
+
