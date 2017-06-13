@@ -6,7 +6,8 @@
 .form-control-wireframe {
   background: white !important;
   border: 2px solid black !important;
-  border-radius: 0px !important;
+  border-radius: 0 !important;
+  color: black !important;
 }
 
 .btn-blank {
@@ -61,7 +62,7 @@ section.section-container {
   margin-bottom:4rem;
   display: block;
   width:100%;
-  position:relative;  
+  position:relative;
   &.card-container-height{
     height:20em;
      @include phone-landscape {

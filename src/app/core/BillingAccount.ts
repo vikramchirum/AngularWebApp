@@ -140,6 +140,7 @@ export class BillingAccountService {
 
   private BillingAccountsSubscribers: Subscriber<any>[] = [];
   private BillingAccountsRequesting: boolean = null;
+  private BillingAccountsRetries: number = null;
 
   constructor(
     private Http: Http
@@ -214,20 +215,33 @@ export class BillingAccountService {
         ) {
           this.ActiveBillingAccount = this.BillingAccounts.length > 0 ? this.BillingAccounts[0] : null;
         }
+        // Reset the retries:
+        this.BillingAccountsRetries = 0;
+        // Reset the updating flag - allow new API subscribers to request:
+        this.BillingAccountsRequesting = false;
       },
       // TODO: handle errors.
       error => {
-        console.log(`Error with ${environment.Api_Url}/billing_accounts\nUsing MockData...\n`, error);
+        if (this.BillingAccountsRetries >= 5) {
+          alert(`Error with ${environment.Api_Url}/billing_accounts\nToo many retries... please check the console.\n`);
+        } else {
+          this.BillingAccountsRetries++;
+          console.log(`Error with ${environment.Api_Url}/billing_accounts\nTrying again (${this.BillingAccountsRetries}/5) in 5 seconds...\n`, error);
+          setTimeout(() => this.BillingAccountsUpdate(), 5000);
+        }
       },
       // Emit our new data to all of our subscribers.
       () => {
+        // If we're still requesting, that means we error'd out - so stop, reset and don't emit.
+        if (this.BillingAccountsRequesting === true) {
+          this.BillingAccountsRequesting = false;
+          return;
+        }
         for (const index in this.BillingAccountsSubscribers) {
           if (this.BillingAccountsSubscribers[index]) {
             this.BillingAccountsSubscribers[index].next(this.BillingAccounts);
           }
         }
-        // Reset the updating flag - allow new API subscribers to request:
-        this.BillingAccountsRequesting = false;
       }
     );
 
