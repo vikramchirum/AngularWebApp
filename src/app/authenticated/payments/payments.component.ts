@@ -11,8 +11,8 @@ export class PaymentsComponent implements OnInit {
 
   ngOnInit() {}
 
-  reactToChangedBillingAccount(BillingAccount_Id) {
-    console.log(BillingAccount_Id);
+  reactToChangedBillingAccount(BillingAccount) {
+    console.log(BillingAccount);
   }
 
 }

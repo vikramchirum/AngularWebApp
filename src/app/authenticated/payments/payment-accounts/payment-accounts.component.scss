@@ -1,32 +1,48 @@
 @import "../../../../../styles/bootstrap/stylesheets/bootstrap/_variables";
 
-.card-options {
-  padding: 10px 0;
-
-  a {
-    margin-left: 1rem;
+table.card-table {
+  td {
+    vertical-align: middle !important;
   }
-}
-
-.changing-jumbotron {
-  margin-left: -8rem;
-  margin-right: -8rem;
-
-  .form-group-lg {
-    margin-bottom: 1rem;
+  td.card-brand {
+    i.fa {
+      margin-right: 4px;
+    }
   }
-}
+  td.card-ending {
+    button {
+      font-family: monospace;
+      font-weight: bold;
+      padding: 0;
 
-.changing-storing-container {
-  margin-bottom: 1rem;
-
-  .col-md-2 {
+      i.fa {
+        margin-left: 4px;
+      }
+    }
+    button:hover {
+      text-decoration: underline;
+    }
+  }
+  td.card-expires {
+    text-align: center;
+  }
+  td.card-remove {
     text-align: center;
   }
 }
+table.card-table-odd {
+  background: #EBEBEB;
+}
 
-@media (max-width: $screen-xs-max) {
-  .changing-storing-container h4 {
-    font-size: 12px;
+h4.new-header {
+  font-weight: bold;
+  padding: 1rem 0;
+}
+button.new-button {
+  i.fa {
+    margin-right: 6px;
   }
+}
+button.new-button:hover {
+  text-decoration: underline;
 }
