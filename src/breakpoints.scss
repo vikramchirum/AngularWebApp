@@ -1,0 +1,64 @@
+/**
+ * Breakpoints for my-gexa below:
+ */
+
+/* Portrait phones and smaller */
+@mixin phones {
+  @media (max-width: #{$screen-xs-min}) {
+    @content;
+  }
+}
+
+/* Landscape phones and portrait tablets */
+@mixin phone-landscape {
+  @media (max-width: #{$screen-xs-max}) {
+      @content;
+  }
+}
+
+/* Portrait tablets and small desktops */
+@mixin tablets-only {
+  @media (min-width: #{$screen-tablet}) and (max-width: #{$screen-sm-max}) {
+    @content;
+  }
+}
+
+
+/* Landscape tablets and medium desktops */
+@mixin desktops-only{
+  @media (min-width: #{$screen-desktop}) and (max-width: #{$screen-md-max}) {
+    @content;
+  }
+}
+
+/* Large desktops and laptops */
+@mixin large-screen {
+  @media (min-width: #{$screen-lg-min}) {
+   @content;
+  }
+}
+
+// /* Large desktops and laptops */
+// @media (min-width: 1200px) {
+
+// }
+
+// /* Landscape tablets and medium desktops */
+// @media (min-width: 992px) and (max-width: 1199px) {
+
+// }
+
+// /* Portrait tablets and small desktops */
+// @media (min-width: 768px) and (max-width: 991px) {
+
+// }
+
+// /* Landscape phones and portrait tablets */
+// @media (max-width: 767px) {
+
+// }
+
+// /* Portrait phones and smaller */
+// @media (max-width: 480px) {
+
+// }

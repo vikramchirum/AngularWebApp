@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CarouselModule } from 'ngx-bootstrap';
+import { ChartsModule } from 'ng2-charts';
 
 import { HomeComponent } from './home.component';
 import { home_routes } from './home-routing.module';
@@ -17,7 +18,8 @@ import { HomeCarouselComponent } from './home-carousel/home-carousel.component'
     CommonModule,
     home_routes,
     SharedModule,
-    CarouselModule
+    CarouselModule,
+    ChartsModule
   ],
   declarations: [
     HomeComponent, 

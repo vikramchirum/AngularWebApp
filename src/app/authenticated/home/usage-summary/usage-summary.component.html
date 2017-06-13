@@ -1,6 +1,18 @@
-<div class="usage-summary card-container">
+<div class="usage-summary card-container card-container-height">
   <h4>Usage Summary</h4>
-  <div class="text-right">
-    <button class="btn btn-wireframe">View More</button>
+  <div class="row position-relative">
+    <div class="col-md-7">
+        <div class="bar-chart">
+          <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [colors]="barChartColors"
+            [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+        </div>
+    </div>
+    <div class="col-md-5 view-more-button">
+      <div class="text-right">
+        <button class="btn btn-wireframe">View More</button>
+      </div>
+    </div>
   </div>
-  </div>
+
+
+</div>

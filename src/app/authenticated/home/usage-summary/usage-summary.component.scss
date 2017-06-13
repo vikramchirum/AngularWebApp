@@ -1,3 +1,15 @@
+@import '../../../../styles';
 .usage-summary{
-    height:20em;
+  //  height:20em;
+  .bar-chart{
+      height:12.5em;
+  }
+  .view-more-button{
+      position: absolute;
+      bottom:0;
+      right:0;
+      @include phone-landscape {
+          position: inherit;
+      }
+  }
 }
