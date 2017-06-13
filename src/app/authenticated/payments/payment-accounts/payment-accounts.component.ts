@@ -1,7 +1,10 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import * as $ from 'jquery';
 import { PaymentMethod, PaymentMethodService } from 'app/core/PaymentMethod';
+import { CustomValidators } from 'ng2-validation';
+import { validCreditCard } from 'app/validators/validator';
 
 declare const jQuery: $;
 
@@ -13,62 +16,71 @@ declare const jQuery: $;
 export class PaymentAccountsComponent implements OnInit, AfterViewInit {
   @ViewChild('modal_delete') modal_delete;
 
-  $modal: $ = null;
-  changingPaymentMethod: PaymentMethod = null;
-  deletePaymentMethod: PaymentMethod = null;
+  PaymentMethods: PaymentMethod[] = [];
+
+  addingCreditCardNow: Date = new Date;
+  addingCreditCard: boolean = null;
+  addingCreditCardForm: FormGroup = null;
+  addingCreditCardMonths: any[] = [
+    ['01', 'January'],
+    ['02', 'February'],
+    ['03', 'March'],
+    ['04', 'April'],
+    ['05', 'May'],
+    ['06', 'June'],
+    ['07', 'July'],
+    ['08', 'August'],
+    ['09', 'September'],
+    ['10', 'October'],
+    ['11', 'November'],
+    ['12', 'December']
+  ];
+  addingCreditCardYears: string[] = [];
 
   constructor(
+    private FormBuilder: FormBuilder,
     private PaymentMethodService: PaymentMethodService
-  ) { }
+  ) {
+    // Generate the available years to select.
+    const thisYear = this.addingCreditCardNow.getFullYear();
+    for (let count = 0; count <= 5; this.addingCreditCardYears.push(`${thisYear + count}`), count++) {}
+    // Prepare the credit card form.
+    this.addingCreditCardForm = this.addingCreditCardFormInit();
+  }
 
   ngOnInit() {
     this.PaymentMethodService.getPaymentMethods()
-      .then(data => console.log(data));
+      .then((PaymentMethods: PaymentMethod[]) => this.PaymentMethods = PaymentMethods);
   }
 
   ngAfterViewInit() {
-    this.$modal = jQuery(this.modal_delete.nativeElement);
+    // Leave for later use.
+    // this.$modal = jQuery(this.modal_delete.nativeElement);
   }
 
-  isInactive(paymentMethod: PaymentMethod): boolean {
-    return (this.changingPaymentMethod !== null && this.changingPaymentMethod !== paymentMethod);
+  addingCreditCardToggle(open: boolean): void {
+    const doOpen = open !== false;
+    if (doOpen) {
+      this.addingCreditCardForm = this.addingCreditCardFormInit();
+    }
+    this.addingCreditCard = doOpen;
   }
 
-  change($event, paymentMethod) {
-
-    if ($event && $event.preventDefault) { $event.preventDefault(); }
-
-    this.changingPaymentMethod = paymentMethod;
-
+  addingCreditCardFormInit(): FormGroup {
+    const thisMonth = (this.addingCreditCardNow.getMonth() + 1);
+    return this.FormBuilder.group({
+      Card_Name: ['', Validators.required],
+      Card_Number: ['', validCreditCard],
+      Card_Expiration_Month: [`${thisMonth < 10 ? '0' : ''}${thisMonth}`, Validators.required],
+      Card_Expiration_Year: [this.addingCreditCardYears[0], Validators.required],
+      Card_CCV: ['', Validators.compose([Validators.required, CustomValidators.digits, Validators.minLength(3)])]
+    });
   }
 
-  changeCancel() {
-    this.changingPaymentMethod = null;
-  }
-
-  changeSubmit() {
-    alert ('Work with Forte.');
-    this.changeCancel();
-  }
-
-  delete($event, paymentMethod) {
-
-    if ($event && $event.preventDefault) { $event.preventDefault(); }
-
-    this.deletePaymentMethod = paymentMethod;
-
-    this.$modal.modal('show');
-
-  }
-
-  delete_confirm() {
-
-    this.PaymentMethodService.deletePaymentMethod(this.deletePaymentMethod.Id);
-
-    if (this.changingPaymentMethod === this.deletePaymentMethod) { this.changingPaymentMethod = null; }
-
-    this.$modal.modal('hide');
-
+  addingCreditCardSubmit() {
+    console.log('this.addingCreditCardForm.value', this.addingCreditCardForm.value);
+    alert('Add card to Forte now.\nCheck the console for the user\'s input.');
+    this.addingCreditCard = false;
   }
 
 }
