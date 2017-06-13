@@ -10,6 +10,6 @@ export interface IUser {
 }
 
 export interface ISecurityQuestions {
-  Security_Id: number;
-  Security_Question: string;
+  Id: number;
+  Question: string;
 }

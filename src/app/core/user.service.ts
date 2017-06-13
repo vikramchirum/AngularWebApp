@@ -8,16 +8,18 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import { IToken } from "app/login/login.component.token";
-import { IUser } from "app/login/register";
+import { IUser,ISecurityQuestions } from "app/login/register";
 import { environment } from 'environments/environment';
 
 @Injectable()
 export class UserService implements CanActivate {
 
+  public securityQuestions: ISecurityQuestions;
   state: string = null;
   result: string;
   errorMessage: string;
   private actionUrl: string; private registerUrl: string;
+  private secQuesUrl: string;
 
   get user_token(): string {
     return localStorage.getItem('gexa_auth_token');
@@ -32,7 +34,7 @@ export class UserService implements CanActivate {
     this.actionUrl = environment.Api_Url + "/user/authentication";
     //this.actionUrl = "http://localhost:58894/api/user/authentication";
     this.registerUrl = environment.Api_Url + "/user/register";
-
+    this.secQuesUrl = "http://localhost:58894/api/user/securityQues"
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
@@ -90,6 +92,19 @@ export class UserService implements CanActivate {
       .subscribe(res => { this.result = res;
         console.log(this.result);
       });
+  }
+
+  getSecurityQuestions(): Observable<ISecurityQuestions[]> {
+    return this._http.get(
+       this.secQuesUrl).map(
+      (response: Response) => {
+        var res = <ISecurityQuestions[]> response.json();
+        console.log("Response:", res);
+        return res;
+       // data => {
+      // console.log("My data", data);
+      // return data;
+    }).catch(( error: any ) => Observable.throw(error.json().error || 'Server error'));
   }
 
   logout() {

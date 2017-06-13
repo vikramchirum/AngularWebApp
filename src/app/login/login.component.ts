@@ -18,8 +18,8 @@ export class LoginComponent implements OnInit {
   user_name: string;
   error: string = null;
   password: string;
-  public securityQues: ISecurityQuestions;
-
+  testdata: any;
+  secQuesArray: ISecurityQuestions[];
   constructor(private user_service: UserService, private router: Router, private fb: FormBuilder) {
     this.processing = false;
     this.registerForm = fb.group({
@@ -29,7 +29,8 @@ export class LoginComponent implements OnInit {
       'Password': ['', Validators.compose([Validators.required])],
       'ConfirmPassword': ['', Validators.compose([Validators.required])],
       'Email_Address': ['', Validators.compose([Validators.required, validateEmail])],
-      'Security_Question_Id': ['', Validators.compose([Validators.required])]
+      'Security_Question_Id': ['0', Validators.compose([Validators.required])],
+      'Security_Question_Answer': ['', Validators.required]
     });
     // , {validator: equalityCheck('email', 'confirmEmail')});
   }
@@ -60,7 +61,21 @@ export class LoginComponent implements OnInit {
    // this.registerForm.reset();
   }
 
-  ngOnInit() {
+  // ngOnInit() {
+  //   var res = this.user_service.getSecurityQuestions()
+  //     .subscribe(
+  //       data => {
+  //         this.testdata = data;
+  //         console.log("Data:", this.testdata);
+  //       });
+  //
+  // }
 
+  ngOnInit(): void {
+    let self = this;
+    self.user_service.getSecurityQuestions().subscribe(response => {
+        this.secQuesArray = response;
+        console.log("Data 2", this.secQuesArray);
+    }, error => this.error = < any > error);
   }
 }

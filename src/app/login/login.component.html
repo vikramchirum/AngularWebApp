@@ -46,7 +46,7 @@
             <label>Do you have an account?</label>
           </div>
           <div class="form-group">
-            <button type="submit" class="btn btn-wireframe" (click)="register()">Sign Up</button>
+            <button type="submit" class="btn btn-wireframe" data-toggle="modal" data-target="#register" (click)="disableLogin()">Sign Up</button>
           </div>
         </form>
       </div>
@@ -179,16 +179,29 @@
                   && formSubmitted}">
                     <div class="inner-addon left-addon">
                       <span class=""><i class="fa fa-question-circle fa-fw" style="color:gray"></i></span>
-                      <select name="Security_Question_Id" class="form-control" [formControl="registerForm.controls['Security_Question_Id']">
-                        <option value="0">Please select a security question</option>
-                        <!--<option *ngFor="let BillingAccount of BillingAccountService.BillingAccounts" -->
-                                <!--[value]="BillingAccount.Id">{{ BillingAccount.serviceAddressString() }}</option>-->
+                      <select name="Security_Question_Id" class="form-control"  style="padding-left:40px " [formControl]="registerForm.controls['Security_Question_Id']">
+                        <option value="0" selected="selected">Please select a security question</option>
+                        <option *ngFor="let secQues of secQuesArray" [value]="secQues.Id">{{ secQues.Question }}</option>
                       </select>
                     </div>
                   </div>
 
+                  <div class="form-group row inputRow" [ngClass]="{'has-error':registerForm.controls['Security_Question_Answer'].valid
+                  && formSubmitted}">
+                    <div class="inner-addon left-addon ">
+                      <span class=""><i class="fa fa-lock fa-fw"></i></span>
+                    </div>
+                    <input  name="Security_Question_Answer" type="text" class="form-control line-border"
+                            [formControl]="registerForm.controls['Security_Question_Answer']"
+                            placeholder="Enter your response.">
+                    <div class="has-error" *ngIf="!registerForm.controls['Security_Question_Answer'].hasError('required')
+                    && formSubmitted">
+                      <span class="help-block">Response is required.</span>
+                    </div>
+                  </div>
+
                   <div class="text-right">
-                    <button type="submit" [disabled]="!myForm.valid"
+                    <button type="submit" [disabled]="!registerForm.valid"
                             class="btnreg btn-secondary pull-right text-uppercase">Register
                     </button>
                   </div>
