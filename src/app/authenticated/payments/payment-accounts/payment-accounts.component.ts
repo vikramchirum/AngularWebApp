@@ -89,6 +89,19 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
       .then((PaymentMethods: PaymentMethod[]) => this.PaymentMethods = PaymentMethods);
   }
 
+  removePaymentMethodStopAutoPay(): void {
+    this.PaymentMessage = {
+      class: ['alert', 'alert-success'],
+      innerHTML: `<b>Ok!</b> your payment account, ending in <b>${this.PaymentEditting.Card_Last}</b> was deleted and <b>Auto Pay</b> has been stopped!`
+    };
+    this.PaymentMethodService.deletePaymentMethod(this.PaymentEditting.Id)
+      .then((PaymentMethods: PaymentMethod[]) => this.PaymentMethods = PaymentMethods);
+  }
+
+  removePaymentMethodEditAutoPay(): void {
+    // TODO: allow selecting of other payment methods.
+  }
+
   addingCreditCardToggle(open: boolean): void {
     const doOpen = open !== false;
     if (doOpen) {
