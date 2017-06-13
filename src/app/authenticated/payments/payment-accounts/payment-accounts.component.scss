@@ -39,6 +39,9 @@ h4.new-header {
   padding: 1rem 0;
 }
 button.new-button {
+  outline: none !important;
+  padding: 10px;
+
   i.fa {
     margin-right: 6px;
   }

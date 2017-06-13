@@ -1,7 +1,34 @@
  /*
   Custom validators to use everywhere.
 */
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
+
+import { CustomValidators } from 'ng2-validation';
+
+/**
+* This patches the broken CustomValidators.creditCard validator.
+* It was allowing allowing characters other than numbers, dashes and spaces.
+* @param control
+* @returns {any}
+*/
+export function validCreditCard(control: FormControl): any {
+
+ const value: string = control.value;
+
+ if (
+   // Test for an empty string.
+   !value
+   // Test using the third-party validator.
+   || CustomValidators.creditCard(control) !== null
+   // Test if there are non-credit card characters (other than 0-9, spaces, and dashes)
+   || /([^0-9 -])/g.test(value)
+ ) {
+   return { invalidCreditCard: true };
+ }
+
+ return null;
+
+}
 
  export function validateInteger(c: FormControl) {
    const INTEGER_REGEXP = /^[0-9]*$/;

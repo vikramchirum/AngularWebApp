@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { payment_routes } from './payments-routing.module';
 import { ViewMyBillComponent } from './view-my-bill/view-my-bill.component';
@@ -18,6 +18,7 @@ import { SharedModule } from 'app/shared/shared.module';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     payment_routes,
     PaymentOptionsModule,
     SharedModule
