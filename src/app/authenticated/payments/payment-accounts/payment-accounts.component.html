@@ -8,11 +8,13 @@
   <div *ngIf="PaymentMethodService.PaymentMethods" class="row">
 
     <div *ngFor="let paymentMethod of PaymentMethodService.PaymentMethods" class="col-md-4">
-      <div class="card-container" [ngClass]="{ 'card-container-inactive': isInactive(paymentMethod) }">
-        <h4>Card<span class="pull-right">{{ paymentMethod.Card_Type === 'debit' ? 'Debit' : 'Credit' }}</span></h4>
-        <h4 class="card-number">&times;&times;&times;&times; &times;&times;&times;&times; &times;&times;&times;&times; {{ paymentMethod.Card_Last }}</h4>
-        <h4>{{ paymentMethod.Card_Name }}<i [ngClass]="'fa fa-fw pull-right ' + paymentMethod.getFontAwesomeTag()"></i></h4>
-      </div>
+      <mygexa-credit-card
+        [Last]="paymentMethod.Card_Last"
+        [Name]="paymentMethod.Card_Name"
+        [Type]="paymentMethod.Card_Type"
+        [Brand]="paymentMethod.Card_Brand"
+        [Inactive]="isInactive(paymentMethod)"
+      ></mygexa-credit-card>
       <div class="card-options">
         <a href (click)="delete($event,paymentMethod)">Delete</a>
         <a href (click)="change($event,paymentMethod)">Change</a>
