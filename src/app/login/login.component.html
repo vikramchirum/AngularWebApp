@@ -4,21 +4,21 @@
       <div class="my-gexa-login-form">
         <h1>myGexa</h1><br><br>
         <form (ngSubmit)="login()" #myGexaLoginForm="ngForm" >
-          <div class="form-group" [ngClass]="{ 'has-error': error !== null }">
+          <div class="form-group" [ngClass]="{ 'has-error': error != null && myGexaLoginForm.form.valid }">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
               <input [(ngModel)]="user_name" [disabled]="processing" name="user_name" type="text" class="form-control" placeholder="Username" required #username="ngModel">
             </div>
             <small [hidden]="username.valid || username.pristine || processing" class="text-danger">Username is required</small>
           </div>
-          <div class="form-group" [ngClass]="{ 'has-error': error !== null }">
+          <div class="form-group" [ngClass]="{ 'has-error': error !== null && myGexaLoginForm.form.valid}">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
               <input [(ngModel)]="password" [disabled]="processing" name="password" type="password" class="form-control" placeholder="Password" required #em="ngModel">
             </div>
             <small [hidden]="em.valid || em.pristine || processing" class="text-danger">Password is required</small>
           </div>
-          <div *ngIf="error != null">
+          <div *ngIf="error != null && myGexaLoginForm.form.valid">
             <small class="text-danger">Either username or password is wrong</small>
           </div><br>
           <div>
@@ -69,7 +69,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close fa fa-times fa-2x" style="padding:15px 100px 10px 0px"
-                data-dismiss="modal"></button>
+                data-dismiss="modal" (click)="reset()"></button>
         <h2 class="modal-title">Register</h2>
       </div>
       <div class="modal-body container">
@@ -79,34 +79,47 @@
               <div class="text-center">
                 <form id="registration" novalidate [formGroup]="registerForm" (ngSubmit)="save(registerForm.value, registerForm.valid)">
 
-                  <div class="form-group row inputRow" [ngClass]="{'has-error':registerForm.controls['Billing_Account_Id'].valid
+                  <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['Billing_Account_Id'].valid
                   && formSubmitted}">
                     <div class="inner-addon left-addon ">
                       <span class=""><i class="fa fa-wrench fa-fw"></i></span>
-                    </div>
                     <input  name="Billing_Account_Id" type="text" class="form-control line-border"
                             [formControl]="registerForm.controls['Billing_Account_Id']"
                             placeholder="Enter your Service Account Number">
-                    <div class="has-error" *ngIf="!registerForm.controls['Billing_Account_Id'].hasError('required')
+                    </div>
+                    <div class="has-error" *ngIf="registerForm.controls['Billing_Account_Id'].hasError('required')
                     && formSubmitted">
                       <span class="help-block">Service number is required.</span>
                     </div>
                   </div>
 
-                  <div class="form-group row inputRow" [ngClass]="{'has-error':registerForm.controls['Zip'].valid
+                  <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['Zip'].valid
                   && formSubmitted}">
                     <div class="inner-addon left-addon">
                       <span class=""><i class="fa fa-map-marker fa-fw"></i></span>
                       <input name="Zip" type="text" class="form-control line-border"
                              placeholder=" Enter your Zipcode" [formControl]="registerForm.controls['Zip']">
                     </div>
-                    <div class="has-error" *ngIf="!registerForm.controls['Zip'].hasError('required')
+                    <div class="has-error" *ngIf="registerForm.controls['Zip'].hasError('required')
                     && formSubmitted">
                       <span class="help-block">Zip code is required.</span>
                     </div>
+
+                    <div class="has-error" *ngIf="registerForm.controls['Zip'].hasError('validateInteger') && registerForm.controls['Zip'].touched">
+                      <span class="help-block">Zip code should be a number.</span>
+                    </div>
+
+                    <!--<div class="has-error" *ngIf="registerForm.controls['Zip'].hasError('pattern')-->
+                    <!--&& formSubmitted">-->
+                      <!--<span class="help-block">Zip code.</span>-->
+                    <!--</div>-->
+                    <div *ngIf="registerForm.controls['Zip'].hasError('minlength')
+                    && registerForm.controls['Zip'].touched" class="alert alert-danger">Zip must be at least 5 characters long.</div>
+                    <div *ngIf="registerForm.controls['Zip'].hasError('maxlength')
+                    && registerForm.controls['Zip'].touched" class="alert alert-danger">Zip cannot exceed 5 characters.</div>
                   </div>
 
-                  <div class="form-group row inputRow" [ngClass]="{'has-error':registerForm.controls['User_name'].valid
+                  <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['User_name'].valid
                   && formSubmitted}">
                     <div class="inner-addon left-addon">
                       <span class=""><i class="fa fa-user fa-fw"></i></span>
@@ -114,13 +127,13 @@
                              placeholder="Enter Username"
                               [formControl]="registerForm.controls['User_name']">
                     </div>
-                    <div class="has-error" *ngIf="!registerForm.controls['User_name'].hasError('required')
+                    <div class="has-error" *ngIf="registerForm.controls['User_name'].hasError('required')
                     && formSubmitted">
                       <span class="help-block">Username is required.</span>
                     </div>
                   </div>
 
-                  <div class="form-group row inputRow" [ngClass]="{'has-error':registerForm.controls['Password'].valid
+                  <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['Password'].valid
                   && formSubmitted}">
                     <div class="inner-addon left-addon">
                       <span class=""><i class="fa fa-key fa-fw"></i></span>
@@ -133,18 +146,18 @@
                         <span class="faRight"><i class="fa fa-info-circle fa-fw"></i></span>
                       </button>
                     </div>
-                    <div class="has-error" *ngIf="!registerForm.controls['Password'].hasError('required')
+                    <div class="has-error" *ngIf="registerForm.controls['Password'].hasError('required')
                     && formSubmitted">
                       <span class="help-block">Password is required.</span>
                     </div>
                   </div>
 
-                  <div class="form-group row inputRow" [ngClass]="{'has-error':registerForm.controls['ConfirmPassword'].valid
+                  <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['ConfirmPassword'].valid
                   && formSubmitted}">
                     <div class="inner-addon left-addon">
                       <span class=""><i class="fa fa-key fa-fw"></i></span>
                       <input name="ConfirmPassword" class="form-control line-border"
-                             placeholder="Confirm Password"
+                             placeholder="Confirm Password" type="password"
                              [formControl]="registerForm.controls['ConfirmPassword']">
                       <button type="button" style="background-color:white" class="btn modal-body faRight"
                               tooltip="Passwords must match."
@@ -152,11 +165,17 @@
                         <span class="faRight"><i class="fa fa-info-circle fa-fw"></i></span>
                       </button>
                     </div>
-                    <div class="has-error" *ngIf="!registerForm.controls['ConfirmPassword'].hasError('required')
+                    <div class="has-error" *ngIf="registerForm.controls['ConfirmPassword'].hasError('required')
                     && formSubmitted">
                       <span class="help-block">Confirm Password is required.</span>
                     </div>
+                    <div class="has-error" *ngIf="!registerForm.controls['ConfirmPassword'].hasError('required')
+                     && formSubmitted
+                     && !(registerForm.controls['ConfirmPassword'].value == registerForm.controls['Password'].value)">
+                      <span class="help-block">Passwords mismatch</span>
+                    </div>
                   </div>
+
 
                   <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['Email_Address'].valid
                   && formSubmitted}">
@@ -180,28 +199,32 @@
                     <div class="inner-addon left-addon">
                       <span class=""><i class="fa fa-question-circle fa-fw" style="color:gray"></i></span>
                       <select name="Security_Question_Id" class="form-control"  style="padding-left:40px " [formControl]="registerForm.controls['Security_Question_Id']">
-                        <option value="0" selected="selected">Please select a security question</option>
+                        <option value="none">Please select a security question</option>
                         <option *ngFor="let secQues of secQuesArray" [value]="secQues.Id">{{ secQues.Question }}</option>
                       </select>
                     </div>
+                    <div class="has-error" *ngIf="registerForm.controls['Security_Question_Id'].hasError('required')
+                     && formSubmitted">
+                      <span class="help-block">Security question is required.</span>
+                    </div>
                   </div>
 
-                  <div class="form-group row inputRow" [ngClass]="{'has-error':registerForm.controls['Security_Question_Answer'].valid
+                  <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['Security_Question_Answer'].valid
                   && formSubmitted}">
                     <div class="inner-addon left-addon ">
                       <span class=""><i class="fa fa-lock fa-fw"></i></span>
-                    </div>
                     <input  name="Security_Question_Answer" type="text" class="form-control line-border"
                             [formControl]="registerForm.controls['Security_Question_Answer']"
                             placeholder="Enter your response.">
-                    <div class="has-error" *ngIf="!registerForm.controls['Security_Question_Answer'].hasError('required')
+                    </div>
+                    <div class="has-error" *ngIf="registerForm.controls['Security_Question_Answer'].hasError('required')
                     && formSubmitted">
                       <span class="help-block">Response is required.</span>
                     </div>
                   </div>
 
                   <div class="text-right">
-                    <button type="submit" [disabled]="!registerForm.valid"
+                    <button type="submit"
                             class="btnreg btn-secondary pull-right text-uppercase">Register
                     </button>
                   </div>
@@ -211,7 +234,6 @@
             </div>
           </div>
         </div>
-
       </div>
       <!--<div class="modal-footer">-->
       <!--<button type="button" class="btn btn-default" data-dismiss="modal">Register</button>-->
