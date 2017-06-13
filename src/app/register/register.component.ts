@@ -2,7 +2,7 @@ import {Directive, Component, OnInit} from '@angular/core';
 import {UserService} from "../core/user.service";
 import {Router} from "@angular/router";
 import {IToken} from "app/login/login.component.token";
-import {ISecurityQuestions, IUser} from "app/register/register";
+import {ISecurityQuestions, IUser} from "app/login/register";
 
 @Component({
   templateUrl: './register.component.html',
@@ -22,7 +22,8 @@ export class RegisterComponent implements OnInit {
       Zip: '',
       Billing_Account_Id: '',
       User_name: '',
-      Password: ''
+      Password: '',
+      ConfirmPassword:''
     };
   }
 
