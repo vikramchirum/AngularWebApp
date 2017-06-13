@@ -8,6 +8,7 @@ export class PaymentMethod {
   Id: string;
   Card_Type: string;
   Card_Brand: string;
+  Card_Expires: string;
   Card_Last: string;
   Card_Name: string;
 
@@ -21,6 +22,24 @@ export class PaymentMethod {
         this[key] = opts[key];
       }
     }
+  }
+
+  /**
+   * Returns the formatted brand name or none.
+   * @returns {string}
+   */
+  getBrand(): string {
+    switch (this.Card_Brand) {
+      case 'amex': return 'Amex';
+      case 'diners-club': return 'Diners Club';
+      case 'discover': return 'Discover';
+      case 'jcb': return 'JCB';
+      case 'mastercard': return 'Mastercard';
+      case 'paypal': return 'PayPal';
+      case 'stripe': return 'Stripe';
+      case 'visa': return 'Visa';
+    }
+    return '???';
   }
 
   /**
