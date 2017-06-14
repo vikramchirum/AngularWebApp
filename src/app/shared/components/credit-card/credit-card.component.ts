@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+import { PaymentMethod } from 'app/core/PaymentMethod';
+
 @Component({
   selector: 'mygexa-credit-card',
   templateUrl: './credit-card.component.html',
@@ -7,27 +9,19 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class CreditCardComponent implements OnInit {
 
-  classes: string[] = ['credit-card-container'];
-  fontAwesomeTags: string = null;
-
-  @Input() Brand: string = null;
+  @Input() PaymentMethod: PaymentMethod = null;
   @Input() Inactive: boolean = null;
-  @Input() Last: string = null;
-  @Input() Name: string = null;
-  @Input() Type: string = null;
 
   constructor() {}
 
-  ngOnInit() {
-    this.fontAwesomeTags = `fa fa-fw pull-right fa-${this.getFontAwesomeTag()}`;
-  }
+  ngOnInit() {}
 
   /**
    * Returns the Font Awesome tag or a general credit card icon.
    * @returns {string}
    */
   getFontAwesomeTag(): string {
-    switch (this.Brand) {
+    switch (this.PaymentMethod.Card_Brand) {
       case 'amex': return 'cc-amex';
       case 'diners-club': return 'cc-diners-club';
       case 'discover': return 'cc-discover';

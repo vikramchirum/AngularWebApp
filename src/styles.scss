@@ -22,6 +22,7 @@
 
 .btn-wireframe {
   background: white;
+  color: black !important;
   cursor: pointer !important;
   padding: 0.6em 1em;
   font-size: 1.1em;
@@ -49,15 +50,32 @@ section.section-container {
   border: 2px solid black;
   padding: 4rem 8rem;
 }
+section.section-container-highlight {
+  background: #EEEEEE;
+  margin: 0 -8rem;
+  padding: 48px 60px;
+}
 @media (max-width: $screen-sm-max) {
   section.section-container {
     padding: 2rem 4rem;
   }
+  section.section-container-highlight {
+    margin: 0 -4rem;
+    padding: 24px 30px;
+  }
 }
 @media (max-width: $screen-xs-max) {
+  .text-xs-left {
+    text-align: left !important;
+  }
   section.section-container {
     border: none;
     padding: 0 0 4rem 0;
+  }
+  section.section-container-highlight {
+    background: white;
+    margin: 0;
+    padding: 0;
   }
 }
 

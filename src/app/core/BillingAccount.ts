@@ -4,7 +4,9 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
 
+import { PaymentMethod } from './PaymentMethod';
 import { environment } from 'environments/environment';
+import MockData from './BillingAccount.mock-data.json';
 
 interface IBillingAccountAddress {
   Line1: string;
@@ -62,6 +64,7 @@ export class BillingAccount {
   Mailing_Address: IBillingAccountAddress;
   Paperless_Billing: boolean;
   Budget_Billing: boolean;
+  Enrolled_In_Auto_Bill_Pay: boolean;
   Service_Stop_Request_date: string;
   Status_Id: number;
   Status: string;
@@ -199,22 +202,7 @@ export class BillingAccountService {
     response.subscribe(
       // Process our results into classes.
       data => {
-        // Populate our new billing account collection with new billing account classes using our new data.
-        const BillingAccounts: BillingAccount[] = [];
-        for (const index in data) {
-          if (data[index]) {
-            BillingAccounts.push(new BillingAccount(data[index]));
-          }
-        }
-        // Update with the new billing accounts.
-        this.BillingAccounts = BillingAccounts;
-        // If there is no active billing account, or it is not included, then set a new active billing account.
-        if (
-          this.ActiveBillingAccount === null
-          || this.BillingAccounts.indexOf(this.ActiveBillingAccount) < 0
-        ) {
-          this.ActiveBillingAccount = this.BillingAccounts.length > 0 ? this.BillingAccounts[0] : null;
-        }
+        this.BillingAccountsProcessApiData(data);
         // Reset the retries:
         this.BillingAccountsRetries = 0;
         // Reset the updating flag - allow new API subscribers to request:
@@ -222,12 +210,28 @@ export class BillingAccountService {
       },
       // TODO: handle errors.
       error => {
-        if (this.BillingAccountsRetries >= 5) {
-          alert(`Error with ${environment.Api_Url}/billing_accounts\nToo many retries... please check the console.\n`);
-        } else {
+        // Limit the amount of retries to three.
+        if (this.BillingAccountsRetries < 3) {
           this.BillingAccountsRetries++;
-          console.log(`Error with ${environment.Api_Url}/billing_accounts\nTrying again (${this.BillingAccountsRetries}/5) in 5 seconds...\n`, error);
+          // Log out the error...
+          console.log([
+            `Error with ${environment.Api_Url}/billing_accounts`,
+            `Trying again (${this.BillingAccountsRetries}/3) in 5 seconds...\n`
+          ].join('\n'), error);
+          // ...and retry.
           setTimeout(() => this.BillingAccountsUpdate(), 5000);
+        } else {
+          // Tell the user the problem.
+          alert([
+            `Error with ${environment.Api_Url}/billing_accounts`,
+            'Too many retries... please check the console.',
+            'Falling back to mock billing accounts data.'
+          ].join('\n'));
+          // Use the temporary mock solution.
+          this.BillingAccountsProcessApiData(MockData);
+          this.BillingAccountsRetries = 0;
+          this.BillingAccountsRequesting = false;
+          this.BillingAccountsEmitToSubscribers();
         }
       },
       // Emit our new data to all of our subscribers.
@@ -237,16 +241,66 @@ export class BillingAccountService {
           this.BillingAccountsRequesting = false;
           return;
         }
-        for (const index in this.BillingAccountsSubscribers) {
-          if (this.BillingAccountsSubscribers[index]) {
-            this.BillingAccountsSubscribers[index].next(this.BillingAccounts);
-          }
-        }
+        this.BillingAccountsEmitToSubscribers();
       }
     );
 
     return response;
 
+  }
+
+  /**
+   * Process provided JSON data into Billing Account classes.
+   * @param jsonData
+   * @constructor
+   */
+  BillingAccountsProcessApiData(jsonData): void {
+    // Populate our new billing account collection with new billing account classes using our new data.
+    const BillingAccounts: BillingAccount[] = [];
+    for (const index in jsonData) {
+      if (jsonData[index]) {
+        BillingAccounts.push(new BillingAccount(jsonData[index]));
+      }
+    }
+    // Update with the new billing accounts.
+    this.BillingAccounts = BillingAccounts;
+    // If there is no active billing account, or it is not included, then set a new active billing account.
+    if (
+      this.ActiveBillingAccount === null
+      || this.BillingAccounts.indexOf(this.ActiveBillingAccount) < 0
+    ) {
+      this.ActiveBillingAccount = this.BillingAccounts.length > 0 ? this.BillingAccounts[0] : null;
+    }
+  }
+
+  /**
+   * Emit the current Billing Accounts to all subscribers.
+   * @constructor
+   */
+  BillingAccountsEmitToSubscribers(): void {
+    for (const index in this.BillingAccountsSubscribers) {
+      if (this.BillingAccountsSubscribers[index]) {
+        this.BillingAccountsSubscribers[index].next(this.BillingAccounts);
+      }
+    }
+  }
+
+  /**
+   * Set the provided Billing Account's Auto Bill Pay setting to the provided Payment Method.
+   * @param paymentMethod
+   * @param billingAccount
+   * @returns {Promise<void>}
+   */
+  applyNewAutoBillPay(paymentMethod: PaymentMethod, billingAccount: BillingAccount, value?: boolean): Promise<any> {
+    // TODO: Interact with the API to make this change. Use the below temporarily.
+    for (const index in this.BillingAccounts) {
+      if (this.BillingAccounts[index]) {
+        this.BillingAccounts[index].Enrolled_In_Auto_Bill_Pay = value === true;
+        this.BillingAccountsEmitToSubscribers();
+        break;
+      }
+    }
+    return Promise.resolve();
   }
 
 }
