@@ -9,6 +9,7 @@ import { StatusBarComponent } from './components/status-bar/status-bar.component
 import { ChangeAddressComponent } from './components/change-address/change-address.component';
 import { ServiceAccountSelectorComponent } from './components/service-account-selector/service-account-selector.component';
 import { CreditCardComponent } from './components/credit-card/credit-card.component';
+import { PhonePipe } from './pipes/phone.pipe';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { CreditCardComponent } from './components/credit-card/credit-card.compon
     StatusBarComponent,
     ChangeAddressComponent,
     ServiceAccountSelectorComponent,
-    CreditCardComponent
+    CreditCardComponent,
+    PhonePipe
   ],
   exports :[
     ChangeUserNameComponent,
@@ -32,7 +34,8 @@ import { CreditCardComponent } from './components/credit-card/credit-card.compon
     StatusBarComponent,
     ChangeAddressComponent,
     ServiceAccountSelectorComponent,
-    CreditCardComponent
+    CreditCardComponent,
+    PhonePipe
   ]
 })
 export class SharedModule { }
