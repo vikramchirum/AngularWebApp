@@ -3,6 +3,7 @@
 table.card-table {
   td {
     vertical-align: middle !important;
+    line-height: 4rem;
   }
   td.card-brand {
     i.fa {
@@ -11,17 +12,8 @@ table.card-table {
     }
   }
   td.card-ending {
-    button {
+    b {
       font-family: monospace;
-      font-weight: bold;
-      padding: 0;
-
-      i.fa {
-        margin-left: 4px;
-      }
-    }
-    button:hover {
-      text-decoration: underline;
     }
   }
   td.card-expires {
@@ -52,6 +44,9 @@ div.card-prompt {
     margin: 1rem 0;
     padding: 3rem 0;
   }
+}
+td.card-abp {
+  background: #DFF0D8;
 }
 
 h4.new-header {

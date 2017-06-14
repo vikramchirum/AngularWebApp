@@ -35,6 +35,11 @@
 .btn-wireframe[disabled] {
   cursor: not-allowed !important;
 }
+.btn-blank:active,
+.btn-wireframe:active {
+  box-shadow: none !important;
+  outline: none !important;
+}
 
 hr.breaker {
   border-top: 2px solid black;

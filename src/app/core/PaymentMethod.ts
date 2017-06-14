@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 
 import MockData from './PaymentMethod.mock-data.json';
+import { BillingAccount } from './BillingAccount';
 
 export class PaymentMethod {
   Id: string;
@@ -138,6 +139,11 @@ export class PaymentMethodService {
     // Otherwise no payment method was found, return null:
     return Promise.reject(null);
 
+  }
+
+  applyNewAutoBillPay(paymentMethod: PaymentMethod, billingAccount: BillingAccount): Promise<any> {
+    // TODO: Interact with the API to make this change.
+    return Promise.resolve();
   }
 
   /**

@@ -1,15 +1,13 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import * as $ from 'jquery';
+import { BillingAccountService } from 'app/core/BillingAccount';
 import { PaymentMethod, PaymentMethodService } from 'app/core/PaymentMethod';
 import { CustomValidators } from 'ng2-validation';
 import { validCreditCard } from 'app/validators/validator';
 
-declare const jQuery: $;
-
 interface IPaymentMessage {
-  class: string[];
+  classes: string[];
   innerHTML: string;
 }
 
@@ -18,12 +16,13 @@ interface IPaymentMessage {
   templateUrl: './payment-accounts.component.html',
   styleUrls: ['./payment-accounts.component.scss']
 })
-export class PaymentAccountsComponent implements OnInit, AfterViewInit {
-  @ViewChild('modal_delete') modal_delete;
+export class PaymentAccountsComponent implements OnInit {
 
   PaymentMessage: IPaymentMessage = null;
   PaymentEditting: PaymentMethod = null;
   PaymentMethods: PaymentMethod[] = [];
+  PaymentAbpSelecting: PaymentMethod = null;
+  PaymentAbpSelected: PaymentMethod = null;
 
   addingEcheck: boolean = null;
   addingEcheckForm: FormGroup = null;
@@ -48,6 +47,7 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
 
   constructor(
     private FormBuilder: FormBuilder,
+    private BillingAccountService: BillingAccountService,
     private PaymentMethodService: PaymentMethodService
   ) {
     // Generate the available years to select.
@@ -64,11 +64,6 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
       .then((PaymentMethods: PaymentMethod[]) => this.PaymentMethods = PaymentMethods);
   }
 
-  ngAfterViewInit() {
-    // Leave for later use.
-    // this.$modal = jQuery(this.modal_delete.nativeElement);
-  }
-
   removePaymentMethod(paymentMethod: PaymentMethod): void {
     if (
       !paymentMethod
@@ -82,7 +77,7 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
 
   removePaymentMethodConfirm(): void {
     this.PaymentMessage = {
-      class: ['alert', 'alert-success'],
+      classes: ['alert', 'alert-success'],
       innerHTML: `<b>Ok!</b> your payment account, ending in <b>${this.PaymentEditting.Card_Last}</b> was deleted!`
     };
     this.PaymentMethodService.deletePaymentMethod(this.PaymentEditting.Id)
@@ -91,15 +86,43 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
 
   removePaymentMethodStopAutoPay(): void {
     this.PaymentMessage = {
-      class: ['alert', 'alert-success'],
-      innerHTML: `<b>Ok!</b> your payment account, ending in <b>${this.PaymentEditting.Card_Last}</b> was deleted and <b>Auto Pay</b> has been stopped!`
+      classes: ['alert', 'alert-success'],
+      innerHTML: [
+        `<b>Ok!</b> your payment account, ending in <b>${this.PaymentEditting.Card_Last}</b> was deleted`,
+        ` and <b>Auto Pay</b> has been stopped!`
+      ].join('')
     };
     this.PaymentMethodService.deletePaymentMethod(this.PaymentEditting.Id)
       .then((PaymentMethods: PaymentMethod[]) => this.PaymentMethods = PaymentMethods);
   }
 
   removePaymentMethodEditAutoPay(): void {
-    // TODO: allow selecting of other payment methods.
+    this.PaymentAbpSelecting = this.PaymentEditting;
+    this.PaymentEditting = this.PaymentAbpSelected = null;
+  }
+
+  removePaymentMethodEditAutoPayConfirm(): void {
+    this.PaymentMethodService
+      .applyNewAutoBillPay(this.PaymentAbpSelected, this.BillingAccountService.ActiveBillingAccount)
+      .then(() => {
+        this.PaymentMethodService
+          .deletePaymentMethod(this.PaymentAbpSelecting.Id)
+          .then((PaymentMethods: PaymentMethod[]) => {
+            this.PaymentMessage = {
+              classes: ['alert', 'alert-success'],
+              innerHTML: [
+                `<b>Ok!</b> your payment account, ending in <b>${this.PaymentAbpSelecting.Card_Last}</b> was deleted and `,
+                `<b>Auto Bill Pay</b> is using your payment account ending in <b>${this.PaymentAbpSelected.Card_Last}</b>!`
+              ].join('')
+            };
+            this.removePaymentMethodEditAutoPayCancel();
+            this.PaymentMethods = PaymentMethods;
+          });
+      });
+  }
+
+  removePaymentMethodEditAutoPayCancel(): void {
+    this.PaymentEditting = this.PaymentAbpSelecting = null;
   }
 
   addingCreditCardToggle(open: boolean): void {
