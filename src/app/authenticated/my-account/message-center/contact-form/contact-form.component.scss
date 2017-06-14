@@ -1,5 +1,19 @@
-form {
-    .message{
-    width:100%;
+.contact-us-form {
+    .form-control {
+        border-radius: 0;
+        border:1px solid #000;
+    }
+    textarea{
+        border-color:#000;
+        &.message{
+            width:100%;
+    }
+   
 }
+}
+.message-confirmation{
+    p {
+        color: #727271;
+        font-size:1.3em;
+    }
 }
