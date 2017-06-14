@@ -1,20 +1,42 @@
-<form>
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="form-group">
-        <input type="number" class="form-control" placeholder="Enter Phone Number">
+<div [hidden]="submitted" class="contact-us-form">
+  <form novalidate (ngSubmit)="onSubmit(contactForm.value, contactForm.valid)" #contactForm="ngForm">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Enter Phone Number" minlength="10" maxlength="10" pattern="\d*" [(ngModel)]="phoneNumber"
+            name="phoneNumber" required #phone="ngModel">
+          <small [hidden]="phone.valid || phone.pristine" class="text-danger">
+            Please enter numerical digits with 10 characters long.
+          </small>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
-      <textarea placeholder="Enter Message here" class="message" rows="5" name="comment" required>
+    <div class="row">
+      <div class="col-xs-12">
+        <textarea placeholder="Enter Message here" class="message" rows="5" name="comment" [(ngModel)]="message" name="message" required
+          #msg="ngModel">
 </textarea>
+        <small [hidden]="msg.valid || msg.pristine" class="text-danger">
+            Message is required
+          </small>
+
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12 text-right">
-      <button class="btn btn-default" [disabled]="">Send</button>
+    <div class="row">
+      <div class="col-xs-12 text-right">
+        <button class="btn btn-default btn-wireframe" [disabled]="!contactForm.form.valid">Send</button>
+      </div>
     </div>
+  </form>
+</div>
+
+<!--Message Confirmation Screen -->
+
+<div [hidden]="!submitted" class="message-confirmation">
+  <div class="alert alert-success">
+    <strong>Thanks Charlie!</strong> Your Message Has Been Sent
   </div>
-</form>
+  <p>{{phoneNumber | PhonePipe}}</p>
+  <p>"{{message}}"</p>
+</div>
+<!--<p>{{myNumber | PhonePipe }}</p>-->
