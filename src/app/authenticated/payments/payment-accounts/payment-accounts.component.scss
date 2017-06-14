@@ -7,6 +7,7 @@ table.card-table {
   td.card-brand {
     i.fa {
       margin-right: 4px;
+      margin-left: 1rem;
     }
   }
   td.card-ending {
@@ -28,10 +29,29 @@ table.card-table {
   }
   td.card-remove {
     text-align: center;
+
+    button {
+      outline: none;
+    }
+  }
+  td.card-remove-active,
+  td.card-remove-active * {
+    background: black !important;
+    color: white !important;
   }
 }
 table.card-table-odd {
   background: #EBEBEB;
+}
+div.card-prompt {
+  border: 1px solid black;
+  padding: 2rem;
+  text-align: center;
+
+  button.btn-block {
+    margin: 1rem 0;
+    padding: 3rem 0;
+  }
 }
 
 h4.new-header {

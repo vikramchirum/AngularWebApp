@@ -8,6 +8,11 @@ import { validCreditCard } from 'app/validators/validator';
 
 declare const jQuery: $;
 
+interface IPaymentMessage {
+  class: string[];
+  innerHTML: string;
+}
+
 @Component({
   selector: 'mygexa-payment-accounts',
   templateUrl: './payment-accounts.component.html',
@@ -16,6 +21,8 @@ declare const jQuery: $;
 export class PaymentAccountsComponent implements OnInit, AfterViewInit {
   @ViewChild('modal_delete') modal_delete;
 
+  PaymentMessage: IPaymentMessage = null;
+  PaymentEditting: PaymentMethod = null;
   PaymentMethods: PaymentMethod[] = [];
 
   addingEcheck: boolean = null;
@@ -60,6 +67,39 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // Leave for later use.
     // this.$modal = jQuery(this.modal_delete.nativeElement);
+  }
+
+  removePaymentMethod(paymentMethod: PaymentMethod): void {
+    if (
+      !paymentMethod
+      || this.PaymentEditting === paymentMethod
+    ) {
+      this.PaymentEditting = null;
+    } else if (paymentMethod) {
+      this.PaymentEditting = paymentMethod;
+    }
+  }
+
+  removePaymentMethodConfirm(): void {
+    this.PaymentMessage = {
+      class: ['alert', 'alert-success'],
+      innerHTML: `<b>Ok!</b> your payment account, ending in <b>${this.PaymentEditting.Card_Last}</b> was deleted!`
+    };
+    this.PaymentMethodService.deletePaymentMethod(this.PaymentEditting.Id)
+      .then((PaymentMethods: PaymentMethod[]) => this.PaymentMethods = PaymentMethods);
+  }
+
+  removePaymentMethodStopAutoPay(): void {
+    this.PaymentMessage = {
+      class: ['alert', 'alert-success'],
+      innerHTML: `<b>Ok!</b> your payment account, ending in <b>${this.PaymentEditting.Card_Last}</b> was deleted and <b>Auto Pay</b> has been stopped!`
+    };
+    this.PaymentMethodService.deletePaymentMethod(this.PaymentEditting.Id)
+      .then((PaymentMethods: PaymentMethod[]) => this.PaymentMethods = PaymentMethods);
+  }
+
+  removePaymentMethodEditAutoPay(): void {
+    // TODO: allow selecting of other payment methods.
   }
 
   addingCreditCardToggle(open: boolean): void {

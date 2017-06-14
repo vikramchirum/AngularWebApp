@@ -1,5 +1,7 @@
 <section class="section-container">
 
+  <div *ngIf="PaymentMessage" [ngClass]="PaymentMessage.class" [innerHTML]="PaymentMessage.innerHTML"></div>
+
   <h2>Payment Accounts</h2>
   <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
 
@@ -16,21 +18,53 @@
       </tr>
       </tbody>
     </table>
-
-
     <div *ngFor="let paymentMethod of PaymentMethods; let i = index">
-
       <table class="card-table" cellpadding="0" cellspacing="0" width="100%" [ngClass]="{ 'card-table-odd': i % 2 !== 0 }">
         <tbody>
         <tr>
           <td class="card-brand" width="31%"><i class="fa fa-fw" [ngClass]="paymentMethod.getFontAwesomeTag()"></i>{{ paymentMethod.getBrand() }}</td>
           <td class="card-ending" width="43%">ENDING IN <button class="btn btn-blank">{{ paymentMethod.Card_Last }}<i class="fa fa-fw fa-pencil"></i></button></td>
           <td class="card-expires" width="13%">{{ paymentMethod.Card_Expires }}</td>
-          <td class="card-remove" width="13%"><button class="btn btn-blank"><i class="fa fa-fw fa-trash"></i></button></td>
+          <td class="card-remove" [ngClass]="{ 'card-remove-active': PaymentEditting === paymentMethod }" width="13%"><button class="btn btn-blank" (click)="removePaymentMethod(paymentMethod)"><i class="fa fa-fw fa-trash"></i></button></td>
         </tr>
         </tbody>
       </table>
-
+      <div class="card-prompt" *ngIf="PaymentEditting === paymentMethod">
+        <div *ngIf="PaymentEditting.Used_For_Auto_Pay === true; then AutoPayBlock else NonAutoPayBlock"></div>
+        <ng-template #AutoPayBlock>
+          <h1>
+            <b>Warning!</b>
+            <div>This Payment Account is Being Used For Auto Pay.</div>
+            <small>What Would You Like To Do?</small>
+          </h1>
+          <div class="row">
+            <div class="col-sm-6">
+              <button class="btn btn-lg btn-block btn-warning" (click)="removePaymentMethodStopAutoPay()">Delete and Stop Auto Pay</button>
+            </div>
+            <div class="col-sm-6">
+              <button class="btn btn-lg btn-block btn-success" (click)="removePaymentMethodEditAutoPay()">Delete and Edit Auto Pay</button>
+            </div>
+          </div>
+          <div class="text-right">
+            <button class="btn btn-lg btn-blank" (click)="removePaymentMethod()">Cancel</button>
+          </div>
+        </ng-template>
+        <ng-template #NonAutoPayBlock>
+          <h1>
+            <b>Warning!</b>
+            <div>You are about to delete this payment method.</div>
+            <small>Are your sure?</small>
+          </h1>
+          <div class="row">
+            <div class="col-sm-6">
+              <button class="btn btn-lg btn-block btn-warning" (click)="removePaymentMethodConfirm()">Yes - delete this payment method.</button>
+            </div>
+            <div class="col-sm-6">
+              <button class="btn btn-lg btn-block btn-secondary" (click)="removePaymentMethod()">No - cancel and go back.</button>
+            </div>
+          </div>
+        </ng-template>
+      </div>
     </div>
 
     <div style="padding: 2rem;"></div>

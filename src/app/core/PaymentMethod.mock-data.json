@@ -5,7 +5,8 @@
     "Card_Brand": "visa",
     "Card_Expires": "2/22",
     "Card_Last": "2109",
-    "Card_Name": "John Doe"
+    "Card_Name": "John Doe",
+    "Used_For_Auto_Pay": false
   },
   {
     "Id": "f831c027d1a94f429281314848954b07",
@@ -13,7 +14,8 @@
     "Card_Brand": "visa",
     "Card_Expires": "2/24",
     "Card_Last": "2109",
-    "Card_Name": "John Doe"
+    "Card_Name": "John Doe",
+    "Used_For_Auto_Pay": true
   },
   {
     "Id": "af6d55748c63c52211ff5b0cfb32d940",
@@ -21,6 +23,7 @@
     "Card_Brand": "mastercard",
     "Card_Expires": "3/26",
     "Card_Last": "2109",
-    "Card_Name": "John Doe"
+    "Card_Name": "John Doe",
+    "Used_For_Auto_Pay": false
   }
 ]
