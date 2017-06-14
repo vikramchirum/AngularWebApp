@@ -1,7 +1,7 @@
 
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 
-import { Subscriber } from 'rxjs/Subscriber';
+import { Subscription } from 'rxjs/Subscription';
 import { BillingAccount, BillingAccountService } from 'app/core/BillingAccount';
 
 @Component({
@@ -11,21 +11,20 @@ import { BillingAccount, BillingAccountService } from 'app/core/BillingAccount';
 })
 export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
 
-  BillingAccounts: BillingAccount[] = null;
-  BillingAccountSelectedId: string = null;
-
   @Input() selectedBillingAccount: BillingAccount = null;
   @Input() selectorLabel: string = null;
   @Output() changedBillingAccount: EventEmitter<any> =  new EventEmitter<any>();
 
-  private BillingAccountsSubscription: Subscriber<any> = null;
+  private BillingAccounts: BillingAccount[] = null;
+  private BillingAccountSelectedId: string = null;
+  private BillingAccountsSubscription: Subscription = null;
 
   constructor(
     private BillingAccountService: BillingAccountService
   ) {}
 
   ngOnInit() {
-    this.BillingAccountsSubscription = <Subscriber<any>>this.BillingAccountService.BillingAccountsObservable.subscribe(
+    this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable.subscribe(
       (BillingAccounts: BillingAccount[]) => {
         this.BillingAccounts = BillingAccounts;
         // If there is not provided billing account to select, use the Billing Account Service's.
@@ -45,7 +44,7 @@ export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     // Clean up our subscriber to avoid memeory leaks.
-    this.BillingAccountsSubscription.complete();
+    this.BillingAccountsSubscription.unsubscribe();
   }
 
   changeBillingAccount() {

@@ -102,8 +102,8 @@ export class PaymentAccountsComponent implements OnInit {
   }
 
   removePaymentMethodEditAutoPayConfirm(): void {
-    this.PaymentMethodService
-      .applyNewAutoBillPay(this.PaymentAbpSelected, this.BillingAccountService.ActiveBillingAccount)
+    this.BillingAccountService
+      .applyNewAutoBillPay(this.PaymentAbpSelected, this.BillingAccountService.ActiveBillingAccount, true)
       .then(() => {
         this.PaymentMethodService
           .deletePaymentMethod(this.PaymentAbpSelecting.Id)
