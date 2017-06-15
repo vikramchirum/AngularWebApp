@@ -12,6 +12,7 @@ import { ServiceAccountSelectorComponent } from './components/service-account-se
 import { PaymentMethodSelectorComponent } from './components/payment-method-selector/payment-method-selector.component';
 import { CreditCardComponent } from './components/credit-card/credit-card.component';
 import { PhonePipe } from './pipes/phone.pipe';
+import { NumberToMoneyPipe } from './pipes/NumberToMoney.pipe';
 import { LeftNavPanelComponent } from './components/left-nav-panel/left-nav-panel.component';
 
 @NgModule({
@@ -31,6 +32,7 @@ import { LeftNavPanelComponent } from './components/left-nav-panel/left-nav-pane
     PaymentMethodSelectorComponent,
     CreditCardComponent,
     PhonePipe,
+    NumberToMoneyPipe,
     LeftNavPanelComponent
   ],
   exports: [
@@ -43,6 +45,7 @@ import { LeftNavPanelComponent } from './components/left-nav-panel/left-nav-pane
     PaymentMethodSelectorComponent,
     CreditCardComponent,
     PhonePipe,
+    NumberToMoneyPipe,
     LeftNavPanelComponent
   ]
 })

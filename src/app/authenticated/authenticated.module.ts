@@ -13,7 +13,7 @@ import { ControlsAndInsightsComponent } from './controls-and-insights/controls-a
   ],
   declarations: [
     RootComponent,
-    ResponsiveHamburgerMenuComponent    
+    ResponsiveHamburgerMenuComponent
   ],
   exports: [
     RouterModule
