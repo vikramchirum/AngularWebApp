@@ -23,4 +23,8 @@ private sideNavPanelData:any;
     }
   }
 
+  reactToChangedBillingAccount(BillingAccount) {
+    console.log(BillingAccount);
+  }
+
 }

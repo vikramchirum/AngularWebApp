@@ -1,6 +1,13 @@
 <div class="container-fluid"> 
+  
 <mygexa-status-bar></mygexa-status-bar>
-  <div class="row">
+
+<mygexa-service-account-selector
+    selectorLabel="Your Service Address:"
+    (changedBillingAccount)="reactToChangedBillingAccount($event)"
+  ></mygexa-service-account-selector>
+
+  <div class="row">    
     <div class="col-md-3 col-sm-3 hidden-xs">
       <mygexa-left-nav-panel [sideNavData] = 'sideNavPanelData' ></mygexa-left-nav-panel>
      </div>
