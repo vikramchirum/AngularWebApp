@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
 
 import { ChangeUserNameComponent } from './components/change-user-name/change-user-name.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
@@ -11,12 +12,14 @@ import { ServiceAccountSelectorComponent } from './components/service-account-se
 import { PaymentMethodSelectorComponent } from './components/payment-method-selector/payment-method-selector.component';
 import { CreditCardComponent } from './components/credit-card/credit-card.component';
 import { PhonePipe } from './pipes/phone.pipe';
+import { LeftNavPanelComponent } from './components/left-nav-panel/left-nav-panel.component';
 
 @NgModule({
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   declarations: [
     ChangeUserNameComponent,
@@ -27,7 +30,8 @@ import { PhonePipe } from './pipes/phone.pipe';
     ServiceAccountSelectorComponent,
     PaymentMethodSelectorComponent,
     CreditCardComponent,
-    PhonePipe
+    PhonePipe,
+    LeftNavPanelComponent
   ],
   exports: [
     ChangeUserNameComponent,
@@ -38,7 +42,8 @@ import { PhonePipe } from './pipes/phone.pipe';
     ServiceAccountSelectorComponent,
     PaymentMethodSelectorComponent,
     CreditCardComponent,
-    PhonePipe
+    PhonePipe,
+    LeftNavPanelComponent
   ]
 })
 export class SharedModule { }
