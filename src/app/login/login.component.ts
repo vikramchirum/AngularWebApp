@@ -1,7 +1,9 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {UserService} from "../shared/user.service";
+import {UserService} from "../core/user.service";
 import {Router} from "@angular/router";
-import { IToken } from "./login.component.token";
+import {IUser, ISecurityQuestions} from "./register";
+import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import {validateEmail, equalCheck, validateInteger} from "app/validators/validator";
 
 @Component({
   templateUrl: './login.component.html',
@@ -9,29 +11,77 @@ import { IToken } from "./login.component.token";
   encapsulation: ViewEncapsulation.None
 })
 export class LoginComponent implements OnInit {
-
+  processing: boolean;
+  registerForm: FormGroup;
+  formSubmitted: boolean = false;
+   public user: IUser;
   user_name: string;
+  error: string = null;
   password: string;
-  token: IToken;
-  tokencontent: string;
+  testdata: any;
+  secQuesArray: ISecurityQuestions[];
+  constructor(private user_service: UserService, private router: Router, private fb: FormBuilder) {
+    this.processing = false;
+    this.registerForm = this.registerFormInit();
+  }
 
-  constructor(private user_service: UserService, private router: Router) {  }
 
   login() {
-    this.user_service.login(this.user_name, this.password).subscribe(res => this.token = res );
+    this.processing = true;
+    this.error = null;
+    this.user_service.login(this.user_name, this.password)
+      .subscribe(
+        token => {
+          this.router.navigate(this.user_service.state ? [this.user_service.state] : ['/account/profile']);
+        },
+        error => {
+          this.error = error.Message;
+          this.processing = false;
+        });
 
-    console.log('Login local storage: ' + localStorage.getItem('gexa_auth_token'));
-
-    if(localStorage.getItem("gexa_auth_token") != null)
-      this.router.navigate(['/account/profile']);
   }
 
-  register() {
-    this.router.navigate(['/register']);
+  save(model: any, isValid: boolean) {
+    this.formSubmitted = true;
+    // call API to save customer
+    if (isValid) {
+      //this.user_service.signup(model);
+    }
+    // console.log("Isvalid",isValid);
+   // this.registerForm.reset();
+  }
+  reset() {
+    this.formSubmitted = false;
+    this.registerForm = this.registerFormInit();
   }
 
-  ngOnInit() {
-    console.log('Login local storage: ' + localStorage.getItem('gexa_auth_token'));
+  registerFormInit(): FormGroup {
+    return this.fb.group({
+      'Billing_Account_Id': ['', Validators.compose([Validators.required])],
+      'Zip': ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(5), validateInteger])],
+      'User_name': ['', Validators.compose([Validators.required])],
+      'Password': ['', Validators.compose([Validators.required])],
+      'ConfirmPassword': ['', Validators.compose([Validators.required])],
+      'Email_Address': ['', Validators.compose([Validators.required, validateEmail])],
+      'Security_Question_Id': ['none', Validators.compose([Validators.required])],
+      'Security_Question_Answer': ['', Validators.required]
+    }, {validator: equalCheck('Password', 'ConfirmPassword')});
   }
 
+  // ngOnInit() {
+  //   var res = this.user_service.getSecurityQuestions()
+  //     .subscribe(
+  //       data => {
+  //         this.testdata = data;
+  //         console.log("Data:", this.testdata);
+  //       });
+  //
+  // }
+
+  ngOnInit(): void {
+    let self = this;
+    self.user_service.getSecurityQuestions().subscribe(response => {
+        this.secQuesArray = response;
+    }, error => this.error = < any > error);
+  }
 }

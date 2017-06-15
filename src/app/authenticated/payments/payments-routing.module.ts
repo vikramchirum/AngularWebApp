@@ -1,5 +1,6 @@
 
 import { Route, RouterModule } from '@angular/router';
+
 import { PaymentsComponent } from './payments.component';
 import { ViewMyBillComponent } from './view-my-bill/view-my-bill.component';
 import { MakePaymentComponent } from './make-payment/make-payment.component';
@@ -19,6 +20,7 @@ const routes: Route[] = [
       { path: 'make-payment', component: MakePaymentComponent },
       { path: 'payment-accounts', component: PaymentAccountsComponent  },
       { path: 'payment-options', loadChildren: loadPaymentOptionsModule },
+      { path: 'payment-history', redirectTo: 'payment-history/bills', pathMatch: 'full' },
       { path: 'payment-history', loadChildren: loadPaymentHistoryModule }
     ]
   }

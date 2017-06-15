@@ -2,4 +2,19 @@ span{
   i{
     width: 10px;
   }
+  i::before{
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-bottom: 0px solid black;
+
+  }
 }
+input {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  border-bottom: 1px solid black;
+}
+.wrapper { position: relative; }
+i.fa-icon { position: absolute; top: 10px; left: 50px;}

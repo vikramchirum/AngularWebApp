@@ -1,0 +1,70 @@
+@import "../../../../../styles/bootstrap/stylesheets/bootstrap/_variables";
+
+table.card-table {
+  td {
+    vertical-align: middle !important;
+    line-height: 4rem;
+  }
+  td.card-brand {
+    i.fa {
+      margin-right: 4px;
+      margin-left: 1rem;
+    }
+  }
+  td.card-ending {
+    b {
+      font-family: monospace;
+    }
+  }
+  td.card-expires {
+    text-align: center;
+  }
+  td.card-remove {
+    text-align: center;
+
+    button {
+      outline: none;
+    }
+  }
+  td.card-remove-active,
+  td.card-remove-active * {
+    background: black !important;
+    color: white !important;
+  }
+}
+table.card-table-odd {
+  background: #EBEBEB;
+}
+div.card-prompt {
+  border: 1px solid black;
+  padding: 2rem;
+  text-align: center;
+
+  button.btn-block {
+    margin: 1rem 0;
+    padding: 3rem 0;
+  }
+}
+td.card-abp {
+  background: #DFF0D8;
+}
+
+h4.new-header {
+  font-weight: bold;
+  padding: 1rem 0;
+}
+button.new-button {
+  outline: none !important;
+  padding: 10px;
+
+  i.fa {
+    margin-right: 6px;
+  }
+}
+button.new-button:hover {
+  text-decoration: underline;
+}
+
+img.payments-accounts-e-check-numbers {
+  padding: 4rem 0;
+}

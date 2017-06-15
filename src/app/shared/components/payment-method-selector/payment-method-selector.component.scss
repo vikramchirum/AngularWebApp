@@ -1,0 +1,41 @@
+@import '../../../../../styles/bootstrap/stylesheets/bootstrap/_variables';
+
+table.card-table {
+  line-height: 4rem;
+
+  td {
+    vertical-align: middle !important;
+  }
+  .card-brand {
+    i.fa {
+      margin-right: 4px;
+      margin-left: 1rem;
+    }
+  }
+  .card-ending {
+    b {
+      font-family: monospace;
+    }
+  }
+  .card-expires {
+    text-align: center;
+  }
+  @media (max-width: $screen-sm-max) {
+    .card-expires {
+      text-align: left;
+    }
+  }
+  td.card-abp {
+    text-align: center;
+
+    button {
+      outline: none !important;
+    }
+  }
+}
+table.card-table-odd {
+  background: #EBEBEB;
+}
+td.card-abp {
+  background: #DFF0D8;
+}

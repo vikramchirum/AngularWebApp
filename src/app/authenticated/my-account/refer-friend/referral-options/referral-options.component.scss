@@ -1,28 +1,58 @@
-.refer-friend-options{
-  #refer-option{
-    margin: 40px 10px 20px 10px;
-  }
-  p{
-    text-align: left;
-  }
-  label{
-    display: inline-block;
-    text-align: center;
-    background-color: Black;
+
+@import '../../../../../../styles/bootstrap/stylesheets/bootstrap/_variables';
+
+.refer-friend-options {
+  margin: 4rem 0;
+}
+
+.content {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.col-xs-4 {
+  text-align: center;
+
+  .option {
+    background: black;
     color: white;
-    height:55px;
-    width:105px;
-    padding:15px
+    line-height: 6rem;
   }
-  .linkLabel{
-    display: inline-block;
-    text-align: center;
-    background-color: #cccccc;
-    color: black;
-    height:55px;
-    width:505px;
-    padding:15px
+}
+
+.friends {
+  .input-group-lg {
+    margin-bottom: 10px;
+
+    .btn-wireframe {
+      border-width: 2px;
+      border-right: none;
+    }
   }
+  input.ng-invalid {
+    border-color: red !important;
+  }
+  input.ng-pristine {
+    border-color: black !important;
+  }
+}
 
+@media (max-width: $screen-xs-max) {
+  .friends .row {
+    margin-bottom: 2rem;
+  }
+}
 
+.btn-add-more-friends {
+  text-align: left;
+  outline: none !important;
+}
+
+h1.or {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+p{
+  text-align: left;
 }

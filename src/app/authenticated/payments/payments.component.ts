@@ -9,6 +9,10 @@ export class PaymentsComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {}
+
+  reactToChangedBillingAccount(BillingAccount) {
+    console.log(BillingAccount);
+  }
 
 }

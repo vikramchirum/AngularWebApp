@@ -5,19 +5,22 @@
       <h5>Your service Referral ID#</h5>
       <h4>695074</h4>
     </div>
-    <div class="col-md-3 col-xs-6">
+    <div class="col-md-9 col-xs-6" *ngIf="selectedBillingAccount">
       <h5>Address to which your bill</h5>
-      <h4>{{streetAddress}}</h4>
-      <h4>{{city}}</h4>
-      <h4>{{state}}</h4>
-      <h4>{{zip}}</h4>
-     <a href="#" *ngIf="!addressEditing"(click)="toggleAddressEdit($event)">Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+      <div *ngIf="editingAddress">
+        <mygexa-service-account-selector
+          [selectedBillingAccount]="editingBillingAccount"
+          (changedBillingAccount)="serviceChanged($event)"
+        ></mygexa-service-account-selector>
+        <button class="btn btn-wireframe" (click)="serviceUse()">Use This Address</button>
+        <button class="btn btn-wireframe" (click)="toggleAddressEdit()">Cancel</button>
+      </div>
+      <div *ngIf="!editingAddress">
+        <h4>{{selectedBillingAccount.Service_Address.Line1}} {{selectedBillingAccount.Service_Address.Line2}}</h4>
+        <h4>{{selectedBillingAccount.Service_Address.City}}, {{selectedBillingAccount.Service_Address.State}} {{selectedBillingAccount.Service_Address.Zip}}</h4>
+        <button class="btn btn-wireframe" [hidden]="BillingAccountService.BillingAccounts.length < 2" (click)="toggleAddressEdit()">Change Account</button>
+      </div>
     </div>
-  </div>
-
-  <div *ngIf="addressEditing" class="text-center addressPanel">
-    <!--<div>visible: {{addressEditing}}</div>-->
-    <mygexa-change-address [addressEditing]="addressEditing" (toggleEventClicked) = 'toggleAddressEdit()'></mygexa-change-address>
   </div>
 </section>
 

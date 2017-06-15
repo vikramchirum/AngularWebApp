@@ -1,0 +1,20 @@
+
+.credit-card-container {
+  border-radius: 1rem;
+  background: black;
+  color: white;
+  padding: 1rem;
+  max-width: 32rem;
+
+  .credit-card-number {
+    padding: 2.5rem 0;
+  }
+  .credit-card-name {
+    overflow: hidden;
+    width: 80%;
+  }
+}
+
+.credit-card-container-inactive {
+  background: grey;
+}
