@@ -1,11 +1,15 @@
 <section class="section-container">
   <h2>Payment History</h2>
   <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
-  <div>
-    <button [routerLinkActive]="['active']" routerLink="bills">Bills</button>
-    <button [routerLinkActive]="['active']" routerLink="payments">Payments</button>
+
+  <div class="options-container">
+    <div class="btn-group btn-group-lg" role="group">
+      <button type="button" class="btn" [routerLinkActive]="['active']" routerLink="bills">Bills</button>
+      <button type="button" class="btn" [routerLinkActive]="['active']" routerLink="payments">Payments</button>
+      <button type="button" class="btn" [routerLinkActive]="['active']" routerLink="ledger">Ledger</button>
+    </div>
   </div>
-  <div>
-    <router-outlet></router-outlet>
-  </div>
+
+  <router-outlet></router-outlet>
+
 </section>
