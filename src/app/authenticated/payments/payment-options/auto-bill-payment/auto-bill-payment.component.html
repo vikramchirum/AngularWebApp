@@ -1,82 +1,37 @@
-<!-- This displays for the medium/larger devices -->
-<div class="jumbotron hidden-xs">
-  <div class="container">
-    <h2><a routerLink="/payments/payment-options" class="pull-right"><i class="fa fa-fw fa-times"></i></a>&nbsp;</h2>
+<section class="section-container-highlight">
+  <a routerLink="/payments/payment-options" class="visible-xs"><i class="fa fa-4x fa-arrow-left"></i></a>
+  <ng-template *ngIf="ActiveBillingAccount?.Enrolled_In_Auto_Bill_Pay === true; then Enrolled_In_Auto_Bill_Pay else Not_Enrolled_In_Auto_Bill_Pay"></ng-template>
+  <ng-template #Enrolled_In_Auto_Bill_Pay>
+    <h2>
+      <div class="row">
+        <div class="col-sm-6">Auto Bill Payment Details</div>
+        <div class="col-sm-6 text-right text-xs-left">
+          <button class="btn btn-lg btn-blank" (click)="unenrollInAutoBillPaySelected()" style="padding: 10px 0;">UN-ENROLL AND STOP AUTO BILL PAY</button>
+        </div>
+      </div>
+    </h2>
     <br/>
-    <div class="row auto-bill-payment-options">
-      <div class="col-xs-6 col-md-4">
-        <a routerLink="/payments/payment-options/auto-bill-payment" class="auto-bill-payment-option">
-          <table border="0">
-            <tbody>
-              <tr><td><i class="fa fa-4x fa-credit-card"></i></td></tr>
-              <tr><td class="auto-bill-payment-option-action">Pay with Credit or Debit Card</td></tr>
-            </tbody>
-          </table>
-        </a>
-      </div>
-      <div class="col-xs-6 col-md-4">
-        <a routerLink="/payments/payment-options/auto-bill-payment" class="auto-bill-payment-option">
-          <table border="0">
-            <tbody>
-              <tr><td><i class="fa fa-4x fa-cc-paypal"></i></td></tr>
-              <tr><td class="auto-bill-payment-option-action">Pay with PayPal</td></tr>
-            </tbody>
-          </table>
-        </a>
-      </div>
-      <div class="col-xs-6 col-md-4">
-        <a routerLink="/payments/payment-options/auto-bill-payment" class="auto-bill-payment-option">
-          <table border="0">
-            <tbody>
-              <tr><td><i class="fa fa-4x fa-check-circle-o"></i></td></tr>
-              <tr><td class="auto-bill-payment-option-action">Pay with eCheck</td></tr>
-            </tbody>
-          </table>
-        </a>
-      </div>
+    <mygexa-credit-card
+      [PaymentMethod]="autoBillPaymentMethod"
+    ></mygexa-credit-card>
+    <br/>
+    <button class="btn btn-blank switchAutoBillPayButton" (click)="this.switchingAutoBillPay = !this.switchingAutoBillPay">
+      <h2>SWITCH AUTO PAYMENT ACCOUNTS <i class="fa" [ngClass]="switchingAutoBillPay ? 'fa-chevron-up' : 'fa-chevron-down' "></i></h2>
+    </button>
+    <br/>
+    <div *ngIf="switchingAutoBillPay">
+      <mygexa-payment-method-selector
+        [initialPaymentMethod]="autoBillPaymentMethod"
+        (changedPaymentMethod)="switchingAutoBillPaySelected($event)"
+      ></mygexa-payment-method-selector>
     </div>
-  </div>
-</div>
-<!-- This displays for the smaller devices -->
-<div class="visible-xs">
-  <a routerLink="/payments/payment-options"><i class="fa fa-4x fa-arrow-left"></i></a>
-  <h1>Setup Auto Payment</h1>
-  <br/>
-  <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-  <br/>
-  <h3>Choose payment method below</h3>
-  <br/>
-  <div class="row auto-bill-payment-options">
-    <div class="col-xs-6">
-      <a routerLink="/payments/payment-options/auto-bill-payment" class="auto-bill-payment-option">
-        <table border="0">
-          <tbody>
-          <tr><td><i class="fa fa-4x fa-credit-card"></i></td></tr>
-          <tr><td class="auto-bill-payment-option-action">Pay with Credit or Debit Card</td></tr>
-          </tbody>
-        </table>
-      </a>
-    </div>
-    <div class="col-xs-6">
-      <a routerLink="/payments/payment-options/auto-bill-payment" class="auto-bill-payment-option">
-        <table border="0">
-          <tbody>
-          <tr><td><i class="fa fa-4x fa-cc-paypal"></i></td></tr>
-          <tr><td class="auto-bill-payment-option-action">Pay with PayPal</td></tr>
-          </tbody>
-        </table>
-      </a>
-    </div>
-    <div class="col-xs-6">
-      <a routerLink="/payments/payment-options/auto-bill-payment" class="auto-bill-payment-option">
-        <table border="0">
-          <tbody>
-          <tr><td><i class="fa fa-4x fa-check-circle-o"></i></td></tr>
-          <tr><td class="auto-bill-payment-option-action">Pay with eCheck</td></tr>
-          </tbody>
-        </table>
-      </a>
-    </div>
-  </div>
-  <br/>
-</div>
+    <br/>
+  </ng-template>
+  <ng-template #Not_Enrolled_In_Auto_Bill_Pay>
+    <h2>Enroll In Auto Bill Pay</h2>
+    <br/>
+    <mygexa-payment-method-selector
+      (changedPaymentMethod)="enrollInAutoBillPaySelected($event)"
+    ></mygexa-payment-method-selector>
+  </ng-template>
+</section>

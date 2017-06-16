@@ -1,18 +1,20 @@
 
-import { Route, RouterModule } from "@angular/router";
-import { PaymentHistoryBillsComponent } from "./payment-history-bills/payment-history-bills.component";
-import { PaymentHistoryPaymentsComponent } from './payment-history-payments/payment-history-payments.component';
+import { Route, RouterModule } from '@angular/router';
+
+import { BillsComponent } from './bills/bills.component';
+import { PaymentsComponent } from './payments/payments.component';
+import { LedgerComponent } from './ledger/ledger.component';
 import { PaymentHistoryComponent } from './payment-history.component';
 
 const routes: Route[] = [
   {
     path: '', component: PaymentHistoryComponent,
     children: [
-      { path: 'bills', component: PaymentHistoryBillsComponent },
-      { path: 'payments', component: PaymentHistoryPaymentsComponent },
+      { path: 'bills', component: BillsComponent },
+      { path: 'ledger', component: LedgerComponent },
+      { path: 'payments', component: PaymentsComponent }
     ]
   }
 ];
 
 export const payment_history_routes = RouterModule.forChild(routes);
-

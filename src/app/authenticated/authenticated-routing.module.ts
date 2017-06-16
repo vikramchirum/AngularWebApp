@@ -11,6 +11,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { MyAccountModule } from './my-account/my-account.module';
 import { HomeModule } from './home/home.module';
 import { PlansAndServicesModule } from './plans-and-services/plans-and-services.module';
+import { ControlsAndInsightsModule } from './controls-and-insights/controls-and-insights.module';
 
 export function loadHomeModule() { return HomeModule; }
 
@@ -19,6 +20,8 @@ export function loadMyAccountModule() { return MyAccountModule; }
 export function loadPaymentModule() { return PaymentsModule; }
 
 export function loadPlansAndServicesModule() { return PlansAndServicesModule; }
+
+export function loadControlInsightsModule() { return ControlsAndInsightsModule; }
 
 const routes: Route[] = [
   {
@@ -34,7 +37,8 @@ const routes: Route[] = [
       { path: 'payments', redirectTo: 'payments/view-my-bill', pathMatch: 'full' },
       { path: 'payments', loadChildren: loadPaymentModule },
       { path: 'plans-and-services', redirectTo: 'plans-and-services/my-services-plans', pathMatch: 'full' },
-      { path: 'plans-and-services', loadChildren: loadPlansAndServicesModule }
+      { path: 'plans-and-services', loadChildren: loadPlansAndServicesModule },
+      { path: 'controls-and-insights', loadChildren: loadControlInsightsModule }
     ]
   }
 ];

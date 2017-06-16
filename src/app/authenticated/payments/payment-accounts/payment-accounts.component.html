@@ -1,5 +1,7 @@
 <section class="section-container">
 
+  <div *ngIf="PaymentMessage" [ngClass]="PaymentMessage.classes" [innerHTML]="PaymentMessage.innerHTML"></div>
+
   <h2>Payment Accounts</h2>
   <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
 
@@ -12,28 +14,82 @@
       <tr>
         <td width="74%"><h4>Your Payment Options</h4></td>
         <td width="13%"><h4 class="text-center">Expires</h4></td>
-        <td width="13%"><h4 class="text-center">Remove</h4></td>
+        <td width="13%" *ngIf="!PaymentAbpSelecting"><h4 class="text-center">Remove</h4></td>
+        <td width="13%" *ngIf="PaymentAbpSelecting" class="card-abp"><h4 class="text-center">Select</h4></td>
       </tr>
       </tbody>
     </table>
-
-
     <div *ngFor="let paymentMethod of PaymentMethods; let i = index">
-
       <table class="card-table" cellpadding="0" cellspacing="0" width="100%" [ngClass]="{ 'card-table-odd': i % 2 !== 0 }">
         <tbody>
-        <tr>
+        <tr [ngClass]="{ 'text-muted': PaymentAbpSelecting === paymentMethod }">
           <td class="card-brand" width="31%"><i class="fa fa-fw" [ngClass]="paymentMethod.getFontAwesomeTag()"></i>{{ paymentMethod.getBrand() }}</td>
-          <td class="card-ending" width="43%">ENDING IN <button class="btn btn-blank">{{ paymentMethod.Card_Last }}<i class="fa fa-fw fa-pencil"></i></button></td>
+          <td class="card-ending" width="43%">ENDING IN <b>{{ paymentMethod.Card_Last }}</b></td>
           <td class="card-expires" width="13%">{{ paymentMethod.Card_Expires }}</td>
-          <td class="card-remove" width="13%"><button class="btn btn-blank"><i class="fa fa-fw fa-trash"></i></button></td>
+          <td class="card-remove" width="13%" *ngIf="!PaymentAbpSelecting" [ngClass]="{ 'card-remove-active': PaymentEditting === paymentMethod }">
+            <button class="btn btn-blank" (click)="removePaymentMethod(paymentMethod)"><i class="fa fa-fw fa-trash"></i></button>
+          </td>
+          <td class="card-abp" width="13%" *ngIf="PaymentAbpSelecting">
+            <button class="btn btn-block btn-blank" *ngIf="PaymentAbpSelecting !== paymentMethod" (click)="PaymentAbpSelected = paymentMethod">
+              <i class="fa fa-fw" [ngClass]="PaymentAbpSelected === paymentMethod ? 'fa-check-circle-o' : 'fa-circle-o' "></i>
+            </button>
+          </td>
         </tr>
         </tbody>
       </table>
-
+      <div class="card-prompt" *ngIf="PaymentEditting === paymentMethod">
+        <div *ngIf="PaymentEditting.Used_For_Auto_Pay === true; then AutoPayBlock else NonAutoPayBlock"></div>
+        <ng-template #AutoPayBlock>
+          <h1>
+            <b>Warning!</b>
+            <div>This Payment Account is Being Used For Auto Pay.</div>
+            <small>What Would You Like To Do?</small>
+          </h1>
+          <div class="row">
+            <div class="col-sm-6">
+              <button class="btn btn-lg btn-block btn-warning" (click)="removePaymentMethodStopAutoPay()">Delete and Stop Auto Pay</button>
+            </div>
+            <div class="col-sm-6">
+              <button class="btn btn-lg btn-block btn-success" (click)="removePaymentMethodEditAutoPay()">Delete and Edit Auto Pay</button>
+            </div>
+          </div>
+          <div class="text-right">
+            <button class="btn btn-lg btn-blank" (click)="removePaymentMethod()">Cancel</button>
+          </div>
+        </ng-template>
+        <ng-template #NonAutoPayBlock>
+          <h1>
+            <b>Warning!</b>
+            <div>You are about to delete this payment method.</div>
+            <small>Are your sure?</small>
+          </h1>
+          <div class="row">
+            <div class="col-sm-6">
+              <button class="btn btn-lg btn-block btn-warning" (click)="removePaymentMethodConfirm()">Yes - delete this payment method.</button>
+            </div>
+            <div class="col-sm-6">
+              <button class="btn btn-lg btn-block btn-secondary" (click)="removePaymentMethod()">No - cancel and go back.</button>
+            </div>
+          </div>
+        </ng-template>
+      </div>
     </div>
-
-    <div style="padding: 2rem;"></div>
+    <table class="card-table" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+      <tr>
+        <td width="74%">&nbsp;</td>
+        <ng-template *ngIf="PaymentAbpSelecting; then PaymentAbpSelectingOptions;"></ng-template>
+        <ng-template #PaymentAbpSelectingOptions>
+          <td width="13%" class="card-abp">
+            <button class="btn btn-block btn-blank" [disabled]="!PaymentAbpSelected" (click)="removePaymentMethodEditAutoPayConfirm()">Ok</button>
+          </td>
+          <td width="13%" class="card-abp">
+            <button class="btn btn-block btn-blank" (click)="removePaymentMethodEditAutoPayCancel()">Cancel</button>
+          </td>
+        </ng-template>
+      </tr>
+      </tbody>
+    </table>
 
     <h4 class="new-header">NEW PAYMENT ACCOUNT</h4>
 
@@ -43,16 +99,16 @@
       <div class="row">
         <div class="col-md-6 col-lg-3">
           <div class="form-group-lg">
-            <label>Name on Card</label>
-            <input type="text" class="form-control form-control-wireframe" formControlName="Card_Name" maxlength="32" style="text-transform: uppercase;"/>
+            <label for="Card_Name">Name on Card</label>
+            <input type="text" class="form-control form-control-wireframe" id="Card_Name" formControlName="Card_Name" maxlength="32" style="text-transform: uppercase;"/>
             <small class="text-danger" *ngIf="addingCreditCardForm.controls['Card_Name'].errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
             <small class="text-success" *ngIf="addingCreditCardForm.controls['Card_Name'].valid"><i class="fa fa-fw fa-check"></i> Ok</small>
           </div>
         </div>
         <div class="col-md-6 col-lg-3">
           <div class="form-group-lg">
-            <label>Card Number</label>
-            <input type="text" class="form-control form-control-wireframe" formControlName="Card_Number" maxlength="19"/>
+            <label for="Card_Number">Card Number</label>
+            <input type="text" class="form-control form-control-wireframe" id="Card_Number" formControlName="Card_Number" maxlength="19"/>
             <small class="text-danger" *ngIf="addingCreditCardForm.controls['Card_Number'].pristine"><i class="fa fa-fw fa-asterisk"></i> required</small>
             <small class="text-danger" *ngIf="addingCreditCardForm.controls['Card_Number'].errors && !addingCreditCardForm.controls['Card_Number'].pristine"><i class="fa fa-fw fa-asterisk"></i> requires a valid credit card number</small>
             <small class="text-success" *ngIf="addingCreditCardForm.controls['Card_Number'].valid"><i class="fa fa-fw fa-check"></i> Ok</small>
@@ -60,8 +116,8 @@
         </div>
         <div class="col-xs-6 col-md-5 col-lg-3">
           <div class="form-group-lg">
-            <label>Expiration</label>
-            <select class="form-control form-control-wireframe" formControlName="Card_Expiration_Month">
+            <label for="Card_Expiration_Month">Expiration</label>
+            <select class="form-control form-control-wireframe" id="Card_Expiration_Month" formControlName="Card_Expiration_Month">
               <option *ngFor="let month of addingCreditCardMonths" [value]="month[0]">{{ month[0] }} - {{ month[1] }}</option>
             </select>
             <small class="text-success"><i class="fa fa-fw fa-check"></i> Ok</small>
@@ -69,8 +125,8 @@
         </div>
         <div class="col-xs-6 col-md-4 col-lg-2">
           <div class="form-group-lg">
-            <label>&nbsp;</label>
-            <select class="form-control form-control-wireframe" formControlName="Card_Expiration_Year">
+            <label for="Card_Expiration_Year">&nbsp;</label>
+            <select class="form-control form-control-wireframe" id="Card_Expiration_Year" formControlName="Card_Expiration_Year">
               <option *ngFor="let year of addingCreditCardYears" [value]="year">{{ year }}</option>
             </select>
             <small class="text-success"><i class="fa fa-fw fa-check"></i> Ok</small>
@@ -78,8 +134,8 @@
         </div>
         <div class="col-xs-3 col-xs-offset-9 col-sm-4 col-sm-offset-8 col-md-3 col-md-offset-0 col-lg-1">
           <div class="form-group-lg">
-            <label>CCV</label>
-            <input type="text" class="form-control form-control-wireframe" formControlName="Card_CCV" maxlength="3"/>
+            <label for="Card_CCV">CCV</label>
+            <input type="text" class="form-control form-control-wireframe" id="Card_CCV" formControlName="Card_CCV" maxlength="3"/>
             <small class="text-danger" *ngIf="addingCreditCardForm.controls['Card_CCV'].errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
             <small class="text-success" *ngIf="addingCreditCardForm.controls['Card_CCV'].valid"><i class="fa fa-fw fa-check"></i> Ok</small>
           </div>
@@ -95,8 +151,51 @@
 
     <div><!-- This breaks up the buttons --></div>
 
-    <button class="btn btn-lg btn-blank new-button"><i class="fa fa-fw fa-plus-circle"></i>ADD NEW E-CHECK</button>
-    <div></div>
+    <button class="btn btn-lg btn-blank new-button" [disabled]="addingEcheck" (click)="addingEcheckToggle()"><i class="fa fa-fw fa-plus-circle"></i>ADD NEW E-CHECK</button>
+    <form [formGroup]="addingEcheckForm" [hidden]="!addingEcheck" (submit)="addingEcheckSubmit()" novalidate>
+      <img class="payments-accounts-e-check-numbers" src="/assets/payments/payment-accounts-e-check-numbers.png"/>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group-lg">
+            <label for="Check_Name">Name on Account</label>
+            <input type="text" class="form-control form-control-wireframe" id="Check_Name" formControlName="Check_Name" maxlength="32" style="text-transform: uppercase;"/>
+            <small class="text-danger" *ngIf="addingEcheckForm.controls['Check_Name'].errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
+            <small class="text-success" *ngIf="addingEcheckForm.controls['Check_Name'].valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group-lg">
+            <label for="Check_Routing">Routing Number</label>
+            <input type="text" class="form-control form-control-wireframe" id="Check_Routing" formControlName="Check_Routing" maxlength="17"/>
+            <small class="text-danger" *ngIf="addingEcheckForm.controls['Check_Routing'].errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
+            <small class="text-success" *ngIf="addingEcheckForm.controls['Check_Routing'].valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group-lg">
+            <label for="Check_Accounting">Checking Account Number</label>
+            <input type="text" class="form-control form-control-wireframe" id="Check_Accounting" formControlName="Check_Accounting" maxlength="17"/>
+            <small class="text-danger" *ngIf="addingEcheckForm.controls['Check_Accounting'].errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
+            <small class="text-success" *ngIf="addingEcheckForm.controls['Check_Accounting'].valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group-lg">
+            <label for="Check_Info">Other info?</label>
+            <input type="text" class="form-control form-control-wireframe" id="Check_Info" formControlName="Check_Info"/>
+            <small class="text-muted">(optional)</small>
+          </div>
+        </div>
+        <div class="col-md-8 text-right">
+          <div class="form-group-lg">
+            <label>&nbsp;</label><br/>
+            <button type="button" class="btn btn-lg btn-blank" (click)="addingEcheckToggle(false)">Cancel</button>
+            <button type="submit" class="btn btn-lg btn-primary" [disabled]="addingEcheckForm.invalid">Add Now</button>
+          </div>
+        </div>
+      </div>
+      <br/>
+    </form>
 
   </div>
 

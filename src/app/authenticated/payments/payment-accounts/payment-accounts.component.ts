@@ -1,25 +1,33 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import * as $ from 'jquery';
+import { BillingAccountService } from 'app/core/BillingAccount';
 import { PaymentMethod, PaymentMethodService } from 'app/core/PaymentMethod';
 import { CustomValidators } from 'ng2-validation';
 import { validCreditCard } from 'app/validators/validator';
 
-declare const jQuery: $;
+interface IPaymentMessage {
+  classes: string[];
+  innerHTML: string;
+}
 
 @Component({
   selector: 'mygexa-payment-accounts',
   templateUrl: './payment-accounts.component.html',
   styleUrls: ['./payment-accounts.component.scss']
 })
-export class PaymentAccountsComponent implements OnInit, AfterViewInit {
-  @ViewChild('modal_delete') modal_delete;
+export class PaymentAccountsComponent implements OnInit {
 
+  PaymentMessage: IPaymentMessage = null;
+  PaymentEditting: PaymentMethod = null;
   PaymentMethods: PaymentMethod[] = [];
+  PaymentAbpSelecting: PaymentMethod = null;
+  PaymentAbpSelected: PaymentMethod = null;
 
-  addingCreditCardNow: Date = new Date;
+  addingEcheck: boolean = null;
+  addingEcheckForm: FormGroup = null;
   addingCreditCard: boolean = null;
+  addingCreditCardNow: Date = new Date;
   addingCreditCardForm: FormGroup = null;
   addingCreditCardMonths: any[] = [
     ['01', 'January'],
@@ -39,6 +47,7 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
 
   constructor(
     private FormBuilder: FormBuilder,
+    private BillingAccountService: BillingAccountService,
     private PaymentMethodService: PaymentMethodService
   ) {
     // Generate the available years to select.
@@ -46,6 +55,8 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
     for (let count = 0; count <= 5; this.addingCreditCardYears.push(`${thisYear + count}`), count++) {}
     // Prepare the credit card form.
     this.addingCreditCardForm = this.addingCreditCardFormInit();
+    // Prepare the Echeck form.
+    this.addingEcheckForm = this.addingEcheckFormInit();
   }
 
   ngOnInit() {
@@ -53,9 +64,65 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
       .then((PaymentMethods: PaymentMethod[]) => this.PaymentMethods = PaymentMethods);
   }
 
-  ngAfterViewInit() {
-    // Leave for later use.
-    // this.$modal = jQuery(this.modal_delete.nativeElement);
+  removePaymentMethod(paymentMethod: PaymentMethod): void {
+    if (
+      !paymentMethod
+      || this.PaymentEditting === paymentMethod
+    ) {
+      this.PaymentEditting = null;
+    } else if (paymentMethod) {
+      this.PaymentEditting = paymentMethod;
+    }
+  }
+
+  removePaymentMethodConfirm(): void {
+    this.PaymentMessage = {
+      classes: ['alert', 'alert-success'],
+      innerHTML: `<b>Ok!</b> your payment account, ending in <b>${this.PaymentEditting.Card_Last}</b> was deleted!`
+    };
+    this.PaymentMethodService.deletePaymentMethod(this.PaymentEditting.Id)
+      .then((PaymentMethods: PaymentMethod[]) => this.PaymentMethods = PaymentMethods);
+  }
+
+  removePaymentMethodStopAutoPay(): void {
+    this.PaymentMessage = {
+      classes: ['alert', 'alert-success'],
+      innerHTML: [
+        `<b>Ok!</b> your payment account, ending in <b>${this.PaymentEditting.Card_Last}</b> was deleted`,
+        ` and <b>Auto Pay</b> has been stopped!`
+      ].join('')
+    };
+    this.PaymentMethodService.deletePaymentMethod(this.PaymentEditting.Id)
+      .then((PaymentMethods: PaymentMethod[]) => this.PaymentMethods = PaymentMethods);
+  }
+
+  removePaymentMethodEditAutoPay(): void {
+    this.PaymentAbpSelecting = this.PaymentEditting;
+    this.PaymentEditting = this.PaymentAbpSelected = null;
+  }
+
+  removePaymentMethodEditAutoPayConfirm(): void {
+    this.BillingAccountService
+      .applyNewAutoBillPay(this.PaymentAbpSelected, this.BillingAccountService.ActiveBillingAccount, true)
+      .then(() => {
+        this.PaymentMethodService
+          .deletePaymentMethod(this.PaymentAbpSelecting.Id)
+          .then((PaymentMethods: PaymentMethod[]) => {
+            this.PaymentMessage = {
+              classes: ['alert', 'alert-success'],
+              innerHTML: [
+                `<b>Ok!</b> your payment account, ending in <b>${this.PaymentAbpSelecting.Card_Last}</b> was deleted and `,
+                `<b>Auto Bill Pay</b> is using your payment account ending in <b>${this.PaymentAbpSelected.Card_Last}</b>!`
+              ].join('')
+            };
+            this.removePaymentMethodEditAutoPayCancel();
+            this.PaymentMethods = PaymentMethods;
+          });
+      });
+  }
+
+  removePaymentMethodEditAutoPayCancel(): void {
+    this.PaymentEditting = this.PaymentAbpSelecting = null;
   }
 
   addingCreditCardToggle(open: boolean): void {
@@ -81,6 +148,29 @@ export class PaymentAccountsComponent implements OnInit, AfterViewInit {
     console.log('this.addingCreditCardForm.value', this.addingCreditCardForm.value);
     alert('Add card to Forte now.\nCheck the console for the user\'s input.');
     this.addingCreditCard = false;
+  }
+
+  addingEcheckToggle(open: boolean): void {
+    const doOpen = open !== false;
+    if (doOpen) {
+      this.addingEcheckForm = this.addingEcheckFormInit();
+    }
+    this.addingEcheck = doOpen;
+  }
+
+  addingEcheckFormInit(): FormGroup {
+    return this.FormBuilder.group({
+      Check_Name: ['', Validators.required],
+      Check_Routing: ['', Validators.compose([Validators.required, Validators.minLength(9), CustomValidators.digits])],
+      Check_Accounting: ['', Validators.compose([Validators.required, Validators.minLength(9), CustomValidators.digits])],
+      Check_Info: ['']
+    });
+  }
+
+  addingEcheckSubmit() {
+    console.log('this.addingEcheckForm.value', this.addingEcheckForm.value);
+    alert('Add Echeck now.\nCheck the console for the user\'s input.');
+    this.addingEcheck = false;
   }
 
 }
