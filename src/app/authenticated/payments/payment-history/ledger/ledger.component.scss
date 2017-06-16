@@ -1,3 +1,60 @@
+
 table {
-  width: 100%;
+  thead {
+    tr {
+      border-bottom: 2px solid #DBDADC;
+    }
+  }
+  tbody {
+    tr {
+      border-top: 1px solid #DBDADC;
+
+      td {
+        button {
+          font-size: 2rem;
+          padding: 0;
+        }
+      }
+    }
+  }
+  td {
+    padding-right: 2rem;
+    font-size: 2rem;
+    line-height: 4rem;
+    vertical-align: middle;
+  }
+  td.date {
+    padding: 0 0 0 2rem;
+  }
+  td.charge {
+    background: #FCF8E3;
+  }
+  td.payment {
+    background: #DFF0D8;
+  }
+  td.charge,
+  td.payment,
+  td.balance {
+    text-align: right;
+  }
+}
+
+.pagination-container {
+  padding: 6rem 0;
+
+  button {
+    background: white;
+    color: black;
+    outline: none !important;
+  }
+  .text-center {
+    button {
+      font-size: 20px;
+    }
+    .badge {
+      background: black;
+      border-color: black;
+      color: white;
+    }
+  }
 }
