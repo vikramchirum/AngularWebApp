@@ -17,14 +17,14 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.user = {
-      Email_Address: '',
-      Zip: '',
-      Billing_Account_Id: '',
-      User_name: '',
-      Password: '',
-      ConfirmPassword:''
-    };
+    // this.user = {
+    //   Email_Address: '',
+    //   Zip: '',
+    //   Billing_Account_Id: '',
+    //   User_name: '',
+    //   Password: '',
+    //   ConfirmPassword:''
+    // };
   }
 
   save(model: IUser, isValid: boolean) {

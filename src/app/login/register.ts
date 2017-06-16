@@ -1,12 +1,12 @@
 
 export interface IUser {
   Email_Address: string;
-  Zip: string;
+  Zip_Code: string;
   Billing_Account_Id: string;
   User_name: string;
   Password: string;
-  ConfirmPassword: string;
-
+  Security_Question_Id: number;
+  Security_Question_Answer: string;
 }
 
 export interface ISecurityQuestions {
