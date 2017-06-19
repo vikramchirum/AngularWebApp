@@ -12,13 +12,7 @@
     <p>Account No: 1370351-3 </p>
   </div>
 
-  <div class="row">
-    <div class="col-md-6 col-xs-12">
-      <h5>Service Address</h5>
-      <h4>20455 - TX-249 #200,</h4>
-      <h4>Houston</h4>
-      <h4>TX - 77-70 </h4>
-    </div>
+  <div class="row">    
     <div class="col-md-6 col-xs-12">
       <h5>Email Address</h5>
       <div class="profile-inline">
@@ -29,6 +23,21 @@
 
    <div *ngIf="emailEditing">
     <mygexa-change-email-address></mygexa-change-email-address>
+  </div>
+
+<br>
+  <div class="row">    
+    <div class="col-md-6 col-xs-12">
+      <h5>Phone Number</h5>
+      <div class="profile-inline">
+        <h4>(867) 867-5309</h4>
+         <a (click)="togglePhoneEdit($event)">{{ phoneEditing ? 'Close' : 'Edit'}}</a></div>
+    </div>
+  </div>
+
+  
+   <div *ngIf="phoneEditing">
+    <mygexa-change-phone-number></mygexa-change-phone-number>
   </div>
 
 

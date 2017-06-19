@@ -79,3 +79,14 @@ export function equalityCheck (emailKey: string, confirmEmailKey: string) {
    };
  }
 
+
+ export function validatePhone(c: FormControl) {
+  const PHONE_REGEXP = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+  return PHONE_REGEXP.test(c.value) ? null : {
+    validatePhone: {
+      valid: false
+    }
+  };
+}
+
+

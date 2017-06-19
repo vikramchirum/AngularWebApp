@@ -11,9 +11,10 @@ export class PersonalInformationComponent implements OnInit {
 
   emailAddress : string;
   emailEditing : boolean;
+  phoneEditing : boolean = false;
   
   constructor() {
-     this.emailEditing = false;
+     this.emailEditing = false;     
    }
    
   ngOnInit() {
@@ -24,6 +25,12 @@ export class PersonalInformationComponent implements OnInit {
    toggleEmailEdit($event) {
     $event.preventDefault();
     this.emailEditing = !this.emailEditing;
+  }
+
+  togglePhoneEdit($event) {
+      $event.preventDefault();
+    this.phoneEditing = !this.phoneEditing;
+
   }
  
 

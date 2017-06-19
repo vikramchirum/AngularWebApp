@@ -1,0 +1,51 @@
+{
+  "Customer_Account_Id": "12902",
+  "Id": "77054",
+  "Past_Due": 0,
+  "Current_Due": 0,
+  "Deposit_Balance": 0,
+  "UAN": "1008901009190649745100",
+  "TDU_Name": "CenterPoint Energy",
+  "TDU_DUNS_Number": "957877905",
+  "Service_Address": {
+    "Line1": "9898 CLUB CREEK DR BS20",
+    "Line2": null,
+    "City": "HOUSTON",
+    "State": "TX",
+    "Zip": "77036",
+    "Zip_4": "7704"
+  },
+  "Mailing_Address": {
+    "Line1": "ATTENTION: OFFICE",
+    "Line2": "9898 CLUB CREEK DR OFC",
+    "City": "HOUSTON",
+    "State": "TX",
+    "Zip": "77036",
+    "Zip_4": ""
+  },
+  "Paperless_Billing": false,
+  "Budget_Billing": false,
+  "Service_Stop_Request_date": null,
+  "Status": "Active",
+  "Terminate_Switch": false,
+  "Switch_Hold": false,
+  "Service_Start_Date": "2003-08-08T00:00:00",
+  "Service_Stop_Date": "0001-01-01T00:00:00",
+  "Contract_Start_Date": "2016-07-22T00:00:00",
+  "Contract_End_Date": "2021-07-12T00:00:00",
+  "Last_payment_amount": 65.42,
+  "Last_payment_date": "2016-11-21T00:00:00",
+  "Due_Amount": 65.42,
+  "Due_Date": "2016-12-01T00:00:00",
+  "New_charges": 0,
+  "Is_Auto_Bill_Pay": false,
+  "Plan_History": [
+    {
+      "StartDate": "2003-08-08T00:00:00",
+      "StopDate": null,
+      "CSP_Status": "Active",
+      "Offer": null,
+      "OfferingName": "Contract CPE000"
+    }
+  ]
+}
