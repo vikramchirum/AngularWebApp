@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+import { CustomFormsModule } from 'ng2-validation'
+
 
 import { ChangeUserNameComponent } from './components/change-user-name/change-user-name.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
@@ -14,13 +16,15 @@ import { CreditCardComponent } from './components/credit-card/credit-card.compon
 import { PhonePipe } from './pipes/phone.pipe';
 import { NumberToMoneyPipe } from './pipes/NumberToMoney.pipe';
 import { LeftNavPanelComponent } from './components/left-nav-panel/left-nav-panel.component';
+import { ChangePhoneNumberComponent } from './components/change-phone-number/change-phone-number.component';
 
 @NgModule({
   imports: [
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    RouterModule
+    RouterModule,
+    CustomFormsModule
   ],
   declarations: [
     ChangeUserNameComponent,
@@ -33,7 +37,8 @@ import { LeftNavPanelComponent } from './components/left-nav-panel/left-nav-pane
     CreditCardComponent,
     PhonePipe,
     NumberToMoneyPipe,
-    LeftNavPanelComponent
+    LeftNavPanelComponent,
+    ChangePhoneNumberComponent
   ],
   exports: [
     ChangeUserNameComponent,
@@ -46,7 +51,8 @@ import { LeftNavPanelComponent } from './components/left-nav-panel/left-nav-pane
     CreditCardComponent,
     PhonePipe,
     NumberToMoneyPipe,
-    LeftNavPanelComponent
+    LeftNavPanelComponent,
+    ChangePhoneNumberComponent
   ]
 })
 export class SharedModule { }

@@ -1,0 +1,40 @@
+    <div class="row phoneNumberPanel">
+    <div class="col-md-6 col-md-offset-3 col-xs-offset-2">
+      <h3>Change Phone Number</h3>
+      <form id="changePhoneNumberForm" novalidate [formGroup]="changePhoneNumberForm" (ngSubmit)="submitForm(changePhoneNumberForm.value, changePhoneNumberForm.valid)"
+        align="center">
+        <div class="form-group" [ngClass]="{'has-error':!changePhoneNumberForm.controls['phone'].valid && submitAttempt}">
+          <input name="phone" class="form-control" type="text" [formControl]="changePhoneNumberForm.controls['phone']" placeholder="Enter new Phone Number">
+          <div class="has-error" *ngIf="changePhoneNumberForm.controls['phone'].hasError('required') && submitAttempt">
+            <span class="help-block">Required</span>
+          </div>
+          <div class="has-error" *ngIf="!changePhoneNumberForm.controls['phone'].hasError('required') && changePhoneNumberForm.controls['phone'].hasError('validatePhone') && submitAttempt">
+            <span class="help-block">Enter a valid phone number</span>
+          </div>
+        </div>
+        <div class="form-group" [ngClass]="{'has-error':!changePhoneNumberForm.controls['confirmPhone'].valid && submitAttempt}">
+          <input class="form-control" validateEqual="phone" name="confirmPhone" [formControl]="changePhoneNumberForm.controls['confirmPhone']"
+            placeholder="Confirm Phone Number">
+          <div class="has-error" *ngIf="changePhoneNumberForm.controls['confirmPhone'].hasError('required') && submitAttempt">
+            <span class="help-block">Required</span>
+          </div>
+          <div class="has-error" *ngIf="!changePhoneNumberForm.controls['confirmPhone'].hasError('required') && changePhoneNumberForm.controls['confirmPhone'].hasError('validatePhone') && submitAttempt">
+            <span class="help-block">Enter a valid phone Number</span>
+          </div>
+          <div class="has-error" *ngIf="!changePhoneNumberForm.controls['confirmPhone'].hasError('required') && !changePhoneNumberForm.controls['confirmPhone'].hasError('validatePhone') && submitAttempt && !(changePhoneNumberForm.controls['confirmPhone'].value == changePhoneNumberForm.controls['phone'].value)">
+            <span class="help-block">Phone Number mismatch</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-6 text-left">
+            <a>Cancel</a>
+          </div>
+          <div class="col-xs-6 text-right">
+            <button class="btn btn-default" [disabled]="">Save</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
