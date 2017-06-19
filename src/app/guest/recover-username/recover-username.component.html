@@ -12,7 +12,7 @@
               <div class="input-group">
                 <input type="text" class="form-control" name="name" id="name"  placeholder="Type your Email Address"/>
               </div>
-            </div>
+            </div><br><br>
             <button class="btn btn-primary pull-left" *ngIf="!IsValidEmail" (click)="validateEmail()">Continue</button>
             <button class="btn btn-primary pull-left"  *ngIf="IsValidEmail" routerLink="/login">Back to Sign In</button>
           </div>
