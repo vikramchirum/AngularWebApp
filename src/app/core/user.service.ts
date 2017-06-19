@@ -7,9 +7,9 @@ import {CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot} from '
 import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
-import {IToken} from "app/login/login.component.token";
-import {IUser, ISecurityQuestions} from "app/login/register";
-import {IRegisteredUser} from "app/login/registeredUserDetails";
+import {IToken} from "app/guest/login/login.component.token";
+import {IUser, ISecurityQuestions} from "app/guest/login/register";
+import {IRegisteredUser} from "app/guest/login/registeredUserDetails";
 import {environment} from 'environments/environment';
 
 @Injectable()
@@ -155,7 +155,7 @@ export class UserService implements CanActivate {
       this.secQuesUrl).map(
       (response: Response) => {
         var res = <ISecurityQuestions[]> response.json();
-        console.log("Response:", res);
+        //console.log("Response:", res);
         return res;
         // data => {
         // console.log("My data", data);
@@ -169,4 +169,24 @@ export class UserService implements CanActivate {
     //localStorage.removeItem('currentUser');
     localStorage.removeItem('gexa_auth_token');
   }
+}
+
+@Injectable()
+export class RedirectLoggedInUserToHome implements CanActivate {
+
+  constructor (
+    private UserService: UserService,
+    private Router: Router
+  ) {}
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    if (
+      this.UserService.user_logged_in
+      && state.url === '/login'
+    ) {
+      this.Router.navigate(['/']);
+    }
+    return true;
+  }
+
 }

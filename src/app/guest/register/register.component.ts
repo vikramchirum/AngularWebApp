@@ -1,8 +1,8 @@
 import {Directive, Component, OnInit} from '@angular/core';
-import {UserService} from "../core/user.service";
+import {UserService} from "../../core/user.service";
 import {Router} from "@angular/router";
-import {IToken} from "app/login/login.component.token";
-import {ISecurityQuestions, IUser} from "app/login/register";
+import {IToken} from "app/guest/login/login.component.token";
+import {ISecurityQuestions, IUser} from "app/guest/login/register";
 
 @Component({
   templateUrl: './register.component.html',

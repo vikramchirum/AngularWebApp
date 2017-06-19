@@ -4,6 +4,14 @@ body {
   background: $brand-primary;
 }
 
+.btnWidth{
+  width:150px !important;
+}
+.btnWidthSM {
+  width:250px !important;
+  margin-left: 130px;
+}
+
 .modal-content{
   width:550px; height: 850px;
   overflow-y: scroll;

@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {UserService} from "../core/user.service";
+import {UserService} from "../../core/user.service";
 import {Router} from "@angular/router";
 import {IUser, ISecurityQuestions} from "./register";
 import {IRegisteredUser} from "./registeredUserDetails";
@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
     this.user_service.login(this.user_name, this.password)
       .subscribe(
         token => {
-          this.router.navigate(this.user_service.state ? [this.user_service.state] : ['/account/profile']);
+          this.router.navigate(this.user_service.state ? [this.user_service.state] : ['/']);
         },
         error => {
           this.error = error.Message;
@@ -84,6 +84,13 @@ export class LoginComponent implements OnInit {
   //       });
   //
   // }
+
+  recPassword($event) {
+    if ($event && $event.preventDefault) {
+      $event.preventDefault();
+    }
+    this.router.navigate(['/login/recover-password']);
+  }
 
   ngOnInit(): void {
     let self = this;
