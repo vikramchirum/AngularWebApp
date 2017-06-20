@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
+import { PaymentMethodAddCcComponent } from 'app/shared/components/payment-method-add-cc/payment-method-add-cc.component';
+import { PaymentMethodAddEcheckComponent } from 'app/shared/components/payment-method-add-echeck/payment-method-add-echeck.component';
 import { BillingAccountService } from 'app/core/BillingAccount';
 import { PaymentMethod, PaymentMethodService } from 'app/core/PaymentMethod';
-import { CustomValidators } from 'ng2-validation';
-import { validCreditCard } from 'app/validators/validator';
 
 interface IPaymentMessage {
   classes: string[];
@@ -24,40 +23,20 @@ export class PaymentAccountsComponent implements OnInit {
   PaymentAbpSelecting: PaymentMethod = null;
   PaymentAbpSelected: PaymentMethod = null;
 
+  @ViewChild(PaymentMethodAddCcComponent)
+  private addCreditCardComponent: PaymentMethodAddCcComponent;
+  @ViewChild(PaymentMethodAddEcheckComponent)
+  private addEcheckComponent: PaymentMethodAddEcheckComponent;
+
   addingEcheck: boolean = null;
-  addingEcheckForm: FormGroup = null;
+  addingEcheckFormValid: boolean = null;
   addingCreditCard: boolean = null;
-  addingCreditCardNow: Date = new Date;
-  addingCreditCardForm: FormGroup = null;
-  addingCreditCardMonths: any[] = [
-    ['01', 'January'],
-    ['02', 'February'],
-    ['03', 'March'],
-    ['04', 'April'],
-    ['05', 'May'],
-    ['06', 'June'],
-    ['07', 'July'],
-    ['08', 'August'],
-    ['09', 'September'],
-    ['10', 'October'],
-    ['11', 'November'],
-    ['12', 'December']
-  ];
-  addingCreditCardYears: string[] = [];
+  addingCreditCardFormValid: boolean = null;
 
   constructor(
-    private FormBuilder: FormBuilder,
     private BillingAccountService: BillingAccountService,
     private PaymentMethodService: PaymentMethodService
-  ) {
-    // Generate the available years to select.
-    const thisYear = this.addingCreditCardNow.getFullYear();
-    for (let count = 0; count <= 5; this.addingCreditCardYears.push(`${thisYear + count}`), count++) {}
-    // Prepare the credit card form.
-    this.addingCreditCardForm = this.addingCreditCardFormInit();
-    // Prepare the Echeck form.
-    this.addingEcheckForm = this.addingEcheckFormInit();
-  }
+  ) {}
 
   ngOnInit() {
     this.PaymentMethodService.getPaymentMethods()
@@ -128,24 +107,17 @@ export class PaymentAccountsComponent implements OnInit {
   addingCreditCardToggle(open: boolean): void {
     const doOpen = open !== false;
     if (doOpen) {
-      this.addingCreditCardForm = this.addingCreditCardFormInit();
+      this.addingCreditCardFormValid = false;
     }
     this.addingCreditCard = doOpen;
   }
 
-  addingCreditCardFormInit(): FormGroup {
-    const thisMonth = (this.addingCreditCardNow.getMonth() + 1);
-    return this.FormBuilder.group({
-      Card_Name: ['', Validators.required],
-      Card_Number: ['', validCreditCard],
-      Card_Expiration_Month: [`${thisMonth < 10 ? '0' : ''}${thisMonth}`, Validators.required],
-      Card_Expiration_Year: [this.addingCreditCardYears[0], Validators.required],
-      Card_CCV: ['', Validators.compose([Validators.required, CustomValidators.digits, Validators.minLength(3)])]
-    });
+  addingCreditCardFormChanged($event: string): void {
+    this.addingCreditCardFormValid = $event === 'valid';
   }
 
   addingCreditCardSubmit() {
-    console.log('this.addingCreditCardForm.value', this.addingCreditCardForm.value);
+    console.log(this.addCreditCardComponent.formGroup.value);
     alert('Add card to Forte now.\nCheck the console for the user\'s input.');
     this.addingCreditCard = false;
   }
@@ -153,22 +125,17 @@ export class PaymentAccountsComponent implements OnInit {
   addingEcheckToggle(open: boolean): void {
     const doOpen = open !== false;
     if (doOpen) {
-      this.addingEcheckForm = this.addingEcheckFormInit();
+      this.addingEcheckFormValid = false;
     }
     this.addingEcheck = doOpen;
   }
 
-  addingEcheckFormInit(): FormGroup {
-    return this.FormBuilder.group({
-      Check_Name: ['', Validators.required],
-      Check_Routing: ['', Validators.compose([Validators.required, Validators.minLength(9), CustomValidators.digits])],
-      Check_Accounting: ['', Validators.compose([Validators.required, Validators.minLength(9), CustomValidators.digits])],
-      Check_Info: ['']
-    });
+  addingEcheckFormChanged($event: string): void {
+    this.addingEcheckFormValid = $event === 'valid';
   }
 
   addingEcheckSubmit() {
-    console.log('this.addingEcheckForm.value', this.addingEcheckForm.value);
+    console.log(this.addEcheckComponent.formGroup.value);
     alert('Add Echeck now.\nCheck the console for the user\'s input.');
     this.addingEcheck = false;
   }

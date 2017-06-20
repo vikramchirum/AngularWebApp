@@ -30,6 +30,23 @@ export function validCreditCard(control: FormControl): any {
 
 }
 
+export function validMoneyAmount(control: FormControl): any {
+
+  const value: string = control.value;
+
+  if (
+    // Test for an empty string.
+    !value
+    // Test using regex.
+    || !/^\$?[0-9]+(\.[0-9][0-9])?$/.test(value)
+  ) {
+    return { invalidMoneyAmount: true };
+  }
+
+  return null;
+
+}
+
  export function validateInteger(c: FormControl) {
    const INTEGER_REGEXP = /^[0-9]*$/;
    return INTEGER_REGEXP.test(c.value) ? null : {
@@ -78,4 +95,15 @@ export function equalityCheck (emailKey: string, confirmEmailKey: string) {
      }
    };
  }
+
+
+ export function validatePhone(c: FormControl) {
+  const PHONE_REGEXP = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+  return PHONE_REGEXP.test(c.value) ? null : {
+    validatePhone: {
+      valid: false
+    }
+  };
+}
+
 

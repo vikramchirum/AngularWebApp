@@ -11,5 +11,7 @@ export class PlansAndServicesComponent implements OnInit {
 
   ngOnInit() {
   }
-
+ reactToChangedBillingAccount(BillingAccount) {
+    console.log(BillingAccount);
+  }
 }
