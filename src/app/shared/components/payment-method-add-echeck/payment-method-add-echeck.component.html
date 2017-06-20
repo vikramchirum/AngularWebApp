@@ -1,0 +1,136 @@
+<form [formGroup]="formGroup" (submit)="formGroupSubmit()" novalidate>
+  <ng-template *ngIf="!!form_horizontal; then FormHorizontal else FormNormal"></ng-template>
+  <ng-template #FormHorizontal>
+
+    <div class="row">
+      <div class="col-md-8 col-md-offset-4 col-lg-10 col-lg-offset-2">
+        <img class="payments-method-add-echeck-numbers" src="/assets/payments/payment-accounts-e-check-numbers.png"/>
+      </div>
+    </div>
+
+    <div class="form-group form-group-lg">
+      <label for="payment-horizontal-echeck-name" class="col-md-4 col-lg-2 control-label">Account Name</label>
+      <div class="col-md-8 col-lg-6">
+        <input
+          type="text"
+          class="form-control form-control-wireframe"
+          id="payment-horizontal-echeck-name"
+          formControlName="echeck_name"
+          maxlength="32"
+        />
+        <small class="text-danger" *ngIf="formGroup.controls?.echeck_name.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
+        <small class="text-success" *ngIf="formGroup.controls?.echeck_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+      </div>
+    </div>
+
+    <div class="form-group form-group-lg">
+      <label for="payment-horizontal-echeck-routing" class="col-md-4 col-lg-2 control-label">Routing Number</label>
+      <div class="col-md-8 col-lg-6">
+        <input
+          type="text"
+          class="form-control form-control-wireframe"
+          id="payment-horizontal-echeck-routing"
+          formControlName="echeck_routing"
+          maxlength="17"
+        />
+        <small class="text-danger" *ngIf="formGroup.controls?.echeck_routing.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
+        <small class="text-success" *ngIf="formGroup.controls?.echeck_routing.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+      </div>
+    </div>
+
+    <div class="form-group form-group-lg">
+      <label for="payment-horizontal-echeck-accounting" class="col-md-4 col-lg-2 control-label">Checking Account Number</label>
+      <div class="col-md-8 col-lg-6">
+        <input
+          type="text"
+          class="form-control form-control-wireframe"
+          id="payment-horizontal-echeck-accounting"
+          formControlName="echeck_accounting"
+          maxlength="17"
+        />
+        <small class="text-danger" *ngIf="formGroup.controls?.echeck_accounting.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
+        <small class="text-success" *ngIf="formGroup.controls?.echeck_accounting.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+      </div>
+    </div>
+
+    <div class="form-group form-group-lg">
+      <label for="payment-horizontal-echeck-info" class="col-md-4 col-lg-2 control-label">Other info?</label>
+      <div class="col-md-8 col-lg-6">
+        <input
+          type="text"
+          class="form-control form-control-wireframe"
+          id="payment-horizontal-echeck-info"
+          formControlName="echeck_info"
+        />
+        <small class="text-muted">(optional)</small>
+      </div>
+    </div>
+
+  </ng-template>
+  <ng-template #FormNormal>
+
+    <img class="payments-method-add-echeck-numbers" src="/assets/payments/payment-accounts-e-check-numbers.png"/>
+
+    <div class="row">
+
+      <div class="col-md-4">
+        <div class="form-group-lg">
+          <label for="payment-normal-echeck-name">Name on Account</label>
+          <input
+            type="text"
+            class="form-control form-control-wireframe"
+            id="payment-normal-echeck-name"
+            formControlName="echeck_name"
+            maxlength="32"
+          />
+          <small class="text-danger" *ngIf="formGroup.controls?.echeck_name.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
+          <small class="text-success" *ngIf="formGroup.controls?.echeck_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group-lg">
+          <label for="payment-normal-echeck-routing">Routing Number</label>
+          <input
+            type="text"
+            class="form-control form-control-wireframe"
+            id="payment-normal-echeck-routing"
+            formControlName="echeck_routing"
+            maxlength="17"
+          />
+          <small class="text-danger" *ngIf="formGroup.controls?.echeck_routing.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
+          <small class="text-success" *ngIf="formGroup.controls?.echeck_routing.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group-lg">
+          <label for="payment-normal-echeck-accounting">Checking Account Number</label>
+          <input
+            type="text"
+            class="form-control form-control-wireframe"
+            id="payment-normal-echeck-accounting"
+            formControlName="echeck_accounting"
+            maxlength="17"
+          />
+          <small class="text-danger" *ngIf="formGroup.controls?.echeck_accounting.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
+          <small class="text-success" *ngIf="formGroup.controls?.echeck_accounting.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="form-group-lg">
+      <label for="payment-normal-echeck-info">Other info?</label>
+      <input
+        type="text"
+        class="form-control form-control-wireframe"
+        id="payment-normal-echeck-info"
+        formControlName="echeck_info"
+      />
+      <small class="text-muted">(optional)</small>
+    </div>
+
+  </ng-template>
+</form>
+
