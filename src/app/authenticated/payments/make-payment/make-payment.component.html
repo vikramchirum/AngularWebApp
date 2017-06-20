@@ -41,13 +41,13 @@
         <p class="form-control-static" *ngIf="PaymentMethods === null"><i class="fa fa-spin fa-spinner"></i> Loading your payment accounts...</p>
         <div class="btn-group" id="payment-accounts-container" [hidden]="PaymentMethods === null">
           <button class="btn btn-lg btn-wireframe dropdown-toggle" type="button" data-toggle="dropdown" id="payment-accounts">
+            <i class="fa fa-chevron-down pull-right"></i>
             <ng-container *ngIf="paymentOneTimeType === 'e-check'">e-Check</ng-container>
             <ng-container *ngIf="paymentOneTimeType === 'cc'">Credit Card</ng-container>
             <ng-container *ngIf="!paymentOneTimeType && PaymentMethodSelected">
               <i class="fa fa-fw" [ngClass]="PaymentMethodSelected.getFontAwesomeTag()"></i>
               {{ PaymentMethodSelected.getBrand() }} ending in {{ PaymentMethodSelected.Card_Last }}
             </ng-container>
-            <i class="fa fa-chevron-down pull-right"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-right">
             <li class="text-muted" *ngIf="!PaymentMethods">Payment Accounts (none)</li>

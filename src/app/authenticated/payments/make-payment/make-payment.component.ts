@@ -23,7 +23,7 @@ export class MakePaymentComponent implements OnInit {
   private PaymentMethods: PaymentMethod[] = null;
   private PaymentMethodSelected: PaymentMethod = null;
   @ViewChild(PaymentMethodAddCcComponent)
-  private addCcComponent: PaymentMethodAddCcComponent;
+  private addCreditCardComponent: PaymentMethodAddCcComponent;
   @ViewChild(PaymentMethodAddEcheckComponent)
   private addEcheckComponent: PaymentMethodAddEcheckComponent;
 
@@ -87,7 +87,7 @@ export class MakePaymentComponent implements OnInit {
   paymentSubmit(): void {
     if (this.paymentOneTimeType === 'cc') {
       console.log(this.formGroup.value);
-      console.log(this.addCcComponent.formGroup.value);
+      console.log(this.addCreditCardComponent.formGroup.value);
     } else if (this.paymentOneTimeType === 'e-check') {
       console.log(this.formGroup.value);
       console.log(this.addEcheckComponent.formGroup.value);
