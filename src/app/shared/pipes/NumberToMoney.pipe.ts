@@ -4,15 +4,34 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class NumberToMoneyPipe implements PipeTransform {
   transform(value: number): string {
 
-    const string = (Math.ceil(value) / 100).toString();
+    // We'll take the money amount in cents, so round any possible fractions of cents.
+    value = Math.round(value);
 
-    if (string.indexOf('.') < 0 ) { return `${string}.00`; }
+    // Single-digit values with a possible negative sign.
+    if (value < 10 && value > -10) {
+      return `${value < 0 ? '-' : ''}0.0${value}`;
+    }
 
-    if (string.length === 1) { return `${string}.00`; }
+    // Double-digit values with a possible negative sign.
+    if (value < 100 && value > -100) {
+      return `${value < 0 ? '-' : ''}0.${value}`;
+    }
 
-    if (string[string.length - 2] === '.') { return `${string}0`; }
+    // Get the value as a string, with the decimal.
+    const valueString = (value / 100).toString();
 
-    return `${string}`;
+    // If we only have one digit after the decimal.
+    if (valueString[valueString.length - 2] === '.') {
+      return `${valueString}0`;
+    }
+
+    // If we do not have any decimals the it's a whole number.
+    if (valueString.indexOf('.') < 0) {
+      return `${valueString}.00`;
+    }
+
+    // It's a valid money number.
+    return valueString;
 
   }
 }
