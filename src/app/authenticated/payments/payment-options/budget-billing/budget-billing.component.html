@@ -1,36 +1,61 @@
-<!-- This displays for the medium/larger devices -->
-<section class="section-container-highlight hidden-xs">
-  <h2><a routerLink="/payments/payment-options" class="pull-right"><i class="fa fa-fw fa-times"></i></a>Budget Billing</h2>
-  <br/>
-  <div class="row">
-    <div class="col-lg-6">
-      <h3>Understanding Budget Billing</h3>
-      <br/>
-      <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
+<section class="section-container-highlight">
+  <ng-template *ngIf="signedUpToBudgetBilling; then SignedUpToBudgetBilling else NotSignedUpToBudgetBilling;"></ng-template>
+  <ng-template #NotSignedUpToBudgetBilling>
+    <ng-template *ngIf="signingUpToBudgetBilling; then SigningUpToBudgetBilling else NotSigningUpToBudgetBilling;"></ng-template>
+    <ng-template #NotSigningUpToBudgetBilling>
+      <div class="row text-center">
+        <div class="col-md-4 col-md-push-8">
+          <a href="#" (click)="$event.preventDefault();">
+            <img class="payment-options-budget-billing-how-it-works" src="/assets/payments/payment-options-budget-billing-how-it-works.jpg"/>
+          </a>
+        </div>
+        <div class="col-md-8 col-md-pull-4">
+          <h1>Start Up Budget Billing<br/><small>for as little as</small></h1>
+          <h1 class="start-at">${{ amountMinimum | NumberToMoneyPipe }} Per Month *</h1>
+          <button class="btn btn-lg btn-primary" (click)="signingUpToBudgetBilling = true">Sign Up Now!</button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #SigningUpToBudgetBilling>
+      <mygexa-budget-billing-selector
+        [editing]="signedUpToBudgetBillingEditing"
+        [onCancel]="cancelSubmit"
+        [onSubmit]="startSubmit"
+        [amountInitial]="amountInitial"
+        [amountMinimum]="amountMinimum"
+      ></mygexa-budget-billing-selector>
+    </ng-template>
+  </ng-template>
+  <ng-template #SignedUpToBudgetBilling>
+    <div class="text-center">
+      <h1>{{ signedUpToBudgetBillingRecently ? 'Thanks! ' : '' }}Your Budget Billing is Active</h1>
+      <h1 class="active-budget">{{ temporary_budget_billing }} Per Month</h1>
+      <h4>Next Schedule Payment {{ nextPaymentDate | date:'yMd' }}</h4>
     </div>
-    <div class="col-lg-6">
-      <div class="payment-extension-video-placeholder">
-        <i class="fa fa-4x fa-play-circle"></i>
+    <div class="row active-options">
+      <div class="col-md-4 col-md-offset-2">
+        <button class="btn btn-lg btn-block btn-primary" (click)="budgetBillingEdit()">Edit Budget Billing</button>
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-lg btn-block btn-primary" (click)="budgetBillingCancel()">Cancel Budget Billing</button>
+      </div>
+    </div>
+  </ng-template>
+</section>
+
+<div #confirmation_modal class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Confirmation</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to cancel Budget Billing?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Dismiss</button>
+        <button type="button" class="btn btn-primary" (click)="budgetBillingCancel(true)">Stop Budget Billing</button>
       </div>
     </div>
   </div>
-  <div class="text-right">
-    <button class="btn btn-lg btn-wireframe">Get Started</button>
-  </div>
-</section>
-<!-- This displays for the smaller devices -->
-<div class="visible-xs">
-  <a routerLink="/payments/payment-options"><i class="fa fa-4x fa-arrow-left"></i></a>
-  <h1>Budget Billing</h1>
-  <br/>
-  <h3>Understanding Budget Billing</h3>
-  <br/>
-  <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
-  <br/>
-  <div class="payment-extension-video-placeholder">
-    <i class="fa fa-4x fa-play-circle"></i>
-  </div>
-  <button class="btn btn-lg btn-block btn-wireframe">Request Payment Extension</button>
-  <br/>
 </div>
-
