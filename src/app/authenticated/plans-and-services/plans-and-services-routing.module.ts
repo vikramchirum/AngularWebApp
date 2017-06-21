@@ -6,7 +6,7 @@ import { OrderStatusComponent } from './order-status/order-status.component';
 import { PlansAndServicesComponent } from './plans-and-services.component';
 import { MovingFromToAddressComponent } from './moving-from-to-address/moving-from-to-address.component';
 import { MovingComponent} from './moving/moving.component';
-
+import { SubmitMoveComponent } from './submit-move/submit-move.component';
 
 const routes: Route[] = [
   {
@@ -16,7 +16,8 @@ const routes: Route[] = [
       { path: 'add-service-location', component: AddServicesComponent },
       { path: 'order-status', component: OrderStatusComponent },
       { path: 'moving', component: MovingComponent },
-      { path: 'moving-center', component: MovingFromToAddressComponent}
+      { path: 'moving-center', component: MovingFromToAddressComponent},
+      { path: 'moving-confirmation', component: SubmitMoveComponent, canActivate:[]}
     ]
   }
 ];

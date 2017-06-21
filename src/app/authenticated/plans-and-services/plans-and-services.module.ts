@@ -22,6 +22,8 @@ import { SelectPlanComponent } from './add-services/select-plan/select-plan.comp
 import { CreditCheckComponent } from './add-services/credit-check/credit-check.component';
 import { MovingFromToAddressComponent } from './moving-from-to-address/moving-from-to-address.component';
 import { MovingComponent} from './moving/moving.component';
+import { SelectPlanModalDialogComponent } from './moving-from-to-address/select-plan-modal-dialog/select-plan-modal-dialog.component';
+import { SubmitMoveComponent } from './submit-move/submit-move.component';
 
 @NgModule({
   imports: [
@@ -50,7 +52,9 @@ import { MovingComponent} from './moving/moving.component';
       SelectPlanComponent,
       CreditCheckComponent,
       MovingFromToAddressComponent,
-      MovingComponent    
+      MovingComponent,
+      SelectPlanModalDialogComponent,
+      SubmitMoveComponent    
       ]
 })
 export class PlansAndServicesModule { }
