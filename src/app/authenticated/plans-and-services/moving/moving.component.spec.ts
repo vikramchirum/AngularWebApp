@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MovingServiceComponent } from './moving-service.component';
+import { MovingCenterComponent } from './moving-center.component';
 
-describe('MovingServiceComponent', () => {
-  let component: MovingServiceComponent;
-  let fixture: ComponentFixture<MovingServiceComponent>;
+describe('MovingCenterComponent', () => {
+  let component: MovingCenterComponent;
+  let fixture: ComponentFixture<MovingCenterComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MovingServiceComponent ]
+      declarations: [ MovingCenterComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MovingServiceComponent);
+    fixture = TestBed.createComponent(MovingCenterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
