@@ -7,8 +7,9 @@
         <form (ngSubmit)="login()" #myGexaLoginForm="ngForm">
           <div class="form-group" [ngClass]="{ 'has-error': error != null && myGexaLoginForm.form.valid }">
             <div class="input-group">
-              <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
-              <input [(ngModel)]="user_name" [disabled]="processing" name="user_name" type="text" class="form-control"
+              <label class="cols-sm-2 control-label">Username</label>
+              <!--<span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>-->
+              <input [(ngModel)]="user_name" [disabled]="processing" name="user_name" type="text" class="form-control"  style="width: 450px;border-radius: 5px; "
                      placeholder="Username" required #username="ngModel">
             </div>
             <small [hidden]="username.valid || username.pristine || processing" class="text-danger">Username is
@@ -17,9 +18,10 @@
           </div>
           <div class="form-group" [ngClass]="{ 'has-error': error !== null && myGexaLoginForm.form.valid}">
             <div class="input-group">
-              <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
-              <input [(ngModel)]="password" [disabled]="processing" name="password" type="password" class="form-control"
-                     placeholder="Password" required #em="ngModel">
+              <!--<span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>-->
+              <label class="cols-sm-2 control-label">Password</label>
+                <input [(ngModel)]="password" [disabled]="processing" name="password" type="password" class="form-control"  style="width: 450px;border-radius: 5px; "
+                       placeholder="Type your Password" required #em="ngModel">
             </div>
             <small [hidden]="em.valid || em.pristine || processing" class="text-danger">Password is required</small>
           </div>
@@ -36,7 +38,7 @@
             </button>
             <div class="form-group" style="padding-left: 250px">
               <button type="submit" class="btn btn-wireframe btnWidth" data-toggle="modal" data-target="#register"
-                      (click)="disableLogin()"><b> > </b> Register
+                      (click)="disableLogin()"><b> > </b>   Register
               </button>
             </div>
           </div>

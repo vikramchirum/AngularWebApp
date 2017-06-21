@@ -1,7 +1,12 @@
 export interface IRegisteredUser {
   Token: string;
-  Email_Address: string;
+  Profile: IUserProfile;
   AccountPermissions: IAccountPermissions[];
+}
+
+export interface IUserProfile {
+  Email_Address: string;
+  Username: string;
 }
 
 export interface IAccountPermissions {

@@ -14,6 +14,7 @@ import {validateEmail, equalCheck, validateInteger} from "app/validators/validat
 export class LoginComponent implements OnInit {
   processing: boolean;
   registerForm: FormGroup;
+
   formSubmitted: boolean = false;
    public user: IUser;
   user_name: string;
@@ -33,13 +34,13 @@ export class LoginComponent implements OnInit {
     this.user_service.login(this.user_name, this.password)
       .subscribe(
         token => {
+          console.log("Result", token);
           this.router.navigate(this.user_service.state ? [this.user_service.state] : ['/']);
         },
         error => {
           this.error = error.Message;
           this.processing = false;
         });
-
   }
 
   save(model: IUser, isValid: boolean) {
@@ -48,7 +49,7 @@ export class LoginComponent implements OnInit {
     if (isValid) {
       this.user_service.signup(model).subscribe(
         token => {
-          this.router.navigate(this.user_service.state ? [this.user_service.state] : ['/account/profile']);
+          this.router.navigate(this.user_service.state ? [this.user_service.state] : ['/']);
         },
         error => {
           this.error = error.Message;
