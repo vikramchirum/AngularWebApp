@@ -6,7 +6,7 @@
         <h2><b>Recover Username</b></h2>
         <form  id="Recover_username" novalidate [formGroup]="recoverUsernameForm">
 
-          <div id = UserName_Reset_Password [ngClass]="{'has-error':!registerForm.controls['Email_Address'].valid && formSubmitted}">
+          <div id = UserName_Reset_Password [ngClass]="{'has-error':!recoverUsernameForm.controls['Email_Address'].valid && formSubmitted}">
             <h5 style="color: #cccccc; width: 250px">Send the email address you used to register for MyGexa and we will send your username to that address.</h5>
             <div class="form-group">
               <label for="Email_Address" class="cols-sm-2 control-label">Email Address</label>
@@ -19,7 +19,7 @@
                  *ngIf="recoverUsernameForm.controls['Email_Address'].hasError('required') && formSubmitted">
               <span class="help-block">Email is required</span>
             </div>
-            <div class="has-error" *ngIf="!registerForm.controls['Email_Address'].hasError('required')
+            <div class="has-error" *ngIf="!recoverUsernameForm.controls['Email_Address'].hasError('required')
                     && recoverUsernameForm.controls['Email_Address'].hasError('validateEmail') && formSubmitted">
               <span class="help-block">Enter a valid email. Email format should be <i>john@doe.com</i>.</span>
             </div><br><br>

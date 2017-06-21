@@ -11,12 +11,12 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class PaymentOptionsComponent implements OnInit, OnDestroy {
 
-  private ActiveBillingAccount: BillingAccount = null;
+  ActiveBillingAccount: BillingAccount = null;
   private BillingAccounts: BillingAccount[] = [];
   private BillingAccountsSubscription: Subscription = null;
 
   constructor(
-    private router: Router,
+    public router: Router,
     private BillingAccountService: BillingAccountService
   ) {
     this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable

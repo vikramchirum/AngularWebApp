@@ -12,11 +12,12 @@ export class SecurityInformationComponent implements OnInit {
   userName: string;
   userNameEditing: boolean;
   passwordEditing: boolean;
+  editing: boolean;
 
   submitAttempt: boolean = false;
   constructor(fb: FormBuilder) {
     this.userNameEditing = false;
-    this.passwordEditing = false;   
+    this.passwordEditing = false;
   }
 
   ngOnInit() {

@@ -10,7 +10,7 @@ import { Bill, BillService } from 'app/core/Bill';
 export class ViewMyBillComponent implements OnInit {
 
   private date_today = new Date;
-  private bill: Bill;
+  bill: Bill;
 
   constructor(
     private BillService: BillService

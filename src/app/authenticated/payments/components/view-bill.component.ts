@@ -10,7 +10,7 @@ import { Bill, BillService } from 'app/core/Bill';
 export class ViewBillComponent implements OnInit {
   @Input() bill_Id: string;
 
-  private bill: Bill = null;
+  bill: Bill = null;
   private openCharges = [];
 
   /**

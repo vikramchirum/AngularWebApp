@@ -3,6 +3,7 @@ import {UserService} from "../../core/user.service";
 import {Router} from "@angular/router";
 import {IToken} from "app/guest/login/login.component.token";
 import {ISecurityQuestions, IUser} from "app/guest/login/register";
+import {FormGroup} from "@angular/forms";
 
 @Component({
   templateUrl: './register.component.html',
@@ -12,6 +13,7 @@ export class RegisterComponent implements OnInit {
 
   public user: IUser;
   public securityQues: ISecurityQuestions;
+  myForm: FormGroup;
 
   constructor(private user_service: UserService, private router: Router) {
   }

@@ -16,7 +16,7 @@
           <div class="form-group">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
-              <input [(ngModel)]="user.Zip" name="Zip" type="text" class="form-control" placeholder=" Service address Zipcode" required minlength="5" maxlength="5" #zipcode="ngModel">
+              <input [(ngModel)]="user.Zip_Code" name="Zip" type="text" class="form-control" placeholder=" Service address Zipcode" required minlength="5" maxlength="5" #zipcode="ngModel">
             </div>
             <small [hidden]="zipcode.valid || (zipcode.pristine && !f.submitted)" class="text-danger">Zip code is required (Must be 5 characters).</small>
           </div>
@@ -45,7 +45,7 @@
           <div class="form-group">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-key"></i></span>
-              <input [(ngModel)]="securityQues.Security_Id" class="form-control" placeholder="Password" required validateEqual="confirmPassword" reverse="true" #password="ngModel">
+              <input [(ngModel)]="securityQues.Id" class="form-control" placeholder="Password" required validateEqual="confirmPassword" reverse="true" #password="ngModel">
             </div>
             <small [hidden]="password.valid || (password.pristine && !f.submitted)" class="text-danger">Password is required.</small>
           </div>
