@@ -35,8 +35,11 @@ export function validMoneyAmount(control: FormControl): any {
   const value: string = control.value;
 
   if (
+    // Test for non-string types.
+    typeof value !== 'string'
     // Test for an empty string.
-    !value
+    || !value
+    || value === ''
     // Test using regex.
     || !/^\$?[0-9]+(\.[0-9][0-9])?$/.test(value)
   ) {
@@ -45,6 +48,29 @@ export function validMoneyAmount(control: FormControl): any {
 
   return null;
 
+}
+
+export function minimumMoneyAmount(amount: number) {
+  return (control: FormControl) => {
+
+    // Test for a valid money amount:
+    const isValidMoneyAmount = validMoneyAmount(control);
+    if (isValidMoneyAmount !== null) {
+      // If not valid, return so.
+      return isValidMoneyAmount;
+    }
+
+    // Get the money value with decimals if it's a whole number:
+    const value = control.value.indexOf('.') < 0 ? `${control.value}.00` : control.value;
+
+    // Test if the money value is less than the specified amount:
+    if (Number(value.replace(/[^0-9]+/g, '')) < amount) {
+      return { minimumMoneyAmount: true };
+    }
+
+    return null;
+
+  };
 }
 
  export function validateInteger(c: FormControl) {

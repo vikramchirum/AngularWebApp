@@ -49,11 +49,13 @@ hr.breaker {
 
 section.section-container {
   border: 2px solid black;
+  overflow: hidden;
   padding: 4rem 8rem;
 }
 section.section-container-highlight {
   background: #EEEEEE;
   margin: 0 -8rem;
+  overflow: hidden;
   padding: 48px 60px;
 }
 @media (max-width: $screen-sm-max) {
