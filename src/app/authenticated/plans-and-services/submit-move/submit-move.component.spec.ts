@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MovingServiceComponent } from './moving-service.component';
+import { SubmitMoveComponent } from './submit-move.component';
 
-describe('MovingServiceComponent', () => {
-  let component: MovingServiceComponent;
-  let fixture: ComponentFixture<MovingServiceComponent>;
+describe('SubmitMoveComponent', () => {
+  let component: SubmitMoveComponent;
+  let fixture: ComponentFixture<SubmitMoveComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MovingServiceComponent ]
+      declarations: [ SubmitMoveComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MovingServiceComponent);
+    fixture = TestBed.createComponent(SubmitMoveComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
