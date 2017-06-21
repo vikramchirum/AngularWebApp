@@ -44,7 +44,7 @@
             <i class="fa fa-chevron-down pull-right"></i>
             <ng-container *ngIf="paymentOneTimeType === 'e-check'">e-Check</ng-container>
             <ng-container *ngIf="paymentOneTimeType === 'cc'">Credit Card</ng-container>
-            <ng-container *ngIf="!paymentOneTimeType && PaymentMethodSelected">
+            <ng-container *ngIf="!paymentOneTimeType && PaymentMethodSelected != null">
               <i class="fa fa-fw" [ngClass]="PaymentMethodSelected.getFontAwesomeTag()"></i>
               {{ PaymentMethodSelected.getBrand() }} ending in {{ PaymentMethodSelected.Card_Last }}
             </ng-container>
