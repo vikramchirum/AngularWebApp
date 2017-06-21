@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'mygexa-recover-username',
@@ -8,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 export class RecoverUsernameComponent implements OnInit {
 
   IsValidEmail: boolean = false;
+  recoverUsernameForm: FormGroup;
+  formSubmitted: boolean;
 
   constructor() { }
 

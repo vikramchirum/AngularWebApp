@@ -19,9 +19,9 @@ export class MakePaymentComponent implements OnInit {
   paymentOneTimeValid: boolean = null;
   formGroup: FormGroup = null;
 
-  private Bill: Bill = null;
-  private PaymentMethods: PaymentMethod[] = null;
-  private PaymentMethodSelected: PaymentMethod = null;
+  Bill: Bill = null;
+  PaymentMethods: PaymentMethod[] = null;
+  PaymentMethodSelected: PaymentMethod = null;
   @ViewChild(PaymentMethodAddCcComponent)
   private addCreditCardComponent: PaymentMethodAddCcComponent;
   @ViewChild(PaymentMethodAddEcheckComponent)

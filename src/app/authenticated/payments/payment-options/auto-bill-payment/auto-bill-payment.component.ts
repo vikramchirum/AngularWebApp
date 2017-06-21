@@ -17,7 +17,7 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
 
   autoBillPaymentMethod: PaymentMethod = null;
 
-  private ActiveBillingAccount: BillingAccount = null;
+  ActiveBillingAccount: BillingAccount = null;
   private BillingAccounts: BillingAccount[] = [];
   private BillingAccountsSubscription: Subscription = null;
 

@@ -15,7 +15,7 @@ export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
   @Input() selectorLabel: string = null;
   @Output() changedBillingAccount: EventEmitter<any> =  new EventEmitter<any>();
 
-  private BillingAccounts: BillingAccount[] = null;
+  BillingAccounts: BillingAccount[] = null;
   private BillingAccountSelectedId: string = null;
   private BillingAccountsSubscription: Subscription = null;
 

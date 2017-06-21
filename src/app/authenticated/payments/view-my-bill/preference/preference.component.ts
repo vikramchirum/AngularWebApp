@@ -8,8 +8,8 @@ import { Component, OnInit, Input } from '@angular/core';
 export class PreferenceComponent implements OnInit {
   @Input() preference: string;
 
-  private active: boolean;
-  private preference_text: string;
+  active: boolean;
+  preference_text: string;
 
   constructor() {
     // Make 'null' to tell the view we're loading:

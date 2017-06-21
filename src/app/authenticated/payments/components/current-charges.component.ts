@@ -9,7 +9,7 @@ import { Bill, BillService } from 'app/core/Bill';
 })
 export class CurrentChargesComponent implements OnInit {
 
-  private Bill: Bill = null;
+  Bill: Bill = null;
 
   constructor(
     private BillService: BillService

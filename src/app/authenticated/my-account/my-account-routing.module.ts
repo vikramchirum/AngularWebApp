@@ -9,7 +9,7 @@ import { MyAccountComponent } from './my-account.component';
 import { MessageCenterComponent } from './message-center/message-center.component';
 import { ReferFriendModule } from './refer-friend/refer-friend.module';
 
-function loadReferFriendModule() { return ReferFriendModule; }
+export function loadReferFriendModule() { return ReferFriendModule; }
 
 const routes: Route[] = [
   {
