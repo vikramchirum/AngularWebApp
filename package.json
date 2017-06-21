@@ -9,11 +9,11 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build-dev": "ng build --target=production --environment=dev --output-hashing all",
-    "build-qa": "ng build --target=production --environment=qa --output-hashing all",
-    "build-stg": "ng build --target=production --environment=stg --output-hashing all",
-    "build-prd": "ng build --target=production --environment=prod --output-hashing all",
-    "deploy-local": "ng build --target=production --environment=dev --output-path C:\\inetpub\\wwwroot\\DEV\\test --output-hashing all"
+    "build-dev": "ng build --aot=false --target=production --environment=dev --output-hashing all",
+    "build-qa": "ng build --aot=false --target=production --environment=qa --output-hashing all",
+    "build-stg": "ng build --aot=false --target=production --environment=stg --output-hashing all",
+    "build-prd": "ng build --aot=false --target=production --environment=prod --output-hashing all",
+    "deploy-local": "ng build --aot=false --target=production --environment=dev --output-path C:\\inetpub\\wwwroot\\DEV\\test --output-hashing all"
   },
   "private": true,
   "dependencies": {
