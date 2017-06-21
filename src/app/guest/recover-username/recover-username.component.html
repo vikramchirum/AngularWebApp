@@ -1,0 +1,34 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4">
+      <div id="ResetUsername" class="form-group formPadding">
+        <h1>Gexa Energy</h1><br><br>
+        <h2><b>Recover Username</b></h2>
+        <form  id="Recover_username" novalidate [formGroup]="recoverUsernameForm">
+
+          <div id = UserName_Reset_Password [ngClass]="{'has-error':!registerForm.controls['Email_Address'].valid && formSubmitted}">
+            <h5 style="color: #cccccc; width: 250px">Send the email address you used to register for MyGexa and we will send your username to that address.</h5>
+            <div class="form-group">
+              <label for="Email_Address" class="cols-sm-2 control-label">Email Address</label>
+              <div class="input-group">
+                <input type="text" class="form-control" name="Email_Address" id="Email_Address"  [formControl]="recoverUsernameForm.controls['Email_Address']"
+                       placeholder="Type your Email Address"/>
+              </div>
+            </div>
+            <div class="has-error"
+                 *ngIf="recoverUsernameForm.controls['Email_Address'].hasError('required') && formSubmitted">
+              <span class="help-block">Email is required</span>
+            </div>
+            <div class="has-error" *ngIf="!registerForm.controls['Email_Address'].hasError('required')
+                    && recoverUsernameForm.controls['Email_Address'].hasError('validateEmail') && formSubmitted">
+              <span class="help-block">Enter a valid email. Email format should be <i>john@doe.com</i>.</span>
+            </div><br><br>
+            <button class="btn btn-primary pull-left" *ngIf="!IsValidEmail" (click)="validateEmail()">Continue</button>
+            <button class="btn btn-primary pull-left"  *ngIf="IsValidEmail" routerLink="/login">Back to Sign In</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ModalModule } from 'ngx-bootstrap';
+import { DatePickerModule } from 'ng2-datepicker';
 import { MdCardModule, MaterialModule } from '@angular/material';
+
 import { SharedModule } from '../../shared/shared.module';
 import { AddServicesComponent } from './add-services/add-services.component';
 import { MyServicePlansComponent } from './my-service-plans/my-service-plans.component';
@@ -13,14 +16,14 @@ import { MyCurrentPlanComponent } from './my-service-plans/my-current-plan/my-cu
 import { DocumentsComponent } from './my-service-plans/documents/documents.component';
 import { ChangeYourPlanComponent } from './my-service-plans/change-your-plan/change-your-plan.component';
 import { ChangeYourPlanCardComponent } from './my-service-plans/change-your-plan/change-your-plan-card/change-your-plan-card.component';
-import { MovingServiceComponent } from './moving-service/moving-service.component';
-import { ModalModule } from 'ngx-bootstrap';
 import { ServicePlanUpgradeModalComponent } from './my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
 import { TransferServiceInfoComponent } from './order-status/service-enrollment-status/transfer-service-info/transfer-service-info.component';
 import { SelectPlanComponent } from './add-services/select-plan/select-plan.component';
 import { CreditCheckComponent } from './add-services/credit-check/credit-check.component';
-import { DatePickerModule } from 'ng2-datepicker';
-import { MovingServiceModalDialogComponent } from './moving-service/moving-service-modal-dialog/moving-service-modal-dialog.component';
+import { MovingFromToAddressComponent } from './moving-from-to-address/moving-from-to-address.component';
+import { MovingComponent} from './moving/moving.component';
+import { SelectPlanModalDialogComponent } from './moving-from-to-address/select-plan-modal-dialog/select-plan-modal-dialog.component';
+import { SubmitMoveComponent } from './submit-move/submit-move.component';
 
 @NgModule({
   imports: [
@@ -43,13 +46,15 @@ import { MovingServiceModalDialogComponent } from './moving-service/moving-servi
       MyCurrentPlanComponent,
       DocumentsComponent,
       ChangeYourPlanComponent,
-      ChangeYourPlanCardComponent,
-      MovingServiceComponent,
+      ChangeYourPlanCardComponent,     
       ServicePlanUpgradeModalComponent,
       TransferServiceInfoComponent,
       SelectPlanComponent,
       CreditCheckComponent,
-      MovingServiceModalDialogComponent
+      MovingFromToAddressComponent,
+      MovingComponent,
+      SelectPlanModalDialogComponent,
+      SubmitMoveComponent    
       ]
 })
 export class PlansAndServicesModule { }
