@@ -9,7 +9,7 @@
     <ng-template #listCharges>
       <h2>
         <button class="charge-toggle" (click)="chargeToggle(charge)">
-          <i class="fa fa-fw" [ngClass]="{ 'fa-chevron-down': !chargeOpened(charge), 'fa-chevron-up': chargeOpened(charge) }"></i>
+          <i class="fa fa-fw" [ngClass]="chargeOpened(charge) ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
         </button>
         {{ charge.title }}
       </h2>
@@ -72,7 +72,7 @@
     </div>
     <div class="col-md-5 text-right">
       <br/>
-      <a class="btn btn-block btn-wireframe" [routerLink]="['../make-payment']">Make a Payment</a>
+      <a class="btn btn-block btn-wireframe" routerLink="/payments/make-payment">Make a Payment</a>
     </div>
   </div>
 
