@@ -36,15 +36,15 @@ export class UserService implements CanActivate {
 
   constructor(private router: Router, private _http: Http) {
 
-     // this.loginUrl = 'http://localhost:53342/api/user/authentication';
-     // this.registerUrl = 'http://localhost:53342/api/user/register';
-     // this.getSecQuestionUrl = 'http://localhost:53342/api/user/getSecQues';
+     this.loginUrl = 'http://localhost:53342/api/user/authentication';
+     this.registerUrl = 'http://localhost:53342/api/user/register';
+     this.getSecQuestionUrl = 'http://localhost:53342/api/user/getSecQues';
 
     this.secQuesUrl = environment.Api_Url + "/user/securityQues";
-    this.getSecQuestionUrl = environment.Api_Url + "/user/getSecQues";
-    this.loginUrl = environment.Api_Url + "/user/authentication";
-    this.registerUrl = environment.Api_Url + "/user/register";
-  }
+  //   this.getSecQuestionUrl = environment.Api_Url + "/user/getSecQues";
+  //   this.loginUrl = environment.Api_Url + "/user/authentication";
+  //   this.registerUrl = environment.Api_Url + "/user/register";
+   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     return this.verify_login(state.url);
@@ -90,7 +90,7 @@ export class UserService implements CanActivate {
     return this._http.post(this.loginUrl, urlSearchParams.toString(), requestOptions)
       .map((response: Response) => {
         var result = response.json();
-        console.log("Result:", result.Token);
+        console.log("Result:", result);
         const token = result.Token;
         if (token && token.length) {
           localStorage.setItem('gexa_auth_token', token);
