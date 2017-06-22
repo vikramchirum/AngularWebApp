@@ -1,4 +1,22 @@
 
+.current-charges-container {
+  border: 2px solid black;
+  margin-bottom: 4rem;
+  padding: 2rem 4rem;
+}
+
+table.current-charges-make-a-payment {
+  td {
+    font-size: 2rem;
+    line-height: 4rem;
+  }
+}
+
+.current-charges-make-a-payment-container {
+  text-align: right;
+  padding: 4rem 0;
+}
+
 .view-my-bill-billing-payment-preferences,
 .view-my-bill-billing-meter-information,
 .view-my-bill-billing-power-outage {
