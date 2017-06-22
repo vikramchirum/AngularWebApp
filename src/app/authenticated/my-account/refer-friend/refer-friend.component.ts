@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { CustomerAccountService } from 'app/core/CustomerAccount';
+let temp_Enrolled_In_My_Rewards_And_Referrals: boolean = null;
 
 @Component({
   selector: 'mygexa-refer-friend',
@@ -13,10 +13,9 @@ export class ReferFriendComponent implements OnInit {
   enrolled: boolean = null;
 
   constructor(
-    private CustomerAccountService: CustomerAccountService
   ) {
-    this.CustomerAccountService.getCurrentCustomerAccount()
-      .then(data => this.enrolled = data.Enrolled_In_My_Rewards_And_Referrals);
+    // TODO: look up from the API.
+    this.enrolled = temp_Enrolled_In_My_Rewards_And_Referrals;
   }
 
   toggleButton(): void {
@@ -24,13 +23,8 @@ export class ReferFriendComponent implements OnInit {
   }
 
   onEnroll() {
-    this.CustomerAccountService
-      .enrollMyRewardsAndReferrals()
-      .then(() => {
-        // We will not need to update the enroll variable ourselves,
-        // once we utilize observables.
-        this.enrolled = true;
-      });
+    // TODO: post to the API.
+    this.enrolled = temp_Enrolled_In_My_Rewards_And_Referrals = true;
   }
 
   ngOnInit() { }

@@ -1,8 +1,10 @@
 
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 
+import { find } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
-import { BillingAccount, BillingAccountService } from 'app/core/BillingAccount';
+import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
+import { BillingAccountService } from 'app/core/BillingAccount.service';
 
 @Component({
   selector: 'mygexa-service-account-selector',
@@ -11,11 +13,11 @@ import { BillingAccount, BillingAccountService } from 'app/core/BillingAccount';
 })
 export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
 
-  @Input() selectedBillingAccount: BillingAccount = null;
+  @Input() selectedBillingAccount: BillingAccountClass = null;
   @Input() selectorLabel: string = null;
   @Output() changedBillingAccount: EventEmitter<any> =  new EventEmitter<any>();
 
-  BillingAccounts: BillingAccount[] = null;
+  private BillingAccounts: BillingAccountClass[] = null;
   private BillingAccountSelectedId: string = null;
   private BillingAccountsSubscription: Subscription = null;
 
@@ -25,7 +27,7 @@ export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable.subscribe(
-      (BillingAccounts: BillingAccount[]) => {
+      (BillingAccounts: BillingAccountClass[]) => {
         this.BillingAccounts = BillingAccounts;
         // If there is not provided billing account to select, use the Billing Account Service's.
         if (
@@ -43,20 +45,15 @@ export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Clean up our subscriber to avoid memeory leaks.
+    // Clean up our subscriber to avoid memory leaks.
     this.BillingAccountsSubscription.unsubscribe();
   }
 
   changeBillingAccount() {
     // Look for the selected billing account and emit the change with it.
-    for (const index in this.BillingAccounts) {
-      if (
-        this.BillingAccounts[index]
-        && this.BillingAccounts[index].Id === this.BillingAccountSelectedId
-      ) {
-        this.changedBillingAccount.emit(this.BillingAccounts[index]);
-        break;
-      }
+    const SelectedBillingAccount = find(this.BillingAccounts, { Id: this.BillingAccountSelectedId });
+    if (SelectedBillingAccount) {
+      this.changedBillingAccount.emit(SelectedBillingAccount);
     }
   }
 

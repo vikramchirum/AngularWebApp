@@ -10,8 +10,8 @@ import { HttpClient } from './httpclient';
 import { httpFactory } from './httpFactory';
 
 import { BillService } from './Bill';
-import { BillingAccountService } from './BillingAccount';
-import { CustomerAccountService } from './CustomerAccount';
+import { BillingAccountService } from './BillingAccount.service';
+import { CustomerAccountService } from './CustomerAccount.service';
 import { PaymentMethodService } from './PaymentMethod';
 import { InvoiceService } from './invoiceservice.service';
 

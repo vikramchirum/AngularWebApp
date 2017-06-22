@@ -1,6 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 
-import { BillingAccount, BillingAccountService } from 'app/core/BillingAccount';
+import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
+import { BillingAccountService } from 'app/core/BillingAccount.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -10,11 +11,11 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class MyRewardsComponent implements OnInit, OnDestroy {
 
-  public selectedBillingAccount: BillingAccount = null;
-  public editingBillingAccount: BillingAccount = null;
+  public selectedBillingAccount: BillingAccountClass = null;
+  public editingBillingAccount: BillingAccountClass = null;
   public editingAddress: boolean = null;
 
-  private BillingAccounts: BillingAccount[] = null;
+  private BillingAccounts: BillingAccountClass[] = null;
   private BillingAccountsSubscription: Subscription = null;
 
   constructor(
@@ -23,7 +24,7 @@ export class MyRewardsComponent implements OnInit, OnDestroy {
     this.editingAddress = false;
   }
 
-  serviceChanged(newBillingAccount: BillingAccount) {
+  serviceChanged(newBillingAccount: BillingAccountClass) {
     this.editingBillingAccount = newBillingAccount;
   }
 
@@ -34,8 +35,7 @@ export class MyRewardsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable.subscribe(
-      (BillingAccounts: BillingAccount[]) => {
-        console.log(new Date);
+      (BillingAccounts: BillingAccountClass[]) => {
         this.selectedBillingAccount = this.BillingAccountService.ActiveBillingAccount;
         this.BillingAccounts = BillingAccounts;
       }
