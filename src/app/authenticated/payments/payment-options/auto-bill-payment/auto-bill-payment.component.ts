@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { BillingAccount, BillingAccountService } from 'app/core/BillingAccount';
+import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
+import { BillingAccountService } from 'app/core/BillingAccount.service';
 import { PaymentMethod, PaymentMethodService } from 'app/core/PaymentMethod';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -17,8 +18,8 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
 
   autoBillPaymentMethod: PaymentMethod = null;
 
-  ActiveBillingAccount: BillingAccount = null;
-  private BillingAccounts: BillingAccount[] = [];
+  private ActiveBillingAccount: BillingAccountClass = null;
+  private BillingAccounts: BillingAccountClass[] = [];
   private BillingAccountsSubscription: Subscription = null;
 
   constructor(
@@ -26,7 +27,7 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
     private PaymentMethodService: PaymentMethodService
   ) {
     this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable
-      .subscribe((BillingAccounts: BillingAccount[]) => {
+      .subscribe((BillingAccounts: BillingAccountClass[]) => {
         this.ActiveBillingAccount = this.BillingAccountService.ActiveBillingAccount;
         this.BillingAccounts = BillingAccounts;
       });
