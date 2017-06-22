@@ -12,7 +12,7 @@
 <div [hidden]="!editing" class="row questionPanel">
   <div class="col-md-6 col-md-offset-3">
     <h3>Answer questions to continue</h3>
-    <form id="changeForm" novalidate [formGroup]="securityQuestionForm" (ngSubmit)="submitForm(securityQuestionForm.value, securityQuestionForm.valid)">
+    <form id="changeForm" novalidate [formGroup]="securityQuestionForm">
       <div class="form-group" [ngClass]="{'has-error':!securityQuestionForm.controls['question1'].valid && submitAttempt}">
         <p>Security Question 1</p>
         <label class="control-label">whats your mothers maiden name ?</label>

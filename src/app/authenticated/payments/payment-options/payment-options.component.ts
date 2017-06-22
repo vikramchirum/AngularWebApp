@@ -17,7 +17,7 @@ export class PaymentOptionsComponent implements OnInit, OnDestroy {
   private BillingAccountsSubscription: Subscription = null;
 
   constructor(
-    private router: Router,
+    public router: Router,
     private BillingAccountService: BillingAccountService
   ) {
     this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable

@@ -10,6 +10,7 @@ export class SecurityQuestionComponent implements OnInit {
 
   securityQuestionForm: FormGroup;
   editing: boolean;
+  submitAttempt: boolean;
 
   constructor(fb: FormBuilder) {
     this.editing = false;
