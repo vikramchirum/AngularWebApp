@@ -4,7 +4,7 @@ import { Response } from '@angular/http';
 import { HttpClient } from './httpclient';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 
 import { UsageHistory } from './models/usage-history.model';
@@ -16,7 +16,7 @@ export class UsageHistoryService {
   }
 
   /**
-   * Returns billing account usage history based on Id 
+   * Returns billing account usage history based on Id
    * @param billingAccountId
    * @returns {Observable<UsageHistory[]>}
    */
@@ -32,23 +32,23 @@ export class UsageHistoryService {
   private processApiData(res: Response) {
     let data = res.json();
     let groupedByDate = _.groupBy(data, function (item) {
-      return item.Usage_Month;//.substring(0,7);
+      return (item as any).Usage_Month;//.substring(0,7);
     });
     var aggregateData = _.map(groupedByDate, function (UsageObject, usage_Month) {
       return {
         Usage_Month: usage_Month,
         Usage: _.reduce(UsageObject, function (m, x) {
-          return m + x.Usage;
+          return m + (x as any).Usage;
         }, 0)
       };
     });
 
     aggregateData.forEach((d) => {
       //conversion of string to dates.
-      d.Usage_Month = new Date(d.Usage_Month);
+      (d as any).Usage_Month = new Date((d as any).Usage_Month);
     });
     return aggregateData;
-    }
+  }
 
   private handleError(error: Response) {
     console.log(error.statusText);
