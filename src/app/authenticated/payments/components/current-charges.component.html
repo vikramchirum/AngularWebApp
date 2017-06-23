@@ -1,4 +1,4 @@
-<div *ngIf="Bill" class="current-charges-container">
+<div *ngIf="req_bill" class="current-charges-container">
 
   <table class="current-charges-make-a-payment" border="0" width="100%">
     <colgroup>
@@ -9,11 +9,11 @@
     <tbody>
     <tr>
       <td>Current Charges</td>
-      <td colspan="2">${{ Bill.total() | NumberToMoneyPipe }}</td>
+      <td colspan="2">${{ req_bill[0].Current_Charges }}</td>
     </tr>
     <tr *ngIf="Bill.balance_forward">
       <td>Balance Forward</td>
-      <td colspan="2">${{ Bill.balance_forward | NumberToMoneyPipe }}</td>
+      <td colspan="2">${{ req_bill[0].Balance_Forward }}</td>
     </tr>
     <tr>
       <td colspan="3">
@@ -22,7 +22,7 @@
     </tr>
     <tr>
       <td><h2 class="text-muted">Total</h2></td>
-      <td colspan="2"><h2>${{ Bill.current_charges() | NumberToMoneyPipe }}</h2></td>
+      <td colspan="2"><h2>${{ req_bill[0].Current_Charges + req_bill[0].Balance_Forward }}</h2></td>
     </tr>
     </tbody>
   </table>
