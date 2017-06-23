@@ -20,10 +20,9 @@ import { ServicePlanUpgradeModalComponent } from './my-service-plans/change-your
 import { TransferServiceInfoComponent } from './order-status/service-enrollment-status/transfer-service-info/transfer-service-info.component';
 import { SelectPlanComponent } from './add-services/select-plan/select-plan.component';
 import { CreditCheckComponent } from './add-services/credit-check/credit-check.component';
-import { MovingFromToAddressComponent } from './moving-from-to-address/moving-from-to-address.component';
 import { MovingComponent} from './moving/moving.component';
-import { SelectPlanModalDialogComponent } from './moving-from-to-address/select-plan-modal-dialog/select-plan-modal-dialog.component';
-import { SubmitMoveComponent } from './submit-move/submit-move.component';
+import { SelectPlanModalDialogComponent } from './moving-center-form/select-plan-modal-dialog/select-plan-modal-dialog.component';
+import { MovingCenterFormComponent } from './moving-center-form/moving-center-form.component';
 
 @NgModule({
   imports: [
@@ -51,10 +50,9 @@ import { SubmitMoveComponent } from './submit-move/submit-move.component';
       TransferServiceInfoComponent,
       SelectPlanComponent,
       CreditCheckComponent,
-      MovingFromToAddressComponent,
       MovingComponent,
       SelectPlanModalDialogComponent,
-      SubmitMoveComponent    
+      MovingCenterFormComponent    
       ]
 })
 export class PlansAndServicesModule { }

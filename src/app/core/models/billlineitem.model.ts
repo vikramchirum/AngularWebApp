@@ -3,13 +3,13 @@
  */
 
 export interface IBillLineItem {
-  description: string;
-  amount: number;
-  uom: string;
+  Descripton: string;
+  Amount: number;
+  UOM: string;
   Quantity: string;
-  multiplier: number;
-  min: number;
-  max: number;
-  billLineItemType: string;
-  billLineItemSubType: string;
+  Multiplier: number;
+  Min: number;
+  Max: number;
+  Bill_Line_Item_Type: string;
+  Bill_Line_Item_Sub_Type: string;
 }

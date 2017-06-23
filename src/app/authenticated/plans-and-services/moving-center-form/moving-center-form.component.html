@@ -1,0 +1,115 @@
+<div class="container-fluid">
+  <form [hidden]="nextClicked || submitted" [formGroup]="movingAddressForm" novalidate (ngSubmit)="onMovingAddressFormSubmit(movingAddressForm.value)" class="moving-address-form">
+    <h2>Moving Center</h2>
+    <p>Let's start with finding out where you are moving to, so we know which options are available to you</p>
+
+    <div class="row">
+      <!--Present Billing Account Address -->
+      <div class="col-md-6">
+        <h3>You are Moving From</h3>
+        <mygexa-service-account-selector (changedBillingAccount)="serviceChanged($event)"></mygexa-service-account-selector>
+      </div>
+
+      <!-- select date when customer wants their service turned off at the old home  -->
+      <div class="col-md-6">
+        <div class="form-group">
+          <h3>Shut Off Date</h3>
+          <ng2-datepicker [options]="options" formControlName="Current_Service_End_Date" [(ngModel)]="Current_Service_End_Date" class="moving-address-date-picker"></ng2-datepicker>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-6">
+        <!--TODO: Moving Address Input -->
+        <h3>You are Moving To</h3>
+        <input type="text" class="form-control" placeholder="Enter New Address" />
+      </div>
+
+      <!-- select date when customer wants their service turned on at the new home  -->
+      <div class="col-md-6">
+        <div class="form-group">
+          <h3>Turn On Date</h3>
+          <ng2-datepicker class="moving-address-date-picker" [options]="options" formControlName="New_Service_Start_Date" [(ngModel)]="New_Service_Start_Date" ></ng2-datepicker>
+        </div>
+      </div>
+    </div><br/>
+
+    <!--If we don't offer service in the moving address, we should show message-->
+    <div class="alert alert-info fade in alert-dismissable">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+      <strong>We're Sorry!</strong> We cannot register your move online, please call 1-888 888 8888 for assistance.
+    </div>
+
+
+    <br/>
+
+    <div class="text-right">
+      <button class="btn btn-lg btn-default" (click)="nextButtonClicked()">Next</button>
+    </div>
+  </form>
+
+
+
+  <form [hidden]="previousClicked || submitted" [formGroup]="ServicePlanForm" novalidate (ngSubmit)="onServicePlanFormSubmit(ServicePlanForm.value, movingAddressForm.value)">
+    <h2>Moving Center</h2>
+    <p>A few more items and we can finalize your order</p>
+    <br/>
+    <h3>Your Service Plan</h3>
+    <table class="service-plan">
+      <tbody>
+        <tr>
+          <td>
+            <p> Would you like to keep your existing service plan<i class="fa fa-chevron-right" aria-hidden="true"></i></p>
+            <div class="form-group radio">
+              <label class="radio-inline"><input type="radio" formControlName="service_plan" value="Current Plan"  [checked]='true' >Keep Current Plan</label>
+              <label class="radio-inline"><input type="radio" formControlName="service_plan" value="New Plan" (click)="openSelectPlanModal()">Select New Plan</label></div>
+            <mygexa-select-plan-modal-dialog #selectPlanModal></mygexa-select-plan-modal-dialog>
+          </td>
+          <td>
+            <div class="current-plan-card">
+              <div class="card-content">
+                <p>Gexa classic 12</p>
+                <p>$0.082 pkw/hr</p>
+                <p>Expires 12/12/18</p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <div class="form-group radio">
+      <h3>Your Final Bill</h3>
+      <label class="radio-inline">
+      <input type="radio" formControlName="service_address" value="Current Address">Send to Current Address
+    </label>
+      <label class="radio-inline">
+      <input type="radio" formControlName="service_address" value="New Address"  [checked]='true' >Send to New Address
+    </label>
+    </div>
+
+    <br/>
+    <input type="checkbox" formControlName="agree_to_terms" value="check" id="agree" /> I Agree to the Terms and Conditions,
+    click <a>here</a>
+
+    <div class="row">
+      <div class="text-right">
+        <button class="btn btn-lg btn-default" (click)="previousButtonClicked()">Previous</button>
+        <button class="btn btn-lg btn-default" (click)="onSubmitMove()">Submit Move</button>
+      </div>
+    </div>
+  </form>
+
+  <!--Moving Form Confirmation Screen -->
+  <div [hidden]="!submitted" class="moving-confirmation">
+    <br/>
+    <div class="alert alert-info fade in alert-dismissable">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+      <strong>Thanks!</strong> Your Move Center Order has been placed
+    </div>
+    <p>Check <a routerLink="/plans-and-services/order-status">Order Status</a> to follow progress on this order.</p>
+  </div>
+</div>
