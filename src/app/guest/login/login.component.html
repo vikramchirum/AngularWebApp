@@ -5,62 +5,98 @@
         <h1>Gexa Energy</h1><br><br>
         <h2><b>Sign in</b></h2><br><br>
         <form (ngSubmit)="login()" #myGexaLoginForm="ngForm">
-          <div class="form-group" [ngClass]="{ 'has-error': error != null && myGexaLoginForm.form.valid }">
-            <div class="input-group">
-              <label class="cols-sm-2 control-label">Username</label>
-              <!--<span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>-->
-              <input [(ngModel)]="user_name" [disabled]="processing" name="user_name" type="text" class="form-control"  style="width: 450px;border-radius: 5px; "
-                     placeholder="Username" required #username="ngModel">
-            </div>
-            <small [hidden]="username.valid || username.pristine || processing" class="text-danger">Username is
+
+          <div class="form-group" [ngClass]="{ 'has-error': !username.valid && !username.pristine && !processing }">
+            <label class="cols-sm-2 control-label">Username</label>
+            <input
+              [(ngModel)]="user_name"
+              [disabled]="processing"
+              name="user_name"
+              type="text"
+              class="form-control"
+              style="border-radius: 5px;"
+              placeholder="Username"
               required
-            </small>
+              #username="ngModel"
+            />
+            <small [hidden]="username.valid || username.pristine || processing" class="text-danger">Username is required</small>
           </div>
-          <div class="form-group" [ngClass]="{ 'has-error': error !== null && myGexaLoginForm.form.valid}">
-            <div class="input-group">
-              <!--<span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>-->
-              <label class="cols-sm-2 control-label">Password</label>
-                <input [(ngModel)]="password" [disabled]="processing" name="password" type="password" class="form-control"  style="width: 450px;border-radius: 5px; "
-                       placeholder="Type your Password" required #em="ngModel">
-            </div>
+
+          <div class="form-group" [ngClass]="{ 'has-error': !em.valid && !em.pristine && !processing }">
+            <label class="cols-sm-2 control-label">Password</label>
+            <input
+              [(ngModel)]="password"
+              [disabled]="processing"
+              name="password"
+              type="password"
+              class="form-control"
+              style="border-radius: 5px;"
+              placeholder="Type your Password"
+              required
+              #em="ngModel"
+            />
             <small [hidden]="em.valid || em.pristine || processing" class="text-danger">Password is required</small>
           </div>
-          <div *ngIf="error != null && myGexaLoginForm.form.valid">
-            <small class="text-danger">Either username or password is wrong</small>
-          </div>
+
+          <p *ngIf="error && myGexaLoginForm.form.valid" class="text-danger">Either username or password is wrong</p>
+
           <br>
-          <div class="form-group text-center">
-            <button type="submit" class="btn btn-wireframe pull-left btnWidth" [ngClass]="{'hidden': processing }"
-                    [disabled]="!myGexaLoginForm.form.valid">Login
-            </button>
-            <button type="button" class="btn btn-wireframe pull-left btnWidth" [ngClass]="{'hidden': !processing }"><i
-              class="fa fa-spin fa-cog"></i> Logging in...
-            </button>
-            <div class="form-group" style="padding-left: 250px">
-              <button type="submit" class="btn btn-wireframe btnWidth" data-toggle="modal" data-target="#register"><b> > </b>   Register
-              </button>
+
+          <div class="row">
+            <div class="col-md-6">
+              <button
+                type="submit"
+                class="btn btn-lg btn-block btn-wireframe"
+                *ngIf="!processing"
+              >Login</button>
+              <button
+                type="button"
+                class="btn btn-lg btn-block btn-wireframe"
+                *ngIf="processing"
+              ><i class="fa fa-spin fa-cog"></i> Logging in...</button>
+              <br/>
+            </div>
+            <div class="col-md-6">
+              <button
+                type="button"
+                class="btn btn-lg btn-block btn-wireframe"
+                data-toggle="modal"
+                data-target="#register"
+              ><b>&gt;</b> Register</button>
+              <br/>
             </div>
           </div>
+
+          <p>Forgot your <a routerLink="/login/recover-password">Password</a> or <a routerLink="/login/recover-username">Username</a>?</p>
+
           <br>
-          <div class="form-group">
-            Forgot <a routerLink="/login/recover-password">Password </a>or<a routerLink="/login/recover-username"> Username?</a>
-          </div>
-          <br>
+
           <div class="social-media-icon">
-              <button class="btn btn-wireframe pull-left btnWidthSM center-block">
+              <button type="button" class="btn btn-wireframe pull-left btnWidthSM center-block">
                 <span class="fa fa-facebook-square fa-fw pull-left"></span> Login with facebook
               </button>
           </div>
           <div class="social-media-icon" style="padding-top: 55px">
-            <button class="btn btn-wireframe pull-left btnWidthSM">
+            <button type="button" class="btn btn-wireframe pull-left btnWidthSM">
               <span class="fa fa-linkedin-square fa-fw pull-left"></span> Login with Linkedin
             </button>
           </div><br>
+
         </form>
       </div>
     </div>
-    <div class="col-md-8 hidden-xs video-container">
-      <video class="my-gexa-video" muted loop playsinline controls preload="none" poster="assets/login/my-gexa.jpg">
+    <div class="col-md-8 hidden-xs hidden-sm video-container">
+      <video
+        id="login-video-player"
+        class="my-gexa-video"
+        muted
+        autoplay="true"
+        preload="none"
+        loop
+        playsinline
+        controls
+        poster="assets/login/my-gexa.jpg"
+      >
         <source src="assets/login/my-gexa.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'/>
         Your browser does not support the video tag.
       </video>
