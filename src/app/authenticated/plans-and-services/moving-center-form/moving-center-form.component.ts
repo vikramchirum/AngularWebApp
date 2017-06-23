@@ -26,14 +26,15 @@ export class MovingCenterFormComponent implements OnInit {
 
     this.movingAddressForm = fb.group({
       'Current_Service_End_Date': [null, Validators.required],
-      'New_Service_Start_Date': [null, Validators.required]
+      'New_Service_Start_Date': [null, Validators.required],
+      'current_bill_address':fb.array([]),
+      'new_billing_address': fb.array([])
     })
 
     this.ServicePlanForm = fb.group({
       'service_address': '',
       'service_plan': '',
-      'agree_to_terms': '',
-      'new_billing_address': fb.array([]),
+      'agree_to_terms': '',      
       'final_billing_address': fb.array([])
     })
   }
@@ -57,7 +58,6 @@ export class MovingCenterFormComponent implements OnInit {
 
 
   onSubmitMove() {
-    console.log();
     this.submitted = true;
   }
 
@@ -65,12 +65,12 @@ export class MovingCenterFormComponent implements OnInit {
     this.selectPlanModal.show();
   }
 
-  onServicePlanFormSubmit() {
-
+  onServicePlanFormSubmit(addressForm, billSelector) {
+    //console.log(addressForm, billSelector);
   }
 
-  onMovingAddressFormSubmit() {
-
+  onMovingAddressFormSubmit(addressForm) {
+   // console.log(addressForm);
   }
 
 

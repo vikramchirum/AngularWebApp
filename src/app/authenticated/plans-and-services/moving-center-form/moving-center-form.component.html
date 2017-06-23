@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <form [hidden]="nextClicked || submitted" [formGroup]="movingAddressForm" novalidate (ngSubmit)="onMovingAddressFormSubmit(user)">
+  <form [hidden]="nextClicked || submitted" [formGroup]="movingAddressForm" novalidate (ngSubmit)="onMovingAddressFormSubmit(movingAddressForm.value)" class="moving-address-form">
     <h2>Moving Center</h2>
     <p>Let's start with finding out where you are moving to, so we know which options are available to you</p>
 
@@ -14,7 +14,7 @@
       <div class="col-md-6">
         <div class="form-group">
           <h3>Shut Off Date</h3>
-          <ng2-datepicker [options]="options" formControlName="Current_Service_End_Date" [(ngModel)]="Current_Service_End_Date"></ng2-datepicker>
+          <ng2-datepicker [options]="options" formControlName="Current_Service_End_Date" [(ngModel)]="Current_Service_End_Date" class="moving-address-date-picker"></ng2-datepicker>
         </div>
       </div>
     </div>
@@ -31,7 +31,7 @@
       <div class="col-md-6">
         <div class="form-group">
           <h3>Turn On Date</h3>
-          <ng2-datepicker [options]="options" formControlName="New_Service_Start_Date" [(ngModel)]="New_Service_Start_Date"></ng2-datepicker>
+          <ng2-datepicker class="moving-address-date-picker" [options]="options" formControlName="New_Service_Start_Date" [(ngModel)]="New_Service_Start_Date" ></ng2-datepicker>
         </div>
       </div>
     </div><br/>
@@ -52,9 +52,10 @@
 
 
 
-  <form [hidden]="previousClicked || submitted" [formGroup]="ServicePlanForm" novalidate (ngSubmit)="onServicePlanFormSubmit(ServicePlanForm.value, ServicePlanForm.valid)">
+  <form [hidden]="previousClicked || submitted" [formGroup]="ServicePlanForm" novalidate (ngSubmit)="onServicePlanFormSubmit(ServicePlanForm.value, movingAddressForm.value)">
     <h2>Moving Center</h2>
     <p>A few more items and we can finalize your order</p>
+    <br/>
     <h3>Your Service Plan</h3>
     <table class="service-plan">
       <tbody>
@@ -90,6 +91,7 @@
     </label>
     </div>
 
+    <br/>
     <input type="checkbox" formControlName="agree_to_terms" value="check" id="agree" /> I Agree to the Terms and Conditions,
     click <a>here</a>
 
