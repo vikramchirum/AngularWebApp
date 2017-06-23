@@ -31,7 +31,10 @@ export class UsageSummaryComponent implements OnInit {
           return tooltipItem.yLabel + 'kwh';
         }
       }
-    }
+    },
+    scales: {
+        yAxes: [{id: 'y-axis-1', type: 'linear', position: 'left', ticks: {min: 0}}]
+      }
   };
   public barChartLabels: string[] = [];
   public barChartType: string = 'bar';
@@ -64,7 +67,7 @@ export class UsageSummaryComponent implements OnInit {
     //TODO: get AccountId on selection of billing Account associated with the customerId
     //Test Accounts - 913064, 1408663, 830688, 1047431, 1340673 : CustomerId - 342802 
 
-    this.billingAccountId = 1408663; // test
+    this.billingAccountId = 913064; // test
 
     this.usageHistoryService.getUsageHistory(this.billingAccountId)
       .subscribe(usageHistory => this.populateChart(usageHistory))
