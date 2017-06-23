@@ -2,66 +2,107 @@
  * Created by patrick.purcell on 5/2/2017.
  */
 import {Injectable} from '@angular/core';
-import {Http, Response, Headers, URLSearchParams, RequestOptions, Request, RequestMethod} from '@angular/http';
+import {Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
 import {CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
-import 'rxjs/add/operator/map';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import {IToken} from "app/guest/login/login.component.token";
-import {IUser, ISecurityQuestions} from "app/guest/login/register";
-import {IRegisteredUser} from "app/guest/login/registeredUserDetails";
-import {environment} from 'environments/environment';
+
+import { forEach, get, pull } from 'lodash';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+import { environment } from 'environments/environment';
+import { IUser, IUserSecurityQuestions, IUserSigningUp } from './models/User.model';
 
 @Injectable()
 export class UserService implements CanActivate {
 
-  public userDetails: IRegisteredUser;
-  public securityQuestions: ISecurityQuestions;
-  state: string = null;
-  result: string;
-  errorMessage: string;
-  private loginUrl: string;
-  private registerUrl: string;
-  private secQuesUrl: string;
-  private getSecQuestionUrl: string;
+  public UserCache: IUser = null;
+  public UserObservable: Observable<IUser> = null;
+  public UserObservers: Observer<IUser>[] = [];
+  public UserState: string = null;
+  public getSecurityQuestionsCached: IUserSecurityQuestions[] = [];
 
+  private getUserFromMongo = environment.Api_Url + '/user/getUserFromMongo';
+  private secQuesUrl = environment.Api_Url + '/user/securityQues';
+  private getSecQuestionUrl = environment.Api_Url + '/user/getSecQues';
+  private loginUrl = environment.Api_Url + '/user/authentication';
+  private registerUrl = environment.Api_Url + '/user/register';
 
   get user_token(): string {
-    return localStorage.getItem('gexa_auth_token');
+
+    // See if we already have it cached and return it.
+    const cachedToken = get(this.UserCache, 'Token', null);
+    if (cachedToken) { return cachedToken; }
+
+    // Try getting it from localStorage / sessionStorage / cookie / etc...
+    const token = localStorage.getItem('gexa_auth_token');
+    const token_expire = localStorage.getItem('gexa_auth_token_expire');
+
+    // If it's valid and hasn't expired then return it.
+    if (
+      token
+      && token_expire
+      && Number(token_expire) > (new Date).getTime()
+    ) {
+      return token;
+    }
+
+    // Otherwise, reset the stored token and return null.
+    // TODO: Use cross-browser capable storage solution here.
+    localStorage.removeItem('gexa_auth_token');
+    localStorage.removeItem('gexa_auth_token_expire');
+    return null;
+
   };
 
   get user_logged_in(): boolean {
     return !!this.user_token;
   };
 
-  constructor(private router: Router, private _http: Http) {
+  constructor(
+    private router: Router,
+    private Http: Http
+  ) {
 
-     // this.loginUrl = 'http://localhost:53342/api/user/authentication';
-     // this.registerUrl = 'http://localhost:53342/api/user/register';
-     // this.getSecQuestionUrl = 'http://localhost:53342/api/user/getSecQues';
+    // Make an Observable for others to listen to.
+    this.UserObservable = Observable.create((observer: Observer<IUser>) => {
 
-    this.secQuesUrl = environment.Api_Url + "/user/securityQues";
-    this.getSecQuestionUrl = environment.Api_Url + "/user/getSecQues";
-    this.loginUrl = environment.Api_Url + "/user/authentication";
-    this.registerUrl = environment.Api_Url + "/user/register";
-   }
+      // We want to collect our observers for future emits.
+      this.UserObservers.push(observer);
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    return this.verify_login(state.url);
+      // Send the User data to the new observer.
+      observer.next(this.UserCache);
+
+      // Provide the clean-up function to avoid memory leaks.
+      // Find the observer and remove them from the collection.
+      return () => pull(this.UserObservers, observer);
+
+    });
+
+    // If we have a valid token then get our user data.
+    const storedToken = this.user_token;
+    if (storedToken) {
+
+      const params = new URLSearchParams();
+      params.append('Token', storedToken);
+      const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+      const options = new RequestOptions({ headers, params });
+
+      this.Http.get(this.getUserFromMongo, options)
+        .map(res => res.json())
+        .catch(error => this.handleError(error))
+        .subscribe(res => this.ApplyUserData(res));
+    }
+
   }
 
-  verify_login(url: string): boolean {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
 
-    if (this.state === null) {
-      this.state = url;
-    }
+    // The user is logged in so yes, they can activate.
+    if (this.user_logged_in) { return true; }
 
-    if (this.user_logged_in) {
-      return true;
-    }
-
+    // Otherwise, save their state and navigate to the login prompt.
+    this.UserState = this.UserState || state.url;
     this.router.navigate(['/login']);
-    return false;
+
   }
 
   private handleError(error: Response | any) {
@@ -79,105 +120,96 @@ export class UserService implements CanActivate {
   }
 
   login(user_name: string, password: string): Observable<string> {
-    let urlSearchParams = new URLSearchParams();
-    urlSearchParams.append('username', user_name);
-    urlSearchParams.append('password', password);
 
-    let headerParam = new Headers();
-    headerParam.append("Content-Type", "application/x-www-form-urlencoded");
+    const body = new URLSearchParams();
+    body.append('username', user_name);
+    body.append('password', password);
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }) });
 
-    let requestOptions = new RequestOptions({headers: headerParam});
-    return this._http.post(this.loginUrl, urlSearchParams.toString(), requestOptions)
-      .map((response: Response) => {
-        var result = response.json();
-        console.log("Result:", result);
-        const token = result.Token;
-        if (token && token.length) {
-          localStorage.setItem('gexa_auth_token', token);
-          return result;
-        }
-        return null;
-      })
-      .catch((error: any) => Observable.throw({Code: error.status, Message: error.statusText}));
+    return this.Http.post(this.loginUrl, body.toString(), options)
+      .map(res => res.json())
+      .map(res => this.ApplyUserData(res))
+      .catch(error => this.handleError(error));
   }
 
-  signup(user: IUser): Observable<string> {
+  signup(user: IUserSigningUp): Observable<string> {
 
-    var userRegistration = {
-        Credentials: {
-          Username: user.User_name,
-          Password: user.Password
-        },
-        Profile: {
-          Email_Address: user.Email_Address,
-          Username: user.User_name
-        },
-        Security_Question: {
-          Id: user.Security_Question_Id,
-          Question: user.Security_Question_Id.valueOf()
-        },
-        Security_Question_Answer: user.Security_Question_Answer,
-        Billing_Account_Id: user.Billing_Account_Id,
-        Zip_Code: user.Zip_Code
-      }
-    ;
-    let body = JSON.stringify(userRegistration);
-    let headers = new Headers({'Content-Type': 'application/json'});
-    let options = new RequestOptions({headers: headers});
-    return this._http.post(this.registerUrl, body, options)
-      .map((response: Response) => {
-        this.userDetails = response.json();
-        const token = this.userDetails.Token;
-        if (token && token.length) {
-          localStorage.setItem('gexa_auth_token', token);
-          return token;
-        }
-        return null;
-      })
-      .catch((error: any) => Observable.throw({Code: error.status, Message: error.statusText}));
+    const body = JSON.stringify({
+      Credentials: {
+        Username: user.User_name,
+        Password: user.Password
+      },
+      Profile: {
+        Email_Address: user.Email_Address,
+        Username: user.User_name
+      },
+      Security_Question: {
+        Id: user.Security_Question_Id,
+        Question: user.Security_Question_Id.valueOf()
+      },
+      Security_Question_Answer: user.Security_Question_Answer,
+      Billing_Account_Id: user.Billing_Account_Id,
+      Zip_Code: user.Zip_Code
+    });
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
 
-    // this._http.post(this.registerUrl, user)
-    //   .map((res: Response) => res.json())
-    //   .subscribe(res => { this.result = res;
-    //     console.log(this.result);
-    //   });
+    return this.Http.post(this.registerUrl, body, options)
+      .map(res => res.json())
+      .map(res => this.ApplyUserData(res))
+      .catch(error => this.handleError(error));
   }
 
-  getSecurityQuestions(): Observable<ISecurityQuestions[]> {
-    return this._http.get(
-      this.secQuesUrl).map(
-      (response: Response) => {
-        var res = <ISecurityQuestions[]> response.json();
-        //console.log("Response:", res);
-        return res;
-        // data => {
-        // console.log("My data", data);
-        // return data;
-      }).catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+  getSecurityQuestions(): Observable<IUserSecurityQuestions[]> {
+
+    if (this.getSecurityQuestionsCached.length) { return Observable.of(this.getSecurityQuestionsCached); }
+
+    return this.Http.get(this.secQuesUrl)
+      .map(res => res.json())
+      .map(res => this.getSecurityQuestionsCached = res)
+      .catch(error => this.handleError(error));
   }
 
   getSecQuesByUserName(user_name: string): Observable<string> {
-    var username = user_name;
-    let body = JSON.stringify(username);
-    let headers = new Headers({'Content-Type': 'application/json'});
-    let options = new RequestOptions({headers: headers});
 
-   return this._http.post(this.getSecQuestionUrl, body, options)
-      .map((response: Response) => {
-        var result = response.json();
-        console.log( 'Response', result);
-        if (result && result.length) {
-          return result;
-        }
-        return null;
-      }) .catch((error: any) => Observable.throw({Code: error.status, Message: error.statusText}));
+    const body = JSON.stringify(user_name);
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }) });
+
+    return this.Http.post(this.getSecQuestionUrl, body, options)
+      .map(res => res.json())
+      .map(res => get(res, 'length') > 0 ? res : null)
+      .catch(error => this.handleError(error));
+  }
+
+  ApplyUserData(user: IUser): IUser {
+
+    this.UserCache = user || null;
+
+    if (user) {
+      // Make date objects.
+      this.UserCache.Creation_Time = new Date(this.UserCache.Creation_Time);
+      this.UserCache.Date_Created = new Date(this.UserCache.Date_Created);
+      this.UserCache.Date_Last_Modified = new Date(this.UserCache.Date_Last_Modified);
+      // If the token has changed, then update our storage.
+      if (localStorage.getItem('gexa_auth_token') !== this.UserCache.Token) {
+        localStorage.setItem('gexa_auth_token', this.UserCache.Token);
+        localStorage.setItem('gexa_auth_token_expire', (this.UserCache.Date_Created.getTime() + 1000 * 60 * 60).toString());
+      }
+    }
+
+    // Emit the new data to all observers.
+    forEach(this.UserObservers, observer => observer.next(this.UserCache));
+
+    // Return the new user's data.
+    return this.UserCache;
+
   }
 
   logout() {
-    // clear token remove user from local storage to log user out
-    //this.token = null;
-    //localStorage.removeItem('currentUser');
+    // Remove our token and apply empty data.
+    // TODO: Use cross-browser capable storage solution here.
     localStorage.removeItem('gexa_auth_token');
+    localStorage.removeItem('gexa_auth_token_expire');
+    this.ApplyUserData(null);
   }
 }
 

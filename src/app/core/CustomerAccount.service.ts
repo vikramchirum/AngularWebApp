@@ -1,8 +1,7 @@
 
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
 
-import { pull, forEach } from 'lodash';
+import { find, forEach, get, pull } from 'lodash';
 import { HttpClient } from './httpclient';
 import { UserService } from './user.service';
 import { CustomerAccountClass } from './models/CustomerAccount.model';
@@ -24,10 +23,6 @@ export class CustomerAccountService {
     private UserService: UserService
   ) {
 
-    // TODO: get the user's customer id.
-    // this.CustomerAccountId = this.UserService.CustomerAccountId;
-    this.CustomerAccountId = '342802';
-
     // Make an Observable for others to listen to.
     this.CustomerAccountObservable = Observable.create((observer: Observer<CustomerAccountClass>) => {
 
@@ -47,12 +42,32 @@ export class CustomerAccountService {
 
     });
 
-    // Start an initial call to the API.
-    this.getCustomerAccount();
+    // Keep the customer account id synced.
+    this.UserService.UserObservable.subscribe(user => {
+      console.log(user);
+
+      const customer_account = find(get(user, 'Account_permissions', []), { AccountType: 'Customer_Account_Id'});
+
+      // If we have a customer account then try and update our id, otherwise reset and emit.
+      if (customer_account) {
+        // Update only if the account id has changed.
+        if (this.CustomerAccountId !== customer_account.AccountNumber) {
+          this.CustomerAccountId = customer_account.AccountNumber;
+          this.getCustomerAccount();
+        }
+      } else {
+        this.CustomerAccountId = null;
+        this.CustomerAccountsObserversEmit();
+      }
+
+    });
 
   }
 
   getCustomerAccount(): Observable<CustomerAccountClass> {
+
+    // If we don't have an Id to lookup, skip.
+    if (!this.CustomerAccountId) { return; }
 
     // If we're already requesting, return the original request.
     if (this.CustomerAccountRequester) {
@@ -76,7 +91,7 @@ export class CustomerAccountService {
 
     // Make the request.
     this.HttpClient.get(`/customer_accounts/${this.CustomerAccountId}`)
-      .map((res: Response) => res.json())
+      .map(res => res.json())
       .subscribe(
         data => this.CustomerAccountCache = new CustomerAccountClass(data),
         error => {
@@ -85,7 +100,6 @@ export class CustomerAccountService {
           return Observable.throw(error.statusText);
         },
         () => {
-
           // Start to emit to any and all observers collected since this request started.
           forEach(observersWhileRequesting, observer => {
             // Emit.
@@ -94,8 +108,7 @@ export class CustomerAccountService {
             observer.complete();
           });
 
-          // Emit the new data to all observers of the service's observable.
-          forEach(this.CustomerAccountsObservers, observer => observer.next(this.CustomerAccountCache));
+          this.CustomerAccountsObserversEmit();
 
           // Destroy this requester.
           this.CustomerAccountRequester = null;
@@ -106,6 +119,11 @@ export class CustomerAccountService {
     // Return the observable to the observer who initialized this request.
     return this.CustomerAccountRequester;
 
+  }
+
+  private CustomerAccountsObserversEmit(): void {
+    // Emit the new data to all observers of the service's observable.
+    forEach(this.CustomerAccountsObservers, observer => observer.next(this.CustomerAccountCache));
   }
 
 }
