@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SubmitMoveComponent } from './submit-move.component';
+import { MovingCenterFormComponent } from './moving-center-form.component';
 
-describe('SubmitMoveComponent', () => {
-  let component: SubmitMoveComponent;
-  let fixture: ComponentFixture<SubmitMoveComponent>;
+describe('MovingCenterFormComponent', () => {
+  let component: MovingCenterFormComponent;
+  let fixture: ComponentFixture<MovingCenterFormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SubmitMoveComponent ]
+      declarations: [ MovingCenterFormComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SubmitMoveComponent);
+    fixture = TestBed.createComponent(MovingCenterFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
