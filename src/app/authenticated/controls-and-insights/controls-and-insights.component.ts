@@ -23,8 +23,4 @@ export class ControlsAndInsightsComponent implements OnInit {
     }
   }
 
-  reactToChangedBillingAccount(BillingAccount) {
-    console.log(BillingAccount);
-  }
-
 }

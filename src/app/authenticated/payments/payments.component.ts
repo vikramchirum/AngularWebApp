@@ -1,18 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'mygexa-payments',
   templateUrl: './payments.component.html',
   styleUrls: ['./payments.component.scss']
 })
-export class PaymentsComponent implements OnInit {
+export class PaymentsComponent {
 
   constructor() { }
-
-  ngOnInit() {}
-
-  reactToChangedBillingAccount(BillingAccount) {
-    console.log(BillingAccount);
-  }
 
 }

@@ -16,12 +16,12 @@ export class RootComponent implements OnInit {
   user: string;
   accordionVisible: boolean = false;
 
-  constructor(private user_service: UserService, private router: Router) { }
+  constructor(
+    private user_service: UserService,
+    private router: Router
+  ) { }
 
-  ngOnInit() {
-    //this.user = this.user_service.logged_in_user;
-    //this.user = this.user_service.user_token;
-  }
+  ngOnInit() { }
 
   logout($event) {
     if ($event && $event.preventDefault) { $event.preventDefault(); }

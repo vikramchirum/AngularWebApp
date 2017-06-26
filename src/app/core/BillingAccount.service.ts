@@ -4,144 +4,154 @@ import { Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
-import { pull, forEach } from 'lodash';
+import { clone, find, first, forEach, get, isString, map, pull } from 'lodash';
 import { BillingAccountClass } from './models/BillingAccount.model';
 import { PaymentMethod } from './PaymentMethod';
 import { HttpClient } from './httpclient';
+import { UserService } from './user.service';
 
 @Injectable()
 export class BillingAccountService {
 
-  public ActiveBillingAccount: BillingAccountClass = null;
-  public BillingAccounts: BillingAccountClass[] = null;
+  public ActiveBillingAccountCache: BillingAccountClass = null;
+  public ActiveBillingAccountObservable: Observable<BillingAccountClass> = null;
+  public BillingAccountsCache: BillingAccountClass[] = null;
   public BillingAccountsObservable: Observable<BillingAccountClass[]> = null;
 
+  private initialized: boolean = null;
   private CustomerAccountId: string = null;
+  private ActiveBillingAccountObservers: Observer<any>[] = [];
   private BillingAccountsObservers: Observer<any>[] = [];
-  private BillingAccountsRequesting: boolean = null;
+  private requestObservable: Observable<Response> = null;
+
+  set ActiveBillingAccountId(BillingAccountId: string) {
+    localStorage.setItem('gexa_active_billing_account_id', BillingAccountId);
+  }
+  get ActiveBillingAccountId(): string {
+    return this.ActiveBillingAccountCache
+      ? this.ActiveBillingAccountCache.Id
+      : localStorage.getItem('gexa_active_billing_account_id');
+  }
 
   constructor(
-    private HttpClient: HttpClient
+    private HttpClient: HttpClient,
+    private UserService: UserService
   ) {
 
-    // TODO: get the user's customer id.
-    // this.CustomerAccountId = this.UserService.CustomerAccountId;
-    this.CustomerAccountId = '962786';
-
-    // Make an Observable for others to listen to.
+    // Make Observables (Active Billing Account and Billing Accounts) for others to listen to.
+    // 1. Collect, or 'push', new observers to the observable's collection.
+    // 2. Send the latest cached data to the new observer (only if we've initialized with some data.)
+    // 3. Provide the new observer a clean-up function to prevent memory leaks.
+    this.ActiveBillingAccountObservable = Observable.create((observer: Observer<any>) => {
+      this.ActiveBillingAccountObservers.push(observer);
+      if (this.initialized) { observer.next(this.ActiveBillingAccountCache); }
+      return () => pull(this.ActiveBillingAccountObservers, observer);
+    });
     this.BillingAccountsObservable = Observable.create((observer: Observer<any>) => {
-
-      // We want to collect our observers for future emits.
       this.BillingAccountsObservers.push(observer);
-
-      // There are no billing accounts and we are not requesting, so make a request.
-      if (
-        this.BillingAccounts === null
-        && this.BillingAccountsRequesting === false
-      ) {
-        this.BillingAccountsUpdate();
-      }
-
-      // If we do have our billing accounts, send them to the new observer.
-      if (this.BillingAccounts !== null) {
-        observer.next(this.BillingAccounts);
-      }
-
-      // Provide the clean-up function to avoid memory leaks.
-      // Find the observer and remove them from the collection.
+      if (this.initialized) { observer.next(this.BillingAccountsCache); }
       return () => pull(this.BillingAccountsObservers, observer);
-
     });
 
-    this.BillingAccountsUpdate();
+    // Respond to the first (initializing) call.
+    this.BillingAccountsObservable.first().delay(0).subscribe(() => {
+      this.initialized = true;
+      if (this.ActiveBillingAccountId) { this.SetActiveBillingAccount(this.ActiveBillingAccountId); }
+    });
+
+    // Keep up-to-date with the user's billing accounts via the customer id.
+    this.UserService.UserCustomerAccountObservable.subscribe(CustomerAccountId => {
+      if (this.CustomerAccountId !== CustomerAccountId) {
+        this.CustomerAccountId = CustomerAccountId;
+        this.UpdateBillingAccounts();
+      }
+    });
 
   }
 
-  /**
-   * Force the API lookup and then emit to all of our observers.
-   * @returns {Observable<Response>}
-   */
-  BillingAccountsUpdate(): Observable<Response> {
+  UpdateBillingAccounts(): Observable<Response> {
 
-    // Turn on the updating flag to prevent new observers from making new requests.
-    this.BillingAccountsRequesting = true;
+    // If we're already requesting then return the original request observable.
+    if (this.requestObservable) { return this.requestObservable; }
 
-    const response = this.HttpClient.get(`/billing_accounts?search_option.customer_Account_Id=${this.CustomerAccountId}`)
+    // If we don't have a Customer Account Id then return null;
+    if (this.CustomerAccountId === null) { return Observable.from(null); }
+
+    // Assign the Http request to prevent any similar requests.
+    this.requestObservable = this.HttpClient.get(`/billing_accounts?search_option.customer_Account_Id=${this.CustomerAccountId}`)
       .map(data => data.json())
+      .map(data => map(data, BillingAccountData => new BillingAccountClass(BillingAccountData)))
       .catch(error => error);
 
-    response.subscribe(
-      // Process our results into classes.
-      data => {
-        this.BillingAccountsProcessApiData(data);
-        // Reset the updating flag - allow new API observers to request:
-        this.BillingAccountsRequesting = false;
-      },
-      error => {
-        // TODO: handle errors.
-        console.log({ error });
-        return Observable.throw(error.statusText);
-      },
-      // Emit our new data to all of our observers.
+    // Handle the new Billing account data.
+    this.requestObservable.subscribe(
+      BillingAccounts => this.BillingAccountsCache = <any>BillingAccounts,
+      error => this.handleError(error),
       () => {
-        // If we're still requesting, that means we error'd out - so stop, reset and don't emit.
-        if (this.BillingAccountsRequesting === true) {
-          this.BillingAccountsRequesting = false;
-          return;
-        }
-        this.BillingAccountsEmitToObservers();
+        // We're no longer requesting.
+        this.requestObservable = null;
+        // Emit our new data to all of our observers.
+        forEach(clone(this.BillingAccountsObservers), observer => observer.next(this.BillingAccountsCache));
       }
     );
 
-    return response;
+    return this.requestObservable;
 
   }
 
-  /**
-   * Process provided JSON data into Billing Account classes.
-   * @param jsonData
-   * @constructor
-   */
-  BillingAccountsProcessApiData(jsonData): void {
+  SetActiveBillingAccount(BillingAccount: BillingAccountClass | string): BillingAccountClass {
 
-    // Populate our new billing account collection with new billing account classes using our new data.
-    const BillingAccounts: BillingAccountClass[] = [];
-    forEach(jsonData, data => BillingAccounts.push(new BillingAccountClass(data)));
+    // Determine the provided (from string or object) billing account id.
+    BillingAccount = isString(BillingAccount) ? BillingAccount : get(BillingAccount, 'Id', this.ActiveBillingAccountId);
 
-    // Update with the new billing accounts.
-    this.BillingAccounts = BillingAccounts;
+    // If there is nothing to change then return.
+    if (get(this.ActiveBillingAccountCache, 'Id') === BillingAccount) { return this.ActiveBillingAccountCache; }
 
-    // If there is no active billing account, or it is not included, then set a new active billing account.
-    if (
-      this.ActiveBillingAccount === null
-      || this.BillingAccounts.indexOf(this.ActiveBillingAccount) < 0
-    ) {
-      this.ActiveBillingAccount = this.BillingAccounts.length > 0 ? this.BillingAccounts[0] : null;
+    // Find the specified billing account.
+    let ActiveBillingAccount = find(this.BillingAccountsCache, ['Id', BillingAccount], null);
+
+    // If no billing account was found then use the first one.
+    if (ActiveBillingAccount === null) { ActiveBillingAccount = first(this.BillingAccountsCache); }
+
+    // Assign the newly active billing account.
+    this.ActiveBillingAccountCache = ActiveBillingAccount;
+    if (this.ActiveBillingAccountCache) { this.ActiveBillingAccountId = this.ActiveBillingAccountCache.Id; }
+
+    // Emit our new data to all of our observers.
+    forEach(clone(this.ActiveBillingAccountObservers), observer => observer.next(this.ActiveBillingAccountCache));
+
+    return this.ActiveBillingAccountCache;
+
+  }
+
+  private handleError(error: Response | any) {
+    // In a real world app, you might use a remote logging infrastructure
+    let errMsg: string;
+    if (error instanceof Response) {
+      const body = error.json() || '';
+      const err = body.error || JSON.stringify(body);
+      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+    } else {
+      errMsg = error.message ? error.message : error.toString();
     }
-
-  }
-
-  /**
-   * Emit the current Billing Accounts to all observers.
-   * @constructor
-   */
-  BillingAccountsEmitToObservers(): void {
-    forEach(this.BillingAccountsObservers, observer => observer.next(this.BillingAccounts));
+    console.error(errMsg);
+    return Observable.throw(errMsg);
   }
 
   /**
    * Set the provided Billing Account's Auto Bill Pay setting to the provided Payment Method.
    * @param paymentMethod
    * @param billingAccount
+   * @param value
    * @returns {Promise<void>}
    */
   applyNewAutoBillPay(paymentMethod: PaymentMethod, billingAccount: BillingAccountClass, value?: boolean): Promise<any> {
 
     // TODO: Interact with the API to make this change. Use the below temporarily.
-    for (const index in this.BillingAccounts) {
-      if (this.BillingAccounts[index]) {
-        this.BillingAccounts[index].Enrolled_In_Auto_Bill_Pay = value === true;
-        this.BillingAccountsEmitToObservers();
+    for (const index in this.BillingAccountsCache) {
+      if (this.BillingAccountsCache[index]) {
+        this.BillingAccountsCache[index].Enrolled_In_Auto_Bill_Pay = value === true;
+        forEach(clone(this.BillingAccountsObservers), observer => observer.next(this.BillingAccountsCache));
         break;
       }
     }
