@@ -19,7 +19,7 @@ function getBillingAccountIds(user: IUser): string[] {
 
 function getCustomerAccountId(user: IUser): string {
   return user
-    ? <string>get(find(get(user, 'Account_permissions', []), ['AccountType', 'Customer_Account_Id']), 'AccountNumber')
+    ? <string>get(find(get(user, 'Account_permissions', []), ['AccountType', 'Customer_Account_Id']), 'AccountNumber', null)
     : null;
 }
 
