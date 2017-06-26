@@ -36,7 +36,10 @@
       </div>
     </div>
     <div class="row" style="height:100%">
-      <mygexa-responsive-hamburger-menu (notify)='onNotify($event)'></mygexa-responsive-hamburger-menu>
+      <mygexa-responsive-hamburger-menu
+        (signout)="logout($event)"
+        (notify)="onNotify($event)"
+      ></mygexa-responsive-hamburger-menu>
     </div>
   </div>
   <!-- </div> -->
