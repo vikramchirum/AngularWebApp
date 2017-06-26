@@ -86,49 +86,25 @@ export class UserService implements CanActivate {
     private Http: Http
   ) {
 
-    // Make the User Observable for others to listen to.
+    // Make the Observables (User, Billing Account Ids, Customer Account Id) for others to listen to.
+    // Each will:
+    // 1. Collect, or 'push', new observers to the observable's collection.
+    // 2. Send the latest cached data to the new observer.
+    // 3. Provide the new observer a clean-up function to prevent memory leaks.
     this.UserObservable = Observable.create((observer: Observer<IUser>) => {
-
-      // We want to collect our observers for future emits.
       this.UserObservers.push(observer);
-
-      // Send the User data to the new observer.
       observer.next(this.UserCache);
-
-      // Provide the clean-up function to avoid memory leaks.
-      // Find the observer and remove them from the collection.
       return () => pull(this.UserObservers, observer);
-
     });
-
-    // Make the User Billing_Account_Ids Observable for others to listen to.
     this.UserBillingAccountsObservable = Observable.create((observer: Observer<string[]>) => {
-
-      // We want to collect our observers for future emits.
       this.UserBillingAccountsObservers.push(observer);
-
-      // Send the User data to the new observer.
       observer.next(getBillingAccountIds(this.UserCache));
-
-      // Provide the clean-up function to avoid memory leaks.
-      // Find the observer and remove them from the collection.
       return () => pull(this.UserBillingAccountsObservers, observer);
-
     });
-
-    // Make the User Customer_Account_Id Observable for others to listen to.
     this.UserCustomerAccountObservable = Observable.create((observer: Observer<string>) => {
-
-      // We want to collect our observers for future emits.
       this.UserCustomerAccountObservers.push(observer);
-
-      // Send the User data to the new observer.
       observer.next(getCustomerAccountId(this.UserCache));
-
-      // Provide the clean-up function to avoid memory leaks.
-      // Find the observer and remove them from the collection.
       return () => pull(this.UserCustomerAccountObservers, observer);
-
     });
 
     // Keep observers of the user's customer and billing account Ids updated.
