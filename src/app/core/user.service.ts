@@ -2,24 +2,40 @@
  * Created by patrick.purcell on 5/2/2017.
  */
 import {Injectable} from '@angular/core';
-import {Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
-import {CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
-import { forEach, get, pull } from 'lodash';
+import { filter, find, forEach, get, map, pull } from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { environment } from 'environments/environment';
 import { IUser, IUserSecurityQuestions, IUserSigningUp } from './models/User.model';
+
+function getBillingAccountIds(user: IUser): string[] {
+  return user
+    ? map(filter(get(user, 'Account_permissions', []), ['AccountType', 'Billing_Account_Id']), 'AccountNumber')
+    : null;
+}
+
+function getCustomerAccountId(user: IUser): string {
+  return user
+    ? <string>get(find(get(user, 'Account_permissions', []), ['AccountType', 'Customer_Account_Id']), 'AccountNumber')
+    : null;
+}
 
 @Injectable()
 export class UserService implements CanActivate {
 
   public UserCache: IUser = null;
   public UserObservable: Observable<IUser> = null;
-  public UserObservers: Observer<IUser>[] = [];
+  public UserBillingAccountsObservable: Observable<string[]> = null;
+  public UserCustomerAccountObservable: Observable<string> = null;
   public UserState: string = null;
   public getSecurityQuestionsCached: IUserSecurityQuestions[] = [];
 
+  private UserObservers: Observer<IUser>[] = [];
+  private UserBillingAccountsObservers: Observer<string[]>[] = [];
+  private UserCustomerAccountObservers: Observer<string>[] = [];
   private getUserFromMongo = environment.Api_Url + '/user/getUserFromMongo';
   private secQuesUrl = environment.Api_Url + '/user/securityQues';
   private getSecQuestionUrl = environment.Api_Url + '/user/getSecQues';
@@ -57,12 +73,20 @@ export class UserService implements CanActivate {
     return !!this.user_token;
   };
 
+  get UserCacheBillingAccountIds(): string[] {
+    return getBillingAccountIds(this.UserCache);
+  }
+
+  get UserCacheCustomerAccountId(): string {
+    return getCustomerAccountId(this.UserCache);
+  }
+
   constructor(
     private router: Router,
     private Http: Http
   ) {
 
-    // Make an Observable for others to listen to.
+    // Make the User Observable for others to listen to.
     this.UserObservable = Observable.create((observer: Observer<IUser>) => {
 
       // We want to collect our observers for future emits.
@@ -75,6 +99,44 @@ export class UserService implements CanActivate {
       // Find the observer and remove them from the collection.
       return () => pull(this.UserObservers, observer);
 
+    });
+
+    // Make the User Billing_Account_Ids Observable for others to listen to.
+    this.UserBillingAccountsObservable = Observable.create((observer: Observer<string[]>) => {
+
+      // We want to collect our observers for future emits.
+      this.UserBillingAccountsObservers.push(observer);
+
+      // Send the User data to the new observer.
+      observer.next(getBillingAccountIds(this.UserCache));
+
+      // Provide the clean-up function to avoid memory leaks.
+      // Find the observer and remove them from the collection.
+      return () => pull(this.UserBillingAccountsObservers, observer);
+
+    });
+
+    // Make the User Customer_Account_Id Observable for others to listen to.
+    this.UserCustomerAccountObservable = Observable.create((observer: Observer<string>) => {
+
+      // We want to collect our observers for future emits.
+      this.UserCustomerAccountObservers.push(observer);
+
+      // Send the User data to the new observer.
+      observer.next(getCustomerAccountId(this.UserCache));
+
+      // Provide the clean-up function to avoid memory leaks.
+      // Find the observer and remove them from the collection.
+      return () => pull(this.UserCustomerAccountObservers, observer);
+
+    });
+
+    // Keep observers of the user's customer and billing account Ids updated.
+    this.UserObservable.subscribe(user => {
+      if (user) {
+        forEach(this.UserBillingAccountsObservers, observer => observer.next(getBillingAccountIds(user)));
+        forEach(this.UserCustomerAccountObservers, observer => observer.next(getCustomerAccountId(user)));
+      }
     });
 
     // If we have a valid token then get our user data.
@@ -211,6 +273,7 @@ export class UserService implements CanActivate {
     localStorage.removeItem('gexa_auth_token_expire');
     this.ApplyUserData(null);
   }
+
 }
 
 @Injectable()
