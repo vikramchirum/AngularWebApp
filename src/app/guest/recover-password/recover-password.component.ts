@@ -4,9 +4,7 @@ import {Router} from '@angular/router';
 import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
 import {Http} from '@angular/http';
 import 'rxjs/add/operator/map';
-import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
-import {environment} from 'environments/environment';
 import { equalCheck } from 'app/validators/validator';
 
 @Component({
@@ -21,10 +19,12 @@ export class RecoverPasswordComponent implements OnInit {
   public question: string;  error: string = null; public token: string;
   IsUserNameValid: boolean;
   public IsSecurityQuestionValid: boolean;
+
   constructor(private user_service: UserService, private router: Router, private fb: FormBuilder, private _http: Http) {
     this.IsUserNameValid = this.IsSecurityQuestionValid = this.IsResetSucessfull = false;
     this.resetPassForm = this.resetPasswordFormInit();
   }
+
   resetPasswordFormInit(): FormGroup {
     return this.fb.group({
       'User_Name': [''],
@@ -35,6 +35,7 @@ export class RecoverPasswordComponent implements OnInit {
       validator: equalCheck('New_Password', 'Confirm_New_Password')
     });
   }
+
   validateUsername(user_name: string) {
     if (user_name && user_name.length) {
       this.user_service.getSecQuesByUserName(user_name).subscribe(
@@ -49,6 +50,7 @@ export class RecoverPasswordComponent implements OnInit {
         });
     }
   }
+
   validateSecurityQuestion(user_name: string, SecQues_Answer: string) {
     if ((user_name && user_name.length) && (SecQues_Answer && SecQues_Answer.length)) {
       this.user_service.checkSecQuesByUserName(user_name, SecQues_Answer).subscribe(
@@ -76,7 +78,6 @@ export class RecoverPasswordComponent implements OnInit {
       });
     }
   }
-
 
   ngOnInit() {
   }

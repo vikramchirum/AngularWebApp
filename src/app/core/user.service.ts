@@ -39,13 +39,11 @@ export class UserService implements CanActivate {
   private getUserFromMongo = environment.Api_Url + '/user/getUserFromMongo';
   private secQuesUrl = environment.Api_Url + '/user/securityQues';
   private getSecQuestionUrl = environment.Api_Url + '/user/getSecQues';
-  //private checkSecQuesUrl = environment.Api_Url + '/user/checkSecurityQues';
-  //private resetPasswordUrl = environment.Api_Url + '/user/resetPassword';
+  private checkSecQuesUrl = environment.Api_Url + '/user/checkSecurityQues';
+  private resetPasswordUrl = environment.Api_Url + '/user/resetPassword';
+  private getUsernameUrl = environment.Api_Url + '/user/getUsername';
   private loginUrl = environment.Api_Url + '/user/authentication';
   private registerUrl = environment.Api_Url + '/user/register';
-
-  private checkSecQuesUrl = 'http://localhost:53342/api/user/checkSecurityQues';
-  private resetPasswordUrl = 'http://localhost:53342/api/user/resetPassword';
 
   get user_token(): string {
 
@@ -274,6 +272,23 @@ export class UserService implements CanActivate {
         .catch(error => this.handleError(error));
     }
     return null;
+  }
+
+  recoverUsername (Email_Address) {
+    const body = JSON.stringify(Email_Address);
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
+
+    return this.Http.post(this.getUsernameUrl, body, options)
+      .map(res => res.json())
+      .map(res => {
+        if (res && res.length) {
+          sessionStorage.setItem('User_Name', res);
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .catch(error => this.handleError(error));
   }
 
   ApplyUserData(user: IUser): IUser {
