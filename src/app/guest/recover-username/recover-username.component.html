@@ -4,9 +4,8 @@
       <div id="ResetUsername" class="form-group formPadding">
         <h1>Gexa Energy</h1><br><br>
         <h2><b>Recover Username</b></h2>
-        <form  id="Recover_username" novalidate [formGroup]="recoverUsernameForm">
+        <form  id="Recover_username" novalidate [formGroup]="recoverUsernameForm"  (ngSubmit)="recoverUsername(recoverUsernameForm.get('Email_Address').value, recoverUsernameForm.valid)">
 
-          <div id = UserName_Reset_Password [ngClass]="{'has-error':!recoverUsernameForm.controls['Email_Address'].valid && formSubmitted}">
             <h5 style="color: #cccccc; width: 250px">Send the email address you used to register for MyGexa and we will send your username to that address.</h5>
             <div class="form-group">
               <label for="Email_Address" class="cols-sm-2 control-label">Email Address</label>
@@ -15,17 +14,20 @@
                        placeholder="Type your Email Address"/>
               </div>
             </div>
-            <div class="has-error"
-                 *ngIf="recoverUsernameForm.controls['Email_Address'].hasError('required') && formSubmitted">
-              <span class="help-block">Email is required</span>
+            <div class="alert alert-danger" *ngIf="recoverUsernameForm.controls['Email_Address'].hasError('validateEmail') && formSubmitted">
+             Enter a valid email. Email format should be <i>john@doe.com</i>.
             </div>
-            <div class="has-error" *ngIf="!recoverUsernameForm.controls['Email_Address'].hasError('required')
-                    && recoverUsernameForm.controls['Email_Address'].hasError('validateEmail') && formSubmitted">
-              <span class="help-block">Enter a valid email. Email format should be <i>john@doe.com</i>.</span>
-            </div><br><br>
-            <button class="btn btn-primary pull-left" *ngIf="!IsValidEmail" (click)="validateEmail()">Continue</button>
-            <button class="btn btn-primary pull-left"  *ngIf="IsValidEmail" routerLink="/login">Back to Sign In</button>
+          <div class="alert alert-success" *ngIf="IsValidEmail && recoverUsernameForm.valid && formSubmitted">
+            User name has been sent to your email address!!
           </div>
+            <div class="alert alert-success" *ngIf="!IsValidEmail && recoverUsernameForm.valid && formSubmitted">
+            No user is registered with the given email address!!
+          </div><br>
+          <div class="btn-toolbar">
+            <button type="submit" class="btn btn-primary" [disabled] = "!recoverUsernameForm.get('Email_Address').value" *ngIf = "!IsValidEmail">Continue</button>
+            <button class="btn btn-primary"  *ngIf="!IsValidEmail && !recoverUsernameForm.valid" routerLink="/login">Cancel</button>
+          </div>
+            <button class="btn btn-primary pull-left"  *ngIf="IsValidEmail" routerLink="/login">Back to Sign In</button>
 
         </form>
       </div>
