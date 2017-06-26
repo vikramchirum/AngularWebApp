@@ -7,6 +7,7 @@ import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import {environment} from 'environments/environment';
+import { equalCheck } from 'app/validators/validator';
 
 @Component({
   selector: 'mygexa-recover-password',
@@ -28,8 +29,10 @@ export class RecoverPasswordComponent implements OnInit {
     return this.fb.group({
       'User_Name': [''],
       'SecQues_Answer': [''],
-      'New_Password': [''],
-      'Confirm_New_Password': ['']
+      'New_Password': ['', Validators.required],
+      'Confirm_New_Password': ['', Validators.required]
+    }, {
+      validator: equalCheck('New_Password', 'Confirm_New_Password')
     });
   }
   validateUsername(user_name: string) {
