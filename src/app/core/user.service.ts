@@ -23,8 +23,13 @@ export class UserService implements CanActivate {
   private getUserFromMongo = environment.Api_Url + '/user/getUserFromMongo';
   private secQuesUrl = environment.Api_Url + '/user/securityQues';
   private getSecQuestionUrl = environment.Api_Url + '/user/getSecQues';
+  //private checkSecQuesUrl = environment.Api_Url + '/user/checkSecurityQues';
+  //private resetPasswordUrl = environment.Api_Url + '/user/resetPassword';
   private loginUrl = environment.Api_Url + '/user/authentication';
   private registerUrl = environment.Api_Url + '/user/register';
+
+  private checkSecQuesUrl = 'http://localhost:53342/api/user/checkSecurityQues';
+  private resetPasswordUrl = 'http://localhost:53342/api/user/resetPassword';
 
   get user_token(): string {
 
@@ -172,12 +177,41 @@ export class UserService implements CanActivate {
   getSecQuesByUserName(user_name: string): Observable<string> {
 
     const body = JSON.stringify(user_name);
-    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }) });
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
 
     return this.Http.post(this.getSecQuestionUrl, body, options)
       .map(res => res.json())
       .map(res => get(res, 'length') > 0 ? res : null)
       .catch(error => this.handleError(error));
+  }
+
+  checkSecQuesByUserName(user_name: string, security_answer: string) {
+    const body = new URLSearchParams();
+    body.append('Username', user_name);
+    body.append('SecurityAnswer', security_answer);
+
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }) });
+    return this.Http.post(this.checkSecQuesUrl, body, options)
+      .map(res => res.json())
+      .map(res => get(res, 'length') > 0 ?  localStorage.setItem('reset_password_token', res) : localStorage.setItem('reset_password_token', null))
+      .catch(error => this.handleError(error));
+  }
+
+  resetPassword (user_name: string, password: string) {
+    const token = localStorage.getItem('reset_password_token');
+    const body = JSON.stringify({
+      creds: {
+      Username: user_name, Password: password
+    },
+      Token: token
+    });
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
+    if (token && token.length) {
+      return this.Http.put(this.resetPasswordUrl, body, options)
+        .map(res => res.json())
+        .catch(error => this.handleError(error));
+    }
+    return null;
   }
 
   ApplyUserData(user: IUser): IUser {

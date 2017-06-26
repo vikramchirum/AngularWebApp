@@ -16,11 +16,12 @@ import {environment} from 'environments/environment';
 
 export class RecoverPasswordComponent implements OnInit {
   resetPassForm: FormGroup;
-  question: string;  error: string = null;
+  IsResetSucessfull: boolean;
+  public question: string;  error: string = null; public token: string;
   IsUserNameValid: boolean;
   public IsSecurityQuestionValid: boolean;
   constructor(private user_service: UserService, private router: Router, private fb: FormBuilder, private _http: Http) {
-    this.IsUserNameValid = this.IsSecurityQuestionValid = false;
+    this.IsUserNameValid = this.IsSecurityQuestionValid = this.IsResetSucessfull = false;
     this.resetPassForm = this.resetPasswordFormInit();
   }
   resetPasswordFormInit(): FormGroup {
@@ -45,10 +46,35 @@ export class RecoverPasswordComponent implements OnInit {
         });
     }
   }
-  validateSecurityQuestion() {
-    //this.IsUserNameValid = false;
-    this.IsSecurityQuestionValid = true;
+  validateSecurityQuestion(user_name: string, SecQues_Answer: string) {
+    if ((user_name && user_name.length) && (SecQues_Answer && SecQues_Answer.length)) {
+      this.user_service.checkSecQuesByUserName(user_name, SecQues_Answer).subscribe(
+        result => {
+          this.token = result;
+          //localStorage.setItem('reset_password_token', this.token);
+          console.log('Token', this.token);
+          this.IsSecurityQuestionValid = true;
+        },
+        error => {
+          this.error = error.Message;
+          this.IsSecurityQuestionValid = false;
+        });
+    }
   }
+
+  resetPassword(user_name: string, New_Password: string) {
+    if ((user_name && user_name.length) && (New_Password && New_Password.length)) {
+      this.user_service.resetPassword(user_name, New_Password).subscribe(
+        result => {
+          this.IsResetSucessfull = result;
+        },
+      error => {
+        this.error = error.Message;
+      });
+    }
+  }
+
+
   ngOnInit() {
   }
 
