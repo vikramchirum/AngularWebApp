@@ -1,0 +1,31 @@
+home-multi-accounts-modal{
+  text-align: initial;
+  .plan-header{
+    .plan-title{
+      display: inline-block;
+    }
+    .close-btn {
+      font-size: 40px;
+    }
+  }
+
+  h1,h2,h3,h4,h5 {
+    font-weight:bold;
+  }
+  input[type="text"].promotional-code{
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.3333333;
+    border: 2px solid black;
+    margin-right:30px;
+
+  }
+  .select-account-card {
+    border: 2px solid black;
+    text-align: center;
+    padding: 1em;
+    margin: 1em;
+    background: #ccc;
+    border-radius: 1em;
+  }
+}
