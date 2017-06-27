@@ -1,8 +1,8 @@
-<div class="container-fluid"> 
+<div class="container-fluid">
 <mygexa-status-bar></mygexa-status-bar>
  <mygexa-service-account-selector
     selectorLabel="Your Service Address:"
-    (changedBillingAccount)="reactToChangedBillingAccount($event)"
+    [setActiveBillingAccount]="true"
   ></mygexa-service-account-selector>
  <div class="row">
     <div class="col-md-3 col-sm-3 hidden-xs">
@@ -14,7 +14,7 @@
           { 'title':'Moving Center', 'navUrl':'moving' },
           { 'title':'Order Status', 'navUrl':'order-status' }
         ]
-      }" ></mygexa-left-nav-panel>      
+      }" ></mygexa-left-nav-panel>
     </div>
     <div class="col-md-9 col-sm-9 plans-services">
       <router-outlet></router-outlet>

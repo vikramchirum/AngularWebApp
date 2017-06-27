@@ -36,7 +36,7 @@ export class MyRewardsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable.subscribe(
       (BillingAccounts: BillingAccountClass[]) => {
-        this.selectedBillingAccount = this.BillingAccountService.ActiveBillingAccount;
+        this.selectedBillingAccount = this.BillingAccountService.ActiveBillingAccountCache;
         this.BillingAccounts = BillingAccounts;
       }
     );
