@@ -3,10 +3,12 @@
  */
 
 export interface IBill {
-  invoiceDate: string;
+  invoice_date: Date;
+  usage: string;
+  due_date: Date;
   charges: number;
   balance: number;
   credit: number;
-  billType: string;
+  total: number;
   invoice_id: number;
 }

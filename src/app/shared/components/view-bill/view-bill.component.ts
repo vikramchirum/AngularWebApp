@@ -1,5 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
-
+import {Component, OnInit, Input, ViewChild} from '@angular/core';
 import { Bill, BillService } from 'app/core/Bill';
 
 @Component({
@@ -8,6 +7,7 @@ import { Bill, BillService } from 'app/core/Bill';
   styleUrls: ['./view-bill.component.scss']
 })
 export class ViewBillComponent implements OnInit {
+
   @Input() bill_Id: string;
 
   private bill: Bill = null;

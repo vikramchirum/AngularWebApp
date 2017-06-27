@@ -19,6 +19,11 @@ tr.bill {
   }
 }
 
+ .my-pagination /deep/ .ngx-pagination .current {
+   background: red;
+ }
+
+
 .pagination-container {
   padding: 6rem 0;
 

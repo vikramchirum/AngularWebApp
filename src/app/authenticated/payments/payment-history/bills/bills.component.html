@@ -1,67 +1,34 @@
 
 <table width="100%">
-  <tbody>
+  <thead>
   <tr class="options">
-    <td>
-      <button class="btn btn-lg btn-blank" (click)="sortBy('date')">
-        Bill Date<i class="fa fa-fw" [ngClass]="BillsSortingBy !== 'date' ? '' : BillsSortingByDesc ? 'fa-angle-down' : 'fa-angle-up'"></i>
-      </button>
-    </td>
-    <td>
-      <button class="btn btn-lg btn-blank" (click)="sortBy('usage')">
-        Usage<i class="fa fa-fw" [ngClass]="BillsSortingBy !== 'usage' ? '' : BillsSortingByDesc ? 'fa-angle-down' : 'fa-angle-up'"></i>
-      </button>
-    </td>
-    <td>
-      <button class="btn btn-lg btn-blank" (click)="sortBy('due')">
-        Due Date<i class="fa fa-fw" [ngClass]="BillsSortingBy !== 'due' ? '' : BillsSortingByDesc ? 'fa-angle-down' : 'fa-angle-up'"></i>
-      </button>
-    </td>
-    <td>
-      <button class="btn btn-lg btn-blank" (click)="sortBy('charges')">
-        Current Charges<i class="fa fa-fw" [ngClass]="BillsSortingBy !== 'charges' ? '' : BillsSortingByDesc ? 'fa-angle-down' : 'fa-angle-up'"></i>
-      </button>
-    </td>
-    <td>
-      <button class="btn btn-lg btn-blank" (click)="sortBy('total')">
-        Total<i class="fa fa-fw" [ngClass]="BillsSortingBy !== 'total' ? '' : BillsSortingByDesc ? 'fa-angle-down' : 'fa-angle-up'"></i>
-      </button>
-    </td>
-    <td style="font-size: 18px; text-align: center;">Bill</td>
+    <th *ngFor="let columnHeader of columnHeaders">
+      <button class="btn btn-lg btn-blank" (click)="sortByColumn(columnHeader)">
+        {{columnHeader.title}}<i class="fa fa-sort-alpha-{{columnSortWay(columnHeader)}}"></i></button>
+    </th>
+    <th style="font-size: 18px; text-align: center;">Bill</th>
   </tr>
-  <tr class="bill" *ngFor="let Bill of currentPageOfBills">
-    <td>{{ Bill.date | date:'d MMM y' }}</td>
-    <td>{{ Bill.usage }}kwh</td>
-    <td>{{ Bill.due | date:'d MMM y' }}</td>
-    <td>${{ Bill.charges | NumberToMoneyPipe }}</td>
-    <td>${{ Bill.total | NumberToMoneyPipe }}</td>
+  </thead>
+  <tbody>
+  <tr class="bill" *ngFor="let row of rows | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }" >
+    <td *ngFor="let columnHeader of columnHeaders">
+    <div>
+          {{getData(row, columnHeader)}}
+    </div>
     <td class="text-center">
-      <button class="btn btn-blank btn-lg" (click)="openUpBill(Bill)">
-        <i class="fa fa-fw fa-file-pdf-o"></i>
+      <button class="btn btn-blank btn-lg">
+        <a class="fa fa-fw fa-file-pdf-o" href="{{documentsUrl}}{{getInvoiceId(row)}}" target="_blank"></a>
       </button>
     </td>
-  </tr>
   </tbody>
 </table>
 
 <br/>
 
-<div class="row pagination-container">
-  <div class="col-xs-3">
-    <button type="button" class="btn btn-lg btn-wireframe" [disabled]="BillsPage === 0" (click)="previousPage()">Previous Page</button>
-  </div>
-  <div class="col-xs-6 text-center">
-    <button type="button" class="btn" *ngIf="BillsPage > 3" (click)="gotoPage(0)">1...</button>
-    <button type="button" class="btn" *ngIf="BillsPage > 2" (click)="gotoPage(BillsPage - 3)">{{ BillsPage - 2 }}</button>
-    <button type="button" class="btn" *ngIf="BillsPage > 1" (click)="gotoPage(BillsPage - 2)">{{ BillsPage - 1 }}</button>
-    <button type="button" class="btn" *ngIf="BillsPage > 0" (click)="gotoPage(BillsPage - 1)">{{ BillsPage }}</button>
-    <button type="button" class="badge" disabled="disabled">{{ currentPageNumber }}</button>
-    <button type="button" class="btn" *ngIf="(BillsPage + 1) < totalPages" (click)="gotoPage(BillsPage + 1)">{{ BillsPage + 2 }}</button>
-    <button type="button" class="btn" *ngIf="(BillsPage + 2) < totalPages" (click)="gotoPage(BillsPage + 2)">{{ BillsPage + 3 }}</button>
-    <button type="button" class="btn" *ngIf="(BillsPage + 3) < totalPages" (click)="gotoPage(BillsPage + 3)">{{ BillsPage + 4 }}</button>
-    <button type="button" class="btn" *ngIf="(BillsPage + 4) < totalPages" (click)="gotoPage(totalPages - 1)">...{{ totalPages }}</button>
-  </div>
-  <div class="col-xs-3 text-right">
-    <button type="button" class="btn btn-lg btn-wireframe" [disabled]="currentPageNumber === totalPages" (click)="nextPage()">Next Page</button>
-  </div>
-</div>
+<h2>3.9<sup class="sup-text">c</sup><sub class="sub-text">pkw/hr</sub>
+  <i class="fa fa-info-circle" (click)="showViewMyBillModal()" aria-hidden="true"></i></h2>
+<mygexa-view-my-bill-modal #viewMyBillModal></mygexa-view-my-bill-modal>
+
+<br>
+
+<pagination-controls class="my-pagination" (pageChange)="currentPage = $event"></pagination-controls>

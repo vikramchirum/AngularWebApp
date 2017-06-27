@@ -8,20 +8,25 @@ import { PaymentsComponent } from './payments/payments.component';
 import { LedgerComponent } from './ledger/ledger.component';
 import { PaymentHistoryComponent } from './payment-history.component';
 import { SharedModule } from 'app/shared/shared.module';
+import {ViewMyBillModalComponent} from "./bills/view-my-bill-modal/view-my-bill-modal.component";
+import { ModalModule } from 'ngx-bootstrap';
 
 @NgModule({
+  exports: [ ViewMyBillModalComponent ],
   imports: [
     payment_history_routes,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    ModalModule.forRoot()
   ],
   declarations: [
     PaymentHistoryComponent,
     PaymentsComponent,
     BillsComponent,
-    LedgerComponent
+    LedgerComponent,
+    ViewMyBillModalComponent
   ]
 })
 export class PaymentsHistoryModule { }
