@@ -91,7 +91,7 @@ export class BillingAccountService {
         // We're no longer requesting.
         this.requestObservable = null;
         // Emit our new data to all of our observers.
-        forEach(clone(this.BillingAccountsObservers), observer => observer.next(this.BillingAccountsCache));
+        this.emitToObservers(this.BillingAccountsObservers, this.BillingAccountsCache);
       }
     );
 
@@ -118,7 +118,7 @@ export class BillingAccountService {
     if (this.ActiveBillingAccountCache) { this.ActiveBillingAccountId = this.ActiveBillingAccountCache.Id; }
 
     // Emit our new data to all of our observers.
-    forEach(clone(this.ActiveBillingAccountObservers), observer => observer.next(this.ActiveBillingAccountCache));
+    this.emitToObservers(this.ActiveBillingAccountObservers, this.ActiveBillingAccountCache);
 
     return this.ActiveBillingAccountCache;
 
@@ -138,6 +138,11 @@ export class BillingAccountService {
     return Observable.throw(errMsg);
   }
 
+  private emitToObservers(observers: Observer<any>[], data: any) {
+    // We "clone" because an observer may remove itself out of the original array - this solves an indexing problem.
+    forEach(clone(observers), observer => observer.next(data));
+  }
+
   /**
    * Set the provided Billing Account's Auto Bill Pay setting to the provided Payment Method.
    * @param paymentMethod
@@ -151,7 +156,7 @@ export class BillingAccountService {
     for (const index in this.BillingAccountsCache) {
       if (this.BillingAccountsCache[index]) {
         this.BillingAccountsCache[index].Enrolled_In_Auto_Bill_Pay = value === true;
-        forEach(clone(this.BillingAccountsObservers), observer => observer.next(this.BillingAccountsCache));
+        this.emitToObservers(this.BillingAccountsObservers, this.BillingAccountsCache);
         break;
       }
     }

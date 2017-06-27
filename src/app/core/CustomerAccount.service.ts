@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { find, forEach, get, pull } from 'lodash';
+import { clone, find, forEach, get, pull } from 'lodash';
 import { HttpClient } from './httpclient';
 import { UserService } from './user.service';
 import { CustomerAccountClass } from './models/CustomerAccount.model';
@@ -57,7 +57,7 @@ export class CustomerAccountService {
         }
       } else {
         this.CustomerAccountId = null;
-        this.CustomerAccountsObserversEmit();
+        this.emitToObservers(this.CustomerAccountsObservers, this.CustomerAccountCache);
       }
 
     });
@@ -101,14 +101,14 @@ export class CustomerAccountService {
         },
         () => {
           // Start to emit to any and all observers collected since this request started.
-          forEach(observersWhileRequesting, observer => {
+          forEach(clone(observersWhileRequesting), observer => {
             // Emit.
             observer.next(this.CustomerAccountCache);
             // Close.
             observer.complete();
           });
 
-          this.CustomerAccountsObserversEmit();
+          this.emitToObservers(this.CustomerAccountsObservers, this.CustomerAccountCache);
 
           // Destroy this requester.
           this.CustomerAccountRequester = null;
@@ -121,9 +121,9 @@ export class CustomerAccountService {
 
   }
 
-  private CustomerAccountsObserversEmit(): void {
-    // Emit the new data to all observers of the service's observable.
-    forEach(this.CustomerAccountsObservers, observer => observer.next(this.CustomerAccountCache));
+  private emitToObservers(observers: Observer<any>[], data: any) {
+    // We "clone" because an observer may remove itself out of the original array - this solves an indexing problem.
+    forEach(clone(observers), observer => observer.next(data));
   }
 
 }

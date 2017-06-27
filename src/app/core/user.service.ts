@@ -5,7 +5,7 @@ import {Injectable} from '@angular/core';
 import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
-import { filter, find, forEach, get, map, pull } from 'lodash';
+import { clone, filter, find, forEach, get, map, pull } from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { environment } from 'environments/environment';
@@ -113,8 +113,8 @@ export class UserService implements CanActivate {
     // Keep observers of the user's customer and billing account Ids updated.
     this.UserObservable.subscribe(user => {
       if (user) {
-        forEach(this.UserBillingAccountsObservers, observer => observer.next(getBillingAccountIds(user)));
-        forEach(this.UserCustomerAccountObservers, observer => observer.next(getCustomerAccountId(user)));
+        this.emitToObservers(this.UserBillingAccountsObservers, getBillingAccountIds(user));
+        this.emitToObservers(this.UserCustomerAccountObservers, getCustomerAccountId(user));
       }
     });
 
@@ -158,6 +158,11 @@ export class UserService implements CanActivate {
     }
     console.error(errMsg);
     return Observable.throw(errMsg);
+  }
+
+  private emitToObservers(observers: Observer<any>[], data: any) {
+    // We "clone" because an observer may remove itself out of the original array - this solves an indexing problem.
+    forEach(clone(observers), observer => observer.next(data));
   }
 
   login(user_name: string, password: string): Observable<string> {
@@ -284,7 +289,7 @@ export class UserService implements CanActivate {
     }
 
     // Emit the new data to all observers.
-    forEach(this.UserObservers, observer => observer.next(this.UserCache));
+    this.emitToObservers(this.UserObservers, this.UserCache);
 
     // Return the new user's data.
     return this.UserCache;
