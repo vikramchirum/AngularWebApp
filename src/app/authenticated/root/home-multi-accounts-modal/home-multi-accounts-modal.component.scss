@@ -1,28 +1,70 @@
-.home-multi-accounts-modal{
+.home-multi-accounts-modal {
   .modal-content {
     border-radius: 0;
     box-shadow: none;
     border:none;
   }
-}
+  .account-header{
+    .account-title{
+      display: inline-block;
+      background: black;
+      color:white;
+      width:250px;
+      height:25px;
+      text-align: center;
+    }
+    .close-btn {
+      font-size: 40px;
+    }
+  }
 
-.account-header{
-  .account-title{
-    display: inline-block;
-    background: black;
-    color:white;
-    width:250px;
-    height:35px;
+  h1,h2,h3,h4,h5 {
+    font-weight:bold;
+  }
+  /*Style the DIV*/
+  .select-account-container .box{
+    width: 250px;
+    float: left;
+    margin: 2px;
+    //padding: 5px;
+    border: 1px solid #ccc;
     text-align: center;
   }
-  .close-btn {
-    font-size: 40px;
+
+  /*Fade all the DIV when user hovers on any div*/
+  .select-account-container:hover .box{
+    zoom: 1;
+    filter: alpha(opacity=45);
+    opacity: 0.45;
+    -webkit-transition: opacity .5s ease-in-out;
+    -moz-transition: opacity .5s ease-in-out;
+    -ms-transition: opacity .5s ease-in-out;
+    -o-transition: opacity .5s ease-in-out;
+    transition: opacity .5s ease-in-out;
   }
+
+  /*Fade out the particular DIV when user hover on that DIV*/
+  .select-account-container-active .box,
+  .select-account-container .box:hover {
+    box-shadow: 3px 3px 15px #666;
+    border-color:#909090;
+    background: #a9a9a9;
+    color: #fff;
+    cursor: pointer;
+
+    /*Opacity*/
+    zoom: 1;
+    filter: alpha(opacity=100);
+    opacity: 1;
+  }
+
+  .continue-button{
+    margin: 15px 25px 0px 0px;
+  }
+
 }
 
-h1,h2,h3,h4,h5 {
-  font-weight:bold;
-}
+
 .select-account-card {
   border: 2px solid #000;
   text-align: center;
@@ -31,38 +73,4 @@ h1,h2,h3,h4,h5 {
   background: white;
   //border-radius: 1em;
 }
-/*Style the DIV*/
-.container .box{
-  background: white;
-  float: left;
-  margin: 2px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  text-align: center;
-}
 
-/*Fade all the DIV when user hovers on any div*/
-.container:hover .box{
-  zoom: 1;
-  filter: alpha(opacity=45);
-  opacity: 0.45;
-  -webkit-transition: opacity .5s ease-in-out;
-  -moz-transition: opacity .5s ease-in-out;
-  -ms-transition: opacity .5s ease-in-out;
-  -o-transition: opacity .5s ease-in-out;
-  transition: opacity .5s ease-in-out;
-}
-
-/*Fade out the particular DIV when user hover on that DIV*/
-.container .box:hover{
-  box-shadow: 3px 3px 15px #666;
-  border-color:#a9a9a9;
-  background: #a9a9a9;
-  color: #fff;
-  cursor: pointer;
-
-  /*Opacity*/
-  zoom: 1;
-  filter: alpha(opacity=100);
-  opacity: 1;
-}

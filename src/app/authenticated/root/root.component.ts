@@ -4,6 +4,7 @@ import {UserService} from '../../core/user.service';
 import {Router} from '@angular/router';
 import {environment} from '../../../environments/environment';
 import {HomeMultiAccountsModalComponent} from './home-multi-accounts-modal/home-multi-accounts-modal.component';
+import {BillingAccountService} from 'app/core/BillingAccount.service';
 
 @Component({
   selector: 'mygexa-root',
@@ -19,14 +20,16 @@ export class RootComponent implements OnInit, AfterViewInit {
 
   @ViewChild('homeMultiAccountsModal') homeMultiAccountsModal: HomeMultiAccountsModalComponent;
 
-  constructor(private user_service: UserService, private router: Router, private viewContainerRef: ViewContainerRef) { }
+  constructor(private user_service: UserService, private router: Router, private viewContainerRef: ViewContainerRef, private billingAcctService: BillingAccountService) { }
 
   showHomeMultiAccountsModal() {
     this.homeMultiAccountsModal.show();
   }
   ngAfterViewInit() {
-    // alert('Hi');
-    this.homeMultiAccountsModal.show();
+    // this.homeMultiAccountsModal.show();
+    if (!this.billingAcctService.ActiveBillingAccountId) {
+      this.homeMultiAccountsModal.show();
+    }
   }
   ngOnInit() {
     //this.user = this.user_service.logged_in_user;
