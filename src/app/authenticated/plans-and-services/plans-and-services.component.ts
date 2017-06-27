@@ -9,9 +9,6 @@ export class PlansAndServicesComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-  }
- reactToChangedBillingAccount(BillingAccount) {
-    console.log(BillingAccount);
-  }
+  ngOnInit() { }
+
 }

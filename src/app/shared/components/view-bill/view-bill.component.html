@@ -1,28 +1,38 @@
-<div *ngIf="bill" class="view-bill-container">
+<div *ngIf="bill_item_details" class="view-bill-container">
 
-  <h4>April 10 2017<span class="pull-right">Invoice Number # {{ bill.invoice_number }}</span></h4>
+  <h4>{{invoice_date | date }}<span class="pull-right">Invoice Number # {{ invoice_num }}</span></h4>
 
   <hr class="breaker"/>
 
-  <div *ngFor="let charge of bill.charges">
-    <div *ngIf="charge.items.length > 0; then listCharges else noChargesToList"></div>
+  <div>
+    <div *ngIf="bill_item_details_gexa_charges.length > 0; then listCharges else noChargesToList"></div>
     <ng-template #listCharges>
       <h2>
-        <button class="charge-toggle" (click)="chargeToggle(charge)">
-          <i class="fa fa-fw" [ngClass]="{ 'fa-chevron-down': !chargeOpened(charge), 'fa-chevron-up': chargeOpened(charge) }"></i>
+        <button class="charge-toggle" (click)="chargeToggle(bill_item_details_gexa_charges)">
+          <i class="fa fa-fw" [ngClass]="chargeOpened(bill_item_details_gexa_charges) ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
         </button>
-        {{ charge.title }}
+        Gexa Charges
       </h2>
-      <table *ngIf="chargeOpened(charge)" border="0" width="100%">
+      <table *ngIf="chargeOpened(bill_item_details_gexa_charges)" border="0" width="100%">
         <colgroup>
           <col width="75%"/>
           <col width="20%"/>
           <col width="5%"/>
         </colgroup>
         <tbody>
-        <tr *ngFor="let item of charge.items">
-          <td class="bill-name"><span>{{ item.name }}</span><span class="bill-uasge" *ngIf="item.usage">{{ item.usage }}</span></td>
-          <td class="bill-amount">${{ item.amount | NumberToMoneyPipe }}</td>
+        <tr *ngFor="let item of bill_item_details_gexa_charges">
+          <td class="bill-name"><span>{{ item.Descripton }}</span><span class="bill-uasge" *ngIf="item.Quantity">{{ item.Quantity }}</span></td>
+          <td class="bill-amount">${{ item.Amount }}</td>
+          <td></td>
+        </tr>
+        <tr *ngFor="let item of bill_item_details_other_charges">
+          <td class="bill-name"><span>{{ item.Descripton }}</span></td>
+          <td class="bill-amount">${{ item.Amount }}</td>
+          <td></td>
+        </tr>
+        <tr *ngFor="let item of bill_item_details_tax">
+          <td class="bill-name"><span>{{ item.Descripton }}</span></td>
+          <td class="bill-amount">${{ item.Amount }}</td>
           <td></td>
         </tr>
         </tbody>
@@ -36,15 +46,61 @@
         <tbody>
         <tr>
           <td><b>Sub Total</b></td>
-          <td><b>${{ subtotal(charge) | NumberToMoneyPipe }}</b></td>
+          <td><b>${{ subtotal(bill_item_details_gexa_charges) + subtotal(bill_item_details_other_charges) + subtotal(bill_item_details_tax) }}</b></td>
           <td></td>
         </tr>
         </tbody>
       </table>
       <br/>
     </ng-template>
+
     <ng-template #noChargesToList>
-      <h2>{{ charge.title }} <small>(No charges to list.)</small></h2>
+      <h2>Gexa Charges <small>(No charges to list.)</small></h2>
+    </ng-template>
+  </div>
+
+  <div>
+    <div *ngIf="bill_item_details_TDU_charges.length > 0; then listTDUCharges else noTDUChargesToList"></div>
+    <ng-template #listTDUCharges>
+      <h2>
+        <button class="charge-toggle" (click)="chargeToggle(bill_item_details_TDU_charges)">
+          <i class="fa fa-fw" [ngClass]="chargeOpened(bill_item_details_TDU_charges) ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+        </button>
+        TDU Charges
+      </h2>
+      <table *ngIf="chargeOpened(bill_item_details_TDU_charges)" border="0" width="100%">
+        <colgroup>
+          <col width="75%"/>
+          <col width="20%"/>
+          <col width="5%"/>
+        </colgroup>
+        <tbody>
+        <tr *ngFor="let item of bill_item_details_TDU_charges">
+          <td class="bill-name"><span>{{ item.Descripton }}</span></td>
+          <td class="bill-amount">${{ item.Amount }}</td>
+          <td></td>
+        </tr>
+        </tbody>
+      </table>
+      <table border="0" width="100%">
+        <colgroup>
+          <col width="75%"/>
+          <col width="20%"/>
+          <col width="5%"/>
+        </colgroup>
+        <tbody>
+        <tr>
+          <td><b>Sub Total</b></td>
+          <td><b>${{ subtotal(bill_item_details_TDU_charges)}}</b></td>
+          <td></td>
+        </tr>
+        </tbody>
+      </table>
+      <br/>
+    </ng-template>
+
+    <ng-template #noTDUChargesToList>
+      <h2>TDU Charges <small>(No TDU charges to list.)</small></h2>
     </ng-template>
   </div>
 
@@ -59,7 +115,7 @@
     <tbody>
     <tr>
       <td><h2 class="text-muted">Total</h2></td>
-      <td><h2>${{ bill.total() | NumberToMoneyPipe }}</h2></td>
+      <td><h2>${{ bill_object.Balance_Forward + bill_object.Current_Charges }}</h2></td>
       <td></td>
     </tr>
     </tbody>
@@ -72,7 +128,7 @@
     </div>
     <div class="col-md-5 text-right">
       <br/>
-      <a class="btn btn-block btn-wireframe" [routerLink]="['../make-payment']">Make a Payment</a>
+      <a class="btn btn-block btn-wireframe" routerLink="/payments/make-payment">Make a Payment</a>
     </div>
   </div>
 

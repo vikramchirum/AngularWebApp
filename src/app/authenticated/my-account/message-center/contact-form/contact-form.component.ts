@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { PhonePipe } from '../../../../shared/pipes/phone.pipe';
-import { Contact } from './contact-form.interface';
+import {Component, OnInit} from '@angular/core';
+import {PhonePipe} from '../../../../shared/pipes/phone.pipe';
+import {Contact} from './contact-form.interface';
 
 @Component({
   selector: 'mygexa-contact-form',
@@ -9,19 +9,22 @@ import { Contact } from './contact-form.interface';
 })
 export class ContactFormComponent implements OnInit {
 
-public contact: Contact;
-public submitted : boolean = false;
+  public contact: Contact;
+  public submitted: boolean = false;
+  message: string = '';
+  phoneNumber: string = '';
 
-  constructor() {  
-   }
+  constructor() {
+  }
 
   ngOnInit() {
     this.contact = {
-      phoneNumber:'',
-      message:''
+      phoneNumber: '',
+      message: ''
     }
   }
- //submitted = false;
+
+  //submitted = false;
 
   onSubmit(model: Contact, isValid: boolean) {
     console.log(model, isValid);

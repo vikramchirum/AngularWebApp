@@ -7,6 +7,7 @@ import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
+import { forEach } from 'lodash';
 import { HttpClient } from './httpclient';
 import { IBillLineItem } from './models/billlineitem.model';
 import { IBill } from './models/bill.model';
@@ -20,9 +21,13 @@ export class InvoiceService {
   getBills(billingAccountId: number): Observable<IBill[]>   {
 
     const relativePath = `/invoice/${billingAccountId}/bills`;
-    return this.http.get(relativePath).map((response: Response) => {
-      return <IBill[]> response.json();
-    }).catch(this.handleError);
+    return this.http.get(relativePath)
+      .map(res => res.json())
+      .map((bills: IBill[]) => forEach(bills, bill => {
+        bill.Invoice_Date = new Date(bill.Invoice_Date);
+        bill.Due_Date = new Date(bill.Due_Date);
+      }))
+      .catch(this.handleError);
   }
 
   getItemizedBillDetails(invoiceId: number): Observable<IBillLineItem[]>   {

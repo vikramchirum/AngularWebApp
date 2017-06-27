@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { BillingAccount, BillingAccountService } from 'app/core/BillingAccount';
+import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
+import { BillingAccountService } from 'app/core/BillingAccount.service';
 import { PaymentMethod, PaymentMethodService } from 'app/core/PaymentMethod';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -17,8 +18,8 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
 
   autoBillPaymentMethod: PaymentMethod = null;
 
-  private ActiveBillingAccount: BillingAccount = null;
-  private BillingAccounts: BillingAccount[] = [];
+  private ActiveBillingAccountCache: BillingAccountClass = null;
+  private BillingAccounts: BillingAccountClass[] = [];
   private BillingAccountsSubscription: Subscription = null;
 
   constructor(
@@ -26,8 +27,8 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
     private PaymentMethodService: PaymentMethodService
   ) {
     this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable
-      .subscribe((BillingAccounts: BillingAccount[]) => {
-        this.ActiveBillingAccount = this.BillingAccountService.ActiveBillingAccount;
+      .subscribe((BillingAccounts: BillingAccountClass[]) => {
+        this.ActiveBillingAccountCache = this.BillingAccountService.ActiveBillingAccountCache;
         this.BillingAccounts = BillingAccounts;
       });
   }
@@ -43,13 +44,13 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
 
   enrollInAutoBillPaySelected(selectedPaymentMethod: PaymentMethod): void {
     this.BillingAccountService
-      .applyNewAutoBillPay(selectedPaymentMethod, this.BillingAccountService.ActiveBillingAccount, true)
+      .applyNewAutoBillPay(selectedPaymentMethod, this.BillingAccountService.ActiveBillingAccountCache, true)
       .then(() => this.autoBillPaymentMethod = selectedPaymentMethod);
   }
 
   unenrollInAutoBillPaySelected(): void {
     this.BillingAccountService
-      .applyNewAutoBillPay(null, this.BillingAccountService.ActiveBillingAccount, false)
+      .applyNewAutoBillPay(null, this.BillingAccountService.ActiveBillingAccountCache, false)
       .then(() => {
         this.autoBillPaymentMethod = null;
       });
@@ -59,7 +60,7 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
     // TODO: do we need to call separately to remove the old payment method?.. or is that handled by the back-end API?
     if (selectedPaymentMethod !== this.autoBillPaymentMethod) {
       this.BillingAccountService
-        .applyNewAutoBillPay(selectedPaymentMethod, this.BillingAccountService.ActiveBillingAccount, true)
+        .applyNewAutoBillPay(selectedPaymentMethod, this.BillingAccountService.ActiveBillingAccountCache, true)
         .then(() => this.autoBillPaymentMethod = selectedPaymentMethod);
     }
     this.switchingAutoBillPay = false;

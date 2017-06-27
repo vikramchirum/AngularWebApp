@@ -1,8 +1,10 @@
 
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 
+import { find } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
-import { BillingAccount, BillingAccountService } from 'app/core/BillingAccount';
+import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
+import { BillingAccountService } from 'app/core/BillingAccount.service';
 
 @Component({
   selector: 'mygexa-service-account-selector',
@@ -11,13 +13,15 @@ import { BillingAccount, BillingAccountService } from 'app/core/BillingAccount';
 })
 export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
 
-  @Input() selectedBillingAccount: BillingAccount = null;
+  @Input() setActiveBillingAccount: boolean = null;
+  @Input() selectedBillingAccount: BillingAccountClass = null;
   @Input() selectorLabel: string = null;
   @Output() changedBillingAccount: EventEmitter<any> =  new EventEmitter<any>();
 
-  private BillingAccounts: BillingAccount[] = null;
+  private BillingAccounts: BillingAccountClass[] = null;
   private BillingAccountSelectedId: string = null;
   private BillingAccountsSubscription: Subscription = null;
+  private ActiveBillingAccountsSubscription: Subscription = null;
 
   constructor(
     private BillingAccountService: BillingAccountService
@@ -25,39 +29,33 @@ export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable.subscribe(
-      (BillingAccounts: BillingAccount[]) => {
-        this.BillingAccounts = BillingAccounts;
-        // If there is not provided billing account to select, use the Billing Account Service's.
-        if (
-          this.selectedBillingAccount === null
-          || this.BillingAccounts.indexOf(this.selectedBillingAccount) < 0
-        ) {
-          this.BillingAccountSelectedId = this.BillingAccountService.ActiveBillingAccount.Id;
-        } else {
-          this.BillingAccountSelectedId = this.selectedBillingAccount.Id;
-        }
-      },
-      // TODO: handle errors.
-      error => console.log('error', error)
+      BillingAccounts => this.BillingAccounts = BillingAccounts
     );
+    if (this.selectedBillingAccount) {
+      this.BillingAccountSelectedId = this.selectedBillingAccount.Id;
+    } else {
+      this.ActiveBillingAccountsSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+        ActiveBillingAccount => this.BillingAccountSelectedId = ActiveBillingAccount.Id
+      );
+    }
   }
 
   ngOnDestroy() {
-    // Clean up our subscriber to avoid memeory leaks.
+    // Clean up our subscribers to avoid memory leaks.
     this.BillingAccountsSubscription.unsubscribe();
+    // If we're listening for the active billing account then clean it up.
+    if (this.ActiveBillingAccountsSubscription) { this.ActiveBillingAccountsSubscription.unsubscribe(); }
   }
 
   changeBillingAccount() {
     // Look for the selected billing account and emit the change with it.
-    for (const index in this.BillingAccounts) {
-      if (
-        this.BillingAccounts[index]
-        && this.BillingAccounts[index].Id === this.BillingAccountSelectedId
-      ) {
-        this.changedBillingAccount.emit(this.BillingAccounts[index]);
-        break;
-      }
-    }
+    const SelectedBillingAccount = find(this.BillingAccounts, { Id: this.BillingAccountSelectedId });
+
+    // If we're setting the global account then do so here.
+    if (this.setActiveBillingAccount) { this.BillingAccountService.SetActiveBillingAccount(SelectedBillingAccount); }
+
+    // Emit this change-event to any listeners.
+    if (SelectedBillingAccount) { this.changedBillingAccount.emit(SelectedBillingAccount); }
   }
 
 }

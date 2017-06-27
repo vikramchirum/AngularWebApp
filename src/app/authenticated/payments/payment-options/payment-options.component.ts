@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { BillingAccount, BillingAccountService } from 'app/core/BillingAccount';
+import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
+import { BillingAccountService } from 'app/core/BillingAccount.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -11,17 +12,17 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class PaymentOptionsComponent implements OnInit, OnDestroy {
 
-  private ActiveBillingAccount: BillingAccount = null;
-  private BillingAccounts: BillingAccount[] = [];
+  private ActiveBillingAccount: BillingAccountClass = null;
+  private BillingAccounts: BillingAccountClass[] = [];
   private BillingAccountsSubscription: Subscription = null;
 
   constructor(
-    private router: Router,
+    public router: Router,
     private BillingAccountService: BillingAccountService
   ) {
     this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable
-      .subscribe((BillingAccounts: BillingAccount[]) => {
-        this.ActiveBillingAccount = this.BillingAccountService.ActiveBillingAccount;
+      .subscribe((BillingAccounts: BillingAccountClass[]) => {
+        this.ActiveBillingAccount = this.BillingAccountService.ActiveBillingAccountCache;
         this.BillingAccounts = BillingAccounts;
       });
   }

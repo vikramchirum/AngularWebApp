@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ControlsAndInsightsComponent implements OnInit {
 
-private sideNavPanelData:any;
+  sideNavPanelData:any;
 
   constructor() { }
 
@@ -21,10 +21,6 @@ private sideNavPanelData:any;
         }
       ]
     }
-  }
-
-  reactToChangedBillingAccount(BillingAccount) {
-    console.log(BillingAccount);
   }
 
 }

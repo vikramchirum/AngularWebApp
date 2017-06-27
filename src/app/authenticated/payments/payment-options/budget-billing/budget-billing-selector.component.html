@@ -1,0 +1,49 @@
+<form
+  class="form-horizontal"
+  [formGroup]="formGroup"
+  (submit)="formGroupSubmit();"
+  novalidate
+>
+
+  <div class="form-group form-group-lg">
+    <label for="budget-billing-amount" class="col-md-4 col-lg-2 control-label">Budget Payment Amount</label>
+    <div class="col-md-8 col-lg-6">
+      <input
+        type="text"
+        class="form-control form-control-wireframe"
+        id="budget-billing-amount"
+        formControlName="amount"
+        autocomplete="off"
+        maxlength="19"
+      />
+      <small class="text-success" *ngIf="formGroup.controls?.amount.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+      <ng-container *ngIf="formGroup.controls?.amount.errors">
+        <small class="text-danger"><i class="fa fa-fw fa-asterisk"></i>
+          <ng-template *ngIf="formGroup.controls?.amount.errors?.minimumMoneyAmount === true; then errorsMinimum else errorsRequired;"></ng-template>
+          <ng-template #errorsMinimum> requires a minimum amount of ${{ amountMinimum | NumberToMoneyPipe }}</ng-template>
+          <ng-template #errorsRequired> required</ng-template>
+        </small>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-md-offset-4 col-md-8 col-lg-offset-2 col-lg-10">
+
+      <div class="checkbox">
+        <label>
+          <input
+            type="checkbox"
+            formControlName="agree"
+          > I Agree to Terms and Conditions
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg" [disabled]="!formGroup.valid || !formGroup.controls['agree'].value">Start Now</button>
+
+      <button type="button" class="btn btn-wireframe btn-lg" *ngIf="editing" (click)="formGroupCancel()">Cancel Edit</button>
+
+    </div>
+  </div>
+
+</form>

@@ -11,7 +11,7 @@ import { validateEmail } from 'app/validators/validator';
 export class ReferralOptionsComponent implements OnInit, AfterViewInit {
   @ViewChild('referralLink') referralLink;
 
-  private friendsForm: FormGroup;
+  friendsForm: FormGroup;
 
   constructor(
     private FormBuilder: FormBuilder

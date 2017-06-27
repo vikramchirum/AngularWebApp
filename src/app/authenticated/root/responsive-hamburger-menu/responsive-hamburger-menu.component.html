@@ -28,7 +28,7 @@
         <ul>
           <li><h5><a (click)='routerOnClick()' routerLink="/plans-and-services/my-services-plans">My Service Plans</a></h5></li>
           <li><h5><a (click)='routerOnClick()' routerLink="/plans-and-services/add-service-location">Add Service Locations</a></h5></li>
-          <li><h5><a (click)='routerOnClick()' routerLink="/plans-and-services/moving-service">Moving </a></h5></li>
+          <li><h5><a (click)='routerOnClick()' routerLink="/plans-and-services/moving">Moving </a></h5></li>
           <li><h5><a (click)='routerOnClick()' routerLink="/plans-and-services/order-status">Order Status</a></h5></li>
         </ul>
       </div>
@@ -54,4 +54,13 @@
     </div>
   </div>
 
+  <div class="panel dx-panel-default" style="margin-top: 6rem;">
+    <div class="panel-body">
+      <ul>
+        <li><a href="#" (click)="doSignOut($event)"><i class="fa fa-fw fa-sign-out"></i> Sign-out</a></li>
+      </ul>
+    </div>
+  </div>
+
 </div>
+

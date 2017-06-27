@@ -9,18 +9,18 @@ import { MyBillService } from './my-bill.service';
 })
 export class MyBillComponent implements OnInit {
   errorMessage: string;
-  private billingAccounts:any = null;
+  billingAccounts:any = null;
 
   constructor(private myBillService: MyBillService) { }
 
   ngOnInit() {
-    this.getMyBill();    
+    this.getMyBill();
   }
 
 
 
   getMyBill() {
-    //Id should be dynamic. On selection of billing address, We should get billing account Id amd pass it to service 
+    //Id should be dynamic. On selection of billing address, We should get billing account Id amd pass it to service
     this.myBillService.getMyBill('77054')
                      .then(
                        billingAccounts => {

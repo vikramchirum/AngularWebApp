@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { PaymentMethodAddCcComponent } from 'app/shared/components/payment-method-add-cc/payment-method-add-cc.component';
 import { PaymentMethodAddEcheckComponent } from 'app/shared/components/payment-method-add-echeck/payment-method-add-echeck.component';
-import { BillingAccountService } from 'app/core/BillingAccount';
+import { BillingAccountService } from 'app/core/BillingAccount.service';
 import { PaymentMethod, PaymentMethodService } from 'app/core/PaymentMethod';
 
 interface IPaymentMessage {
@@ -82,7 +82,7 @@ export class PaymentAccountsComponent implements OnInit {
 
   removePaymentMethodEditAutoPayConfirm(): void {
     this.BillingAccountService
-      .applyNewAutoBillPay(this.PaymentAbpSelected, this.BillingAccountService.ActiveBillingAccount, true)
+      .applyNewAutoBillPay(this.PaymentAbpSelected, this.BillingAccountService.ActiveBillingAccountCache, true)
       .then(() => {
         this.PaymentMethodService
           .deletePaymentMethod(this.PaymentAbpSelecting.Id)

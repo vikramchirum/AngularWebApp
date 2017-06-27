@@ -1,5 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'mygexa-responsive-hamburger-menu',
@@ -8,15 +7,21 @@ import { Router } from '@angular/router';
 })
 export class ResponsiveHamburgerMenuComponent implements OnInit {
 
+  @Output() signout = new EventEmitter<string>();
   @Output() notify = new EventEmitter<string>();
 
-  constructor(private router: Router) { }
+  constructor() { }
 
   ngOnInit() { }
 
   routerOnClick() {
-    // this.router.navigate([url]);
     this.notify.emit('Router changed');
+  }
+
+  doSignOut($event) {
+    if ($event && $event.preventDefault) { $event.preventDefault(); }
+    this.routerOnClick();
+    this.signout.emit();
   }
 
 }
