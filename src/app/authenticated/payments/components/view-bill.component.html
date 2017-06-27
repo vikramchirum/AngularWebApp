@@ -22,17 +22,17 @@
         <tbody>
         <tr *ngFor="let item of bill_item_details_gexa_charges">
           <td class="bill-name"><span>{{ item.Descripton }}</span><span class="bill-uasge" *ngIf="item.Quantity">{{ item.Quantity }}</span></td>
-          <td class="bill-amount">${{ item.Amount }}</td>
+          <td class="bill-amount">${{ item.Amount | FloatToMoneyPipe }}</td>
           <td></td>
         </tr>
         <tr *ngFor="let item of bill_item_details_other_charges">
           <td class="bill-name"><span>{{ item.Descripton }}</span></td>
-          <td class="bill-amount">${{ item.Amount }}</td>
+          <td class="bill-amount">${{ item.Amount | FloatToMoneyPipe }}</td>
           <td></td>
         </tr>
         <tr *ngFor="let item of bill_item_details_tax">
           <td class="bill-name"><span>{{ item.Descripton }}</span></td>
-          <td class="bill-amount">${{ item.Amount }}</td>
+          <td class="bill-amount">${{ item.Amount | FloatToMoneyPipe }}</td>
           <td></td>
         </tr>
         </tbody>
@@ -46,7 +46,7 @@
         <tbody>
         <tr>
           <td><b>Sub Total</b></td>
-          <td><b>${{ subtotal(bill_item_details_gexa_charges) + subtotal(bill_item_details_other_charges) + subtotal(bill_item_details_tax) }}</b></td>
+          <td><b>${{ subtotal(bill_item_details_gexa_charges) + subtotal(bill_item_details_other_charges) + subtotal(bill_item_details_tax) | FloatToMoneyPipe}}</b></td>
           <td></td>
         </tr>
         </tbody>
@@ -77,7 +77,7 @@
         <tbody>
         <tr *ngFor="let item of bill_item_details_TDU_charges">
           <td class="bill-name"><span>{{ item.Descripton }}</span></td>
-          <td class="bill-amount">${{ item.Amount }}</td>
+          <td class="bill-amount">${{ item.Amount | FloatToMoneyPipe }}</td>
           <td></td>
         </tr>
         </tbody>
@@ -91,7 +91,7 @@
         <tbody>
         <tr>
           <td><b>Sub Total</b></td>
-          <td><b>${{ subtotal(bill_item_details_TDU_charges)}}</b></td>
+          <td><b>${{ subtotal(bill_item_details_TDU_charges) | FloatToMoneyPipe }}</b></td>
           <td></td>
         </tr>
         </tbody>
