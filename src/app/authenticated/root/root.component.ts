@@ -19,14 +19,14 @@ export class RootComponent implements OnInit, AfterViewInit {
 
   @ViewChild('homeMultiAccountsModal') homeMultiAccountsModal: HomeMultiAccountsModalComponent;
 
-
   constructor(private user_service: UserService, private router: Router, private viewContainerRef: ViewContainerRef) { }
 
   showHomeMultiAccountsModal() {
     this.homeMultiAccountsModal.show();
   }
   ngAfterViewInit() {
-    this.homeMultiAccountsModal.show();
+    // alert('Hi');
+    // this.homeMultiAccountsModal.show();
   }
   ngOnInit() {
     //this.user = this.user_service.logged_in_user;

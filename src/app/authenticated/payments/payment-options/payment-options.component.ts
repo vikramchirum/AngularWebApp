@@ -22,7 +22,7 @@ export class PaymentOptionsComponent implements OnInit, OnDestroy {
   ) {
     this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable
       .subscribe((BillingAccounts: BillingAccountClass[]) => {
-        this.ActiveBillingAccount = this.BillingAccountService.ActiveBillingAccount;
+        this.ActiveBillingAccount = this.BillingAccountService.ActiveBillingAccountCache;
         this.BillingAccounts = BillingAccounts;
       });
   }

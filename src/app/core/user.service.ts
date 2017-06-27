@@ -39,6 +39,9 @@ export class UserService implements CanActivate {
   private getUserFromMongo = environment.Api_Url + '/user/getUserFromMongo';
   private secQuesUrl = environment.Api_Url + '/user/securityQues';
   private getSecQuestionUrl = environment.Api_Url + '/user/getSecQues';
+  private checkSecQuesUrl = environment.Api_Url + '/user/checkSecurityQues';
+  private resetPasswordUrl = environment.Api_Url + '/user/resetPassword';
+  private getUsernameUrl = environment.Api_Url + '/user/getUsername';
   private loginUrl = environment.Api_Url + '/user/authentication';
   private registerUrl = environment.Api_Url + '/user/register';
 
@@ -86,49 +89,25 @@ export class UserService implements CanActivate {
     private Http: Http
   ) {
 
-    // Make the User Observable for others to listen to.
+    // Make the Observables (User, Billing Account Ids, Customer Account Id) for others to listen to.
+    // Each will:
+    // 1. Collect, or 'push', new observers to the observable's collection.
+    // 2. Send the latest cached data to the new observer.
+    // 3. Provide the new observer a clean-up function to prevent memory leaks.
     this.UserObservable = Observable.create((observer: Observer<IUser>) => {
-
-      // We want to collect our observers for future emits.
       this.UserObservers.push(observer);
-
-      // Send the User data to the new observer.
       observer.next(this.UserCache);
-
-      // Provide the clean-up function to avoid memory leaks.
-      // Find the observer and remove them from the collection.
       return () => pull(this.UserObservers, observer);
-
     });
-
-    // Make the User Billing_Account_Ids Observable for others to listen to.
     this.UserBillingAccountsObservable = Observable.create((observer: Observer<string[]>) => {
-
-      // We want to collect our observers for future emits.
       this.UserBillingAccountsObservers.push(observer);
-
-      // Send the User data to the new observer.
       observer.next(getBillingAccountIds(this.UserCache));
-
-      // Provide the clean-up function to avoid memory leaks.
-      // Find the observer and remove them from the collection.
       return () => pull(this.UserBillingAccountsObservers, observer);
-
     });
-
-    // Make the User Customer_Account_Id Observable for others to listen to.
     this.UserCustomerAccountObservable = Observable.create((observer: Observer<string>) => {
-
-      // We want to collect our observers for future emits.
       this.UserCustomerAccountObservers.push(observer);
-
-      // Send the User data to the new observer.
       observer.next(getCustomerAccountId(this.UserCache));
-
-      // Provide the clean-up function to avoid memory leaks.
-      // Find the observer and remove them from the collection.
       return () => pull(this.UserCustomerAccountObservers, observer);
-
     });
 
     // Keep observers of the user's customer and billing account Ids updated.
@@ -234,11 +213,57 @@ export class UserService implements CanActivate {
   getSecQuesByUserName(user_name: string): Observable<string> {
 
     const body = JSON.stringify(user_name);
-    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }) });
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
 
     return this.Http.post(this.getSecQuestionUrl, body, options)
       .map(res => res.json())
       .map(res => get(res, 'length') > 0 ? res : null)
+      .catch(error => this.handleError(error));
+  }
+
+  checkSecQuesByUserName(user_name: string, security_answer: string) {
+    const body = new URLSearchParams();
+    body.append('Username', user_name);
+    body.append('SecurityAnswer', security_answer);
+
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }) });
+    return this.Http.post(this.checkSecQuesUrl, body, options)
+      .map(res => res.json())
+      .map(res => get(res, 'length') > 0 ?  localStorage.setItem('reset_password_token', res) : localStorage.setItem('reset_password_token', null))
+      .catch(error => this.handleError(error));
+  }
+
+  resetPassword (user_name: string, password: string) {
+    const token = localStorage.getItem('reset_password_token');
+    const body = JSON.stringify({
+      creds: {
+      Username: user_name, Password: password
+    },
+      Token: token
+    });
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
+    if (token && token.length) {
+      return this.Http.put(this.resetPasswordUrl, body, options)
+        .map(res => res.json())
+        .catch(error => this.handleError(error));
+    }
+    return null;
+  }
+
+  recoverUsername (Email_Address) {
+    const body = JSON.stringify(Email_Address);
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
+
+    return this.Http.post(this.getUsernameUrl, body, options)
+      .map(res => res.json())
+      .map(res => {
+        if (res && res.length) {
+          sessionStorage.setItem('User_Name', res);
+          return true;
+        } else {
+          return false;
+        }
+      })
       .catch(error => this.handleError(error));
   }
 

@@ -2,7 +2,7 @@
 
   <mygexa-service-account-selector
     selectorLabel="Your Service Address:"
-    (changedBillingAccount)="reactToChangedBillingAccount($event)"
+    [setActiveBillingAccount]="true"
   ></mygexa-service-account-selector>
 
   <div class="row">
