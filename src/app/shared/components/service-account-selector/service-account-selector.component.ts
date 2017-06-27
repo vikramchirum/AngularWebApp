@@ -1,7 +1,7 @@
 
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 
-import { find } from 'lodash';
+import { find, get } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
 import { BillingAccountService } from 'app/core/BillingAccount.service';
@@ -35,7 +35,7 @@ export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
       this.BillingAccountSelectedId = this.selectedBillingAccount.Id;
     } else {
       this.ActiveBillingAccountsSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
-        ActiveBillingAccount => this.BillingAccountSelectedId = ActiveBillingAccount.Id
+        ActiveBillingAccount => this.BillingAccountSelectedId = get(ActiveBillingAccount, 'Id', null)
       );
     }
   }

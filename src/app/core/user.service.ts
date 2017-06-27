@@ -299,6 +299,8 @@ export class UserService implements CanActivate {
   logout() {
     // Remove our token and apply empty data.
     // TODO: Use cross-browser capable storage solution here.
+    console.log('loggin out')
+    localStorage.removeItem('gexa_active_billing_account_id');
     localStorage.removeItem('gexa_auth_token');
     localStorage.removeItem('gexa_auth_token_expire');
     this.ApplyUserData(null);

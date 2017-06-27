@@ -7,12 +7,12 @@ export function NumberToMoney(value: number): string {
 
   // Single-digit values with a possible negative sign.
   if (value < 10 && value > -10) {
-    return `${value < 0 ? '-' : ''}0.0${value}`;
+    return `${value < 0 ? '-' : ''}0.0${Math.abs(value)}`;
   }
 
   // Double-digit values with a possible negative sign.
   if (value < 100 && value > -100) {
-    return `${value < 0 ? '-' : ''}0.${value}`;
+    return `${value < 0 ? '-' : ''}0.${Math.abs(value)}`;
   }
 
   // Get the value as a string, with the decimal.
