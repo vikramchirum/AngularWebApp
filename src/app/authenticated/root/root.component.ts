@@ -26,7 +26,7 @@ export class RootComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit() {
     // alert('Hi');
-    // this.homeMultiAccountsModal.show();
+    this.homeMultiAccountsModal.show();
   }
   ngOnInit() {
     //this.user = this.user_service.logged_in_user;
