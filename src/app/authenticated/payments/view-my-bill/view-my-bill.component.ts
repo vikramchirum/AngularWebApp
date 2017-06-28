@@ -2,7 +2,6 @@ import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/c
 import { InvoiceService } from 'app/core/invoiceservice.service';
 import { IBill } from 'app/core/models/bill.model';
 import { IBillLineItem } from 'app/core/models/billlineitem.model';
-import { Bill, BillService } from 'app/core/Bill';
 import { first, orderBy, filter } from 'lodash';
 import {BillingAccountService} from 'app/core/BillingAccount.service';
 import {Subscription} from 'rxjs/Subscription';
@@ -19,12 +18,9 @@ export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
 
   error: string = null;
   public req_bill: IBill;
-  Bill: Bill = null;
   public billing_account_id: number;
   public id: string;
   date_today = new Date;
-  bill: Bill;
-
   @ViewChild(ViewBillComponent) private viewBill: ViewBillComponent;
 
   private ActiveBillingAccountSubscription: Subscription = null;

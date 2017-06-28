@@ -3,7 +3,6 @@ import { InvoiceService } from 'app/core/invoiceservice.service';
 import { IBillLineItem } from 'app/core/models/billlineitem.model';
 import { IBill } from 'app/core/models/bill.model';
 
-import { Bill, BillService } from 'app/core/Bill';
 import { filter, forEach } from 'lodash';
 
 @Component({
@@ -26,7 +25,6 @@ export class ViewBillComponent implements OnInit {
 
   public invoice_num: number;
   public invoice_date: Date;
-  bill: Bill = null;
   private openCharges = [];
 
   /**
@@ -63,7 +61,6 @@ export class ViewBillComponent implements OnInit {
   }
 
   constructor(
-    private BillService: BillService,
     private invoice_service: InvoiceService
   ) { }
 
