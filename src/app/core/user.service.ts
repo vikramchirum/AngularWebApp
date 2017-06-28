@@ -33,6 +33,7 @@ export class UserService implements CanActivate {
   public UserState: string = null;
   public getSecurityQuestionsCached: IUserSecurityQuestions[] = [];
 
+  private initialized: boolean = null;
   private UserObservers: Observer<IUser>[] = [];
   private UserBillingAccountsObservers: Observer<string[]>[] = [];
   private UserCustomerAccountObservers: Observer<string>[] = [];
@@ -92,27 +93,28 @@ export class UserService implements CanActivate {
     // Make the Observables (User, Billing Account Ids, Customer Account Id) for others to listen to.
     // Each will:
     // 1. Collect, or 'push', new observers to the observable's collection.
-    // 2. Send the latest cached data to the new observer.
+    // 2. Send the latest cached data to the new observer (only if we've initialized with some data.)
     // 3. Provide the new observer a clean-up function to prevent memory leaks.
     this.UserObservable = Observable.create((observer: Observer<IUser>) => {
       this.UserObservers.push(observer);
-      observer.next(this.UserCache);
+      if (this.initialized) { observer.next(this.UserCache); }
       return () => pull(this.UserObservers, observer);
     });
     this.UserBillingAccountsObservable = Observable.create((observer: Observer<string[]>) => {
       this.UserBillingAccountsObservers.push(observer);
-      observer.next(getBillingAccountIds(this.UserCache));
+      if (this.initialized) { observer.next(getBillingAccountIds(this.UserCache)); }
       return () => pull(this.UserBillingAccountsObservers, observer);
     });
     this.UserCustomerAccountObservable = Observable.create((observer: Observer<string>) => {
       this.UserCustomerAccountObservers.push(observer);
-      observer.next(getCustomerAccountId(this.UserCache));
+      if (this.initialized) { observer.next(getCustomerAccountId(this.UserCache)); }
       return () => pull(this.UserCustomerAccountObservers, observer);
     });
 
     // Keep observers of the user's customer and billing account Ids updated.
     this.UserObservable.subscribe(user => {
       if (user) {
+        this.initialized = true;
         this.emitToObservers(this.UserBillingAccountsObservers, getBillingAccountIds(user));
         this.emitToObservers(this.UserCustomerAccountObservers, getCustomerAccountId(user));
       }
@@ -151,7 +153,7 @@ export class UserService implements CanActivate {
     let errMsg: string;
     if (error instanceof Response) {
       const body = error.json() || '';
-      const err = body.error || JSON.stringify(body);
+      const err = get(body, 'error', JSON.stringify(body));
       errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
     } else {
       errMsg = error.message ? error.message : error.toString();
@@ -299,7 +301,6 @@ export class UserService implements CanActivate {
   logout() {
     // Remove our token and apply empty data.
     // TODO: Use cross-browser capable storage solution here.
-    console.log('loggin out')
     localStorage.removeItem('gexa_active_billing_account_id');
     localStorage.removeItem('gexa_auth_token');
     localStorage.removeItem('gexa_auth_token_expire');

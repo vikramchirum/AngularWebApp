@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { clone, find, forEach, get, pull } from 'lodash';
+import { clone, forEach, get, pull } from 'lodash';
 import { HttpClient } from './httpclient';
 import { UserService } from './user.service';
 import { CustomerAccountClass } from './models/CustomerAccount.model';
@@ -14,111 +14,82 @@ export class CustomerAccountService {
   public CustomerAccountCache: CustomerAccountClass = null;
   public CustomerAccountObservable: Observable<CustomerAccountClass> = null;
 
+  private initialized: boolean = null;
   private CustomerAccountId: string = null;
   private CustomerAccountsObservers: Observer<CustomerAccountClass>[] = [];
-  private CustomerAccountRequester: Observable<CustomerAccountClass> = null;
+  private requestObservable: Observable<Response> = null;
 
   constructor(
     private HttpClient: HttpClient,
     private UserService: UserService
   ) {
 
-    // Make an Observable for others to listen to.
+    // Make the Observables for others to listen to.
     this.CustomerAccountObservable = Observable.create((observer: Observer<CustomerAccountClass>) => {
-
-      // We want to collect our observers for future emits.
+      // 1. Collect, or 'push', new observers to the observable's collection.
       this.CustomerAccountsObservers.push(observer);
-
-      // If we do have our customer account then send it to the new observer, otherwise make a request.
-      if (this.CustomerAccountCache !== null) {
-        observer.next(this.CustomerAccountCache);
-      } else {
-        this.getCustomerAccount();
-      }
-
-      // Provide the clean-up function to avoid memory leaks.
-      // Find the observer and remove them from the collection.
+      // 2. Send the latest cached data to the new observer (only if we've initialized with some data.)
+      if (this.initialized) { observer.next(this.CustomerAccountCache); }
+      // 3. Provide the new observer a clean-up function to prevent memory leaks.
       return () => pull(this.CustomerAccountsObservers, observer);
+    });
 
+    // Respond to the first (initializing) call.
+    this.CustomerAccountObservable.first().delay(0).subscribe(() => {
+      this.initialized = true;
     });
 
     // Keep the customer account id synced.
-    this.UserService.UserObservable.subscribe(user => {
-      console.log(user);
-
-      const customer_account = find(get(user, 'Account_permissions', []), { AccountType: 'Customer_Account_Id'});
-
-      // If we have a customer account then try and update our id, otherwise reset and emit.
-      if (customer_account) {
-        // Update only if the account id has changed.
-        if (this.CustomerAccountId !== customer_account.AccountNumber) {
-          this.CustomerAccountId = customer_account.AccountNumber;
-          this.getCustomerAccount();
-        }
-      } else {
-        this.CustomerAccountId = null;
-        this.emitToObservers(this.CustomerAccountsObservers, this.CustomerAccountCache);
+    this.UserService.UserCustomerAccountObservable.subscribe(
+      CustomerAccountId => {
+        this.CustomerAccountId = CustomerAccountId;
+        this.UpdateCustomerAccount();
       }
-
-    });
+    );
 
   }
 
-  getCustomerAccount(): Observable<CustomerAccountClass> {
+  UpdateCustomerAccount(): Observable<Response> {
 
-    // If we don't have an Id to lookup, skip.
-    if (!this.CustomerAccountId) { return; }
+    // If we're already requesting then return the original request observable.
+    if (this.requestObservable) { return this.requestObservable; }
 
-    // If we're already requesting, return the original request.
-    if (this.CustomerAccountRequester) {
-      return this.CustomerAccountRequester;
+    // If we don't have a Customer Account Id then return null;
+    if (this.CustomerAccountId === null) { return Observable.from(null); }
+
+    // Assign the Http request to prevent any similar requests.
+    this.requestObservable = this.HttpClient.get(`/customer_accounts/${this.CustomerAccountId}`)
+      .map(data => data.json())
+      .catch(error => error);
+
+    // Handle the new Billing account data.
+    this.requestObservable.subscribe(
+      data => this.CustomerAccountCache = new CustomerAccountClass(data),
+      error => this.handleError(error),
+      () => {
+        // We're no longer requesting.
+        this.requestObservable = null;
+        // Emit our new data to all of our observers.
+        this.emitToObservers(this.CustomerAccountsObservers, this.CustomerAccountCache);
+      }
+    );
+
+    return this.requestObservable;
+
+  }
+
+  private handleError(error: Response | any) {
+    // In a real world app, you might use a remote logging infrastructure
+    let errMsg: string;
+    if (error instanceof Response) {
+      const body = error.json() || '';
+      const err = get(body, 'error', JSON.stringify(body));
+      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+    } else {
+      errMsg = error.message ? error.message : error.toString();
     }
-
-    // We want to keep a collection of those who subscribe while we request.
-    const observersWhileRequesting: Observer<CustomerAccountClass>[] = [];
-
-    // Make an Observable we can use to collect interested observers and to then publish to.
-    this.CustomerAccountRequester = Observable.create((observer: Observer<CustomerAccountClass>) => {
-
-      // We want to collect our observers to emit to after the HTTP request.
-      observersWhileRequesting.push(observer);
-
-      // Provide the clean-up function to avoid memory leaks.
-      // Find the observer and remove them from the collection.
-      return () => pull(observersWhileRequesting, observer);
-
-    });
-
-    // Make the request.
-    this.HttpClient.get(`/customer_accounts/${this.CustomerAccountId}`)
-      .map(res => res.json())
-      .subscribe(
-        data => this.CustomerAccountCache = new CustomerAccountClass(data),
-        error => {
-          // TODO: handle errors.
-          console.log({ error });
-          return Observable.throw(error.statusText);
-        },
-        () => {
-          // Start to emit to any and all observers collected since this request started.
-          forEach(clone(observersWhileRequesting), observer => {
-            // Emit.
-            observer.next(this.CustomerAccountCache);
-            // Close.
-            observer.complete();
-          });
-
-          this.emitToObservers(this.CustomerAccountsObservers, this.CustomerAccountCache);
-
-          // Destroy this requester.
-          this.CustomerAccountRequester = null;
-
-        }
-      );
-
-    // Return the observable to the observer who initialized this request.
-    return this.CustomerAccountRequester;
-
+    console.error(errMsg);
+    return Observable.throw(errMsg);
   }
 
   private emitToObservers(observers: Observer<any>[], data: any) {
