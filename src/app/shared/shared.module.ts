@@ -14,6 +14,7 @@ import { PaymentMethodSelectorComponent } from './components/payment-method-sele
 import { CreditCardComponent } from './components/credit-card/credit-card.component';
 import { PhonePipe } from './pipes/phone.pipe';
 import { NumberToMoneyPipe } from './pipes/NumberToMoney.pipe';
+import { FloatToMoneyPipe } from './pipes/FloatToMoney.pipe';
 import { LeftNavPanelComponent } from './components/left-nav-panel/left-nav-panel.component';
 import { ChangePhoneNumberComponent } from './components/change-phone-number/change-phone-number.component';
 import { PaymentMethodAddCcComponent } from './components/payment-method-add-cc/payment-method-add-cc.component';
@@ -38,6 +39,7 @@ import { PaymentMethodAddEcheckComponent } from './components/payment-method-add
     CreditCardComponent,
     PhonePipe,
     NumberToMoneyPipe,
+    FloatToMoneyPipe,
     LeftNavPanelComponent,
     ChangePhoneNumberComponent,
     PaymentMethodAddCcComponent,
@@ -54,6 +56,7 @@ import { PaymentMethodAddEcheckComponent } from './components/payment-method-add
     CreditCardComponent,
     PhonePipe,
     NumberToMoneyPipe,
+    FloatToMoneyPipe,
     LeftNavPanelComponent,
     ChangePhoneNumberComponent,
     PaymentMethodAddCcComponent,

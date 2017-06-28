@@ -28,9 +28,7 @@ export class BillingAccountService {
     localStorage.setItem('gexa_active_billing_account_id', BillingAccountId);
   }
   get ActiveBillingAccountId(): string {
-    return this.ActiveBillingAccountCache
-      ? this.ActiveBillingAccountCache.Id
-      : localStorage.getItem('gexa_active_billing_account_id');
+    return localStorage.getItem('gexa_active_billing_account_id');
   }
 
   constructor(
