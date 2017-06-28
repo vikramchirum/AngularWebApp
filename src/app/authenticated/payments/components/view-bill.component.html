@@ -1,4 +1,4 @@
-<div *ngIf="bill_item_details" class="view-bill-container">
+<div *ngIf="bill_object && bill_item_details" class="view-bill-container">
 
   <h4>{{invoice_date | date }}<span class="pull-right">Invoice Number # {{ invoice_num }}</span></h4>
 
@@ -30,11 +30,6 @@
           <td class="bill-amount">${{ item.Amount | FloatToMoneyPipe }}</td>
           <td></td>
         </tr>
-        <tr *ngFor="let item of bill_item_details_tax">
-          <td class="bill-name"><span>{{ item.Descripton }}</span></td>
-          <td class="bill-amount">${{ item.Amount | FloatToMoneyPipe }}</td>
-          <td></td>
-        </tr>
         </tbody>
       </table>
       <table border="0" width="100%">
@@ -46,7 +41,7 @@
         <tbody>
         <tr>
           <td><b>Sub Total</b></td>
-          <td><b>${{ subtotal(bill_item_details_gexa_charges) + subtotal(bill_item_details_other_charges) + subtotal(bill_item_details_tax) | FloatToMoneyPipe}}</b></td>
+          <td><b>${{ subtotal(bill_item_details_gexa_charges) + subtotal(bill_item_details_other_charges) | FloatToMoneyPipe}}</b></td>
           <td></td>
         </tr>
         </tbody>
@@ -104,6 +99,51 @@
     </ng-template>
   </div>
 
+  <div>
+    <div *ngIf="bill_item_details_tax.length > 0; then listTaxCharges else noTaxChargesToList"></div>
+    <ng-template #listTaxCharges>
+      <h2>
+        <button class="charge-toggle" (click)="chargeToggle(bill_item_details_tax)">
+          <i class="fa fa-fw" [ngClass]="chargeOpened(bill_item_details_tax) ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+        </button>
+        Tax Charges
+      </h2>
+      <table *ngIf="chargeOpened(bill_item_details_tax)" border="0" width="100%">
+        <colgroup>
+          <col width="75%"/>
+          <col width="20%"/>
+          <col width="5%"/>
+        </colgroup>
+        <tbody>
+        <tr *ngFor="let item of bill_item_details_tax">
+          <td class="bill-name"><span>{{ item.Descripton }}</span></td>
+          <td class="bill-amount">${{ item.Amount | FloatToMoneyPipe }}</td>
+          <td></td>
+        </tr>
+        </tbody>
+      </table>
+      <table border="0" width="100%">
+        <colgroup>
+          <col width="75%"/>
+          <col width="20%"/>
+          <col width="5%"/>
+        </colgroup>
+        <tbody>
+        <tr>
+          <td><b>Sub Total</b></td>
+          <td><b>${{ subtotal(bill_item_details_tax) | FloatToMoneyPipe}}</b></td>
+          <td></td>
+        </tr>
+        </tbody>
+      </table>
+      <br/>
+    </ng-template>
+
+    <ng-template #noTaxChargesToList>
+      <h2>Tax Charges <small>(No tax charges to list.)</small></h2>
+    </ng-template>
+  </div>
+
   <hr class="breaker"/>
 
   <table border="0" width="100%">
@@ -115,7 +155,7 @@
     <tbody>
     <tr>
       <td><h2 class="text-muted">Total</h2></td>
-      <td><h2>${{ bill_object.Balance_Forward + bill_object.Current_Charges }}</h2></td>
+      <td><h2>${{ subtotal(bill_item_details_gexa_charges) + subtotal(bill_item_details_other_charges) + subtotal(bill_item_details_TDU_charges) +  subtotal(bill_item_details_tax) | FloatToMoneyPipe}}</h2></td>
       <td></td>
     </tr>
     </tbody>

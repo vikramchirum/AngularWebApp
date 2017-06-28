@@ -7,44 +7,48 @@
   <div class="row">
     <div class="col-lg-8">
 
-      <div *ngIf="req_bill" class="current-charges-container">
+      <div [hidden]="!req_bill">
 
-        <table class="current-charges-make-a-payment" border="0" width="100%">
-          <colgroup>
-            <col width="75%"/>
-            <col width="20%"/>
-            <col width="5%"/>
-          </colgroup>
-          <tbody>
-          <tr>
-            <td>Current Charges</td>
-            <td colspan="2">${{ req_bill[0].Current_Charges }}</td>
-          </tr>
-          <tr *ngIf="Bill.balance_forward">
-            <td>Balance Forward</td>
-            <td colspan="2">${{ req_bill[0].Balance_Forward }}</td>
-          </tr>
-          <tr>
-            <td colspan="3">
-              <hr class="breaker"/>
-            </td>
-          </tr>
-          <tr>
-            <td><h2 class="text-muted">Total</h2></td>
-            <td colspan="2"><h2>${{ req_bill[0].Current_Charges + req_bill[0].Balance_Forward }}</h2></td>
-          </tr>
-          </tbody>
-        </table>
+        <div class="current-charges-container">
 
-        <div class="current-charges-make-a-payment-container">
-          <a class="btn-wireframe" routerLink="/payments/make-payment">Make a Payment</a>
+          <table class="current-charges-make-a-payment" border="0" width="100%">
+            <colgroup>
+              <col width="75%"/>
+              <col width="20%"/>
+              <col width="5%"/>
+            </colgroup>
+            <tbody>
+            <tr>
+              <td>Current Charges</td>
+              <td colspan="2">${{ req_bill?.Current_Charges }}</td>
+            </tr>
+            <tr *ngIf="req_bill?.Balance_Forward">
+              <td>Balance Forward</td>
+              <td colspan="2">${{ req_bill?.Balance_Forward }}</td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <hr class="breaker"/>
+              </td>
+            </tr>
+            <tr>
+              <td><h2 class="text-muted">Total</h2></td>
+              <td colspan="2"><h2>${{ req_bill?.Current_Charges + req_bill?.Balance_Forward }}</h2></td>
+            </tr>
+            </tbody>
+          </table>
+
+          <div class="current-charges-make-a-payment-container">
+            <a class="btn-wireframe" routerLink="/payments/make-payment">Make a Payment</a>
+          </div>
+
         </div>
 
+        <h4>Bill details as of {{ date_today | date }}</h4>
+
+        <mygexa-view-bill></mygexa-view-bill>
+
       </div>
-
-      <h4>Bill details as of {{ date_today | date }}</h4>
-
-      <mygexa-view-bill *ngIf="req_bill" [bill_object]="req_bill[0]"></mygexa-view-bill>
 
     </div>
     <div class="col-lg-4">

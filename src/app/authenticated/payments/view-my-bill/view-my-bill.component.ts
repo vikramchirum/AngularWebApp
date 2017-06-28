@@ -1,53 +1,61 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { InvoiceService } from 'app/core/invoiceservice.service';
 import { IBill } from 'app/core/models/bill.model';
 import { IBillLineItem } from 'app/core/models/billlineitem.model';
 import { Bill, BillService } from 'app/core/Bill';
-import { filter } from 'lodash';
+import { first, orderBy, filter } from 'lodash';
+import {BillingAccountService} from 'app/core/BillingAccount.service';
+import {Subscription} from 'rxjs/Subscription';
+import {ViewBillComponent} from 'app/authenticated/payments/components/view-bill.component';
 
 @Component({
   selector: 'mygexa-view-my-bill',
   templateUrl: './view-my-bill.component.html',
   styleUrls: ['./view-my-bill.component.scss']
 })
-export class ViewMyBillComponent implements OnInit {
+export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
 
-  all_bills: IBill[];
+  all_bills: IBill[];  sort_all_bills: IBill[];
+
   error: string = null;
-  public req_bill: IBill[];
+  public req_bill: IBill;
   Bill: Bill = null;
   public billing_account_id: number;
-
+  public id: string;
   date_today = new Date;
   bill: Bill;
 
+  @ViewChild(ViewBillComponent) private viewBill: ViewBillComponent;
+
+  private ActiveBillingAccountSubscription: Subscription = null;
+
   constructor(
     private invoice_service: InvoiceService,
-    private BillService: BillService
-  ) {
-    this.billing_account_id = 1408663;
-    // this.BillService.getCurrentBill()
-    //   .then((bill: Bill) => this.bill = bill);
+    private BillingAccountService: BillingAccountService
+  ) { }
+
+  ngAfterViewInit() {
+    this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+      result => {
+        this.billing_account_id = Number(result.Id);
+        this.invoice_service.getBills(this.billing_account_id)
+          .subscribe(
+            response => {
+              this.all_bills = response;
+              this.sort_all_bills = orderBy(this.all_bills, ['Invoice_Date'], ['desc']);
+              this.req_bill = <any> first(this.sort_all_bills);
+              this.viewBill.getItemizedBills(this.req_bill);
+            },
+            error => {
+              this.error = error.Message;
+            }
+          );
+      }
+    );
   }
 
-  ngOnInit() {
-
-    this.invoice_service.getBills(this.billing_account_id)
-      .subscribe(
-        response => {
-          this.all_bills = response;
-          const currentDate = new Date(), y = currentDate.getFullYear() - 1, m = currentDate.getMonth(); // remove -1 to get current year data
-          const firstDay = new Date(y, m, 1);
-          const lastDay = new Date(y, m + 1, 0);
-          this.req_bill = filter(this.all_bills, bill => ( bill.Invoice_Date >= firstDay  && bill.Invoice_Date <= lastDay ));
-        },
-        error => {
-          this.error = error.Message;
-        }
-
-      );
-    this.BillService.getCurrentBill()
-      .then((Bill: Bill) => this.Bill = Bill);
+  ngOnDestroy() {
+    this.ActiveBillingAccountSubscription.unsubscribe();
   }
 
 }
