@@ -3,7 +3,6 @@ import { InvoiceService } from 'app/core/invoiceservice.service';
 import { IBillLineItem } from 'app/core/models/billlineitem.model';
 import { IBill } from 'app/core/models/bill.model';
 
-import { Bill, BillService } from 'app/core/Bill';
 import { filter, forEach } from 'lodash';
 
 @Component({
@@ -12,7 +11,8 @@ import { filter, forEach } from 'lodash';
   styleUrls: ['./view-bill.component.scss']
 })
 export class ViewBillComponent implements OnInit {
-  @Input() bill_Id: string;
+  // @Input() bill_Id: string;
+
   @Input() bill_object: IBill;
 
   error: string = null;
@@ -25,7 +25,6 @@ export class ViewBillComponent implements OnInit {
 
   public invoice_num: number;
   public invoice_date: Date;
-  bill: Bill = null;
   private openCharges = [];
 
   /**
@@ -62,36 +61,29 @@ export class ViewBillComponent implements OnInit {
   }
 
   constructor(
-    private BillService: BillService,
     private invoice_service: InvoiceService
   ) { }
 
   ngOnInit() {
-    this.invoice_num = Number(this.bill_object.Invoice_Id);
-    this.invoice_date = new Date(this.bill_object.Invoice_Date)
-    this.invoice_service.getItemizedBillDetails(this.invoice_num)
+    if (this.bill_object) { this.getItemizedBills(this.bill_object); }
+  }
+
+  public getItemizedBills(bill_object: IBill) {
+    const invoice_id = Number(bill_object.Invoice_Id);
+    this.invoice_service.getItemizedBillDetails(invoice_id)
       .subscribe(
-        response => {
-          this.bill_item_details = response;
+        bill_item_details => {
+          this.openCharges = [];
+          this.bill_object = bill_object;
+          this.invoice_num = invoice_id;
+          this.invoice_date = bill_object.Invoice_Date;
+          this.bill_item_details = bill_item_details;
           this.bill_item_details_TDU_charges = filter(this.bill_item_details, item => (item.Bill_Line_Item_Type === 'TDSP'));
           this.bill_item_details_gexa_charges = filter(this.bill_item_details, item => (item.Bill_Line_Item_Type === 'GEXA' && item.Bill_Line_Item_Sub_Type === 'Energy'));
           this.bill_item_details_other_charges = filter(this.bill_item_details, item => (item.Bill_Line_Item_Type === 'GEXA' && item.Bill_Line_Item_Sub_Type === 'None'));
           this.bill_item_details_tax = filter(this.bill_item_details, item => (item.Bill_Line_Item_Type === 'TAX'));
         }
       );
-
-    //If we've been provided an Id, use it.
-    // if (this.bill_Id) {
-    //   // Get the specified bill.
-    //   this.BillService.getBill(this.bill_Id)
-    //     .then((bill: Bill) => this.bill = bill)
-    //     .catch((err: any) => console.log(err));
-    // } else {
-    //   // Otherwise, get the current bill.
-    //   this.BillService.getCurrentBill()
-    //     .then((bill: Bill) => this.bill = bill)
-    //     .catch((err: any) => console.log(err));
-    // }
   }
 
 }

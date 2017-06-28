@@ -26,9 +26,7 @@
     </div>
   </div>
 </nav>
-
 <div class="container-fluid" *ngIf="accordionVisible">
-  <!-- <div class="container"> -->
   <div class="overlay-menu">
     <div class="row accordion-panel">
       <div class="xs-4">
@@ -47,4 +45,5 @@
 
 <div class="container-fluid">
   <router-outlet></router-outlet>
+  <mygexa-home-multi-accounts-modal #homeMultiAccountsModal></mygexa-home-multi-accounts-modal>
 </div>

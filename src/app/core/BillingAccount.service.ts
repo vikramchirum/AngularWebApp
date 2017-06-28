@@ -28,9 +28,7 @@ export class BillingAccountService {
     localStorage.setItem('gexa_active_billing_account_id', BillingAccountId);
   }
   get ActiveBillingAccountId(): string {
-    return this.ActiveBillingAccountCache
-      ? this.ActiveBillingAccountCache.Id
-      : localStorage.getItem('gexa_active_billing_account_id');
+    return localStorage.getItem('gexa_active_billing_account_id');
   }
 
   constructor(
@@ -129,7 +127,7 @@ export class BillingAccountService {
     let errMsg: string;
     if (error instanceof Response) {
       const body = error.json() || '';
-      const err = body.error || JSON.stringify(body);
+      const err = get(body, 'error', JSON.stringify(body));
       errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
     } else {
       errMsg = error.message ? error.message : error.toString();
