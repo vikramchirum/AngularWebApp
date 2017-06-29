@@ -20,7 +20,7 @@ import { ChangePhoneNumberComponent } from './components/change-phone-number/cha
 import { PaymentMethodAddCcComponent } from './components/payment-method-add-cc/payment-method-add-cc.component';
 import { PaymentMethodAddEcheckComponent } from './components/payment-method-add-echeck/payment-method-add-echeck.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import {ViewBillComponent} from "./components/view-bill/view-bill.component";
+import { ViewBillComponent } from './components/view-bill/view-bill.component';
 
 @NgModule({
   imports: [

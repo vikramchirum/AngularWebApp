@@ -1,4 +1,22 @@
-.view-my-view-modal{
+.view-my-bill-modal{
+  text-align: initial;
+  .view-my-bill-header{
+    .plan-title{
+      display: inline-block;
+    }
+    .close-btn {
+      font-size: 40px;
+    }
+  }
+  h1,h2,h3,h4,h5 {
+    font-weight:bold;
+  }
+}
+
+
+
+
+.service-upgrade-modal{
   text-align: initial;
   .plan-header{
     .plan-title{
@@ -8,15 +26,15 @@
       font-size: 40px;
     }
   }
+
+
   .plan-benefits {
     ul {
       list-style: none;
       padding-left:0;
     }
   }
-  h1,h2,h3,h4,h5 {
-    font-weight:bold;
-  }
+
   .cost-components {
     h3 {
       margin-left:15px;

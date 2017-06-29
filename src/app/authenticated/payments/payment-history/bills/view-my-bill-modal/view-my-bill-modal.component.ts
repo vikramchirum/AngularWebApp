@@ -1,8 +1,11 @@
 /**
  * Created by vikram.chirumamilla on 6/26/2017.
  */
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
+
+import { IBill } from '../../../../../core/models/bill.model';
+import { ViewBillComponent } from '../../../../../shared/components/view-bill/view-bill.component';
 
 @Component({
   selector: 'mygexa-view-my-bill-modal',
@@ -12,18 +15,19 @@ import { ModalDirective } from 'ngx-bootstrap';
 export class ViewMyBillModalComponent implements OnInit {
 
   @ViewChild('viewMyBillModal') public viewMyBillModal: ModalDirective;
-  // @Input() title?:string;
+  @ViewChild(ViewBillComponent) private viewBill: ViewBillComponent;
+  public bill: IBill;
 
   constructor() {
   }
-
   ngOnInit() {
   }
-  public show(): void {
+  public show(bill: IBill): void {
+    this.viewBill.PopulateItemizedBill(bill);
     this.viewMyBillModal.show();
   }
 
   public hideViewMyBillModal(): void {
-    this.viewMyBillModal.hide();
+    this.viewMyBillModal.  hide();
   }
 }

@@ -5,7 +5,7 @@ import { IBillLineItem } from 'app/core/models/billlineitem.model';
 import { first, orderBy, filter } from 'lodash';
 import {BillingAccountService} from 'app/core/BillingAccount.service';
 import {Subscription} from 'rxjs/Subscription';
-import {ViewBillComponent} from 'app/authenticated/payments/components/view-bill.component';
+import { ViewBillComponent } from '../../../shared/components/view-bill/view-bill.component';
 
 @Component({
   selector: 'mygexa-view-my-bill',
@@ -41,7 +41,7 @@ export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
           .subscribe(
             response => {
               this.req_bill = response;
-              this.viewBill.getItemizedBills(this.req_bill);
+              this.viewBill.PopulateItemizedBill(this.req_bill);
             },
             error => {
               this.error = error.Message;

@@ -6,15 +6,22 @@
       <button class="btn btn-lg btn-blank" (click)="sortByColumn(columnHeader)">
         {{columnHeader.title}}<i class="fa fa-sort-alpha-{{columnSortWay(columnHeader)}}"></i></button>
     </th>
-    <th style="font-size: 18px; text-align: center;">Bill</th>
+    <th style="font-size: 14px; text-align: center;">View Bill</th>
+    <th style="font-size: 14px; text-align: center;">Download Bill</th>
   </tr>
   </thead>
   <tbody>
   <tr class="bill" *ngFor="let row of rows | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }" >
     <td *ngFor="let columnHeader of columnHeaders">
-    <div>
-          {{getData(row, columnHeader)}}
-    </div>
+      <div>
+        {{getData(row, columnHeader)}}
+      </div>
+    </td>
+    <td class="text-center">
+      <button class="btn btn-blank btn-lg">
+        <h2><i class="fa fa-info-circle" (click)="showViewMyBillModal(row)" aria-hidden="true"></i></h2>
+      </button>
+    </td>
     <td class="text-center">
       <button class="btn btn-blank btn-lg">
         <a class="fa fa-fw fa-file-pdf-o" href="{{documentsUrl}}{{getInvoiceId(row)}}" target="_blank"></a>
@@ -24,11 +31,6 @@
 </table>
 
 <br/>
-
-<h2>3.9<sup class="sup-text">c</sup><sub class="sub-text">pkw/hr</sub>
-  <i class="fa fa-info-circle" (click)="showViewMyBillModal()" aria-hidden="true"></i></h2>
 <mygexa-view-my-bill-modal #viewMyBillModal></mygexa-view-my-bill-modal>
-
 <br>
-
 <pagination-controls class="my-pagination" (pageChange)="currentPage = $event"></pagination-controls>

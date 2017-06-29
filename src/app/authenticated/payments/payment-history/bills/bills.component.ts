@@ -1,5 +1,4 @@
-
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, AfterViewInit} from '@angular/core';
 import { CurrencyPipe, DatePipe} from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
@@ -8,13 +7,15 @@ import { IBill } from '../../../../core/models/bill.model';
 import { ColumnHeader } from '../../../../core/models/columnheader.model';
 import { InvoiceService } from '../../../../core/invoiceservice.service';
 import { ViewMyBillModalComponent } from './view-my-bill-modal/view-my-bill-modal.component';
+import { Subscription } from 'rxjs/Subscription';
+import { BillingAccountService } from '../../../../core/BillingAccount.service';
 
 @Component({
   selector: 'mygexa-payment-history-bills',
   templateUrl: './bills.component.html',
   styleUrls: ['./bills.component.scss']
 })
-export class BillsComponent implements OnInit, OnDestroy {
+export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public config: any;
   public columnHeaders: Array<ColumnHeader>;
@@ -28,16 +29,17 @@ export class BillsComponent implements OnInit, OnDestroy {
   public Bills: IBill[];
 
   private subscription: any;
+  private ActiveBillingAccountSubscription: Subscription = null;
+
   private billingAccountId: number;
 
   @ViewChild('viewMyBillModal') viewMyBillModal: ViewMyBillModalComponent;
 
   constructor(private route: ActivatedRoute, private datePipe: DatePipe, private currencyPipe: CurrencyPipe
-    , private invoiceService: InvoiceService) {
+    , private invoiceService: InvoiceService, private billingAccountService: BillingAccountService) {
   }
-
-  public showViewMyBillModal() {
-    this.viewMyBillModal.show();
+  public showViewMyBillModal(row: IBill) {
+    this.viewMyBillModal.show(row);
   }
 
   ngOnInit() {
@@ -47,16 +49,18 @@ export class BillsComponent implements OnInit, OnDestroy {
       paging: true,
       sorting: {columnHeaders: this.columnHeaders},
     };
-    this.subscription = this.route.params.subscribe(params => {
-      this.billingAccountId = +params['billingAccountId']; // (+) converts 'id' to number
-    });
+  }
 
-    // TODO
-    this.billingAccountId = 913064;
-    this.invoiceService.getBills(this.billingAccountId).subscribe(bills => {
-      this.Bills = bills;
-      this.onChangeTable(this.config);
-    });
+  ngAfterViewInit() {
+    this.ActiveBillingAccountSubscription = this.billingAccountService.ActiveBillingAccountObservable.subscribe(
+      result => {
+        this.billingAccountId = +(result.Id);
+        this.invoiceService.getBills(this.billingAccountId).subscribe(bills => {
+          this.Bills = bills;
+          this.onChangeTable(this.config);
+        });
+      }
+    );
   }
 
   public getData(row: any, columnHeader: ColumnHeader): any {
@@ -173,74 +177,4 @@ export class BillsComponent implements OnInit, OnDestroy {
       : data.length;
     return data.slice(start, end);
   }
-
-/*
-  private BillsSortingByLesser: number = null;
-  private BillsSortingByGreater: number = null;
-  set BillsSortingByDesc(desc: boolean) {
-    if (desc) {
-      this.BillsSortingByLesser = 1;
-      this.BillsSortingByGreater = -1;
-    } else {
-      this.BillsSortingByLesser = -1;
-      this.BillsSortingByGreater = 1;
-    }
-  }
-  get BillsSortingByDesc(): boolean {
-    return this.BillsSortingByGreater === -1;
-  }
-
-  private sorting(a: IHistoryBill, b: IHistoryBill): number {
-    if (a[this.BillsSortingBy] < b[this.BillsSortingBy]) {
-      return this.BillsSortingByLesser;
-    }
-    if (a[this.BillsSortingBy] > b[this.BillsSortingBy]) {
-      return this.BillsSortingByGreater;
-    }
-    return 0;
-  }
-
-  get currentPageOfBills(): IHistoryBill[] {
-    const sorted = this.Bills.sort((a, b) => this.sorting(a, b));
-    const index = this.BillsPage * this.BillsPerPage;
-    const extent = index + this.BillsPerPage;
-    if (extent > sorted.length) {
-      return sorted.slice(index);
-    }
-    return sorted.slice(index, extent);
-  }
-
-  get currentPageNumber(): number {
-    return this.BillsPage + 1;
-  }
-  get totalPages(): number {
-    return Math.ceil(this.Bills.length / this.BillsPerPage);
-  }
-
-  nextPage(): void {
-    this.BillsPage++;
-  }
-
-  gotoPage(index: number): void {
-    this.BillsPage = index;
-  }
-
-  previousPage(): void {
-    this.BillsPage--;
-  }
-
-  sortBy(attribute: string): void {
-    if (this.BillsSortingBy === attribute) {
-      this.BillsSortingByDesc = !this.BillsSortingByDesc;
-    } else {
-      this.BillsSortingBy = attribute;
-      this.BillsSortingByDesc = true;
-    }
-  }
-
-  openUpBill(bill: IHistoryBill) {
-    alert(`open up bill: ${bill.Id}`);
-  }*/
-
-
 }

@@ -19,27 +19,10 @@ tr.bill {
   }
 }
 
- .my-pagination /deep/ .ngx-pagination .current {
-   background: red;
- }
+.my-pagination {
+  text-align: center;
+}
 
-
-.pagination-container {
-  padding: 6rem 0;
-
-  button {
-    background: white;
-    color: black;
-    outline: none !important;
-  }
-  .text-center {
-    button {
-      font-size: 20px;
-    }
-    .badge {
-      background: black;
-      border-color: black;
-      color: white;
-    }
-  }
+.my-pagination /deep/ .ngx-pagination .current {
+  text-align: center;
 }
