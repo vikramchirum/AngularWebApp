@@ -63,6 +63,7 @@ export class BillingAccountClass {
   Switch_Hold: boolean;
   Contract_Start_Date: string;
   Contract_End_Date: string;
+  Latest_Invoice_Id: string;
   Last_payment_amount: number;
   Last_payment_date: string;
   Plan_History: [ IBillingAccountPlanHistory ];
