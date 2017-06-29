@@ -1,3 +1,31 @@
 @import '../../../../styles';
 
+.usage-history {
+  border: 1px solid black;
+  padding: 4rem;
+}
 
+pagination {
+  float: right;
+}
+
+table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.id {
+  width: 30%;
+}
+
+.month {
+  width: 30%;
+}
+
+.year {
+  width: 20%;
+}
+
+.usage {
+  width: 20%;
+}
