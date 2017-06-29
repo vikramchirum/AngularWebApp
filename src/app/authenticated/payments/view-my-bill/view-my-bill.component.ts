@@ -15,9 +15,11 @@ import {ViewBillComponent} from 'app/authenticated/payments/components/view-bill
 export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
 
   all_bills: IBill[];  sort_all_bills: IBill[];
+  public req1_bill: IBill;
 
   error: string = null;
   public req_bill: IBill;
+  public latest_invoice_id: string;
   public billing_account_id: number;
   public id: string;
   date_today = new Date;
@@ -33,13 +35,12 @@ export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
       result => {
+        this.latest_invoice_id = result.Latest_Invoice_Id;
         this.billing_account_id = Number(result.Id);
-        this.invoice_service.getBills(this.billing_account_id)
+        this.invoice_service.getBill(this.latest_invoice_id)
           .subscribe(
             response => {
-              this.all_bills = response;
-              this.sort_all_bills = orderBy(this.all_bills, ['Invoice_Date'], ['desc']);
-              this.req_bill = <any> first(this.sort_all_bills);
+              this.req_bill = response;
               this.viewBill.getItemizedBills(this.req_bill);
             },
             error => {

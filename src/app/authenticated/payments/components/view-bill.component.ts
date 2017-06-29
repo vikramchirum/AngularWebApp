@@ -3,7 +3,7 @@ import { InvoiceService } from 'app/core/invoiceservice.service';
 import { IBillLineItem } from 'app/core/models/billlineitem.model';
 import { IBill } from 'app/core/models/bill.model';
 
-import { filter, forEach } from 'lodash';
+import { filter, forEach, clone } from 'lodash';
 
 @Component({
   selector: 'mygexa-view-bill',
