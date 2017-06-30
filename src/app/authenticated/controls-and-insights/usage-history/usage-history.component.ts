@@ -35,17 +35,22 @@ export class UsageHistoryComponent implements OnInit {
     min: 0
   };
 
-  public barChartLabels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December',
-    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  public barChartLabels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   public barChartType: string = 'bar';
-  public barChartLegend: boolean = false;
+  public barChartLegend: boolean = true;
 
   public barChartData: any[] = [
-    {data: [47, 55, 60, 56, 49, 55, 53, 61, 54, 49, 57, 47, 55, 60, 56, 49, 55, 53, 61, 54, 49, 57, 47, 55], label: 'Series A'}
+    {data: [47, 55, 61, 55, 49, 53, 53, 61, 54, 49, 57, 47], label: '2015'},
+    {data: [48, 53, 60, 56, 48, 55, 54, 63, 57, 51, 54, 46], label: '2016'},
+    {data: [47, 54, 57, 53, 52, 52, 51, 60, 58, 50, 56, 49], label: '2017'},
+    {data: [49, 52, 65, 56, 49, 54, 50, 62, 56, 51, 53, 49], label: '2018'}
   ];
 
   public barChartColors: any[] = [
-    { backgroundColor: '#959595' }
+    { backgroundColor: '#7FFFD4' },
+    { backgroundColor: '#32CD32' },
+    { backgroundColor: '#98FB98' },
+    { backgroundColor: '#6495ED' }
   ]
 
   /* Line Graph Properties */
@@ -53,7 +58,7 @@ export class UsageHistoryComponent implements OnInit {
     responsive: true,
     elements: {
       line: {
-        tension: 0, // disables bezier curves
+        tension: 0,
       }
     },
     tooltips: {
@@ -81,6 +86,20 @@ export class UsageHistoryComponent implements OnInit {
   public totalItems: number = MockData.length;
   public tablePage: number = 1;
 
+  public lineChartData: Array<any> = [
+    {data: [235, 240, 236, 241, 243, 238, 242, 235, 240, 236, 241, 243], label: '2015', fill: false},
+    {data: [234, 242, 237, 238, 241, 237, 240, 234, 242, 237, 238, 241], label: '2016', fill: false},
+    {data: [238, 235, 240, 236, 240, 242, 243, 238, 235, 240, 236, 240], label: '2017', fill: false},
+    {data: [237, 236, 240, 235, 242, 238, 240, 237, 239, 241, 238, 243], label: '2018', fill: false}
+  ];
+
+  public lineChartColors: Array<any> = [
+    { borderColor: '#7FFFD4', backgroundColor: '#7FFFD4' },
+    { borderColor: '#32CD32', backgroundColor: '#32CD32' },
+    { borderColor: '#98FB98', backgroundColor: '#98FB98' },
+    { borderColor: '#6495ED', backgroundColor: '#6495ED' }
+  ];
+
   private getEntries(page: number) {
     const index = (page - 1) * 10;
     const extent = index + 10;
@@ -100,39 +119,6 @@ export class UsageHistoryComponent implements OnInit {
   public pageChanged(event: any): void {
     this.tablePage = event.page;
   }
-
-  public lineChartData: Array<any> = [
-    {data: [235, 240, 236, 241, 243, 238, 242, 235, 240, 236, 241, 243, 238], label: '2015', fill: false},
-    {data: [234, 242, 237, 238, 241, 237, 240, 234, 242, 237, 238, 241, 237, 240], label: '2016', fill: false},
-    {data: [238, 235, 240, 236, 240, 242, 243, 238, 235, 240, 236, 240, 242, 243], label: '2017', fill: false}
-  ];
-
-  public lineChartColors: Array<any> = [
-    { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    },
-    { // dark grey
-      backgroundColor: 'rgba(77,83,96,0.2)',
-      borderColor: 'rgba(77,83,96,1)',
-      pointBackgroundColor: 'rgba(77,83,96,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(77,83,96,1)'
-    },
-    { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    }
-  ];
 
   // events
   public chartClicked(e: any): void {
