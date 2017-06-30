@@ -19,7 +19,6 @@ import { LeftNavPanelComponent } from './components/left-nav-panel/left-nav-pane
 import { ChangePhoneNumberComponent } from './components/change-phone-number/change-phone-number.component';
 import { PaymentMethodAddCcComponent } from './components/payment-method-add-cc/payment-method-add-cc.component';
 import { PaymentMethodAddEcheckComponent } from './components/payment-method-add-echeck/payment-method-add-echeck.component';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { ViewBillComponent } from './components/view-bill/view-bill.component';
 
 @NgModule({
@@ -28,8 +27,7 @@ import { ViewBillComponent } from './components/view-bill/view-bill.component';
     ReactiveFormsModule,
     CommonModule,
     RouterModule,
-    CustomFormsModule,
-    NgxPaginationModule
+    CustomFormsModule
   ],
   declarations: [
     ChangeUserNameComponent,
@@ -65,7 +63,6 @@ import { ViewBillComponent } from './components/view-bill/view-bill.component';
     ChangePhoneNumberComponent,
     PaymentMethodAddCcComponent,
     PaymentMethodAddEcheckComponent,
-    NgxPaginationModule,
     ViewBillComponent
   ]
 })
