@@ -1,6 +1,5 @@
 import {Component, OnInit, OnDestroy, ViewChild, AfterViewInit} from '@angular/core';
 import { CurrencyPipe, DatePipe} from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
 
 import { environment } from 'environments/environment';
 import { IBill } from '../../../../core/models/bill.model';
@@ -25,17 +24,14 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   public currentPage = 1;
   public itemsPerPage = 10;
   public totalItems = 0;
-  public maxSize = 5;
   public Bills: IBill[];
 
-  private subscription: any;
   private ActiveBillingAccountSubscription: Subscription = null;
-
   private billingAccountId: number;
 
   @ViewChild('viewMyBillModal') viewMyBillModal: ViewMyBillModalComponent;
 
-  constructor(private route: ActivatedRoute, private datePipe: DatePipe, private currencyPipe: CurrencyPipe
+  constructor(private datePipe: DatePipe, private currencyPipe: CurrencyPipe
     , private invoiceService: InvoiceService, private billingAccountService: BillingAccountService) {
   }
   public showViewMyBillModal(row: IBill) {
@@ -167,14 +163,6 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
-
-  public changePage(page: any, data: Array<any> = this.Bills): Array<any> {
-    const start = (page.page - 1) * page.itemsPerPage;
-    const end = page.itemsPerPage > -1
-      ? (start + page.itemsPerPage)
-      : data.length;
-    return data.slice(start, end);
+    this.ActiveBillingAccountSubscription.unsubscribe();
   }
 }
