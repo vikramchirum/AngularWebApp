@@ -1,3 +1,53 @@
-<p>
-  usage-history works!
-</p>
+<div class="usage-history container-fluid usage-history">
+  <h2>Usage History</h2>
+  <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
+  <br/>
+  <div class="col position-relative">
+    <div class="col-md-11">
+      <div class="bar-chart">
+        <h4>Select a Month for Detail</h4>
+        <div style="display: block;">
+          <canvas baseChart height=50px [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [colors]="barChartColors"
+                [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="line-chart">
+      <div class="col-md-11">
+        <br/><br/><br/>
+        <h4>Year Over Year</h4>
+        <canvas baseChart height=50px [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+                [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+      </div>
+    </div>
+      <div class="col-md-5" style="margin-bottom: 10px">
+        <br/><br/><br/>
+        <h4>Data Table</h4>
+        <table class="table table-responsive table-condensed">
+          <tr>
+            <th class='month'>Month</th>
+            <th class='year'>Year</th>
+            <th class='usage'>kwH</th>
+          </tr>
+          <tr *ngFor='let index of currentPage'>
+            <td class='month'>{{ index.date | date:'MMMM' }}</td>
+            <td class='year'>{{ index.date | date:'y' }}</td>
+            <td class='usage'>{{ index.usage }}</td>
+          </tr>
+        </table>
+
+        <pagination
+          (pageChanged)="pageChanged($event)"
+          [boundaryLinks]="true"
+          [totalItems]="totalItems"
+          class="pagination-sm"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        ></pagination>
+
+    </div>
+  </div>
+</div>
