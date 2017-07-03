@@ -1,6 +1,10 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import {Subscription} from 'rxjs/Subscription';
+
 import { SelectPlanModalDialogComponent } from './select-plan-modal-dialog/select-plan-modal-dialog.component';
+import {BillingAccountService} from 'app/core/BillingAccount.service';
+
 
 @Component({
   selector: 'mygexa-moving-center-form',
@@ -20,9 +24,13 @@ export class MovingCenterFormComponent implements OnInit {
   ServicePlanForm: FormGroup;
   submitted: boolean = false;
 
+  private ActiveBillingAccountSubscription: Subscription = null;
+
   @ViewChild('selectPlanModal') selectPlanModal: SelectPlanModalDialogComponent;
 
-  constructor(fb: FormBuilder, private viewContainerRef: ViewContainerRef) {
+  constructor(fb: FormBuilder, 
+  private viewContainerRef: ViewContainerRef,
+   private BillingAccountService: BillingAccountService) {
 
     this.movingAddressForm = fb.group({
       'Current_Service_End_Date': [null, Validators.required],
@@ -39,8 +47,24 @@ export class MovingCenterFormComponent implements OnInit {
     })
   }
 
+
+
   ngOnInit() {
   }
+
+  
+  ngAfterViewInit() {
+     this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+        movingFromAccount => {
+          console.log('ActiveBillingAccount.', movingFromAccount);         
+        } 
+      );
+
+
+      
+  }
+
+
 
   nextButtonClicked() {
     this.nextClicked = true;
