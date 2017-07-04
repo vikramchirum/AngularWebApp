@@ -67,6 +67,7 @@
           <td>
             <p> Would you like to keep your existing service plan<i class="fa fa-chevron-right" aria-hidden="true"></i></p>
             <div class="form-group radio">
+              <small *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Select New Plan </small>
               <label class="radio-inline"><input type="radio" formControlName="service_plan" value="Current Plan"  >Keep Current Plan</label>
               <label class="radio-inline"><input type="radio" formControlName="service_plan" value="New Plan" (click)="openSelectPlanModal()">Select New Plan</label></div>
             <mygexa-select-plan-modal-dialog #selectPlanModal  (selectedPlan)="getSelectedOffer($event)"></mygexa-select-plan-modal-dialog>
@@ -102,7 +103,7 @@
     <div class="row">
       <div class="text-right">
         <button class="btn btn-lg btn-default" (click)="previousButtonClicked()">Previous</button>
-        <button class="btn btn-lg btn-default" (click)="onSubmitMove(movingAddressForm.value, ServicePlanForm.value)">Submit Move</button>
+        <button class="btn btn-lg btn-default"[disabled]="!ServicePlanForm.valid" (click)="onSubmitMove(movingAddressForm.value, ServicePlanForm.value)">Submit Move</button>
       </div>
     </div>
   </form>
