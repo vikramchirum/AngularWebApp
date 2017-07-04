@@ -25,13 +25,11 @@ export class OfferService {
   }
 
     private processApiData(res: Response) {
-      console.log("offer response", res)
       return res.json();
 
     }
 
      private handleError(error: Response) {
-    console.log(error.statusText);
     return Observable.throw(error.statusText);
   }
 

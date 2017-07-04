@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
 
 import { OfferService } from '../../../../core/offer.service';
@@ -13,6 +13,9 @@ export class SelectPlanModalDialogComponent implements OnInit {
 
 
   @ViewChild('selectPlanModal') public selectPlanModal: ModalDirective;
+  @Output() selectedPlan: EventEmitter<any> =  new EventEmitter<any>();
+
+  public availablePlans = null;
   constructor(private offerService: OfferService) { }
 
   ngOnInit() {
@@ -21,8 +24,10 @@ export class SelectPlanModalDialogComponent implements OnInit {
 
   getOffersByTduDunsNumber(){
       this.offerService.getOffers(123234)
-      .subscribe(availablePlans => {
-        console.log("available plans", availablePlans );
+      .subscribe(result => {
+        console.log("available plans", result );
+        this.availablePlans = result;
+        console.log("items", this.availablePlans.Items)
       })
   }
  
@@ -33,5 +38,10 @@ export class SelectPlanModalDialogComponent implements OnInit {
 
   public hideMovingServiceModal(): void {
     this.selectPlanModal.hide();
+  }
+
+  selectPlan(offers) {
+   this.selectedPlan.emit(offers);
+   this.selectPlanModal.hide();
   }
 }
