@@ -42,6 +42,7 @@ export class MovingCenterFormComponent implements OnInit {
   tduCheck(currentTDU, newTDU) {
     return (control: FormControl) => {
       console.log("control.value", control.value);
+       console.log("currentTDU", currentTDU);
       //If user is moving to same TDU, then user can keep the current plan or choose new one
       if (control.value == "Current Plan") {      
         if (currentTDU !== newTDU) {
@@ -69,7 +70,7 @@ export class MovingCenterFormComponent implements OnInit {
 
     this.ServicePlanForm = fb.group({
       'service_address': [null, Validators.required],
-      'service_plan': [null, Validators.compose([Validators.required, this.tduCheck("957877905", "957877905")])],
+      'service_plan': '',
       'agree_to_terms': [null, Validators.required],
       'final_billing_address': fb.array([])
     })
@@ -87,9 +88,11 @@ export class MovingCenterFormComponent implements OnInit {
     this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
       movingFromAccount => {
         this.ActiveBillingAccount = movingFromAccount;
-        console.log('ActiveBillingAccount.', movingFromAccount);
         this.TDU_DUNS_Number = this.ActiveBillingAccount.TDU_DUNS_Number;
-      }
+        //On selecting current plan, check if the address is in same TDU or different TDU
+        //TDU_DUNS for new address is hardcoded now. Get new address TDU from API
+      this.ServicePlanForm.get('service_plan').setValidators([Validators.required, this.tduCheck(this.TDU_DUNS_Number, "957877905")]);
+    }
     );
   }
 

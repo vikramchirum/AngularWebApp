@@ -66,10 +66,10 @@
         <tr>
           <td>
             <p> Would you like to keep your existing service plan<i class="fa fa-chevron-right" aria-hidden="true"></i></p>
-            <div class="form-group radio">
-              <small *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Select New Plan </small>
+            <div class="form-group radio">              
               <label class="radio-inline"><input type="radio" formControlName="service_plan" value="Current Plan"  >Keep Current Plan</label>
               <label class="radio-inline"><input type="radio" formControlName="service_plan" value="New Plan" (click)="openSelectPlanModal()">Select New Plan</label></div>
+              <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Moving address is not in same TDU. Please select New Plan </small>
             <mygexa-select-plan-modal-dialog #selectPlanModal  (selectedPlan)="getSelectedOffer($event)"></mygexa-select-plan-modal-dialog>
           </td>
           <td>
