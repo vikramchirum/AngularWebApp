@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { IMyDpOptions } from 'mydatepicker';
@@ -81,7 +81,7 @@ export class MovingCenterFormComponent implements OnInit {
 
     this.ServicePlanForm = this.fb.group({
       'service_address': [null, Validators.required],
-      'service_plan': '',
+      'service_plan': [null, Validators.required],
       'agree_to_terms': [null, Validators.required],
       'final_billing_address': this.fb.array([])
     })
@@ -169,11 +169,12 @@ export class MovingCenterFormComponent implements OnInit {
       billSelector.final_billing_address = addressForm.new_billing_address;
     }
 
-    //service plan 
-    if(billSelector.service_plan == 'Current Plan'){
+    //If user selects current plan , set current offer as true
+    if (billSelector.service_plan == 'Current Plan') {
       this.Keep_Current_Offer = true;
     }
 
+    //Request Parms to post data to Transfer service API
     this.transferRequest = {
       Email_Address: this.customerDetails.Email,
       Billing_Account_Id: this.ActiveBillingAccount.Id,
@@ -208,7 +209,12 @@ export class MovingCenterFormComponent implements OnInit {
   }
 
   onMovingAddressFormSubmit(addressForm) {
-    console.log("addressForm", addressForm);
+   // console.log("addressForm", addressForm);
+  }
+
+  ngOnDestroy() {
+    this.ActiveBillingAccountSubscription.unsubscribe();
+    this.CustomerAccountSubscription.unsubscribe();
   }
 
 

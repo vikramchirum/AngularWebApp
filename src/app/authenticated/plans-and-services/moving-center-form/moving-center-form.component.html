@@ -16,6 +16,7 @@
           <h3>Shut Off Date</h3>
            <my-date-picker name="Current_Service_End_Date" [options]="myDatePickerOptions"
                     formControlName="Current_Service_End_Date"></my-date-picker>
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors">Required</small>
           <!--<ng2-datepicker [options]="options" formControlName="Current_Service_End_Date" [(ngModel)]="Current_Service_End_Date" class="moving-address-date-picker"></ng2-datepicker>-->
         </div>
       </div>
@@ -35,6 +36,7 @@
           <h3>Turn On Date</h3>
            <my-date-picker name="New_Service_Start_Date" [options]="myDatePickerOptions"
                     formControlName="New_Service_Start_Date"></my-date-picker>
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors">Required</small>
           <!--<ng2-datepicker class="moving-address-date-picker" [options]="options" formControlName="New_Service_Start_Date" [(ngModel)]="New_Service_Start_Date" ></ng2-datepicker>-->
         </div>
       </div>
@@ -50,7 +52,7 @@
     <br/>
 
     <div class="text-right">
-      <button class="btn btn-lg btn-default" (click)="nextButtonClicked()">Next</button>
+      <button class="btn btn-lg btn-default" [disabled]="!movingAddressForm.valid" (click)="nextButtonClicked()">Next</button>
     </div>
   </form>
 
@@ -70,13 +72,14 @@
               <label class="radio-inline"><input type="radio" formControlName="service_plan" value="Current Plan"  >Keep Current Plan</label>
               <label class="radio-inline"><input type="radio" formControlName="service_plan" value="New Plan" (click)="openSelectPlanModal()">Select New Plan</label></div>
               <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Moving address is not in same TDU. Please select New Plan </small>
+              <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.required">Please select plan</small>
             <mygexa-select-plan-modal-dialog #selectPlanModal  (selectedPlan)="getSelectedOffer($event)"></mygexa-select-plan-modal-dialog>
           </td>
           <td>
             <div class="current-plan-card" *ngIf="ActiveBillingAccount">
               <div class="card-content">
                 <p>{{ActiveBillingAccount.Current_Offer.Product_Name}}</p>
-                <p>{{ActiveBillingAccount.Current_Offer.RateAt1000kwh | number : '1.2-4'}}¢ pkw/hr</p>
+                <p>{{ActiveBillingAccount.Current_Offer.RateAt2000kwh | number : '1.2-4'}}¢ pkw/hr</p>
                 <p>Expires {{ActiveBillingAccount.Current_Offer.End_Date | date:'d/M/yy'}}</p>
               </div>
             </div>
@@ -95,8 +98,9 @@
       <input type="radio" formControlName="service_address" value="New Address" >Send to New Address
     </label>
     </div>
+    <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_address.errors">Please select final billing address</small>
 
-    <br/>
+    <br/><br/>
     <input type="checkbox" formControlName="agree_to_terms" value="check" id="agree" /> I Agree to the Terms and Conditions,
     click <a>here</a>
 
