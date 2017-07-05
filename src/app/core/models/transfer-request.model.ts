@@ -1,4 +1,5 @@
 export class TransferRequest {
+    Email_Address:string;
     Billing_Account_Id: string;
     Current_Service_End_Date: string;
     Final_Bill_To_Old_Billing_Address?: boolean;
@@ -9,7 +10,7 @@ export class TransferRequest {
     New_Service_Start_Date: string;
     Keep_Current_Offer?: boolean;
     Offer_Id?: string
-    Contact_Info?: ContactInfo;
+    Contact_Info: ContactInfo;
     Language_Preference?: string;
     Promotion_Code_Used?: string;
     Channel_Id?: string;
@@ -38,7 +39,7 @@ export interface BillingAddress {
 export interface ContactInfo {
     Email_Address: string;
     Primary_Phone_Number: PrimaryPhoneNumber;
-    Secondary_Phone_Number: SecondaryPhoneNumber;
+    Secondary_Phone_Number?: SecondaryPhoneNumber;
 
 }
 
