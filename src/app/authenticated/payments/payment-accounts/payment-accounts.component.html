@@ -7,7 +7,7 @@
 
   <br/>
 
-  <ng-container *ngIf="PaymentMethods">
+  <ng-container *ngIf="Paymethods">
 
     <table cellpadding="0" cellspacing="0" width="100%">
       <tbody>
@@ -19,15 +19,15 @@
       </tr>
       </tbody>
     </table>
-    <div *ngFor="let paymentMethod of PaymentMethods; let i = index">
+    <div *ngFor="let paymentMethod of Paymethods; let i = index">
       <table class="card-table" cellpadding="0" cellspacing="0" width="100%" [ngClass]="{ 'card-table-odd': i % 2 !== 0 }">
         <tbody>
         <tr [ngClass]="{ 'text-muted': PaymentAbpSelecting === paymentMethod }">
           <td class="card-brand" width="31%"><i class="fa fa-fw" [ngClass]="paymentMethod.getFontAwesomeTag()"></i>{{ paymentMethod.getBrand() }}</td>
-          <td class="card-ending" width="43%">ENDING IN <b>{{ paymentMethod.Card_Last }}</b></td>
-          <td class="card-expires" width="13%">{{ paymentMethod.Card_Expires }}</td>
+          <td class="card-ending" width="43%">ENDING IN <b>{{ paymentMethod.getLast() }}</b></td>
+          <td class="card-expires" width="13%">{{ paymentMethod.getExpiration() }}</td>
           <td class="card-remove" width="13%" *ngIf="!PaymentAbpSelecting" [ngClass]="{ 'card-remove-active': PaymentEditting === paymentMethod }">
-            <button class="btn btn-blank" (click)="removePaymentMethod(paymentMethod)"><i class="fa fa-fw fa-trash"></i></button>
+            <button class="btn btn-blank" (click)="removePaymethod(paymentMethod)"><i class="fa fa-fw fa-trash"></i></button>
           </td>
           <td class="card-abp" width="13%" *ngIf="PaymentAbpSelecting">
             <button class="btn btn-block btn-blank" *ngIf="PaymentAbpSelecting !== paymentMethod" (click)="PaymentAbpSelected = paymentMethod">
@@ -38,7 +38,7 @@
         </tbody>
       </table>
       <div class="card-prompt" *ngIf="PaymentEditting === paymentMethod">
-        <div *ngIf="PaymentEditting.Used_For_Auto_Pay === true; then AutoPayBlock else NonAutoPayBlock"></div>
+        <div *ngIf="PaymethodService.Is_Used_For_Autopay(paymentMethod); then AutoPayBlock else NonAutoPayBlock"></div>
         <ng-template #AutoPayBlock>
           <h1>
             <b>Warning!</b>
@@ -47,14 +47,14 @@
           </h1>
           <div class="row">
             <div class="col-sm-6">
-              <button class="btn btn-lg btn-block btn-warning" (click)="removePaymentMethodStopAutoPay()">Delete and Stop Auto Pay</button>
+              <button class="btn btn-lg btn-block btn-warning" (click)="removePaymethodStopAutoPay()">Delete and Stop Auto Pay</button>
             </div>
             <div class="col-sm-6">
-              <button class="btn btn-lg btn-block btn-success" (click)="removePaymentMethodEditAutoPay()">Delete and Edit Auto Pay</button>
+              <button class="btn btn-lg btn-block btn-success" (click)="removePaymethodEditAutoPay()">Delete and Edit Auto Pay</button>
             </div>
           </div>
           <div class="text-right">
-            <button class="btn btn-lg btn-blank" (click)="removePaymentMethod()">Cancel</button>
+            <button class="btn btn-lg btn-blank" (click)="removePaymethod()">Cancel</button>
           </div>
         </ng-template>
         <ng-template #NonAutoPayBlock>
@@ -65,10 +65,10 @@
           </h1>
           <div class="row">
             <div class="col-sm-6">
-              <button class="btn btn-lg btn-block btn-warning" (click)="removePaymentMethodConfirm()">Yes - delete this payment method.</button>
+              <button class="btn btn-lg btn-block btn-warning" (click)="removePaymethodConfirm()">Yes - delete this payment method.</button>
             </div>
             <div class="col-sm-6">
-              <button class="btn btn-lg btn-block btn-secondary" (click)="removePaymentMethod()">No - cancel and go back.</button>
+              <button class="btn btn-lg btn-block btn-secondary" (click)="removePaymethod()">No - cancel and go back.</button>
             </div>
           </div>
         </ng-template>
@@ -81,44 +81,44 @@
         <ng-template *ngIf="PaymentAbpSelecting; then PaymentAbpSelectingOptions;"></ng-template>
         <ng-template #PaymentAbpSelectingOptions>
           <td width="13%" class="card-abp">
-            <button class="btn btn-block btn-blank" [disabled]="!PaymentAbpSelected" (click)="removePaymentMethodEditAutoPayConfirm()">Ok</button>
+            <button class="btn btn-block btn-blank" [disabled]="!PaymentAbpSelected" (click)="removePaymethodEditAutoPayConfirm()">Ok</button>
           </td>
           <td width="13%" class="card-abp">
-            <button class="btn btn-block btn-blank" (click)="removePaymentMethodEditAutoPayCancel()">Cancel</button>
+            <button class="btn btn-block btn-blank" (click)="removePaymethodEditAutoPayCancel()">Cancel</button>
           </td>
         </ng-template>
       </tr>
       </tbody>
     </table>
 
-    <h4 class="new-header">NEW PAYMENT ACCOUNT</h4>
+  </ng-container>
 
-    <button class="btn btn-lg btn-blank new-button" [disabled]="addingCreditCard" (click)="addingCreditCardToggle()"><i class="fa fa-fw fa-plus-circle"></i>ADD NEW CREDIT CARD</button>
-    <ng-container *ngIf="addingCreditCard">
-      <mygexa-payment-method-add-cc
-        (changed)="addingCreditCardFormChanged($event)"
-      ></mygexa-payment-method-add-cc>
-      <br/>
-      <div class="text-right">
-        <button type="button" class="btn btn-lg btn-blank" (click)="addingCreditCardToggle(false)">Cancel</button>
-        <button type="button" class="btn btn-lg btn-primary" [disabled]="!addingCreditCardFormValid" (click)="addingCreditCardSubmit()">Add Now</button>
-      </div>
-    </ng-container>
+  <h4 class="new-header">NEW PAYMENT ACCOUNT</h4>
 
-    <div><!-- This breaks up the buttons --></div>
+  <button class="btn btn-lg btn-blank new-button" [disabled]="addingCreditCard" (click)="addingCreditCardToggle()"><i class="fa fa-fw fa-plus-circle"></i>ADD NEW CREDIT CARD</button>
+  <ng-container *ngIf="addingCreditCard">
+    <mygexa-payment-method-add-cc
+      (changed)="addingCreditCardFormChanged($event)"
+    ></mygexa-payment-method-add-cc>
+    <br/>
+    <div class="text-right">
+      <button type="button" class="btn btn-lg btn-blank" (click)="addingCreditCardToggle(false)">Cancel</button>
+      <button type="button" class="btn btn-lg btn-primary" [disabled]="!addingCreditCardFormValid" (click)="addingCreditCardSubmit()">Add Now</button>
+    </div>
+  </ng-container>
 
-    <button class="btn btn-lg btn-blank new-button" [disabled]="addingEcheck" (click)="addingEcheckToggle()"><i class="fa fa-fw fa-plus-circle"></i>ADD NEW E-CHECK</button>
-    <ng-container *ngIf="addingEcheck">
-      <mygexa-payment-method-add-echeck
-        (changed)="addingEcheckFormChanged($event)"
-      ></mygexa-payment-method-add-echeck>
-      <br/>
-      <div class="text-right">
-        <button type="button" class="btn btn-lg btn-blank" (click)="addingEcheckToggle(false)">Cancel</button>
-        <button type="button" class="btn btn-lg btn-primary" [disabled]="!addingEcheckFormValid" (click)="addingEcheckSubmit()">Add Now</button>
-      </div>
-    </ng-container>
+  <div><!-- This breaks up the buttons --></div>
 
+  <button class="btn btn-lg btn-blank new-button" [disabled]="addingEcheck" (click)="addingEcheckToggle()"><i class="fa fa-fw fa-plus-circle"></i>ADD NEW E-CHECK</button>
+  <ng-container *ngIf="addingEcheck">
+    <mygexa-payment-method-add-echeck
+      (changed)="addingEcheckFormChanged($event)"
+    ></mygexa-payment-method-add-echeck>
+    <br/>
+    <div class="text-right">
+      <button type="button" class="btn btn-lg btn-blank" (click)="addingEcheckToggle(false)">Cancel</button>
+      <button type="button" class="btn btn-lg btn-primary" [disabled]="!addingEcheckFormValid" (click)="addingEcheckSubmit()">Add Now</button>
+    </div>
   </ng-container>
 
 </section>

@@ -38,29 +38,29 @@
     <div class="form-group form-group-lg">
       <label for="payment-accounts" class="col-md-4 col-lg-2 control-label">Payment Account</label>
       <div class="col-md-8 col-lg-6">
-        <p class="form-control-static" *ngIf="PaymentMethods === null"><i class="fa fa-spin fa-spinner"></i> Loading your payment accounts...</p>
-        <div class="btn-group" id="payment-accounts-container" [hidden]="PaymentMethods === null">
+        <p class="form-control-static" *ngIf="Paymethods === null"><i class="fa fa-spin fa-spinner"></i> Loading your payment accounts...</p>
+        <div class="btn-group" id="payment-accounts-container" [hidden]="Paymethods === null">
           <button class="btn btn-lg btn-wireframe dropdown-toggle" type="button" data-toggle="dropdown" id="payment-accounts">
             <i class="fa fa-chevron-down pull-right"></i>
-            <ng-container *ngIf="paymentOneTimeType === 'e-check'">e-Check</ng-container>
-            <ng-container *ngIf="paymentOneTimeType === 'cc'">Credit Card</ng-container>
-            <ng-container *ngIf="!paymentOneTimeType && PaymentMethodSelected != null">
-              <i class="fa fa-fw" [ngClass]="PaymentMethodSelected.getFontAwesomeTag()"></i>
-              {{ PaymentMethodSelected.getBrand() }} ending in {{ PaymentMethodSelected.Card_Last }}
+            <ng-container *ngIf="paymentOneTimeType === 'eCheck'">e-Check</ng-container>
+            <ng-container *ngIf="paymentOneTimeType === 'CreditCard'">Credit Card</ng-container>
+            <ng-container *ngIf="!paymentOneTimeType && PaymethodSelected != null">
+              <i class="fa fa-fw" [ngClass]="PaymethodSelected.getFontAwesomeTag()"></i>
+              {{ PaymethodSelected.getBrand() }} ending in {{ PaymethodSelected.getLast() }}
             </ng-container>
           </button>
           <ul class="dropdown-menu dropdown-menu-right">
-            <li class="text-muted" *ngIf="!PaymentMethods">Payment Accounts (none)</li>
-            <ng-container *ngIf="PaymentMethods">
+            <li class="text-muted" *ngIf="!Paymethods">Payment Accounts (none)</li>
+            <ng-container *ngIf="Paymethods">
               <li class="text-muted">Payment Accounts</li>
-              <li *ngFor="let PaymentMethod of PaymentMethods">
-                <a href="#" (click)="paymentSelectMethod($event, PaymentMethod)"><i class="fa fa-fw" [ngClass]="PaymentMethod.getFontAwesomeTag()"></i> ending {{ PaymentMethod.Card_Last }}</a>
+              <li *ngFor="let Paymethod of Paymethods">
+                <a href="#" (click)="paymentSelectMethod($event, Paymethod)"><i class="fa fa-fw" [ngClass]="Paymethod.getFontAwesomeTag()"></i> ending {{ Paymethod.getLast() }}</a>
               </li>
             </ng-container>
             <li role="separator" class="divider"></li>
             <li class="text-muted">One Time Payment</li>
-            <li><a href="#" (click)="paymentOneTime($event, 'cc')">Credit Card</a></li>
-            <li><a href="#" (click)="paymentOneTime($event, 'e-check')">e-Check</a></li>
+            <li><a href="#" (click)="paymentOneTime($event, 'CreditCard')">Credit Card</a></li>
+            <li><a href="#" (click)="paymentOneTime($event, 'eCheck')">e-Check</a></li>
           </ul>
         </div>
       </div>
@@ -69,13 +69,13 @@
     <ng-container *ngIf="paymentOneTimeType !== null">
 
       <mygexa-payment-method-add-cc
-        *ngIf="paymentOneTimeType === 'cc'"
+        *ngIf="paymentOneTimeType === 'CreditCard'"
         (changed)="paymentOneTimeChanged($event)"
         form_horizontal="true"
       ></mygexa-payment-method-add-cc>
 
       <mygexa-payment-method-add-echeck
-        *ngIf="paymentOneTimeType === 'e-check'"
+        *ngIf="paymentOneTimeType === 'eCheck'"
         (changed)="paymentOneTimeChanged($event)"
         form_horizontal="true"
       ></mygexa-payment-method-add-echeck>

@@ -1,4 +1,6 @@
 
+import { assign } from 'lodash';
+
 export interface IBillingAccountAddress {
   Line1: string;
   Line2: string;
@@ -55,7 +57,7 @@ export class BillingAccountClass {
   Mailing_Address: IBillingAccountAddress;
   Paperless_Billing: boolean;
   Budget_Billing: boolean;
-  Enrolled_In_Auto_Bill_Pay: boolean;
+  Is_Auto_Bill_Pay: boolean;
   Service_Stop_Request_date: string;
   Status_Id: number;
   Status: string;
@@ -72,11 +74,7 @@ export class BillingAccountClass {
    * @param opts
    */
   constructor(opts: any) {
-    for (const key in opts) {
-      if (opts[key] !== undefined) {
-        this[key] = opts[key];
-      }
-    }
+    assign(this, opts);
   }
 
   /**

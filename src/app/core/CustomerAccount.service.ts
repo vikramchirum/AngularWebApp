@@ -15,9 +15,9 @@ export class CustomerAccountService {
   public CustomerAccountObservable: Observable<CustomerAccountClass> = null;
 
   private initialized: boolean = null;
-  private CustomerAccountId: string = null;
   private CustomerAccountsObservers: Observer<CustomerAccountClass>[] = [];
   private requestObservable: Observable<Response> = null;
+  private _CustomerAccountId: string = null;
 
   constructor(
     private HttpClient: HttpClient,
@@ -34,6 +34,11 @@ export class CustomerAccountService {
       return () => pull(this.CustomerAccountsObservers, observer);
     });
 
+    // Console.log the latest customer account.
+    this.CustomerAccountObservable.subscribe(
+      CustomerAccount => console.log('CustomerAccount = ', CustomerAccount)
+    );
+
     // Respond to the first (initializing) call.
     this.CustomerAccountObservable.first().delay(0).subscribe(() => {
       this.initialized = true;
@@ -41,12 +46,19 @@ export class CustomerAccountService {
 
     // Keep the customer account id synced.
     this.UserService.UserCustomerAccountObservable.subscribe(
-      CustomerAccountId => {
-        this.CustomerAccountId = CustomerAccountId;
-        this.UpdateCustomerAccount();
-      }
+      CustomerAccountId => this.CustomerAccountId = CustomerAccountId
     );
 
+  }
+
+  get CustomerAccountId(): string {
+    return this._CustomerAccountId;
+  }
+  set CustomerAccountId(CustomerAccountId: string) {
+    if (this._CustomerAccountId !== CustomerAccountId) {
+      this._CustomerAccountId = CustomerAccountId;
+      this.UpdateCustomerAccount();
+    }
   }
 
   UpdateCustomerAccount(): Observable<Response> {

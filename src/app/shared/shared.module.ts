@@ -10,15 +10,15 @@ import { ChangeEmailAddressComponent } from './components/change-email-address/c
 import { StatusBarComponent } from './components/status-bar/status-bar.component';
 import { ChangeAddressComponent } from './components/change-address/change-address.component';
 import { ServiceAccountSelectorComponent } from './components/service-account-selector/service-account-selector.component';
-import { PaymentMethodSelectorComponent } from './components/payment-method-selector/payment-method-selector.component';
+import { PaymethodSelectorComponent } from './components/payment-method-selector/payment-method-selector.component';
 import { CreditCardComponent } from './components/credit-card/credit-card.component';
 import { PhonePipe } from './pipes/phone.pipe';
 import { NumberToMoneyPipe } from './pipes/NumberToMoney.pipe';
 import { FloatToMoneyPipe } from './pipes/FloatToMoney.pipe';
 import { LeftNavPanelComponent } from './components/left-nav-panel/left-nav-panel.component';
 import { ChangePhoneNumberComponent } from './components/change-phone-number/change-phone-number.component';
-import { PaymentMethodAddCcComponent } from './components/payment-method-add-cc/payment-method-add-cc.component';
-import { PaymentMethodAddEcheckComponent } from './components/payment-method-add-echeck/payment-method-add-echeck.component';
+import { PaymethodAddCcComponent } from './components/payment-method-add-cc/payment-method-add-cc.component';
+import { PaymethodAddEcheckComponent } from './components/payment-method-add-echeck/payment-method-add-echeck.component';
 
 @NgModule({
   imports: [
@@ -35,15 +35,15 @@ import { PaymentMethodAddEcheckComponent } from './components/payment-method-add
     StatusBarComponent,
     ChangeAddressComponent,
     ServiceAccountSelectorComponent,
-    PaymentMethodSelectorComponent,
+    PaymethodSelectorComponent,
     CreditCardComponent,
     PhonePipe,
     NumberToMoneyPipe,
     FloatToMoneyPipe,
     LeftNavPanelComponent,
     ChangePhoneNumberComponent,
-    PaymentMethodAddCcComponent,
-    PaymentMethodAddEcheckComponent
+    PaymethodAddCcComponent,
+    PaymethodAddEcheckComponent
   ],
   exports: [
     ChangeUserNameComponent,
@@ -52,15 +52,15 @@ import { PaymentMethodAddEcheckComponent } from './components/payment-method-add
     StatusBarComponent,
     ChangeAddressComponent,
     ServiceAccountSelectorComponent,
-    PaymentMethodSelectorComponent,
+    PaymethodSelectorComponent,
     CreditCardComponent,
     PhonePipe,
     NumberToMoneyPipe,
     FloatToMoneyPipe,
     LeftNavPanelComponent,
     ChangePhoneNumberComponent,
-    PaymentMethodAddCcComponent,
-    PaymentMethodAddEcheckComponent
+    PaymethodAddCcComponent,
+    PaymethodAddEcheckComponent
   ]
 })
 export class SharedModule { }

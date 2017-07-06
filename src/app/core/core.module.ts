@@ -12,7 +12,7 @@ import { httpFactory } from './httpFactory';
 import { BillService } from './Bill';
 import { BillingAccountService } from './BillingAccount.service';
 import { CustomerAccountService } from './CustomerAccount.service';
-import { PaymentMethodService } from './PaymentMethod';
+import { PaymethodService } from './Paymethod.service';
 import { InvoiceService } from './invoiceservice.service';
 
 @NgModule({
@@ -31,7 +31,7 @@ import { InvoiceService } from './invoiceservice.service';
     BillService,
     BillingAccountService,
     CustomerAccountService,
-    PaymentMethodService,
+    PaymethodService,
     InvoiceService
   ]
 
