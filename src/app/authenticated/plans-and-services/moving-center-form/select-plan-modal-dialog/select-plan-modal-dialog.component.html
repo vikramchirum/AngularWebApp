@@ -1,12 +1,11 @@
 <div class="moving-service-modal">
-  <div bsModal #selectPlanModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" id="movingServiceDialog" aria-labelledby="mySmallModalLabel"
+  <div [config]="{ backdrop: 'static', keyboard: false }" bsModal #selectPlanModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" id="movingServiceDialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-body">
-          <button type="button" class="close text-right" aria-label="Close" (click)="hideMovingServiceModal()">
-          <span class="close-btn" aria-hidden="true">&times;</span></button><br>
-
+          <!--<button type="button" class="close text-right" aria-label="Close" (click)="hideMovingServiceModal()">
+          <span class="close-btn" aria-hidden="true">&times;</span></button><br>-->
 
           <!--Plan information -->
           <div class="row" class="plan-info">
