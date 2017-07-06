@@ -13,7 +13,7 @@ import { ModalModule } from 'ngx-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
-  exports: [ ViewMyBillModalComponent ],
+  exports: [ ViewMyBillModalComponent, NgxPaginationModule ],
   imports: [
     payment_history_routes,
     CommonModule,
