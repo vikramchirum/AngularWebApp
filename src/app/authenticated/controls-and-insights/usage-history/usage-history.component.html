@@ -31,9 +31,9 @@
             <th class='usage'>kwH</th>
           </tr>
           <tr *ngFor='let index of currentPage'>
-            <td class='month'>{{ index.date | date:'MMMM' }}</td>
-            <td class='year'>{{ index.date | date:'y' }}</td>
-            <td class='usage'>{{ index.usage }}</td>
+            <td class='month'>{{ index.Usage_Month | date:'MMMM' }}</td>
+            <td class='year'>{{ index.Usage_Month | date:'y' }}</td>
+            <td class='usage'>{{ index.Usage }}</td>
           </tr>
         </table>
 
