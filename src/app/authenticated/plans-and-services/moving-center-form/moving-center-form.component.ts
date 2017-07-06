@@ -9,12 +9,14 @@ import { CustomerAccountService } from 'app/core/CustomerAccount.service';
 import { TransferRequest } from '../../../core/models/transfer-request.model';
 import { TransferService } from '../../../core/transfer.service';
 import { CustomerAccountClass } from 'app/core/models/CustomerAccount.model';
+import { OfferRequest} from '../../../core/models/offer.model';
+import { OfferService } from '../../../core/offer.service';
 
 @Component({
   selector: 'mygexa-moving-center-form',
   templateUrl: './moving-center-form.component.html',
   styleUrls: ['./moving-center-form.component.scss'],
-  providers: [TransferService]
+  providers: [TransferService, OfferService]
 })
 export class MovingCenterFormComponent implements OnInit {
 
@@ -25,15 +27,16 @@ export class MovingCenterFormComponent implements OnInit {
 
   nextClicked: boolean = false;
   previousClicked: boolean = true;
-  New_Service_Start_Date;
-  Current_Service_End_Date;
   movingCenterForm: FormGroup;
   movingAddressForm: FormGroup;
   ServicePlanForm: FormGroup;
   submitted: boolean = false;
   Final_Bill_To_Old_Billing_Address: boolean;
   Keep_Current_Offer: boolean;
-
+  selectedOffer = null;
+  availableOffers = null;
+  offerId:string;
+  
   public transferRequest: TransferRequest = null;
 
   private ActiveBillingAccountSubscription: Subscription = null;
@@ -41,12 +44,12 @@ export class MovingCenterFormComponent implements OnInit {
   private ActiveBillingAccount = null;
   private TDU_DUNS_Number: string = null;
   customerDetails: CustomerAccountClass = null;
+  offerRequestParams:OfferRequest = null;
 
   @ViewChild('selectPlanModal') selectPlanModal: SelectPlanModalDialogComponent;
 
   tduCheck(currentTDU, newTDU) {
     return (control: FormControl) => {
-      console.log("currentTDU", currentTDU);
       //If user is moving to same TDU, then user can keep the current plan or choose new one
       if (control.value == "Current Plan") {
         if (currentTDU !== newTDU) {
@@ -63,7 +66,8 @@ export class MovingCenterFormComponent implements OnInit {
     private viewContainerRef: ViewContainerRef,
     private BillingAccountService: BillingAccountService,
     private customerAccountService: CustomerAccountService,
-    private transferService: TransferService) {
+    private transferService: TransferService,
+    private offerService:OfferService) {
 
   }
 
@@ -131,11 +135,13 @@ export class MovingCenterFormComponent implements OnInit {
   nextButtonClicked() {
     this.nextClicked = true;
     this.previousClicked = !this.previousClicked;
+    this.selectedOffer = null;
   }
 
   previousButtonClicked() {
     this.previousClicked = true;
     this.nextClicked = !this.nextClicked;
+    this.ServicePlanForm.get('service_plan').reset();    
   }
 
   serviceChanged(event) {
@@ -143,14 +149,15 @@ export class MovingCenterFormComponent implements OnInit {
   }
 
   getSelectedOffer(event) {
-    console.log("selected offer......................", event)
-
+    this.selectedOffer = event;
+    //OfferId should only get passed when user wants to change their offer
+    this.offerId = this.selectedOffer.Id;   
   }
 
 
   onSubmitMove(addressForm, billSelector) {
-    this.submitted = true;
-    console.log(addressForm, billSelector);
+    this.submitted = true; 
+
     addressForm.Current_Service_End_Date = addressForm.Current_Service_End_Date.jsdate.toISOString();
     addressForm.New_Service_Start_Date = addressForm.New_Service_Start_Date.jsdate.toISOString();
     addressForm.current_bill_address = this.ActiveBillingAccount.Mailing_Address;
@@ -169,14 +176,13 @@ export class MovingCenterFormComponent implements OnInit {
       billSelector.final_billing_address = addressForm.new_billing_address;
     }
 
-    //If user selects current plan , set current offer as true
+    //If user selects existing plan , set current offer as true
     if (billSelector.service_plan == 'Current Plan') {
       this.Keep_Current_Offer = true;
     }
 
     //Request Parms to post data to Transfer service API
     this.transferRequest = {
-      Email_Address: this.customerDetails.Email,
       Billing_Account_Id: this.ActiveBillingAccount.Id,
       Current_Service_End_Date: addressForm.Current_Service_End_Date,
       Final_Bill_To_Old_Billing_Address: this.Final_Bill_To_Old_Billing_Address,
@@ -186,15 +192,13 @@ export class MovingCenterFormComponent implements OnInit {
       TDSP_Instructions: "",
       New_Service_Start_Date: addressForm.New_Service_Start_Date,
       Keep_Current_Offer: this.Keep_Current_Offer,
-      Offer_Id: '',
+      Offer_Id: this.offerId,
       Contact_Info: {
         Email_Address: this.customerDetails.Email,
         Primary_Phone_Number: this.customerDetails.Primary_Phone
       },
-      Language_Preference: '',
-      Promotion_Code_Used: '',
-      Channel_Id: '',
-      Referrer_Id: '',
+      Language_Preference: this.customerDetails.Language,
+      Promotion_Code_Used: '',     
       Date_Sent: new Date().toISOString()
     }
     this.transferService.submitMove(this.transferRequest);
@@ -208,8 +212,25 @@ export class MovingCenterFormComponent implements OnInit {
 
   }
 
-  onMovingAddressFormSubmit(addressForm) {
-   // console.log("addressForm", addressForm);
+//TODO : get new address from API
+  onMovingAddressFormSubmit(addressForm) {    
+    //start date - when the customer wants to turn on their service.
+    //TODO : Get TDU_DNS number from New Address API
+   this.offerRequestParams = {
+     startDate: addressForm.New_Service_Start_Date.jsdate.toISOString(),
+     dunsNumber:"957877905"
+   }
+   // send start date and TDU_DUNS_Number to get offers available.
+    this.offerService.getOffers(this.offerRequestParams)
+      .subscribe(result => {
+        this.availableOffers = result;
+      })
+  }
+
+  getCurrentPlan(){  
+    this.selectedOffer = null;
+    //should not pass offerId if the user selects existing Plan.
+    this.offerId=undefined;
   }
 
   ngOnDestroy() {

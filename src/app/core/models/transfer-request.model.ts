@@ -1,11 +1,10 @@
 export class TransferRequest {
-    Email_Address:string;
     Billing_Account_Id: string;
     Current_Service_End_Date: string;
     Final_Bill_To_Old_Billing_Address?: boolean;
-    Final_Bill_Address: FinalBillAddress;
+    Final_Bill_Address: Address;
     UAN: string;
-    Billing_Address?: BillingAddress;
+    Billing_Address?: Address;
     TDSP_Instructions?: string;
     New_Service_Start_Date: string;
     Keep_Current_Offer?: boolean;
@@ -15,11 +14,11 @@ export class TransferRequest {
     Promotion_Code_Used?: string;
     Channel_Id?: string;
     Referrer_Id?: string;
-    Date_Sent?: string;
+    Date_Sent: string;
 }
 
 
-export interface FinalBillAddress {
+export interface Address {
     Line1: string;
     Line2: string;
     City: string;
@@ -28,34 +27,18 @@ export interface FinalBillAddress {
     Zip_4: string;
 }
 
-export interface BillingAddress {
-    Line1: string;
-    Line2: string;
-    City: string;
-    State: string;
-    Zip: string;
-    Zip_4: string;
-}
+
 export interface ContactInfo {
     Email_Address: string;
-    Primary_Phone_Number: PrimaryPhoneNumber;
-    Secondary_Phone_Number?: SecondaryPhoneNumber;
+    Primary_Phone_Number: PhoneNumber;
+    Secondary_Phone_Number?: PhoneNumber;
 
 }
 
-export interface PrimaryPhoneNumber {
+export interface PhoneNumber {
     Type: string;
     Area_Code: string;
     Number: string;
     Extension: string;
     Agree_To_Marketing: string;
 }
-
-export interface SecondaryPhoneNumber {
-    Type: string;
-    Area_Code: string;
-    Number: string;
-    Extension: string;
-    Agree_To_Marketing: string;
-}
-

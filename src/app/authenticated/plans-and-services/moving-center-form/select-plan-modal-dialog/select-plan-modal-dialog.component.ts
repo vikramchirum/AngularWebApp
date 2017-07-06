@@ -1,36 +1,25 @@
-import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
 
-import { OfferService } from '../../../../core/offer.service';
 
 @Component({
   selector: 'mygexa-select-plan-modal-dialog',
   templateUrl: './select-plan-modal-dialog.component.html',
-  styleUrls: ['./select-plan-modal-dialog.component.scss'],
-  providers: [OfferService]
+  styleUrls: ['./select-plan-modal-dialog.component.scss']
+
 })
 export class SelectPlanModalDialogComponent implements OnInit {
 
-
+  @Input() newPlans;
   @ViewChild('selectPlanModal') public selectPlanModal: ModalDirective;
   @Output() selectedPlan: EventEmitter<any> =  new EventEmitter<any>();
 
-  public availablePlans = null;
-  constructor(private offerService: OfferService) { }
+
+  constructor() { }
 
   ngOnInit() {
-     this.getOffersByTduDunsNumber();
+   
   }
-
-  getOffersByTduDunsNumber(){
-      this.offerService.getOffers(123234)
-      .subscribe(result => {
-        console.log("available plans", result );
-        this.availablePlans = result;
-        console.log("items", this.availablePlans.Items)
-      })
-  }
- 
 
   public show(): void {
     this.selectPlanModal.show();

@@ -12,14 +12,14 @@ export class OfferService {
 
   /**
    * Returns billing account usage history based on Id
-   * @param TDU_DUNS_Number
+   * @param offer
    * @returns {Observable<any[]>}
    */
 
-  getOffers(TDU_DUNS_Number: number): Observable<any[]> {
-
+  getOffers(offer): Observable<any[]> {
+    console.log("Offer params", offer)
     return this.http
-      .get(`/v2/Offers?option.plan.tDU.duns_Number=957877905`)
+      .get(`/v2/Offers?option.startDate=${offer.startDate}&option.plan.tDU.duns_Number=${offer.dunsNumber}`)
       .map((response: Response) => this.processApiData(response))
       .catch(this.handleError);
   }
