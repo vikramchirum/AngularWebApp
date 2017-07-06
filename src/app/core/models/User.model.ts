@@ -12,7 +12,7 @@ interface IUserProfile {
   Email_Address: string;
   Username: string;
 }
-interface IUserAccountPermission {
+export interface IUserAccountPermission {
   AccountType: string;
   AccountNumber: string;
 }

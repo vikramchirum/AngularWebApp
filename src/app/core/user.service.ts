@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { environment } from 'environments/environment';
 import { IUser, IUserSecurityQuestions, IUserSigningUp } from './models/User.model';
+import {HttpClient} from 'app/core/httpclient';
 
 function getBillingAccountIds(user: IUser): string[] {
   return user
@@ -45,6 +46,9 @@ export class UserService implements CanActivate {
   private getUsernameUrl = environment.Api_Url + '/user/getUsername';
   private loginUrl = environment.Api_Url + '/user/authentication';
   private registerUrl = environment.Api_Url + '/user/register';
+ // private updateEmail = environment.Api_Url + '/user/updateEmailAddress';
+  private updateEmail =  'http://localhost:57827/api/user/updateEmailAddress';
+
 
   get user_token(): string {
 
@@ -87,7 +91,8 @@ export class UserService implements CanActivate {
 
   constructor(
     private router: Router,
-    private Http: Http
+    private Http: Http,
+    private _http: HttpClient
   ) {
 
     // Make the Observables (User, Billing Account Ids, Customer Account Id) for others to listen to.
@@ -227,6 +232,10 @@ export class UserService implements CanActivate {
 
     return this.Http.post(this.getSecQuestionUrl, body, options)
       .map(res => res.json())
+      .map(res => {
+        console.log('Questuion', res);
+        return res;
+      })
       .map(res => get(res, 'length') > 0 ? res : null)
       .catch(error => this.handleError(error));
   }
@@ -277,6 +286,46 @@ export class UserService implements CanActivate {
       .catch(error => this.handleError(error));
   }
 
+  updateEmailAddress (Email_Address: string) {
+    // Using http client
+    // const realtivePath = `/user/updateEmailAddress/`;
+    // this._http.put(realtivePath, Email_Address).map((res: Response) => {
+    // }).catch(this.handleError);
+
+    const token =  localStorage.getItem('gexa_auth_token');
+    const body = JSON.stringify({
+      Token: token,
+      Email_Address: Email_Address
+    });
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
+    if (token && token.length) {
+      return this.Http.put(this.updateEmail, body, options)
+        .map(res => res.json())
+        .catch(error => this.handleError(error));
+    }
+    return null;
+  }
+
+  updateSecurityQuestion (Email_Address: string) {
+    // Using http client
+    // const realtivePath = `/user/updateEmailAddress/`;
+    // this._http.put(realtivePath, Email_Address).map((res: Response) => {
+    // }).catch(this.handleError);
+
+    const token =  localStorage.getItem('gexa_auth_token');
+    const body = JSON.stringify({
+      Token: token,
+      Email_Address: Email_Address
+    });
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
+    if (token && token.length) {
+      return this.Http.put(this.updateEmail, body, options)
+        .map(res => res.json())
+        .catch(error => this.handleError(error));
+    }
+    return null;
+  }
+
   ApplyUserData(user: IUser): IUser {
 
     this.UserCache = user || null;
@@ -294,7 +343,9 @@ export class UserService implements CanActivate {
     }
 
     // Emit the new data to all observers.
-    this.emitToObservers(this.UserObservers, this.UserCache);
+    if (this.UserCache) {
+      this.emitToObservers(this.UserObservers, this.UserCache);
+    }
 
     // Return the new user's data.
     return this.UserCache;

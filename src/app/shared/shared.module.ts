@@ -19,6 +19,7 @@ import { LeftNavPanelComponent } from './components/left-nav-panel/left-nav-pane
 import { ChangePhoneNumberComponent } from './components/change-phone-number/change-phone-number.component';
 import { PaymethodAddCcComponent } from './components/payment-method-add-cc/payment-method-add-cc.component';
 import { PaymethodAddEcheckComponent } from './components/payment-method-add-echeck/payment-method-add-echeck.component';
+import { ViewBillComponent } from './components/view-bill/view-bill.component';
 
 @NgModule({
   imports: [
@@ -43,7 +44,8 @@ import { PaymethodAddEcheckComponent } from './components/payment-method-add-ech
     LeftNavPanelComponent,
     ChangePhoneNumberComponent,
     PaymethodAddCcComponent,
-    PaymethodAddEcheckComponent
+    PaymethodAddEcheckComponent,
+    ViewBillComponent
   ],
   exports: [
     ChangeUserNameComponent,
@@ -60,7 +62,8 @@ import { PaymethodAddEcheckComponent } from './components/payment-method-add-ech
     LeftNavPanelComponent,
     ChangePhoneNumberComponent,
     PaymethodAddCcComponent,
-    PaymethodAddEcheckComponent
+    PaymethodAddEcheckComponent,
+    ViewBillComponent
   ]
 })
 export class SharedModule { }
