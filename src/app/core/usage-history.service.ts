@@ -34,6 +34,7 @@ export class UsageHistoryService {
     let groupedByDate = _.groupBy(data, function (item) {
       return (item as any).Usage_Month;//.substring(0,7);
     });
+
     var aggregateData = _.map(groupedByDate, function (UsageObject, usage_Month) {
       return {
         Usage_Month: usage_Month,
@@ -47,6 +48,7 @@ export class UsageHistoryService {
       //conversion of string to dates.
       (d as any).Usage_Month = new Date((d as any).Usage_Month);
     });
+    console.log(aggregateData)
     return aggregateData;
   }
 
