@@ -1,4 +1,4 @@
-<div class="usage-history container-fluid usage-history">
+<div class="usage-history container-fluid usage-history" *ngIf="isDataAvailable">
   <h2>Usage History</h2>
   <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
   <br/>
@@ -31,9 +31,9 @@
             <th class='usage'>kwH</th>
           </tr>
           <tr *ngFor='let index of currentPage'>
-            <td class='month'>{{ index.date | date:'MMMM' }}</td>
-            <td class='year'>{{ index.date | date:'y' }}</td>
-            <td class='usage'>{{ index.usage }}</td>
+            <td class='month'>{{ index.Usage_Month | date:'MMMM' }}</td>
+            <td class='year'>{{ index.Usage_Month | date:'y' }}</td>
+            <td class='usage'>{{ index.Usage }}</td>
           </tr>
         </table>
 
