@@ -44,7 +44,7 @@ export interface IBillingAccountPlanHistoryOfferCharge {
 }
 
 export class BillingAccountClass {
-  Entity_id: string;
+  Customer_Account_Id: string;
   Id: string;
   Past_Due: number;
   Current_Due: number;

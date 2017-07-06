@@ -1,28 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { equalityCheck } from '../../../../validators/validator'
+import { equalityCheck } from '../../../../validators/validator';
+import {UserService} from 'app/core/user.service';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'mygexa-security-information',
   templateUrl: './security-information.component.html',
   styleUrls: ['./security-information.component.scss']
 })
-export class SecurityInformationComponent implements OnInit {
+export class SecurityInformationComponent implements OnInit, OnDestroy {
 
   userName: string;
   userNameEditing: boolean;
   passwordEditing: boolean;
   editing: boolean;
+  user_service_subscription: Subscription;
 
-  submitAttempt: boolean = false;
-  constructor(fb: FormBuilder) {
+  submitAttempt: boolean;
+  constructor(fb: FormBuilder, private user_service: UserService) {
+    this.submitAttempt = false;
     this.userNameEditing = false;
     this.passwordEditing = false;
   }
 
   ngOnInit() {
-    this.userName = "cbrown_2371";
 
+    this.user_service_subscription = this.user_service.UserObservable.subscribe(
+      result => { this.userName = result.Profile.Username; }
+    );
   }
 
   toggleUserNameEdit($event) {
@@ -34,6 +40,10 @@ export class SecurityInformationComponent implements OnInit {
     $event.preventDefault();
     this.userNameEditing = false;
     this.passwordEditing = !this.passwordEditing;
+  }
+
+  ngOnDestroy() {
+    this.user_service_subscription.unsubscribe();
   }
 
 
