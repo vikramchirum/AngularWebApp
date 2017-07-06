@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UsageHistoryService } from '../../../core/usage-history.service';
-import { UsageHistory } from '../../../core/models/usage-history.model'
-
+import { UsageHistory } from '../../../core/models/usage-history.model';
 
 
 interface chartDataSet {
@@ -70,7 +69,7 @@ export class UsageSummaryComponent implements OnInit {
     this.billingAccountId = 913064; // test
 
     this.usageHistoryService.getUsageHistory(this.billingAccountId)
-      .subscribe(usageHistory => this.populateChart(usageHistory))
+      .subscribe(usageHistory => this.populateChart(usageHistory));
   }
 
   //Fetching labels and data from api response and to show it on chart.
