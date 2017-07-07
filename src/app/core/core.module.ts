@@ -9,6 +9,7 @@ import { HttpModule, XHRBackend, RequestOptions } from '@angular/http';
 import { HttpClient } from './httpclient';
 import { httpFactory } from './httpFactory';
 
+import { AutoBillPayService } from './auto-bill-pay.service';
 import { BillService } from './Bill';
 import { BillingAccountService } from './BillingAccount.service';
 import { CustomerAccountService } from './CustomerAccount.service';
@@ -20,14 +21,13 @@ import { InvoiceService } from './invoiceservice.service';
     CommonModule,
     HttpModule
   ],
-  declarations: [],
-  exports: [],
   providers: [
     {
       provide: HttpClient,
       useFactory: httpFactory,
       deps: [ XHRBackend, RequestOptions ]
     },
+    AutoBillPayService,
     BillService,
     BillingAccountService,
     CustomerAccountService,

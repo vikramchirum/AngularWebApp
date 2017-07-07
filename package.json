@@ -9,6 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "serve-local": "ng serve --environment=local",
     "build-dev": "ng build --aot=false --target=production --environment=dev --output-hashing all",
     "build-qa": "ng build --aot=false --target=production --environment=qa --output-hashing all",
     "build-stg": "ng build --aot=false --target=production --environment=stg --output-hashing all",
