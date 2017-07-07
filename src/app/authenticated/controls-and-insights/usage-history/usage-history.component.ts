@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { UsageHistoryService } from 'app/core/usage-history.service';
 import { takeRight, toNumber, reverse, values } from 'lodash';
 import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
 import { BillingAccountService } from 'app/core/BillingAccount.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'mygexa-usage-history',
@@ -10,7 +11,7 @@ import { BillingAccountService } from 'app/core/BillingAccount.service';
   styleUrls: ['./usage-history.component.scss'],
   providers: [UsageHistoryService]
 })
-export class UsageHistoryComponent {
+export class UsageHistoryComponent implements OnDestroy {
 
   activeBillingAccount: BillingAccountClass = null;
 
@@ -86,16 +87,23 @@ export class UsageHistoryComponent {
   public isDataAvailable: boolean = false;
   public tableData: any[] = [];
 
+  private BillingAccountsSubscription: Subscription = null;
+
   constructor(
     private usageHistoryService: UsageHistoryService,
     private BillingAccountService: BillingAccountService
   ) {
-    this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+    this.BillingAccountsSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
       activeBillingAccount => {
         this.activeBillingAccount = activeBillingAccount;
         this.getUsageHistoryByBillingAccountId();
       }
     );
+  }
+
+  ngOnDestroy() {
+    // Clean up our subscribers to avoid memory leaks.
+    this.BillingAccountsSubscription.unsubscribe();
   }
 
   get totalItems(): number {

@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { UsageHistoryService } from '../../../core/usage-history.service';
 import { BillingAccountService } from 'app/core/BillingAccount.service';
 import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
 import { first, get, map, takeRight, toNumber } from 'lodash';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'mygexa-usage-summary',
@@ -10,7 +11,7 @@ import { first, get, map, takeRight, toNumber } from 'lodash';
   styleUrls: ['./usage-summary.component.scss'],
   providers: [UsageHistoryService]
 })
-export class UsageSummaryComponent {
+export class UsageSummaryComponent implements OnDestroy {
 
   activeBillingAccount: BillingAccountClass = null;
 
@@ -38,13 +39,13 @@ export class UsageSummaryComponent {
   ]
   public barChartData = [];
 
-  public stringify = JSON.stringify;
+  private BillingAccountsSubscription: Subscription = null;
 
   constructor(
     private usageHistoryService: UsageHistoryService,
     private BillingAccountService: BillingAccountService
   ) {
-    this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+    this.BillingAccountsSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
       activeBillingAccount => {
         this.activeBillingAccount = activeBillingAccount;
         // Empty out the bar chart arrays:
@@ -54,6 +55,11 @@ export class UsageSummaryComponent {
         this.getUsageHistoryByBillingAccountId();
       }
     );
+  }
+
+  ngOnDestroy() {
+    // Clean up our subscribers to avoid memory leaks.
+    this.BillingAccountsSubscription.unsubscribe();
   }
 
   getUsageHistoryByBillingAccountId() {
