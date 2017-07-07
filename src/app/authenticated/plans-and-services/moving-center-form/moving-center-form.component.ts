@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
-import { IMyDpOptions } from 'mydatepicker';
+import { IMyOptions, IMyDateModel } from 'mydatepicker';
 
 import { SelectPlanModalDialogComponent } from './select-plan-modal-dialog/select-plan-modal-dialog.component';
 import { BillingAccountService } from 'app/core/BillingAccount.service';
@@ -9,7 +9,7 @@ import { CustomerAccountService } from 'app/core/CustomerAccount.service';
 import { TransferRequest } from '../../../core/models/transfer-request.model';
 import { TransferService } from '../../../core/transfer.service';
 import { CustomerAccountClass } from 'app/core/models/CustomerAccount.model';
-import { OfferRequest} from '../../../core/models/offer.model';
+import { OfferRequest } from '../../../core/models/offer.model';
 import { OfferService } from '../../../core/offer.service';
 
 @Component({
@@ -19,11 +19,6 @@ import { OfferService } from '../../../core/offer.service';
   providers: [TransferService, OfferService]
 })
 export class MovingCenterFormComponent implements OnInit {
-
-  private myDatePickerOptions: IMyDpOptions = {
-    // other options...
-    dateFormat: 'dd.mm.yyyy',
-  };
 
   nextClicked: boolean = false;
   previousClicked: boolean = true;
@@ -35,8 +30,8 @@ export class MovingCenterFormComponent implements OnInit {
   Keep_Current_Offer: boolean;
   selectedOffer = null;
   availableOffers = null;
-  offerId:string;
-  
+  offerId: string;
+
   public transferRequest: TransferRequest = null;
 
   private ActiveBillingAccountSubscription: Subscription = null;
@@ -44,7 +39,7 @@ export class MovingCenterFormComponent implements OnInit {
   private ActiveBillingAccount = null;
   private TDU_DUNS_Number: string = null;
   customerDetails: CustomerAccountClass = null;
-  offerRequestParams:OfferRequest = null;
+  offerRequestParams: OfferRequest = null;
 
   @ViewChild('selectPlanModal') selectPlanModal: SelectPlanModalDialogComponent;
 
@@ -67,8 +62,10 @@ export class MovingCenterFormComponent implements OnInit {
     private BillingAccountService: BillingAccountService,
     private customerAccountService: CustomerAccountService,
     private transferService: TransferService,
-    private offerService:OfferService) {
-
+    private offerService: OfferService) {
+    //disable new service start date until yesterday
+    //start date must be future date
+    this.disableUntil();
   }
 
 
@@ -111,25 +108,40 @@ export class MovingCenterFormComponent implements OnInit {
     );
   }
 
-  setDate(): void {
-    // Set today date using the setValue function
-    let date = new Date();
-    this.movingAddressForm.setValue({
-      Current_Service_End_Date: {
-        date: {
-          year: date.getFullYear(),
-          month: date.getMonth() + 1,
-          day: date.getDate()
-        }
-      }
-    });
+  private newServiceStartDate: IMyOptions = {
+    // start date options here...
+    disableUntil: { year: 0, month: 0, day: 0 }
   }
 
-  clearDate(): void {
-    // Clear the date using the setValue function
-    this.movingAddressForm.setValue({ Current_Service_End_Date: null });
+  private currentServiceEndDate: IMyOptions = {
+    // other end date options here...
   }
 
+  onStartDateChanged(event: IMyDateModel) {
+    // date selected
+  }
+
+  onEndDateChanged(event: IMyDateModel) {
+    // date selected
+  }
+  // Calling this function set disableUntil value until yesterday
+  disableUntil() {
+    let d: Date = new Date();
+    d.setDate(d.getDate() - 1);
+    let copy = this.getCopyOfOptions();
+    copy.disableUntil = {
+      year: d.getFullYear(),
+      month: d.getMonth() + 1,
+      day: d.getDate()
+    };
+    this.newServiceStartDate = copy;
+
+  }
+
+
+  getCopyOfOptions(): IMyOptions {
+    return JSON.parse(JSON.stringify(this.newServiceStartDate));
+  }
 
 
   nextButtonClicked() {
@@ -141,7 +153,7 @@ export class MovingCenterFormComponent implements OnInit {
   previousButtonClicked() {
     this.previousClicked = true;
     this.nextClicked = !this.nextClicked;
-    this.ServicePlanForm.get('service_plan').reset();    
+    this.ServicePlanForm.get('service_plan').reset();
   }
 
   serviceChanged(event) {
@@ -151,7 +163,7 @@ export class MovingCenterFormComponent implements OnInit {
   getSelectedOffer(event) {
     this.selectedOffer = event;
     //OfferId should only get passed when user wants to change their offer
-    this.offerId = this.selectedOffer.Id;   
+    this.offerId = this.selectedOffer.Id;
   }
 
 
@@ -184,7 +196,7 @@ export class MovingCenterFormComponent implements OnInit {
     //Request Parms to post data to Transfer service API
     this.transferRequest = {
       //The email must match an email that is attached to a channel.  It is hardcoded now
-      Email_Address: "sirisha.gunupati@gexaenergy.com" , //this.customerDetails.Email,
+      Email_Address: "sirisha.gunupati@gexaenergy.com", //this.customerDetails.Email,
       Billing_Account_Id: this.ActiveBillingAccount.Id,
       Current_Service_End_Date: addressForm.Current_Service_End_Date,
       Final_Bill_To_Old_Billing_Address: this.Final_Bill_To_Old_Billing_Address,
@@ -200,14 +212,14 @@ export class MovingCenterFormComponent implements OnInit {
         Primary_Phone_Number: this.customerDetails.Primary_Phone
       },
       Language_Preference: this.customerDetails.Language,
-      Promotion_Code_Used: '',     
+      Promotion_Code_Used: '',
       Date_Sent: new Date().toISOString()
     }
     this.transferService.submitMove(this.transferRequest).subscribe(
-      ()=> this.submitted = true),
-        error => {
-          console.log('Transfer Request API error', error.Message);
-        }     
+      () => this.submitted = true),
+      error => {
+        console.log('Transfer Request API error', error.Message);
+      }
   }
 
   openSelectPlanModal() {
@@ -218,25 +230,25 @@ export class MovingCenterFormComponent implements OnInit {
 
   }
 
-//TODO : get new address from API
-  onMovingAddressFormSubmit(addressForm) {    
+  //TODO : get new address from API
+  onMovingAddressFormSubmit(addressForm) {
     //start date - when the customer wants to turn on their service.
     //TODO : Get TDU_DNS number from New Address API
-   this.offerRequestParams = {
-     startDate: addressForm.New_Service_Start_Date.jsdate.toISOString(),
-     dunsNumber:"957877905"
-   }
-   // send start date and TDU_DUNS_Number to get offers available.
+    this.offerRequestParams = {
+      startDate: addressForm.New_Service_Start_Date.jsdate.toISOString(),
+      dunsNumber: "957877905"
+    }
+    // send start date and TDU_DUNS_Number to get offers available.
     this.offerService.getOffers(this.offerRequestParams)
       .subscribe(result => {
         this.availableOffers = result;
       })
   }
 
-  getCurrentPlan(){  
+  getCurrentPlan() {
     this.selectedOffer = null;
     //should not pass offerId if the user selects existing Plan.
-    this.offerId=undefined;
+    this.offerId = undefined;
   }
 
   ngOnDestroy() {
