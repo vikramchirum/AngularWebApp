@@ -76,7 +76,7 @@ export class MovingCenterFormComponent implements OnInit {
       'New_Service_Start_Date': [null, Validators.required],
       'current_bill_address': this.fb.array([]),
       'new_billing_address': this.fb.array([])
-    }), //{ validator: this.validateMoveInDate('Current_Service_End_Date', 'New_Service_Start_Date') }
+    }),
 
     this.ServicePlanForm = this.fb.group({
       'service_address': [null, Validators.required],
@@ -87,26 +87,7 @@ export class MovingCenterFormComponent implements OnInit {
 
   } 
 
-  // validateMoveInDate(endDate, startDate) {
-  //   return (group: FormGroup): { [key: string]: any } => {
-  //     const serviceEndDate = group.controls[endDate].value;
-  //     const serviceStartDate = group.controls[startDate].value;
 
-  //     if (serviceEndDate && serviceStartDate) {
-  //       let moveInDate = serviceStartDate.jsdate;
-  //       let moveOutDate = serviceEndDate.jsdate;
-  //       moveOutDate = moveOutDate.setDate(moveOutDate.getDate() + 30);
-  //       if (moveInDate > moveOutDate) {
-  //         console.log("equal");
-  //         return {
-  //           validateMoveInDate: {
-  //             valid: false
-  //           }
-  //         };
-  //       }
-  //     }
-  //   };
-  // }
 
 
   ngAfterViewInit() {
@@ -143,20 +124,10 @@ export class MovingCenterFormComponent implements OnInit {
   onEndDateChanged(event: IMyDateModel) {
     // date selected
     let d = event.jsdate;
-
     let copy: IMyOptions = this.getCopyOfOptions();
-    //copy.disableUntil = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
-
-    // set future date 
-    // console.log((event.jsdate).getDate());
-    // d.setDate(d.getDate() + 30);
-    // let setmoveInDateLimit = d;
-
-    // setmoveInDateLimit.setDate(setmoveInDateLimit.getDate() + 30);
-
-
-    //copy.disableSince = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
-    //this.newServiceStartDate = copy;
+    d.setDate(d.getDate() + 30); 
+    copy.disableSince = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
+    this.newServiceStartDate = copy;
   }
 
   disableUntil() {
