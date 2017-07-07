@@ -106,7 +106,7 @@ export class MovingCenterFormComponent implements OnInit {
     this.CustomerAccountSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(
       result => {
         this.customerDetails = result;
-        //console.log('Customer Account', this.customerDetails);
+        //console.log('Customer Account', result);
       }
     );
   }
@@ -156,7 +156,6 @@ export class MovingCenterFormComponent implements OnInit {
 
 
   onSubmitMove(addressForm, billSelector) {
-    this.submitted = true; 
 
     addressForm.Current_Service_End_Date = addressForm.Current_Service_End_Date.jsdate.toISOString();
     addressForm.New_Service_Start_Date = addressForm.New_Service_Start_Date.jsdate.toISOString();
@@ -174,6 +173,7 @@ export class MovingCenterFormComponent implements OnInit {
       this.Final_Bill_To_Old_Billing_Address = true;
     } else {
       billSelector.final_billing_address = addressForm.new_billing_address;
+      this.Final_Bill_To_Old_Billing_Address = false;
     }
 
     //If user selects existing plan , set current offer as true
@@ -183,6 +183,8 @@ export class MovingCenterFormComponent implements OnInit {
 
     //Request Parms to post data to Transfer service API
     this.transferRequest = {
+      //The email must match an email that is attached to a channel.  It is hardcoded now
+      Email_Address: "sirisha.gunupati@gexaenergy.com" , //this.customerDetails.Email,
       Billing_Account_Id: this.ActiveBillingAccount.Id,
       Current_Service_End_Date: addressForm.Current_Service_End_Date,
       Final_Bill_To_Old_Billing_Address: this.Final_Bill_To_Old_Billing_Address,
@@ -194,14 +196,18 @@ export class MovingCenterFormComponent implements OnInit {
       Keep_Current_Offer: this.Keep_Current_Offer,
       Offer_Id: this.offerId,
       Contact_Info: {
-        Email_Address: this.customerDetails.Email,
+        Email_Address: "sirisha.gunupati@gexaenergy.com", // this.customerDetails.Email,
         Primary_Phone_Number: this.customerDetails.Primary_Phone
       },
       Language_Preference: this.customerDetails.Language,
       Promotion_Code_Used: '',     
       Date_Sent: new Date().toISOString()
     }
-    this.transferService.submitMove(this.transferRequest);
+    this.transferService.submitMove(this.transferRequest).subscribe(
+      ()=> this.submitted = true),
+        error => {
+          console.log('Transfer Request API error', error.Message);
+        }     
   }
 
   openSelectPlanModal() {
