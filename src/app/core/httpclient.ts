@@ -26,7 +26,7 @@ export class HttpClient extends Http {
       options.params = params;
     }
 
-    return super.get(url, this.getRequestOptionArgs(options));
+    return super.get(url, options);
   }
 
   public post(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
