@@ -1,4 +1,9 @@
 <div class="container-fluid">
+  <br>
+  <mygexa-service-account-selector
+    selectorLabel="Your Service Address:"
+    [setActiveBillingAccount]="true"
+  ></mygexa-service-account-selector>
 <section *ngIf="!IsInRenewalTimeFrame">
   <div class="row">
     <div class="col-md-12">

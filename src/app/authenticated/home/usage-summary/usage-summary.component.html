@@ -1,10 +1,22 @@
-<div class="usage-summary card-container card-container-height" *ngIf="isDataAvailable">
+<div class="usage-summary card-container card-container-height" *ngIf="barChartData.length < 1">
+  <h1 class="text-center"><i class='fa fa-bolt fa-spin'></i> Loading...</h1>
+</div>
+<div class="usage-summary card-container card-container-height" *ngIf="barChartData.length > 0">
   <h4>Usage Summary</h4>
   <div class="row position-relative">
     <div class="col-md-7">
-      <div class="bar-chart">
-        <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [colors]="barChartColors"
-          [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+      <div *ngFor='let index of barChartData' class="bar-chart">
+        <canvas
+          baseChart
+          [datasets]="index.datasets"
+          [labels]="index.labels"
+          [options]="barChartOptions"
+          [colors]="barChartColors"
+          legend="true"
+          chartType="bar"
+          (chartHover)="chartHovered($event)"
+          (chartClick)="chartClicked($event)"
+        ></canvas>
       </div>
     </div>
     <div class="col-md-5 card-button">

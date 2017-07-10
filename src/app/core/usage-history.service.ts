@@ -8,11 +8,21 @@ import * as _ from 'lodash';
 
 
 import { UsageHistory } from './models/usage-history.model';
+import {BillingAccountService} from "./BillingAccount.service";
+import {BillingAccountClass} from "./models/BillingAccount.model";
 
 @Injectable()
 export class UsageHistoryService {
 
-  constructor(private http: HttpClient) {
+  private activeBillingAccount: BillingAccountClass = null;
+
+  constructor(
+    private http: HttpClient,
+    private BillingAccountService: BillingAccountService
+  ) {
+    this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+      activeBillingAccount => this.activeBillingAccount = activeBillingAccount
+    );
   }
 
   /**
@@ -25,29 +35,32 @@ export class UsageHistoryService {
 
     return this.http
       .get(`/billing_accounts/${billingAccountId}/usage_history`)
-      .map((response: Response) => this.processApiData(response))
+      .map(res => res.json())
+      .map(res => this.processApiData(res))
       .catch(this.handleError);
   }
 
-  private processApiData(res: Response) {
-    let data = res.json();
-    let groupedByDate = _.groupBy(data, function (item) {
-      return (item as any).Usage_Month;//.substring(0,7);
-    });
-    var aggregateData = _.map(groupedByDate, function (UsageObject, usage_Month) {
-      return {
-        Usage_Month: usage_Month,
-        Usage: _.reduce(UsageObject, function (m, x) {
-          return m + (x as any).Usage;
-        }, 0)
-      };
-    });
+  private processApiData(data) {
 
-    aggregateData.forEach((d) => {
-      //conversion of string to dates.
-      (d as any).Usage_Month = new Date((d as any).Usage_Month);
-    });
-    return aggregateData;
+    const months = {};
+
+    for (const index in data) {
+      if (data[index]) {
+
+        if (!months[data[index].Usage_Month]) {
+          months[data[index].Usage_Month] = {
+            usage: 0,
+            date: new Date(data[index].Usage_Month)
+          };
+        }
+
+        months[data[index].Usage_Month].usage += data[index].Usage;
+
+      }
+    }
+
+    return _.sortBy(_.values(months));
+
   }
 
   private handleError(error: Response) {
