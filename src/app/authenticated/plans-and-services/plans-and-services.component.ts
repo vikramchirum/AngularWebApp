@@ -22,7 +22,7 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy, AfterViewIn
   ngAfterViewInit() {
     this.billingAccountSubscription = this.billingAccount_service.ActiveBillingAccountObservable.subscribe(
       result => {
-        console.log('Billing Account', result);
+        //console.log('Billing Account', result);
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
       });
   }

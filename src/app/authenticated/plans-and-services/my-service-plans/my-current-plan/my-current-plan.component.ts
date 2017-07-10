@@ -2,6 +2,7 @@ import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewContainerRef
 import { ServicePlanUpgradeModalComponent } from 'app/authenticated/plans-and-services/my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
 import {BillingAccountService} from 'app/core/BillingAccount.service';
 import {Subscription} from 'rxjs/Subscription';
+import {BillingAccountClass} from 'app/core/models/BillingAccount.model';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -13,7 +14,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   billingAccountSubscription: Subscription;
   selectCheckBox  = false;
   enableSelect = false;
-
+  ActiveBillingAccountDetails: BillingAccountClass;
   @ViewChild('serviceUpgradeModal') serviceUpgradeModal: ServicePlanUpgradeModalComponent;
 
   constructor(private billingAccount_service: BillingAccountService) {
@@ -21,12 +22,14 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnInit() {
-  }
-  ngAfterViewInit() {
     this.billingAccountSubscription = this.billingAccount_service.ActiveBillingAccountObservable.subscribe(
       result => {
+        this.ActiveBillingAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
       });
+  }
+  ngAfterViewInit() {
+
   }
 
   ngOnDestroy() {
@@ -48,4 +51,10 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
     this.selectCheckBox = false;
     this.enableSelect = false;
   }
+
+  getEndDate(startDate): Date {
+    startDate = new Date(startDate);
+    return new Date(new Date(startDate).setMonth(startDate.getMonth() + 12));
+  }
+
 }

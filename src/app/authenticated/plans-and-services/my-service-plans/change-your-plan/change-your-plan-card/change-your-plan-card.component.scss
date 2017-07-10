@@ -3,7 +3,7 @@
     border-radius: 20px;
     padding: 20px;
     .card-content{
-        text-align: center;   
+        text-align: center;
         .sup-text {
             font-size: 12px;
             top: -1.5em;
@@ -25,8 +25,10 @@
            }
        }
 
-   } 
-    
+   }
+  .fa-2x {
+    vertical-align: middle;
+  }
 .checkbox label:after {
   content: '';
   display: table;

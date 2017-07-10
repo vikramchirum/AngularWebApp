@@ -14,12 +14,11 @@ export class TransferService {
   constructor(private http: HttpClient) { }
 
   submitMove(transferRequest): Observable<string> {
-   
-    console.log("transferRequest......", JSON.stringify(transferRequest));
+    console.log('transferRequest......', JSON.stringify(transferRequest));
     return this.http.post(`/Transfer_Service/Transfer_Service_Create`, JSON.stringify(transferRequest))
-    .map(res =>{     
+    .map(res => {
       res.json();
-      console.log("res",res.json());
+      console.log('res', res.json());
     })
     .catch(error => this.handleError(error));
 
@@ -27,7 +26,7 @@ export class TransferService {
     private handleError(error: Response | any) {
     // In a real world app, you might use a remote logging infrastructure
     let errMsg: string;
-    console.log("error", error);
+    console.log('error', error);
     if (error instanceof Response) {
       const body = error.json() || '';
      // const err = get(body, 'error', JSON.stringify(body));
