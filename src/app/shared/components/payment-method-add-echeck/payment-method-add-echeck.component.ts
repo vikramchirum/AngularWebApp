@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
   templateUrl: './payment-method-add-echeck.component.html',
   styleUrls: ['./payment-method-add-echeck.component.scss']
 })
-export class PaymentMethodAddEcheckComponent implements OnInit, OnDestroy {
+export class PaymethodAddEcheckComponent implements OnInit, OnDestroy {
 
   @Input() form_horizontal: boolean = null;
 

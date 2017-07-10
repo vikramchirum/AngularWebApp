@@ -13,33 +13,33 @@
       <div class="col-md-10 col-md-offset-2">
         <div class="friends">
           <div formArrayName="friends">
-            <!--<div> &lt;!&ndash;*ngFor="let friend of friendsForm.controls.friends.controls; let i = index"&ndash;&gt;-->
-              <!--<div class="row" [formGroupName]="i">-->
-                <!--<div [formGroupName]="'name'">-->
-                  <!--<div class="col-sm-4">-->
-                    <!--<div *ngIf="i === 0" class="input-group-lg">-->
-                      <!--<input type="text" class="form-control form-control-wireframe" placeholder="First Name" formControlName="first"/>-->
-                    <!--</div>-->
-                    <!--<div *ngIf="i !== 0" class="input-group input-group-lg">-->
-                      <!--<span class="input-group-btn">-->
-                        <!--<button class="btn btn-wireframe" type="button" (click)="removeFriend(i)"><i class="fa fa-times"></i></button>-->
-                      <!--</span>-->
-                      <!--<input type="text" class="form-control form-control-wireframe" placeholder="First Name" formControlName="first"/>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                  <!--<div class="col-sm-4">-->
-                    <!--<div class="input-group-lg">-->
-                      <!--<input type="text" class="form-control form-control-wireframe" placeholder="Last Name" formControlName="last"/>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                <!--</div>-->
-                <!--<div class="col-sm-4">-->
-                  <!--<div class="input-group-lg">-->
-                    <!--<input type="email" class="form-control form-control-wireframe" [ngClass]="{ 'ng-invalid': !friend.controls['email'].hasError('validateEmail') }" placeholder="Email Address" formControlName="email"/>-->
-                  <!--</div>-->
-                <!--</div>-->
-              <!--</div>-->
-            <!--</div>-->
+            <div *ngFor="let friend of friendsForm.controls.friends.controls; let i = index">
+              <div class="row" [formGroupName]="i">
+                <div [formGroupName]="'name'">
+                  <div class="col-sm-4">
+                    <div *ngIf="i === 0" class="input-group-lg">
+                      <input type="text" class="form-control form-control-wireframe" placeholder="First Name" formControlName="first"/>
+                    </div>
+                    <div *ngIf="i !== 0" class="input-group input-group-lg">
+                      <span class="input-group-btn">
+                        <button class="btn btn-wireframe" type="button" (click)="removeFriend(i)"><i class="fa fa-times"></i></button>
+                      </span>
+                      <input type="text" class="form-control form-control-wireframe" placeholder="First Name" formControlName="first"/>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="input-group-lg">
+                      <input type="text" class="form-control form-control-wireframe" placeholder="Last Name" formControlName="last"/>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="input-group-lg">
+                    <input type="email" class="form-control form-control-wireframe" [ngClass]="{ 'ng-invalid': !friend.controls['email'].hasError('validateEmail') }" placeholder="Email Address" formControlName="email"/>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">

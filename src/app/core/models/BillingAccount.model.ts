@@ -1,4 +1,6 @@
 
+import { assign } from 'lodash';
+
 export interface IBillingAccountAddress {
   Line1: string;
   Line2: string;
@@ -74,11 +76,7 @@ export class BillingAccountClass {
    * @param opts
    */
   constructor(opts: any) {
-    for (const key in opts) {
-      if (opts[key] !== undefined) {
-        this[key] = opts[key];
-      }
-    }
+    assign(this, opts);
   }
 
   /**

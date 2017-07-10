@@ -73,7 +73,9 @@ export class HttpClient extends Http {
       options.headers = new Headers();
     }
 
-    options.headers.append('Content-Type', 'application/json');
+    if (!options.headers.has('Content-Type')) {
+      options.headers.append('Content-Type', 'application/json');
+    }
     options.headers.append('Ocp-Apim-Subscription-Key', environment.Api_Token);
     options.headers.append('bearer', 'token');
     return options;

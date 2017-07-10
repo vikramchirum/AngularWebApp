@@ -122,6 +122,9 @@ export class UserService implements CanActivate {
         this.initialized = true;
         this.emitToObservers(this.UserBillingAccountsObservers, getBillingAccountIds(user));
         this.emitToObservers(this.UserCustomerAccountObservers, getCustomerAccountId(user));
+        console.log('user = ', user);
+        console.log(`BillingAccountIds = ${getBillingAccountIds(user)}`);
+        console.log(`CustomerAccountId = ${getCustomerAccountId(user)}`);
       }
     });
 
@@ -335,7 +338,7 @@ export class UserService implements CanActivate {
       // If the token has changed, then update our storage.
       if (localStorage.getItem('gexa_auth_token') !== this.UserCache.Token) {
         localStorage.setItem('gexa_auth_token', this.UserCache.Token);
-        localStorage.setItem('gexa_auth_token_expire', (this.UserCache.Date_Created.getTime() + 1000 * 60 * 60).toString());
+        localStorage.setItem('gexa_auth_token_expire', (this.UserCache.Date_Created.getTime() + 1000 * 60 * 60 * 12).toString());
       }
     }
 
