@@ -4,7 +4,7 @@ import { Response } from '@angular/http';
 import { HttpClient, HandleError } from './httpclient';
 import { Observable } from 'rxjs/Observable';
 import { BillingAccountClass } from './models/BillingAccount.model';
-import { PaymentMethod } from './PaymentMethod';
+import { PaymethodClass } from './models/Paymethod.model';
 
 @Injectable()
 export class AutoBillPayService {
@@ -15,14 +15,14 @@ export class AutoBillPayService {
 
   EnrollInAutoBillPay(
     billingAccount: BillingAccountClass,
-    paymentMethod: PaymentMethod
+    paymethod: PaymethodClass
   ): Observable<Response> {
 
     const now = new Date;
     const body = JSON.stringify({
       StartDate: now,
       TermAcceptanceDate: now,
-      PayMethodId: paymentMethod.Id,
+      PayMethodId: paymethod.Id,
       BillingAccountId: billingAccount.Id
     });
 
@@ -52,14 +52,14 @@ export class AutoBillPayService {
 
   UpdateAutoBillPay(
     billingAccount: BillingAccountClass,
-    paymentMethod: PaymentMethod
+    paymethod: PaymethodClass
   ): Observable<Response> {
 
     const now = new Date;
     const body = JSON.stringify({
       StartDate: now,
       TermAcceptanceDate: now,
-      PayMethodId: paymentMethod.Id,
+      PayMethodId: paymethod.Id,
       BillingAccountId: billingAccount.Id
     });
 

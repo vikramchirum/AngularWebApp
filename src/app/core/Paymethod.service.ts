@@ -104,12 +104,8 @@ export class PaymethodService {
     // If we don't have a Customer Account Id then return null;
     if (this.CustomerAccountId === null) { return Observable.from(null); }
 
-    const options = new RequestOptions({
-      headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' })
-    });
-
     // Assign the Http request to prevent any similar requests.
-    this.requestObservable = this.HttpClient.get(`/Paymethods?userKey=${ this.CustomerAccountId }&isActive=true`, options)
+    this.requestObservable = this.HttpClient.get(`/Paymethods?userKey=${ this.CustomerAccountId }&isActive=true`)
       .map(data => data.json())
       .map(data => map(data, PaymethodData => new PaymethodClass(PaymethodData)))
       .catch(error => error);
