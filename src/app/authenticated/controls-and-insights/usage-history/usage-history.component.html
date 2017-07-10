@@ -1,24 +1,44 @@
+<div class="usage-summary card-container card-container-height" *ngIf="barChartData.length < 1">
+  <h1 class="text-center"><i class='fa fa-bolt fa-spin'></i> Loading...</h1>
+</div>
 <div class="usage-history container-fluid usage-history" *ngIf="isDataAvailable">
   <h2>Usage History</h2>
   <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
   <br/>
   <div class="col position-relative">
-    <div class="col-md-11">
-      <div class="bar-chart">
-        <h4>Select a Month for Detail</h4>
-        <div style="display: block;">
-          <canvas baseChart height=50px [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [colors]="barChartColors"
-                [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
-        </div>
+    <div class="bar-chart">
+      <h4>Select a Month for Detail</h4>
+      <div *ngFor='let index of barChartData'>
+        <canvas
+        baseChart
+        height="50px"
+        [datasets]="index"
+        [labels]="monthNames"
+        [options]="barChartOptions"
+        [colors]="barChartColors"
+        legend="true"
+        chartType="bar"
+        (chartHover)="chartHovered($event)"
+        (chartClick)="chartClicked($event)"
+        ></canvas>
       </div>
     </div>
     <div class="line-chart">
-      <div class="col-md-11">
-        <br/><br/><br/>
-        <h4>Year Over Year</h4>
-        <canvas baseChart height=50px [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
-                [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"></canvas>
+      <br/><br/><br/>
+      <h4>Year Over Year</h4>
+      <div *ngFor='let index of lineChartData'>
+        <canvas
+          baseChart
+          legend="true"
+          chartType="line"
+          height="50px"
+          [datasets]="index"
+          [labels]="monthNames"
+          [options]="lineChartOptions"
+          [colors]="lineChartColors"
+          (chartHover)="chartHovered($event)"
+          (chartClick)="chartClicked($event)"
+        ></canvas>
       </div>
     </div>
       <div class="col-md-5" style="margin-bottom: 10px">
@@ -31,9 +51,9 @@
             <th class='usage'>kwH</th>
           </tr>
           <tr *ngFor='let index of currentPage'>
-            <td class='month'>{{ index.Usage_Month | date:'MMMM' }}</td>
-            <td class='year'>{{ index.Usage_Month | date:'y' }}</td>
-            <td class='usage'>{{ index.Usage }}</td>
+            <td class='month'>{{ index.date | date:'MMMM' }}</td>
+            <td class='year'>{{ index.date | date:'y' }}</td>
+            <td class='usage'>{{ index.usage }}</td>
           </tr>
         </table>
 
