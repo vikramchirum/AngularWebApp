@@ -1,3 +1,4 @@
+<section *ngIf="!IsInRenewalTimeFrame">
 <h4>My Current Plan</h4>
 <div layout-align="center center">
   <md-card class="current-plan-card">
@@ -18,3 +19,38 @@
     <i class="material-icons pull-right check-mark">check_circle</i>
   </md-card>
 </div>
+</section>
+
+<section id="Renewal" *ngIf="IsInRenewalTimeFrame">
+  <div class="plan-card-container">
+    <div class="card-content">
+      <div class="corner-ribbon">Best for your home</div>
+      <h5>Gexa Prime 1000 12</h5>
+      <h2>3.9<sup class="sup-text">c</sup><sub class="sub-text">pkw/hr</sub>
+        <i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></h2>
+      <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
+      <p>at 1000kwh</p>
+      <p>TERM:12 months</p>
+      <p>No Sign Up Bonus</p>
+    </div>
+    <div *ngIf= "selectCheckBox" class="agreement-section">
+      <hr>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" value="" (click) = "toggleButton()">
+          <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+          <p>By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP(Gexa energy).<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
+        </label>
+      </div>
+      <hr>
+    </div>
+    <div class="row">
+      <div style="text-align:center">
+        <button class="btn btn-default btn-wireframe" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>Select</button>
+        <i *ngIf= "selectCheckBox" class="fa fa-times fa-2x" style="margin-left:.5em" (click)="closeCheckBox()" aria-hidden="true"></i>
+      </div>
+    </div>
+
+  </div>
+
+</section>

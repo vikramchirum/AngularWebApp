@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { ServicePlanUpgradeModalComponent } from './service-plan-upgrade-modal/service-plan-upgrade-modal.component'
+import { ServicePlanUpgradeModalComponent } from './service-plan-upgrade-modal/service-plan-upgrade-modal.component';
 
 @Component({
   selector: 'mygexa-change-your-plan-card',
@@ -8,12 +8,12 @@ import { ServicePlanUpgradeModalComponent } from './service-plan-upgrade-modal/s
 })
 export class ChangeYourPlanCardComponent implements OnInit {
 
-  selectCheckBox: boolean = false;
-  enableSelect: boolean = false;
+  @ViewChild('serviceUpgradeModal') serviceUpgradeModal: ServicePlanUpgradeModalComponent;
+  selectCheckBox = false;
+  enableSelect = false;
   ngOnInit() {
   }
 
-  @ViewChild('serviceUpgradeModal') serviceUpgradeModal: ServicePlanUpgradeModalComponent;
   constructor(private viewContainerRef: ViewContainerRef) {
   }
   showServiceUpgradeModal() {

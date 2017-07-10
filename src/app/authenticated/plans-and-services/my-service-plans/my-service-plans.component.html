@@ -1,9 +1,9 @@
 <div class="container-fluid">
-<section>
-<div class="row">
+<section *ngIf="!IsInRenewalTimeFrame">
+  <div class="row">
     <div class="col-md-12">
       <h2>
-        Plan Information       
+        Plan Information
       </h2>
     </div>
   </div>
@@ -24,6 +24,29 @@
       </div>
   </div>
 </section>
+  <section id="renewPlan" *ngIf="IsInRenewalTimeFrame" >
+    <div class="row">
+      <div class="col-md-12">
+        <b><h2>
+          Renew your plan
+        </h2></b>
+      </div>
+      <div class="col-md-8">
+        <h4>
+          Your plan is ready to be renewed! Based on your product history, we've found the renewal plan that's best for your home:
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+
+      <div class="col-md-4 col-xs-12 account-info">
+        <mygexa-my-current-plan></mygexa-my-current-plan>
+      </div>
+      <div class="col-md-4 col-xs-12 account-info">
+        <mygexa-documents></mygexa-documents>
+      </div>
+    </div>
+  </section>
 <br/>
 <mygexa-change-your-plan></mygexa-change-your-plan>
 </div>

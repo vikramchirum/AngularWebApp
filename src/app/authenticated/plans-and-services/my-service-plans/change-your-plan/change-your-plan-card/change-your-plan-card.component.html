@@ -12,18 +12,18 @@
     <hr>
     <div class="checkbox">
       <label>
-            <input type="checkbox" value="" (click) = "toggleButton()">
-            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-            <p>By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP(Gexa energy).<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
-          </label>
+        <input type="checkbox" value="" (click) = "toggleButton()">
+        <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+        <p>By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP(Gexa energy).<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
+      </label>
     </div>
     <hr>
   </div>
   <div class="row">
-  <div style="text-align:center">
-    <button class="btn btn-default btn-wireframe" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>Select</button>
-    <i *ngIf= "selectCheckBox" class="fa fa-times fa-2x" style="margin-left:.5em" (click)="closeCheckBox()" aria-hidden="true"></i>
-  </div>
+    <div style="text-align:center">
+      <button class="btn btn-default btn-wireframe" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>Select</button>
+      <i *ngIf= "selectCheckBox" class="fa fa-times fa-2x" style="margin-left:.5em" (click)="closeCheckBox()" aria-hidden="true"></i>
+    </div>
   </div>
 
 </div>
