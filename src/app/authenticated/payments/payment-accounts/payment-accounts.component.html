@@ -7,74 +7,84 @@
 
   <br/>
 
-  <ng-container *ngIf="Paymethods">
-
-    <table cellpadding="0" cellspacing="0" width="100%">
-      <tbody>
-      <tr>
-        <td width="74%"><h4>Your Payment Options</h4></td>
-        <td width="13%"><h4 class="text-center">Expires</h4></td>
-        <td width="13%" *ngIf="!PaymentAbpSelecting"><h4 class="text-center">Remove</h4></td>
-        <td width="13%" *ngIf="PaymentAbpSelecting" class="card-abp"><h4 class="text-center">Select</h4></td>
-      </tr>
-      </tbody>
-    </table>
-    <div *ngFor="let paymentMethod of Paymethods; let i = index">
-      <table class="card-table" cellpadding="0" cellspacing="0" width="100%" [ngClass]="{ 'card-table-odd': i % 2 !== 0 }">
+  <ng-template *ngIf="Paymethods === null; then ShowLoadingScreen else ShowPaymethods;"></ng-template>
+  <ng-template #ShowLoadingScreen>
+    <h4 class="text-muted"><i class="fa fa-fw fa-spinner fa-spin"></i> Loading your saved paymethods.</h4>
+    <br/>
+  </ng-template>
+  <ng-template #ShowPaymethods>
+    <ng-template *ngIf="Paymethods.length < 1; then ShowPaymethodsEmpty else ShowPaymethodsList;"></ng-template>
+    <ng-template #ShowPaymethodsEmpty>
+      <h4 class="text-muted"><i class="fa fa-fw fa-info-circle"></i> No saved paymethods to show.</h4>
+      <br/>
+    </ng-template>
+    <ng-template #ShowPaymethodsList>
+      <table cellpadding="0" cellspacing="0" width="100%">
         <tbody>
-        <tr [ngClass]="{ 'text-muted': PaymentAbpSelecting === paymentMethod }">
-          <td class="card-brand" width="31%"><i class="fa fa-fw" [ngClass]="paymentMethod.getFontAwesomeTag()"></i>{{ paymentMethod.getBrand() }}</td>
-          <td class="card-ending" width="43%">ENDING IN <b>{{ paymentMethod.getLast() }}</b></td>
-          <td class="card-expires" width="13%">{{ paymentMethod.getExpiration() }}</td>
-          <td class="card-remove" width="13%" *ngIf="!PaymentAbpSelecting" [ngClass]="{ 'card-remove-active': PaymentEditting === paymentMethod }">
-            <button class="btn btn-blank" (click)="removePaymethod(paymentMethod)"><i class="fa fa-fw fa-trash"></i></button>
-          </td>
-          <td class="card-abp" width="13%" *ngIf="PaymentAbpSelecting">
-            <button class="btn btn-block btn-blank" *ngIf="PaymentAbpSelecting !== paymentMethod" (click)="PaymentAbpSelected = paymentMethod">
-              <i class="fa fa-fw" [ngClass]="PaymentAbpSelected === paymentMethod ? 'fa-check-circle-o' : 'fa-circle-o' "></i>
-            </button>
-          </td>
+        <tr>
+          <td width="74%"><h4>Your Payment Options</h4></td>
+          <td width="13%"><h4 class="text-center">Expires</h4></td>
+          <td width="13%" *ngIf="!PaymentAbpSelecting"><h4 class="text-center">Remove</h4></td>
+          <td width="13%" *ngIf="PaymentAbpSelecting" class="card-abp"><h4 class="text-center">Select</h4></td>
         </tr>
         </tbody>
       </table>
-      <div class="card-prompt" *ngIf="PaymentEditting === paymentMethod">
-        <div *ngIf="PaymethodService.Is_Used_For_Autopay(paymentMethod); then AutoPayBlock else NonAutoPayBlock"></div>
-        <ng-template #AutoPayBlock>
-          <h1>
-            <b>Warning!</b>
-            <div>This Payment Account is Being Used For Auto Pay.</div>
-            <small>What Would You Like To Do?</small>
-          </h1>
-          <div class="row">
-            <div class="col-sm-6">
-              <button class="btn btn-lg btn-block btn-warning" (click)="removePaymethodStopAutoPay()">Delete and Stop Auto Pay</button>
+      <div *ngFor="let paymentMethod of Paymethods; let i = index">
+        <table class="card-table" cellpadding="0" cellspacing="0" width="100%" [ngClass]="{ 'card-table-odd': i % 2 !== 0 }">
+          <tbody>
+          <tr [ngClass]="{ 'text-muted': PaymentAbpSelecting === paymentMethod }">
+            <td class="card-brand" width="31%"><i class="fa fa-fw" [ngClass]="paymentMethod.getFontAwesomeTag()"></i>{{ paymentMethod.getBrand() }}</td>
+            <td class="card-ending" width="43%">ENDING IN <b>{{ paymentMethod.getLast() }}</b></td>
+            <td class="card-expires" width="13%">{{ paymentMethod.getExpiration() }}</td>
+            <td class="card-remove" width="13%" *ngIf="!PaymentAbpSelecting" [ngClass]="{ 'card-remove-active': PaymentEditting === paymentMethod }">
+              <button class="btn btn-blank" (click)="removePaymethod(paymentMethod)"><i class="fa fa-fw fa-trash"></i></button>
+            </td>
+            <td class="card-abp" width="13%" *ngIf="PaymentAbpSelecting">
+              <button class="btn btn-block btn-blank" *ngIf="PaymentAbpSelecting !== paymentMethod" (click)="PaymentAbpSelected = paymentMethod">
+                <i class="fa fa-fw" [ngClass]="PaymentAbpSelected === paymentMethod ? 'fa-check-circle-o' : 'fa-circle-o' "></i>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="card-prompt" *ngIf="PaymentEditting === paymentMethod">
+          <div *ngIf="PaymethodService.Is_Used_For_Autopay(paymentMethod); then AutoPayBlock else NonAutoPayBlock"></div>
+          <ng-template #AutoPayBlock>
+            <h1>
+              <b>Warning!</b>
+              <div>This Payment Account is Being Used For Auto Pay.</div>
+              <small>What Would You Like To Do?</small>
+            </h1>
+            <div class="row">
+              <div class="col-sm-6">
+                <button class="btn btn-lg btn-block btn-warning" (click)="removePaymethodStopAutoPay()">Delete and Stop Auto Pay</button>
+              </div>
+              <div class="col-sm-6">
+                <button class="btn btn-lg btn-block btn-success" (click)="removePaymethodEditAutoPay()">Delete and Edit Auto Pay</button>
+              </div>
             </div>
-            <div class="col-sm-6">
-              <button class="btn btn-lg btn-block btn-success" (click)="removePaymethodEditAutoPay()">Delete and Edit Auto Pay</button>
+            <div class="text-right">
+              <button class="btn btn-lg btn-blank" (click)="removePaymethod()">Cancel</button>
             </div>
-          </div>
-          <div class="text-right">
-            <button class="btn btn-lg btn-blank" (click)="removePaymethod()">Cancel</button>
-          </div>
-        </ng-template>
-        <ng-template #NonAutoPayBlock>
-          <h1>
-            <b>Warning!</b>
-            <div>You are about to delete this payment method.</div>
-            <small>Are your sure?</small>
-          </h1>
-          <div class="row">
-            <div class="col-sm-6">
-              <button class="btn btn-lg btn-block btn-warning" (click)="removePaymethodConfirm()">Yes - delete this payment method.</button>
+          </ng-template>
+          <ng-template #NonAutoPayBlock>
+            <h1>
+              <b>Warning!</b>
+              <div>You are about to delete this payment method.</div>
+              <small>Are your sure?</small>
+            </h1>
+            <div class="row">
+              <div class="col-sm-6">
+                <button class="btn btn-lg btn-block btn-warning" (click)="removePaymethodConfirm()">Yes - delete this payment method.</button>
+              </div>
+              <div class="col-sm-6">
+                <button class="btn btn-lg btn-block btn-secondary" (click)="removePaymethod()">No - cancel and go back.</button>
+              </div>
             </div>
-            <div class="col-sm-6">
-              <button class="btn btn-lg btn-block btn-secondary" (click)="removePaymethod()">No - cancel and go back.</button>
-            </div>
-          </div>
-        </ng-template>
+          </ng-template>
+        </div>
       </div>
-    </div>
-    <table class="card-table" cellpadding="0" cellspacing="0" width="100%">
+      <table class="card-table" cellpadding="0" cellspacing="0" width="100%">
       <tbody>
       <tr>
         <td width="74%">&nbsp;</td>
@@ -90,8 +100,8 @@
       </tr>
       </tbody>
     </table>
-
-  </ng-container>
+    </ng-template>
+  </ng-template>
 
   <h4 class="new-header">NEW PAYMENT ACCOUNT</h4>
 

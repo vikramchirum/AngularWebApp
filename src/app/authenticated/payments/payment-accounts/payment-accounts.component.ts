@@ -154,7 +154,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     this.addingCreditCard = false;
     this.PaymentMessage = {
       classes: ['alert', 'alert-info'],
-      innerHTML: `<b>Please wait</b> we're adding your new payment method now.`
+      innerHTML: `<i class="fa fa-fw fa-spinner fa-spin"></i> <b>Please wait</b> we're adding your new payment method now.`
     };
     this.PaymethodService.AddPaymethodCreditCard(
       this.addCreditCardComponent.formGroup.value.cc_name,
@@ -189,7 +189,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     this.addingEcheck = false;
     this.PaymentMessage = {
       classes: ['alert', 'alert-info'],
-      innerHTML: `<b>Please wait</b> we're adding your new payment method now.`
+      innerHTML: `<i class="fa fa-fw fa-spinner fa-spin"></i> <b>Please wait</b> we're adding your new payment method now.`
     };
     this.PaymethodService.AddPaymethodEcheck(
       this.addEcheckComponent.formGroup.value.echeck_name,

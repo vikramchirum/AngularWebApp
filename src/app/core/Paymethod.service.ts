@@ -109,8 +109,7 @@ export class PaymethodService {
     });
 
     // Assign the Http request to prevent any similar requests.
-    // this.requestObservable = this.HttpClient.get(`/Paymethods?isActive=true&customerAccountId=${this.CustomerAccountId}`, options)
-    this.requestObservable = this.HttpClient.get(`/Paymethods?minPayMethodId=270&pageSize=100&active=true`, options)
+    this.requestObservable = this.HttpClient.get(`/Paymethods?userKey=${ this.CustomerAccountId }&isActive=true`, options)
       .map(data => data.json())
       .map(data => map(data, PaymethodData => new PaymethodClass(PaymethodData)))
       .catch(error => error);
@@ -228,26 +227,28 @@ export class PaymethodService {
   }
 
   RemovePaymethod(Paymethod: PaymethodClass): Observable<any> {
-
     return Observable.create((observer: Observer<any>) => {
-
+      // Call out to the API to set the isActive to "false".
       this.HttpClient.put(`/Paymethods?id=${Paymethod.PayMethodId}`, '')
         .map(res => res.json())
         .catch(error => this.handleError(error))
         .subscribe(res => {
+          // Return back the result information, if our original caller wants it or not, and close.
           observer.next(res);
           observer.complete();
+          // Look in our cache for the Paymethod to remove.
+          const paymethodToPull = find(this.PaymethodsCache, ['PayMethodId', Paymethod.PayMethodId]);
+          // If the removed Paymethod was found then remove it and emit to observers.
+          if (paymethodToPull) {
+            pull(this.PaymethodsCache, paymethodToPull);
+            this.emitToObservers(this.PaymethodsObservers, this.PaymethodsCache);
+          }
         });
     });
   }
 
   Is_Used_For_Autopay(Paymethod: PaymethodClass): boolean {
-    const matchedBillingAccount = find(this.BillingAccountService.BillingAccountsCache, { Is_Auto_Bill_Pay: Paymethod.PayMethodId });
-    if (matchedBillingAccount) {
-      return true;
-    }
-    return true;
-    // return false;
+    return !!find(this.BillingAccountService.BillingAccountsCache, { Is_Auto_Bill_Pay: Paymethod.PayMethodId });
   }
 
 }
