@@ -153,7 +153,7 @@ export class BillingAccountService {
     // TODO: Interact with the API to make this change. Use the below temporarily.
     for (const index in this.BillingAccountsCache) {
       if (this.BillingAccountsCache[index]) {
-        this.BillingAccountsCache[index].Enrolled_In_Auto_Bill_Pay = value === true;
+        this.BillingAccountsCache[index].Is_Auto_Bill_Pay = value === true;
         this.emitToObservers(this.BillingAccountsObservers, this.BillingAccountsCache);
         break;
       }

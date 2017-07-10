@@ -1,6 +1,6 @@
 <section class="section-container-highlight">
   <a routerLink="/payments/payment-options" class="visible-xs"><i class="fa fa-4x fa-arrow-left"></i></a>
-  <ng-template *ngIf="ActiveBillingAccount?.Enrolled_In_Auto_Bill_Pay === true; then Enrolled_In_Auto_Bill_Pay else Not_Enrolled_In_Auto_Bill_Pay"></ng-template>
+  <ng-template *ngIf="ActiveBillingAccount?.Is_Auto_Bill_Pay === true; then Enrolled_In_Auto_Bill_Pay else Not_Enrolled_In_Auto_Bill_Pay"></ng-template>
   <ng-template #Enrolled_In_Auto_Bill_Pay>
     <h2>
       <div class="row">
