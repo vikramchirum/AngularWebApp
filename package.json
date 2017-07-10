@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve -o",
+    "start": "npm install && ng serve -o",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -39,6 +39,7 @@
     "jquery": "^3.2.1",
     "load-grunt-tasks": "^3.5.2",
     "lodash": "^4.17.4",
+    "mydatepicker": "^2.0.22",
     "ng2-charts": "^1.6.0",
     "ng2-datepicker": "^1.8.3",
     "ng2-validation": "^4.2.0",
