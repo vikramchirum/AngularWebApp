@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ModalModule } from 'ngx-bootstrap';
 import { DatePickerModule } from 'ng2-datepicker';
 import { MdCardModule, MaterialModule } from '@angular/material';
+import { MyDatePickerModule } from 'mydatepicker';
 
 import { SharedModule } from '../../shared/shared.module';
 import { AddServicesComponent } from './add-services/add-services.component';
@@ -34,7 +35,8 @@ import { MovingCenterFormComponent } from './moving-center-form/moving-center-fo
     ReactiveFormsModule,
     SharedModule,
     ModalModule.forRoot(),
-    DatePickerModule
+    DatePickerModule,
+    MyDatePickerModule
   ],
   declarations: [
       PlansAndServicesComponent,

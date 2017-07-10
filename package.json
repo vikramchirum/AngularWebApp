@@ -4,17 +4,17 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve -o",
+    "start": "npm install && ng serve -o",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "serve-local": "ng serve --environment=local",
-    "build-dev": "ng build --aot=false --target=production --environment=dev --output-hashing all",
-    "build-qa": "ng build --aot=false --target=production --environment=qa --output-hashing all",
-    "build-stg": "ng build --aot=false --target=production --environment=stg --output-hashing all",
-    "build-prd": "ng build --aot=false --target=production --environment=prod --output-hashing all",
-    "deploy-local": "ng build --aot=false --target=production --environment=dev --output-path C:\\inetpub\\wwwroot\\DEV\\test --output-hashing all"
+    "build-dev": "npm install && ng build --aot=false --target=production --environment=dev --output-hashing all",
+    "build-qa": "npm install && ng build --aot=false --target=production --environment=qa --output-hashing all",
+    "build-stg": "npm install && ng build --aot=false --target=production --environment=stg --output-hashing all",
+    "build-prd": "npm install && ng build --aot=false --target=production --environment=prod --output-hashing all",
+    "deploy-local": "npm install && ng build --aot=false --target=production --environment=dev --output-path C:\\inetpub\\wwwroot\\DEV\\test --output-hashing all"
   },
   "private": true,
   "dependencies": {
@@ -39,6 +39,7 @@
     "jquery": "^3.2.1",
     "load-grunt-tasks": "^3.5.2",
     "lodash": "^4.17.4",
+    "mydatepicker": "^2.0.22",
     "ng2-charts": "^1.6.0",
     "ng2-datepicker": "^1.8.3",
     "ng2-validation": "^4.2.0",

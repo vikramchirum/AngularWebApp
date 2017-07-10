@@ -34,8 +34,13 @@ export class HttpClient extends Http {
     return super.request(url, options);
   }
 
-  public get(url: string, options?: RequestOptionsArgs): Observable<Response> {
+  public get(url: string, params?: URLSearchParams): Observable<Response> {
     url = this.getAbsoluteUrl(url);
+    const options = this.getRequestOptionArgs();
+    if (params != null) {
+      options.params = params;
+    }
+
     return super.get(url, this.getRequestOptionArgs(options));
   }
 

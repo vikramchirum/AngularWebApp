@@ -1,19 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-
-import { slice } from 'lodash';
-import MockData from 'app/authenticated/payments/payment-history/bills/bills.mock-data.json';
+import { Component, OnDestroy } from '@angular/core';
+import { UsageHistoryService } from 'app/core/usage-history.service';
+import { takeRight, toNumber, reverse, values } from 'lodash';
+import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
+import { BillingAccountService } from 'app/core/BillingAccount.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'mygexa-usage-history',
   templateUrl: './usage-history.component.html',
-  styleUrls: ['./usage-history.component.scss']
+  styleUrls: ['./usage-history.component.scss'],
+  providers: [UsageHistoryService]
 })
-export class UsageHistoryComponent implements OnInit {
+export class UsageHistoryComponent implements OnDestroy {
+
+  activeBillingAccount: BillingAccountClass = null;
+
+  public monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+    'September', 'October', 'November', 'December'];
 
   /* Bar Graph Properties */
   public barChartOptions: any = {
     responsive: true,
-    barThickness: 2,
     tooltips: {
       callbacks: {
         label: (tooltipItem, data) => {
@@ -23,7 +30,7 @@ export class UsageHistoryComponent implements OnInit {
     },
     scales: {
       xAxes: [{
-        display: false
+        display: true
       }],
       yAxes: [{
         display: false,
@@ -34,24 +41,13 @@ export class UsageHistoryComponent implements OnInit {
     },
     min: 0
   };
-
-  public barChartLabels: string[] = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  public barChartType: string = 'bar';
-  public barChartLegend: boolean = true;
-
-  public barChartData: any[] = [
-    {data: [47, 55, 61, 55, 49, 53, 53, 61, 54, 49, 57, 47], label: '2015'},
-    {data: [48, 53, 60, 56, 48, 55, 54, 63, 57, 51, 54, 46], label: '2016'},
-    {data: [47, 54, 57, 53, 52, 52, 51, 60, 58, 50, 56, 49], label: '2017'},
-    {data: [49, 52, 65, 56, 49, 54, 50, 62, 56, 51, 53, 49], label: '2018'}
-  ];
-
+  public barChartData = [];
   public barChartColors: any[] = [
     { backgroundColor: '#7FFFD4' },
     { backgroundColor: '#32CD32' },
     { backgroundColor: '#98FB98' },
     { backgroundColor: '#6495ED' }
-  ]
+  ];
 
   /* Line Graph Properties */
   public lineChartOptions: any = {
@@ -59,6 +55,7 @@ export class UsageHistoryComponent implements OnInit {
     elements: {
       line: {
         tension: 0,
+        fill: false
       }
     },
     tooltips: {
@@ -70,29 +67,14 @@ export class UsageHistoryComponent implements OnInit {
     },
     scales: {
       xAxes: [{
-        display: false
+        display: true
       }],
       yAxes: [{
         display: false
       }]
     }
   };
-
-  public lineChartLegend: boolean = true;
-  public lineChartType: string = 'line';
-  public lineChartLabels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-  public tableData = MockData;
-  public totalItems: number = MockData.length;
-  public tablePage: number = 1;
-
-  public lineChartData: Array<any> = [
-    {data: [235, 240, 236, 241, 243, 238, 242, 235, 240, 236, 241, 243], label: '2015', fill: false},
-    {data: [234, 242, 237, 238, 241, 237, 240, 234, 242, 237, 238, 241], label: '2016', fill: false},
-    {data: [238, 235, 240, 236, 240, 242, 243, 238, 235, 240, 236, 240], label: '2017', fill: false},
-    {data: [237, 236, 240, 235, 242, 238, 240, 237, 239, 241, 238, 243], label: '2018', fill: false}
-  ];
-
+  public lineChartData = [];
   public lineChartColors: Array<any> = [
     { borderColor: '#7FFFD4', backgroundColor: '#7FFFD4' },
     { borderColor: '#32CD32', backgroundColor: '#32CD32' },
@@ -100,19 +82,45 @@ export class UsageHistoryComponent implements OnInit {
     { borderColor: '#6495ED', backgroundColor: '#6495ED' }
   ];
 
+  /* Table and Pagination Data */
+  public tablePage: number = 1;
+  public isDataAvailable: boolean = false;
+  public tableData: any[] = [];
+
+  private BillingAccountsSubscription: Subscription = null;
+
+  constructor(
+    private usageHistoryService: UsageHistoryService,
+    private BillingAccountService: BillingAccountService
+  ) {
+    this.BillingAccountsSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+      activeBillingAccount => {
+        this.activeBillingAccount = activeBillingAccount;
+        this.getUsageHistoryByBillingAccountId();
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    // Clean up our subscribers to avoid memory leaks.
+    this.BillingAccountsSubscription.unsubscribe();
+  }
+
+  get totalItems(): number {
+    return this.tableData.length;
+  }
+
   private getEntries(page: number) {
     const index = (page - 1) * 10;
     const extent = index + 10;
-    if (extent > MockData.length) {
-      return MockData.slice(index);
+    if (extent > this.tableData.length) {
+      return this.tableData.slice(index);
     }
-    return MockData.slice(index, extent);
+    return this.tableData.slice(index, extent);
   }
 
   get currentPage() {
     const pageEntries = this.getEntries(this.tablePage);
-    const dateObj = new Date('2017-06-15T21:19:18.349Z');
-    console.log(dateObj.getFullYear());
     return pageEntries;
   }
 
@@ -120,7 +128,6 @@ export class UsageHistoryComponent implements OnInit {
     this.tablePage = event.page;
   }
 
-  // events
   public chartClicked(e: any): void {
     console.log(e);
   }
@@ -129,9 +136,56 @@ export class UsageHistoryComponent implements OnInit {
     console.log(e);
   }
 
-  constructor() { }
+  getUsageHistoryByBillingAccountId() {
+    if (this.activeBillingAccount) {
+      this.usageHistoryService.getUsageHistory(toNumber(this.activeBillingAccount.Id))
+        .subscribe(usageHistory => this.populateCharts(usageHistory));
+    }
+  }
 
-  ngOnInit() {
+  // Fetch labels and data from api response and show it on the charts
+  populateCharts(usageHistory) {
+
+    this.tableData = usageHistory;
+
+    const datagroups = {};
+    let tempYear: string;
+    let tempMonth: number;
+
+    usageHistory.sort((a, b) => b.date - a.date);
+
+    // Put data from api into array
+    for (let i = 0; i < usageHistory.length ; i++) {
+      tempYear = usageHistory[i].date.getFullYear().toString();
+      tempMonth = usageHistory[i].date.getMonth();
+
+      if (!datagroups[tempYear]) {
+        datagroups[tempYear] = { data: [], label: tempYear };
+      }
+      datagroups[tempYear].data.push(usageHistory[i].usage);
+    }
+
+    // Pad the first year with nulls so the data lines up with the labels
+    for (let i = tempMonth; i > 0; i--) {
+      datagroups[tempYear].data.push(null);
+    }
+
+    // Reverse data so it matches the labels
+    for (const key in datagroups) {
+      if (datagroups[key]) {
+        datagroups[key].data = reverse(datagroups[key].data);
+      }
+    }
+
+    const dataToDisplay = takeRight(values(datagroups), 4);
+
+    while (this.barChartData.length) { this.barChartData.pop(); }
+    while (this.lineChartData.length) { this.lineChartData.pop(); }
+
+    this.barChartData.push(dataToDisplay);
+    this.lineChartData.push(dataToDisplay);
+
+    this.isDataAvailable = true;
   }
 
 }
