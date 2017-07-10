@@ -63,6 +63,7 @@ export class MovingCenterFormComponent implements OnInit {
     private customerAccountService: CustomerAccountService,
     private transferService: TransferService,
     private offerService: OfferService) {
+      //start date and end date must be future date.
     this.disableUntil();
   }
 
@@ -78,14 +79,14 @@ export class MovingCenterFormComponent implements OnInit {
       'new_billing_address': this.fb.array([])
     }),
 
-    this.ServicePlanForm = this.fb.group({
-      'service_address': [null, Validators.required],
-      'service_plan': [null, Validators.required],
-      'agree_to_terms': [null, Validators.required],
-      'final_billing_address': this.fb.array([])
-    })
+      this.ServicePlanForm = this.fb.group({
+        'service_address': [null, Validators.required],
+        'service_plan': [null, Validators.required],
+        'agree_to_terms': [null, Validators.required],
+        'final_billing_address': this.fb.array([])
+      })
 
-  } 
+  }
 
 
 
@@ -93,6 +94,7 @@ export class MovingCenterFormComponent implements OnInit {
   ngAfterViewInit() {
     this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
       movingFromAccount => {
+        //console.log("Active Billing Account", movingFromAccount);
         this.ActiveBillingAccount = movingFromAccount;
         this.TDU_DUNS_Number = this.ActiveBillingAccount.TDU_DUNS_Number;
         //On selecting current plan, check if the address is in same TDU or different TDU
@@ -113,6 +115,22 @@ export class MovingCenterFormComponent implements OnInit {
     disableUntil: { year: 0, month: 0, day: 0 }
   }
 
+  setDate(): void {
+        // Set today date using the setValue function
+        let date = new Date();
+        this.movingAddressForm.setValue({Current_Service_End_Date: {
+        date: {
+            year: date.getFullYear(),
+            month: date.getMonth() + 1,
+            day: date.getDate()}
+        }});
+    }
+
+    clearDate(): void {
+        // Clear the date using the setValue function
+        this.movingAddressForm.setValue({Current_Service_End_Date: null});
+    }
+
   private currentServiceEndDate: IMyOptions = {
     // other end date options here...
   }
@@ -122,21 +140,25 @@ export class MovingCenterFormComponent implements OnInit {
   }
 
   onEndDateChanged(event: IMyDateModel) {
-    // date selected
-    let d = event.jsdate;
-    let copy: IMyOptions = this.getCopyOfOptions();
-    d.setDate(d.getDate() + 30); 
-    copy.disableSince = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate()};
-    this.newServiceStartDate = copy;
+  // this.movingAddressForm.controls['Current_Service_End_Date'].setValue(event);
+  //   // date selected
+  //   let d = event.jsdate;
+  //   let copy: IMyOptions = this.getCopyOfOptions();
+  //   d.setDate(d.getDate() + 30);
+  //   copy.disableSince = { 
+  //     year: d.getFullYear(), 
+  //     month: d.getMonth() + 1, 
+  //     day: d.getDate() };
+  //   this.newServiceStartDate = copy;
   }
 
   disableUntil() {
-    let d = new Date();
+    let currentDate = new Date();
     let copy = this.getCopyOfOptions();
     copy.disableUntil = {
-      year: d.getFullYear(),
-      month: d.getMonth() + 1,
-      day: d.getDate()
+      year: currentDate.getFullYear(),
+      month: currentDate.getMonth() + 1,
+      day: currentDate.getDate()
     };
     this.newServiceStartDate = copy;
     this.currentServiceEndDate = copy;
@@ -223,6 +245,7 @@ export class MovingCenterFormComponent implements OnInit {
     this.transferService.submitMove(this.transferRequest).subscribe(
       () => this.submitted = true),
       error => {
+        console.log('------------------------------------------------');
         console.log('Transfer Request API error', error.Message);
       }
   }
