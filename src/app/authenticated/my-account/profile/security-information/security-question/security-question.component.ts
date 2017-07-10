@@ -42,7 +42,7 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
      this.user_service.getSecQuesByUserName(this.username).subscribe(
       res => { this.securityQuestion = res;
                localStorage.setItem('security_Question_Cache', res);
-               console.log('Security Question', res);
+              // console.log('Security Question', res);
                return res; }
     );
   }

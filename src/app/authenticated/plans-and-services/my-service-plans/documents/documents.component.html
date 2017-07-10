@@ -1,4 +1,5 @@
-<p class="doc-title">  Documents</p>
+<section *ngIf="!IsInRenewalTimeFrame">
+  <b><p class="doc-title">  Documents</p></b>
 <ul class="documents">
   <li><a>Terms of Use</a></li>
   <li><a>Electricity Facts Label</a></li>
@@ -6,3 +7,19 @@
   </ul>
 
   <p><a href >Get Adobe Reader Free </a></p>
+</section>
+<section id="RenewalPlan" *ngIf="IsInRenewalTimeFrame">
+  <b><p class="doc-title">  What's included</p></b>
+  <ul class="documents">
+    <li>> Best plan for homes that a moderate amount of electricity</li>
+    <li>> Eligible for bill credits with Share & Save</li>
+    <li>> Price is fixed for 12 month</li>
+  </ul>
+
+  <b><p>Your current plan ends in 38 days!</p></b>
+  <b><p>Renew by {{'hii'}}</p></b>
+  <ul class="documents">
+    <li> <span class="cr"><i class="cr-icon fa fa-question-circle"> What happens if I don't renew</i></span> </li>
+    <li> <span class="cr"><i class="cr-icon fa fa-info-circle"> View current plan details</i></span> </li>
+  </ul>
+</section>

@@ -230,7 +230,7 @@ export class UserService implements CanActivate {
     return this.Http.post(this.getSecQuestionUrl, body, options)
       .map(res => res.json())
       .map(res => {
-        console.log('Questuion', res);
+        //console.log('Questuion', res);
         return res;
       })
       .map(res => get(res, 'length') > 0 ? res : null)
