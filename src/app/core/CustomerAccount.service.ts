@@ -71,11 +71,8 @@ export class CustomerAccountService {
 
     // Assign the Http request to prevent any similar requests.
     this.requestObservable = this.HttpClient.get(`/customer_accounts/${this.CustomerAccountId}`)
-      .map(data =>{
-               data.json();
-               console.log("customer data", data.json());
-     
-      }) .catch(error => error);
+      .map(data => data.json())
+      .catch(error => error);
 
     // Handle the new Billing account data.
     this.requestObservable.subscribe(

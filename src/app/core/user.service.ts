@@ -1,16 +1,15 @@
 /**
  * Created by patrick.purcell on 5/2/2017.
  */
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
+import { environment } from 'environments/environment';
 import { clone, filter, find, forEach, get, map, pull } from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
-import { environment } from 'environments/environment';
 import { IUser, IUserSecurityQuestions, IUserSigningUp } from './models/User.model';
-import {HttpClient} from 'app/core/httpclient';
 
 function getBillingAccountIds(user: IUser): string[] {
   return user
@@ -91,8 +90,7 @@ export class UserService implements CanActivate {
 
   constructor(
     private router: Router,
-    private Http: Http,
-    private _http: HttpClient
+    private Http: Http
   ) {
 
     // Make the Observables (User, Billing Account Ids, Customer Account Id) for others to listen to.
@@ -233,7 +231,7 @@ export class UserService implements CanActivate {
     return this.Http.post(this.getSecQuestionUrl, body, options)
       .map(res => res.json())
       .map(res => {
-        console.log('Questuion', res);
+        console.log('Question', res);
         return res;
       })
       .map(res => get(res, 'length') > 0 ? res : null)
@@ -256,8 +254,8 @@ export class UserService implements CanActivate {
     const token = localStorage.getItem('reset_password_token');
     const body = JSON.stringify({
       creds: {
-      Username: user_name, Password: password
-    },
+        Username: user_name, Password: password
+      },
       Token: token
     });
     const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
