@@ -17,6 +17,8 @@ export class BillingAccountService {
   public ActiveBillingAccountObservable: Observable<BillingAccountClass> = null;
   public BillingAccountsCache: BillingAccountClass[] = null;
   public BillingAccountsObservable: Observable<BillingAccountClass[]> = null;
+  public IsActiveBillingAccountUpForRenewalCache: boolean = null;
+  public IsActiveBillingAccountUpForRenewalObservable: Observable<boolean> = null;
 
   private initialized: boolean = null;
   private ActiveBillingAccountObservers: Observer<any>[] = [];
@@ -128,11 +130,39 @@ export class BillingAccountService {
     this.ActiveBillingAccountCache = ActiveBillingAccount;
     if (this.ActiveBillingAccountCache) { this.ActiveBillingAccountId = this.ActiveBillingAccountCache.Id; }
 
+    this.ActiveBillingAccountCache = this.SetIsUpFOrRenewalFlag(this.ActiveBillingAccountCache);
+
     // Emit our new data to all of our observers.
     this.emitToObservers(this.ActiveBillingAccountObservers, this.ActiveBillingAccountCache);
 
     return this.ActiveBillingAccountCache;
 
+  }
+
+  SetIsUpFOrRenewalFlag(ActiveBillingAccount: BillingAccountClass): BillingAccountClass {
+    const Start_Date = ActiveBillingAccount.Current_Offer.Start_Date;
+    const End_Date =  ActiveBillingAccount.Current_Offer.End_Date;
+    const Term = ActiveBillingAccount.Current_Offer.Term;
+
+    const startDate = new Date(Start_Date);
+    const currentDate = new Date(Date.now());
+    let req90Day: Date;
+
+    if (End_Date === null) {
+      const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ));
+      req90Day = new Date(new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ))
+        .setDate(new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 )).getDate() - 90 ));
+      console.log('End date null mark', req90Day);
+    } else {
+      req90Day = new Date(End_Date);
+      console.log('End date not null mark', req90Day);
+    }
+    if ( currentDate > req90Day) {
+      ActiveBillingAccount.IsUpForRenewal = true;
+    } else {
+      ActiveBillingAccount.IsUpForRenewal = false;
+    }
+    return ActiveBillingAccount;
   }
 
   private handleError(error: Response | any) {
