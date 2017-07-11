@@ -1,9 +1,7 @@
 
 import { Injectable} from '@angular/core';
-import { Headers, RequestOptions } from '@angular/http';
-import { environment } from 'environments/environment';
 
-import { clone, find, forEach, get, noop, map, pull, replace, set } from 'lodash';
+import { environment } from 'environments/environment';
 import { CardBrands, PaymethodClass, IPaymethodRequest, IPaymethodRequestEcheck, IPaymethodRequestCreditCard } from './models/Paymethod.model';
 import { HttpClient } from './httpclient';
 import { Observer } from 'rxjs/Observer';
@@ -12,6 +10,7 @@ import { UserService } from './user.service';
 import { CustomerAccountService } from './CustomerAccount.service';
 import { CustomerAccountClass } from './models/CustomerAccount.model';
 import { BillingAccountService } from './BillingAccount.service';
+import { clone, find, forEach, get, noop, map, pull, replace, set } from 'lodash';
 
 @Injectable()
 export class PaymethodService {
@@ -113,7 +112,7 @@ export class PaymethodService {
     // Handle the new payment methods data.
     this.requestObservable.subscribe(
       Paymethods => this.PaymethodsCache = <any>Paymethods,
-      error => this.handleError(error),
+      error => this.HttpClient.handleHttpError(error),
       () => {
         console.log('Paymethods =', this.PaymethodsCache);
         // We're no longer requesting.
@@ -125,20 +124,6 @@ export class PaymethodService {
 
     return this.requestObservable;
 
-  }
-
-  private handleError(error: Response | any) {
-    // In a real world app, you might use a remote logging infrastructure
-    let errMsg: string;
-    if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = get(body, 'error', JSON.stringify(body));
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
-    console.error(errMsg);
-    return Observable.throw(errMsg);
   }
 
   private emitToObservers(observers: Observer<any>[], data: any) {
@@ -208,12 +193,11 @@ export class PaymethodService {
 
           this.HttpClient.post('/Paymethods', JSON.stringify(body))
             .map(res => res.json())
-            .catch(error => this.handleError(error))
+            .catch(error => this.HttpClient.handleHttpError(error))
             .subscribe(res => {
-              console.log(res);
+              console.log('POST /Paymethods', res);
               observer.next(res);
               observer.complete();
-              // this.UpdatePaymethods();
             });
 
         });
@@ -227,7 +211,7 @@ export class PaymethodService {
       // Call out to the API to set the isActive to "false".
       this.HttpClient.put(`/Paymethods?id=${Paymethod.PayMethodId}`, '')
         .map(res => res.json())
-        .catch(error => this.handleError(error))
+        .catch(error => this.HttpClient.handleHttpError(error))
         .subscribe(res => {
           // Return back the result information, if our original caller wants it or not, and close.
           observer.next(res);

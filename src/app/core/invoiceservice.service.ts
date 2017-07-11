@@ -27,7 +27,7 @@ export class InvoiceService {
         bill.Invoice_Date = new Date(bill.Invoice_Date);
         bill.Due_Date = new Date(bill.Due_Date);
       }))
-      .catch(this.handleError);
+      .catch(error => this.http.handleHttpError(error));
   }
 
   getBill(invoiceId: string): Observable<IBill>   {
@@ -35,19 +35,15 @@ export class InvoiceService {
     const relativePath = `/invoice/${invoiceId}`;
     return this.http.get(relativePath)
       .map(res => res.json())
-     .catch(this.handleError);
+     .catch(error => this.http.handleHttpError(error));
   }
 
   getItemizedBillDetails(invoiceId: number): Observable<IBillLineItem[]>   {
 
     const relativePath = `/invoice/${invoiceId}/details`;
-    return this.http.get(relativePath).map((response: Response) => {
-               return <IBillLineItem[]> response.json();
-    }).catch(this.handleError);
+    return this.http.get(relativePath)
+      .map((response: Response) => { return <IBillLineItem[]> response.json(); })
+      .catch(error => this.http.handleHttpError(error));
   }
 
-  private handleError(error: Response) {
-    console.log(error.statusText);
-    return Observable.throw(error.statusText);
-  }
 }
