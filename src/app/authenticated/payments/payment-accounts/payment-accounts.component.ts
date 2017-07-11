@@ -63,7 +63,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
   }
   set Paymethods(Paymethods: PaymethodClass[]) {
     this._Paymethods = Paymethods;
-    this.ChangeDetectorRef.detectChanges();
+    this.ChangeDetectorRef.markForCheck();
   }
 
   removePaymethod(paymentMethod: PaymethodClass): void {
