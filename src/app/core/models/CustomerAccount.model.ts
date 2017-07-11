@@ -1,4 +1,6 @@
 
+import { assign } from 'lodash';
+
 export interface ICustomerAccountDriversLicense {
   Number: string;
   State: string;
@@ -40,11 +42,7 @@ export class CustomerAccountClass {
    * @param opts
    */
   constructor(opts: any) {
-    for (const key in opts) {
-      if (opts[key] !== undefined) {
-        this[key] = opts[key];
-      }
-    }
+    assign(this, opts);
   }
 
 }

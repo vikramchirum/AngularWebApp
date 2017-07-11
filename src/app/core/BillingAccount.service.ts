@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { clone, find, first, forEach, get, isString, map, pull } from 'lodash';
 import { BillingAccountClass } from './models/BillingAccount.model';
-import { PaymentMethod } from './PaymentMethod';
+import { PaymethodClass } from './models/Paymethod.model';
 import { HttpClient } from './httpclient';
 import { UserService } from './user.service';
 
@@ -21,10 +21,10 @@ export class BillingAccountService {
   public IsActiveBillingAccountUpForRenewalObservable: Observable<boolean> = null;
 
   private initialized: boolean = null;
-  private CustomerAccountId: string = null;
   private ActiveBillingAccountObservers: Observer<any>[] = [];
   private BillingAccountsObservers: Observer<any>[] = [];
   private requestObservable: Observable<Response> = null;
+  private _CustomerAccountId: string = null;
 
   set ActiveBillingAccountId(BillingAccountId: string) {
     localStorage.setItem('gexa_active_billing_account_id', BillingAccountId);
@@ -53,6 +53,10 @@ export class BillingAccountService {
       return () => pull(this.BillingAccountsObservers, observer);
     });
 
+    // Console.log the latest active billing account.
+    this.ActiveBillingAccountObservable.subscribe(
+      ActiveBillingAccount => console.log('ActiveBillingAccount = ', ActiveBillingAccount)
+    );
 
     // Respond to the first (initializing) call.
     this.BillingAccountsObservable.first().delay(0).subscribe(() => {
@@ -61,13 +65,20 @@ export class BillingAccountService {
     });
 
     // Keep up-to-date with the user's billing accounts via the customer id.
-    this.UserService.UserCustomerAccountObservable.subscribe(CustomerAccountId => {
-      if (this.CustomerAccountId !== CustomerAccountId) {
-        this.CustomerAccountId = CustomerAccountId;
-        this.UpdateBillingAccounts();
-      }
-    });
+    this.UserService.UserCustomerAccountObservable.subscribe(
+      CustomerAccountId => this.CustomerAccountId = CustomerAccountId
+    );
 
+  }
+
+  get CustomerAccountId(): string {
+    return this._CustomerAccountId;
+  }
+  set CustomerAccountId(CustomerAccountId: string) {
+    if (this._CustomerAccountId !== CustomerAccountId) {
+      this._CustomerAccountId = CustomerAccountId;
+      this.UpdateBillingAccounts();
+    }
   }
 
   UpdateBillingAccounts(): Observable<Response> {
@@ -89,6 +100,7 @@ export class BillingAccountService {
       BillingAccounts => this.BillingAccountsCache = <any>BillingAccounts,
       error => this.handleError(error),
       () => {
+        console.log('BillingAccounts =', this.BillingAccountsCache);
         // We're no longer requesting.
         this.requestObservable = null;
         // Emit our new data to all of our observers.
@@ -134,7 +146,7 @@ export class BillingAccountService {
 
     const startDate = new Date(Start_Date);
     const currentDate = new Date(Date.now());
-    var req90Day: Date;
+    let req90Day: Date;
 
     if (End_Date === null) {
       const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ));
@@ -179,12 +191,12 @@ export class BillingAccountService {
    * @param value
    * @returns {Promise<void>}
    */
-  applyNewAutoBillPay(paymentMethod: PaymentMethod, billingAccount: BillingAccountClass, value?: boolean): Promise<any> {
+  applyNewAutoBillPay(paymentMethod: PaymethodClass, billingAccount: BillingAccountClass, value?: boolean): Promise<any> {
 
     // TODO: Interact with the API to make this change. Use the below temporarily.
     for (const index in this.BillingAccountsCache) {
       if (this.BillingAccountsCache[index]) {
-        this.BillingAccountsCache[index].Enrolled_In_Auto_Bill_Pay = value === true;
+        this.BillingAccountsCache[index].Is_Auto_Bill_Pay = value === true;
         this.emitToObservers(this.BillingAccountsObservers, this.BillingAccountsCache);
         break;
       }

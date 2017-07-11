@@ -14,9 +14,9 @@
         >
           <table border="0">
             <tbody>
-            <tr><td class="payment-option-caption">{{ ActiveBillingAccount?.Enrolled_In_Auto_Bill_Pay ? 'You\'re enrolled in Autopay' : 'Never forget to pay your bill again, setup Autopay' }}</td></tr>
+            <tr><td class="payment-option-caption">{{ ActiveBillingAccount?.Is_Auto_Bill_Pay ? 'You\'re enrolled in Autopay' : 'Never forget to pay your bill again, setup Autopay' }}</td></tr>
             <tr><td class="payment-option-icon"><i class="fa fa-4x fa-clock-o"></i></td></tr>
-            <tr><td class="payment-option-name">{{ ActiveBillingAccount?.Enrolled_In_Auto_Bill_Pay ? 'View' : 'Setup' }} Autopay</td></tr>
+            <tr><td class="payment-option-name">{{ ActiveBillingAccount?.Is_Auto_Bill_Pay ? 'View' : 'Setup' }} Autopay</td></tr>
             </tbody>
           </table>
         </a>

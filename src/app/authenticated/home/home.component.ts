@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewContainerRef  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'mygexa-home',
@@ -6,7 +6,6 @@ import { Component, OnInit, ViewChild, ViewContainerRef  } from '@angular/core';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
 
   constructor() { }
 
