@@ -3,12 +3,14 @@
  */
 
 export interface IBudgetBillingEstimate {
-  billing_account_id: number;
-  totalKWH: number;
-  totalmonths: number;
-  averageKWH: number;
-  amount: number;
-  isbudgetbillingdefaultamount: number;
-  variance: number;
-  isvariancebillgenerated: boolean;
+  Billing_Account_Id: number;
+  TotalKWH: number;
+  TotalMonths: number;
+  AverageKWH?: number;
+  Amount: number;
+  IsBudgetBillingDefaultAmount: number;
+  Variance: number;
+  IsVarianceBillGenerated: boolean;
+  Past_Due: number;
+  Check_Past_Due: boolean;
 }

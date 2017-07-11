@@ -24,6 +24,10 @@ export class InvoiceService {
     return this.http.get(relativePath)
       .map(res => res.json())
       .map((bills: IBill[]) => forEach(bills, bill => {
+
+       console.log('rambesh');
+
+
         bill.Invoice_Date = new Date(bill.Invoice_Date);
         bill.Due_Date = new Date(bill.Due_Date);
       }))
