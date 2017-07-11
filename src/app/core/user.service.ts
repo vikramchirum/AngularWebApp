@@ -44,10 +44,9 @@ export class UserService implements CanActivate {
   private checkSecQuesUrl = environment.Api_Url + '/user/checkSecurityQues';
   private resetPasswordUrl = environment.Api_Url + '/user/resetPassword';
   private getUsernameUrl = environment.Api_Url + '/user/getUsername';
-  private loginUrl = environment.Api_Url + '/user/authorize';
+  private loginUrl = environment.Api_Url + '/user/authenticate';
   private registerUrl = environment.Api_Url + '/user/register';
   private updateEmail = environment.Api_Url + '/user/updateEmailAddress';
-  //private loginUrl =  'http://localhost:57827/api/user/authorize';
 
 
   get user_token(): string {
