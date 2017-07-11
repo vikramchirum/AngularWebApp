@@ -6,7 +6,7 @@
   </tr>
   </tbody>
 </table>
-<div *ngFor="let paymentMethod of PaymentMethods; let i = index">
+<div *ngFor="let paymentMethod of Paymethods; let i = index">
   <table class="card-table" cellpadding="0" cellspacing="0" width="100%" [ngClass]="{ 'card-table-odd': i % 2 !== 0 }">
     <tbody>
     <tr>
@@ -24,8 +24,8 @@
         </div>
       </td>
       <td class="card-abp" width="13%">
-        <button class="btn btn-block btn-blank" (click)="PaymentMethodSelected = paymentMethod">
-          <i class="fa fa-fw" [ngClass]="PaymentMethodSelected === paymentMethod ? 'fa-check-circle-o' : 'fa-circle-o' "></i>
+        <button class="btn btn-block btn-blank" (click)="PaymethodSelected = paymentMethod">
+          <i class="fa fa-fw" [ngClass]="PaymethodSelected === paymentMethod ? 'fa-check-circle-o' : 'fa-circle-o' "></i>
         </button>
       </td>
     </tr>
@@ -39,8 +39,8 @@
     <td width="13%" class="card-abp">
       <button
         class="btn btn-block btn-blank"
-        [disabled]="!PaymentMethodSelected"
-        (click)="submitPaymentMethod()"
+        [disabled]="!PaymethodSelected"
+        (click)="submitPaymethod()"
       >{{ submitText || 'Submit' }}</button>
     </td>
   </tr>
