@@ -12,7 +12,7 @@ import { equalCheck, validateEmail, validateInteger } from 'app/validators/valid
   encapsulation: ViewEncapsulation.None
 })
 export class LoginComponent implements OnInit {
-
+  invalidCreds: boolean;
   processing: boolean = null;
   registerForm: FormGroup = null;
   formSubmitted: boolean = null;
@@ -29,17 +29,20 @@ export class LoginComponent implements OnInit {
   ) {
     this.processing = false;
     this.registerForm = this.registerFormInit();
-
+    this.invalidCreds = false;
   }
 
   login() {
     this.processing = true;
     this.error = null;
     this.UserService.login(this.user_name, this.password).subscribe(
-      () => this.Router.navigate([this.UserService.UserState || '/']),
+      (result) => {this.Router.navigate([this.UserService.UserState || '/']);
+                   console.log('Result', result);
+                   },
       error => {
         this.error = error.Message;
         this.processing = false;
+        this.invalidCreds = true;
       }
     );
   }

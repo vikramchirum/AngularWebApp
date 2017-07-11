@@ -39,9 +39,7 @@
             />
             <small [hidden]="em.valid || em.pristine || processing" class="text-danger">Password is required</small>
           </div>
-
-          <p *ngIf="error && myGexaLoginForm.form.valid" class="text-danger">Either username or password is wrong</p>
-
+          <div class="text-danger" *ngIf="invalidCreds">Either username or password is wrong</div>
           <br>
 
           <div class="row">
@@ -97,7 +95,7 @@
         id="login-video-player"
         class="my-gexa-video"
         muted
-       
+
         preload="none"
         loop
         playsinline
