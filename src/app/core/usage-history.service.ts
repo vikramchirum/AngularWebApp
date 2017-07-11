@@ -1,15 +1,12 @@
 
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
+
 import { HttpClient } from './httpclient';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import * as _ from 'lodash';
-
-
 import { UsageHistory } from './models/usage-history.model';
-import {BillingAccountService} from "./BillingAccount.service";
-import {BillingAccountClass} from "./models/BillingAccount.model";
+import { BillingAccountService } from './BillingAccount.service';
+import { BillingAccountClass } from './models/BillingAccount.model';
+import { sortBy, values } from 'lodash';
 
 @Injectable()
 export class UsageHistoryService {
@@ -17,7 +14,7 @@ export class UsageHistoryService {
   private activeBillingAccount: BillingAccountClass = null;
 
   constructor(
-    private http: HttpClient,
+    private HttpClient: HttpClient,
     private BillingAccountService: BillingAccountService
   ) {
     this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
@@ -30,14 +27,13 @@ export class UsageHistoryService {
    * @param billingAccountId
    * @returns {Observable<UsageHistory[]>}
    */
-
   getUsageHistory(billingAccountId: number): Observable<UsageHistory[]> {
 
-    return this.http
+    return this.HttpClient
       .get(`/billing_accounts/${billingAccountId}/usage_history`)
       .map(res => res.json())
       .map(res => this.processApiData(res))
-      .catch(this.handleError);
+      .catch(error => this.HttpClient.handleHttpError(error));
   }
 
   private processApiData(data) {
@@ -59,12 +55,8 @@ export class UsageHistoryService {
       }
     }
 
-    return _.sortBy(_.values(months));
+    return sortBy(values(months));
 
   }
 
-  private handleError(error: Response) {
-    console.log(error.statusText);
-    return Observable.throw(error.statusText);
-  }
 }
