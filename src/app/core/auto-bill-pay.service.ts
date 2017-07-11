@@ -22,7 +22,7 @@ export class AutoBillPayService {
     const body = JSON.stringify({
       StartDate: now,
       TermAcceptanceDate: now,
-      PayMethodId: paymethod.Id,
+      PayMethodId: paymethod.PayMethodId,
       BillingAccountId: billingAccount.Id
     });
 
@@ -59,7 +59,7 @@ export class AutoBillPayService {
     const body = JSON.stringify({
       StartDate: now,
       TermAcceptanceDate: now,
-      PayMethodId: paymethod.Id,
+      PayMethodId: paymethod.PayMethodId,
       BillingAccountId: billingAccount.Id
     });
 
