@@ -43,7 +43,9 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     private ChangeDetectorRef: ChangeDetectorRef,
     private BillingAccountService: BillingAccountService,
     private PaymethodService: PaymethodService
-  ) {
+  ) { }
+
+  ngOnInit() {
     this.PaymethodService.ForteJsObservable.subscribe(
       ForteJs => this.ForteJs = ForteJs
     );
@@ -51,8 +53,6 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
       Paymethods => this.Paymethods = Paymethods
     );
   }
-
-  ngOnInit() {}
 
   ngOnDestroy() {
     this.PaymethodSubscription.unsubscribe();

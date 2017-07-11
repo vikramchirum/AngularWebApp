@@ -146,7 +146,7 @@ export class BillingAccountService {
 
     const startDate = new Date(Start_Date);
     const currentDate = new Date(Date.now());
-    var req90Day: Date;
+    let req90Day: Date;
 
     if (End_Date === null) {
       const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ));
