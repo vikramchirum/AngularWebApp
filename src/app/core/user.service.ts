@@ -91,7 +91,7 @@ export class UserService implements CanActivate {
   constructor(
     private router: Router,
     private Http: Http,
-    private _http: HttpClient
+    private HttpClient: HttpClient
   ) {
 
     // Make the Observables (User, Billing Account Ids, Customer Account Id) for others to listen to.
@@ -138,7 +138,7 @@ export class UserService implements CanActivate {
 
       this.Http.get(this.getUserFromMongo, options)
         .map(res => res.json())
-        .catch(error => this.handleError(error))
+        .catch(error => this.HttpClient.handleHttpError(error))
         .subscribe(res => this.ApplyUserData(res));
     }
 
@@ -153,20 +153,6 @@ export class UserService implements CanActivate {
     this.UserState = this.UserState || state.url;
     this.router.navigate(['/login']);
 
-  }
-
-  private handleError(error: Response | any) {
-    // In a real world app, you might use a remote logging infrastructure
-    let errMsg: string;
-    if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = get(body, 'error', JSON.stringify(body));
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
-    console.error(errMsg);
-    return Observable.throw(errMsg);
   }
 
   private emitToObservers(observers: Observer<any>[], data: any) {
@@ -184,7 +170,7 @@ export class UserService implements CanActivate {
     return this.Http.post(this.loginUrl, body.toString(), options)
       .map(res => res.json())
       .map(res => this.ApplyUserData(res))
-      .catch(error => this.handleError(error));
+      .catch(error => this.HttpClient.handleHttpError(error));
   }
 
   signup(user: IUserSigningUp): Observable<string> {
@@ -211,7 +197,7 @@ export class UserService implements CanActivate {
     return this.Http.post(this.registerUrl, body, options)
       .map(res => res.json())
       .map(res => this.ApplyUserData(res))
-      .catch(error => this.handleError(error));
+      .catch(error => this.HttpClient.handleHttpError(error));
   }
 
   getSecurityQuestions(): Observable<IUserSecurityQuestions[]> {
@@ -221,7 +207,7 @@ export class UserService implements CanActivate {
     return this.Http.get(this.secQuesUrl)
       .map(res => res.json())
       .map(res => this.getSecurityQuestionsCached = res)
-      .catch(error => this.handleError(error));
+      .catch(error => this.HttpClient.handleHttpError(error));
   }
 
   getSecQuesByUserName(user_name: string): Observable<string> {
@@ -231,12 +217,8 @@ export class UserService implements CanActivate {
 
     return this.Http.post(this.getSecQuestionUrl, body, options)
       .map(res => res.json())
-      .map(res => {
-        //console.log('Questuion', res);
-        return res;
-      })
       .map(res => get(res, 'length') > 0 ? res : null)
-      .catch(error => this.handleError(error));
+      .catch(error => this.HttpClient.handleHttpError(error));
   }
 
   checkSecQuesByUserName(user_name: string, security_answer: string) {
@@ -248,22 +230,23 @@ export class UserService implements CanActivate {
     return this.Http.post(this.checkSecQuesUrl, body, options)
       .map(res => res.json())
       .map(res => get(res, 'length') > 0 ?  localStorage.setItem('reset_password_token', res) : localStorage.setItem('reset_password_token', null))
-      .catch(error => this.handleError(error));
+      .catch(error => this.HttpClient.handleHttpError(error));
   }
 
   resetPassword (user_name: string, password: string) {
     const token = localStorage.getItem('reset_password_token');
     const body = JSON.stringify({
       creds: {
-      Username: user_name, Password: password
-    },
+        Username: user_name,
+        Password: password
+      },
       Token: token
     });
     const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
     if (token && token.length) {
       return this.Http.put(this.resetPasswordUrl, body, options)
         .map(res => res.json())
-        .catch(error => this.handleError(error));
+        .catch(error => this.HttpClient.handleHttpError(error));
     }
     return null;
   }
@@ -282,14 +265,14 @@ export class UserService implements CanActivate {
           return false;
         }
       })
-      .catch(error => this.handleError(error));
+      .catch(error => this.HttpClient.handleHttpError(error));
   }
 
   updateEmailAddress (Email_Address: string) {
     // Using http client
     // const realtivePath = `/user/updateEmailAddress/`;
     // this._http.put(realtivePath, Email_Address).map((res: Response) => {
-    // }).catch(this.handleError);
+    // }).catch(error => this.HttpClient.handleHttpError(error));
 
     const token =  localStorage.getItem('gexa_auth_token');
     const body = JSON.stringify({
@@ -300,7 +283,7 @@ export class UserService implements CanActivate {
     if (token && token.length) {
       return this.Http.put(this.updateEmail, body, options)
         .map(res => res.json())
-        .catch(error => this.handleError(error));
+        .catch(error => this.HttpClient.handleHttpError(error));
     }
     return null;
   }
@@ -309,7 +292,7 @@ export class UserService implements CanActivate {
     // Using http client
     // const realtivePath = `/user/updateEmailAddress/`;
     // this._http.put(realtivePath, Email_Address).map((res: Response) => {
-    // }).catch(this.handleError);
+    // }).catch(error => this.HttpClient.handleHttpError(error));
 
     const token =  localStorage.getItem('gexa_auth_token');
     const body = JSON.stringify({
@@ -320,7 +303,7 @@ export class UserService implements CanActivate {
     if (token && token.length) {
       return this.Http.put(this.updateEmail, body, options)
         .map(res => res.json())
-        .catch(error => this.handleError(error));
+        .catch(error => this.HttpClient.handleHttpError(error));
     }
     return null;
   }

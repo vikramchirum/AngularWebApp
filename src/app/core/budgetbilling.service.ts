@@ -21,36 +21,32 @@ export class BudgetBillingService {
 
   getBudgetBillingEstimate(billingAccountId: number): Observable<IBudgetBillingEstimate> {
     const relativePath = `/budget_billing/${billingAccountId}/estimate`;
-    return this.http.get(relativePath).map((response: Response) => {
-      return <IBudgetBillingEstimate> response.json();
-    }).catch(this.handleError);
+    return this.http.get(relativePath)
+      .map((response: Response) => { return <IBudgetBillingEstimate> response.json(); })
+      .catch(error => this.http.handleHttpError(error));
   }
 
   getBudgetBillingInfo(billingAccountId: number): Observable<IBudgetBillingInfo> {
     const relativePath = `/budget_billing/${billingAccountId}`;
-    return this.http.get(relativePath).map((response: Response) => {
-      return <IBudgetBillingInfo> response.json();
-    }).catch(this.handleError);
+    return this.http.get(relativePath)
+      .map((response: Response) => { return <IBudgetBillingInfo> response.json(); })
+      .catch(error => this.http.handleHttpError(error));
   }
 
   createBudgetBilling(request: ICreateBudgetBillingRequest): Observable<boolean[]> {
     const body = JSON.stringify(request);
     const relativePath = `/budget_billing/${request.billing_account_id}/create_budget_billing`;
-    return this.http.post(relativePath, body).map((response: Response) => {
-      return <boolean> response.json();
-    }).catch(this.handleError);
+    return this.http.post(relativePath, body)
+      .map((response: Response) => { return <boolean> response.json(); })
+      .catch(error => this.http.handleHttpError(error));
   }
 
   cancelBudgetBilling(request: ICancelBudgetBillingRequest): Observable<boolean> {
     const body = JSON.stringify(request);
     const relativePath = `/budget_billing/${request.billing_account_id}/cancel_budget_billing`;
-    return this.http.put(relativePath, body).map((response: Response) => {
-      return <boolean> response.json();
-    }).catch(this.handleError);
+    return this.http.put(relativePath, body)
+      .map((response: Response) => { return <boolean> response.json(); })
+      .catch(error => this.http.handleHttpError(error));
   }
 
-  private handleError(error: Response) {
-    console.log(error.statusText);
-    return Observable.throw(error.statusText);
-  }
 }
