@@ -32,7 +32,7 @@ export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
     this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable.subscribe(
       BillingAccounts => {
         this.BillingAccounts = BillingAccounts;
-        this.ChangeDetectorRef.markForCheck();
+        this.ChangeDetectorRef.detectChanges();
       }
     );
     if (this.selectedBillingAccount) {
@@ -41,7 +41,7 @@ export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
       this.ActiveBillingAccountsSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
         ActiveBillingAccount => {
           this.BillingAccountSelectedId = get(ActiveBillingAccount, 'Id', null);
-          this.ChangeDetectorRef.markForCheck();
+          this.ChangeDetectorRef.detectChanges();
         }
       );
     }
