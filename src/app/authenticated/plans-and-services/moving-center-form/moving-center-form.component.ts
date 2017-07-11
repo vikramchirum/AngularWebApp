@@ -36,7 +36,7 @@ export class MovingCenterFormComponent implements OnInit {
   selectedOffer = null;
   availableOffers = null;
   offerId:string;
-  
+
   public transferRequest: TransferRequest = null;
 
   private ActiveBillingAccountSubscription: Subscription = null;
@@ -51,7 +51,7 @@ export class MovingCenterFormComponent implements OnInit {
   tduCheck(currentTDU, newTDU) {
     return (control: FormControl) => {
       //If user is moving to same TDU, then user can keep the current plan or choose new one
-      if (control.value == "Current Plan") {
+      if (control.value === "Current Plan") {
         if (currentTDU !== newTDU) {
           return {
             tduCheck: true
@@ -141,7 +141,7 @@ export class MovingCenterFormComponent implements OnInit {
   previousButtonClicked() {
     this.previousClicked = true;
     this.nextClicked = !this.nextClicked;
-    this.ServicePlanForm.get('service_plan').reset();    
+    this.ServicePlanForm.get('service_plan').reset();
   }
 
   serviceChanged(event) {
@@ -151,12 +151,12 @@ export class MovingCenterFormComponent implements OnInit {
   getSelectedOffer(event) {
     this.selectedOffer = event;
     //OfferId should only get passed when user wants to change their offer
-    this.offerId = this.selectedOffer.Id;   
+    this.offerId = this.selectedOffer.Id;
   }
 
 
   onSubmitMove(addressForm, billSelector) {
-    this.submitted = true; 
+    this.submitted = true;
 
     addressForm.Current_Service_End_Date = addressForm.Current_Service_End_Date.jsdate.toISOString();
     addressForm.New_Service_Start_Date = addressForm.New_Service_Start_Date.jsdate.toISOString();
@@ -198,7 +198,7 @@ export class MovingCenterFormComponent implements OnInit {
         Primary_Phone_Number: this.customerDetails.Primary_Phone
       },
       Language_Preference: this.customerDetails.Language,
-      Promotion_Code_Used: '',     
+      Promotion_Code_Used: '',
       Date_Sent: new Date().toISOString()
     }
     this.transferService.submitMove(this.transferRequest);
@@ -213,7 +213,7 @@ export class MovingCenterFormComponent implements OnInit {
   }
 
 //TODO : get new address from API
-  onMovingAddressFormSubmit(addressForm) {    
+  onMovingAddressFormSubmit(addressForm) {
     //start date - when the customer wants to turn on their service.
     //TODO : Get TDU_DNS number from New Address API
    this.offerRequestParams = {
@@ -227,7 +227,7 @@ export class MovingCenterFormComponent implements OnInit {
       })
   }
 
-  getCurrentPlan(){  
+  getCurrentPlan(){
     this.selectedOffer = null;
     //should not pass offerId if the user selects existing Plan.
     this.offerId=undefined;
