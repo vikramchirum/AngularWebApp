@@ -1,6 +1,6 @@
 <section class="section-container">
 
-  <div [ngClass]="{'hidden-xs': router.url !== '/payments/payment-options'}">
+  <div [ngClass]="{'hidden-xs': Router.url !== '/payments/payment-options'}">
     <h2>Payment Options</h2>
     <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
 
@@ -9,8 +9,8 @@
     <div class="row payment-options">
       <div class="col-md-4">
         <a class="payment-option"
-           routerLinkActive="payment-option-active"
-           [routerLink]="router.url === '/payments/payment-options/auto-bill-payment' ? '/payments/payment-options' : '/payments/payment-options/auto-bill-payment'"
+           [ngClass]="{ 'payment-option-active': Router.url === '/payments/payment-options/auto-bill-payment' }"
+           [routerLink]="Router.url === '/payments/payment-options/auto-bill-payment' ? '/payments/payment-options' : '/payments/payment-options/auto-bill-payment'"
         >
           <table border="0">
             <tbody>
@@ -23,8 +23,8 @@
       </div>
       <div class="col-md-4">
         <a class="payment-option"
-           routerLinkActive="payment-option-active"
-           [routerLink]="router.url === '/payments/payment-options/budget-billing' ? '/payments/payment-options' : '/payments/payment-options/budget-billing'"
+           [ngClass]="{ 'payment-option-active': Router.url === '/payments/payment-options/budget-billing' }"
+           [routerLink]="Router.url === '/payments/payment-options/budget-billing' ? '/payments/payment-options' : '/payments/payment-options/budget-billing'"
         >
           <table border="0">
             <tbody>
@@ -37,8 +37,8 @@
       </div>
       <div class="col-md-4">
         <a class="payment-option"
-           routerLinkActive="payment-option-active"
-           [routerLink]="router.url === '/payments/payment-options/payment-extension' ? '/payments/payment-options' : '/payments/payment-options/payment-extension'"
+           [ngClass]="{ 'payment-option-active': Router.url === '/payments/payment-options/payment-extension' }"
+           [routerLink]="Router.url === '/payments/payment-options/payment-extension' ? '/payments/payment-options' : '/payments/payment-options/payment-extension'"
         >
           <table border="0">
             <tbody>
