@@ -12,6 +12,7 @@ import { httpFactory } from './httpFactory';
 import { BillService } from './Bill';
 import { BillingAccountService } from './BillingAccount.service';
 import { CustomerAccountService } from './CustomerAccount.service';
+import { PaymentsService } from './payments.service';
 import { PaymethodService } from './Paymethod.service';
 import { InvoiceService } from './invoiceservice.service';
 
@@ -31,6 +32,7 @@ import { InvoiceService } from './invoiceservice.service';
     BillService,
     BillingAccountService,
     CustomerAccountService,
+    PaymentsService,
     PaymethodService,
     InvoiceService
   ]
