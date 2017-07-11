@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
@@ -12,25 +12,29 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class PaymentOptionsComponent implements OnInit, OnDestroy {
 
-  private ActiveBillingAccount: BillingAccountClass = null;
-  private BillingAccounts: BillingAccountClass[] = [];
-  private BillingAccountsSubscription: Subscription = null;
+  private ActiveBillingAccountSubscription: Subscription = null;
 
-  constructor(
-    public router: Router,
-    private BillingAccountService: BillingAccountService
-  ) {
-    this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable
-      .subscribe((BillingAccounts: BillingAccountClass[]) => {
-        this.ActiveBillingAccount = this.BillingAccountService.ActiveBillingAccountCache;
-        this.BillingAccounts = BillingAccounts;
-      });
+  private _ActiveBillingAccount: BillingAccountClass = null;
+  get ActiveBillingAccount() { return this._ActiveBillingAccount; }
+  set ActiveBillingAccount(ActiveBillingAccount) {
+    this._ActiveBillingAccount = ActiveBillingAccount;
+    this.ChangeDetectorRef.detectChanges();
   }
 
-  ngOnInit() { }
+  constructor(
+    public Router: Router,
+    private BillingAccountService: BillingAccountService,
+    private ChangeDetectorRef: ChangeDetectorRef
+  ) { }
+
+  ngOnInit() {
+    this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+      ActiveBillingAccount => this.ActiveBillingAccount = ActiveBillingAccount
+    );
+  }
 
   ngOnDestroy() {
-    this.BillingAccountsSubscription.unsubscribe();
+    this.ActiveBillingAccountSubscription.unsubscribe();
   }
 
 }

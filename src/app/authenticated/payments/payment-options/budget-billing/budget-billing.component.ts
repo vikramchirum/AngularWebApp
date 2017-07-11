@@ -83,7 +83,11 @@ export class BudgetBillingComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     // Hide the modal when the user navigates away (the backdrop can get stuck!)
-    jQuery(this.confirmation_modal.nativeElement).modal('hide');
+    try {
+      jQuery(this.confirmation_modal.nativeElement).modal('hide');
+    } catch (err) {
+      // The modal was never opened or there is nothing to close.
+    }
   }
 
   startSubmit(formGroup: FormGroup): void {
