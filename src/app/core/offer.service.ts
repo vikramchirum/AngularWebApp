@@ -21,16 +21,11 @@ export class OfferService {
     return this.http
       .get(`/v2/Offers?option.startDate=${offer.startDate}&option.plan.tDU.duns_Number=${offer.dunsNumber}`)
       .map((response: Response) => this.processApiData(response))
-      .catch(this.handleError);
+      .catch(error => this.http.handleHttpError(error));
   }
 
-    private processApiData(res: Response) {
-      return res.json();
-
-    }
-
-     private handleError(error: Response) {
-    return Observable.throw(error.statusText);
+  private processApiData(res: Response) {
+    return res.json();
   }
 
 }
