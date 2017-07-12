@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Response } from '@angular/http';
 
-import { HttpClient, HandleError } from './httpclient';
+import { HttpClient } from './httpclient';
 import { Observable } from 'rxjs/Observable';
 import { BillingAccountClass } from './models/BillingAccount.model';
 import { PaymethodClass } from './models/Paymethod.model';
+import { isFunction, noop } from 'lodash';
 
 @Injectable()
 export class AutoBillPayService {
@@ -15,7 +16,8 @@ export class AutoBillPayService {
 
   EnrollInAutoBillPay(
     billingAccount: BillingAccountClass,
-    paymethod: PaymethodClass
+    paymethod: PaymethodClass,
+    callback?: Function
   ): Observable<Response> {
 
     const now = new Date;
@@ -23,28 +25,47 @@ export class AutoBillPayService {
       StartDate: now,
       TermAcceptanceDate: now,
       PayMethodId: paymethod.PayMethodId,
-      BillingAccountId: billingAccount.Id
+      BillingAccountList: [
+        {
+          BillingAccountId: billingAccount.Id,
+          BillingSystem: 'GEMS',
+          AccountTypeName: 'ContractServicePoint',
+          BusinessUnit: 'GEXA'
+        }
+      ]
     });
 
-    const request = this.HttpClient.post('AutoPaymentConfigs', body)
+    const request = this.HttpClient.post('/AutoPaymentConfigs/EnrollAutoPay', body)
       .map(res => res.json())
-      .catch(err => HandleError(err));
+      .catch(err => this.HttpClient.handleHttpError(err));
 
-    request.subscribe(res => console.log('POST AutoPaymentConfigs res', res));
+    request.subscribe(
+      res => console.log('POST api/AutoPaymentConfigs/EnrollAutoPay res', res),
+      err => console.log('POST api/AutoPaymentConfigs/EnrollAutoPay err', err),
+      () => isFunction(callback) ? callback() : noop()
+    );
 
     return request;
 
   }
 
   CancelAutoBillPay(
-    billingAccount: BillingAccountClass
+    billingAccount: BillingAccountClass,
+    callback?: Function
   ): Observable<Response> {
 
-    const request = this.HttpClient.delete('AutoPaymentConfigs', billingAccount.Id)
+    const body = JSON.stringify({
+      Billing_Account_Id: billingAccount.Id
+    });
+    const request = this.HttpClient.put('/AutoPaymentConfigs/CancelAutoPay', body)
       .map(res => res.json())
-      .catch(err => HandleError(err));
+      .catch(err => this.HttpClient.handleHttpError(err));
 
-    request.subscribe(res => console.log('DELETE AutoPaymentConfigs res', res));
+    request.subscribe(
+      res => console.log('PUT api/AutoPaymentConfigs/CancelAutoPay res', res),
+      err => console.log('PUT api/AutoPaymentConfigs/CancelAutoPay err', err),
+      () => isFunction(callback) ? callback() : noop()
+    );
 
     return request;
 
@@ -52,7 +73,8 @@ export class AutoBillPayService {
 
   UpdateAutoBillPay(
     billingAccount: BillingAccountClass,
-    paymethod: PaymethodClass
+    paymethod: PaymethodClass,
+    callback?: Function
   ): Observable<Response> {
 
     const now = new Date;
@@ -60,14 +82,25 @@ export class AutoBillPayService {
       StartDate: now,
       TermAcceptanceDate: now,
       PayMethodId: paymethod.PayMethodId,
-      BillingAccountId: billingAccount.Id
+      BillingAccountList: [
+        {
+          BillingAccountId: billingAccount.Id,
+          BillingSystem: 'GEMS',
+          AccountTypeName: 'ContractServicePoint',
+          BusinessUnit: 'GEXA'
+        }
+      ]
     });
 
-    const request = this.HttpClient.put('AutoPaymentConfigs', body)
+    const request = this.HttpClient.put('/AutoPaymentConfigs/ModifyAutoPay', body)
       .map(res => res.json())
-      .catch(err => HandleError(err));
+      .catch(err => this.HttpClient.handleHttpError(err));
 
-    request.subscribe(res => console.log('PUT AutoPaymentConfigs res', res));
+    request.subscribe(
+      res => console.log('PUT api/AutoPaymentConfigs/ModifyAutoPay res', res),
+      err => console.log('PUT api/AutoPaymentConfigs/ModifyAutoPay err', err),
+      () => isFunction(callback) ? callback() : noop()
+    );
 
     return request;
 

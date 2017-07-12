@@ -24,9 +24,7 @@ export class PaymethodSelectorComponent implements OnInit, OnDestroy {
     private PaymethodService: PaymethodService
   ) { }
 
-  get Paymethods(): PaymethodClass[] {
-    return this._Paymethods;
-  }
+  get Paymethods(): PaymethodClass[] { return this._Paymethods; }
   set Paymethods(Paymethods: PaymethodClass[]) {
     this._Paymethods = Paymethods;
     if (

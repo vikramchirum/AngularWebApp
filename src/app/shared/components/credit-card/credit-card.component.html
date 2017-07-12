@@ -1,4 +1,4 @@
-<div class="credit-card-container" [ngClass]="{ 'credit-card-container-inactive': Inactive === true }">
+<div class="credit-card-container" *ngIf="Paymethod" [ngClass]="{ 'credit-card-container-inactive': Inactive === true }">
   <!-- <h4>Card<span class="pull-right">{{ Paymethod.Card_Type === 'debit' ? 'Debit' : 'Credit' }}</span></h4> -->
   <h4 class="credit-card-number">&times;&times;&times;&times; &times;&times;&times;&times; &times;&times;&times;&times; {{ Paymethod.CreditCard?.AccountNumber || '????' }}</h4>
   <h4>
