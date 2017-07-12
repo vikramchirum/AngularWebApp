@@ -1,23 +1,27 @@
 <section class="account-profile" *ngIf="customerDetails">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-8">
       <h2>
-        Personal Information
+        Hello, {{customerDetails.First_Name + ' ' + customerDetails.Last_Name}}
         <!--<i class="fa fa-user-circle fa-spin"></i>-->
       </h2>
     </div>
-  </div>
-  <div class="account-info">
-    <h3>{{customerDetails.First_Name + ' ' + customerDetails.Last_Name}}</h3>
-    <p>Account No: {{accountNumber}}</p>
+    <div class="col-md-4">
+             <div class="alert alert-info pull-right">Account No: {{accountNumber}}</div>
+    </div>
   </div>
 
+        <p></p>
+
   <div class="row">
-    <div class="col-md-6 col-xs-12">
-      <h5>Email Address</h5>
-      <div class="profile-inline">
-        <h4>{{emailAddress}}</h4>
-         <a (click)="toggleEmailEdit($event)">{{ emailEditing ? 'Close' : 'Edit'}}</a></div>
+    <div class="col-md-4 col-xs-12">
+      <label class="control-label">Email Address</label>
+    </div>
+    <div class="col-md-4 col-xs-12">
+        <div class="form-control">{{emailAddress}}</div>
+    </div>
+    <div class="col-xs-1">
+         <a class="btn btn-primary" (click)="toggleEmailEdit($event)">{{ emailEditing ? 'Close' : 'Edit'}}</a>
     </div>
   </div>
 
@@ -27,13 +31,16 @@
 
 <br>
   <div class="row">
-    <div class="col-md-6 col-xs-12">
-      <h5>Phone Number</h5>
-      <div class="profile-inline">
-        <h4>{{customerDetails.Phone}}</h4>
-         <a (click)="togglePhoneEdit($event)">{{ phoneEditing ? 'Close' : 'Edit'}}</a></div>
+    <div class="col-md-4 col-xs-12">
+      <label class="control-label">Phone Number</label>
     </div>
-  </div>
+    <div class="col-md-4 col-xs-12">
+      <div class="form-control">{{customerDetails.Phone}}</div>
+    </div>
+         <div class="col-xs-1">
+         <a class="btn btn-primary"  (click)="togglePhoneEdit($event)">{{ phoneEditing ? 'Close' : 'Edit'}}</a>
+         </div>
+    </div>
 
 
    <div *ngIf="phoneEditing">

@@ -1,4 +1,5 @@
 export class TransferRequest {
+    Email_Address:string;
     Billing_Account_Id: string;
     Current_Service_End_Date: string;
     Final_Bill_To_Old_Billing_Address?: boolean;
