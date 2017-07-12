@@ -8,7 +8,7 @@ export interface IBudgetBillingEstimate {
   TotalMonths: number;
   AverageKWH?: number;
   Amount: number;
-  IsBudgetBillingDefaultAmount: number;
+  IsBudgetBillingDefaultAmount: boolean;
   Variance: number;
   IsVarianceBillGenerated: boolean;
   Past_Due: number;

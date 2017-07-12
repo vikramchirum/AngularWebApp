@@ -1,56 +1,57 @@
 /**
  * Created by vikram.chirumamilla on 7/11/2017.
  */
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { minimumMoneyAmount } from 'app/validators/validator';
-import { NumberToMoney } from 'app/shared/pipes/NumberToMoney.pipe';
-import * as $ from 'jquery';
+import { minimumValueValidator } from 'app/validators/validator';
 
-declare const jQuery: $;
+import { IBudgetBillingEstimate } from '../../../../core/models/budgetbilling/budgetbillingestimate.model';
+import { ICreateBudgetBillingRequest } from '../../../../core/models/budgetbilling/createbudgetbillingrequest.model';
 
 @Component({
   selector: 'mygexa-budget-billing-selector',
   templateUrl: './budget-billing-selector.component.html',
   styleUrls: ['./budget-billing-selector.component.scss']
 })
-export class BudgetBillingSelectorComponent implements OnInit {
+export class BudgetBillingSelectorComponent implements OnInit, OnDestroy {
 
-  formGroup: FormGroup = null;
-
-  @Input() amountInitial: string = null;
-  @Input() amountMinimum: number = null;
+  budgetBillingFormGroup: FormGroup;
+  createBudgetBillingRequest: ICreateBudgetBillingRequest = {} as ICreateBudgetBillingRequest;
+  @Input() budgetBillingEstimate: IBudgetBillingEstimate = null;
   @Input() editing: boolean = null;
   @Input() onCancel: any = null;
   @Input() onSubmit: any = null;
+  public minimumAmount: number;
 
-  constructor(
-    private FormBuilder: FormBuilder
-  ) {}
+  constructor(private formBuilder: FormBuilder) {
+  }
 
   ngOnInit() {
-    this.formGroup = this.FormBuilder.group({
-      amount: ['', Validators.compose([Validators.required, minimumMoneyAmount(this.amountMinimum)])],
-      agree: ['', Validators.required]
+    this.minimumAmount = this.budgetBillingEstimate.Amount;
+
+    alert(this.minimumAmount);
+
+    this.budgetBillingFormGroup = this.formBuilder.group({
+      amount: [{value: this.budgetBillingEstimate.Amount, disabled: false}
+        , [Validators.required, minimumValueValidator(this.budgetBillingEstimate.Amount)]],
+      agree: [false, [Validators.pattern('true')]]
     });
-    if (this.amountInitial) {
-      this.formGroup.controls['amount'].patchValue(this.amountInitial);
-    } else if (this.amountMinimum) {
-      this.formGroup.controls['amount'].patchValue(`$${NumberToMoney(this.amountMinimum)}`);
-    }
   }
 
-  formGroupSubmit(): void {
+  save(): void {
     if (typeof this.onSubmit === 'function') {
-      this.onSubmit(this.formGroup);
+      this.onSubmit(this.budgetBillingFormGroup);
     }
   }
 
-  formGroupCancel(): void {
+  cancel(): void {
     if (typeof this.onCancel === 'function') {
       this.onCancel();
     }
   }
 
+  ngOnDestroy() {
+  }
 }

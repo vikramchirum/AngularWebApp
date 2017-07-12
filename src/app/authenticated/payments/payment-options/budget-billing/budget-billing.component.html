@@ -6,7 +6,8 @@
       <ng-container *ngIf="budgetBillingEstimate$ | async; else loading let budgetBillingEstimate; ">
 
         <ng-container *ngIf="!getBudgetBillingEligibility(budgetBillingEstimate); else SignUpBudgetBilling">
-          <ng-container *ngIf=" budgetBillingEstimate.Check_Past_Due">
+
+          <ng-container *ngIf="budgetBillingEstimate.Check_Past_Due && (budgetBillingEstimate.Amount > 0)">
 
             Unfortunately we are unable to process your request to enroll in Budget Billing because you have a past due
             amount of <b>$ {{ budgetBillingEstimate.Past_Due }} </b>
@@ -16,7 +17,8 @@
             Once your balance has been paid in full, you may enroll in Budget Billing.
 
           </ng-container>
-          <ng-container *ngIf="budgetBillingEstimate.Variance > 0">
+
+          <ng-container *ngIf="(budgetBillingEstimate.Variance > 0) && (budgetBillingEstimate.Amount > 0)">
 
             Unfortunately we are unable to process your request to enroll in Budget Billing until you have paid your
             variance bill amount of
@@ -27,25 +29,73 @@
             Once your balance has been paid in full, you may enroll in Budget Billing.
 
           </ng-container>
-          <ng-container *ngIf="!budgetBillingEstimate.IsVarianceBillGenerated > 0">
-            "Unfortunately we are unable to process your request to enroll in Budget Billing until your variance bill is
+
+          <ng-container *ngIf="(!budgetBillingEstimate.IsVarianceBillGenerated > 0) && (budgetBillingEstimate.Amount > 0)">
+            Unfortunately we are unable to process your request to enroll in Budget Billing until your variance bill is
             generated.
           </ng-container>
+
+          <ng-container *ngIf="budgetBillingEstimate.Amount <= 0">
+            Please contact Customer Services at 1-866-961-9399 to set-up your budget billing needs...
+          </ng-container>
+
         </ng-container>
+
+
         <ng-template #SignUpBudgetBilling>
 
-          <div class="row text-center">
-            <div class="col-md-4 col-md-push-8">
-              <a><img class="payment-options-budget-billing-how-it-works"
-                      src="/assets/payments/payment-options-budget-billing-how-it-works.jpg"/></a>
-            </div>
-            <ng-template #loading>loading...</ng-template>
+          <ng-container *ngIf="!signingUpToBudgetBilling; else SigningUpToBudgetBilling;">
+            <div class="row text-center">
+              <div class="col-md-4 col-md-push-8">
+                <a><img class="payment-options-budget-billing-how-it-works"
+                        src="/assets/payments/payment-options-budget-billing-how-it-works.jpg"/></a>
+              </div>
+              <div class="col-md-8 col-md-pull-4">
 
-          </div>
+                <h4>
+
+                  <ng-container
+                    *ngIf="budgetBillingEstimate.IsBudgetBillingDefaultAmount; else BudgetBillingAmountInfo;">
+                    Our records indicate that we do not have sufficient usage history at this location.
+                    Therefore your budget billing amount will be set up in the amount of ${{
+                    budgetBillingEstimate.Amount | number : '1.2-2' }}
+                    As we receive additional usage for your location, the budget billing amount of ${{
+                    budgetBillingEstimate.Amount | number : '1.2-2' }}
+                    will be adjusted to better reflect your consumption.
+                  </ng-container>
+
+                  <ng-template #BudgetBillingAmountInfo>
+                    Based on your average monthly usage of <b> {{ budgetBillingEstimate.AverageKWH }} </b> kWh, your
+                    Budget Billing amount will be <b> ${{ budgetBillingEstimate.Amount | number : '1.2-2' }} </b> for
+                    the
+                    initial 12 months.
+                  </ng-template>
+                </h4>
+
+
+                <h1>Start Up Budget Billing<br/>
+                  <small>for as little as</small>
+                </h1>
+                <h1 class="start-at">${{ budgetBillingEstimate.Amount | number : '1.2-2' }} Per Month *</h1>
+                <button class="btn btn-lg btn-primary" (click)="signingUpToBudgetBilling = true">Sign Up Now!</button>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #SigningUpToBudgetBilling>
+            <mygexa-budget-billing-selector
+              [editing]="signedUpToBudgetBillingEditing"
+              [onCancel]="cancelSubmit"
+              [onSubmit]="startSubmit"
+              [budgetBillingEstimate]="budgetBillingEstimate"></mygexa-budget-billing-selector>
+          </ng-template>
         </ng-template>
+
+
       </ng-container>
     </ng-template>
   </ng-container>
+  <ng-template #loading>loading...</ng-template>
 </section>
 
 
