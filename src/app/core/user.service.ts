@@ -2,15 +2,15 @@
  * Created by patrick.purcell on 5/2/2017.
  */
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
+import { Http, Headers, URLSearchParams, RequestOptions } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 import { environment } from 'environments/environment';
-import { clone, filter, find, forEach, get, map, pull } from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
 import { IUser, IUserSecurityQuestions, IUserSigningUp } from './models/User.model';
 import { HttpClient } from './httpclient';
+import { clone, filter, find, forEach, get, map, pull } from 'lodash';
 
 function getBillingAccountIds(user: IUser): string[] {
   return user
