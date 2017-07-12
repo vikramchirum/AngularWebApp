@@ -98,7 +98,7 @@ export class BillingAccountService {
     // Handle the new Billing account data.
     this.requestObservable.subscribe(
       BillingAccounts => this.BillingAccountsCache = <any>BillingAccounts,
-      error => this.handleError(error),
+      error => this.HttpClient.handleHttpError(error),
       () => {
         console.log('BillingAccounts =', this.BillingAccountsCache);
         // We're no longer requesting.
@@ -163,20 +163,6 @@ export class BillingAccountService {
       ActiveBillingAccount.IsUpForRenewal = false;
     }
     return ActiveBillingAccount;
-  }
-
-  private handleError(error: Response | any) {
-    // In a real world app, you might use a remote logging infrastructure
-    let errMsg: string;
-    if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = get(body, 'error', JSON.stringify(body));
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
-    console.error(errMsg);
-    return Observable.throw(errMsg);
   }
 
   private emitToObservers(observers: Observer<any>[], data: any) {

@@ -32,8 +32,8 @@ export class UsageSummaryComponent implements OnDestroy {
   };
   public barChartColors: any[] = [
     {
-      backgroundColor: '#959595',
-      borderColor: '#000000',
+      backgroundColor: 'rgb(27,141,205)',
+      borderColor: ' rgb(27,141,205)',
       borderWidth: 1,
     }
   ]
