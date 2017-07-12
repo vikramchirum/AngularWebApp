@@ -1,12 +1,22 @@
 .paperless-status {
-    padding-top :40px;
-    .profile-inline{
-    h4{
-        display:inline;
+  .status {
+    background-color: rgba(46,177,52,1.0) ;
+    color:#ffffff;
+    display: inline-block;
+    border-radius: 100px;
+    height: 200px;
+    width: 200px;
+    text-align: center;
+    div {
+      margin-top: 30%;
+      font-size: 28px;
+      width: 90%;
+      margin: 0 auto;
     }
+  }
 }
 .switch-to-paperless {
-    background-color: #eeeeee;
+    background-color: #fff;
     margin-top:20px;
     padding-bottom:20px;
     padding-top:20px;
@@ -15,5 +25,4 @@
         padding:20px;
     }
 
-}
 }

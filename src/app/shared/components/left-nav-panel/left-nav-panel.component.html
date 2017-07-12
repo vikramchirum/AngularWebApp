@@ -1,4 +1,4 @@
-<ul class="sidenav">
-        <li><h4>{{sideNavData.panelTitle}}</h4></li>
-        <li *ngFor="let item of sideNavData.items"><a [routerLinkActive]="['active']" routerLink={{item.navUrl}}>{{item.title}} </a></li>
+<h1>{{sideNavData.panelTitle}}</h1>
+       <ul class="sidenav list-group">
+        <li *ngFor="let item of sideNavData.items" class="list-group-item" [routerLinkActive]="['active']"><a  routerLink={{item.navUrl}}>{{item.title}} </a></li>
 </ul>
