@@ -40,6 +40,7 @@ const routes: Route[] = [
       { path: 'payments', loadChildren: loadPaymentModule },
       { path: 'plans-and-services', redirectTo: 'plans-and-services/my-services-plans', pathMatch: 'full' },
       { path: 'plans-and-services', loadChildren: loadPlansAndServicesModule },
+      { path: 'controls-and-insights', redirectTo: 'controls-and-insights/usage-history', pathMatch: 'full' },
       { path: 'controls-and-insights', loadChildren: loadControlInsightsModule }
     ]
   }

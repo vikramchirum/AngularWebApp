@@ -1,5 +1,5 @@
 
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 
 import { find, get } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
@@ -24,18 +24,25 @@ export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
   private ActiveBillingAccountsSubscription: Subscription = null;
 
   constructor(
-    private BillingAccountService: BillingAccountService
+    private BillingAccountService: BillingAccountService,
+    private ChangeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable.subscribe(
-      BillingAccounts => this.BillingAccounts = BillingAccounts
+      BillingAccounts => {
+        this.BillingAccounts = BillingAccounts;
+        this.ChangeDetectorRef.detectChanges();
+      }
     );
     if (this.selectedBillingAccount) {
       this.BillingAccountSelectedId = this.selectedBillingAccount.Id;
     } else {
       this.ActiveBillingAccountsSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
-        ActiveBillingAccount => this.BillingAccountSelectedId = get(ActiveBillingAccount, 'Id', null)
+        ActiveBillingAccount => {
+          this.BillingAccountSelectedId = get(ActiveBillingAccount, 'Id', null);
+          this.ChangeDetectorRef.detectChanges();
+        }
       );
     }
   }

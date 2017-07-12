@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs/Subscription';
   templateUrl: './payment-method-add-cc.component.html',
   styleUrls: ['./payment-method-add-cc.component.scss']
 })
-export class PaymentMethodAddCcComponent implements OnInit, OnDestroy {
+export class PaymethodAddCcComponent implements OnInit, OnDestroy {
 
   @Input() form_horizontal: boolean = null;
 

@@ -46,7 +46,7 @@ export class MovingCenterFormComponent implements OnInit {
   tduCheck(currentTDU, newTDU) {
     return (control: FormControl) => {
       //If user is moving to same TDU, then user can keep the current plan or choose new one
-      if (control.value == "Current Plan") {
+      if (control.value === "Current Plan") {
         if (currentTDU !== newTDU) {
           return {
             tduCheck: true
@@ -245,7 +245,6 @@ export class MovingCenterFormComponent implements OnInit {
     this.transferService.submitMove(this.transferRequest).subscribe(
       () => this.submitted = true),
       error => {
-        console.log('------------------------------------------------');
         console.log('Transfer Request API error', error.Message);
       }
   }
