@@ -1,6 +1,9 @@
 @import '../../../../styles';
 .usage-summary{
   //  height:20em;
+  .thumbnail {
+    min-height: 296px;
+  }
   .bar-chart{
       height:12.5em;
   }

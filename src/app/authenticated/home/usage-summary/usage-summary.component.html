@@ -1,11 +1,13 @@
-<div class="usage-summary card-container card-container-height" *ngIf="barChartData.length < 1">
-  <h1 class="text-center"><i class='fa fa-bolt fa-spin'></i> Loading...</h1>
+<div class="usage-summary thumbnail-container-height" *ngIf="barChartData.length < 1">
+  <div class="thumbnail">
+  <br/>
+  <p class="text-center"><i class='fa fa-circle-o-notch fa-spin'></i> Loading...</p>
+  </div>
 </div>
-<div class="usage-summary card-container card-container-height" *ngIf="barChartData.length > 0">
-  <h4>Usage Summary</h4>
-  <div class="row position-relative">
-    <div class="col-md-7">
-      <div *ngFor='let index of barChartData' class="bar-chart">
+<div class="usage-summary thumbnail-container-height" *ngIf="barChartData.length > 0">
+  <div class="thumbnail">
+    <div class="clearfix">
+      <div *ngFor='let index of barChartData' class="bar-chart col-md-offset-1 col-md-10">
         <canvas
           baseChart
           [datasets]="index.datasets"
@@ -17,12 +19,14 @@
           (chartHover)="chartHovered($event)"
           (chartClick)="chartClicked($event)"
         ></canvas>
-      </div>
+      </div>  
     </div>
-    <div class="col-md-5 card-button">
-      <div class="text-right">
-        <button class="btn btn-wireframe">View More</button>
+      <div class="caption clearfix">
+         <h4>Usage Summary</h4>
+          <p>Learn valuable insights to take control of your energy usage, and control your bottom line.</p>
+          <p>
+            <button class="btn btn-success col-md-offset-2 col-md-8">View More Now</button>
+         </p>
       </div>
-    </div>
-  </div>
+   </div>
 </div>
