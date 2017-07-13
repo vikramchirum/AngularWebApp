@@ -4,6 +4,7 @@
 
 export class ICreateBudgetBillingRequest {
 
-  billing_account_id: number;
-  user_name: string;
+  Billing_Account_Id: number;
+  User_Name: string;
+  Amount: number;
 }

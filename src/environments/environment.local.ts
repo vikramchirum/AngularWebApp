@@ -7,5 +7,6 @@ export const environment = {
   Api_Url: 'http://localhost:62204/api',
   Api_Token: 'ce6c931123fd4b699f92f53a0fa1fefd',
   Forte_Api_Key: 'GwnI15Vj36',
-  Documents_Url: 'https://docsdev.gexaenergy.com/invoice/generate/'
+  Documents_Url: 'https://docsdev.gexaenergy.com/invoice/generate/',
+  DollarAmountFormatter: '1.2-2'
 };
