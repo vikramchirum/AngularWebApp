@@ -17,7 +17,7 @@ export class OfferService {
    */
 
   getOffers(offer): Observable<any[]> {
-    console.log("Offer params", offer)
+    console.log('Offer params', offer)
     return this.http
       .get(`/v2/Offers?option.startDate=${offer.startDate}&option.plan.tDU.duns_Number=${offer.dunsNumber}`)
       .map((response: Response) => this.processApiData(response))
