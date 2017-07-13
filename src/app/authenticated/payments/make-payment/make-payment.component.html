@@ -4,19 +4,27 @@
 
   <br/>
 
-  <form class="form-horizontal" [formGroup]="formGroup" novalidate>
+  <ng-container *ngIf="!LatestInvoice">
+    <h4 class="text-muted"><i class="fa fa-fw fa-spinner fa-spin"></i> Loading your current bill.</h4>
+  </ng-container>
+
+  <form
+    class="form-horizontal"
+    [hidden]="!LatestInvoice"
+    [formGroup]="formGroup" novalidate
+  >
 
     <div class="form-group form-group-lg">
       <label for="payment-amount" class="col-md-4 col-lg-2 control-label">Current Balance</label>
       <div class="col-md-8 col-lg-6">
-        <p class="form-control-static"><b>${{ Bill?.total() | NumberToMoneyPipe }}</b></p>
+        <p class="form-control-static"><b>${{ LatestInvoice?.Current_Charges | FloatToMoneyPipe }}</b></p>
       </div>
     </div>
 
     <div class="form-group form-group-lg">
       <label for="payment-amount" class="col-md-4 col-lg-2 control-label">Past Due</label>
       <div class="col-md-8 col-lg-6">
-        <p class="form-control-static text-muted">${{ Bill?.balance_forward | NumberToMoneyPipe }}</p>
+        <p class="form-control-static text-muted">${{ LatestInvoice?.Balance_Forward | FloatToMoneyPipe }}</p>
       </div>
     </div>
 
@@ -97,7 +105,7 @@
 
     <div class="form-group">
       <div class="col-lg-8 text-right">
-        <button type="submit" class="btn btn-lg btn-primary" (click)="paymentSubmit()" [disabled]="!paymentReady()">Make Payment</button>
+        <button type="submit" class="btn btn-lg btn-primary" (click)="paymentSubmit()" [disabled]="!paymentReady">Make Payment</button>
       </div>
     </div>
 
