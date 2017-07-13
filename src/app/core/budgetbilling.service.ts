@@ -35,7 +35,7 @@ export class BudgetBillingService {
 
   createBudgetBilling(request: ICreateBudgetBillingRequest): Observable<boolean[]> {
     const body = JSON.stringify(request);
-    const relativePath = `/budget_billing/${request.billing_account_id}/create`;
+    const relativePath = `/budget_billing/${request.Billing_Account_Id}/create`;
     return this.http.post(relativePath, body).map((response: Response) => {
       return <boolean> response.json();
     }).catch(this.handleError);
@@ -43,7 +43,7 @@ export class BudgetBillingService {
 
   cancelBudgetBilling(request: ICancelBudgetBillingRequest): Observable<boolean> {
     const body = JSON.stringify(request);
-    const relativePath = `/budget_billing/${request.billing_account_id}/cancel`;
+    const relativePath = `/budget_billing/${request.Billing_Account_Id}/cancel`;
     return this.http.put(relativePath, body).map((response: Response) => {
       return <boolean> response.json();
     }).catch(this.handleError);

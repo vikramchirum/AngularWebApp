@@ -10,7 +10,7 @@
           <ng-container *ngIf="budgetBillingEstimate.Check_Past_Due && (budgetBillingEstimate.Amount > 0)">
 
             Unfortunately we are unable to process your request to enroll in Budget Billing because you have a past due
-            amount of <b>$ {{ budgetBillingEstimate.Past_Due }} </b>
+            amount of <b>$ {{ budgetBillingEstimate.Past_Due | number : dollarAmountFormatter }} </b>
             We have several options by which you can pay your bill: A payment can be made online by selecting <b>Make a
             Payment</b>.
             You may also visit any MoneyGram location where a processing fee will be applied.
@@ -22,7 +22,7 @@
 
             Unfortunately we are unable to process your request to enroll in Budget Billing until you have paid your
             variance bill amount of
-            <b>$ {{ budgetBillingEstimate.Variance }} </b>.
+            <b>$ {{ budgetBillingEstimate.Variance | number : dollarAmountFormatter }} </b>.
             We have several options by which you can pay your bill: A payment can be made online by selecting <b>Make a
             Payment</b>.
             You may also visit any MoneyGram location where a processing fee will be applied.
@@ -58,15 +58,15 @@
                     *ngIf="budgetBillingEstimate.IsBudgetBillingDefaultAmount; else BudgetBillingAmountInfo;">
                     Our records indicate that we do not have sufficient usage history at this location.
                     Therefore your budget billing amount will be set up in the amount of ${{
-                    budgetBillingEstimate.Amount | number : '1.2-2' }}
+                    budgetBillingEstimate.Amount | number : dollarAmountFormatter }}
                     As we receive additional usage for your location, the budget billing amount of ${{
-                    budgetBillingEstimate.Amount | number : '1.2-2' }}
+                    budgetBillingEstimate.Amount | number : dollarAmountFormatter }}
                     will be adjusted to better reflect your consumption.
                   </ng-container>
 
                   <ng-template #BudgetBillingAmountInfo>
                     Based on your average monthly usage of <b> {{ budgetBillingEstimate.AverageKWH }} </b> kWh, your
-                    Budget Billing amount will be <b> ${{ budgetBillingEstimate.Amount | number : '1.2-2' }} </b> for
+                    Budget Billing amount will be <b> ${{ budgetBillingEstimate.Amount | number : dollarAmountFormatter }} </b> for
                     the
                     initial 12 months.
                   </ng-template>
@@ -76,7 +76,7 @@
                 <h1>Start Up Budget Billing<br/>
                   <small>for as little as</small>
                 </h1>
-                <h1 class="start-at">${{ budgetBillingEstimate.Amount | number : '1.2-2' }} Per Month *</h1>
+                <h1 class="start-at">${{ budgetBillingEstimate.Amount | number : dollarAmountFormatter }} Per Month *</h1>
                 <button class="btn btn-lg btn-primary" (click)="signingUpToBudgetBilling = true">Sign Up Now!</button>
               </div>
             </div>
@@ -84,9 +84,7 @@
 
           <ng-template #SigningUpToBudgetBilling>
             <mygexa-budget-billing-selector
-              [editing]="signedUpToBudgetBillingEditing"
-              [onCancel]="cancelSubmit"
-              [onSubmit]="startSubmit"
+              (onBudgetBillingEvent)="handleBudgetBillingEvent($event)"
               [budgetBillingEstimate]="budgetBillingEstimate"></mygexa-budget-billing-selector>
           </ng-template>
         </ng-template>
