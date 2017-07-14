@@ -42,7 +42,11 @@ export class AutoBillPayService {
     request.subscribe(
       res => console.log('POST api/AutoPaymentConfigs/EnrollAutoPay res', res),
       err => console.log('POST api/AutoPaymentConfigs/EnrollAutoPay err', err),
-      () => isFunction(callback) ? callback() : noop()
+      () => {
+        billingAccount.Is_Auto_Bill_Pay = true;
+        billingAccount.PayMethodId = paymethod.PayMethodId;
+        if (isFunction(callback)) { callback(); }
+      }
     );
 
     return request;
@@ -64,7 +68,11 @@ export class AutoBillPayService {
     request.subscribe(
       res => console.log('PUT api/AutoPaymentConfigs/CancelAutoPay res', res),
       err => console.log('PUT api/AutoPaymentConfigs/CancelAutoPay err', err),
-      () => isFunction(callback) ? callback() : noop()
+      () => {
+        billingAccount.Is_Auto_Bill_Pay = false;
+        billingAccount.PayMethodId = null;
+        if (isFunction(callback)) { callback(); }
+      }
     );
 
     return request;
@@ -78,8 +86,7 @@ export class AutoBillPayService {
   ): Observable<Response> {
 
     const now = new Date;
-    const body = JSON.stringify({
-      StartDate: now,
+    const body = {
       TermAcceptanceDate: now,
       PayMethodId: paymethod.PayMethodId,
       BillingAccountList: [
@@ -90,16 +97,21 @@ export class AutoBillPayService {
           BusinessUnit: 'GEXA'
         }
       ]
-    });
+    };
 
-    const request = this.HttpClient.put('/AutoPaymentConfigs/ModifyAutoPay', body)
+    console.log('/AutoPaymentConfigs/ModifyAutoPay', JSON.stringify(body, null, '  '));
+
+    const request = this.HttpClient.put('/AutoPaymentConfigs/ModifyAutoPay', JSON.stringify(body))
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err));
 
     request.subscribe(
       res => console.log('PUT api/AutoPaymentConfigs/ModifyAutoPay res', res),
       err => console.log('PUT api/AutoPaymentConfigs/ModifyAutoPay err', err),
-      () => isFunction(callback) ? callback() : noop()
+      () => {
+        billingAccount.PayMethodId = paymethod.PayMethodId;
+        if (isFunction(callback)) { callback(); }
+      }
     );
 
     return request;

@@ -3,10 +3,11 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@ang
 import { PaymethodAddCcComponent } from 'app/shared/components/payment-method-add-cc/payment-method-add-cc.component';
 import { PaymethodAddEcheckComponent } from 'app/shared/components/payment-method-add-echeck/payment-method-add-echeck.component';
 import { BillingAccountService } from 'app/core/BillingAccount.service';
+import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
 import { PaymethodService } from 'app/core/Paymethod.service';
 import { PaymethodClass, IPaymethodRequestEcheck, IPaymethodRequestCreditCard } from 'app/core/models/Paymethod.model';
 import { Subscription } from 'rxjs/Subscription';
-import { get } from 'lodash';
+import { find, get } from 'lodash';
 
 interface IPaymentMessage {
   classes: string[];
@@ -21,9 +22,7 @@ interface IPaymentMessage {
 export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
   PaymentMessage: IPaymentMessage = null;
-  PaymentEditting: PaymethodClass = null;
   PaymentAbpSelecting: PaymethodClass = null;
-  PaymentAbpSelected: PaymethodClass = null;
 
   @ViewChild(PaymethodAddCcComponent)
   private addCreditCardComponent: PaymethodAddCcComponent;
@@ -36,8 +35,37 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
   addingCreditCardFormValid: boolean = null;
 
   private ForteJs: any = null;
+
+  private _PaymentEditting: PaymethodClass = null;
+  get PaymentEditting(): PaymethodClass { return this._PaymentEditting; }
+  set PaymentEditting(payMethod) {
+    this._PaymentEditting = payMethod;
+    // BUGFIX: The below fixes a rendering bug.
+    // If the user adds a Paymethod, and tries to remove a
+    // paymethod the editing prompt won't show.
+    this.ChangeDetectorRef.detectChanges();
+  }
+
+  private _PaymentAbpSelected: PaymethodClass = null;
+  get PaymentAbpSelected(): PaymethodClass { return this._PaymentAbpSelected; }
+  set PaymentAbpSelected(payMethod) {
+    this._PaymentAbpSelected = payMethod;
+    // BUGFIX: The below fixes a rendering bug.
+    // If the user adds a Paymethod, and tries to remove an ABP
+    // paymethod and select a new method, the check won't show.
+    this.ChangeDetectorRef.detectChanges();
+  }
+
+  private BillingAccountsSubscription: Subscription = null;
+  private BillingAccounts: BillingAccountClass[] = null;
+
   private PaymethodSubscription: Subscription = null;
   private _Paymethods: PaymethodClass[] = null;
+  get Paymethods(): PaymethodClass[] { return this._Paymethods; }
+  set Paymethods(Paymethods: PaymethodClass[]) {
+    this._Paymethods = Paymethods;
+    this.ChangeDetectorRef.detectChanges();
+  }
 
   constructor(
     private ChangeDetectorRef: ChangeDetectorRef,
@@ -49,6 +77,9 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     this.PaymethodService.ForteJsObservable.subscribe(
       ForteJs => this.ForteJs = ForteJs
     );
+    this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable.subscribe(
+      BillingAccounts => this.BillingAccounts = BillingAccounts
+    );
     this.PaymethodSubscription = this.PaymethodService.PaymethodsObservable.subscribe(
       Paymethods => this.Paymethods = Paymethods
     );
@@ -58,12 +89,8 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     this.PaymethodSubscription.unsubscribe();
   }
 
-  get Paymethods(): PaymethodClass[] {
-    return this._Paymethods;
-  }
-  set Paymethods(Paymethods: PaymethodClass[]) {
-    this._Paymethods = Paymethods;
-    this.ChangeDetectorRef.detectChanges();
+  isUsedForAutoBillPay(paymethod: PaymethodClass): boolean {
+    return !!find(this.BillingAccounts, ['PayMethodId', paymethod.PayMethodId]);
   }
 
   removePaymethod(paymentMethod: PaymethodClass): void {

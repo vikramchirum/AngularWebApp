@@ -1,48 +1,60 @@
-<table cellpadding="0" cellspacing="0" width="100%">
-  <tbody>
-  <tr>
-    <td width="87%"><h4>Your Payment Options</h4></td>
-    <td width="13%" class="card-abp"><h4 class="text-center">Select</h4></td>
-  </tr>
-  </tbody>
-</table>
-<div *ngFor="let paymentMethod of Paymethods; let i = index">
-  <table class="card-table" cellpadding="0" cellspacing="0" width="100%" [ngClass]="{ 'card-table-odd': i % 2 !== 0 }">
-    <tbody>
-    <tr>
-      <td width="87%">
-        <div class="row">
-          <div class="card-brand col-xs-6 col-md-4">
-            <i class="fa fa-fw" [ngClass]="paymentMethod.getFontAwesomeTag()"></i>{{ paymentMethod.getBrand() }}
-          </div>
-          <div class="card-ending col-xs-6 col-md-4">
-            ENDING IN <b>{{ paymentMethod.getLast() }}</b>
-          </div>
-          <div class="card-expires col-xs-6 col-xs-offset-6 col-md-4 col-md-offset-0">
-            {{ paymentMethod.CreditCard ? 'EXP ' + paymentMethod.getExpiration() : '' }}
-          </div>
-        </div>
-      </td>
-      <td class="card-abp" width="13%">
-        <button class="btn btn-block btn-blank" (click)="PaymethodSelected = paymentMethod">
-          <i class="fa fa-fw" [ngClass]="PaymethodSelected === paymentMethod ? 'fa-check-circle-o' : 'fa-circle-o' "></i>
-        </button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-</div>
-<table class="card-table" cellpadding="0" cellspacing="0" width="100%">
-  <tbody>
-  <tr>
-    <td width="87%">&nbsp;</td>
-    <td width="13%" class="card-abp">
-      <button
-        class="btn btn-block btn-blank"
-        [disabled]="!PaymethodSelected"
-        (click)="submitPaymethod()"
-      >{{ submitText || 'Submit' }}</button>
-    </td>
-  </tr>
-  </tbody>
-</table>
+<ng-template *ngIf="Paymethods === null; then WaitForPaymethods else LoadedPaymethods"></ng-template>
+<ng-template #WaitForPaymethods>
+  <h4 class="text-muted"><i class="fa fa-fw fa-spinner fa-spin"></i> Loading your saved payment methods.</h4>
+</ng-template>
+<ng-template #LoadedPaymethods>
+  <ng-template *ngIf="Paymethods.length < 1; then NoPaymethodsToList else ListPaymethods"></ng-template>
+  <ng-template #NoPaymethodsToList>
+    <h4 class="text-muted"><i class="fa fa-fw fa-info-circle"></i> You have no saved payment methods to list.</h4>
+  </ng-template>
+  <ng-template #ListPaymethods>
+    <table cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+      <tr>
+        <td width="87%"><h4>Your Payment Options</h4></td>
+        <td width="13%" class="card-abp"><h4 class="text-center">Select</h4></td>
+      </tr>
+      </tbody>
+    </table>
+    <div *ngFor="let paymentMethod of Paymethods; let i = index">
+      <table class="card-table" cellpadding="0" cellspacing="0" width="100%" [ngClass]="{ 'card-table-odd': i % 2 !== 0 }">
+        <tbody>
+        <tr>
+          <td width="87%">
+            <div class="row">
+              <div class="card-brand col-xs-6 col-md-4">
+                <i class="fa fa-fw" [ngClass]="paymentMethod.getFontAwesomeTag()"></i>{{ paymentMethod.getBrand() }}
+              </div>
+              <div class="card-ending col-xs-6 col-md-4">
+                ENDING IN <b>{{ paymentMethod.getLast() }}</b>
+              </div>
+              <div class="card-expires col-xs-6 col-xs-offset-6 col-md-4 col-md-offset-0">
+                {{ paymentMethod.CreditCard ? 'EXP ' + paymentMethod.getExpiration() : '' }}
+              </div>
+            </div>
+          </td>
+          <td class="card-abp" width="13%">
+            <button class="btn btn-block btn-blank" (click)="PaymethodSelected = paymentMethod">
+              <i class="fa fa-fw" [ngClass]="PaymethodSelected === paymentMethod ? 'fa-check-circle-o' : 'fa-circle-o' "></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <table class="card-table" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+      <tr>
+        <td width="87%">&nbsp;</td>
+        <td width="13%" class="card-abp">
+          <button
+            class="btn btn-block btn-blank"
+            [disabled]="!PaymethodSelected"
+            (click)="submitPaymethod()"
+          >{{ submitText || 'Submit' }}</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </ng-template>
+</ng-template>

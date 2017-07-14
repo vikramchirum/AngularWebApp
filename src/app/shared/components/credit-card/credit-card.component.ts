@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
+import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
 import { PaymethodService } from 'app/core/Paymethod.service';
 import { PaymethodClass } from 'app/core/models/Paymethod.model';
 import { Subscription } from 'rxjs/Subscription';
@@ -14,6 +15,7 @@ export class CreditCardComponent implements OnDestroy, OnInit {
 
   @Input() Inactive: boolean = null;
   @Input() PaymethodId: number = null;
+  @Input() ActiveBillingAccount: BillingAccountClass = null;
 
   private PaymethodsSubscription: Subscription = null;
   private _Paymethod: PaymethodClass = null;
@@ -28,10 +30,13 @@ export class CreditCardComponent implements OnDestroy, OnInit {
     private ChangeDetectorRef: ChangeDetectorRef
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.PaymethodsSubscription = this.PaymethodService.PaymethodsObservable.subscribe(
       Paymethods => {
-        const targetPaymethod = find(Paymethods, ['PayMethodId', this.PaymethodId]);
+        const targetPaymethod = find(Paymethods, ['PayMethodId', this.ActiveBillingAccount
+          ? this.ActiveBillingAccount.PayMethodId
+          : this.PaymethodId
+        ]);
         if (targetPaymethod) {
           this.Paymethod = targetPaymethod;
         }
@@ -39,7 +44,7 @@ export class CreditCardComponent implements OnDestroy, OnInit {
     );
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.PaymethodsSubscription.unsubscribe();
   }
 

@@ -7,14 +7,14 @@
       <div class="row">
         <div class="col-sm-6">Auto Bill Payment Details</div>
         <div class="col-sm-6 text-right text-xs-left">
-          <button class="btn btn-lg btn-blank" (click)="unenrollInAutoBillPaySelected()" style="padding: 10px 0;">UN-ENROLL AND STOP AUTO BILL PAY</button>
+          <button class="btn btn-lg btn-blank" (click)="unenrollInAutoBillPaySelected()">UN-ENROLL AND STOP AUTO BILL PAY</button>
         </div>
       </div>
     </h2>
     <br/>
 
     <mygexa-credit-card
-      [PaymethodId]="ActiveBillingAccount?.PayMethodId"
+      [ActiveBillingAccount]="ActiveBillingAccount"
     ></mygexa-credit-card>
     <br/>
 
