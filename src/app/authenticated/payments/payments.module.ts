@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import {CommonModule, CurrencyPipe, DecimalPipe} from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 
@@ -32,6 +32,6 @@ import { ModalModule } from 'ngx-bootstrap';
     MakePaymentComponent,
     PaymentAccountsComponent
   ],
-  providers: [ DatePipe, CurrencyPipe ]
+  providers: [ DatePipe, CurrencyPipe, DecimalPipe ]
 })
 export class PaymentsModule { }
