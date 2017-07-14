@@ -3,6 +3,7 @@
   [ngClass]="{ 'form-horizontal': !!form_horizontal }"
   (submit)="formGroupSubmit()"
   novalidate
+  autocomplete="off"
 >
   <ng-template *ngIf="!!form_horizontal; then FormHorizontal else FormNormal"></ng-template>
   <ng-template #FormHorizontal>

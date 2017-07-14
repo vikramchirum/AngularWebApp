@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
+import { AutoBillPayService } from 'app/core/auto-bill-pay.service';
 import { PaymethodAddCcComponent } from 'app/shared/components/payment-method-add-cc/payment-method-add-cc.component';
 import { PaymethodAddEcheckComponent } from 'app/shared/components/payment-method-add-echeck/payment-method-add-echeck.component';
 import { BillingAccountService } from 'app/core/BillingAccount.service';
@@ -21,9 +22,6 @@ interface IPaymentMessage {
 })
 export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
-  PaymentMessage: IPaymentMessage = null;
-  PaymentAbpSelecting: PaymethodClass = null;
-
   @ViewChild(PaymethodAddCcComponent)
   private addCreditCardComponent: PaymethodAddCcComponent;
   @ViewChild(PaymethodAddEcheckComponent)
@@ -33,8 +31,12 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
   addingEcheckFormValid: boolean = null;
   addingCreditCard: boolean = null;
   addingCreditCardFormValid: boolean = null;
-
-  private ForteJs: any = null;
+  ActiveBillingAccount: BillingAccountClass = null;
+  ActiveBillingAccountSubscription: Subscription = null;
+  BillingAccounts: BillingAccountClass[] = null;
+  BillingAccountsSubscription: Subscription = null;
+  PaymentMessage: IPaymentMessage = null;
+  PaymentAbpSelecting: PaymethodClass = null;
 
   private _PaymentEditting: PaymethodClass = null;
   get PaymentEditting(): PaymethodClass { return this._PaymentEditting; }
@@ -56,8 +58,6 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     this.ChangeDetectorRef.detectChanges();
   }
 
-  private BillingAccountsSubscription: Subscription = null;
-  private BillingAccounts: BillingAccountClass[] = null;
 
   private PaymethodSubscription: Subscription = null;
   private _Paymethods: PaymethodClass[] = null;
@@ -69,13 +69,14 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
   constructor(
     private ChangeDetectorRef: ChangeDetectorRef,
+    private AutoBillPayService: AutoBillPayService,
     private BillingAccountService: BillingAccountService,
     private PaymethodService: PaymethodService
   ) { }
 
   ngOnInit() {
-    this.PaymethodService.ForteJsObservable.subscribe(
-      ForteJs => this.ForteJs = ForteJs
+    this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+      ActiveBillingAccount => this.ActiveBillingAccount = ActiveBillingAccount
     );
     this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable.subscribe(
       BillingAccounts => this.BillingAccounts = BillingAccounts
@@ -86,6 +87,8 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.ActiveBillingAccountSubscription.unsubscribe();
+    this.BillingAccountsSubscription.unsubscribe();
     this.PaymethodSubscription.unsubscribe();
   }
 
@@ -123,6 +126,10 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
     const PaymethodToDelete = this.PaymentEditting;
 
+    // this.AutoBillPayService.CancelAutoBillPay(
+    //   this.ActiveBillingAccount
+    // );
+
     this.PaymethodService.RemovePaymethod(PaymethodToDelete).subscribe(
       result => this.PaymentMessage = {
         classes: ['alert', 'alert-success'],
@@ -147,21 +154,23 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     const PaymethodToDelete = this.PaymentEditting;
     const PaymethodToUse = this.PaymentAbpSelected;
 
-    this.BillingAccountService
-      .applyNewAutoBillPay(PaymethodToUse, this.BillingAccountService.ActiveBillingAccountCache, true)
-      .then(() => {
-        this.PaymethodService.RemovePaymethod(PaymethodToDelete).subscribe(
-          () => this.PaymentMessage = {
-            classes: ['alert', 'alert-success'],
-            innerHTML: [
-              `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted and `,
-              `<b>Auto Bill Pay</b> is using your payment account ending in <b>${ PaymethodToUse.getLast() }</b>!`
-            ].join('')
-          },
-          error => console.log('handle error => ', error),
-          () => this.removePaymethodEditAutoPayCancel()
-        );
-      });
+    // this.AutoBillPayService.UpdateAutoBillPay(
+    //   this.ActiveBillingAccount,
+    //   PaymethodToUse
+    // );
+
+    this.PaymethodService.RemovePaymethod(PaymethodToDelete).subscribe(
+      () => this.PaymentMessage = {
+        classes: ['alert', 'alert-success'],
+        innerHTML: [
+          `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted and `,
+          `<b>Auto Bill Pay</b> is using your payment account ending in <b>${ PaymethodToUse.getLast() }</b>!`
+        ].join('')
+      },
+      error => console.log('handle error => ', error),
+      () => this.removePaymethodEditAutoPayCancel()
+    );
+
   }
 
   removePaymethodEditAutoPayCancel(): void {

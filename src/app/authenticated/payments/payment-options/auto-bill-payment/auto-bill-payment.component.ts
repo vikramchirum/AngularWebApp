@@ -84,9 +84,7 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
       this.AutoBillPayService.UpdateAutoBillPay(
         this.ActiveBillingAccount,
         selectedPaymethod,
-        () => {
-          this.autoBillPaymethod = selectedPaymethod;
-        }
+        () => this.autoBillPaymethod = selectedPaymethod
       );
     }
     this.switchingAutoBillPay = false;
