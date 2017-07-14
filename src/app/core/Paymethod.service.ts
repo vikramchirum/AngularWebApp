@@ -2,15 +2,17 @@
 import { Injectable} from '@angular/core';
 
 import { environment } from 'environments/environment';
-import { CardBrands, PaymethodClass, IPaymethodRequest, IPaymethodRequestEcheck, IPaymethodRequestCreditCard } from './models/Paymethod.model';
+import {
+  CardBrands, PaymethodClass, IPaymethodRequest,
+  IPaymethodRequestEcheck, IPaymethodRequestCreditCard
+} from './models/Paymethod.model';
 import { HttpClient } from './httpclient';
 import { Observer } from 'rxjs/Observer';
 import { Observable } from 'rxjs/Observable';
 import { UserService } from './user.service';
 import { CustomerAccountService } from './CustomerAccount.service';
 import { CustomerAccountClass } from './models/CustomerAccount.model';
-import { BillingAccountService } from './BillingAccount.service';
-import { clone, find, forEach, get, noop, map, pull, replace, set } from 'lodash';
+import { clone, cloneDeep, find, forEach, get, isError, noop, map, pull, replace, set } from 'lodash';
 
 @Injectable()
 export class PaymethodService {
@@ -30,8 +32,7 @@ export class PaymethodService {
   constructor(
     private HttpClient: HttpClient,
     private UserService: UserService,
-    private CustomerAccountService: CustomerAccountService,
-    private BillingAccountService: BillingAccountService
+    private CustomerAccountService: CustomerAccountService
   ) {
 
     // Make Observables for others to listen to.
@@ -131,6 +132,31 @@ export class PaymethodService {
     forEach(clone(observers), observer => observer.next(data));
   }
 
+  GetForteOneTimeToken(Paymethod: IPaymethodRequest): Observable<any> {
+
+    const PaymethodPayload = cloneDeep(Paymethod.CreditCard || Paymethod.Echeck);
+
+    set(PaymethodPayload, 'api_login_id', environment.Forte_Api_Key);
+
+    return Observable.create((observer: Observer<any>) => {
+
+      this.ForteJsCache.createToken(PaymethodPayload)
+        .error(error => {
+          console.log('Forte error:', error);
+          observer.error(error);
+          observer.complete();
+        })
+        .success(data => {
+          console.log('Forte success:', data);
+          observer.next(data);
+          observer.complete();
+        });
+
+    });
+
+  }
+
+  // Credit Card methods / processors.
   AddPaymethodCreditCard(account_holder: string, Paymethod: IPaymethodRequestCreditCard): Observable<any> {
     const FortePaymethodPayload: IPaymethodRequest = {
       account_holder: account_holder,
@@ -144,36 +170,71 @@ export class PaymethodService {
     return this.AddPaymethod(FortePaymethodPayload);
   }
 
+  AddPaymethodCreditCardFromComponent(addCreditCardComponent): Observable<any> {
+    return this.AddPaymethodCreditCard.apply(
+      this,
+      this.AddPaymethodCreditCardFromComponentObject(addCreditCardComponent)
+    );
+  }
+
+  AddPaymethodCreditCardFromComponentObject(addCreditCardComponent): any {
+    return [
+      addCreditCardComponent.formGroup.value.cc_name.toUpperCase(),
+      <IPaymethodRequestCreditCard> {
+        card_number: addCreditCardComponent.formGroup.value.cc_number,
+        expire_year: addCreditCardComponent.formGroup.value.cc_year,
+        expire_month: addCreditCardComponent.formGroup.value.cc_month,
+        cvv: addCreditCardComponent.formGroup.value.cc_ccv
+      }
+    ];
+  }
+
+  // eCheck methods / processors.
   AddPaymethodEcheck(account_holder: string, Paymethod: IPaymethodRequestEcheck): Observable<any> {
     const FortePaymethodPayload: IPaymethodRequest = {
       account_holder: account_holder,
       Echeck: {
         account_number: Paymethod.account_number,
-        account_type: 'c',
+        account_type: Paymethod.account_type,
         routing_number: Paymethod.routing_number
       }
     };
     return this.AddPaymethod(FortePaymethodPayload);
   }
 
+  AddPaymethodEcheckFromComponent(addEcheckComponent): Observable<any> {
+    return this.AddPaymethodEcheck.apply(
+      this,
+      this.AddPaymethodEcheckFromComponentObject(addEcheckComponent)
+    );
+  }
+
+  AddPaymethodEcheckFromComponentObject(addEcheckComponent): any {
+    return [
+      addEcheckComponent.formGroup.value.echeck_name.toUpperCase(),
+      <IPaymethodRequestEcheck> {
+        account_number: addEcheckComponent.formGroup.value.echeck_accounting,
+        account_type: 'c',
+        routing_number: addEcheckComponent.formGroup.value.echeck_routing,
+        other_info: addEcheckComponent.formGroup.value.echeck_info
+      }
+    ];
+  }
+
+  // Paymethod methods.
   AddPaymethod(Paymethod: IPaymethodRequest): Observable<any> {
 
     const PaymethodType = Paymethod.CreditCard ? 'CreditCard' : 'eCheck';
-    const PaymethodPayload = Paymethod.CreditCard || Paymethod.Echeck;
-
-    set(PaymethodPayload, 'api_login_id', environment.Forte_Api_Key);
 
     return Observable.create((observer: Observer<any>) => {
 
-      this.ForteJsCache.createToken(PaymethodPayload)
-        .error(data => {
-          observer.next(data);
-          observer.complete();
-        })
-        .success(data => {
+      this.GetForteOneTimeToken(Paymethod).subscribe(
+        ForteResult => {
+
+          if (isError(ForteResult)) { return observer.error(ForteResult); }
 
           const body = {
-            Token: data.onetime_token,
+            Token: ForteResult.onetime_token,
             Paymethod_Customer: {
               Id: this.CustomerAccountId,
               FirstName: this.CustomerAccount.First_Name,
@@ -182,11 +243,11 @@ export class PaymethodService {
             PaymethodName: 'My Paymethod Name',
             PaymethodType: PaymethodType,
             AccountHolder: Paymethod.account_holder.toUpperCase(),
-            AccountNumber: data.last_4
+            AccountNumber: ForteResult.last_4
           };
 
           if (Paymethod.CreditCard) {
-            set(body, 'CreditCardType', replace(get(CardBrands, data.card_type, 'Unknown'), ' ', ''));
+            set(body, 'CreditCardType', replace(get(CardBrands, ForteResult.card_type, 'Unknown'), ' ', ''));
           } else {
             set(body, 'RoutingNumber', Paymethod.Echeck.routing_number);
           }
@@ -200,7 +261,8 @@ export class PaymethodService {
               observer.complete();
             });
 
-        });
+        }
+      );
 
     });
 
@@ -225,10 +287,6 @@ export class PaymethodService {
           }
         });
     });
-  }
-
-  Is_Used_For_Autopay(Paymethod: PaymethodClass): boolean {
-    return !!find(this.BillingAccountService.BillingAccountsCache, { Is_Auto_Bill_Pay: Paymethod.PayMethodId });
   }
 
 }

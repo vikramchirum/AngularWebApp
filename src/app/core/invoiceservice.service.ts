@@ -2,48 +2,43 @@
  * Created by vikram.chirumamilla on 6/19/2017.
  */
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Rx';
-import 'rxjs/add/operator/map';
-
-import { filter, forEach } from 'lodash';
 import { HttpClient } from './httpclient';
 import { IBillLineItem } from './models/billlineitem.model';
 import { IBill } from './models/bill.model';
+import { forEach } from 'lodash';
 
 @Injectable()
 export class InvoiceService {
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(
+    private HttpClient: HttpClient
+  ) { }
 
   getBills(billingAccountId: number): Observable<IBill[]>   {
 
-    const relativePath = `/invoice/${billingAccountId}/bills`;
-    return this.http.get(relativePath)
+    return this.HttpClient.get(`/invoice/${billingAccountId}/bills`)
       .map(res => res.json())
-      .map((bills: IBill[]) => forEach(bills, bill => {
+      .map(bills => forEach(bills, bill => {
         bill.Invoice_Date = new Date(bill.Invoice_Date);
         bill.Due_Date = new Date(bill.Due_Date);
       }))
-      .catch(error => this.http.handleHttpError(error));
+      .catch(error => this.HttpClient.handleHttpError(error));
   }
 
   getBill(invoiceId: string): Observable<IBill>   {
 
-    const relativePath = `/invoice/${invoiceId}`;
-    return this.http.get(relativePath)
+    return this.HttpClient.get(`/invoice/${invoiceId}`)
       .map(res => res.json())
-     .catch(error => this.http.handleHttpError(error));
+      .catch(err => this.HttpClient.handleHttpError(err));
   }
 
   getItemizedBillDetails(invoiceId: number): Observable<IBillLineItem[]>   {
 
-    const relativePath = `/invoice/${invoiceId}/details`;
-    return this.http.get(relativePath)
-      .map((response: Response) => { return <IBillLineItem[]> response.json(); })
-      .catch(error => this.http.handleHttpError(error));
+    return this.HttpClient.get(`/invoice/${invoiceId}/details`)
+      .map(res => res.json())
+      .catch(err => this.HttpClient.handleHttpError(err));
   }
 
 }
