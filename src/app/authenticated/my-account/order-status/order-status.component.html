@@ -1,0 +1,60 @@
+<div class='col-md-6'>
+  <section class='order-status'>
+    <h1>Order Status</h1>
+    <br/><br/>
+    <h6>ORDER PLACED</h6>
+    <div>
+      <div class='details' *ngFor='let order of data' [style.backgroundColor]="orderOpened(order) ? '#DCDCDC' : 'white'">
+        <div class='row'>
+          <h4 class='date col-md-2'>{{ order.Order_Placed | date:'longDate' }}</h4>
+          <button class="charge-toggle col-md-1 form-inline" (click)="orderToggle(order)">
+            <i class="fa fa-fw " [ngClass]="orderOpened(order) ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+          </button>
+          <h4 class='col-md-5'>{{ order.Order_Type }}</h4>
+          <h4 class='status f col-md-1'>{{ order.Order_Status }}</h4>
+        </div>
+
+        <div *ngIf="orderOpened(order)" border="0" width="100%">
+          <div *ngIf='order.Order_Type === "Moving"'>
+            <div class='row'>
+              <h5 class='lbl col-md-1 col-md-offset-1'>From</h5>
+              <h5 class='col-md-6'>{{ order.Prev_Service_Account_Address.Line1 }},
+                {{ order.Prev_Service_Account_Address.City }},
+                {{ order.Prev_Service_Account_Address.State }},
+                {{ order.Prev_Service_Account_Address.Zip }}</h5>
+            </div>
+            <div class='row'>
+              <h5 class='lbl col-md-1  col-md-offset-1'>To</h5>
+              <h5 class='col-md-6'>{{ order.Service_Account_Address.Line1 }},
+                {{ order.Service_Account_Address.City }},
+                {{ order.Service_Account_Address.State }},
+                {{ order.Service_Account_Address.Zip }}</h5>
+            </div>
+            <div class='row'>
+              <h5 class='lbl col-md-1  col-md-offset-1'>On</h5>
+              <h5 class='col-md-3'>{{ order.Order_Placed | date: 'longDate' }}</h5>
+            </div>
+          </div>
+          <div *ngIf='order.Order_Type == "Upgrade" || order.Order_Type == "Renewal" || order.Order_Type == "Additional_Service" || order.Order_Type == "Reconnect"'>
+            <div class='row'>
+              <h5 class='lbl col-md-1  col-md-offset-1'>Address</h5>
+              <h5 class='col-md-6'>{{ order.Service_Account_Address.Line1 }},
+                {{ order.Service_Account_Address.City }},
+                {{ order.Service_Account_Address.State }},
+                {{ order.Service_Account_Address.Zip }}</h5>
+            </div>
+            <div class='row'>
+              <h5 class='lbl col-md-1  col-md-offset-1'>Offer</h5>
+              <h5 class='col-md-2'>{{ order.Offer.Product_Name }}</h5>
+            </div>
+            <div class='row'>
+              <h5 class='lbl col-md-1  col-md-offset-1'>Date</h5>
+              <h5 class='col-md-3'>{{ order.Order_Placed | date: 'longDate' }}</h5>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

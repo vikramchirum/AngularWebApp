@@ -1,31 +1,32 @@
-<div class="container"> 
+<div class="container-fluid">
+<mygexa-status-bar></mygexa-status-bar>
   <div class="row">
-    <div class="col-md-3 col-sm-3 hidden-xs account-side-panel">
+    <div class="col-md-3 col-sm-3 hidden-xs">
        <mygexa-left-nav-panel [sideNavData] = "{
         'panelTitle':'My Account',
         'items':[
           { 'title':'Profile &amp; Preferences', 'navUrl':'profile' },
           { 'title':'Message Center', 'navUrl':'message-center' },
-          { 'title':'My Rewards &amp; Referrals', 'navUrl':'refer-a-friend' }
+          { 'title':'My Rewards &amp; Referrals', 'navUrl':'refer-a-friend' },
+          { 'title': 'Order Status', 'navUrl':'order-status'}
         ]
       }" ></mygexa-left-nav-panel>
     </div>
-    <div class="col-md-9 col-sm-9 col-xs-12 my-account">
-      <mygexa-status-bar></mygexa-status-bar>
+    <div class="col-md-9 col-sm-9 my-account">
       <router-outlet></router-outlet>
     </div>
   </div>
 </div>
-<div class="container-fluid bg-info">
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-              <mygexa-paperless-settings></mygexa-paperless-settings>
-          </div>
-        </div>
-      </div>
+<div class='jumbotron jumbotron-fluid row'>
+  <div class='col-md-offset-2 col-md-2'>
+   <img src="/assets/global/gexa-menu-lyric.png" height='300px' width='300px' >
+  </div>
+  <div class='col-md-offset-1 col-md-5'>
+    <h2>Stay Connected!</h2>
+    <div class='col-md-offset-1'>
+     <h3>And Save With Honeywell</h3>
     </div>
+    <br>
+    <button class="btn col-md-offset-3 col-md-2">LEARN MORE</button>
   </div>
 </div>
