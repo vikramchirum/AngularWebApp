@@ -34,9 +34,8 @@ export class BudgetBillingService {
   }
 
   createBudgetBilling(request: ICreateBudgetBillingRequest): Observable<boolean[]> {
-    const body = JSON.stringify(request);
     const relativePath = `/budget_billing/${request.Billing_Account_Id}/create`;
-    return this.http.post(relativePath, body).map((response: Response) => {
+    return this.http.post(relativePath, request).map((response: Response) => {
       return <boolean> response.json();
     }).catch(this.handleError);
   }

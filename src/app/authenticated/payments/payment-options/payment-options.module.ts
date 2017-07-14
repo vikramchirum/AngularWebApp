@@ -9,7 +9,9 @@ import { AutoBillPaymentComponent } from './auto-bill-payment/auto-bill-payment.
 import { BudgetBillingComponent } from './budget-billing/budget-billing.component';
 import { PaymentExtensionComponent } from './payment-extension/payment-extension.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ModalModule } from 'ngx-bootstrap';
 import { BudgetBillingSelectorComponent } from './budget-billing/budget-billing-selector.component';
+import { CancelBudgetBillingModalComponent } from './budget-billing/cancel-budget-billing-modal/cancel-budget-billing-modal.component';
 
 @NgModule({
   imports: [
@@ -17,14 +19,19 @@ import { BudgetBillingSelectorComponent } from './budget-billing/budget-billing-
     ReactiveFormsModule,
     CustomFormsModule,
     CommonModule,
-    SharedModule
+    SharedModule,
+    ModalModule.forRoot()
   ],
   declarations: [
     PaymentOptionsComponent,
     AutoBillPaymentComponent,
     BudgetBillingComponent,
     BudgetBillingSelectorComponent,
-    PaymentExtensionComponent
+    PaymentExtensionComponent,
+    CancelBudgetBillingModalComponent
+  ],
+  exports: [
+    CancelBudgetBillingModalComponent
   ]
 })
 export class PaymentOptionsModule { }
