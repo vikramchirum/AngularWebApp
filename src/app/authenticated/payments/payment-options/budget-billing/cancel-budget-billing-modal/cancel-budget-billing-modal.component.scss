@@ -1,0 +1,15 @@
+
+.cancel-budget-billing-modal{
+  text-align: initial;
+  .cancel-budget-billing-header{
+    .plan-title{
+      display: inline-block;
+    }
+    .close-btn {
+      font-size: 40px;
+    }
+  }
+  h1,h2,h3,h4,h5 {
+    font-weight:bold;
+  }
+}

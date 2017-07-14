@@ -1,28 +1,30 @@
 
 @import '../../../../styles/bootstrap/stylesheets/bootstrap/_variables';
 
-.sidenav {
-  background-color:#000000;
-  height: 100vh;
-  padding: 30px;
 
-  li{
-    list-style-type: none;
-    margin-bottom:10px;
+.account-side-panel {
 
-    a, h4{
-      color:#ffffff;
-    }
+  h1 {
+    color: rgba(6,81,128,1.0);
   }
+
+  .active {
+        border-color: rgba(6,81,128,1.0) ;
+  }
+
 }
 
-.my-account {
-  border: 1px solid black;
-  padding: 4rem;
+.account-menu {
+  background-color: red;
 }
+
 @media (max-width: $screen-xs-max) {
   .my-account {
     border: none;
     padding: 0;
   }
+}
+
+.jumbotron {
+  margin-top:5%;
 }

@@ -1,0 +1,17 @@
+
+.options-container {
+  padding: 4rem 0;
+  text-align: center;
+
+  button {
+    background: white;
+    border: 1px solid black;
+    color: black;
+    outline: none;
+    padding: 2rem 3rem;
+  }
+  button.active {
+    background: black;
+    color: white;
+  }
+}

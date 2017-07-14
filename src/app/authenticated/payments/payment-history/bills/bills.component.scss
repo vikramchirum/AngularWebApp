@@ -1,0 +1,28 @@
+
+tr.options {
+  button {
+    outline: none !important;
+    padding: 10px 0;
+  }
+}
+
+tr.bill {
+  border-top: 2px solid black;
+
+  td {
+    font-weight: bold;
+    height: 6rem;
+    vertical-align: middle !important;
+  }
+  button {
+    padding: 10px 0;
+  }
+}
+
+.my-pagination {
+  text-align: center;
+}
+
+.my-pagination /deep/ .ngx-pagination .current {
+  text-align: center;
+}

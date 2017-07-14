@@ -10,7 +10,7 @@ import { MyBillComponent } from './my-bill/my-bill.component';
 import { UsageSummaryComponent } from './usage-summary/usage-summary.component';
 import { ReferFriendProgramComponent } from './refer-friend-program/refer-friend-program.component';
 import { AutoPaySignupComponent } from './auto-pay-signup/auto-pay-signup.component';
-import { HomeCarouselComponent } from './home-carousel/home-carousel.component'
+import { HomeCarouselComponent } from './home-carousel/home-carousel.component';
 
 
 @NgModule({
@@ -22,11 +22,11 @@ import { HomeCarouselComponent } from './home-carousel/home-carousel.component'
     ChartsModule
   ],
   declarations: [
-    HomeComponent, 
-    MyBillComponent, 
-    UsageSummaryComponent, 
-    ReferFriendProgramComponent, 
-    AutoPaySignupComponent, 
+    HomeComponent,
+    MyBillComponent,
+    UsageSummaryComponent,
+    ReferFriendProgramComponent,
+    AutoPaySignupComponent,
     HomeCarouselComponent]
 })
 export class HomeModule { }

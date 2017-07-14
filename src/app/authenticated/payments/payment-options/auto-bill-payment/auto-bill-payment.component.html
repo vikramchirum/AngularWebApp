@@ -1,6 +1,6 @@
 <section class="section-container-highlight">
   <a routerLink="/payments/payment-options" class="visible-xs"><i class="fa fa-4x fa-arrow-left"></i></a>
-  <ng-template *ngIf="ActiveBillingAccount?.Enrolled_In_Auto_Bill_Pay === true; then Enrolled_In_Auto_Bill_Pay else Not_Enrolled_In_Auto_Bill_Pay"></ng-template>
+  <ng-template *ngIf="ActiveBillingAccount?.Is_Auto_Bill_Pay === true; then Enrolled_In_Auto_Bill_Pay else Not_Enrolled_In_Auto_Bill_Pay"></ng-template>
   <ng-template #Enrolled_In_Auto_Bill_Pay>
     <h2>
       <div class="row">
@@ -12,7 +12,7 @@
     </h2>
     <br/>
     <mygexa-credit-card
-      [PaymentMethod]="autoBillPaymentMethod"
+      [Paymethod]="autoBillPaymethod"
     ></mygexa-credit-card>
     <br/>
     <button class="btn btn-blank switchAutoBillPayButton" (click)="this.switchingAutoBillPay = !this.switchingAutoBillPay">
@@ -21,8 +21,8 @@
     <br/>
     <div *ngIf="switchingAutoBillPay">
       <mygexa-payment-method-selector
-        [initialPaymentMethod]="autoBillPaymentMethod"
-        (changedPaymentMethod)="switchingAutoBillPaySelected($event)"
+        [initialPaymethod]="autoBillPaymethod"
+        (changedPaymethod)="switchingAutoBillPaySelected($event)"
       ></mygexa-payment-method-selector>
     </div>
     <br/>
@@ -31,7 +31,7 @@
     <h2>Enroll In Auto Bill Pay</h2>
     <br/>
     <mygexa-payment-method-selector
-      (changedPaymentMethod)="enrollInAutoBillPaySelected($event)"
+      (changedPaymethod)="enrollInAutoBillPaySelected($event)"
     ></mygexa-payment-method-selector>
   </ng-template>
 </section>

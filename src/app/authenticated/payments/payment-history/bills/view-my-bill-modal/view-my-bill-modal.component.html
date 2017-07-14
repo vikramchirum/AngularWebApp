@@ -1,0 +1,17 @@
+<section class="view-my-bill-modal">
+  <div bsModal #viewMyBillModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="view-my-bill-header">
+            <h4 class="modal-title pull-left"></h4>
+            <button type="button" class="close text-right" aria-label="Close" (click)="hideViewMyBillModal()">
+              <span class="close-btn" aria-hidden="true">&times;</span></button></div><br>
+        </div>
+        <div class="modal-body">
+          <mygexa-view-bill></mygexa-view-bill>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

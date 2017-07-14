@@ -1,34 +1,156 @@
-<nav class="navbar custom-nav">
+<nav class="navbar navbar-inverse">
   <div class="container container-relaxed">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle pull-left" (click)="toggleAccordion($event)"><span>&#9776;</span></button>
-      <a class="navbar-brand" [routerLink]="['/']">My Gexa ({{env}})</a>
-    </div>
-    <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li><a [routerLinkActive]="['active']" routerLink="/home">Home</a></li>
-        <li><a [routerLinkActive]="['active']" routerLink="/account"> Account</a></li>
-        <li><a [routerLinkActive]="['active']" routerLink="/plans-and-services/"> Plans &amp; Services</a></li>
-        <li><a [routerLinkActive]="['active']" routerLink="/payments">Payment Center</a></li>
-        <li><a [routerLinkActive]="['active']" routerLink="/controls-and-insights">Control and Insights</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
+    <ul class="nav navbar-nav navbar-left">
+          <li><a  [routerLink]="['/']"><small><span class="fa fa-rocket fa-rotate-45 fa-fw"></span> My Gexa {{env}} </small></a> </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
         <!--<li> <form  role="search">
           <div class="form-group">
             <input type="text" class="form-control" placeholder="Search">
           </div>
         </form><li>-->
-        <li><a href="#"><span class="fa fa-bell"></span></a></li>
-        <li><a href="#"><span class="fa fa-user-circle"></span></a></li>
-        <li><a href="#" (click)="logout($event)"><span class="fa fa-sign-out"></span></a></li>
-        <!--<a href (click)="logout()"></i></a>-->
+      <li><a href="#"><small><span class="fa fa-user-circle fa-white"></span> <span class="hidden-xs">Hi!</span></small></a></li>
+      <li><a href="#"><small><span class="fa fa-bell fa-white"></span> <span class="hidden-xs">Notifications</span></small></a></li>
+      <li><a href="#" (click)="logout($event)"><small><span class="fa fa-sign-out fa-white"></span> <span class="hidden-xs">Logout</span></small></a></li>
+      <li><a href="#"><small><span class="fa fa-phone fa-white"></span> <span class="hidden-xs">866-961-9399</span></small></a></li>
+    </ul>
+  </div>
+</nav>
+ <nav class="navbar custom-nav">
+  <div class="container container-relaxed">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle pull-left" (click)="toggleAccordion($event)"><span>&#9776;</span></button>
+     <div class="navbar-logo">
+       <a [routerLinkActive]="['active']" routerLink="/home"><img src="/assets/global/gexa-lq.png" alt="Gexa Energy"/></a>
+      </div>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+       	<li class="dropdown-full account-menu">
+    		  <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/account"  class="dropdown-toggle">Account</a>
+    		  <div class="dropdown-menu">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hero no-margin">
+              <div class="">
+                <h3><a [routerLinkActive]="['active']" routerLink="/account"> My Account</a></h3>
+                <p>Update your security or Go Paperless! Set your personal preferences with ease.</p>
+                <p>And don’t forget check your Referrals for even more savings.</p>
+              </div>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+              <ul class="list-unstyled list-center list-rule">
+                <li><a href="/account/profile">Profile and Preferences</a></li>
+                <li><a href="/account/message-center">Message Center</a></li>
+                <li><a href="/account/refer-a-friend/referral-options">Rewards and Referrals</a></li>
+                <li><a href="/account/order-status">Order Status</a></li>
+              </ul>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+              <ul class="list-unstyled list-center">
+                <li><strong> Other My Account Favorites</strong></li>
+                <li>Reset Your Password</li>
+                <li>Change Your Security Questions</li>
+                <li>Sign up for Email Notifications</li>
+                <li>Go Paperless!</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li role="separator" class="divider"> </li>
+        <li class="dropdown-full plans-menu">
+          <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/plans-and-services" class="dropdown-toggle">Plans &amp; Services</a>
+           <div class="dropdown-menu plans">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hero no-margin">
+              <div class="">
+                <h3><a [routerLinkActive]="['active']" routerLink="/plans-and-services"> Plans &amp; Services</a></h3>
+                <p>Check often to see the latest incentives in Plans and Services.</p>
+                <p> Don’t get caught off guard when you plan expires,  be prepared to save.</p>
+              </div>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+              <ul class="list-unstyled list-center list-rule">
+                <li><a href="/plans-and-services/my-services-plans">My Service Plans</a></li>
+                <li><a href="/plans-and-services/add-service-location">Add Service Location</a></li>
+                <li><a href="/plans-and-services/moving-service">Moving Center</a></li>
+                <li><a href="/plans-and-services/order-status">Order Status</a></li>
+              </ul>￼
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+              <ul class="list-unstyled list-center">
+                <li><strong>Other Plans and Services Options</strong></li>
+                <li>Upgrade Your Plan</li>
+                <li>Renew Your Plan</li>
+                <li>Add a New Service Location</li>
+                <li>Look up your new address</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li role="separator" class="divider"> </li>
+         <li class="dropdown-full payment-menu">
+          <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/payment-center/view-my-bill/" class="dropdown-toggle">Payment Center</a>
+          <div class="dropdown-menu">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hero no-margin">
+              <div class="">
+                <h3><a [routerLinkActive]="['active']" routerLink="/payment-center/view-my-bill/">Payment Center</a></h3>
+                <p>We make it easy for you to stay on top of and renew your plans.</p>
+                <p>You can set up convenient ways to manage your account.</p>
+              </div>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+              <ul class="list-unstyled list-center list-rule">
+                <li><a href="/payments/view-my-bill"> View My Bill</a></li>
+                <li><a href="/payments/make-payment">Make a Payment</a></li>
+                <li><a href="/payments/payment-options">Payment Options</a></li>
+                <li><a href="/payment/payment-history">Payment History</a></li>
+              </ul>￼
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+              <ul class="list-unstyled list-center">
+                <li><strong>Other Plans and Services Options</strong></li>
+                <li>Mange Autopay</li>
+                <li>Manage Payment Account</li>
+                <li>Need to Update Your Credit Card?</li>
+                <li>Apply for a Payment Extension</li>
+                <li>Set-Up Budget Billing</li>
+               </ul>
+            </div>
+          </div>
+        </li>
+
+        <li role="separator" class="divider"> </li>
+        <li class="dropdown-full control-menu">
+          <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/controls-and-insights" class="dropdown-toggle">Control and Insights</a>
+          <div class="dropdown-menu">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hero no-margin">
+              <div>
+                <img src="/assets/global/gexa-menu-lyric.png" >
+                <h3><a [routerLinkActive]="['active']" routerLink="/controls-and-insights">Control and Insights</a></h3>
+                <p>Combine the power of Gexa Energy with your smart home.</p>
+              </div>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+              <ul class="list-unstyled list-center list-rule">
+                <li><a href="/control-and-insights/usage-history"> Usage History</a></li>
+                <li><a href="/control-and-insights/usage-history">Insights</a></li>
+                <li><a href="/control-and-insights/usage-history">Things</a></li>
+                <li><a href="/control-and-insights/usage-history">Home Profile</a></li>
+             </ul>￼
+            </div>
+                <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+              <ul class="list-unstyled list-center">
+                <li><strong>Other Control and Insights Favorites </strong></li>
+                <li>Check Your Home Temperature</li>
+                <li>Check Your Automation Schedules</li>
+                <li>Add a New Honeywell Thermostat</li>
+               </ul>
+            </div>
+          </div>
+        </li>
       </ul>
     </div>
   </div>
 </nav>
-
 <div class="container-fluid" *ngIf="accordionVisible">
-  <!-- <div class="container"> -->
   <div class="overlay-menu">
     <div class="row accordion-panel">
       <div class="xs-4">
@@ -36,12 +158,18 @@
       </div>
     </div>
     <div class="row" style="height:100%">
-      <mygexa-responsive-hamburger-menu (notify)='onNotify($event)'></mygexa-responsive-hamburger-menu>
+      <mygexa-responsive-hamburger-menu
+        (signout)="logout($event)"
+        (notify)="onNotify($event)"
+      ></mygexa-responsive-hamburger-menu>
     </div>
   </div>
   <!-- </div> -->
 </div>
 
 <div class="container-fluid">
+ <div class="row">
   <router-outlet></router-outlet>
+  <mygexa-home-multi-accounts-modal #homeMultiAccountsModal></mygexa-home-multi-accounts-modal>
+  </div>
 </div>

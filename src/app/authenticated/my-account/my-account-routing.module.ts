@@ -8,8 +8,9 @@ import { ProfileComponent } from './profile/profile.component';
 import { MyAccountComponent } from './my-account.component';
 import { MessageCenterComponent } from './message-center/message-center.component';
 import { ReferFriendModule } from './refer-friend/refer-friend.module';
+import {OrderStatusComponent} from "./order-status/order-status.component";
 
-function loadReferFriendModule() { return ReferFriendModule; }
+export function loadReferFriendModule() { return ReferFriendModule; }
 
 const routes: Route[] = [
   {
@@ -18,7 +19,8 @@ const routes: Route[] = [
       { path: 'refer-a-friend', redirectTo: 'refer-a-friend/referral-options', pathMatch: 'full' },
       { path: 'refer-a-friend', loadChildren: loadReferFriendModule },
       { path: 'profile', component: ProfileComponent },
-      { path: 'message-center', component: MessageCenterComponent }
+      { path: 'message-center', component: MessageCenterComponent },
+      { path: 'order-status', component: OrderStatusComponent }
     ]
   }
 ];

@@ -1,41 +1,54 @@
 
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 
-import { PaymentMethod, PaymentMethodService } from 'app/core/PaymentMethod';
+import { PaymethodService } from 'app/core/Paymethod.service';
+import { PaymethodClass } from 'app/core/models/Paymethod.model';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'mygexa-payment-method-selector',
   templateUrl: './payment-method-selector.component.html',
   styleUrls: ['./payment-method-selector.component.scss']
 })
-export class PaymentMethodSelectorComponent implements OnInit {
+export class PaymethodSelectorComponent implements OnInit, OnDestroy {
 
   @Input() submitText: string = null;
-  @Input() initialPaymentMethod: PaymentMethod = null;
-  @Output() changedPaymentMethod: EventEmitter<any> =  new EventEmitter<any>();
+  @Input() initialPaymethod: PaymethodClass = null;
+  @Output() changedPaymethod: EventEmitter<any> =  new EventEmitter<any>();
 
-  PaymentMethods: PaymentMethod[] = [];
-  PaymentMethodSelected: PaymentMethod = null;
+  PaymethodSelected: PaymethodClass = null;
+  private PaymethodSubscription: Subscription = null;
+  private _Paymethods: PaymethodClass[] = null;
 
   constructor(
-    private PaymentMethodService: PaymentMethodService
+    private PaymethodService: PaymethodService
   ) { }
 
-  ngOnInit() {
-    this.PaymentMethodService.getPaymentMethods()
-      .then((PaymentMethods: PaymentMethod[]) => {
-        this.PaymentMethods = PaymentMethods;
-        if (
-          this.initialPaymentMethod
-          && this.PaymentMethods.indexOf(this.initialPaymentMethod) >= 0
-        ) {
-          this.PaymentMethodSelected = this.initialPaymentMethod;
-        }
-      });
+  get Paymethods(): PaymethodClass[] {
+    return this._Paymethods;
+  }
+  set Paymethods(Paymethods: PaymethodClass[]) {
+    this._Paymethods = Paymethods;
+    if (
+      this.initialPaymethod
+      && this.Paymethods.indexOf(this.initialPaymethod) >= 0
+    ) {
+      this.PaymethodSelected = this.initialPaymethod;
+    }
   }
 
-  submitPaymentMethod(): void {
-    this.changedPaymentMethod.emit(this.PaymentMethodSelected);
+  ngOnInit() {
+    this.PaymethodSubscription = this.PaymethodService.PaymethodsObservable.subscribe(
+      Paymethods => this.Paymethods = Paymethods
+    );
+  }
+
+  ngOnDestroy() {
+    this.PaymethodSubscription.unsubscribe();
+  }
+
+  submitPaymethod(): void {
+    this.changedPaymethod.emit(this.PaymethodSelected);
   }
 }
 

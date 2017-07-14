@@ -5,5 +5,8 @@ export const environment = {
   Production: true,
   Name: 'DEV',
   Api_Url: 'http://azureapidev/api',
-  Api_Token: 'ce6c931123fd4b699f92f53a0fa1fefd'
+  Api_Token: 'ce6c931123fd4b699f92f53a0fa1fefd',
+  Forte_Api_Key: 'GwnI15Vj36',
+  Documents_Url: 'https://docsdev.gexaenergy.com/invoice/generate/',
+  DollarAmountFormatter: '1.2-2'
 };

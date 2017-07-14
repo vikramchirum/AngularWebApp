@@ -1,0 +1,31 @@
+
+#payment-accounts-container,
+#payment-accounts {
+  width: 100%;
+}
+
+#payment-accounts-container {
+  .dropdown-menu {
+    width: 50%;
+
+    .text-muted {
+      padding: 10px 20px 5px 20px;
+    }
+    i.fa {
+      margin-right: 5px;
+    }
+  }
+}
+
+#payment-accounts {
+  text-align: left;
+
+  i.fa,
+  i.fa-chevron-down {
+    line-height: 20px;
+    margin-right: 5px;
+  }
+  i.fa-chevron-down {
+    margin: 0;
+  }
+}

@@ -1,23 +1,43 @@
+/**
+ * Created by vikram.chirumamilla on 6/20/2017.
+ */
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpModule, XHRBackend, RequestOptions } from '@angular/http';
+
+import { HttpClient } from './httpclient';
+import { httpFactory } from './httpFactory';
 
 import { BillService } from './Bill';
-import { BillingAccountService } from './BillingAccount';
-import { CustomerAccountService } from './CustomerAccount';
-import { PaymentMethodService } from './PaymentMethod';
+import { BillingAccountService } from './BillingAccount.service';
+import { CustomerAccountService } from './CustomerAccount.service';
+import { PaymentsService } from './payments.service';
+import { PaymethodService } from './Paymethod.service';
+import { InvoiceService } from './invoiceservice.service';
+import { BudgetBillingService } from './budgetbilling.service';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    HttpModule
   ],
   declarations: [],
   exports: [],
   providers: [
+    {
+      provide: HttpClient,
+      useFactory: httpFactory,
+      deps: [ XHRBackend, RequestOptions ]
+    },
     BillService,
     BillingAccountService,
     CustomerAccountService,
-    PaymentMethodService
+    PaymentsService,
+    PaymethodService,
+    InvoiceService,
+    BudgetBillingService
   ]
 })
-export class CoreModule { }
+export class CoreModule {
+}

@@ -1,0 +1,27 @@
+<div class="moving-service-modal">
+  <div [config]="{ backdrop: 'static', keyboard: false }" bsModal #selectPlanModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" id="movingServiceDialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+          <!--<button type="button" class="close text-right" aria-label="Close" (click)="hideMovingServiceModal()">
+          <span class="close-btn" aria-hidden="true">&times;</span></button><br>-->
+
+          <!--Plan information -->
+          <div class="row" class="plan-info">
+            <div class="col-md-4 col-xs-12"  *ngFor="let offers of newPlans.Items">
+              <div class="select-plan-container">
+              <div class="select-plan-card">
+                <p>{{offers.Plan.Name}}</p>
+                <p>{{offers.Price_At_2000_kwh | number : '1.2-4'}}¢ pkw/hr</p>
+                <p>{{offers.End_Date | date:'d/M/yy'}}</p>
+              </div>
+              <div align="center"><button class="btn btn-default" (click)="selectPlan(offers)">Select Plan</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

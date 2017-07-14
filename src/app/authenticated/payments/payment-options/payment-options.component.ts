@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { BillingAccount, BillingAccountService } from 'app/core/BillingAccount';
+import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
+import { BillingAccountService } from 'app/core/BillingAccount.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -11,25 +12,29 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class PaymentOptionsComponent implements OnInit, OnDestroy {
 
-  private ActiveBillingAccount: BillingAccount = null;
-  private BillingAccounts: BillingAccount[] = [];
-  private BillingAccountsSubscription: Subscription = null;
+  private ActiveBillingAccountSubscription: Subscription = null;
 
-  constructor(
-    private router: Router,
-    private BillingAccountService: BillingAccountService
-  ) {
-    this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable
-      .subscribe((BillingAccounts: BillingAccount[]) => {
-        this.ActiveBillingAccount = this.BillingAccountService.ActiveBillingAccount;
-        this.BillingAccounts = BillingAccounts;
-      });
+  private _ActiveBillingAccount: BillingAccountClass = null;
+  get ActiveBillingAccount() { return this._ActiveBillingAccount; }
+  set ActiveBillingAccount(ActiveBillingAccount) {
+    this._ActiveBillingAccount = ActiveBillingAccount;
+    this.ChangeDetectorRef.detectChanges();
   }
 
-  ngOnInit() { }
+  constructor(
+    public Router: Router,
+    private BillingAccountService: BillingAccountService,
+    private ChangeDetectorRef: ChangeDetectorRef
+  ) { }
+
+  ngOnInit() {
+    this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+      ActiveBillingAccount => this.ActiveBillingAccount = ActiveBillingAccount
+    );
+  }
 
   ngOnDestroy() {
-    this.BillingAccountsSubscription.unsubscribe();
+    this.ActiveBillingAccountSubscription.unsubscribe();
   }
 
 }

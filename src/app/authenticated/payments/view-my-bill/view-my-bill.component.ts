@@ -1,24 +1,58 @@
-import { Component, OnInit } from '@angular/core';
-
-import { Bill, BillService } from 'app/core/Bill';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { InvoiceService } from 'app/core/invoiceservice.service';
+import { IBill } from 'app/core/models/bill.model';
+import { IBillLineItem } from 'app/core/models/billlineitem.model';
+import { first, orderBy, filter } from 'lodash';
+import {BillingAccountService} from 'app/core/BillingAccount.service';
+import {Subscription} from 'rxjs/Subscription';
+import { ViewBillComponent } from '../../../shared/components/view-bill/view-bill.component';
 
 @Component({
   selector: 'mygexa-view-my-bill',
   templateUrl: './view-my-bill.component.html',
   styleUrls: ['./view-my-bill.component.scss']
 })
-export class ViewMyBillComponent implements OnInit {
+export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
 
-  private date_today = new Date;
-  private bill: Bill;
+  all_bills: IBill[];  sort_all_bills: IBill[];
+  public req1_bill: IBill;
+
+  error: string = null;
+  public req_bill: IBill;
+  public latest_invoice_id: string;
+  public billing_account_id: number;
+  public id: string;
+  date_today = new Date;
+  @ViewChild(ViewBillComponent) private viewBill: ViewBillComponent;
+
+  private ActiveBillingAccountSubscription: Subscription = null;
 
   constructor(
-    private BillService: BillService
-  ) {
-    this.BillService.getCurrentBill()
-      .then((bill: Bill) => this.bill = bill);
+    private invoice_service: InvoiceService,
+    private BillingAccountService: BillingAccountService
+  ) { }
+
+  ngAfterViewInit() {
+    this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+      result => {
+        this.latest_invoice_id = result.Latest_Invoice_Id;
+        this.billing_account_id = Number(result.Id);
+        this.invoice_service.getBill(this.latest_invoice_id)
+          .subscribe(
+            response => {
+              this.req_bill = response;
+              this.viewBill.PopulateItemizedBill(this.req_bill);
+            },
+            error => {
+              this.error = error.Message;
+            }
+          );
+      }
+    );
   }
 
-  ngOnInit() { }
+  ngOnDestroy() {
+    this.ActiveBillingAccountSubscription.unsubscribe();
+  }
 
 }

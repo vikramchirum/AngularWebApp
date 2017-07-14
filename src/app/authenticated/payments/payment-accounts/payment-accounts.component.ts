@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import { BillingAccountService } from 'app/core/BillingAccount';
-import { PaymentMethod, PaymentMethodService } from 'app/core/PaymentMethod';
-import { CustomValidators } from 'ng2-validation';
-import { validCreditCard } from 'app/validators/validator';
+import { PaymethodAddCcComponent } from 'app/shared/components/payment-method-add-cc/payment-method-add-cc.component';
+import { PaymethodAddEcheckComponent } from 'app/shared/components/payment-method-add-echeck/payment-method-add-echeck.component';
+import { BillingAccountService } from 'app/core/BillingAccount.service';
+import { PaymethodService } from 'app/core/Paymethod.service';
+import { PaymethodClass, IPaymethodRequestEcheck, IPaymethodRequestCreditCard } from 'app/core/models/Paymethod.model';
+import { Subscription } from 'rxjs/Subscription';
+import { get } from 'lodash';
 
 interface IPaymentMessage {
   classes: string[];
@@ -16,55 +18,55 @@ interface IPaymentMessage {
   templateUrl: './payment-accounts.component.html',
   styleUrls: ['./payment-accounts.component.scss']
 })
-export class PaymentAccountsComponent implements OnInit {
+export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
   PaymentMessage: IPaymentMessage = null;
-  PaymentEditting: PaymentMethod = null;
-  PaymentMethods: PaymentMethod[] = [];
-  PaymentAbpSelecting: PaymentMethod = null;
-  PaymentAbpSelected: PaymentMethod = null;
+  PaymentEditting: PaymethodClass = null;
+  PaymentAbpSelecting: PaymethodClass = null;
+  PaymentAbpSelected: PaymethodClass = null;
+
+  @ViewChild(PaymethodAddCcComponent)
+  private addCreditCardComponent: PaymethodAddCcComponent;
+  @ViewChild(PaymethodAddEcheckComponent)
+  private addEcheckComponent: PaymethodAddEcheckComponent;
 
   addingEcheck: boolean = null;
-  addingEcheckForm: FormGroup = null;
+  addingEcheckFormValid: boolean = null;
   addingCreditCard: boolean = null;
-  addingCreditCardNow: Date = new Date;
-  addingCreditCardForm: FormGroup = null;
-  addingCreditCardMonths: any[] = [
-    ['01', 'January'],
-    ['02', 'February'],
-    ['03', 'March'],
-    ['04', 'April'],
-    ['05', 'May'],
-    ['06', 'June'],
-    ['07', 'July'],
-    ['08', 'August'],
-    ['09', 'September'],
-    ['10', 'October'],
-    ['11', 'November'],
-    ['12', 'December']
-  ];
-  addingCreditCardYears: string[] = [];
+  addingCreditCardFormValid: boolean = null;
+
+  private ForteJs: any = null;
+  private PaymethodSubscription: Subscription = null;
+  private _Paymethods: PaymethodClass[] = null;
 
   constructor(
-    private FormBuilder: FormBuilder,
+    private ChangeDetectorRef: ChangeDetectorRef,
     private BillingAccountService: BillingAccountService,
-    private PaymentMethodService: PaymentMethodService
-  ) {
-    // Generate the available years to select.
-    const thisYear = this.addingCreditCardNow.getFullYear();
-    for (let count = 0; count <= 5; this.addingCreditCardYears.push(`${thisYear + count}`), count++) {}
-    // Prepare the credit card form.
-    this.addingCreditCardForm = this.addingCreditCardFormInit();
-    // Prepare the Echeck form.
-    this.addingEcheckForm = this.addingEcheckFormInit();
-  }
+    private PaymethodService: PaymethodService
+  ) { }
 
   ngOnInit() {
-    this.PaymentMethodService.getPaymentMethods()
-      .then((PaymentMethods: PaymentMethod[]) => this.PaymentMethods = PaymentMethods);
+    this.PaymethodService.ForteJsObservable.subscribe(
+      ForteJs => this.ForteJs = ForteJs
+    );
+    this.PaymethodSubscription = this.PaymethodService.PaymethodsObservable.subscribe(
+      Paymethods => this.Paymethods = Paymethods
+    );
   }
 
-  removePaymentMethod(paymentMethod: PaymentMethod): void {
+  ngOnDestroy() {
+    this.PaymethodSubscription.unsubscribe();
+  }
+
+  get Paymethods(): PaymethodClass[] {
+    return this._Paymethods;
+  }
+  set Paymethods(Paymethods: PaymethodClass[]) {
+    this._Paymethods = Paymethods;
+    this.ChangeDetectorRef.detectChanges();
+  }
+
+  removePaymethod(paymentMethod: PaymethodClass): void {
     if (
       !paymentMethod
       || this.PaymentEditting === paymentMethod
@@ -75,102 +77,126 @@ export class PaymentAccountsComponent implements OnInit {
     }
   }
 
-  removePaymentMethodConfirm(): void {
-    this.PaymentMessage = {
-      classes: ['alert', 'alert-success'],
-      innerHTML: `<b>Ok!</b> your payment account, ending in <b>${this.PaymentEditting.Card_Last}</b> was deleted!`
-    };
-    this.PaymentMethodService.deletePaymentMethod(this.PaymentEditting.Id)
-      .then((PaymentMethods: PaymentMethod[]) => this.PaymentMethods = PaymentMethods);
+  removePaymethodConfirm(): void {
+
+    const PaymethodToDelete = this.PaymentEditting;
+
+    this.PaymethodService.RemovePaymethod(PaymethodToDelete).subscribe(
+      result => this.PaymentMessage = {
+        classes: ['alert', 'alert-success'],
+        innerHTML: `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted!`
+      },
+      error => console.log('handle error => ', error),
+      () => this.removePaymethodEditAutoPayCancel()
+    );
+
   }
 
-  removePaymentMethodStopAutoPay(): void {
-    this.PaymentMessage = {
-      classes: ['alert', 'alert-success'],
-      innerHTML: [
-        `<b>Ok!</b> your payment account, ending in <b>${this.PaymentEditting.Card_Last}</b> was deleted`,
-        ` and <b>Auto Pay</b> has been stopped!`
-      ].join('')
-    };
-    this.PaymentMethodService.deletePaymentMethod(this.PaymentEditting.Id)
-      .then((PaymentMethods: PaymentMethod[]) => this.PaymentMethods = PaymentMethods);
+  removePaymethodStopAutoPay(): void {
+
+    const PaymethodToDelete = this.PaymentEditting;
+
+    this.PaymethodService.RemovePaymethod(PaymethodToDelete).subscribe(
+      result => this.PaymentMessage = {
+        classes: ['alert', 'alert-success'],
+        innerHTML: [
+          `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted`,
+          ` and <b>Auto Pay</b> has been stopped!`
+        ].join('')
+      },
+      error => console.log('handle error => ', error),
+      () => this.removePaymethodEditAutoPayCancel()
+    );
+
   }
 
-  removePaymentMethodEditAutoPay(): void {
+  removePaymethodEditAutoPay(): void {
     this.PaymentAbpSelecting = this.PaymentEditting;
     this.PaymentEditting = this.PaymentAbpSelected = null;
   }
 
-  removePaymentMethodEditAutoPayConfirm(): void {
+  removePaymethodEditAutoPayConfirm(): void {
+
+    const PaymethodToDelete = this.PaymentEditting;
+    const PaymethodToUse = this.PaymentAbpSelected;
+
     this.BillingAccountService
-      .applyNewAutoBillPay(this.PaymentAbpSelected, this.BillingAccountService.ActiveBillingAccount, true)
+      .applyNewAutoBillPay(PaymethodToUse, this.BillingAccountService.ActiveBillingAccountCache, true)
       .then(() => {
-        this.PaymentMethodService
-          .deletePaymentMethod(this.PaymentAbpSelecting.Id)
-          .then((PaymentMethods: PaymentMethod[]) => {
-            this.PaymentMessage = {
-              classes: ['alert', 'alert-success'],
-              innerHTML: [
-                `<b>Ok!</b> your payment account, ending in <b>${this.PaymentAbpSelecting.Card_Last}</b> was deleted and `,
-                `<b>Auto Bill Pay</b> is using your payment account ending in <b>${this.PaymentAbpSelected.Card_Last}</b>!`
-              ].join('')
-            };
-            this.removePaymentMethodEditAutoPayCancel();
-            this.PaymentMethods = PaymentMethods;
-          });
+        this.PaymethodService.RemovePaymethod(PaymethodToDelete).subscribe(
+          () => this.PaymentMessage = {
+            classes: ['alert', 'alert-success'],
+            innerHTML: [
+              `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted and `,
+              `<b>Auto Bill Pay</b> is using your payment account ending in <b>${ PaymethodToUse.getLast() }</b>!`
+            ].join('')
+          },
+          error => console.log('handle error => ', error),
+          () => this.removePaymethodEditAutoPayCancel()
+        );
       });
   }
 
-  removePaymentMethodEditAutoPayCancel(): void {
+  removePaymethodEditAutoPayCancel(): void {
     this.PaymentEditting = this.PaymentAbpSelecting = null;
   }
 
   addingCreditCardToggle(open: boolean): void {
-    const doOpen = open !== false;
-    if (doOpen) {
-      this.addingCreditCardForm = this.addingCreditCardFormInit();
-    }
-    this.addingCreditCard = doOpen;
+    this.addingCreditCard = open !== false;
+    if (this.addingCreditCard) { this.addingCreditCardFormValid = false; }
   }
 
-  addingCreditCardFormInit(): FormGroup {
-    const thisMonth = (this.addingCreditCardNow.getMonth() + 1);
-    return this.FormBuilder.group({
-      Card_Name: ['', Validators.required],
-      Card_Number: ['', validCreditCard],
-      Card_Expiration_Month: [`${thisMonth < 10 ? '0' : ''}${thisMonth}`, Validators.required],
-      Card_Expiration_Year: [this.addingCreditCardYears[0], Validators.required],
-      Card_CCV: ['', Validators.compose([Validators.required, CustomValidators.digits, Validators.minLength(3)])]
-    });
+  addingCreditCardFormChanged($event: string): void {
+    this.addingCreditCardFormValid = $event === 'valid';
   }
 
   addingCreditCardSubmit() {
-    console.log('this.addingCreditCardForm.value', this.addingCreditCardForm.value);
-    alert('Add card to Forte now.\nCheck the console for the user\'s input.');
     this.addingCreditCard = false;
+    this.PaymentMessage = {
+      classes: ['alert', 'alert-info'],
+      innerHTML: `<i class="fa fa-fw fa-spinner fa-spin"></i> <b>Please wait</b> we're adding your new payment method now.`
+    };
+    this.PaymethodService.AddPaymethodCreditCardFromComponent(this.addCreditCardComponent).subscribe(
+      result => {
+        const accountNumber = get(result, 'CreditCard.AccountNumber');
+        if (accountNumber) {
+          this.PaymentMessage = {
+            classes: ['alert', 'alert-success'],
+            innerHTML: `<b>Ok!</b> your credit account, ending in <b>${ accountNumber }</b> has been added as a payment method!`
+          };
+        }
+        this.PaymethodService.UpdatePaymethods();
+      }
+    );
   }
 
   addingEcheckToggle(open: boolean): void {
-    const doOpen = open !== false;
-    if (doOpen) {
-      this.addingEcheckForm = this.addingEcheckFormInit();
-    }
-    this.addingEcheck = doOpen;
+    this.addingEcheck = open !== false;
+    if (this.addingEcheck) { this.addingEcheckFormValid = false; }
   }
 
-  addingEcheckFormInit(): FormGroup {
-    return this.FormBuilder.group({
-      Check_Name: ['', Validators.required],
-      Check_Routing: ['', Validators.compose([Validators.required, Validators.minLength(9), CustomValidators.digits])],
-      Check_Accounting: ['', Validators.compose([Validators.required, Validators.minLength(9), CustomValidators.digits])],
-      Check_Info: ['']
-    });
+  addingEcheckFormChanged($event: string): void {
+    this.addingEcheckFormValid = $event === 'valid';
   }
 
   addingEcheckSubmit() {
-    console.log('this.addingEcheckForm.value', this.addingEcheckForm.value);
-    alert('Add Echeck now.\nCheck the console for the user\'s input.');
     this.addingEcheck = false;
+    this.PaymentMessage = {
+      classes: ['alert', 'alert-info'],
+      innerHTML: `<i class="fa fa-fw fa-spinner fa-spin"></i> <b>Please wait</b> we're adding your new payment method now.`
+    };
+    this.PaymethodService.AddPaymethodEcheckFromComponent(this.addEcheckComponent).subscribe(
+      result => {
+        const accountNumber = get(result, 'BankAccount.AccountNumber');
+        if (accountNumber) {
+          this.PaymentMessage = {
+            classes: ['alert', 'alert-success'],
+            innerHTML: `<b>Ok!</b> your bank account, ending in <b>${ accountNumber }</b> has been added as a payment method!`
+          };
+        }
+        this.PaymethodService.UpdatePaymethods();
+      }
+    );
   }
 
 }

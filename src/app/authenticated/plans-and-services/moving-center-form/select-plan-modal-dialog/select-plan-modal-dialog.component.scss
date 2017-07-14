@@ -1,0 +1,23 @@
+.moving-service-modal{
+    .modal-content {
+        background-color: inherit;
+        border-radius: 0;
+        box-shadow: none;
+        border:none;
+    }
+}
+.plan-info {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.select-plan-card {
+    border: 2px solid #000;
+    text-align: center;
+    padding: 1em;
+    margin: 1em;
+    background: #ccc;
+    border-radius: 1em; 
+}

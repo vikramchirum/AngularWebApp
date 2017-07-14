@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { validateEmail, equalityCheck } from '../../../validators/validator'
+import { validateEmail, equalityCheck } from '../../../validators/validator';
+import {UserService} from 'app/core/user.service';
 
 @Component({
   selector: 'mygexa-change-email-address',
@@ -8,12 +9,12 @@ import { validateEmail, equalityCheck } from '../../../validators/validator'
   styleUrls: ['./change-email-address.component.scss']
 })
 export class ChangeEmailAddressComponent implements OnInit {
-
+  IsResetSucessfull: boolean;
   changeEmailForm: FormGroup;
-  submitAttempt: boolean = false;
+  submitAttempt = false;
 
-  constructor(fb: FormBuilder) {
-    
+  constructor(fb: FormBuilder, private user_service: UserService) {
+  this.IsResetSucessfull = false;
      this.changeEmailForm = fb.group({
       'email': [null, Validators.compose([Validators.required, validateEmail])],
       'confirmEmail': [null, Validators.compose([Validators.required, validateEmail])]
@@ -22,12 +23,17 @@ export class ChangeEmailAddressComponent implements OnInit {
 
   ngOnInit() {
   }
-  
-   submitForm(value: any, valid:boolean) {
+
+   submitForm(email: string, valid: boolean) {
     this.submitAttempt = true;
-     if(valid){
+
+     if (valid) {
+       this.user_service.updateEmailAddress(email).subscribe(
+         result => { console.log('result', result);
+           this.IsResetSucessfull = result; }
+       );
      /** send form data to api to update in database */
-     }  
+     }
 
   }
 

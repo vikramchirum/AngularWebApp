@@ -1,3 +1,73 @@
-<p>
-  usage-history works!
-</p>
+<div class="usage-summary card-container card-container-height" *ngIf="barChartData.length < 1">
+  <h1 class="text-center"><i class='fa fa-bolt fa-spin'></i> Loading...</h1>
+</div>
+<div class="usage-history container-fluid usage-history" *ngIf="isDataAvailable">
+  <h2>Usage History</h2>
+  <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
+  <br/>
+  <div class="col position-relative">
+    <div class="bar-chart">
+      <h4>Select a Month for Detail</h4>
+      <div *ngFor='let index of barChartData'>
+        <canvas
+        baseChart
+        height="50px"
+        [datasets]="index"
+        [labels]="monthNames"
+        [options]="barChartOptions"
+        [colors]="barChartColors"
+        legend="true"
+        chartType="bar"
+        (chartHover)="chartHovered($event)"
+        (chartClick)="chartClicked($event)"
+        ></canvas>
+      </div>
+    </div>
+    <div class="line-chart">
+      <br/><br/><br/>
+      <h4>Year Over Year</h4>
+      <div *ngFor='let index of lineChartData'>
+        <canvas
+          baseChart
+          legend="true"
+          chartType="line"
+          height="50px"
+          [datasets]="index"
+          [labels]="monthNames"
+          [options]="lineChartOptions"
+          [colors]="lineChartColors"
+          (chartHover)="chartHovered($event)"
+          (chartClick)="chartClicked($event)"
+        ></canvas>
+      </div>
+    </div>
+      <div class="col-md-5" style="margin-bottom: 10px">
+        <br/><br/><br/>
+        <h4>Data Table</h4>
+        <table class="table table-responsive table-condensed">
+          <tr>
+            <th class='month'>Month</th>
+            <th class='year'>Year</th>
+            <th class='usage'>kwH</th>
+          </tr>
+          <tr *ngFor='let index of currentPage'>
+            <td class='month'>{{ index.date | date:'MMMM' }}</td>
+            <td class='year'>{{ index.date | date:'y' }}</td>
+            <td class='usage'>{{ index.usage }}</td>
+          </tr>
+        </table>
+
+        <pagination
+          (pageChanged)="pageChanged($event)"
+          [boundaryLinks]="true"
+          [totalItems]="totalItems"
+          class="pagination-sm"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;"
+        ></pagination>
+
+    </div>
+  </div>
+</div>

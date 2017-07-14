@@ -1,24 +1,135 @@
 <section class="section-container">
   <h2>Make A Payment</h2>
-  <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
+  <p>Let's get this over quickly.</p>
+
+  <div class="alert alert-success" *ngIf="paymentSubmittedWithoutError === true">
+    <i class="fa fa-fw fa-check"></i> <b>Ok</b> your payment was submitted!
+  </div>
+  <div class="alert alert-danger" *ngIf="paymentSubmittedWithoutError === false">
+    <i class="fa fa-fw fa-exclamation-circle"></i> <b>Sorry</b> an error occurred when submitting your payment!
+  </div>
 
   <br/>
 
-  <div class="row">
-    <div class="col-md-8">
+  <ng-container *ngIf="!LatestInvoice">
+    <h4 class="text-muted"><i class="fa fa-fw fa-spinner fa-spin"></i> Loading your current bill.</h4>
+  </ng-container>
 
-      <mygexa-current-charges></mygexa-current-charges>
+  <form
+    class="form-horizontal"
+    [hidden]="!LatestInvoice"
+    [formGroup]="formGroup" novalidate
+  >
 
+    <div class="form-group form-group-lg">
+      <label for="payment-amount" class="col-md-4 col-lg-2 control-label">Current Balance</label>
+      <div class="col-md-8 col-lg-6">
+        <p class="form-control-static"><b>${{ LatestInvoice?.Current_Charges | FloatToMoneyPipe }}</b></p>
+      </div>
     </div>
-    <div class="col-md-4">
 
-      <div class="jumbotron" style="padding:1rem 2rem;">
-        Autopay is setup on this account and payment will be taken on 05/30/2017
-        <div class="text-right" style="padding-top:2rem;">
-          <a routerLink="/payments/payment-options/auto-bill-payment">cancel autopay</a>
+    <div class="form-group form-group-lg">
+      <label for="payment-amount" class="col-md-4 col-lg-2 control-label">Past Due</label>
+      <div class="col-md-8 col-lg-6">
+        <p class="form-control-static text-muted">${{ LatestInvoice?.Balance_Forward | FloatToMoneyPipe }}</p>
+      </div>
+    </div>
+
+    <div class="form-group form-group-lg">
+      <label for="payment-amount" class="col-md-4 col-lg-2 control-label">Pay Now</label>
+      <div class="col-md-8 col-lg-6">
+        <input
+          type="text"
+          class="form-control form-control-wireframe"
+          id="payment-amount"
+          formControlName="payment_now"
+          autocomplete="off"
+        />
+        <small class="text-danger" *ngIf="formGroup.controls?.payment_now.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
+        <small class="text-success" *ngIf="formGroup.controls?.payment_now.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+      </div>
+    </div>
+
+    <div class="form-group form-group-lg">
+      <label for="payment-accounts" class="col-md-4 col-lg-2 control-label">Payment Account</label>
+      <div class="col-md-8 col-lg-6">
+        <p class="form-control-static" *ngIf="Paymethods === null"><i class="fa fa-spin fa-spinner"></i> Loading your payment accounts...</p>
+        <div class="btn-group" id="payment-accounts-container" [hidden]="Paymethods === null">
+          <button
+            class="btn btn-lg btn-wireframe dropdown-toggle"
+            type="button"
+            data-toggle="dropdown"
+            id="payment-accounts"
+            [disabled]="paymentLoadingMessage"
+          >
+            <i class="fa fa-chevron-down pull-right"></i>
+            <ng-container *ngIf="paymentOneTimeType === 'eCheck'">e-Check</ng-container>
+            <ng-container *ngIf="paymentOneTimeType === 'CreditCard'">Credit Card</ng-container>
+            <ng-container *ngIf="!paymentOneTimeType && PaymethodSelected != null">
+              <i class="fa fa-fw" [ngClass]="PaymethodSelected.getFontAwesomeTag()"></i>
+              {{ PaymethodSelected.getBrand() }} ending in {{ PaymethodSelected.getLast() }}
+            </ng-container>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right">
+            <li class="text-muted" *ngIf="!Paymethods">Payment Accounts (none)</li>
+            <ng-container *ngIf="Paymethods">
+              <li class="text-muted">Payment Accounts</li>
+              <li *ngFor="let Paymethod of Paymethods">
+                <a href="#" (click)="paymentSelectMethod($event, Paymethod)"><i class="fa fa-fw" [ngClass]="Paymethod.getFontAwesomeTag()"></i> ending {{ Paymethod.getLast() }}</a>
+              </li>
+            </ng-container>
+            <li role="separator" class="divider"></li>
+            <li class="text-muted">One Time Payment</li>
+            <li><a href="#" (click)="paymentOneTime($event, 'CreditCard')">Credit Card</a></li>
+            <li><a href="#" (click)="paymentOneTime($event, 'eCheck')">e-Check</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="paymentOneTimeType !== null">
+
+      <mygexa-payment-method-add-cc
+        *ngIf="paymentOneTimeType === 'CreditCard'"
+        (changed)="paymentOneTimeChanged($event)"
+        form_horizontal="true"
+      ></mygexa-payment-method-add-cc>
+
+      <mygexa-payment-method-add-echeck
+        *ngIf="paymentOneTimeType === 'eCheck'"
+        (changed)="paymentOneTimeChanged($event)"
+        form_horizontal="true"
+      ></mygexa-payment-method-add-echeck>
+
+      <div class="form-group">
+        <div class="col-md-offset-4 col-md-8 col-lg-offset-2 col-lg-10">
+          <div class="checkbox">
+            <label>
+              <input
+                type="checkbox"
+                formControlName="payment_save"
+              > Save for future payment
+            </label>
+          </div>
         </div>
       </div>
 
+    </ng-container>
+
+    <div class="form-group">
+      <div class="col-lg-8 text-right">
+        <button
+          type="submit"
+          class="btn btn-lg btn-primary"
+          (click)="paymentSubmit()"
+          [disabled]="!paymentReady || paymentLoadingMessage"
+        >
+          <i class="fa fa-spin fa-spinner" *ngIf="paymentLoadingMessage"></i>
+          {{ paymentLoadingMessage ? paymentLoadingMessage : 'Make Payment' }}
+        </button>
+      </div>
     </div>
-  </div>
+
+  </form>
+
 </section>
