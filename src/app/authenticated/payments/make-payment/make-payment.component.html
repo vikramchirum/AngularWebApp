@@ -2,6 +2,13 @@
   <h2>Make A Payment</h2>
   <p>Let's get this over quickly.</p>
 
+  <div class="alert alert-success" *ngIf="paymentSubmittedWithoutError === true">
+    <i class="fa fa-fw fa-check"></i> <b>Ok</b> your payment was submitted!
+  </div>
+  <div class="alert alert-danger" *ngIf="paymentSubmittedWithoutError === false">
+    <i class="fa fa-fw fa-exclamation-circle"></i> <b>Sorry</b> an error occurred when submitting your payment!
+  </div>
+
   <br/>
 
   <ng-container *ngIf="!LatestInvoice">
@@ -48,7 +55,13 @@
       <div class="col-md-8 col-lg-6">
         <p class="form-control-static" *ngIf="Paymethods === null"><i class="fa fa-spin fa-spinner"></i> Loading your payment accounts...</p>
         <div class="btn-group" id="payment-accounts-container" [hidden]="Paymethods === null">
-          <button class="btn btn-lg btn-wireframe dropdown-toggle" type="button" data-toggle="dropdown" id="payment-accounts">
+          <button
+            class="btn btn-lg btn-wireframe dropdown-toggle"
+            type="button"
+            data-toggle="dropdown"
+            id="payment-accounts"
+            [disabled]="paymentLoadingMessage"
+          >
             <i class="fa fa-chevron-down pull-right"></i>
             <ng-container *ngIf="paymentOneTimeType === 'eCheck'">e-Check</ng-container>
             <ng-container *ngIf="paymentOneTimeType === 'CreditCard'">Credit Card</ng-container>
@@ -105,7 +118,15 @@
 
     <div class="form-group">
       <div class="col-lg-8 text-right">
-        <button type="submit" class="btn btn-lg btn-primary" (click)="paymentSubmit()" [disabled]="!paymentReady">Make Payment</button>
+        <button
+          type="submit"
+          class="btn btn-lg btn-primary"
+          (click)="paymentSubmit()"
+          [disabled]="!paymentReady || paymentLoadingMessage"
+        >
+          <i class="fa fa-spin fa-spinner" *ngIf="paymentLoadingMessage"></i>
+          {{ paymentLoadingMessage ? paymentLoadingMessage : 'Make Payment' }}
+        </button>
       </div>
     </div>
 
