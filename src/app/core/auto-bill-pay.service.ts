@@ -21,7 +21,7 @@ export class AutoBillPayService {
   ): Observable<Response> {
 
     const now = new Date;
-    const body = JSON.stringify({
+    const body = {
       StartDate: now,
       TermAcceptanceDate: now,
       PayMethodId: paymethod.PayMethodId,
@@ -33,9 +33,11 @@ export class AutoBillPayService {
           BusinessUnit: 'GEXA'
         }
       ]
-    });
+    };
 
-    const request = this.HttpClient.post('/AutoPaymentConfigs/EnrollAutoPay', body)
+    console.log('/AutoPaymentConfigs/EnrollAutoPay', JSON.stringify(body, null, '  '));
+
+    const request = this.HttpClient.post('/AutoPaymentConfigs/EnrollAutoPay', JSON.stringify(body))
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err));
 
@@ -58,10 +60,13 @@ export class AutoBillPayService {
     callback?: Function
   ): Observable<Response> {
 
-    const body = JSON.stringify({
+    const body = {
       Billing_Account_Id: billingAccount.Id
-    });
-    const request = this.HttpClient.put('/AutoPaymentConfigs/CancelAutoPay', body)
+    };
+
+    console.log('/AutoPaymentConfigs/CancelAutoPay', JSON.stringify(body, null, '  '));
+
+    const request = this.HttpClient.put('/AutoPaymentConfigs/CancelAutoPay', JSON.stringify(body))
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err));
 
