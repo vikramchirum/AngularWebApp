@@ -2,7 +2,9 @@ import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy } from '@angu
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
+import { clone } from 'lodash';
 
+import { checkIfSunday, validateMoveInDate, checkIfNewYear, checkIfChristmasEve, checkIfChristmasDay } from '../../../validators/moving-form.validator';
 import { SelectPlanModalDialogComponent } from './select-plan-modal-dialog/select-plan-modal-dialog.component';
 import { BillingAccountService } from 'app/core/BillingAccount.service';
 import { CustomerAccountService } from 'app/core/CustomerAccount.service';
@@ -11,6 +13,7 @@ import { TransferService } from '../../../core/transfer.service';
 import { CustomerAccountClass } from 'app/core/models/CustomerAccount.model';
 import { OfferRequest } from '../../../core/models/offer.model';
 import { OfferService } from '../../../core/offer.service';
+
 
 @Component({
   selector: 'mygexa-moving-center-form',
@@ -73,11 +76,11 @@ export class MovingCenterFormComponent implements OnInit {
   ngOnInit() {
 
     this.movingAddressForm = this.fb.group({
-      'Current_Service_End_Date': [null, Validators.required],
-      'New_Service_Start_Date': [null, Validators.required],
+      'Current_Service_End_Date': [null, Validators.compose([Validators.required, checkIfSunday, checkIfNewYear, checkIfChristmasEve, checkIfChristmasDay])],
+      'New_Service_Start_Date': [null, Validators.compose([Validators.required, checkIfSunday, checkIfNewYear, checkIfChristmasEve, checkIfChristmasDay])],
       'current_bill_address': this.fb.array([]),
       'new_billing_address': this.fb.array([])
-    }),
+    },{ validator: validateMoveInDate('Current_Service_End_Date', 'New_Service_Start_Date') }),
 
       this.ServicePlanForm = this.fb.group({
         'service_address': [null, Validators.required],
@@ -112,7 +115,7 @@ export class MovingCenterFormComponent implements OnInit {
 
   private newServiceStartDate: IMyOptions = {
     // start date options here...
-    disableUntil: { year: 0, month: 0, day: 0 }
+    disableUntil: { year: 0, month: 0, day: 0 },
   }
 
   setDate(): void {
@@ -140,16 +143,16 @@ export class MovingCenterFormComponent implements OnInit {
   }
 
   onEndDateChanged(event: IMyDateModel) {
-  // this.movingAddressForm.controls['Current_Service_End_Date'].setValue(event);
-  //   // date selected
-  //   let d = event.jsdate;
-  //   let copy: IMyOptions = this.getCopyOfOptions();
-  //   d.setDate(d.getDate() + 30);
-  //   copy.disableSince = { 
-  //     year: d.getFullYear(), 
-  //     month: d.getMonth() + 1, 
-  //     day: d.getDate() };
-  //   this.newServiceStartDate = copy;
+    // date selected   
+    // let d = clone(event.jsdate);
+    // if(d === event.jsdate){console.log('---------------------------------')}
+    // let copy: IMyOptions = this.getCopyOfOptions();
+    // d.setDate(d.getDate() + 30);
+    // copy.disableSince = { 
+    //   year: d.getFullYear(), 
+    //   month: d.getMonth() + 1, 
+    //   day: d.getDate() };
+    // this.newServiceStartDate = copy;
   }
 
   disableUntil() {
@@ -259,6 +262,8 @@ export class MovingCenterFormComponent implements OnInit {
 
   //TODO : get new address from API
   onMovingAddressFormSubmit(addressForm) {
+
+    console.log('address form.....', addressForm)
     //start date - when the customer wants to turn on their service.
     //TODO : Get TDU_DNS number from New Address API
     this.offerRequestParams = {

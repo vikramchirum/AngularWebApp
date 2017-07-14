@@ -16,7 +16,11 @@
           <h3>Shut Off Date</h3>
            <my-date-picker name="Current_Service_End_Date" [options]="currentServiceEndDate"
                     formControlName="Current_Service_End_Date" (dateChanged)="onEndDateChanged($event)"></my-date-picker>
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors">Required</small>          
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.required">Required</small>    
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday">You cannot pick a sunday for a stop date</small>          
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfNewYear">New Year day is not a valid stop date</small>          
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid stop date</small>  
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid stop date</small>                              
         </div>
       </div>
     </div>
@@ -35,7 +39,12 @@
           <h3>Turn On Date</h3>
            <my-date-picker name="New_Service_Start_Date" [options]="newServiceStartDate"
                     formControlName="New_Service_Start_Date" (dateChanged)="onStartDateChanged($event)"></my-date-picker>
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors">Required</small>         
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.required">Required</small>    
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday">You cannot pick a sunday for a start date</small>          
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfNewYear">New Year day is not a valid start date</small>          
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid start date</small>  
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid start date</small>          
+       
         </div>
       </div>
     </div><br/>
