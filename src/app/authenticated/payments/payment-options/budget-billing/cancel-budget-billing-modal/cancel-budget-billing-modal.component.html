@@ -1,0 +1,25 @@
+<section class="cancel-budget-billing-modal">
+  <div bsModal #cancelBudgetBillingModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="cancel-budget-billing-header">
+            <h4 class="modal-title pull-left"></h4>
+            <button type="button" class="close text-right" aria-label="Close" (click)="hideViewMyBillModal()">
+              <span class="close-btn" aria-hidden="true">&times;</span></button></div><br>
+        </div>
+
+
+        <div class="modal-body">
+          <p>If you cancel budget billing today, you will see a variance amount of $ {{ budgetBillingInfo?.Variance }} on your next bill. Are you sure you want to cancel Budget Billing?</p>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" (click)="hideViewMyBillModal()" data-dismiss="modal">Dismiss</button>
+          <button type="button" class="btn btn-primary" (click)="cancelBudgetBilling()">Stop Budget Billing</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

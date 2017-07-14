@@ -13,6 +13,7 @@ import { AutoBillPayService } from './auto-bill-pay.service';
 import { BillService } from './Bill';
 import { BillingAccountService } from './BillingAccount.service';
 import { CustomerAccountService } from './CustomerAccount.service';
+import { PaymentsService } from './payments.service';
 import { PaymethodService } from './Paymethod.service';
 import { InvoiceService } from './invoiceservice.service';
 import { BudgetBillingService } from './budgetbilling.service';
@@ -32,6 +33,7 @@ import { BudgetBillingService } from './budgetbilling.service';
     BillService,
     BillingAccountService,
     CustomerAccountService,
+    PaymentsService,
     PaymethodService,
     InvoiceService,
     BudgetBillingService

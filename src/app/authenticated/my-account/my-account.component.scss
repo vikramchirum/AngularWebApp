@@ -3,15 +3,15 @@
 
 
 .account-side-panel {
-  
+
   h1 {
     color: rgba(6,81,128,1.0);
   }
-  
+
   .active {
         border-color: rgba(6,81,128,1.0) ;
   }
-  
+
 }
 
 .account-menu {
@@ -23,4 +23,8 @@
     border: none;
     padding: 0;
   }
+}
+
+.jumbotron {
+  margin-top:5%;
 }

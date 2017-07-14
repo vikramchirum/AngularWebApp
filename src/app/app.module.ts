@@ -11,7 +11,7 @@ import { GuestModule } from './guest/guest.module';
 import { AuthenticatedModule } from './authenticated/authenticated.module';
 import { EqualValidator } from './guest/register/equal-validator.directive';
 import { CoreModule } from './core/core.module';
-import {AppRoutingModule} from "./app-routing.module";
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [

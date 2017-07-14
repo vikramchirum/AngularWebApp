@@ -183,24 +183,18 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
       classes: ['alert', 'alert-info'],
       innerHTML: `<i class="fa fa-fw fa-spinner fa-spin"></i> <b>Please wait</b> we're adding your new payment method now.`
     };
-    this.PaymethodService.AddPaymethodCreditCard(
-      this.addCreditCardComponent.formGroup.value.cc_name,
-      <IPaymethodRequestCreditCard> {
-        card_number: this.addCreditCardComponent.formGroup.value.cc_number,
-        expire_year: this.addCreditCardComponent.formGroup.value.cc_year,
-        expire_month: this.addCreditCardComponent.formGroup.value.cc_month,
-        cvv: this.addCreditCardComponent.formGroup.value.cc_ccv
+    this.PaymethodService.AddPaymethodCreditCardFromComponent(this.addCreditCardComponent).subscribe(
+      result => {
+        const accountNumber = get(result, 'CreditCard.AccountNumber');
+        if (accountNumber) {
+          this.PaymentMessage = {
+            classes: ['alert', 'alert-success'],
+            innerHTML: `<b>Ok!</b> your credit account, ending in <b>${ accountNumber }</b> has been added as a payment method!`
+          };
+        }
+        this.PaymethodService.UpdatePaymethods();
       }
-    ).subscribe(result => {
-      const accountNumber = get(result, 'CreditCard.AccountNumber');
-      if (accountNumber) {
-        this.PaymentMessage = {
-          classes: ['alert', 'alert-success'],
-          innerHTML: `<b>Ok!</b> your credit account, ending in <b>${ accountNumber }</b> has been added as a payment method!`
-        };
-      }
-      this.PaymethodService.UpdatePaymethods();
-    });
+    );
   }
 
   addingEcheckToggle(open: boolean): void {
@@ -218,23 +212,18 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
       classes: ['alert', 'alert-info'],
       innerHTML: `<i class="fa fa-fw fa-spinner fa-spin"></i> <b>Please wait</b> we're adding your new payment method now.`
     };
-    this.PaymethodService.AddPaymethodEcheck(
-      this.addEcheckComponent.formGroup.value.echeck_name,
-      <IPaymethodRequestEcheck> {
-        account_number: this.addEcheckComponent.formGroup.value.echeck_accounting,
-        routing_number: this.addEcheckComponent.formGroup.value.echeck_routing,
-        other_info: this.addEcheckComponent.formGroup.value.echeck_info
+    this.PaymethodService.AddPaymethodEcheckFromComponent(this.addEcheckComponent).subscribe(
+      result => {
+        const accountNumber = get(result, 'BankAccount.AccountNumber');
+        if (accountNumber) {
+          this.PaymentMessage = {
+            classes: ['alert', 'alert-success'],
+            innerHTML: `<b>Ok!</b> your bank account, ending in <b>${ accountNumber }</b> has been added as a payment method!`
+          };
+        }
+        this.PaymethodService.UpdatePaymethods();
       }
-    ).subscribe(result => {
-      const accountNumber = get(result, 'BankAccount.AccountNumber');
-      if (accountNumber) {
-        this.PaymentMessage = {
-          classes: ['alert', 'alert-success'],
-          innerHTML: `<b>Ok!</b> your bank account, ending in <b>${ accountNumber }</b> has been added as a payment method!`
-        };
-      }
-      this.PaymethodService.UpdatePaymethods();
-    });
+    );
   }
 
 }
