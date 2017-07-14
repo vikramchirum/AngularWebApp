@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
 import { BillingAccountService } from 'app/core/BillingAccount.service';
-import { PaymethodService } from 'app/core/Paymethod.service';
 import { PaymethodClass } from 'app/core/models/Paymethod.model';
+import { PaymethodService } from 'app/core/Paymethod.service';
+import { AutoBillPayService } from 'app/core/auto-bill-pay.service';
 import { Subscription } from 'rxjs/Subscription';
-
-let temporaryAutoBillPaymethod: PaymethodClass = null;
+import { find, includes } from 'lodash';
 
 @Component({
   selector: 'mygexa-auto-bill-payment',
@@ -15,54 +15,77 @@ let temporaryAutoBillPaymethod: PaymethodClass = null;
 })
 export class AutoBillPaymentComponent implements OnInit, OnDestroy {
 
+  protected includes = includes;
+
   switchingAutoBillPay: boolean = null;
 
-  autoBillPaymethod: PaymethodClass = null;
+  private _autoBillPaymethod: PaymethodClass = null;
+  get autoBillPaymethod(): PaymethodClass { return this._autoBillPaymethod; }
+  set autoBillPaymethod(autoBillPaymethod) {
+    this._autoBillPaymethod = autoBillPaymethod;
+    this.ChangeDetectorRef.detectChanges();
+  }
 
-  private ActiveBillingAccountCache: BillingAccountClass = null;
-  private BillingAccounts: BillingAccountClass[] = [];
-  private BillingAccountsSubscription: Subscription = null;
+  private ActiveBillingAccountsSubscription: Subscription = null;
+  private _ActiveBillingAccount: BillingAccountClass = null;
+  get ActiveBillingAccount() { return this._ActiveBillingAccount; }
+  set ActiveBillingAccount(ActiveBillingAccount) {
+    this._ActiveBillingAccount = ActiveBillingAccount;
+    this.autoBillPaymethod = find(this.Paymethods, ['PayMethodId', ActiveBillingAccount.PayMethodId], null);
+    this.ChangeDetectorRef.detectChanges();
+  }
+
+  private PaymethodsSubscription: Subscription = null;
+  private _Paymethods: PaymethodClass[] = null;
+  get Paymethods() { return this._Paymethods; }
+  set Paymethods(Paymethods) {
+    this._Paymethods = Paymethods;
+    this.ChangeDetectorRef.detectChanges();
+  }
 
   constructor(
     private BillingAccountService: BillingAccountService,
-    private PaymethodService: PaymethodService
-  ) {
-    this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable
-      .subscribe((BillingAccounts: BillingAccountClass[]) => {
-        this.ActiveBillingAccountCache = this.BillingAccountService.ActiveBillingAccountCache;
-        this.BillingAccounts = BillingAccounts;
-      });
-  }
+    private AutoBillPayService: AutoBillPayService,
+    private PaymethodService: PaymethodService,
+    private ChangeDetectorRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
-    this.autoBillPaymethod = temporaryAutoBillPaymethod;
+    this.ActiveBillingAccountsSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+      ActiveBillingAccount => this.ActiveBillingAccount = ActiveBillingAccount
+    );
+    this.PaymethodsSubscription = this.PaymethodService.PaymethodsObservable.subscribe(
+      Paymethods => this.Paymethods = Paymethods
+    );
   }
 
   ngOnDestroy() {
-    this.BillingAccountsSubscription.unsubscribe();
-    temporaryAutoBillPaymethod = this.autoBillPaymethod;
+    this.ActiveBillingAccountsSubscription.unsubscribe();
+    this.PaymethodsSubscription.unsubscribe();
   }
 
   enrollInAutoBillPaySelected(selectedPaymethod: PaymethodClass): void {
-    this.BillingAccountService
-      .applyNewAutoBillPay(selectedPaymethod, this.BillingAccountService.ActiveBillingAccountCache, true)
-      .then(() => this.autoBillPaymethod = selectedPaymethod);
+    this.AutoBillPayService.EnrollInAutoBillPay(
+      this.ActiveBillingAccount,
+      selectedPaymethod,
+      () => this.autoBillPaymethod = selectedPaymethod
+    );
   }
 
   unenrollInAutoBillPaySelected(): void {
-    this.BillingAccountService
-      .applyNewAutoBillPay(null, this.BillingAccountService.ActiveBillingAccountCache, false)
-      .then(() => {
-        this.autoBillPaymethod = null;
-      });
+    this.AutoBillPayService.CancelAutoBillPay(
+      this.ActiveBillingAccount,
+      () => this.autoBillPaymethod = null
+    );
   }
 
   switchingAutoBillPaySelected(selectedPaymethod: PaymethodClass) {
-    // TODO: do we need to call separately to remove the old payment method?.. or is that handled by the back-end API?
     if (selectedPaymethod !== this.autoBillPaymethod) {
-      this.BillingAccountService
-        .applyNewAutoBillPay(selectedPaymethod, this.BillingAccountService.ActiveBillingAccountCache, true)
-        .then(() => this.autoBillPaymethod = selectedPaymethod);
+      this.AutoBillPayService.UpdateAutoBillPay(
+        this.ActiveBillingAccount,
+        selectedPaymethod,
+        () => this.autoBillPaymethod = selectedPaymethod
+      );
     }
     this.switchingAutoBillPay = false;
   }

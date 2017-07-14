@@ -72,6 +72,7 @@ export class BillingAccountClass {
   New_Charges: string;
   Enrolled_In_Auto_Bill_Pay: boolean;
   Is_Auto_Bill_Pay: boolean;
+  PayMethodId: number;
   Is_Happiness_Guranteed: boolean;
   Latest_Invoice_Id: string;
   Average_Usage: number;
