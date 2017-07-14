@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BudgetBillingComponent, BudgetBillingSelectorComponent } from './budget-billing.component';
+import { BudgetBillingSelectorComponent } from './budget-billing/budget-billing-selector.component';
 
 describe('BudgetBillingComponent', () => {
   let component: BudgetBillingComponent;

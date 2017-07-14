@@ -71,16 +71,13 @@ export class CustomerAccountService {
 
     // Assign the Http request to prevent any similar requests.
     this.requestObservable = this.HttpClient.get(`/customer_accounts/${this.CustomerAccountId}`)
-      .map(data => {
-               data = data.json();
-               //console.log("customer data", data);
-               return data;
-      }) .catch(error => error);
+      .map(data => data.json())
+      .catch(error => this.HttpClient.handleHttpError(error));
 
     // Handle the new Billing account data.
     this.requestObservable.subscribe(
       data => this.CustomerAccountCache = new CustomerAccountClass(data),
-      error => this.handleError(error),
+      error => this.HttpClient.handleHttpError(error),
       () => {
         // We're no longer requesting.
         this.requestObservable = null;
@@ -91,20 +88,6 @@ export class CustomerAccountService {
 
     return this.requestObservable;
 
-  }
-
-  private handleError(error: Response | any) {
-    // In a real world app, you might use a remote logging infrastructure
-    let errMsg: string;
-    if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = get(body, 'error', JSON.stringify(body));
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
-    console.error(errMsg);
-    return Observable.throw(errMsg);
   }
 
   private emitToObservers(observers: Observer<any>[], data: any) {

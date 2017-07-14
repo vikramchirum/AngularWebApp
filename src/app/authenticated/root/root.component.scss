@@ -17,8 +17,143 @@
       color:white;
     }
 }
+
+.navbar-inverse {
+    border-radius: 0;
+    color: #fff;
+    min-height: 30px;
+    height:32px;
+    margin-bottom:0;
+  
+  .navbar-right {
+    margin-right: 15px;
+  }
+  
+    .navbar-nav > li > a {
+      color:white;
+      padding:5px 15px;
+    }
+    .fa-white {
+      color: #ffffff;
+    }
+     .nav > li > a:hover, .nav > li > a:focus {
+      text-decoration: none;
+      background-color: #2e2e2e;
+    }
+}
+
 .custom-nav {
-  background: transparent;
-  border-width:0;
-  border-bottom: thin solid #000000;
+    background: url(/assets/global/header-nav.png) repeat-x;
+    border-width:0;
+    border-bottom: thin solid #ccc;
+    border-radius:0;
+    
+    .nav > li > a {  
+      font-size:12px;
+      padding: 30px 20px;      
+    }
+    
+    .nav > li.divider {
+        display: inline-block;
+        width: 1px;
+        border: 1px inset white;
+        height: 50px;
+        margin-top: 12px;
+    }
+  
+    .nav > li > a:hover, .nav > li > a:focus {
+      text-decoration: none;
+      background-color: #ffffff;
+    }
+  
+    .navbar-logo:hover img {
+      background-color:#ffffff;
+    }
+  
+}
+
+.thumbnail {
+  margin-top:40px;
+  margin-bottom: 40px;
+  border: 0;
+  border-radius:0;
+  padding:0;
+  
+  > img {
+    width: 100%;
+ }
+  
+  h4 {
+    font-family: "Open Sans";
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .btn {
+    text-transform: uppercase;
+  }
+  p {
+    font-size: 12px;
+    font-family: "Open Sans";
+    color: #2F2F2F;
+    text-align: center;
+    
+  }
+  h1, .btn-link {
+  color:  #5CB85C
+  }
+
+}
+.my-bill-grid.thumbnail {
+  margin-top: 20px;
+}
+
+
+.usage-summary .thumbnail .bar-chart {
+  max-height: 164px
+}
+
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+.custom-nav {
+    .nav > li > a {  
+      font-size:14px;
+      padding: 30px 18px;      
+    }
+   
+    .navbar-logo img {
+      width: 165px;
+    }
+  }
+
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 992px) {
+  .custom-nav {
+
+    .nav > li > a {  
+      font-size:16px;
+      padding: 30px 20px;      
+    }
+    
+    .navbar-logo img {
+      width:auto;
+    }
+
+  }
+}
+
+/* Large Devices, Wide Screens */
+  @media only screen and (min-width : 1200px) {
+    
+      .custom-nav {
+
+    .nav > li > a {  
+      font-size:18px;
+      padding: 30px 25px;      
+    }
+
+  }
 }

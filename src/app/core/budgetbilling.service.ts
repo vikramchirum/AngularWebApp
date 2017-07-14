@@ -9,9 +9,9 @@ import 'rxjs/add/operator/map';
 
 import { HttpClient } from './httpclient';
 import { IBudgetBillingEstimate } from './models/budgetbilling/budgetbillingestimate.model';
-import { IBudgetBillingInfo } from './models/budgetbilling/budgetbillinginfo';
-import { ICreateBudgetBillingRequest } from './models/budgetbilling/createbudgetbillingrequest';
-import { ICancelBudgetBillingRequest } from './models/budgetbilling/cancelbudgetbillingrequest';
+import { IBudgetBillingInfo } from './models/budgetbilling/budgetbillinginfo.model';
+import { ICreateBudgetBillingRequest } from './models/budgetbilling/createbudgetbillingrequest.model';
+import { ICancelBudgetBillingRequest } from './models/budgetbilling/cancelbudgetbillingrequest.model';
 
 @Injectable()
 export class BudgetBillingService {
@@ -20,7 +20,7 @@ export class BudgetBillingService {
   }
 
   getBudgetBillingEstimate(billingAccountId: number): Observable<IBudgetBillingEstimate> {
-    const relativePath = `/budget_billing/${billingAccountId}/estimate`;
+    const relativePath = `/budget_billing/${billingAccountId}/details`;
     return this.http.get(relativePath).map((response: Response) => {
       return <IBudgetBillingEstimate> response.json();
     }).catch(this.handleError);
@@ -35,7 +35,7 @@ export class BudgetBillingService {
 
   createBudgetBilling(request: ICreateBudgetBillingRequest): Observable<boolean[]> {
     const body = JSON.stringify(request);
-    const relativePath = `/budget_billing/${request.billing_account_id}/create_budget_billing`;
+    const relativePath = `/budget_billing/${request.Billing_Account_Id}/create`;
     return this.http.post(relativePath, body).map((response: Response) => {
       return <boolean> response.json();
     }).catch(this.handleError);
@@ -43,7 +43,7 @@ export class BudgetBillingService {
 
   cancelBudgetBilling(request: ICancelBudgetBillingRequest): Observable<boolean> {
     const body = JSON.stringify(request);
-    const relativePath = `/budget_billing/${request.billing_account_id}/cancel_budget_billing`;
+    const relativePath = `/budget_billing/${request.Billing_Account_Id}/cancel`;
     return this.http.put(relativePath, body).map((response: Response) => {
       return <boolean> response.json();
     }).catch(this.handleError);
