@@ -80,5 +80,4 @@ export class HttpClient extends Http {
     console.error(errMsg);
     return Observable.throw(errMsg);
   }
-
 }
