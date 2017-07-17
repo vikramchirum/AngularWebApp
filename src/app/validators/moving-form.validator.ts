@@ -69,15 +69,33 @@ export function checkIfChristmasDay(control:FormControl) {
 }
 
 
+export function checkIfJuly4th(control:FormControl) {
+     if(control.value) {
+        const serviceDate = control.value.date;
+        const selectedDay = serviceDate.day;
+        const selectedMonth = serviceDate.month;
+        if(selectedDay == 4 && selectedMonth == 7){
+             return {
+                checkIfJuly4th: {
+                    valid: false
+                }
+            };
+
+        }
+    }
+
+}
+
+
 export function validateMoveInDate(endDate, startDate) {
     return (group: FormGroup): { [key: string]: any } => {
-        const serviceEndDate = group.controls[endDate].value;
-        const serviceStartDate = group.controls[startDate].value;
+        let serviceEndDate = group.controls[endDate].value;
+        let serviceStartDate = group.controls[startDate].value;
         if (serviceEndDate && serviceStartDate) {
-            let moveInDate = serviceStartDate.jsdate;
-            let moveOutDate = clone(serviceEndDate.jsdate);
-            moveOutDate = moveOutDate.setDate(moveOutDate.getDate() + 30);
-            if (moveInDate > moveOutDate) {
+            serviceStartDate = serviceStartDate.jsdate;
+            serviceEndDate = clone(serviceEndDate.jsdate);
+            serviceEndDate = serviceEndDate.setDate(serviceEndDate.getDate() + 30);
+            if (serviceStartDate > serviceEndDate) {
                 return {
                     validateMoveInDate: {
                         valid: false
@@ -87,3 +105,17 @@ export function validateMoveInDate(endDate, startDate) {
         }
     };
 }
+
+ export function tduCheck(currentTDU, newTDU) {
+    return (control: FormControl) => {
+      //If user is moving to same TDU, then user can keep the current plan or choose new one
+      if (control.value === "Current Plan") {
+        if (currentTDU !== newTDU) {
+          return {
+            tduCheck: true
+          }
+        }
+      }
+    }
+
+  }

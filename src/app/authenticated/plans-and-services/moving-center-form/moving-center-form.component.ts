@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import { clone } from 'lodash';
 
-import { checkIfSunday, validateMoveInDate, checkIfNewYear, checkIfChristmasEve, checkIfChristmasDay } from '../../../validators/moving-form.validator';
+import { checkIfSunday, validateMoveInDate, checkIfNewYear, checkIfChristmasEve, checkIfChristmasDay, checkIfJuly4th, tduCheck } from '../../../validators/moving-form.validator';
 import { SelectPlanModalDialogComponent } from './select-plan-modal-dialog/select-plan-modal-dialog.component';
 import { BillingAccountService } from 'app/core/BillingAccount.service';
 import { CustomerAccountService } from 'app/core/CustomerAccount.service';
@@ -45,20 +45,7 @@ export class MovingCenterFormComponent implements OnInit {
   offerRequestParams: OfferRequest = null;
 
   @ViewChild('selectPlanModal') selectPlanModal: SelectPlanModalDialogComponent;
-
-  tduCheck(currentTDU, newTDU) {
-    return (control: FormControl) => {
-      //If user is moving to same TDU, then user can keep the current plan or choose new one
-      if (control.value === "Current Plan") {
-        if (currentTDU !== newTDU) {
-          return {
-            tduCheck: true
-          }
-        }
-      }
-    }
-
-  }
+ 
 
   constructor(private fb: FormBuilder,
     private viewContainerRef: ViewContainerRef,
@@ -66,7 +53,7 @@ export class MovingCenterFormComponent implements OnInit {
     private customerAccountService: CustomerAccountService,
     private transferService: TransferService,
     private offerService: OfferService) {
-      //start date and end date must be future date.
+    //start date and end date must be future date.
     this.disableUntil();
   }
 
@@ -76,11 +63,23 @@ export class MovingCenterFormComponent implements OnInit {
   ngOnInit() {
 
     this.movingAddressForm = this.fb.group({
-      'Current_Service_End_Date': [null, Validators.compose([Validators.required, checkIfSunday, checkIfNewYear, checkIfChristmasEve, checkIfChristmasDay])],
-      'New_Service_Start_Date': [null, Validators.compose([Validators.required, checkIfSunday, checkIfNewYear, checkIfChristmasEve, checkIfChristmasDay])],
+      'Current_Service_End_Date': [null, Validators.compose([
+        Validators.required, 
+        checkIfSunday, 
+        checkIfNewYear, 
+        checkIfChristmasEve, 
+        checkIfChristmasDay, 
+        checkIfJuly4th])],
+      'New_Service_Start_Date': [null, Validators.compose([
+        Validators.required, 
+        checkIfSunday, 
+        checkIfNewYear, 
+        checkIfChristmasEve, 
+        checkIfChristmasDay, 
+        checkIfJuly4th])],
       'current_bill_address': this.fb.array([]),
       'new_billing_address': this.fb.array([])
-    },{ validator: validateMoveInDate('Current_Service_End_Date', 'New_Service_Start_Date') }),
+    }, { validator: validateMoveInDate('Current_Service_End_Date', 'New_Service_Start_Date') }),
 
       this.ServicePlanForm = this.fb.group({
         'service_address': [null, Validators.required],
@@ -102,7 +101,7 @@ export class MovingCenterFormComponent implements OnInit {
         this.TDU_DUNS_Number = this.ActiveBillingAccount.TDU_DUNS_Number;
         //On selecting current plan, check if the address is in same TDU or different TDU
         //TDU_DUNS for new address is hardcoded now. Get new address TDU from API
-        this.ServicePlanForm.get('service_plan').setValidators([Validators.required, this.tduCheck(this.TDU_DUNS_Number, "957877905")]);
+        this.ServicePlanForm.get('service_plan').setValidators([Validators.required, tduCheck(this.TDU_DUNS_Number, "957877905")]);
       }
     );
     this.CustomerAccountSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(
@@ -119,20 +118,23 @@ export class MovingCenterFormComponent implements OnInit {
   }
 
   setDate(): void {
-        // Set today date using the setValue function
-        let date = new Date();
-        this.movingAddressForm.setValue({Current_Service_End_Date: {
+    // Set today date using the setValue function
+    let date = new Date();
+    this.movingAddressForm.setValue({
+      Current_Service_End_Date: {
         date: {
-            year: date.getFullYear(),
-            month: date.getMonth() + 1,
-            day: date.getDate()}
-        }});
-    }
+          year: date.getFullYear(),
+          month: date.getMonth() + 1,
+          day: date.getDate()
+        }
+      }
+    });
+  }
 
-    clearDate(): void {
-        // Clear the date using the setValue function
-        this.movingAddressForm.setValue({Current_Service_End_Date: null});
-    }
+  clearDate(): void {
+    // Clear the date using the setValue function
+    this.movingAddressForm.setValue({ Current_Service_End_Date: null });
+  }
 
   private currentServiceEndDate: IMyOptions = {
     // other end date options here...
