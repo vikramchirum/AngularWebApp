@@ -9,32 +9,36 @@ import { HttpModule, XHRBackend, RequestOptions } from '@angular/http';
 import { HttpClient } from './httpclient';
 import { httpFactory } from './httpFactory';
 
+import { AutoBillPayService } from './auto-bill-pay.service';
 import { BillService } from './Bill';
 import { BillingAccountService } from './BillingAccount.service';
 import { CustomerAccountService } from './CustomerAccount.service';
+import { PaymentsService } from './payments.service';
 import { PaymethodService } from './Paymethod.service';
 import { InvoiceService } from './invoiceservice.service';
 import { BudgetBillingService } from './budgetbilling.service';
+import { AddressSearchService } from './addresssearch.service';
 
 @NgModule({
   imports: [
     CommonModule,
     HttpModule
   ],
-  declarations: [],
-  exports: [],
   providers: [
     {
       provide: HttpClient,
       useFactory: httpFactory,
       deps: [ XHRBackend, RequestOptions ]
     },
+    AutoBillPayService,
     BillService,
     BillingAccountService,
     CustomerAccountService,
+    PaymentsService,
     PaymethodService,
     InvoiceService,
-    BudgetBillingService
+    BudgetBillingService,
+    AddressSearchService
   ]
 })
 export class CoreModule {

@@ -36,19 +36,24 @@
             <td class="card-brand" width="31%"><i class="fa fa-fw" [ngClass]="paymentMethod.getFontAwesomeTag()"></i>{{ paymentMethod.getBrand() }}</td>
             <td class="card-ending" width="43%">ENDING IN <b>{{ paymentMethod.getLast() }}</b></td>
             <td class="card-expires" width="13%">{{ paymentMethod.getExpiration() }}</td>
-            <td class="card-remove" width="13%" *ngIf="!PaymentAbpSelecting" [ngClass]="{ 'card-remove-active': PaymentEditting === paymentMethod }">
-              <button class="btn btn-blank" (click)="removePaymethod(paymentMethod)"><i class="fa fa-fw fa-trash"></i></button>
-            </td>
-            <td class="card-abp" width="13%" *ngIf="PaymentAbpSelecting">
-              <button class="btn btn-block btn-blank" *ngIf="PaymentAbpSelecting !== paymentMethod" (click)="PaymentAbpSelected = paymentMethod">
-                <i class="fa fa-fw" [ngClass]="PaymentAbpSelected === paymentMethod ? 'fa-check-circle-o' : 'fa-circle-o' "></i>
-              </button>
-            </td>
+            <ng-template *ngIf="PaymentAbpSelecting; then ShowAbpSelection else ShowRemovalButton"></ng-template>
+            <ng-template #ShowAbpSelection>
+              <td class="card-abp" width="13%">
+                <button class="btn btn-block btn-blank" *ngIf="PaymentAbpSelecting !== paymentMethod" (click)="PaymentAbpSelected = paymentMethod">
+                  <i class="fa fa-fw" [ngClass]="PaymentAbpSelected === paymentMethod ? 'fa-check-circle-o' : 'fa-circle-o' "></i>
+                </button>
+              </td>
+            </ng-template>
+            <ng-template #ShowRemovalButton>
+              <td class="card-remove" width="13%" [ngClass]="{ 'card-remove-active': PaymentEditting === paymentMethod }">
+                <button class="btn btn-blank" (click)="removePaymethod(paymentMethod)"><i class="fa fa-fw fa-trash"></i></button>
+              </td>
+            </ng-template>
           </tr>
           </tbody>
         </table>
         <div class="card-prompt" *ngIf="PaymentEditting === paymentMethod">
-          <div *ngIf="PaymethodService.Is_Used_For_Autopay(paymentMethod); then AutoPayBlock else NonAutoPayBlock"></div>
+          <div *ngIf="isUsedForAutoBillPay(paymentMethod); then AutoPayBlock else NonAutoPayBlock"></div>
           <ng-template #AutoPayBlock>
             <h1>
               <b>Warning!</b>

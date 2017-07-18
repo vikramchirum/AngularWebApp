@@ -30,7 +30,7 @@ export class HttpClient extends Http {
     return super.get(url, options);
   }
 
-  public post(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
+  public post(url: string, body: any, options?: RequestOptionsArgs): Observable<Response> {
     url = this.getAbsoluteUrl(url);
     return super.post(url, body, this.getRequestOptionArgs(options));
   }
@@ -80,5 +80,4 @@ export class HttpClient extends Http {
     console.error(errMsg);
     return Observable.throw(errMsg);
   }
-
 }

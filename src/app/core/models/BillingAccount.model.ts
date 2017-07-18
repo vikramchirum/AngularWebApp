@@ -1,14 +1,8 @@
 
 import { assign } from 'lodash';
+import {IAddress} from './address/address';
 
-export interface IBillingAccountAddress {
-  Line1: string;
-  Line2: string;
-  City: string;
-  State: string;
-  Zip: string;
-  Zip_4: string;
-}
+
 export interface IBillingAccountPlanHistory {
   StartDate: string;
   StopDate: string;
@@ -54,8 +48,8 @@ export class BillingAccountClass {
   UAN: string;
   TDU_Name: string;
   TDU_DUNS_Number: string;
-  Service_Address: IBillingAccountAddress;
-  Mailing_Address: IBillingAccountAddress;
+  Service_Address: IAddress;
+  Mailing_Address: IAddress;
   Paperless_Billing: boolean;
   Budget_Billing: boolean;
   Service_Stop_Request_date: string;
@@ -72,6 +66,7 @@ export class BillingAccountClass {
   New_Charges: string;
   Enrolled_In_Auto_Bill_Pay: boolean;
   Is_Auto_Bill_Pay: boolean;
+  PayMethodId: number;
   Is_Happiness_Guranteed: boolean;
   Latest_Invoice_Id: string;
   Average_Usage: number;
