@@ -17,11 +17,9 @@
     <div class="col-md-4 col-xs-12">
       <label class="control-label">Email Address</label>
     </div>
-    <div class="col-md-4 col-xs-12">
+    <div class="col-md-6 col-xs-12">
         <div class="form-control">{{emailAddress}}</div>
-    </div>
-    <div class="col-xs-1">
-         <a class="btn btn-primary" (click)="toggleEmailEdit($event)">{{ emailEditing ? 'Close' : 'Edit'}}</a>
+         <a class="btn btn-link" (click)="toggleEmailEdit($event)">{{ emailEditing ? 'Close' : 'Edit'}}</a>
     </div>
   </div>
 
@@ -34,11 +32,9 @@
     <div class="col-md-4 col-xs-12">
       <label class="control-label">Phone Number</label>
     </div>
-    <div class="col-md-4 col-xs-12">
+    <div class="col-md-6 col-xs-12">
       <div class="form-control">{{customerDetails.Phone}}</div>
-    </div>
-         <div class="col-xs-1">
-         <a class="btn btn-primary"  (click)="togglePhoneEdit($event)">{{ phoneEditing ? 'Close' : 'Edit'}}</a>
+         <a class="btn btn-link"  (click)="togglePhoneEdit($event)">{{ phoneEditing ? 'Close' : 'Edit'}}</a>
          </div>
     </div>
 

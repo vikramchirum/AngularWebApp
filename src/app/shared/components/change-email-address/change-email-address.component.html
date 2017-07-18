@@ -1,6 +1,10 @@
-<div class="row emailPanel">
-    <div class="col-md-6 col-md-offset-3 col-xs-offset-2">
-      <h3>Change Email Address</h3>
+<br/>
+   <div class="row bg-info">
+  <hr/>
+    <div class="col-md-4">
+      <label class="form-control-label">Change Email Address</label>
+    </div>
+    <div class="col-md-6">
       <form id="changeForm" novalidate [formGroup]="changeEmailForm" (ngSubmit)="submitForm(changeEmailForm.get('email').value, changeEmailForm.valid)"
         align="center">
         <div class="form-group" [ngClass]="{'has-error':!changeEmailForm.controls['email'].valid && submitAttempt}">
@@ -28,18 +32,16 @@
         </div>
 
         <div class="row">
-          <div class="col-xs-6 text-left">
-            <a>Cancel</a>
-          </div>
-          <div class="col-xs-6 text-right">
-            <button class="btn btn-default" [disabled]="">Save</button>
+          <div class="col-xs-12 text-right">
+            <button class="btn btn-primary" [disabled]="">Save</button>
+            <button class="btn btn-default">Cancel</button>
+
           </div>
         </div>
-        <br>
         <div class="alert alert-success" *ngIf="IsResetSucessfull">
           Email updated successfully!!
         </div>
-
       </form>
+      <hr/>
     </div>
   </div>
