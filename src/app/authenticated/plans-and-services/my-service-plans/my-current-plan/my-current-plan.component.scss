@@ -1,6 +1,4 @@
 .current-plan-card {
-    background-color:#000000;
-    color:#ffffff;
     text-align: center;
     .mat-button {
         color:black;
@@ -115,3 +113,36 @@
   }
 }
 
+
+
+
+.mat-card.current-plan-card {
+  box-shadow: none;
+  
+  h2, .fa {
+    color: rgba(46,177,52,1.0);
+  }
+   small .fa {
+     font-size: 12px;
+     font-weight: 100;
+     vertical-align: super;
+  }
+  
+  .mat-card-content {
+    h2 {
+      font-weight:800;
+      color:#000;
+      
+    }
+    .bg-default {
+      background-color: #ececec;
+      margin-bottom:0;
+      line-height: 30px;
+    }
+      p {
+      margin-bottom:0;
+      line-height: 30px;
+    }
+  }
+  
+}
