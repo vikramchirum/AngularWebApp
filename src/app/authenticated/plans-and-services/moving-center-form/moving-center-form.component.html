@@ -1,5 +1,6 @@
 <div class="container-fluid">
-  <form [hidden]="nextClicked || submitted" [formGroup]="movingAddressForm" novalidate (ngSubmit)="onMovingAddressFormSubmit(movingAddressForm.value)" class="moving-address-form">
+  <form [hidden]="nextClicked || submitted" [formGroup]="movingAddressForm" novalidate (ngSubmit)="onMovingAddressFormSubmit(movingAddressForm.value)"
+    class="moving-address-form">
     <h2>Moving Center</h2>
     <p>Let's start with finding out where you are moving to, so we know which options are available to you</p>
 
@@ -14,13 +15,13 @@
       <div class="col-md-6">
         <div class="form-group">
           <h3>Shut Off Date</h3>
-           <my-date-picker name="Current_Service_End_Date" [options]="currentServiceEndDate"
-                    formControlName="Current_Service_End_Date" (dateChanged)="onEndDateChanged($event)"></my-date-picker>
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.required">Required</small>    
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday">You cannot pick a sunday for a stop date</small>          
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfNewYear">New Year day is not a valid stop date</small>          
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid stop date</small>  
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid stop date</small>                              
+          <my-date-picker name="Current_Service_End_Date" [options]="currentServiceEndDate" formControlName="Current_Service_End_Date"
+            (dateChanged)="onEndDateChanged($event)"></my-date-picker>
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.required">Required</small>
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday">You cannot pick a sunday for a stop date</small>
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfNewYear">New Year day is not a valid stop date</small>
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid stop date</small>
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid stop date</small>
         </div>
       </div>
     </div>
@@ -28,23 +29,42 @@
 
     <div class="row">
       <div class="col-md-6">
-        <!--TODO: Moving Address Input -->
         <h3>You are Moving To</h3>
-        <input type="text" class="form-control" placeholder="Enter New Address" />
+        <!--<input type="text" class="form-control" placeholder="Enter New Address" />-->
+        <section class="filter-wrapper">
+          <div class="keyword-wrapper">
+            <input type="text" formControlName="queryField" class="form-control" id="keyword" placeholder="Enter New Address" autofocus />
+          </div>
+          <ul class="filter-select" *ngIf="results">
+            <li *ngFor="let result of results" class="filter-select-list">
+              <p class="artist-name">{{result.newAddressString()}}
+              </p></li>
+
+          </ul>
+        </section>
+<!--<input formControlName="queryField"
+         [typeahead]="dataSource"
+         typeaheadOptionsLimit="7"
+         typeaheadMinLength="0"
+         placeholder="Enter New Address"
+         typeaheadOptionField="Address.City"
+         class="form-control"
+         [typeaheadWaitMs]="600"
+        >-->
+   
       </div>
 
       <!-- select date when customer wants their service turned on at the new home  -->
       <div class="col-md-6">
         <div class="form-group">
           <h3>Turn On Date</h3>
-           <my-date-picker name="New_Service_Start_Date" [options]="newServiceStartDate"
-                    formControlName="New_Service_Start_Date" (dateChanged)="onStartDateChanged($event)"></my-date-picker>
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.required">Required</small>    
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday">You cannot pick a sunday for a start date</small>          
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfNewYear">New Year day is not a valid start date</small>          
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid start date</small>  
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid start date</small>          
-       
+          <my-date-picker name="New_Service_Start_Date" [options]="newServiceStartDate" formControlName="New_Service_Start_Date" (dateChanged)="onStartDateChanged($event)"></my-date-picker>
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.required">Required</small>
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday">You cannot pick a sunday for a start date</small>
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfNewYear">New Year day is not a valid start date</small>
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid start date</small>
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid start date</small>
+
         </div>
       </div>
     </div><br/>
@@ -77,16 +97,16 @@
         <tr>
           <td>
             <p> Would you like to keep your existing service plan<i class="fa fa-chevron-right" aria-hidden="true"></i></p>
-            <div class="form-group radio">              
+            <div class="form-group radio">
               <label class="radio-inline"><input type="radio" formControlName="service_plan" value="Current Plan" (click)="getCurrentPlan()" >Keep Current Plan</label>
               <label class="radio-inline"><input type="radio" formControlName="service_plan" value="New Plan" (click)="openSelectPlanModal()">Select New Plan</label></div>
-              <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Moving address is not in same TDU. Please select New Plan </small>
-              <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.required">Please select plan</small>
-            <mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal  (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>
+            <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Moving address is not in same TDU. Please select New Plan </small>
+            <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.required">Please select plan</small>
+            <mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>
           </td>
           <td>
-                
-           
+
+
             <div class="current-plan-card" *ngIf="selectedOffer">
               <div class="card-content">
                 <p>{{selectedOffer.Plan.Name}}</p>
@@ -94,9 +114,9 @@
                 <p>Expires {{selectedOffer.End_Date | date:'d/M/yy'}}</p>
               </div>
             </div>
-      
- 
-            
+
+
+
             <div *ngIf="ActiveBillingAccount" [hidden]="selectedOffer" class="current-plan-card">
               <div class="card-content">
                 <p>{{ActiveBillingAccount.Current_Offer.Product_Name}}</p>
@@ -104,7 +124,7 @@
                 <p>Expires {{ActiveBillingAccount.Current_Offer.End_Date | date:'d/M/yy'}}</p>
               </div>
             </div>
-           
+
           </td>
         </tr>
       </tbody>
@@ -129,7 +149,7 @@
     <div class="row">
       <div class="text-right">
         <button class="btn btn-lg btn-default" (click)="previousButtonClicked()">Previous</button>
-        <button class="btn btn-lg btn-default"[disabled]="!ServicePlanForm.valid" (click)="onSubmitMove(movingAddressForm.value, ServicePlanForm.value)">Submit Move</button>
+        <button class="btn btn-lg btn-default" [disabled]="!ServicePlanForm.valid" (click)="onSubmitMove(movingAddressForm.value, ServicePlanForm.value)">Submit Move</button>
       </div>
     </div>
   </form>

@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { Subscription } from 'rxjs/Subscription';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import { clone } from 'lodash';
+import { Observable } from 'rxjs/Observable';
 
 import { checkIfSunday, validateMoveInDate, checkIfNewYear, checkIfChristmasEve, checkIfChristmasDay, checkIfJuly4th, tduCheck } from '../../../validators/moving-form.validator';
 import { SelectPlanModalDialogComponent } from './select-plan-modal-dialog/select-plan-modal-dialog.component';
@@ -13,7 +14,9 @@ import { TransferService } from '../../../core/transfer.service';
 import { CustomerAccountClass } from 'app/core/models/CustomerAccount.model';
 import { OfferRequest } from '../../../core/models/offer.model';
 import { OfferService } from '../../../core/offer.service';
-
+import { AddressSearchService } from '../../../core/addresssearch.service';
+import { ISearchAddressRequest } from '../../../core/models/serviceaddress/searchaddressrequest';
+import { ServiceAddress } from '../../../core/models/serviceaddress/serviceaddress';
 
 @Component({
   selector: 'mygexa-moving-center-form',
@@ -43,16 +46,19 @@ export class MovingCenterFormComponent implements OnInit {
   private TDU_DUNS_Number: string = null;
   customerDetails: CustomerAccountClass = null;
   offerRequestParams: OfferRequest = null;
+  results: ServiceAddress[] = null;
+
 
   @ViewChild('selectPlanModal') selectPlanModal: SelectPlanModalDialogComponent;
- 
+
 
   constructor(private fb: FormBuilder,
     private viewContainerRef: ViewContainerRef,
     private BillingAccountService: BillingAccountService,
     private customerAccountService: CustomerAccountService,
     private transferService: TransferService,
-    private offerService: OfferService) {
+    private offerService: OfferService,
+    private addressSearchService: AddressSearchService) {
     //start date and end date must be future date.
     this.disableUntil();
   }
@@ -64,21 +70,22 @@ export class MovingCenterFormComponent implements OnInit {
 
     this.movingAddressForm = this.fb.group({
       'Current_Service_End_Date': [null, Validators.compose([
-        Validators.required, 
-        checkIfSunday, 
-        checkIfNewYear, 
-        checkIfChristmasEve, 
-        checkIfChristmasDay, 
+        Validators.required,
+        checkIfSunday,
+        checkIfNewYear,
+        checkIfChristmasEve,
+        checkIfChristmasDay,
         checkIfJuly4th])],
       'New_Service_Start_Date': [null, Validators.compose([
-        Validators.required, 
-        checkIfSunday, 
-        checkIfNewYear, 
-        checkIfChristmasEve, 
-        checkIfChristmasDay, 
+        Validators.required,
+        checkIfSunday,
+        checkIfNewYear,
+        checkIfChristmasEve,
+        checkIfChristmasDay,
         checkIfJuly4th])],
       'current_bill_address': this.fb.array([]),
-      'new_billing_address': this.fb.array([])
+      'new_billing_address': this.fb.array([]),
+      'queryField': null
     }, { validator: validateMoveInDate('Current_Service_End_Date', 'New_Service_Start_Date') }),
 
       this.ServicePlanForm = this.fb.group({
@@ -93,7 +100,10 @@ export class MovingCenterFormComponent implements OnInit {
 
 
 
+
   ngAfterViewInit() {
+
+
     this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
       movingFromAccount => {
         //console.log("Active Billing Account", movingFromAccount);
@@ -110,8 +120,31 @@ export class MovingCenterFormComponent implements OnInit {
         //console.log('Customer Account', result);
       }
     );
+
+
+
+    this.movingAddressForm.get('queryField').valueChanges
+    //request API only after a specific interval of time.
+    //emits a value from the source observable after 200ms
+      .debounceTime(200)
+      .distinctUntilChanged()
+       // Emit values from latest request and discards previous source emission.
+      .switchMap((query) => this.search(query))
+      .subscribe(result => {
+        console.log("Address search Response", result);
+        this.results = result;
+      });
   }
 
+
+
+
+
+  search(queryString: string) {
+    const searchRequest = {} as ISearchAddressRequest;
+    searchRequest.partial = queryString;
+    return this.addressSearchService.searchAddress(searchRequest)
+  }
   private newServiceStartDate: IMyOptions = {
     // start date options here...
     disableUntil: { year: 0, month: 0, day: 0 },

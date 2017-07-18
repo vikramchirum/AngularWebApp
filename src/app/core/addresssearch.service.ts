@@ -4,6 +4,7 @@
 
 import { Injectable } from '@angular/core';
 import { Response, URLSearchParams } from '@angular/http';
+import {map} from 'lodash';
 
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
@@ -11,7 +12,7 @@ import 'rxjs/add/operator/map';
 import { HttpClient } from './httpclient';
 
 import {ISearchAddressRequest} from './models/serviceaddress/searchaddressrequest';
-import {IServiceAddress} from './models/serviceaddress/serviceaddress';
+import {ServiceAddress} from './models/serviceaddress/serviceaddress';
 
 @Injectable()
 export class AddressSearchService {
@@ -19,7 +20,7 @@ export class AddressSearchService {
   constructor(private http: HttpClient) {
   }
 
-  searchAddress(searchRequest: ISearchAddressRequest): Observable<IServiceAddress[]> {
+  searchAddress(searchRequest: ISearchAddressRequest): Observable<ServiceAddress[]> {
 
     const params: URLSearchParams = new URLSearchParams();
     for (const key in searchRequest) {
@@ -31,7 +32,8 @@ export class AddressSearchService {
 
     const relativePath = `/address_search/`;
     return this.http.get(relativePath, params)
-      .map((response: Response) => { return <IServiceAddress[]> response.json(); })
+      .map((response: Response) => response.json())
+      .map(data => map(data, newAddressData => new ServiceAddress(newAddressData)))
       .catch(error => this.http.handleHttpError(error));
   }
 }
