@@ -1,12 +1,6 @@
-<div class="container-fluid">
-
-  <mygexa-service-account-selector
-    selectorLabel="Your Service Address:"
-    [setActiveBillingAccount]="true"
-  ></mygexa-service-account-selector>
-
+<div class="container"> 
   <div class="row">
-    <div class="col-sm-3 hidden-xs">
+    <div class="col-md-3 col-sm-3 hidden-xs payment-side-panel">
       <mygexa-left-nav-panel [sideNavData] = "{
         'panelTitle':'Payment Center',
         'items':[
@@ -18,7 +12,9 @@
         ]
       }" ></mygexa-left-nav-panel>
     </div>
-    <div class="col-sm-9 payments">
+     <div class="col-md-9 col-sm-9 col-xs-12 payment-profile">
+      <mygexa-status-bar></mygexa-status-bar>
+      <mygexa-service-account-selector [setActiveBillingAccount]="true" ></mygexa-service-account-selector>
       <router-outlet></router-outlet>
     </div>
   </div>

@@ -2,25 +2,17 @@
 
 .card-panel {
   transition: box-shadow .25s;
-  padding: $card-padding;
-  margin: $element-top-margin 0 $element-bottom-margin 0;
-  border-radius: 2px;
   @extend .z-depth-1;
-  background-color: $card-bg-color;
 }
 
 .card {
   position: relative;
-  margin: $element-top-margin 0 $element-bottom-margin 0;
-  background-color: $card-bg-color;
   transition: box-shadow .25s;
-  border-radius: 2px;
   @extend .z-depth-1;
 
 
   .card-title {
     font-size: 24px;
-    font-weight: 300;
     &.activator {
       cursor: pointer;
     }
