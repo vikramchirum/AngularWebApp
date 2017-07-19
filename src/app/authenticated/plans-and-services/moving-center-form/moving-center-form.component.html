@@ -37,7 +37,7 @@
           </div>
           <ul class="filter-select" *ngIf="results">
             <li *ngFor="let result of results" class="filter-select-list">
-              <p class="artist-name">{{result.newAddressString()}}
+              <p (click)="selectAddress(result, $event)" class="artist-name">{{result.newAddressString()}}
               </p></li>
 
           </ul>

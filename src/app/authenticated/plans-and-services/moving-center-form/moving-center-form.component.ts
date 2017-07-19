@@ -47,9 +47,8 @@ export class MovingCenterFormComponent implements OnInit {
   customerDetails: CustomerAccountClass = null;
   offerRequestParams: OfferRequest = null;
   results: ServiceAddress[] = null;
-
-
-  @ViewChild('selectPlanModal') selectPlanModal: SelectPlanModalDialogComponent;
+ selectedAddress:ServiceAddress = null;
+   @ViewChild('selectPlanModal') selectPlanModal: SelectPlanModalDialogComponent;
 
 
   constructor(private fb: FormBuilder,
@@ -84,7 +83,7 @@ export class MovingCenterFormComponent implements OnInit {
         checkIfChristmasDay,
         checkIfJuly4th])],
       'current_bill_address': this.fb.array([]),
-      'new_billing_address': this.fb.array([]),
+      //'new_billing_address': this.fb.array([]),
       'queryField': null
     }, { validator: validateMoveInDate('Current_Service_End_Date', 'New_Service_Start_Date') }),
 
@@ -109,10 +108,7 @@ export class MovingCenterFormComponent implements OnInit {
         //console.log("Active Billing Account", movingFromAccount);
         this.ActiveBillingAccount = movingFromAccount;
         this.TDU_DUNS_Number = this.ActiveBillingAccount.TDU_DUNS_Number;
-        //On selecting current plan, check if the address is in same TDU or different TDU
-        //TDU_DUNS for new address is hardcoded now. Get new address TDU from API
-        this.ServicePlanForm.get('service_plan').setValidators([Validators.required, tduCheck(this.TDU_DUNS_Number, "957877905")]);
-      }
+         }
     );
     this.CustomerAccountSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(
       result => {
@@ -226,6 +222,7 @@ export class MovingCenterFormComponent implements OnInit {
   }
 
   getSelectedOffer(event) {
+    console.log('selected Offer**********************',  event);
     this.selectedOffer = event;
     //OfferId should only get passed when user wants to change their offer
     this.offerId = this.selectedOffer.Id;
@@ -233,23 +230,22 @@ export class MovingCenterFormComponent implements OnInit {
 
 
   onSubmitMove(addressForm, billSelector) {
-
     addressForm.Current_Service_End_Date = addressForm.Current_Service_End_Date.jsdate.toISOString();
     addressForm.New_Service_Start_Date = addressForm.New_Service_Start_Date.jsdate.toISOString();
     addressForm.current_bill_address = this.ActiveBillingAccount.Mailing_Address;
 
-
+   
     // New address where the customer wants to turn on their service. API is not available to fetch new address.
     // For now mapped active account mailing address in new address as well.
 
-    addressForm.new_billing_address = this.ActiveBillingAccount.Mailing_Address;
+    //addressForm.new_billing_address = ;
 
     //Address where the customer wants to send their final bill
     if (billSelector.service_address == 'Current Address') {
       billSelector.final_billing_address = addressForm.current_bill_address;
       this.Final_Bill_To_Old_Billing_Address = true;
     } else {
-      billSelector.final_billing_address = addressForm.new_billing_address;
+      billSelector.final_billing_address = this.selectedAddress.Address;
       this.Final_Bill_To_Old_Billing_Address = false;
     }
 
@@ -267,7 +263,7 @@ export class MovingCenterFormComponent implements OnInit {
       Final_Bill_To_Old_Billing_Address: this.Final_Bill_To_Old_Billing_Address,
       Final_Bill_Address: billSelector.final_billing_address,
       UAN: this.ActiveBillingAccount.UAN,
-      Billing_Address: addressForm.new_billing_address,
+      Billing_Address: this.selectedAddress.Address,
       TDSP_Instructions: "",
       New_Service_Start_Date: addressForm.New_Service_Start_Date,
       Keep_Current_Offer: this.Keep_Current_Offer,
@@ -297,19 +293,25 @@ export class MovingCenterFormComponent implements OnInit {
 
   //TODO : get new address from API
   onMovingAddressFormSubmit(addressForm) {
-
+      console.log('.....................',this.selectedAddress);
     console.log('address form.....', addressForm)
     //start date - when the customer wants to turn on their service.
     //TODO : Get TDU_DNS number from New Address API
     this.offerRequestParams = {
       startDate: addressForm.New_Service_Start_Date.jsdate.toISOString(),
-      dunsNumber: "957877905"
+      dunsNumber: this.selectedAddress.Meter_Info.TDU_DUNS
     }
     // send start date and TDU_DUNS_Number to get offers available.
     this.offerService.getOffers(this.offerRequestParams)
       .subscribe(result => {
+        console.log('Availble Offers..................', result)
         this.availableOffers = result;
       })
+
+       //On selecting current plan, check if the address is in same TDU or different TDU
+        //TDU_DUNS for new address is hardcoded now. Get new address TDU from API
+        this.ServicePlanForm.get('service_plan').setValidators([Validators.required, tduCheck(this.ActiveBillingAccount.TDU_DUNS_Number, this.selectedAddress.Meter_Info.TDU_DUNS)]);
+    
   }
 
   getCurrentPlan() {
@@ -321,6 +323,13 @@ export class MovingCenterFormComponent implements OnInit {
   ngOnDestroy() {
     this.ActiveBillingAccountSubscription.unsubscribe();
     this.CustomerAccountSubscription.unsubscribe();
+  }
+
+  selectAddress(value, event){
+    console.log('value.......', value);
+    this.movingAddressForm.controls.queryField.setValue(value.newAddressString());
+   // this.movingAddressForm.controls.new_billing_address.setValue(value.Address);
+  this.selectedAddress = value;
   }
 
 
