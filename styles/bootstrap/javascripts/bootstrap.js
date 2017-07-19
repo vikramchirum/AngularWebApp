@@ -2380,11 +2380,11 @@ if (typeof jQuery === 'undefined') {
 
 
 $(document).ready(function() {
-    $('.custom-nav li.dropdown-full').hover(function() {
-        $(this).parent().find('li').removeClass('open');
-        $(this).addClass('open');
+    $('.custom-nav li.dropdown-full > a:link').hover(function() {
+        $(this).closest('.custom-nav').find('li').removeClass('open');
+        $(this).parent().addClass('open');
     });
-    $('.custom-nav li.dropdown-full a').click(function() {
-        $(this).parent().find('li').removeClass('open');
+   $('.custom-nav li.dropdown-full > a.active').blur(function() {
+        $(this).closest('.custom-nav').find('li').removeClass('open');
     });
 });
