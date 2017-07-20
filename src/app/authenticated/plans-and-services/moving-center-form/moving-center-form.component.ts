@@ -123,10 +123,13 @@ export class MovingCenterFormComponent implements OnInit {
       // Emit values from latest request and discards previous source emission.
       .switchMap((query) => this.searchNewAddress(query))
       .subscribe(result => {       
-        //console.log("Address search Response", result);
+        console.log("Address search Response", result);
         this.results = result;
-        // this.showHideAdressList = true;      
-      });
+        this.showHideAdressList = true;      
+      }),
+      error => {
+        console.log('Address Search API error', error.Message);
+      };
   }
 
   searchNewAddress(queryString: string) {
@@ -205,8 +208,8 @@ export class MovingCenterFormComponent implements OnInit {
   addressFormSubmit(addressForm) {
     this.nextClicked = true;
     this.previousClicked = !this.previousClicked;
-    this.selectedOffer = null;   
-
+    this.selectedOffer = null;       
+   
     //start date - when the customer wants to turn on their service.
     // dunsNumber - TDU_DNS number from New Address Search API
     this.offerRequestParams = {
@@ -217,7 +220,7 @@ export class MovingCenterFormComponent implements OnInit {
     this.offerService.getOffers(this.offerRequestParams)
       .subscribe(result => {
         this.availableOffers = result;
-      })
+      })      
   }
 
   // New Service Plans Modal
