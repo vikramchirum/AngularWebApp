@@ -17,8 +17,6 @@ export class ServiceAddress {
    */
   constructor(opts: any) {
     assign(this, opts);
-    console.log( 'ServiceAddress', this );
-     console.log( 'ServiceAddress', opts );
   }
 
 

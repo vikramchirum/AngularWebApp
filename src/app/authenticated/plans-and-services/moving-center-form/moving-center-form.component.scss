@@ -36,14 +36,14 @@
   width: 100%;
   position: relative;
 }
-#keyword {
-  border: 1px solid #ccc;
-  padding: 10px;
-  font: 1.5em 'Arimo', sans-serif;
-  width: 100%;
-  outline: none;
-  transition: border 0.5s ease-in-out
-}
+// #keyword {
+//   border: 1px solid #ccc;
+//   padding: 10px;
+//   font: 1.5em 'Arimo', sans-serif;
+//   width: 100%;
+//   outline: none;
+//   transition: border 0.5s ease-in-out
+// }
 #keyword:focus {
   border-color : rgba(81, 203, 238, 1);;
 }
@@ -66,7 +66,7 @@
   border: 1px solid #ccc;
   border-top: none;
   /*so things don't jump around*/
-  position: absolute;
+  //position: absolute;
   //left: 25%;
   top: calc(50% + 25px);
  // max-height: calc(50% - 15px);
@@ -124,7 +124,7 @@
 @media only screen and (max-width: 480px) {
   .filter-select,
   #keyword {
-    width: 95%;
+    width: 100%;
   }
   .filter-select {
     left: 2.5%;

@@ -1,6 +1,5 @@
 <div class="container-fluid">
-  <form [hidden]="nextClicked || submitted" [formGroup]="movingAddressForm" novalidate (ngSubmit)="onMovingAddressFormSubmit(movingAddressForm.value)"
-    class="moving-address-form">
+  <form [hidden]="nextClicked || submitted" [formGroup]="movingAddressForm" novalidate class="moving-address-form">
     <h2>Moving Center</h2>
     <p>Let's start with finding out where you are moving to, so we know which options are available to you</p>
 
@@ -33,16 +32,18 @@
         <!--<input type="text" class="form-control" placeholder="Enter New Address" />-->
         <section class="filter-wrapper">
           <div class="keyword-wrapper">
-            <input type="text" formControlName="queryField" class="form-control" id="keyword" placeholder="Enter New Address" autofocus />
+            <input type="text" formControlName="newAddressSearchField" class="form-control" id="keyword" placeholder="Enter New Address"
+              autofocus />
           </div>
-          <ul class="filter-select" *ngIf="results">
+          <ul class="filter-select" *ngIf="results && showHideAdressList">
             <li *ngFor="let result of results" class="filter-select-list">
-              <p (click)="selectAddress(result, $event)" class="artist-name">{{result.newAddressString()}}
-              </p></li>
-
+              <p (click)="selectNewBillingAddress(result, $event)" class="artist-name">{{result.newAddressString()}}
+              </p>
+            </li>
           </ul>
         </section>
-<!--<input formControlName="queryField"
+        <small class="text-danger" *ngIf="movingAddressForm.controls?.newAddressSearchField.errors?.required">Please Enter Address</small>
+        <!--<input formControlName="queryField"
          [typeahead]="dataSource"
          typeaheadOptionsLimit="7"
          typeaheadMinLength="0"
@@ -51,7 +52,7 @@
          class="form-control"
          [typeaheadWaitMs]="600"
         >-->
-   
+
       </div>
 
       <!-- select date when customer wants their service turned on at the new home  -->
@@ -64,6 +65,7 @@
           <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfNewYear">New Year day is not a valid start date</small>
           <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid start date</small>
           <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid start date</small>
+          <small class="text-danger" *ngIf="movingAddressForm.errors?.validateMoveInDate">Move In Date should be within 30 days of move out Date</small>
 
         </div>
       </div>
@@ -81,13 +83,13 @@
     <br/>
 
     <div class="text-right">
-      <button class="btn btn-lg btn-default" [disabled]="!movingAddressForm.valid" (click)="nextButtonClicked()">Next</button>
+      <button class="btn btn-lg btn-default" [disabled]="!movingAddressForm.valid" (click)="addressFormSubmit(movingAddressForm.value)">Next</button>
     </div>
   </form>
 
 
 
-  <form [hidden]="previousClicked || submitted" [formGroup]="ServicePlanForm" novalidate (ngSubmit)="onServicePlanFormSubmit(ServicePlanForm.value, movingAddressForm.value)">
+  <form [hidden]="previousClicked || submitted" [formGroup]="ServicePlanForm" novalidate>
     <h2>Moving Center</h2>
     <p>A few more items and we can finalize your order</p>
     <br/>
@@ -144,7 +146,8 @@
 
     <br/><br/>
     <input type="checkbox" formControlName="agree_to_terms" value="check" id="agree" /> I Agree to the Terms and Conditions,
-    click <a>here</a>
+    click <a>here</a><br>
+    <small class="text-danger" *ngIf="ServicePlanForm.controls?.agree_to_terms.errors"> Please Agree to Terms and Conditions </small>
 
     <div class="row">
       <div class="text-right">
