@@ -6,8 +6,12 @@
     <div class="row">
       <!--Present Billing Account Address -->
       <div class="col-md-6">
+        <div class="form-group" >
         <h3>You are Moving From</h3>
-        <mygexa-service-account-selector (changedBillingAccount)="serviceChanged($event)"></mygexa-service-account-selector>
+        <mygexa-service-account-selector 
+    [setActiveBillingAccount]="true" (changedBillingAccount)="serviceChanged($event)"></mygexa-service-account-selector>
+           <small class="text-danger" *ngIf="ActiveBillingAccount && ActiveBillingAccount?.Status !== 'Active'">This account has been disconnected and the move out can not be continued</small>
+      </div>
       </div>
 
       <!-- select date when customer wants their service turned off at the old home  -->
@@ -18,9 +22,9 @@
             (dateChanged)="onEndDateChanged($event)"></my-date-picker>
           <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.required">Required</small>
           <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday">You cannot pick a sunday for a stop date</small>
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfNewYear">New Year day is not a valid stop date</small>
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid stop date</small>
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid stop date</small>
+          <small class="text-danger" *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfNewYear">New Year day is not a valid stop date</small>
+          <small class="text-danger" *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid stop date</small>
+          <small class="text-danger" *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid stop date</small>
         </div>
       </div>
     </div>
@@ -33,7 +37,7 @@
         <section class="filter-wrapper">
           <div class="keyword-wrapper">
             <input type="text" formControlName="newAddressSearchField" class="form-control" id="keyword" placeholder="Enter New Address"
-              autofocus />
+               autocomplete="off"  />
           </div>
           <ul class="filter-select" *ngIf="results && showHideAdressList">
             <li *ngFor="let result of results" class="filter-select-list">
@@ -62,22 +66,25 @@
           <my-date-picker name="New_Service_Start_Date" [options]="newServiceStartDate" formControlName="New_Service_Start_Date" (dateChanged)="onStartDateChanged($event)"></my-date-picker>
           <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.required">Required</small>
           <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday">You cannot pick a sunday for a start date</small>
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfNewYear">New Year day is not a valid start date</small>
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid start date</small>
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid start date</small>
-          <small class="text-danger" *ngIf="movingAddressForm.errors?.validateMoveInDate">Move In Date should be within 30 days of move out Date</small>
+          <small class="text-danger" *ngIf="!movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday && movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfNewYear">New Year day is not a valid start date</small>
+          <small class="text-danger" *ngIf="!movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday && movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid start date</small>
+          <small class="text-danger" *ngIf="!movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday && movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid start date</small>
+          <small class="text-danger" *ngIf="!movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday && 
+          !movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfNewYear && 
+          !movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasEve &&  
+          !movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasDay &&
+          movingAddressForm.errors?.validateMoveInDate">Move In Date should be within 30 days of move out Date</small>
 
         </div>
       </div>
     </div><br/>
 
     <!--If we don't offer service in the moving address, we should show the message-->
-    <!-- TODO: New Address API integration - Uncomment the below alert code once we get new address API -->
 
-    <!--<div class="alert alert-info fade in alert-dismissable">
+    <div *ngIf="results && results.length === 0" class="alert alert-info fade in alert-dismissable">
       <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
       <strong>We're Sorry!</strong> We cannot register your move online, please call 1-888 888 8888 for assistance.
-    </div>-->
+    </div>
 
 
     <br/>
@@ -156,6 +163,8 @@
       </div>
     </div>
   </form>
+
+  <small class="text-danger" *ngIf="pastDueErrorMessage">{{pastDueErrorMessage}}</small>
 
   <!--Moving Form Confirmation Screen -->
   <div [hidden]="!submitted" class="moving-confirmation">
