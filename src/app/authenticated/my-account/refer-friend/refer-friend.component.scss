@@ -1,7 +1,7 @@
 
 .refer-friend-description {
   .checkbox {
-    background: #eeeeee;
+    background: aliceblue;
     margin-top: 4rem;
     padding: 2rem 0;
 
@@ -50,6 +50,11 @@
   .btn-wireframe {
     float: right;
   }
+}
+.hang-indent {
+  display: inline-block;
+  width: 95%;
+  float: right;
 }
 
 .rewards-and-referrals {
