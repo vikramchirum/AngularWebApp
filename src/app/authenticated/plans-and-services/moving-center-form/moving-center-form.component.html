@@ -81,7 +81,7 @@
 
     <!--If we don't offer service in the moving address, we should show the message-->
 
-    <div *ngIf="results && results.length === 0" class="alert alert-info fade in alert-dismissable">
+    <div *ngIf="availableOffers && availableOffers.length === 0" class="alert alert-info fade in alert-dismissable">
       <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
       <strong>We're Sorry!</strong> We cannot register your move online, please call 1-888 888 8888 for assistance.
     </div>
