@@ -14,8 +14,8 @@
       </div>
     </div>
 
-    <div class="form-group form-group-lg">
-      <label for="payment-horizontal-echeck-name" class="col-md-4 col-lg-2 control-label">Account Name</label>
+    <div class="form-group ">
+      <label for="payment-horizontal-echeck-name" class="col-md-3 control-label">Account Name</label>
       <div class="col-md-8 col-lg-6">
         <input
           type="text"
@@ -24,13 +24,15 @@
           formControlName="echeck_name"
           maxlength="32"
         />
+      </div>
+       <div class="col-md-1">
         <small class="text-danger" *ngIf="formGroup.controls?.echeck_name.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
         <small class="text-success" *ngIf="formGroup.controls?.echeck_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
       </div>
     </div>
 
-    <div class="form-group form-group-lg">
-      <label for="payment-horizontal-echeck-routing" class="col-md-4 col-lg-2 control-label">Routing Number</label>
+    <div class="form-group ">
+      <label for="payment-horizontal-echeck-routing" class="col-md-3 control-label">Routing Number</label>
       <div class="col-md-8 col-lg-6">
         <input
           type="text"
@@ -39,13 +41,15 @@
           formControlName="echeck_routing"
           maxlength="17"
         />
+              </div>
+       <div class="col-md-1">
         <small class="text-danger" *ngIf="formGroup.controls?.echeck_routing.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
         <small class="text-success" *ngIf="formGroup.controls?.echeck_routing.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
       </div>
     </div>
 
-    <div class="form-group form-group-lg">
-      <label for="payment-horizontal-echeck-accounting" class="col-md-4 col-lg-2 control-label">Checking Account Number</label>
+    <div class="form-group ">
+      <label for="payment-horizontal-echeck-accounting" class="col-md-3 control-label">Checking Account Number</label>
       <div class="col-md-8 col-lg-6">
         <input
           type="text"
@@ -54,13 +58,15 @@
           formControlName="echeck_accounting"
           maxlength="17"
         />
+              </div>
+       <div class="col-md-1">
         <small class="text-danger" *ngIf="formGroup.controls?.echeck_accounting.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
         <small class="text-success" *ngIf="formGroup.controls?.echeck_accounting.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
       </div>
     </div>
 
-    <div class="form-group form-group-lg">
-      <label for="payment-horizontal-echeck-info" class="col-md-4 col-lg-2 control-label">Other info?</label>
+    <div class="form-group ">
+      <label for="payment-horizontal-echeck-info" class="col-md-3 control-label">Other info?</label>
       <div class="col-md-8 col-lg-6">
         <input
           type="text"
@@ -68,7 +74,6 @@
           id="payment-horizontal-echeck-info"
           formControlName="echeck_info"
         />
-        <small class="text-muted">(optional)</small>
       </div>
     </div>
 
@@ -80,7 +85,7 @@
     <div class="row">
 
       <div class="col-md-4">
-        <div class="form-group-lg">
+        <div class="">
           <label for="payment-normal-echeck-name">Name on Account</label>
           <input
             type="text"
@@ -95,7 +100,7 @@
       </div>
 
       <div class="col-md-4">
-        <div class="form-group-lg">
+        <div class="">
           <label for="payment-normal-echeck-routing">Routing Number</label>
           <input
             type="text"
@@ -110,7 +115,7 @@
       </div>
 
       <div class="col-md-4">
-        <div class="form-group-lg">
+        <div class="">
           <label for="payment-normal-echeck-accounting">Checking Account Number</label>
           <input
             type="text"
@@ -125,8 +130,8 @@
       </div>
 
     </div>
-
-    <div class="form-group-lg">
+<hr/>
+    <div class="row">
       <label for="payment-normal-echeck-info">Other info?</label>
       <input
         type="text"
