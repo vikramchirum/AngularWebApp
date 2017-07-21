@@ -1,5 +1,4 @@
 <section *ngIf="!IsInRenewalTimeFrame && Offer">
-  <div *ngFor="let item of Offer">
 
 <div class="plan-card-container">
   <div class="card-content">
@@ -34,11 +33,9 @@
   </div>
 </div>
 <br>
-  </div>
 </section>
 
 <section id = renewPlan *ngIf="IsInRenewalTimeFrame && Offer" >
-  <div *ngFor="let item of Offer">
   <div class="plan-card-container">
     <div class="card-content">
       <h4>{{Offer.Plan.Name }} <i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></h4>
@@ -69,7 +66,6 @@
   </div>
   <div class="row text-center">
     <h4>What's included <i class="fa fa-caret-down fa-2x"></i></h4>
-  </div>
   </div>
 </section>
 

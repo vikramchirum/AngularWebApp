@@ -12,7 +12,7 @@ import { filter, forEach, clone } from 'lodash';
   templateUrl: './change-your-plan-card.component.html',
   styleUrls: ['./change-your-plan-card.component.scss']
 })
-export class ChangeYourPlanCardComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   @Input() Offer: IOffers;
 
   @ViewChild('serviceUpgradeModal') serviceUpgradeModal: ServicePlanUpgradeModalComponent;
@@ -30,23 +30,11 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy, AfterView
         this.ActiveBillingAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
       });
-
-    // this.activebillingAccountOffersSubscription = this.active_billingaccount_service.ActiveBillingAccountOfferObservable.subscribe(
-    //   all_offers => {
-    //     console.log('HELLO', all_offers);
-    //   });
-
   }
 
   constructor(private viewContainerRef: ViewContainerRef, private billingAccount_service: BillingAccountService,
               private active_billingaccount_service: OfferService) {
   }
-
-
-  ngAfterViewInit() {
-  }
-
-
   showServiceUpgradeModal() {
     this.serviceUpgradeModal.show();
 
@@ -65,6 +53,5 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy, AfterView
   }
   ngOnDestroy() {
     this.billingAccountSubscription.unsubscribe();
-    //this.activebillingAccountOffersSubscription.unsubscribe();
   }
 }

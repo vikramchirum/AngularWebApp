@@ -24,8 +24,6 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   public AllOfferss: IOffers[];
   clicked: boolean;
 
-  @ViewChild(ChangeYourPlanCardComponent) private ChangePlanCard: ChangeYourPlanCardComponent;
-
   constructor(private billingAccount_service: BillingAccountService, private active_billingaccount_service: OfferService) {
     this.IsInRenewalTimeFrame = false;
     this.clicked = false;
