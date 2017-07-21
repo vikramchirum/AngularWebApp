@@ -17,6 +17,7 @@ export class RootComponent implements OnInit, AfterViewInit {
   env = environment.Name;
   user: string;
   accordionVisible: boolean = false;
+  
 
   @ViewChild('homeMultiAccountsModal') homeMultiAccountsModal: HomeMultiAccountsModalComponent;
 

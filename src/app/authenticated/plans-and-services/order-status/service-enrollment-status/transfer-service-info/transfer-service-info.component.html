@@ -1,30 +1,30 @@
-<div class="container-fluid">
+<div class="container-fluid transfer-service-info">
   <div class="row">
     <div class="col-xs-5 col-md-12 status-details visible-xs visible-sm">
       <div class="circle">
         <div class="checkmark"></div>
         <p>Submitted
-          <p>
+        <p> 
       </div>
       <div class="circle">
         <div class="checkmark"></div>
         <p>Processing
-          <p>
+        <p> 
       </div>
       <div class="circle">
         <div class="checkmark"></div>
         <p>Switching Utility
-          <p>
+        <p> 
       </div>
       <div class="circle">
         <div class="checkmark"></div>
         <p>Local Utility Processed
-          <p>
+        <p> 
       </div>
       <div class="circle">
         <div class="checkmark"></div>
         <p>Complete
-          <p>
+        <p> 
       </div>
     </div>
     <div class="col-xs-7 col-md-12 service-info">
@@ -36,12 +36,11 @@
           <p>Houston</p>
           <p>TX - 77-70 </p>
         </div>
-        <div class="col-md-2 hidden-xs hidden-sm">
-          <i class="fa fa-arrow-right right-arrow" aria-hidden="true"></i>
-        </div>
-
+        <div class="col-md-4 text-center hidden-xs hidden-sm"> <i class="fa fa-arrow-right fa-2x right-arrow" aria-hidden="true"></i> </div>
         <div class="col-md-4 col-xs-12">
-          <div class="visible-xs visible-sm"><br/><br></div>
+          <div class="visible-xs visible-sm"><br/>
+            <br>
+          </div>
           <h5>Transfer Service Address</h5>
           <p>10262 TX-249 #200,</p>
           <p>Houston</p>
@@ -50,25 +49,35 @@
       </div>
     </div>
   </div>
-  <br/><br/>
+  <br/>
+  <br/>
   <div class="row">
-    <div class="col-md-5 col-xs-12 plan-info">
-      <h3>Plan Information</h3><br/>
-      <div class="plan-info-container">
-        <h4><span>Gexa Classic 12</span><i class="fa fa-info-circle pull-right" aria-hidden="true"></i></h4>
-        <p><sup>$</sup><span class="unit-cost">0.082</span>pkw/hr</p>
-        <p>TERM:12 months</p>
-        <p>Start:03/31/2017</p>
-        <p>End:03/30/2018</p>
-        <i class="fa fa-check-circle pull-right" aria-hidden="true"></i>
-      </div>
-    </div>
-    <!--<div class="col-md-offset-1"></div>-->
-    <div class="col-md-offset-1 col-md-6 col-xs-12 plan-info-enquire">
-      <div class="jumbotron">
-        <p>tempora incidunt sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem
-          numquam eius.</p>
-        <h2> Call 1800-638-902</h2>
+    <div class="col-md-4 col-md-offset-4 plan-info">
+      <div class="select-plan-card-container">
+        <div class="card-content">
+          <div class="card-title">
+            <h4>Gexa Prime 1000 12 <small><i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></small></h4>
+            <h2>3.9&cent;<small>pkw/hr</small> </h2>
+          </div>
+          <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
+          <p>at 1000kwh</p>
+          <p>TERM:12 months</p>
+          <p>No Sign Up Bonus</p>
+          <br/>
+        </div>
+        <div *ngIf= "selectCheckBox" class="agreement-section">
+          <hr>
+          <div class="checkbox">
+            <label>
+            <input type="checkbox" value="" (click) = "toggleButton()">
+            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+            <p>By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP(Gexa energy).<br/>
+              <br/>
+              View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
+            </label>
+          </div>
+          <hr>
+        </div>
       </div>
     </div>
   </div>

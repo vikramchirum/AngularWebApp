@@ -2,7 +2,10 @@ import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy } from '@angu
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
+import { clone } from 'lodash';
+import { Observable } from 'rxjs/Observable';
 
+import { checkIfSunday, validateMoveInDate, checkIfNewYear, checkIfChristmasEve, checkIfChristmasDay, checkIfJuly4th, tduCheck } from '../../../validators/moving-form.validator';
 import { SelectPlanModalDialogComponent } from './select-plan-modal-dialog/select-plan-modal-dialog.component';
 import { BillingAccountService } from 'app/core/BillingAccount.service';
 import { CustomerAccountService } from 'app/core/CustomerAccount.service';
@@ -11,6 +14,9 @@ import { TransferService } from '../../../core/transfer.service';
 import { CustomerAccountClass } from 'app/core/models/CustomerAccount.model';
 import { OfferRequest } from '../../../core/models/offer.model';
 import { OfferService } from '../../../core/offer.service';
+import { AddressSearchService } from '../../../core/addresssearch.service';
+import { ISearchAddressRequest } from '../../../core/models/serviceaddress/searchaddressrequest';
+import { ServiceAddress } from '../../../core/models/serviceaddress/serviceaddress';
 
 @Component({
   selector: 'mygexa-moving-center-form',
@@ -31,6 +37,8 @@ export class MovingCenterFormComponent implements OnInit {
   selectedOffer = null;
   availableOffers = null;
   offerId: string;
+  showHideAdressList: boolean = true;
+  pastDueErrorMessage : string;
 
   public transferRequest: TransferRequest = null;
 
@@ -40,30 +48,20 @@ export class MovingCenterFormComponent implements OnInit {
   private TDU_DUNS_Number: string = null;
   customerDetails: CustomerAccountClass = null;
   offerRequestParams: OfferRequest = null;
+  results: ServiceAddress[] = null;
+  newServiceAddress: ServiceAddress = null;
 
   @ViewChild('selectPlanModal') selectPlanModal: SelectPlanModalDialogComponent;
 
-  tduCheck(currentTDU, newTDU) {
-    return (control: FormControl) => {
-      //If user is moving to same TDU, then user can keep the current plan or choose new one
-      if (control.value === "Current Plan") {
-        if (currentTDU !== newTDU) {
-          return {
-            tduCheck: true
-          }
-        }
-      }
-    }
-
-  }
 
   constructor(private fb: FormBuilder,
     private viewContainerRef: ViewContainerRef,
     private BillingAccountService: BillingAccountService,
     private customerAccountService: CustomerAccountService,
     private transferService: TransferService,
-    private offerService: OfferService) {
-      //start date and end date must be future date.
+    private offerService: OfferService,
+    private addressSearchService: AddressSearchService) {
+    //start date and end date must be future date.
     this.disableUntil();
   }
 
@@ -73,63 +71,79 @@ export class MovingCenterFormComponent implements OnInit {
   ngOnInit() {
 
     this.movingAddressForm = this.fb.group({
-      'Current_Service_End_Date': [null, Validators.required],
-      'New_Service_Start_Date': [null, Validators.required],
+      'Current_Service_End_Date': [null, Validators.compose([
+        Validators.required,
+        checkIfSunday,
+        checkIfNewYear,
+        checkIfChristmasEve,
+        checkIfChristmasDay,
+        checkIfJuly4th])],
+      'New_Service_Start_Date': [null, Validators.compose([
+        Validators.required,
+        checkIfSunday,
+        checkIfNewYear,
+        checkIfChristmasEve,
+        checkIfChristmasDay,
+        checkIfJuly4th])],
       'current_bill_address': this.fb.array([]),
-      'new_billing_address': this.fb.array([])
-    }),
+      'newAddressSearchField': [null, Validators.required],
+      'activeAccountAddress':null
+    }, { validator: validateMoveInDate('Current_Service_End_Date', 'New_Service_Start_Date') }),
 
       this.ServicePlanForm = this.fb.group({
         'service_address': [null, Validators.required],
         'service_plan': [null, Validators.required],
-        'agree_to_terms': [null, Validators.required],
+        'agree_to_terms': [false, [Validators.pattern('true')]],
         'final_billing_address': this.fb.array([])
       })
 
   }
 
-
-
-
   ngAfterViewInit() {
+
     this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
       movingFromAccount => {
         //console.log("Active Billing Account", movingFromAccount);
-        this.ActiveBillingAccount = movingFromAccount;
-        this.TDU_DUNS_Number = this.ActiveBillingAccount.TDU_DUNS_Number;
-        //On selecting current plan, check if the address is in same TDU or different TDU
-        //TDU_DUNS for new address is hardcoded now. Get new address TDU from API
-        this.ServicePlanForm.get('service_plan').setValidators([Validators.required, this.tduCheck(this.TDU_DUNS_Number, "957877905")]);
+        this.ActiveBillingAccount = movingFromAccount;            
       }
     );
     this.CustomerAccountSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(
       result => {
         this.customerDetails = result;
-        //console.log('Customer Account', result);
+       // console.log('Customer Account**************************', result);
       }
     );
+
+
+    this.movingAddressForm.controls.newAddressSearchField.valueChanges
+      //request API only after a specific interval of time and avoid too many API calls.
+      //emits a value from the source observable after 200ms
+      .debounceTime(200)
+      .distinctUntilChanged()
+      // Emit values from latest request and discards previous source emission.
+      .switchMap((query) => this.searchNewAddress(query))
+      .subscribe(result => {       
+        console.log("Address search Response", result);
+        this.results = result;
+        this.showHideAdressList = true;      
+      }),
+      error => {
+        console.log('Address Search API error', error.Message);
+      };
   }
+
+  searchNewAddress(queryString: string) {
+    const searchRequest = {} as ISearchAddressRequest;
+    searchRequest.partial = queryString;
+    return this.addressSearchService.searchAddress(searchRequest)
+  }
+
 
   private newServiceStartDate: IMyOptions = {
     // start date options here...
-    disableUntil: { year: 0, month: 0, day: 0 }
+    disableUntil: { year: 0, month: 0, day: 0 },
   }
 
-  setDate(): void {
-        // Set today date using the setValue function
-        let date = new Date();
-        this.movingAddressForm.setValue({Current_Service_End_Date: {
-        date: {
-            year: date.getFullYear(),
-            month: date.getMonth() + 1,
-            day: date.getDate()}
-        }});
-    }
-
-    clearDate(): void {
-        // Clear the date using the setValue function
-        this.movingAddressForm.setValue({Current_Service_End_Date: null});
-    }
 
   private currentServiceEndDate: IMyOptions = {
     // other end date options here...
@@ -140,16 +154,15 @@ export class MovingCenterFormComponent implements OnInit {
   }
 
   onEndDateChanged(event: IMyDateModel) {
-  // this.movingAddressForm.controls['Current_Service_End_Date'].setValue(event);
-  //   // date selected
-  //   let d = event.jsdate;
-  //   let copy: IMyOptions = this.getCopyOfOptions();
-  //   d.setDate(d.getDate() + 30);
-  //   copy.disableSince = { 
-  //     year: d.getFullYear(), 
-  //     month: d.getMonth() + 1, 
-  //     day: d.getDate() };
-  //   this.newServiceStartDate = copy;
+    // date selected   
+    // let d = clone(event.jsdate);   
+    // let copy: IMyOptions = this.getCopyOfOptions();
+    // d.setDate(d.getDate() + 30);
+    // copy.disableSince = { 
+    //   year: d.getFullYear(), 
+    //   month: d.getMonth() + 1, 
+    //   day: d.getDate() };
+    // this.newServiceStartDate = copy;
   }
 
   disableUntil() {
@@ -164,17 +177,8 @@ export class MovingCenterFormComponent implements OnInit {
     this.currentServiceEndDate = copy;
   }
 
-
-
   getCopyOfOptions(): IMyOptions {
     return JSON.parse(JSON.stringify(this.newServiceStartDate));
-  }
-
-
-  nextButtonClicked() {
-    this.nextClicked = true;
-    this.previousClicked = !this.previousClicked;
-    this.selectedOffer = null;
   }
 
   previousButtonClicked() {
@@ -194,24 +198,65 @@ export class MovingCenterFormComponent implements OnInit {
   }
 
 
+  selectNewBillingAddress(value, event) {
+    event.stopPropagation();
+    this.movingAddressForm.controls.newAddressSearchField.setValue(value.newAddressString());
+    this.newServiceAddress = value;
+    this.showHideAdressList = !this.showHideAdressList;
+  }
+
+  addressFormSubmit(addressForm) {
+    
+    if(this.customerDetails.Past_Due > 40){
+     this.pastDueErrorMessage = "We are unable to process your request due to Past due Balance";      
+    }
+
+    //start date - when the customer wants to turn on their service.
+    // dunsNumber - TDU_DNS number from New Address Search API
+    this.offerRequestParams = {
+      startDate: addressForm.New_Service_Start_Date.jsdate,
+      dunsNumber: this.newServiceAddress.Meter_Info.TDU_DUNS
+    }
+    // send start date and TDU_DUNS_Number to get offers available.
+    this.offerService.getOffers(this.offerRequestParams)
+      .subscribe(result => {       
+        this.availableOffers = result;
+        //prevent user from navigating to plans page if we don't offer service in the moving address
+        //prevent user from submitting the form if past due balance over 40
+        if( this.availableOffers.Items.length > 0 && this.customerDetails.Past_Due < 40){
+          this.nextClicked = true;
+          this.previousClicked = !this.previousClicked;
+          this.selectedOffer = null; 
+        }
+      })      
+  }
+
+  // New Service Plans Modal
+  openSelectPlanModal() {
+    this.selectPlanModal.show();
+  }
+
+
+  getCurrentPlan() {
+    this.selectedOffer = null;
+    //should not pass offerId if the user selects existing Plan.
+    this.offerId = undefined;
+
+    //On selecting current plan, check if the address is in same TDU or different TDU      
+    this.ServicePlanForm.get('service_plan').setValidators([Validators.required, tduCheck(this.ActiveBillingAccount.TDU_DUNS_Number, this.newServiceAddress.Meter_Info.TDU_DUNS)]);
+
+  }
+
+
   onSubmitMove(addressForm, billSelector) {
 
-    addressForm.Current_Service_End_Date = addressForm.Current_Service_End_Date.jsdate.toISOString();
-    addressForm.New_Service_Start_Date = addressForm.New_Service_Start_Date.jsdate.toISOString();
     addressForm.current_bill_address = this.ActiveBillingAccount.Mailing_Address;
-
-
-    // New address where the customer wants to turn on their service. API is not available to fetch new address.
-    // For now mapped active account mailing address in new address as well.
-
-    addressForm.new_billing_address = this.ActiveBillingAccount.Mailing_Address;
-
     //Address where the customer wants to send their final bill
     if (billSelector.service_address == 'Current Address') {
       billSelector.final_billing_address = addressForm.current_bill_address;
       this.Final_Bill_To_Old_Billing_Address = true;
     } else {
-      billSelector.final_billing_address = addressForm.new_billing_address;
+      billSelector.final_billing_address = this.newServiceAddress.Address;
       this.Final_Bill_To_Old_Billing_Address = false;
     }
 
@@ -225,13 +270,13 @@ export class MovingCenterFormComponent implements OnInit {
       //The email must match an email that is attached to a channel.  It is hardcoded now
       Email_Address: "sirisha.gunupati@gexaenergy.com", //this.customerDetails.Email,
       Billing_Account_Id: this.ActiveBillingAccount.Id,
-      Current_Service_End_Date: addressForm.Current_Service_End_Date,
+      Current_Service_End_Date: addressForm.Current_Service_End_Date.jsdate,
       Final_Bill_To_Old_Billing_Address: this.Final_Bill_To_Old_Billing_Address,
       Final_Bill_Address: billSelector.final_billing_address,
-      UAN: this.ActiveBillingAccount.UAN,
-      Billing_Address: addressForm.new_billing_address,
+      UAN: this.newServiceAddress.Meter_Info.UAN,
+      Billing_Address: this.newServiceAddress.Address,
       TDSP_Instructions: "",
-      New_Service_Start_Date: addressForm.New_Service_Start_Date,
+      New_Service_Start_Date: addressForm.New_Service_Start_Date.jsdate,
       Keep_Current_Offer: this.Keep_Current_Offer,
       Offer_Id: this.offerId,
       Contact_Info: {
@@ -246,42 +291,14 @@ export class MovingCenterFormComponent implements OnInit {
       () => this.submitted = true),
       error => {
         console.log('Transfer Request API error', error.Message);
-      }
-  }
-
-  openSelectPlanModal() {
-    this.selectPlanModal.show();
-  }
-
-  onServicePlanFormSubmit(addressForm, billSelector) {
-
-  }
-
-  //TODO : get new address from API
-  onMovingAddressFormSubmit(addressForm) {
-    //start date - when the customer wants to turn on their service.
-    //TODO : Get TDU_DNS number from New Address API
-    this.offerRequestParams = {
-      startDate: addressForm.New_Service_Start_Date.jsdate.toISOString(),
-      dunsNumber: "957877905"
-    }
-    // send start date and TDU_DUNS_Number to get offers available.
-    this.offerService.getOffers(this.offerRequestParams)
-      .subscribe(result => {
-        this.availableOffers = result;
-      })
-  }
-
-  getCurrentPlan() {
-    this.selectedOffer = null;
-    //should not pass offerId if the user selects existing Plan.
-    this.offerId = undefined;
+      }   
   }
 
   ngOnDestroy() {
     this.ActiveBillingAccountSubscription.unsubscribe();
     this.CustomerAccountSubscription.unsubscribe();
   }
+
 
 
 }

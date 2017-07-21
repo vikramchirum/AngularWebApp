@@ -63,7 +63,7 @@ export class HttpClient extends Http {
       options.headers.append('Content-Type', 'application/json');
     }
     options.headers.append('Ocp-Apim-Subscription-Key', environment.Api_Token);
-    options.headers.append('bearer', 'token');
+    options.headers.append('API_TOKEN', localStorage.getItem('gexa_auth_token'));
     return options;
   }
 

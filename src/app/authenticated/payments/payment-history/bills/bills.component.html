@@ -1,13 +1,13 @@
 
-<table width="100%">
+<table width="100%" class="table table-striped table-condensed">
   <thead>
   <tr class="options">
     <th *ngFor="let columnHeader of columnHeaders">
-      <button class="btn btn-lg btn-blank" (click)="sortByColumn(columnHeader)">
-        {{columnHeader.title}}<i class="fa fa-sort-alpha-{{columnSortWay(columnHeader)}}"></i></button>
+      <button class="btn btn-link" (click)="sortByColumn(columnHeader)">
+        {{columnHeader.title}} <i class="fa fa-sort-{{columnSortWay(columnHeader)}}"></i></button>
     </th>
-    <th style="font-size: 14px; text-align: center;">View Bill</th>
-    <th style="font-size: 14px; text-align: center;">Download Bill</th>
+    <th style=" text-align: center;"><button class="btn btn-link">View Bill</button></th>
+    <th style=" text-align: center;"><button class="btn btn-link">Download Bill</button></th>
   </tr>
   </thead>
   <tbody>
@@ -18,12 +18,12 @@
       </div>
     </td>
     <td class="text-center">
-      <button class="btn btn-blank btn-lg">
-        <h2><i class="fa fa-info-circle" (click)="showViewMyBillModal(row)" aria-hidden="true"></i></h2>
+      <button class="btn btn-link">
+        <i class="fa fa-info-circle" (click)="showViewMyBillModal(row)" aria-hidden="true"></i>
       </button>
     </td>
     <td class="text-center">
-      <button class="btn btn-blank btn-lg">
+      <button class="btn btn-link">
         <a class="fa fa-fw fa-file-pdf-o" href="{{documentsUrl}}{{getInvoiceId(row)}}" target="_blank"></a>
       </button>
     </td>
@@ -33,4 +33,4 @@
 <br/>
 <mygexa-view-my-bill-modal #viewMyBillModal></mygexa-view-my-bill-modal>
 <br>
-<pagination-controls class="my-pagination" (pageChange)="currentPage = $event"></pagination-controls>
+<pagination-controls class="my-pagination pager" (pageChange)="currentPage = $event"></pagination-controls>

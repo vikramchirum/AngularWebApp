@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid plans-profile">
   <div class="row add-services">
     <div class="col-md-12">
       <h2>Add Service Location</h2>
@@ -22,9 +22,9 @@
   <!-- Enter New Service Address -->
   <div class="row">
     <div class="col-md-6 new-service-address">
-      <h5>
-        <u>Enter New Service Address</u>
-      </h5>
+      <h3>
+        Enter New Service Address
+      </h3>
       <input type="text" class="form-control" placeholder="Enter New Address">
     </div>
   </div>
@@ -32,7 +32,7 @@
   <!-- start service -->
   <div class="row">
     <div class="col-md-6">
-      <h5>When would you like start service?</h5>
+      <h3>When would you like start service?</h3>
       <ng2-datepicker [options]="options" [(ngModel)]="date"></ng2-datepicker>
       <!--<div class="input-group">
         <input type="text" id="datepicker-my" class="form-control" placeholder="Select Date" />
@@ -46,21 +46,31 @@
   <!-- Service Type Selection -->
   <div class="row">
     <div class="col-md-6  new-service-address">
-      <h5>Service Type</h5>
+      <h3>Service Type</h3>
       <form>
+      <div class="row">
+        <div class="col-md-5">
+       <div class="form-control">
         <label class="radio-inline">
-         <input type="radio" name="serviceType">Move
+         <input type="radio" name="serviceType">I'm Moving
         </label>
+        </div>
+        </div>
+        <div class="col-md-5 col-md-offset-1">
+        <div class="form-control">
         <label class="radio-inline">
-         <input type="radio" name="serviceType">Switch
+         <input type="radio" name="serviceType">I'm Switching
        </label>
+        </div>
+        </div>
+        </div>
       </form>
-    </div>
+  </div>
   </div>
 
 
   <!-- Select Plan -->
-   <h4>Select a Plan</h4>
+   <h2>Select a Plan</h2>
   <div class="row">   
     <div class="col-md-4" *ngFor="let i of [0, 1, 2, 3, 4, 5, 6, 7, 8]">    
       <mygexa-select-plan></mygexa-select-plan>
@@ -73,20 +83,19 @@
   <mygexa-credit-check></mygexa-credit-check>-->
 
   <div class="add-services-verify-info">
-  <hr class="divider-line">
   <div class="row">
-    <div class="col-md-9">
-      <p>Please review all your information and make it is accurate before submitting </p>
-    </div>
+         <div class="alert alert-info clearfix">
+           <div class="col-md-9">
+      Please review all your information and make it is accurate before submitting
+          </div>
     <div class="col-md-3">
       <i class="fa fa-arrow-up pull-right" aria-hidden="true" (click)="scrollTop()"></i>
     </div> 
   </div>
   <br/>
   <div class="row">
-    <div class="col-md-12 col-xs-12">
-      <a class="text-left" href="">Cancel</a>
-      <button class="btn btn-default btn-wireframe disabled pull-right">Submit</button>
+    <div class="col-md-12 col-xs-12 text-center">
+      <button class="btn btn-primary btn-lg ">Add New Service Location</button>
     </div>
   </div>
   </div>
