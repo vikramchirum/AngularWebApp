@@ -15,7 +15,7 @@ const routes: Route[] = [
       { path: 'add-service-location', component: AddServicesComponent },
       { path: 'order-status', component: OrderStatusComponent },
       { path: 'moving', component: MovingComponent },
-      { path: 'moving-center', component: MovingCenterFormComponent}
+      { path: 'moving/moving-center', component: MovingCenterFormComponent}
     ]
   }
 ];

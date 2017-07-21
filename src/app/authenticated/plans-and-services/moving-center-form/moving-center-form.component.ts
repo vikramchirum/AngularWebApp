@@ -93,7 +93,7 @@ export class MovingCenterFormComponent implements OnInit {
       this.ServicePlanForm = this.fb.group({
         'service_address': [null, Validators.required],
         'service_plan': [null, Validators.required],
-        'agree_to_terms': [null, Validators.required],
+        'agree_to_terms': [false, [Validators.pattern('true')]],
         'final_billing_address': this.fb.array([])
       })
 
@@ -206,10 +206,11 @@ export class MovingCenterFormComponent implements OnInit {
   }
 
   addressFormSubmit(addressForm) {
-    this.nextClicked = true;
-    this.previousClicked = !this.previousClicked;
-    this.selectedOffer = null;       
-   
+    
+    if(this.customerDetails.Past_Due > 40){
+     this.pastDueErrorMessage = "We are unable to process your request due to Past due Balance";      
+    }
+
     //start date - when the customer wants to turn on their service.
     // dunsNumber - TDU_DNS number from New Address Search API
     this.offerRequestParams = {
@@ -218,8 +219,15 @@ export class MovingCenterFormComponent implements OnInit {
     }
     // send start date and TDU_DUNS_Number to get offers available.
     this.offerService.getOffers(this.offerRequestParams)
-      .subscribe(result => {
+      .subscribe(result => {       
         this.availableOffers = result;
+        //prevent user from navigating to plans page if we don't offer service in the moving address
+        //prevent user from submitting the form if past due balance over 40
+        if( this.availableOffers.Items.length > 0 && this.customerDetails.Past_Due < 40){
+          this.nextClicked = true;
+          this.previousClicked = !this.previousClicked;
+          this.selectedOffer = null; 
+        }
       })      
   }
 
@@ -283,10 +291,7 @@ export class MovingCenterFormComponent implements OnInit {
       () => this.submitted = true),
       error => {
         console.log('Transfer Request API error', error.Message);
-      }
-     if(this.customerDetails.Past_Due > 40){
-     this.pastDueErrorMessage = "We are unable to process your request due to Past due Balance "+this.customerDetails.Past_Due;      
-    }
+      }   
   }
 
   ngOnDestroy() {

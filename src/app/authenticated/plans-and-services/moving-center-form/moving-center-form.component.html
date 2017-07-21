@@ -20,7 +20,7 @@
           <h3>Shut Off Date</h3>
           <my-date-picker name="Current_Service_End_Date" [options]="currentServiceEndDate" formControlName="Current_Service_End_Date"
             (dateChanged)="onEndDateChanged($event)"></my-date-picker>
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.required">Required</small>
+          <small class="text-danger" *ngIf="movingAddressForm.get('Current_Service_End_Date').touched  && movingAddressForm.controls?.Current_Service_End_Date.errors?.required">You must enter stop date</small>
           <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday">You cannot pick a sunday for a stop date</small>
           <small class="text-danger" *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfNewYear">New Year day is not a valid stop date</small>
           <small class="text-danger" *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid stop date</small>
@@ -46,7 +46,7 @@
             </li>
           </ul>
         </section>
-        <small class="text-danger" *ngIf="movingAddressForm.controls?.newAddressSearchField.errors?.required">Please Enter Address</small>
+        <small class="text-danger" *ngIf="movingAddressForm.get('newAddressSearchField').touched && movingAddressForm.controls?.newAddressSearchField.errors?.required">Please Enter Address</small>
         <!--<input formControlName="queryField"
          [typeahead]="dataSource"
          typeaheadOptionsLimit="7"
@@ -64,7 +64,8 @@
         <div class="form-group">
           <h3>Turn On Date</h3>
           <my-date-picker name="New_Service_Start_Date" [options]="newServiceStartDate" formControlName="New_Service_Start_Date" (dateChanged)="onStartDateChanged($event)"></my-date-picker>
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.required">Required</small>
+          <small class="text-danger" *ngIf="(movingAddressForm.get('New_Service_Start_Date').touched && movingAddressForm.get('Current_Service_End_Date').invalid)">Please enter service turn off date</small>
+          <small class="text-danger" *ngIf="(movingAddressForm.get('New_Service_Start_Date').touched || movingAddressForm.get('New_Service_Start_Date').dirty) && movingAddressForm.get('Current_Service_End_Date').valid && movingAddressForm.controls?.New_Service_Start_Date.errors?.required">You must enter start date</small>
           <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday">You cannot pick a sunday for a start date</small>
           <small class="text-danger" *ngIf="!movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday && movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfNewYear">New Year day is not a valid start date</small>
           <small class="text-danger" *ngIf="!movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday && movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid start date</small>
@@ -81,11 +82,13 @@
 
     <!--If we don't offer service in the moving address, we should show the message-->
 
-    <div *ngIf="availableOffers && availableOffers.length === 0" class="alert alert-info fade in alert-dismissable">
+    <div *ngIf="availableOffers && availableOffers.Items.length === 0" class="alert alert-info fade in alert-dismissable">
       <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
       <strong>We're Sorry!</strong> We cannot register your move online, please call 1-888 888 8888 for assistance.
     </div>
 
+    <!-- If user has past due balance, show hte message -->
+     <small class="text-danger" *ngIf="pastDueErrorMessage && availableOffers.Items.length > 0"><p>{{pastDueErrorMessage}} <b>$ {{customerDetails.Past_Due | number : dollarAmountFormatter}}</b> </p> </small>
 
     <br/>
 
@@ -154,7 +157,9 @@
     <br/><br/>
     <input type="checkbox" formControlName="agree_to_terms" value="check" id="agree" /> I Agree to the Terms and Conditions,
     click <a>here</a><br>
-    <small class="text-danger" *ngIf="ServicePlanForm.controls?.agree_to_terms.errors"> Please Agree to Terms and Conditions </small>
+    <small class="text-danger" *ngIf="(ServicePlanForm.get('agree_to_terms').touched ||
+                                                         ServicePlanForm.get('agree_to_terms').dirty) &&
+                                                         ServicePlanForm.get('agree_to_terms').errors && ServicePlanForm.get('agree_to_terms').errors.pattern"> Please Agree to Terms and Conditions </small>
 
     <div class="row">
       <div class="text-right">
@@ -162,9 +167,7 @@
         <button class="btn btn-lg btn-default" [disabled]="!ServicePlanForm.valid" (click)="onSubmitMove(movingAddressForm.value, ServicePlanForm.value)">Submit Move</button>
       </div>
     </div>
-  </form>
-
-  <small class="text-danger" *ngIf="pastDueErrorMessage">{{pastDueErrorMessage}}</small>
+  </form> 
 
   <!--Moving Form Confirmation Screen -->
   <div [hidden]="!submitted" class="moving-confirmation">
