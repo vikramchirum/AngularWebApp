@@ -1,6 +1,10 @@
-<div class="row userPanel">
-  <div class="col-md-6 col-md-offset-3">
-    <h3>Change UserName</h3>
+<br>
+<div class="row bg-info">
+ <hr>
+  <div class="col-md-4">
+    <label class="form-control-label">Change UserName</label>
+  </div>
+   <div class="col-md-6">
     <form id="changeForm" novalidate [formGroup]="changeUserNameForm" (ngSubmit)="submitForm(changeUserNameForm.value, changeUserNameForm.valid)"
       align="center">
       <div class="form-group" [ngClass]="{'has-error':!changeUserNameForm.controls['userName'].valid && submitAttempt}">
@@ -22,13 +26,11 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-6 text-left">
-          <a>Cancel</a>
-        </div>
-        <div class="col-xs-6 text-right">
-          <button class="btn btn-default" [disabled]="">Save</button>
+        <div class="col-xs-12 text-right">
+          <button class="btn btn-primary" [disabled]="">Save</button>
+        <button type="button" class="btn btn-default" (click)="toggleUserNameEdit($event)">Cancel</button>
         </div>
       </div>
     </form>
-  </div>
+    <hr>
 </div>

@@ -1,4 +1,4 @@
-.overlay-menu{
+ins.overlay-menu{
     height: 100%;
     width: 100%;
     position: fixed;
@@ -56,7 +56,6 @@
     .nav > li.divider {
         display: inline-block;
         width: 1px;
-        border: 1px inset white;
         height: 50px;
         margin-top: 12px;
     }

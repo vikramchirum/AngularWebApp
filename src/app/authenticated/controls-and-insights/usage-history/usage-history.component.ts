@@ -43,10 +43,10 @@ export class UsageHistoryComponent implements OnDestroy {
   };
   public barChartData = [];
   public barChartColors: any[] = [
-    { backgroundColor: '#7FFFD4' },
-    { backgroundColor: '#32CD32' },
-    { backgroundColor: '#98FB98' },
-    { backgroundColor: '#6495ED' }
+    { backgroundColor: 'rgba(6,81,128,1.0)' },
+    { backgroundColor: 'rgba(254,162,32,1.0)' },
+    { backgroundColor: 'rgba(46,177,52,1.0)' },
+    { backgroundColor: 'rgba(27,141,205,1.0)' }
   ];
 
   /* Line Graph Properties */
@@ -76,10 +76,10 @@ export class UsageHistoryComponent implements OnDestroy {
   };
   public lineChartData = [];
   public lineChartColors: Array<any> = [
-    { borderColor: '#7FFFD4', backgroundColor: '#7FFFD4' },
-    { borderColor: '#32CD32', backgroundColor: '#32CD32' },
-    { borderColor: '#98FB98', backgroundColor: '#98FB98' },
-    { borderColor: '#6495ED', backgroundColor: '#6495ED' }
+    { borderColor: 'rgba(6,81,128,1.0)', backgroundColor: 'rgba(6,81,128,1.0)' },
+    { borderColor: 'rgba(254,162,32,1.0)', backgroundColor: 'rgba(254,162,32,1.0)' },
+    { borderColor: 'rgba(46,177,52,1.0)', backgroundColor: 'rgba(46,177,52,1.0)' },
+    { borderColor: 'rgba(27,141,205,1.0)', backgroundColor: 'rgba(27,141,205,1.0)' }
   ];
 
   /* Table and Pagination Data */

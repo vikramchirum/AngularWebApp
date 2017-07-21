@@ -1,22 +1,22 @@
 <section *ngIf="!IsInRenewalTimeFrame">
-<h4>My Current Plan</h4>
 <div layout-align="center center">
   <md-card class="current-plan-card" *ngIf="ActiveBillingAccountDetails">
     <!--<md-card-header>-->
       <md-card-title>
-        <span class="md-headline" style="font-size:large">{{ActiveBillingAccountDetails.Current_Offer.Product_Name}}</span><i class="material-icons pull-right">info</i>
+        <h2>{{ActiveBillingAccountDetails.Current_Offer.Product_Name}} <small><i class="fa fa-info-circle"></i></small></h2>
       </md-card-title>
     <!--</md-card-header>-->
     <md-card-content>
-      <h4>{{ActiveBillingAccountDetails.Current_Offer.RateAt1000kwh}}<span>kw/hr</span></h4>
-      <p>Term: {{ActiveBillingAccountDetails.Current_Offer.Term}} Months</p>
-      <p>Start: {{ActiveBillingAccountDetails.Current_Offer.Start_Date | date: 'MM/dd/yyyy'}}</p>
-      <p>End: {{ActiveBillingAccountDetails.Current_Offer.End_Date ? (ActiveBillingAccountDetails.Current_Offer.End_Date | date:'MM/dd/yyyy') : (this.getEndDate(ActiveBillingAccountDetails.Current_Offer.Start_Date) | date: 'MM/dd/yyyy')}}</p>
+      <h2>{{ActiveBillingAccountDetails.Current_Offer.RateAt1000kwh}}<small>kw/hr</small></h2>
+      <p class="bg-default">TERM: {{ActiveBillingAccountDetails.Current_Offer.Term}} Months</p>
+      <p>START: {{ActiveBillingAccountDetails.Current_Offer.Start_Date | date: 'MM/dd/yyyy'}}</p>
+      <p  class="bg-default">END: {{ActiveBillingAccountDetails.Current_Offer.End_Date ? (ActiveBillingAccountDetails.Current_Offer.End_Date | date:'MM/dd/yyyy') : (this.getEndDate(ActiveBillingAccountDetails.Current_Offer.Start_Date) | date: 'MM/dd/yyyy')}}</p>
     </md-card-content>
     <!--<md-card-actions>-->
       <!--<button md-button>Renew Plan</button>-->
-    <!--</md-card-actions>-->
-    <i class="material-icons pull-right check-mark">check_circle</i>
+    <!--</md-card-actions>
+        <i class="material-icons pull-right check-mark">check_circle</i>
+    -->
   </md-card>
 </div>
 </section>
@@ -29,9 +29,9 @@
       <h2>3.9<sup class="sup-text">c</sup><sub class="sub-text">pkw/hr</sub>
         <i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></h2>
       <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
-      <p>at 1000kwh</p>
+      <p  class="bg-default">at 1000kwh</p>
       <p>TERM:12 months</p>
-      <p>No Sign Up Bonus</p>
+      <p  class="bg-default">No Sign Up Bonus</p>
     </div>
     <div *ngIf= "selectCheckBox" class="agreement-section">
       <hr>

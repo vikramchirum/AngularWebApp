@@ -8,12 +8,9 @@
      text-decoration: none;
     }
 
-
-.form-control-wireframe {
-  background: white !important;
-  border: 2px solid black !important;
-  border-radius: 0 !important;
-  color: black !important;
+.btn {
+  border-radius:0;
+  text-transform: uppercase;
 }
 
 .btn-blank {
@@ -27,24 +24,8 @@
   display: none !important;
 }
 
-.btn-wireframe {
-  background: white;
-  color: black !important;
-  cursor: pointer !important;
-  padding: 0.6em 1em;
-  font-size: 1.1em;
-  line-height: 1.3333333;
-  border: 2px solid black;
-  border-bottom-width: .25em;
-  border-right-width: .25em;
-  border-radius: 0.3em;
-}
-.btn-wireframe.disabled,
-.btn-wireframe[disabled] {
-  cursor: not-allowed !important;
-}
 .btn-blank:active,
-.btn-wireframe:active {
+{
   box-shadow: none !important;
   outline: none !important;
 }
@@ -53,15 +34,7 @@ hr.breaker {
   border-top: 2px solid black;
 }
 
-section.section-container {
-  border: 2px solid black;
-  padding: 4rem 8rem;
-}
-section.section-container-highlight {
-  background: #EEEEEE;
-  margin: 0 -8rem;
-  padding: 48px 60px;
-}
+
 
 /* will refactor this into sass vars for menu color rules */
 $account-base:              rgba(6,81,128,1.0) !default;
@@ -69,11 +42,14 @@ $plans-base:                rgba(254,162,32,1.0)  !default;
 $payment-base:              rgba(46,177,52,1.0)  !default;
 $control-base:              rgba(27,141,205,1.0)  !default;
 
+.fa-green {
+  color: $payment-base;
+}
 
-.account-menu:not(.open) {
-  .active {
-    background-color: $account-base;
-    color: #ffffff;
+.account-menu, .account-menu.open {
+  a.active {
+    background-color: $account-base !important;
+    color: #ffffff !important;
   }
 }
 
@@ -89,6 +65,14 @@ $control-base:              rgba(27,141,205,1.0)  !default;
   h1 {
     color:$account-base;
   }
+  
+  li:hover {
+    background-color: lighten($account-base, 70%);
+         a, a:link, a:visited {
+            color: $account-base;
+        }
+  }
+
 
   li.active a {
 
@@ -99,31 +83,169 @@ $control-base:              rgba(27,141,205,1.0)  !default;
 
     color: $account-base;
 
-
   }
   
 }
 
-.plans-menu:not(.open) {
+.my-account {
+  .btn-link {
+      position: absolute;
+      right: 10px;
+      top: 0;
+      text-indent: -300px;
+      overflow: hidden;
+      &:after {
+           font-family: "FontAwesome";
+          content: "\F040";
+          display: inline-block;
+          top: 6px;
+          text-indent: 0;
+          position: absolute;
+          right: 12px;
+            color: $payment-base;
+
+      }  
+
+  }
+}
+
+.plans-menu, .plans-menu.open  {
   .active {
-    background-color: $plans-base;
+    background-color: $plans-base !important;
     color: #ffffff;
   }
 }
-.payment-menu:not(.open) {
+
+.plans-profile, .callout-container.plans {
+  
+  h1, h2  {
+    color:$plans-base;
+  }
+  
+}
+
+.plans-side-panel {
+  
+  h1 {
+    color:$plans-base;
+  }
+  
+  li:hover {
+    background-color: lighten($plans-base, 41%);
+      a, a:link, a:visited {
+            color: $plans-base;
+        }
+  }
+
+  li.active a {
+
+    color: $plans-base;
+  }
+  
+  li.active:before {
+
+    color: $plans-base;
+    border-bottom-color: $plans-base;
+  }
+  
+}
+
+.payment-menu, .payment-menu.open {
 .active {
-  background-color: $payment-base;
+  background-color: $payment-base !important;
   color: #ffffff;
   }
 }
 
-.control-menu:not(.open) {
+.payment-side-panel {
+  
+  h1 {
+    color:$payment-base;
+  }
+  
+  li:hover {
+    background-color: lighten($payment-base, 55%);
+      a, a:link, a:visited {
+            color: $payment-base;
+        }
+  }
+
+  li.active a {
+    color: $payment-base;
+  }
+  
+  li.active:before {
+
+    color: $payment-base;
+    border-bottom-color: $payment-base;;
+  }
+  
+}
+
+.payment-profile, .callout-container.payment {
+  
+  h1, h2, h3, h4  {
+    color:$payment-base;
+  }
+  
+}
+
+.control-menu, .control-menu.open {
 .active {
-  background-color: $control-base;
+  background-color: $control-base !important;
   color: #ffffff;
   }
 }
+
+.control-side-panel {
   
+  h1 {
+    color:$control-base;
+  }
+  
+  li:hover {
+    background-color: lighten($control-base, 55%);
+      a, a:link, a:visited {
+            color: $control-base;
+        }
+  }
+
+  li.active a {
+    color: $control-base;
+  }
+  
+  li.active:before {
+
+    color: $control-base;
+    border-bottom-color: $control-base;;
+  }
+  
+}
+
+.control-profile, .callout-container.control {
+  
+  h1, h2, h3, h4  {
+    color:$control-base;
+  }
+  
+}
+  
+.btn-round {
+    height: 250px;
+    border-radius: 100%;
+  
+  .fa {
+    margin-bottom: 10px;
+  }
+
+    .boxed {
+        display: block;
+        border: 1px solid #fff;
+        padding: 10px;
+        width: 70%;
+        margin: 10px auto;
+    }
+}
 .has-success {
   
   .form-control {
@@ -138,6 +260,10 @@ $control-base:              rgba(27,141,205,1.0)  !default;
 }
 
 .custom-nav {
+   .nav > li.open > a {
+    text-decoration: none;
+    background-color: #ffffff;
+}
   
   .navbar-nav>li.dropdown-full {
     position: static;
@@ -181,6 +307,13 @@ $control-base:              rgba(27,141,205,1.0)  !default;
     }
     
   }
+}
+
+.callout-container {
+  padding-top: 40px;
+  padding-bottom:40px;
+  margin-top: 50px;
+  background-color: rgba(239,236,201,1.0)
 }
 
 /* THEMES */
@@ -255,27 +388,13 @@ $control-base:              rgba(27,141,205,1.0)  !default;
 
 
 @media (max-width: $screen-sm-max) {
-  section.section-container {
-    padding: 2rem 4rem;
-  }
-  section.section-container-highlight {
-    margin: 0 -4rem;
-    padding: 24px 30px;
-  }
+
 }
 @media (max-width: $screen-xs-max) {
   .text-xs-left {
     text-align: left !important;
   }
-  section.section-container {
-    border: none;
-    padding: 0 0 4rem 0;
-  }
-  section.section-container-highlight {
-    background: white;
-    margin: 0;
-    padding: 0;
-  }
+
 }
 
 .card-container {

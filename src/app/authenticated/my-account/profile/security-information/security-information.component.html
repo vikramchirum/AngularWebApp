@@ -1,14 +1,13 @@
 <section class="security-info">
-  <h2>Security Information</h2>
+  <h3>Security Information</h3>
+  <br/>
   <div class="row">
     <div class="col-md-4 col-xs-12">
       <label class="control-label">Username</label>
     </div>
-    <div class="col-md-4 col-xs-12">
+    <div class="col-md-6 col-xs-12">
         <div class="form-control">{{userName}}</div>
-    </div>    
-    <div class="col-xs-1">
-         <a class="btn btn-primary" (click)="toggleUserNameEdit($event)">{{ userNameEditing ? 'Close' : 'Edit'}}</a>
+         <a class="btn btn-primary btn-link" (click)="toggleUserNameEdit($event)">{{ userNameEditing ? 'Close' : 'Edit'}}</a>
     </div>
   </div>
     <div *ngIf="userNameEditing" class="row">
@@ -16,17 +15,15 @@
     <mygexa-change-user-name></mygexa-change-user-name>
     </div>
   </div>
-  <br>
   <br/>
   <div class="row">
     <div class="col-md-4 hidden-xs">
       <label class="control-label">Password</label>
     </div>
-    <div class="col-md-4 col-xs-12">
+    <div class="col-md-6 col-xs-12">
       <div class="form-control">***************</div>
-    </div>
-    <div class="col-xs-1">
-         <a class="btn btn-primary"  (click)="togglePasswordEdit($event)">{{ passwordEditing ? 'Close' : 'Edit'}}</a>
+
+         <a class="btn btn-primary btn-link"  (click)="togglePasswordEdit($event)">{{ passwordEditing ? 'Close' : 'Edit'}}</a>
     </div>
   </div>
 
