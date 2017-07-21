@@ -88,7 +88,7 @@
     </div>
 
     <!-- If user has past due balance, show hte message -->
-     <small class="text-danger" *ngIf="pastDueErrorMessage"><p>{{pastDueErrorMessage}} <b>$ {{customerDetails.Past_Due | number : dollarAmountFormatter}}</b> </p> </small>
+     <small class="text-danger" *ngIf="pastDueErrorMessage && availableOffers.Items.length > 0"><p>{{pastDueErrorMessage}} <b>$ {{customerDetails.Past_Due | number : dollarAmountFormatter}}</b> </p> </small>
 
     <br/>
 
