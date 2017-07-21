@@ -4,16 +4,16 @@
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
   </div>
-  <div class="col-sm-9"> 
+  <div class="col-sm-9">
       <div class="row change-plans-grid">
         <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
-        <div class="col-md-4 plan-card" *ngFor="let i of [0, 1, 2, 3, 4]">
-          <mygexa-change-your-plan-card></mygexa-change-your-plan-card>
+        <div class="col-md-4 plan-card"  *ngFor="let offer of AllOfferss" >
+          <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
         </div>
       </div>
   </div>
 </div>
-    
+
 <div class="row"  *ngIf="IsInRenewalTimeFrame">
   <div class="col-sm-12">
     <section id="renewPlan" >
@@ -27,8 +27,10 @@
               <ng-template #listPlans>
                 <div class="row change-plans-grid">
                   <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
-                  <div class="col-md-4 plan-card" *ngFor="let i of [0, 1, 2]">
-                    <mygexa-change-your-plan-card></mygexa-change-your-plan-card>
+                  <div class="col-md-4 plan-card" *ngFor="let offer of RenewalOffers">
+                    <div *ngIf="RenewalOffers">
+                      <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
+                    </div>
                   </div>
                 </div>
               </ng-template>

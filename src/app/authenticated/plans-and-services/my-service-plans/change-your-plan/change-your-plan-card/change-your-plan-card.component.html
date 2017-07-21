@@ -1,15 +1,17 @@
-<section *ngIf="!IsInRenewalTimeFrame">
+<section *ngIf="!IsInRenewalTimeFrame && Offer">
+  <div *ngFor="let item of Offer">
+
 <div class="plan-card-container">
   <div class="card-content">
     <div class="card-title">
-    <h4>Gexa Prime 1000 12 <small><i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></small></h4>
-    
-    <h2>3.9&cent;<small>pkw/hr</small>
+    <h4>{{Offer.Plan.Name }}<small><i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></small></h4>
+
+    <h2>{{Offer.Price_At_1000_kwh | FloatToMoneyPipe}}<small>pkw/hr</small>
       </h2>
       </div>
     <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
     <p>at 1000kwh</p>
-    <p>TERM:12 months</p>
+    <p>TERM:{{Offer.Plan.Term}} months</p>
     <p>No Sign Up Bonus</p>
     <br/>
   </div>
@@ -30,18 +32,20 @@
       <i *ngIf= "selectCheckBox" class="fa fa-times fa-2x" style="margin-left:.5em" (click)="closeCheckBox()" aria-hidden="true"></i>
     </div>
   </div>
-
 </div>
+<br>
+  </div>
 </section>
 
-<section id = renewPlan *ngIf="IsInRenewalTimeFrame">
+<section id = renewPlan *ngIf="IsInRenewalTimeFrame && Offer" >
+  <div *ngFor="let item of Offer">
   <div class="plan-card-container">
     <div class="card-content">
-      <h4>Gexa Prime 1000 12 <i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></h4>
-      <h2>3.9<sup class="sup-text">c</sup><sub class="sub-text">pkw/hr</sub></h2>
+      <h4>{{Offer.Plan.Name }} <i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></h4>
+      <h2>{{Offer.Price_At_1000_kwh | FloatToMoneyPipe}}<sup class="sup-text">c</sup><sub class="sub-text">pkw/hr</sub></h2>
       <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
       <p>at 1000kwh</p>
-      <p>TERM:12 months</p>
+      <p>TERM:{{Offer.Plan.Term}} months</p>
       <p>No Sign Up Bonus</p>
     </div>
     <div *ngIf= "selectCheckBox" class="agreement-section">
@@ -65,6 +69,7 @@
   </div>
   <div class="row text-center">
     <h4>What's included <i class="fa fa-caret-down fa-2x"></i></h4>
+  </div>
   </div>
 </section>
 

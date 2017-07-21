@@ -18,6 +18,7 @@ import { PaymethodService } from './Paymethod.service';
 import { InvoiceService } from './invoiceservice.service';
 import { BudgetBillingService } from './budgetbilling.service';
 import { AddressSearchService } from './addresssearch.service';
+import { OfferService } from './offer.service';
 
 @NgModule({
   imports: [
@@ -38,7 +39,8 @@ import { AddressSearchService } from './addresssearch.service';
     PaymethodService,
     InvoiceService,
     BudgetBillingService,
-    AddressSearchService
+    AddressSearchService,
+    OfferService
   ]
 })
 export class CoreModule {
