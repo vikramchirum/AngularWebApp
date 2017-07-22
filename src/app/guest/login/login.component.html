@@ -1,14 +1,45 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-4">
-      <div class="my-gexa-login-form">
-        <h1>Gexa Energy</h1><br><br>
-        <h2><b>Sign in</b></h2><br><br>
-        <form (ngSubmit)="login()" #myGexaLoginForm="ngForm">
-
-          <div class="form-group" [ngClass]="{ 'has-error': !username.valid && !username.pristine && !processing }">
-            <label class="cols-sm-2 control-label">Username</label>
-            <input
+<nav class="navbar navbar-inverse">
+  <div class="container container-relaxed">
+    <ul class="nav navbar-nav navbar-left">
+      <li><small><span class="fa fa-rocket fa-rotate-45 fa-fw"></span> My Gexa {{env}} </small></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="#"><small><span class="fa fa-sign-out fa-white"></span> <span class="hidden-xs">Log in Or Sign Up for Great GEXA Energy Rates</span></small></a></li>
+    </ul>
+  </div>
+</nav>
+<nav class="navbar custom-nav">
+  <div class="container container-relaxed">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle pull-left" ><span>&#9776;</span></button>
+      <div class="navbar-logo"> <img src="/assets/global/gexa-lq.png" alt="Gexa Energy"/> </div>
+    </div>
+  </div>
+</nav>
+<div class="homepage-hero-wrapper">
+  <div class="homepage-hero-module">
+    <div class="video-container">
+      <div class="filter"></div>
+      <video autoplay loop class="fillWidth" id="login-video-player">
+        <source src="/assets/home/MP4/Up.mp4" type="video/mp4" />
+        Your browser does not support the video tag. I suggest you upgrade your browser.
+        <source src="/assets/home/WEBM/Up.webm" type="video/webm" />
+        Your browser does not support the video tag. I suggest you upgrade your browser. </video>
+      <div class="poster hidden"> <img src="/assets/home/Snapshots/Up.jpg" alt=""> </div>
+    </div>
+  </div>
+</div>
+<div class="container login-container">
+<div class="row">
+<div class="col-md-6 col-xs-12 ui-light">
+  <div class="my-gexa-login-form">
+    <h2><b>Sign in to MyGexa!</b></h2>
+    <br>
+    <br>
+    <form (ngSubmit)="login()" #myGexaLoginForm="ngForm">
+      <div class="form-group" [ngClass]="{ 'has-error': !username.valid && !username.pristine && !processing }">
+        <label class="cols-sm-2 control-label">Username</label>
+        <input
               [(ngModel)]="user_name"
               [disabled]="processing"
               name="user_name"
@@ -19,14 +50,11 @@
               required
               #username="ngModel"
             />
-            <small [hidden]="username.valid || username.pristine || processing" class="text-danger">Username is
-              required
-            </small>
-          </div>
-
-          <div class="form-group" [ngClass]="{ 'has-error': !em.valid && !em.pristine && !processing }">
-            <label class="cols-sm-2 control-label">Password</label>
-            <input
+        <small [hidden]="username.valid || username.pristine || processing" class="text-danger">Username is
+        required </small> </div>
+      <div class="form-group" [ngClass]="{ 'has-error': !em.valid && !em.pristine && !processing }">
+        <label class="cols-sm-2 control-label">Password</label>
+        <input
               [(ngModel)]="password"
               [disabled]="processing"
               name="password"
@@ -37,89 +65,73 @@
               required
               #em="ngModel"
             />
-            <small [hidden]="em.valid || em.pristine || processing" class="text-danger">Password is required</small>
-          </div>
-          <div class="text-danger" *ngIf="invalidCreds">Either username or password is wrong</div>
-          <br>
-
-          <div class="row">
-            <div class="col-md-6">
-              <button
+        <small [hidden]="em.valid || em.pristine || processing" class="text-danger">Password is required</small> </div>
+      <div class="text-danger" *ngIf="invalidCreds">Either username or password is wrong</div>
+      <br>
+      <div class="row">
+        <div class="col-md-6">
+          <button
                 type="submit"
-                class="btn btn-lg btn-block btn-wireframe"
+                class="btn  btn-block btn-success"
                 *ngIf="!processing"
-              >Login
-              </button>
-              <button
+              >Login </button>
+          <button
                 type="button"
-                class="btn btn-lg btn-block btn-wireframe"
+                class="btn btn-block btn-primary"
                 *ngIf="processing"
-              ><i class="fa fa-spin fa-cog"></i> Logging in...
-              </button>
-              <br/>
-            </div>
-            <div class="col-md-6">
-              <button
+              ><i class="fa fa-spin fa-cog"></i> Logging in... </button>
+          <br/>
+        </div>
+        <div class="col-md-6">
+          <button
                 type="button"
-                class="btn btn-lg btn-block btn-wireframe"
+                class="btn  btn-block btn-default"
                 data-toggle="modal"
                 data-target="#register"
-              ><b>&gt;</b> Register
-              </button>
-              <br/>
-            </div>
-          </div>
-
-          <p>Forgot your <a routerLink="/login/recover-password">Password</a> or <a
-            routerLink="/login/recover-username">Username</a>?</p>
-
-          <br>
-
-          <div class="social-media-icon">
-            <button type="button" class="btn btn-wireframe pull-left btnWidthSM center-block">
-              <span class="fa fa-facebook-square fa-fw pull-left"></span> Login with facebook
-            </button>
-          </div>
-          <div class="social-media-icon" style="padding-top: 55px">
-            <button type="button" class="btn btn-wireframe pull-left btnWidthSM">
-              <span class="fa fa-linkedin-square fa-fw pull-left"></span> Login with Linkedin
-            </button>
-          </div>
-          <br>
-
-        </form>
+              ><b>&gt;</b> Register </button>
+          <br/>
+        </div>
       </div>
+      <p>Forgot your <a routerLink="/login/recover-password">Password</a> or <a
+            routerLink="/login/recover-username">Username</a>?</p>
+      
+    </form>
+  </div>
+</div>
+<div class="ui-dark col-md-6 col-xs-hidden">
+  <h1>Enroll in our Share &amp; Save Referral Program</h1>
+  <p>You'll earn a $5 bill credit every month for each friend or family member who signs up for a new Gexa Energy Plan!</p>
+  <hr/>
+  <div class="media">
+    <div class="media-left"><i class="fa fa-cubes fa-3x"></i></div>
+    <div class="media-body">
+      <h4 class="media-heading">Heading One</h4>
+      <p>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
+￼</p>
     </div>
-    <div class="col-md-8 hidden-xs hidden-sm video-container">
-      <video
-        id="login-video-player"
-        class="my-gexa-video"
-        muted
-
-        preload="none"
-        loop
-        playsinline
-        controls
-        poster="assets/login/my-gexa.jpg"
-      >
-        <source src="assets/login/my-gexa.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'/>
-        Your browser does not support the video tag.
-      </video>
+  </div>
+    <hr/>
+  <div class="media">
+    <div class="media-left"><i class="fa fa-leaf fa-3x"></i></div>
+    <div class="media-body">
+      <h4 class="media-heading">Heading Two</h4>
+      <p>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.
+￼</p>
     </div>
   </div>
 </div>
 
-
 <!--Register Modal -->
 <div id="register" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
+  <div class="modal-dialog"> 
+    
     <!-- Register Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close fa fa-times fa-2x" style="padding:15px 100px 10px 0px"
                 data-dismiss="modal" (click)="reset()"></button>
-        <h2 class="modal-title"><b>Register</b></h2><br>
+        <h2 class="modal-title"><b>Register</b></h2>
+        <br>
       </div>
       <div class="modal-body container">
         <div class="container">
@@ -128,177 +140,121 @@
               <div class="text-center">
                 <form id="registration" novalidate [formGroup]="registerForm"
                       (ngSubmit)="save(registerForm.value, registerForm.valid)">
-
                   <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['Billing_Account_Id'].valid
                   && formSubmitted}">
-                    <div class="inner-addon left-addon ">
-                      <span class=""><i class="fa fa-wrench fa-fw"></i></span>
+                    <div class="inner-addon left-addon "> <span class=""><i class="fa fa-wrench fa-fw"></i></span>
                       <input name="Billing_Account_Id" type="text" class="form-control line-border"
                              [formControl]="registerForm.controls['Billing_Account_Id']"
                              placeholder="Enter your Service Account Number">
                     </div>
                     <div class="has-error" *ngIf="registerForm.controls['Billing_Account_Id'].hasError('required')
-                    && formSubmitted">
-                      <span class="help-block">Service number is required.</span>
-                    </div>
+                    && formSubmitted"> <span class="help-block">Service number is required.</span> </div>
                   </div>
-
                   <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['Zip_Code'].valid
                   && formSubmitted}">
-                    <div class="inner-addon left-addon">
-                      <span class=""><i class="fa fa-map-marker fa-fw"></i></span>
+                    <div class="inner-addon left-addon"> <span class=""><i class="fa fa-map-marker fa-fw"></i></span>
                       <input name="Zip_Code" type="text" class="form-control line-border"
                              placeholder=" Enter your Zipcode" [formControl]="registerForm.controls['Zip_Code']">
                     </div>
                     <div class="has-error" *ngIf="registerForm.controls['Zip_Code'].hasError('required')
-                    && formSubmitted">
-                      <span class="help-block">Zip code is required.</span>
-                    </div>
-
+                    && formSubmitted"> <span class="help-block">Zip code is required.</span> </div>
                     <div class="has-error"
-                         *ngIf="registerForm.controls['Zip_Code'].hasError('validateInteger') && registerForm.controls['Zip_Code'].touched">
-                      <span class="help-block">Zip code should be a number.</span>
-                    </div>
-
-                    <!--<div class="has-error" *ngIf="registerForm.controls['Zip'].hasError('pattern')-->
-                    <!--&& formSubmitted">-->
-                    <!--<span class="help-block">Zip code.</span>-->
+                         *ngIf="registerForm.controls['Zip_Code'].hasError('validateInteger') && registerForm.controls['Zip_Code'].touched"> <span class="help-block">Zip code should be a number.</span> </div>
+                    
+                    <!--<div class="has-error" *ngIf="registerForm.controls['Zip'].hasError('pattern')--> 
+                    <!--&& formSubmitted">--> 
+                    <!--<span class="help-block">Zip code.</span>--> 
                     <!--</div>-->
                     <div *ngIf="registerForm.controls['Zip_Code'].hasError('minlength')
                     && registerForm.controls['Zip_Code'].touched" class="alert alert-danger">Zip must be at least 5
-                      characters long.
-                    </div>
+                      characters long. </div>
                     <div *ngIf="registerForm.controls['Zip_Code'].hasError('maxlength')
                     && registerForm.controls['Zip_Code'].touched" class="alert alert-danger">Zip cannot exceed 5
-                      characters.
-                    </div>
+                      characters. </div>
                   </div>
-
                   <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['User_name'].valid
                   && formSubmitted}">
-                    <div class="inner-addon left-addon">
-                      <span class=""><i class="fa fa-user fa-fw"></i></span>
+                    <div class="inner-addon left-addon"> <span class=""><i class="fa fa-user fa-fw"></i></span>
                       <input name="User_name" type="text" class="form-control line-border"
                              placeholder="Enter Username"
                              [formControl]="registerForm.controls['User_name']">
                     </div>
                     <div class="has-error" *ngIf="registerForm.controls['User_name'].hasError('required')
-                    && formSubmitted">
-                      <span class="help-block">Username is required.</span>
-                    </div>
+                    && formSubmitted"> <span class="help-block">Username is required.</span> </div>
                   </div>
-
                   <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['Password'].valid
                   && formSubmitted}">
-                    <div class="inner-addon left-addon">
-                      <span class=""><i class="fa fa-key fa-fw"></i></span>
+                    <div class="inner-addon left-addon"> <span class=""><i class="fa fa-key fa-fw"></i></span>
                       <input name="Password" type="password" class="form-control line-border"
                              placeholder="Enter Password"
                              [formControl]="registerForm.controls['Password']">
                       <button type="button" style="background-color:white" class="btn modal-body faRight"
                               tooltip="Passwords must be at least 6 characters."
-                              placement="bottom">
-                        <span class="faRight"><i class="fa fa-info-circle fa-fw"></i></span>
-                      </button>
+                              placement="bottom"> <span class="faRight"><i class="fa fa-info-circle fa-fw"></i></span> </button>
                     </div>
                     <div class="has-error" *ngIf="registerForm.controls['Password'].hasError('required')
-                    && formSubmitted">
-                      <span class="help-block">Password is required.</span>
-                    </div>
+                    && formSubmitted"> <span class="help-block">Password is required.</span> </div>
                   </div>
-
                   <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['ConfirmPassword'].valid
                   && formSubmitted}">
-                    <div class="inner-addon left-addon">
-                      <span class=""><i class="fa fa-key fa-fw"></i></span>
+                    <div class="inner-addon left-addon"> <span class=""><i class="fa fa-key fa-fw"></i></span>
                       <input name="ConfirmPassword" class="form-control line-border"
                              placeholder="Confirm Password" type="password"
                              [formControl]="registerForm.controls['ConfirmPassword']">
                       <button type="button" style="background-color:white" class="btn modal-body faRight"
                               tooltip="Passwords must match."
-                              placement="bottom">
-                        <span class="faRight"><i class="fa fa-info-circle fa-fw"></i></span>
-                      </button>
+                              placement="bottom"> <span class="faRight"><i class="fa fa-info-circle fa-fw"></i></span> </button>
                     </div>
                     <div class="has-error" *ngIf="registerForm.controls['ConfirmPassword'].hasError('required')
-                    && formSubmitted">
-                      <span class="help-block">Confirm Password is required.</span>
-                    </div>
+                    && formSubmitted"> <span class="help-block">Confirm Password is required.</span> </div>
                     <div class="has-error" *ngIf="!registerForm.controls['ConfirmPassword'].hasError('required')
                      && formSubmitted
-                     && !(registerForm.controls['ConfirmPassword'].value == registerForm.controls['Password'].value)">
-                      <span class="help-block">Passwords mismatch</span>
-                    </div>
+                     && !(registerForm.controls['ConfirmPassword'].value == registerForm.controls['Password'].value)"> <span class="help-block">Passwords mismatch</span> </div>
                   </div>
-
-
                   <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['Email_Address'].valid
                   && formSubmitted}">
-                    <div class="inner-addon left-addon">
-                      <span class=""><i class="fa fa-envelope fa-fw" style="color:gray"></i></span>
+                    <div class="inner-addon left-addon"> <span class=""><i class="fa fa-envelope fa-fw" style="color:gray"></i></span>
                       <input name="Email_Address" type="text"
                              class="form-control line-border" placeholder="Enter Email"
                              [formControl]="registerForm.controls['Email_Address']">
                     </div>
                     <div class="has-error"
-                         *ngIf="registerForm.controls['Email_Address'].hasError('required') && formSubmitted">
-                      <span class="help-block">Email is required</span>
-                    </div>
+                         *ngIf="registerForm.controls['Email_Address'].hasError('required') && formSubmitted"> <span class="help-block">Email is required</span> </div>
                     <div class="has-error" *ngIf="!registerForm.controls['Email_Address'].hasError('required')
-                    && registerForm.controls['Email_Address'].hasError('validateEmail') && formSubmitted">
-                      <span class="help-block">Enter a valid email. Email format should be <i>john@doe.com</i>.</span>
-                    </div>
+                    && registerForm.controls['Email_Address'].hasError('validateEmail') && formSubmitted"> <span class="help-block">Enter a valid email. Email format should be <i>john@doe.com</i>.</span> </div>
                   </div>
-
                   <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['Security_Question_Id'].valid
                   && formSubmitted}">
-                    <div class="inner-addon left-addon">
-                      <span class=""><i class="fa fa-question-circle fa-fw" style="color:gray"></i></span>
+                    <div class="inner-addon left-addon"> <span class=""><i class="fa fa-question-circle fa-fw" style="color:gray"></i></span>
                       <select name="Security_Question_Id" class="form-control" style="padding-left:40px "
                               [formControl]="registerForm.controls['Security_Question_Id']">
                         <option value="none">Please select a security question</option>
-                        <option *ngFor="let secQues of secQuesArray" [value]="secQues.Id">{{ secQues.Question }}
-                        </option>
+                        <option *ngFor="let secQues of secQuesArray" [value]="secQues.Id">{{ secQues.Question }} </option>
                       </select>
                     </div>
                     <div class="has-error" *ngIf="registerForm.controls['Security_Question_Id'].hasError('required')
-                     && formSubmitted">
-                      <span class="help-block">Security question is required.</span>
-                    </div>
+                     && formSubmitted"> <span class="help-block">Security question is required.</span> </div>
                   </div>
-
                   <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['Security_Question_Answer'].valid
                   && formSubmitted}">
-                    <div class="inner-addon left-addon ">
-                      <span class=""><i class="fa fa-lock fa-fw"></i></span>
+                    <div class="inner-addon left-addon "> <span class=""><i class="fa fa-lock fa-fw"></i></span>
                       <input name="Security_Question_Answer" type="text" class="form-control line-border"
                              [formControl]="registerForm.controls['Security_Question_Answer']"
                              placeholder="Enter your response.">
                     </div>
                     <div class="has-error" *ngIf="registerForm.controls['Security_Question_Answer'].hasError('required')
-                    && formSubmitted">
-                      <span class="help-block">Response is required.</span>
-                    </div>
+                    && formSubmitted"> <span class="help-block">Response is required.</span> </div>
                   </div>
-
                   <div class="text-right">
                     <button type="submit"
-                            class="btnreg btn-secondary pull-right text-uppercase">Register
-                    </button>
+                            class="btnreg btn-secondary pull-right text-uppercase">Register </button>
                   </div>
-
                 </form>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <!--<div class="modal-footer">-->
-      <!--<button type="button" class="btn btn-default" data-dismiss="modal">Register</button>-->
-      <!--</div>-->
-      <!--</div>-->
-
     </div>
-
   </div>
 </div>
