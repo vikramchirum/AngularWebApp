@@ -1,15 +1,15 @@
 import { Component, OnDestroy } from '@angular/core';
-import { UsageHistoryService } from '../../../core/usage-history.service';
+
+import { UsageHistoryService } from 'app/core/usage-history.service';
 import { BillingAccountService } from 'app/core/BillingAccount.service';
 import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
-import { first, get, map, takeRight, toNumber } from 'lodash';
+import { map, takeRight, toNumber } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'mygexa-usage-summary',
   templateUrl: './usage-summary.component.html',
-  styleUrls: ['./usage-summary.component.scss'],
-  providers: [UsageHistoryService]
+  styleUrls: ['./usage-summary.component.scss']
 })
 export class UsageSummaryComponent implements OnDestroy {
 
@@ -21,7 +21,7 @@ export class UsageSummaryComponent implements OnDestroy {
     maintainAspectRatio: false,
     tooltips: {
       callbacks: {
-        label: (tooltipItem, data) => {
+        label: (tooltipItem) => {
           return tooltipItem.yLabel + 'kwh';
         }
       }
@@ -36,7 +36,7 @@ export class UsageSummaryComponent implements OnDestroy {
       borderColor: ' rgb(27,141,205)',
       borderWidth: 1,
     }
-  ]
+  ];
   public barChartData = [];
 
   private BillingAccountsSubscription: Subscription = null;
