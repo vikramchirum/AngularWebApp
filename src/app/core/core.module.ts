@@ -16,6 +16,7 @@ import { BillingAccountService } from './BillingAccount.service';
 import { BudgetBillingService } from './budgetbilling.service';
 import { CustomerAccountService } from './CustomerAccount.service';
 import { InvoiceService } from './invoiceservice.service';
+import { OfferService } from './offer.service';
 import { PaymentsHistoryService } from './payments-history.service';
 import { PaymentsService } from './payments.service';
 import { PaymethodService } from './Paymethod.service';
@@ -39,6 +40,7 @@ import { UsageHistoryService } from './usage-history.service';
     BudgetBillingService,
     CustomerAccountService,
     InvoiceService,
+    OfferService,
     PaymentsHistoryService,
     PaymentsService,
     PaymethodService,

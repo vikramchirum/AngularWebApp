@@ -21,18 +21,18 @@
 </div>
 </section>
 
-<section id="Renewal" *ngIf="IsInRenewalTimeFrame">
+<section id="Renewal" *ngIf="IsInRenewalTimeFrame && RenewalOffers">
   <div class="current-plan-card mat-card">
     <div class="card-content">
       <div class="alert alert-warning">Best for your home</div>
       <div class="mat-card-title">
-      <h2>Gexa Prime 1000 12  <small><i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></small></h2>
+      <h2>{{RenewalOffers.Plan.Name}}  <small><i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></small></h2>
       <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
             </div>
       <div class="mat-card-content">
-    <h2>3.9<sup>c</sup><small>pkw/hr</small></h2> 
+    <h2>{{RenewalOffers.Price_At_1000_kwh | FloatToMoneyPipe}}<sup>c</sup><small>pkw/hr</small></h2>
       <p  class="bg-default">at 1000kwh</p>
-      <p>TERM:12 months</p>
+      <p>TERM:{{RenewalOffers.Plan.Term}} months</p>
       <p  class="bg-default">No Sign Up Bonus</p>
       </div>
     </div>

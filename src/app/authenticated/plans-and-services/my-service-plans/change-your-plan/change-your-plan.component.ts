@@ -1,7 +1,12 @@
-import { AfterViewInit, Component, OnInit, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import {BillingAccountService} from 'app/core/BillingAccount.service';
 import {Subscription} from 'rxjs/Subscription';
 import {BillingAccountClass} from 'app/core/models/BillingAccount.model';
+import {OfferService} from '../../../../core/offer.service';
+import { findKey, filter, find } from 'lodash';
+import {ChangeYourPlanCardComponent} from './change-your-plan-card/change-your-plan-card.component';
+import {AllOffersClass} from '../../../../core/models/offers/alloffers.model';
+import {IOffers} from '../../../../core/models/offers/offers.model';
 
 @Component({
   selector: 'mygexa-change-your-plan',
@@ -12,8 +17,15 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   public IsInRenewalTimeFrame: boolean;
   ActiveBillingAccountDetails: BillingAccountClass;
   billingAccountSubscription: Subscription;
+  activebillingAccountOffersSubscription: Subscription;
+  public All_Offers: AllOffersClass;
+  public FeaturedOffers: AllOffersClass[];
+  public RenewalOffers: IOffers[];
+  public AllOffers: AllOffersClass[];
+  public AllOfferss: IOffers[];
   clicked: boolean;
-  constructor(private billingAccount_service: BillingAccountService) {
+
+  constructor(private billingAccount_service: BillingAccountService, private active_billingaccount_service: OfferService) {
     this.IsInRenewalTimeFrame = false;
     this.clicked = false;
   }
@@ -24,7 +36,18 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
         this.ActiveBillingAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
       });
+    this.activebillingAccountOffersSubscription = this.active_billingaccount_service.ActiveBillingAccountOfferObservable.subscribe(
+      all_offers => {
+        this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
+        this.RenewalOffers = this.FeaturedOffers[0].Offers;
+        console.log('Featured_Offers', this.RenewalOffers);
+
+        this.AllOffers = all_offers.filter(item => item.Type === 'All_Offers');
+        this.AllOfferss = this.AllOffers[0].Offers;
+        console.log('All_Offers', this.AllOfferss);
+      });
   }
+
   ngOnDestroy() {
     this.billingAccountSubscription.unsubscribe();
   }
