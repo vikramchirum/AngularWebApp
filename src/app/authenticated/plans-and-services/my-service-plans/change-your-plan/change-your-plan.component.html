@@ -1,41 +1,32 @@
 <div class="row"  *ngIf="!IsInRenewalTimeFrame">
   <div class="col-sm-3">
-      <h2> Want to Upgrade your Plan? </h2>
+    <h2> Want to Upgrade your Plan? </h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+  </div>
+  <div class="col-sm-9">
+    <div class="row change-plans-grid"> 
+      <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
+      <div class="col-md-4 plan-card" *ngFor="let i of [0, 1, 2, 3, 4]">
+        <mygexa-change-your-plan-card></mygexa-change-your-plan-card>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row"  *ngIf="IsInRenewalTimeFrame">
+  <section id="renewPlan" >
+    <div class="col-sm-3">
+      <h2>View more renewal plans </h2>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-  </div>
-  <div class="col-sm-9"> 
-      <div class="row change-plans-grid">
+      <a class="boxed btn btn-primary">Have a promo code?</a> </div>
+    <div class="col-sm-9">
+      <div class="row change-plans-grid"> 
         <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
-        <div class="col-md-4 plan-card" *ngFor="let i of [0, 1, 2, 3, 4]">
+        <div class="col-md-4 plan-card" *ngFor="let i of [0, 1, 2]">
           <mygexa-change-your-plan-card></mygexa-change-your-plan-card>
         </div>
       </div>
-  </div>
-</div>
-    
-<div class="row"  *ngIf="IsInRenewalTimeFrame">
-  <div class="col-sm-12">
-    <section id="renewPlan" >
-     <div class="row">
-          <div class="col-md-4">
-                <h3><b>View more renewal plans </b> <i class="fa fa-caret-down fa-2x"  (click)="ChevClicked()"></i></h3>
-                <a>Have a promo code?</a>
-          </div>
-          <div class="col-md-8">
-              <div *ngIf="clicked; then listPlans else noPlans"></div>
-              <ng-template #listPlans>
-                <div class="row change-plans-grid">
-                  <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
-                  <div class="col-md-4 plan-card" *ngFor="let i of [0, 1, 2]">
-                    <mygexa-change-your-plan-card></mygexa-change-your-plan-card>
-                  </div>
-                </div>
-              </ng-template>
-              <ng-template #noPlans>
-              </ng-template>
-          </div>
-      </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </div>

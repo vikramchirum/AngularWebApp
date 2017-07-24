@@ -1,30 +1,47 @@
+/* will refactor this into sass vars for menu color rules */
+$account-base:              rgba(6,81,128,1.0) !default;
+$plans-base:                rgba(254,162,32,1.0)  !default;
+$payment-base:              rgba(46,177,52,1.0)  !default;
+$control-base:              rgba(27,141,205,1.0)  !default;
 
 .payment-options {
-  text-align: center;
-  padding: 2rem;
 
-  table {
-    width: 100%;
+  .payment-option {
+    text-align: center;
+    display: block;
+    text-decoration: none;
+    margin-bottom: 2rem;
+    padding: 30px;
+    display: block;
+    border: 1px solid transparent;
+    opacity: .5;
+
+    .fa {
+      color: $plans-base;
+    }
+
+    &.payment-option-active {
+      border: 1px solid $payment-base;
+      opacity: 1.0;
+    }
+    
+     &.payment-option-active:after {
+    display: block;
+    position: absolute;
+    content: "";
+    height: 0;
+    bottom: -135px;
+    left: 16px;
+    border: 130px solid transparent;
+    border-top: 25px solid #2eb134;
+    }
+
+    h4 {
+      margin-top: 0;
+    }
+    .payment-option-name {
+      margin-top: 20px;
+
+    }
   }
-}
-
-.payment-option {
-  display: block;
-  color: grey;
-  border: 4px solid grey;
-  text-decoration: none;
-  margin-bottom: 2rem;
-}
-.payment-option-active {
-  color: black;
-  border-color: black;
-}
-.payment-option-caption {
-  height: 8rem;
-  vertical-align: center;
-}
-.payment-option-name {
-  font-weight: bold;
-  height: 8rem;
-  vertical-align: center;
 }
