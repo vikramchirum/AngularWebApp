@@ -1,4 +1,12 @@
 <section class="section-container-highlight">
+      <div class="row">
+      <div class="col-sm-12">
+        <h3>Auto Bill Payment Details</h3>
+      </div>
+    </div>
+    <hr/>
+    <div class="row">
+      <div class="col-sm-12">
   <ng-container *ngIf="budgetBillingInfo$ | async; else loading; let budgetBillingInfo;">
     <ng-container *ngIf="budgetBillingInfo.Indicator; else VerifySignUpBudgetBilling">
 
@@ -34,6 +42,8 @@
     </ng-container>
 
     <ng-template #VerifySignUpBudgetBilling>
+
+     
       <ng-container *ngIf="budgetBillingEstimate$ | async; else loading let budgetBillingEstimate; ">
 
         <ng-container *ngIf="!getBudgetBillingEligibility(budgetBillingEstimate); else SignUpBudgetBilling">
@@ -131,6 +141,8 @@
     </ng-template>
   </ng-container>
   <ng-template #loading>loading...</ng-template>
+      </div>
+  </div>
 </section>
 <br>
 <mygexa-cancel-budget-billing-modal   (onCancelBudgetBillingEvent)="handleCancelBudgetBillingEvent($event)" #cancelBudgetBillingModal></mygexa-cancel-budget-billing-modal>

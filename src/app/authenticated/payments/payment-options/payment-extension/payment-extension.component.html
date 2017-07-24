@@ -1,29 +1,48 @@
 
 <section class="section-container-highlight">
-  <ng-template *ngIf="pastDueAmount; then PastDueAmount else NoPastDueAmount;"></ng-template>
-  <ng-template #NoPastDueAmount>
-    <div class="alert alert-info"><b>No Worries!</b> You have no past due amount. Payment Extension is not required at this time.</div>
-  </ng-template>
-  <ng-template #PastDueAmount>
-    <ng-template *ngIf="requestedExtension; then RequestedExtension else NotRequestedExtension;"></ng-template>
-    <ng-template #NotRequestedExtension>
-      <div class="text-center">
-        <h1>Need an Extension?<br/><small>Submit a Payment Extension Request Below.</small></h1>
-        <h1 class="pastDueAmount">${{ pastDueAmount | NumberToMoneyPipe }} Past Due</h1>
-        <button class="btn btn-lg btn-primary" (click)="requestExtension()">Request Extension</button>
-      </div>
-    </ng-template>
-    <ng-template #RequestedExtension>
-      <ng-template *ngIf="requestedExtensionRecently; then RequestedExtensionRecently else NotRequestedExtensionRecently"></ng-template>
-      <ng-template #RequestedExtensionRecently>
-        <div class="alert alert-success"><b>Thanks!</b> Your payment extension has been submitted.</div>
+  <div class="row">
+    <div class="col-sm-12">
+      <h3>Payment Extension Details</h3>
+    </div>
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="col-sm-12">
+      <ng-template *ngIf="pastDueAmount; then PastDueAmount else NoPastDueAmount;"></ng-template>
+      <ng-template #NoPastDueAmount>
+        <div class="alert alert-info"><b>No Worries!</b> You have no past due amount. Payment Extension is not required at this time.</div>
       </ng-template>
-      <ng-template #NotRequestedExtensionRecently>
-        <div class="alert alert-info"><b>Stand-by.</b> Your payment extension has already been submitted.</div>
+      <ng-template #PastDueAmount>
+        <ng-template *ngIf="requestedExtension; then RequestedExtension else NotRequestedExtension;"></ng-template>
+        <ng-template #NotRequestedExtension>
+          <div class="row">
+            <div class="col-sm-4">
+              <h3>Need an Extension?</h3>
+            </div>
+            <div class="col-sm-8">
+              <h3 class="pastDueAmount text-danger">${{ pastDueAmount | NumberToMoneyPipe }} Past Due</h3></div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-4">
+            </div>
+            <div class="col-sm-8">
+              <button class="btn btn-primary" (click)="requestExtension()">Request Extension</button>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #RequestedExtension>
+          <ng-template *ngIf="requestedExtensionRecently; then RequestedExtensionRecently else NotRequestedExtensionRecently"></ng-template>
+          <ng-template #RequestedExtensionRecently>
+            <div class="alert alert-success"><b>Thanks!</b> Your payment extension has been submitted.</div>
+          </ng-template>
+          <ng-template #NotRequestedExtensionRecently>
+            <div class="alert alert-info"><b>Stand-by.</b> Your payment extension has already been submitted.</div>
+          </ng-template>
+          <div class="make-a-payment"> <a class="btn btn-primary" routerLink="/payments/make-payment">Make A Payment</a> </div>
+        </ng-template>
       </ng-template>
-      <div class="make-a-payment">
-        <a class="btn btn-lg btn-primary" routerLink="/payments/make-payment">Make A Payment</a>
-      </div>
-    </ng-template>
-  </ng-template>
+    </div>
+  </div>
 </section>
+<br/>
