@@ -3,9 +3,10 @@ import {BillingAccountService} from 'app/core/BillingAccount.service';
 import {Subscription} from 'rxjs/Subscription';
 import {BillingAccountClass} from 'app/core/models/BillingAccount.model';
 import {OfferService} from '../../../../core/offer.service';
-import {AllOffersClass, IOffers} from '../../../../core/models/offer.model';
 import { findKey, filter, find } from 'lodash';
 import {ChangeYourPlanCardComponent} from './change-your-plan-card/change-your-plan-card.component';
+import {AllOffersClass} from '../../../../core/models/offers/alloffers.model';
+import {IOffers} from '../../../../core/models/offers/offers.model';
 
 @Component({
   selector: 'mygexa-change-your-plan',

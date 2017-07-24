@@ -4,15 +4,17 @@ import {BillingAccountService} from 'app/core/BillingAccount.service';
 import {Subscription} from 'rxjs/Subscription';
 import {BillingAccountClass} from 'app/core/models/BillingAccount.model';
 import {OfferService} from '../../../../../core/offer.service';
-import {AllOffersClass, IOffers} from '../../../../../core/models/offer.model';
 import { filter, forEach, clone } from 'lodash';
-
+import {IOffers} from '../../../../../core/models/offers/offers.model';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 @Component({
   selector: 'mygexa-change-your-plan-card',
   templateUrl: './change-your-plan-card.component.html',
   styleUrls: ['./change-your-plan-card.component.scss']
 })
 export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
+
+
   @Input() Offer: IOffers;
 
   @ViewChild('serviceUpgradeModal') serviceUpgradeModal: ServicePlanUpgradeModalComponent;

@@ -4,11 +4,12 @@ import { HttpClient } from './httpclient';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {BillingAccountService} from 'app/core/BillingAccount.service';
-import {AllOffersClass} from 'app/core/models/offer.model';
+
 import { Observer } from 'rxjs/Observer';
 import {observable} from 'rxjs/symbol/observable';
 import { clone, forEach, get, pull, map } from 'lodash';
 import { environment } from 'environments/environment';
+import {AllOffersClass} from './models/offers/alloffers.model';
 
 @Injectable()
 export class OfferService {
@@ -104,7 +105,7 @@ export class OfferService {
       data => this.ActiveBillingAccountOffersCache = <any>data,
       error => this.http.handleHttpError(error),
       () => {
-        console.log('Offers =', this.ActiveBillingAccountOffersCache);
+        console.log( 'Offers =', this.ActiveBillingAccountOffersCache);
         // We're no longer requesting.
         this.requestObservable = null;
         // Emit our new data to all of our observers.
