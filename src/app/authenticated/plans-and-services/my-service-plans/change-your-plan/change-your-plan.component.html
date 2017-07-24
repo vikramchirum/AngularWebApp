@@ -27,7 +27,7 @@
               <ng-template #listPlans>
                 <div class="row change-plans-grid">
                   <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
-                  <div class="col-md-4 plan-card" *ngFor="let offer of RenewalOffers">
+                  <div class="col-md-4 plan-card" *ngFor="let offer of AllOfferss">
                     <div *ngIf="RenewalOffers">
                       <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
                     </div>

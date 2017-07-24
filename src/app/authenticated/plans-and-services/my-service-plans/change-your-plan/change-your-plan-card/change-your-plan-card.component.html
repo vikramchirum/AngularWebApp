@@ -38,8 +38,10 @@
 <section id = renewPlan *ngIf="IsInRenewalTimeFrame && Offer" >
   <div class="plan-card-container">
     <div class="card-content">
+      <div class="card-title">
       <h4>{{Offer.Plan.Name }} <i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></h4>
       <h2>{{Offer.Price_At_1000_kwh | FloatToMoneyPipe}}<sup class="sup-text">c</sup><sub class="sub-text">pkw/hr</sub></h2>
+      </div>
       <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
       <p>at 1000kwh</p>
       <p>TERM:{{Offer.Plan.Term}} months</p>
