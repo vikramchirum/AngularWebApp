@@ -7,14 +7,23 @@ import { Observable } from 'rxjs/Rx';
 import { HttpClient } from './httpclient';
 import { IBillLineItem } from './models/billlineitem.model';
 import { IBill } from './models/bill.model';
+import { BillingAccountService } from './BillingAccount.service';
 import { forEach } from 'lodash';
 
 @Injectable()
 export class InvoiceService {
 
+  private cachedInvoices: IBill[] = null;
+
   constructor(
-    private HttpClient: HttpClient
-  ) { }
+    private HttpClient: HttpClient,
+    private BillingAccountService: BillingAccountService
+  ) {
+    // Clear the cache if the active billing account changes.
+    this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+      () => this.cachedInvoices = null
+    );
+  }
 
   getBills(billingAccountId: number): Observable<IBill[]>   {
 
@@ -24,7 +33,18 @@ export class InvoiceService {
         bill.Invoice_Date = new Date(bill.Invoice_Date);
         bill.Due_Date = new Date(bill.Due_Date);
       }))
+      .map(bills => this.cachedInvoices = bills)
       .catch(error => this.HttpClient.handleHttpError(error));
+  }
+
+  getBillsCacheable(billingAccountId: number): Observable<IBill[]> {
+
+    if (this.cachedInvoices) {
+      return Observable.of(this.cachedInvoices).delay(0);
+    }
+
+    return this.getBills(billingAccountId);
+
   }
 
   getBill(invoiceId: string): Observable<IBill>   {

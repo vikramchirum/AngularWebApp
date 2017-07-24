@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { UserService } from './user.service';
 import { CustomerAccountService } from './CustomerAccount.service';
 import { CustomerAccountClass } from './models/CustomerAccount.model';
-import { clone, cloneDeep, find, forEach, get, isError, noop, map, pull, replace, set } from 'lodash';
+import { clone, cloneDeep, endsWith, find, forEach, get, isError, noop, map, pull, replace, set } from 'lodash';
 
 @Injectable()
 export class PaymethodService {
@@ -105,7 +105,7 @@ export class PaymethodService {
     if (this.CustomerAccountId === null) { return Observable.from(null); }
 
     // Assign the Http request to prevent any similar requests.
-    this.requestObservable = this.HttpClient.get(`/Paymethods?userKey=${ this.CustomerAccountId }&isActive=true`)
+    this.requestObservable = this.HttpClient.get(`/Paymethods?isActive=true&userKey=${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`)
       .map(data => data.json())
       .map(data => map(data, PaymethodData => new PaymethodClass(PaymethodData)))
       .catch(error => error);
@@ -236,7 +236,7 @@ export class PaymethodService {
           const body = {
             Token: ForteResult.onetime_token,
             Paymethod_Customer: {
-              Id: this.CustomerAccountId,
+              Id: `${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`,
               FirstName: this.CustomerAccount.First_Name,
               LastName: this.CustomerAccount.Last_Name
             },

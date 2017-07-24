@@ -20,7 +20,7 @@ import { UserService } from 'app/core/user.service';
 import { FloatToMoney } from 'app/shared/pipes/FloatToMoney.pipe';
 import { validMoneyAmount } from 'app/validators/validator';
 import { Subscription } from 'rxjs/Subscription';
-import { assign, get, replace, result } from 'lodash';
+import { assign, endsWith, get, replace, result } from 'lodash';
 
 @Component({
   selector: 'mygexa-make-payment',
@@ -160,7 +160,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
         return resolve({
           PaymethodId: this.PaymethodSelected.PayMethodId,
           Paymethod_Customer: {
-            Id: this.CustomerAccountId,
+            Id: `${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`,
             FirstName: this.CustomerAccount.First_Name,
             LastName: this.CustomerAccount.Last_Name
           }
@@ -209,7 +209,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
           ForteData => resolve(assign({
               Token: ForteData.onetime_token,
               Paymethod_Customer: {
-                Id: this.CustomerAccountId,
+                Id: `${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`,
                 FirstName: this.CustomerAccount.First_Name,
                 LastName: this.CustomerAccount.Last_Name
               },

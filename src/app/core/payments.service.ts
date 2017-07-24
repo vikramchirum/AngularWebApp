@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams } from '@angular/http';
 
 import { HttpClient } from './httpclient';
 import { BillingAccountClass } from './models/BillingAccount.model';
@@ -19,19 +18,6 @@ export class PaymentsService {
     this.CustomerAccountService.CustomerAccountObservable.subscribe(
       CustomerAccount => this.CustomerAccount = CustomerAccount
     );
-  }
-
-  GetPayments(BillingAccount: BillingAccountClass) {
-
-    const urlSearchParams = new URLSearchParams();
-    urlSearchParams.set('billingSystem', 'GEMS');
-    urlSearchParams.set('billingSystemAccountTypeName', 'ContractServicePoint');
-    urlSearchParams.set('billingSystemAccountKey', BillingAccount.Id);
-
-    return this.HttpClient.get(`/Payments`, urlSearchParams)
-      .map(res => res.json())
-      .catch(err => this.HttpClient.handleHttpError(err));
-
   }
 
   MakePayment(

@@ -17,8 +17,14 @@ import { BillingAccountService } from '../../../../core/BillingAccount.service';
 export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public config: any;
-  public columnHeaders: Array<ColumnHeader>;
-  public rows: Array<any> = [];
+  public columnHeaders: ColumnHeader[] = [
+    { title: 'Bill Date',       name: 'Invoice_Date',    sort: 'desc', type: 'date' },
+    { title: 'Usage',           name: 'Usage',           sort: '',     type: '' },
+    { title: 'Due Date',        name: 'Due_Date',        sort: '',     type: 'date' },
+    { title: 'Current Charges', name: 'Current_Charges', sort: '',     type: 'dollar' },
+    { title: 'Total',           name: 'Amount_Due',      sort: '',     type: 'dollar' }
+  ];
+  public rows: any[] = [];
   public documentsUrl;
 
   public currentPage = 1;
@@ -40,7 +46,6 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.documentsUrl = environment.Documents_Url;
-    this.populateColumnHeaders();
     this.config = {
       paging: true,
       sorting: {columnHeaders: this.columnHeaders},
@@ -51,7 +56,7 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.ActiveBillingAccountSubscription = this.billingAccountService.ActiveBillingAccountObservable.subscribe(
       result => {
         this.billingAccountId = +(result.Id);
-        this.invoiceService.getBills(this.billingAccountId).subscribe(bills => {
+        this.invoiceService.getBillsCacheable(this.billingAccountId).subscribe(bills => {
           this.Bills = bills;
           this.onChangeTable(this.config);
         });
@@ -151,15 +156,6 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.currentPage = 1;
     this.onChangeTable(config);
-  }
-
-  private populateColumnHeaders() {
-    this.columnHeaders = new Array<ColumnHeader>();
-    this.columnHeaders.push(<ColumnHeader>{ title: 'Bill Date',       name: 'Invoice_Date',    sort: 'desc', type: 'date' });
-    this.columnHeaders.push(<ColumnHeader>{ title: 'Usage',           name: 'Usage',           sort: '', type: '' });
-    this.columnHeaders.push(<ColumnHeader>{ title: 'Due Date',        name: 'Due_Date',        sort: '', type: 'date' });
-    this.columnHeaders.push(<ColumnHeader>{ title: 'Current Charges', name: 'Current_Charges', sort: '', type: 'dollar' });
-    this.columnHeaders.push(<ColumnHeader>{ title: 'Total',           name: 'Amount_Due',      sort: '', type: 'dollar' });
   }
 
   ngOnDestroy() {
