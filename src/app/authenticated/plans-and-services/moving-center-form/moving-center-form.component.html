@@ -1,22 +1,30 @@
 <div class="container-fluid">
-  <form [hidden]="nextClicked || submitted" [formGroup]="movingAddressForm" novalidate (ngSubmit)="onMovingAddressFormSubmit(movingAddressForm.value)" class="moving-address-form">
+  <form [hidden]="nextClicked || submitted" [formGroup]="movingAddressForm" novalidate class="moving-address-form">
     <h2>Moving Center</h2>
     <p>Let's start with finding out where you are moving to, so we know which options are available to you</p>
 
     <div class="row">
       <!--Present Billing Account Address -->
       <div class="col-md-6">
+        <div class="form-group" >
         <h3>You are Moving From</h3>
-        <mygexa-service-account-selector (changedBillingAccount)="serviceChanged($event)"></mygexa-service-account-selector>
+        <mygexa-service-account-selector 
+    [setActiveBillingAccount]="true" (changedBillingAccount)="serviceChanged($event)"></mygexa-service-account-selector>
+           <small class="text-danger" *ngIf="ActiveBillingAccount && ActiveBillingAccount?.Status !== 'Active'">This account has been disconnected and the move out can not be continued</small>
+      </div>
       </div>
 
       <!-- select date when customer wants their service turned off at the old home  -->
       <div class="col-md-6">
         <div class="form-group">
           <h3>Shut Off Date</h3>
-           <my-date-picker name="Current_Service_End_Date" [options]="currentServiceEndDate"
-                    formControlName="Current_Service_End_Date" (dateChanged)="onEndDateChanged($event)"></my-date-picker>
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors">Required</small>          
+          <my-date-picker name="Current_Service_End_Date" [options]="currentServiceEndDate" formControlName="Current_Service_End_Date"
+            (dateChanged)="onEndDateChanged($event)"></my-date-picker>
+          <small class="text-danger" *ngIf="movingAddressForm.get('Current_Service_End_Date').touched  && movingAddressForm.controls?.Current_Service_End_Date.errors?.required">You must enter stop date</small>
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday">You cannot pick a sunday for a stop date</small>
+          <small class="text-danger" *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfNewYear">New Year day is not a valid stop date</small>
+          <small class="text-danger" *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid stop date</small>
+          <small class="text-danger" *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid stop date</small>
         </div>
       </div>
     </div>
@@ -24,41 +32,74 @@
 
     <div class="row">
       <div class="col-md-6">
-        <!--TODO: Moving Address Input -->
         <h3>You are Moving To</h3>
-        <input type="text" class="form-control" placeholder="Enter New Address" />
+        <!--<input type="text" class="form-control" placeholder="Enter New Address" />-->
+        <section class="filter-wrapper">
+          <div class="keyword-wrapper">
+            <input type="text" formControlName="newAddressSearchField" class="form-control" id="keyword" placeholder="Enter New Address"
+               autocomplete="off"  />
+          </div>
+          <ul class="filter-select" *ngIf="results && showHideAdressList">
+            <li *ngFor="let result of results" class="filter-select-list">
+              <p (click)="selectNewBillingAddress(result, $event)" class="artist-name">{{result.newAddressString()}}
+              </p>
+            </li>
+          </ul>
+        </section>
+        <small class="text-danger" *ngIf="movingAddressForm.get('newAddressSearchField').touched && movingAddressForm.controls?.newAddressSearchField.errors?.required">Please Enter Address</small>
+        <!--<input formControlName="queryField"
+         [typeahead]="dataSource"
+         typeaheadOptionsLimit="7"
+         typeaheadMinLength="0"
+         placeholder="Enter New Address"
+         typeaheadOptionField="Address.City"
+         class="form-control"
+         [typeaheadWaitMs]="600"
+        >-->
+
       </div>
 
       <!-- select date when customer wants their service turned on at the new home  -->
       <div class="col-md-6">
         <div class="form-group">
           <h3>Turn On Date</h3>
-           <my-date-picker name="New_Service_Start_Date" [options]="newServiceStartDate"
-                    formControlName="New_Service_Start_Date" (dateChanged)="onStartDateChanged($event)"></my-date-picker>
-          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors">Required</small>         
+          <my-date-picker name="New_Service_Start_Date" [options]="newServiceStartDate" formControlName="New_Service_Start_Date" (dateChanged)="onStartDateChanged($event)"></my-date-picker>
+          <small class="text-danger" *ngIf="(movingAddressForm.get('New_Service_Start_Date').touched && movingAddressForm.get('Current_Service_End_Date').invalid)">Please enter service turn off date</small>
+          <small class="text-danger" *ngIf="(movingAddressForm.get('New_Service_Start_Date').touched || movingAddressForm.get('New_Service_Start_Date').dirty) && movingAddressForm.get('Current_Service_End_Date').valid && movingAddressForm.controls?.New_Service_Start_Date.errors?.required">You must enter start date</small>
+          <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday">You cannot pick a sunday for a start date</small>
+          <small class="text-danger" *ngIf="!movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday && movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfNewYear">New Year day is not a valid start date</small>
+          <small class="text-danger" *ngIf="!movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday && movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid start date</small>
+          <small class="text-danger" *ngIf="!movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday && movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid start date</small>
+          <small class="text-danger" *ngIf="!movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday && 
+          !movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfNewYear && 
+          !movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasEve &&  
+          !movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasDay &&
+          movingAddressForm.errors?.validateMoveInDate">Move In Date should be within 30 days of move out Date</small>
+
         </div>
       </div>
     </div><br/>
 
     <!--If we don't offer service in the moving address, we should show the message-->
-    <!-- TODO: New Address API integration - Uncomment the below alert code once we get new address API -->
 
-    <!--<div class="alert alert-info fade in alert-dismissable">
+    <div *ngIf="availableOffers && availableOffers.Items.length === 0" class="alert alert-info fade in alert-dismissable">
       <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
       <strong>We're Sorry!</strong> We cannot register your move online, please call 1-888 888 8888 for assistance.
-    </div>-->
+    </div>
 
+    <!-- If user has past due balance, show hte message -->
+     <small class="text-danger" *ngIf="pastDueErrorMessage && availableOffers.Items.length > 0"><p>{{pastDueErrorMessage}} <b>$ {{customerDetails.Past_Due | number : dollarAmountFormatter}}</b> </p> </small>
 
     <br/>
 
     <div class="text-right">
-      <button class="btn btn-lg btn-default" [disabled]="!movingAddressForm.valid" (click)="nextButtonClicked()">Next</button>
+      <button class="btn btn-lg btn-default" [disabled]="!movingAddressForm.valid" (click)="addressFormSubmit(movingAddressForm.value)">Next</button>
     </div>
   </form>
 
 
 
-  <form [hidden]="previousClicked || submitted" [formGroup]="ServicePlanForm" novalidate (ngSubmit)="onServicePlanFormSubmit(ServicePlanForm.value, movingAddressForm.value)">
+  <form [hidden]="previousClicked || submitted" [formGroup]="ServicePlanForm" novalidate>
     <h2>Moving Center</h2>
     <p>A few more items and we can finalize your order</p>
     <br/>
@@ -68,16 +109,16 @@
         <tr>
           <td>
             <p> Would you like to keep your existing service plan<i class="fa fa-chevron-right" aria-hidden="true"></i></p>
-            <div class="form-group radio">              
+            <div class="form-group radio">
               <label class="radio-inline"><input type="radio" formControlName="service_plan" value="Current Plan" (click)="getCurrentPlan()" >Keep Current Plan</label>
               <label class="radio-inline"><input type="radio" formControlName="service_plan" value="New Plan" (click)="openSelectPlanModal()">Select New Plan</label></div>
-              <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Moving address is not in same TDU. Please select New Plan </small>
-              <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.required">Please select plan</small>
-            <mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal  (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>
+            <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Moving address is not in same TDU. Please select New Plan </small>
+            <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.required">Please select plan</small>
+            <mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>
           </td>
           <td>
-                
-           
+
+
             <div class="current-plan-card" *ngIf="selectedOffer">
               <div class="card-content">
                 <p>{{selectedOffer.Plan.Name}}</p>
@@ -85,9 +126,9 @@
                 <p>Expires {{selectedOffer.End_Date | date:'d/M/yy'}}</p>
               </div>
             </div>
-      
- 
-            
+
+
+
             <div *ngIf="ActiveBillingAccount" [hidden]="selectedOffer" class="current-plan-card">
               <div class="card-content">
                 <p>{{ActiveBillingAccount.Current_Offer.Product_Name}}</p>
@@ -95,7 +136,7 @@
                 <p>Expires {{ActiveBillingAccount.Current_Offer.End_Date | date:'d/M/yy'}}</p>
               </div>
             </div>
-           
+
           </td>
         </tr>
       </tbody>
@@ -115,15 +156,18 @@
 
     <br/><br/>
     <input type="checkbox" formControlName="agree_to_terms" value="check" id="agree" /> I Agree to the Terms and Conditions,
-    click <a>here</a>
+    click <a>here</a><br>
+    <small class="text-danger" *ngIf="(ServicePlanForm.get('agree_to_terms').touched ||
+                                                         ServicePlanForm.get('agree_to_terms').dirty) &&
+                                                         ServicePlanForm.get('agree_to_terms').errors && ServicePlanForm.get('agree_to_terms').errors.pattern"> Please Agree to Terms and Conditions </small>
 
     <div class="row">
       <div class="text-right">
         <button class="btn btn-lg btn-default" (click)="previousButtonClicked()">Previous</button>
-        <button class="btn btn-lg btn-default"[disabled]="!ServicePlanForm.valid" (click)="onSubmitMove(movingAddressForm.value, ServicePlanForm.value)">Submit Move</button>
+        <button class="btn btn-lg btn-default" [disabled]="!ServicePlanForm.valid" (click)="onSubmitMove(movingAddressForm.value, ServicePlanForm.value)">Submit Move</button>
       </div>
     </div>
-  </form>
+  </form> 
 
   <!--Moving Form Confirmation Screen -->
   <div [hidden]="!submitted" class="moving-confirmation">

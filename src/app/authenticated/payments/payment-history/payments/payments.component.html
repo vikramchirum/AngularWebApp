@@ -1,33 +1,35 @@
 
-<table width="100%">
-  <tbody>
+<table width="100%" class="table table-striped table-condensed">
+  <thead>
   <tr class="options">
     <td>
-      <button class="btn btn-lg btn-blank" (click)="sortBy('date')">
+      <button class="btn btn-link" (click)="sortBy('date')">
         Date<i class="fa fa-fw" [ngClass]="PaymentsSortingBy !== 'date' ? '' : PaymentsSortingByDesc ? 'fa-angle-down' : 'fa-angle-up'"></i>
       </button>
     </td>
     <td>
-      <button class="btn btn-lg btn-blank" (click)="sortBy('amount')">
+      <button class="btn btn-link" (click)="sortBy('amount')">
         Payment Amount<i class="fa fa-fw" [ngClass]="PaymentsSortingBy !== 'amount' ? '' : PaymentsSortingByDesc ? 'fa-angle-down' : 'fa-angle-up'"></i>
       </button>
     </td>
     <td>
-      <button class="btn btn-lg btn-blank" (click)="sortBy('status')">
+      <button class="btn btn-link" (click)="sortBy('status')">
         Status<i class="fa fa-fw" [ngClass]="PaymentsSortingBy !== 'status' ? '' : PaymentsSortingByDesc ? 'fa-angle-down' : 'fa-angle-up'"></i>
       </button>
     </td>
     <td>
-      <button class="btn btn-lg btn-blank" (click)="sortBy('method')">
+      <button class="btn btn-link" (click)="sortBy('method')">
         Payment Method<i class="fa fa-fw" [ngClass]="PaymentsSortingBy !== 'method' ? '' : PaymentsSortingByDesc ? 'fa-angle-down' : 'fa-angle-up'"></i>
       </button>
     </td>
     <td>
-      <button class="btn btn-lg btn-blank" (click)="sortBy('account')">
+      <button class="btn btn-link" (click)="sortBy('account')">
         Payment Account<i class="fa fa-fw" [ngClass]="PaymentsSortingBy !== 'account' ? '' : PaymentsSortingByDesc ? 'fa-angle-down' : 'fa-angle-up'"></i>
       </button>
     </td>
   </tr>
+  </thead>
+  <tbody>
   <tr class="payment" *ngFor="let Payment of currentPageOfPayments">
     <td>{{ Payment.Payment_Date | date:'d MMM y' }}</td>
     <td>${{ Payment.Amount_Paid | NumberToMoneyPipe }}</td>
@@ -39,9 +41,9 @@
 </table>
 <br/>
 
-<div class="row pagination-container">
+<div class="row pagination-container pager">
   <div class="col-xs-3">
-    <button type="button" class="btn btn-lg btn-wireframe" [disabled]="PaymentsPage === 0" (click)="previousPage()">Previous Page</button>
+    <button type="button" class="btn" [disabled]="PaymentsPage === 0" (click)="previousPage()">Previous Page</button>
   </div>
   <div class="col-xs-6 text-center">
     <button type="button" class="btn" *ngIf="PaymentsPage > 3" (click)="gotoPage(0)">1...</button>

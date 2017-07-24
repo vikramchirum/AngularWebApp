@@ -9,7 +9,7 @@
             <input type="text" class="form-control" placeholder="Search">
           </div>
         </form><li>-->
-      <li><a href="#"><small><span class="fa fa-user-circle fa-white"></span> <span class="hidden-xs">Hi!</span></small></a></li>
+      <li><a href="#"><small><span class="fa fa-user-circle fa-white"></span> <span class="hidden-xs">Hi! {{ user }} {{ username }}</span></small></a></li>
       <li><a href="#"><small><span class="fa fa-bell fa-white"></span> <span class="hidden-xs">Notifications</span></small></a></li>
       <li><a href="#" (click)="logout($event)"><small><span class="fa fa-sign-out fa-white"></span> <span class="hidden-xs">Logout</span></small></a></li>
       <li><a href="#"><small><span class="fa fa-phone fa-white"></span> <span class="hidden-xs">866-961-9399</span></small></a></li>
@@ -38,10 +38,10 @@
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
               <ul class="list-unstyled list-center list-rule">
-                <li><a href="/account/profile">Profile and Preferences</a></li>
-                <li><a href="/account/message-center">Message Center</a></li>
-                <li><a href="/account/refer-a-friend/referral-options">Rewards and Referrals</a></li>
-                <li><a href="/account/order-status">Order Status</a></li>
+                <li><a routerLink="/account/profile">Profile and Preferences</a></li>
+                <li><a routerLink="/account/message-center">Message Center</a></li>
+                <li><a routerLink="/account/refer-a-friend/referral-options">Rewards and Referrals</a></li>
+                <li><a routerLink="/account/order-status">Order Status</a></li>
               </ul>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
@@ -68,10 +68,10 @@
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
               <ul class="list-unstyled list-center list-rule">
-                <li><a href="/plans-and-services/my-services-plans">My Service Plans</a></li>
-                <li><a href="/plans-and-services/add-service-location">Add Service Location</a></li>
-                <li><a href="/plans-and-services/moving-service">Moving Center</a></li>
-                <li><a href="/plans-and-services/order-status">Order Status</a></li>
+                <li><a routerLink="/plans-and-services/my-services-plans">My Service Plans</a></li>
+                <li><a routerLink="/plans-and-services/add-service-location">Add Service Location</a></li>
+                <li><a routerLink="/plans-and-services/moving">Moving Center</a></li>
+                <li><a routerLink="/plans-and-services/order-status">Order Status</a></li>
               </ul>￼
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
@@ -98,10 +98,10 @@
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
               <ul class="list-unstyled list-center list-rule">
-                <li><a href="/payments/view-my-bill"> View My Bill</a></li>
-                <li><a href="/payments/make-payment">Make a Payment</a></li>
-                <li><a href="/payments/payment-options">Payment Options</a></li>
-                <li><a href="/payment/payment-history">Payment History</a></li>
+                <li><a routerLink="/payments/view-my-bill"> View My Bill</a></li>
+                <li><a routerLink="/payments/make-payment">Make a Payment</a></li>
+                <li><a routerLink="/payments/payment-options">Payment Options</a></li>
+                <li><a routerLink="/payment/payment-history">Payment History</a></li>
               </ul>￼
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
@@ -119,21 +119,21 @@
 
         <li role="separator" class="divider"> </li>
         <li class="dropdown-full control-menu">
-          <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/controls-and-insights" class="dropdown-toggle">Control and Insights</a>
+          <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/controls-and-insights" class="dropdown-toggle">Control &amp; Insights</a>
           <div class="dropdown-menu">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hero no-margin">
               <div>
                 <img src="/assets/global/gexa-menu-lyric.png" >
-                <h3><a [routerLinkActive]="['active']" routerLink="/controls-and-insights">Control and Insights</a></h3>
+                <h3><a [routerLinkActive]="['active']" routerLink="/controls-and-insights">Control &amp; Insights</a></h3>
                 <p>Combine the power of Gexa Energy with your smart home.</p>
               </div>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
               <ul class="list-unstyled list-center list-rule">
-                <li><a href="/control-and-insights/usage-history"> Usage History</a></li>
-                <li><a href="/control-and-insights/usage-history">Insights</a></li>
-                <li><a href="/control-and-insights/usage-history">Things</a></li>
-                <li><a href="/control-and-insights/usage-history">Home Profile</a></li>
+                <li><a routerLink="/control-and-insights/usage-history"> Usage History</a></li>
+                <li><a routerLink="/control-and-insights/usage-history">Insights</a></li>
+                <li><a routerLink="/control-and-insights/usage-history">Things</a></li>
+                <li><a routerLink="/control-and-insights/usage-history">Home Profile</a></li>
              </ul>￼
             </div>
                 <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">

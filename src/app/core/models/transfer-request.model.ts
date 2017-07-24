@@ -1,5 +1,8 @@
+
+import {IPhoneNumber} from './address/phonenumber';
+
 export class TransferRequest {
-    Email_Address:string;
+    Email_Address: string;
     Billing_Account_Id: string;
     Current_Service_End_Date: string;
     Final_Bill_To_Old_Billing_Address?: boolean;
@@ -9,7 +12,7 @@ export class TransferRequest {
     TDSP_Instructions?: string;
     New_Service_Start_Date: string;
     Keep_Current_Offer?: boolean;
-    Offer_Id?: string
+    Offer_Id?: string;
     Contact_Info: ContactInfo;
     Language_Preference?: string;
     Promotion_Code_Used?: string;
@@ -31,15 +34,7 @@ export interface Address {
 
 export interface ContactInfo {
     Email_Address: string;
-    Primary_Phone_Number: PhoneNumber;
-    Secondary_Phone_Number?: PhoneNumber;
+    Primary_Phone_Number: IPhoneNumber;
+    Secondary_Phone_Number?: IPhoneNumber;
 
-}
-
-export interface PhoneNumber {
-    Type: string;
-    Area_Code: string;
-    Number: string;
-    Extension: string;
-    Agree_To_Marketing: string;
 }

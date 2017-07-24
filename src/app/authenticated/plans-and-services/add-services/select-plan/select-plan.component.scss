@@ -1,9 +1,120 @@
-.select-plan-card-container {
-    border: 2px solid black;
-    text-align: center;
-    border-radius: 20px;
-    padding: 20px;
-    background: #000000;
-    color: #fff;
-    margin-bottom:30px;
+.select-plan-card-container{
+    border: none;
+    border-right:1px solid rgba(241,240,207,.4);
+    border-radius: 0;
+    padding: 10px 0;
+    margin-bottom: 40px;
+    
+    .card-title {
+      
+      h2 {
+        font-size:36px;
+      }
+      
+      h4 {
+        color:  rgba(46,177,52,1.0);
+      }
+      
+      .fa {
+        color: #fea220;
+      }
+
+    }
+  
+    .card-content{
+        text-align: center;
+        .sup-text {
+            font-size: 12px;
+            top: -1.5em;
+        }
+        .sub-text {
+            font-size:12px;
+            right:0.5em;
+        }
+      h2 {
+        Font-weight: 800;
+        color: #000;
+      }
+      small, sup {
+        font-weight: 100;
+        font-size: 12px;
+      }
+      p {
+        margin-bottom:0;
+        line-height: 25px;
+        
+        &:nth-child(odd){
+          display: inline-block;
+          background-color: rgba(241,240,207,.4);
+          width: 70%;
+        }
+      }
+    }
+    .btn-sm {
+          margin-top: 30px;
+        }
+  
+   .agreement-section{
+       hr {
+           border: 1px solid #000;
+           margin-left:-19px;
+           margin-right:-19px;
+       }
+       label {
+           p {
+               font-size:0.9em;
+           }
+       }
+
+   }
+  .fa-2x {
+    vertical-align: middle;
+  }
+.checkbox label:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.checkbox .cr {
+  position: relative;
+  display: inline-block;
+  border: 1px solid #a9a9a9;
+  border-radius: .25em;
+  width: 1.5em;
+  height: 1.5em;
+  float: left;
+  margin-left: -1.8em;
+ // background:#000;
+}
+.checkbox .cr .cr-icon {
+  position: absolute;
+  font-size: 1em;
+  line-height: 0;
+  top: 50%;
+  left: 20%;
+  //color:#fff;
+}
+
+.checkbox label input[type="checkbox"] {
+  display: none;
+  padding-left:1.4em;
+}
+
+.checkbox label input[type="checkbox"] + .cr > .cr-icon {
+  transform: scale(3) rotateZ(-20deg);
+  opacity: 0;
+  transition: all .3s ease-in;
+}
+
+.checkbox label input[type="checkbox"]:checked + .cr > .cr-icon {
+  transform: scale(1) rotateZ(0deg);
+  opacity: 1;
+}
+
+.checkbox label input[type="checkbox"]:disabled + .cr{
+  opacity: .5;
+}
+
+
 }

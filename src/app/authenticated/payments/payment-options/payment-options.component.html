@@ -5,48 +5,33 @@
     <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
 
     <br/>
-    <h4>Select Payment Option</h4>
     <div class="row payment-options">
-      <div class="col-md-4">
-        <a class="payment-option"
+      <div class="col-md-4" >
+        <a class="payment-option {{ ActiveBillingAccount?.Is_Auto_Bill_Pay ? 'current' : '' }}"
            [ngClass]="{ 'payment-option-active': Router.url === '/payments/payment-options/auto-bill-payment' }"
            [routerLink]="Router.url === '/payments/payment-options/auto-bill-payment' ? '/payments/payment-options' : '/payments/payment-options/auto-bill-payment'"
         >
-          <table border="0">
-            <tbody>
-            <tr><td class="payment-option-caption">{{ ActiveBillingAccount?.Is_Auto_Bill_Pay ? 'You\'re enrolled in Autopay' : 'Never forget to pay your bill again, setup Autopay' }}</td></tr>
-            <tr><td class="payment-option-icon"><i class="fa fa-4x fa-clock-o"></i></td></tr>
-            <tr><td class="payment-option-name">{{ ActiveBillingAccount?.Is_Auto_Bill_Pay ? 'View' : 'Setup' }} Autopay</td></tr>
-            </tbody>
-          </table>
+          <h4>{{ ActiveBillingAccount?.Is_Auto_Bill_Pay ? 'You\'re enrolled in Autopay' : 'Never forget to pay your bill again, setup Autopay' }}</h4>
+            <div class="payment-option-icon"><i class="fa fa-4x fa-clock-o"></i></div>
+          <h4 class="payment-option-name">{{ ActiveBillingAccount?.Is_Auto_Bill_Pay ? 'View' : 'Setup' }} Autopay</h4>
         </a>
       </div>
       <div class="col-md-4">
         <a class="payment-option"
            [ngClass]="{ 'payment-option-active': Router.url === '/payments/payment-options/budget-billing' }"
-           [routerLink]="Router.url === '/payments/payment-options/budget-billing' ? '/payments/payment-options' : '/payments/payment-options/budget-billing'"
-        >
-          <table border="0">
-            <tbody>
-            <tr><td class="payment-option-caption">Pay the same amount every month</td></tr>
-            <tr><td class="payment-option-icon"><i class="fa fa-4x fa-usd"></i></td></tr>
-            <tr><td class="payment-option-name">Budget Billing</td></tr>
-            </tbody>
-          </table>
+           [routerLink]="Router.url === '/payments/payment-options/budget-billing' ? '/payments/payment-options' : '/payments/payment-options/budget-billing'">
+          <h4>Pay the same amount every month</h4>
+          <div class="payment-option-icon"><i class="fa fa-4x fa-usd"></i></div>
+          <h4 class="payment-option-name">Budget Billing</h4>
         </a>
       </div>
       <div class="col-md-4">
         <a class="payment-option"
            [ngClass]="{ 'payment-option-active': Router.url === '/payments/payment-options/payment-extension' }"
-           [routerLink]="Router.url === '/payments/payment-options/payment-extension' ? '/payments/payment-options' : '/payments/payment-options/payment-extension'"
-        >
-          <table border="0">
-            <tbody>
-            <tr><td class="payment-option-caption">Can pay right now?<br/>We got you covered.</td></tr>
-            <tr><td class="payment-option-icon"><i class="fa fa-4x fa-handshake-o"></i></td></tr>
-            <tr><td class="payment-option-name">Payment Extension</td></tr>
-            </tbody>
-          </table>
+           [routerLink]="Router.url === '/payments/payment-options/payment-extension' ? '/payments/payment-options' : '/payments/payment-options/payment-extension'">
+          <h4 class="payment-option-caption">Can pay right now?We got you covered.</h4>
+          <div class="payment-option-icon"><i class="fa fa-4x fa-handshake-o"></i></div>
+          <h4 class="payment-option-name">Payment Extension</h4>
         </a>
       </div>
     </div>

@@ -114,6 +114,7 @@ $control-base:              rgba(27,141,205,1.0)  !default;
     background-color: $plans-base !important;
     color: #ffffff;
   }
+  
 }
 
 .plans-profile, .callout-container.plans {
@@ -155,6 +156,8 @@ $control-base:              rgba(27,141,205,1.0)  !default;
   background-color: $payment-base !important;
   color: #ffffff;
   }
+  
+  
 }
 
 .payment-side-panel {
@@ -259,6 +262,7 @@ $control-base:              rgba(27,141,205,1.0)  !default;
   }
 }
 
+
 .custom-nav {
    .nav > li.open > a {
     text-decoration: none;
@@ -328,6 +332,11 @@ $control-base:              rgba(27,141,205,1.0)  !default;
       a, a:link, a:visited, a:active {
         border-bottom: 1px solid $account-base;
       }
+      a:hover {
+            background-color: lighten($account-base, 55%);
+            color: $account-base;
+        }
+
     }
     strong {
       color:$account-base
@@ -344,6 +353,11 @@ $control-base:              rgba(27,141,205,1.0)  !default;
         border-bottom: 1px solid $plans-base;
         padding: 4px 15px;
         }
+       a:hover {
+            background-color: lighten($plans-base, 55%);
+            color: $plans-base;
+        }
+      
       }
   }
     .payment-menu {
@@ -356,7 +370,14 @@ $control-base:              rgba(27,141,205,1.0)  !default;
       a, a:link, a:visited, a:active {
         border-bottom: 1px solid $payment-base;
         padding: 4px 15px;
+      }
+      
+       a:hover {
+            background-color: lighten($payment-base, 55%);
+            color: $payment-base;
         }
+
+      
       }
       strong {
         color:$payment-base
@@ -378,7 +399,12 @@ $control-base:              rgba(27,141,205,1.0)  !default;
       a, a:link, a:visited, a:active {
         border-bottom: 1px solid $control-base;
         padding: 4px 15px;
+      }
+      a:hover {
+            background-color: lighten($control-base, 65%);
+            color: $control-base;
         }
+      
       }
       strong {
         color:$control-base
