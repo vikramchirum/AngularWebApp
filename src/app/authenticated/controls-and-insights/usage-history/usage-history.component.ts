@@ -8,8 +8,7 @@ import { Subscription } from 'rxjs/Subscription';
 @Component({
   selector: 'mygexa-usage-history',
   templateUrl: './usage-history.component.html',
-  styleUrls: ['./usage-history.component.scss'],
-  providers: [UsageHistoryService]
+  styleUrls: ['./usage-history.component.scss']
 })
 export class UsageHistoryComponent implements OnDestroy {
 
@@ -23,7 +22,7 @@ export class UsageHistoryComponent implements OnDestroy {
     responsive: true,
     tooltips: {
       callbacks: {
-        label: (tooltipItem, data) => {
+        label: (tooltipItem) => {
           return tooltipItem.yLabel + 'kwh';
         }
       }
@@ -60,7 +59,7 @@ export class UsageHistoryComponent implements OnDestroy {
     },
     tooltips: {
       callbacks: {
-        label: (tooltipItem, data) => {
+        label: (tooltipItem) => {
           return tooltipItem.yLabel + 'kwh';
         }
       }
@@ -83,8 +82,8 @@ export class UsageHistoryComponent implements OnDestroy {
   ];
 
   /* Table and Pagination Data */
-  public tablePage: number = 1;
-  public isDataAvailable: boolean = false;
+  public tablePage = 1;
+  public isDataAvailable = false;
   public tableData: any[] = [];
 
   private BillingAccountsSubscription: Subscription = null;
@@ -120,8 +119,7 @@ export class UsageHistoryComponent implements OnDestroy {
   }
 
   get currentPage() {
-    const pageEntries = this.getEntries(this.tablePage);
-    return pageEntries;
+    return this.getEntries(this.tablePage);
   }
 
   public pageChanged(event: any): void {

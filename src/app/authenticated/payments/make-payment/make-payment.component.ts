@@ -7,6 +7,7 @@ import { CustomerAccountService } from 'app/core/CustomerAccount.service';
 import { CustomerAccountClass } from 'app/core/models/CustomerAccount.model';
 import { IBill } from 'app/core/models/bill.model';
 import { InvoiceService } from 'app/core/invoiceservice.service';
+import { PaymentsHistoryService } from 'app/core/payments-history.service';
 import { PaymentsService } from 'app/core/payments.service';
 import { PaymethodAddCcComponent } from 'app/shared/components/payment-method-add-cc/payment-method-add-cc.component';
 import { PaymethodAddEcheckComponent } from 'app/shared/components/payment-method-add-echeck/payment-method-add-echeck.component';
@@ -87,6 +88,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
   constructor(
     private CustomerAccountService: CustomerAccountService,
+    private PaymentsHistoryService: PaymentsHistoryService,
     private PaymentsService: PaymentsService,
     private PaymethodService: PaymethodService,
     private FormBuilder: FormBuilder,
@@ -154,7 +156,16 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     new Promise((resolve, reject) => {
 
       // If we're selecting a saved method, use it.
-      if (this.PaymethodSelected) { return resolve(this.PaymethodSelected); }
+      if (this.PaymethodSelected) {
+        return resolve({
+          PaymethodId: this.PaymethodSelected.PayMethodId,
+          Paymethod_Customer: {
+            Id: this.CustomerAccountId,
+            FirstName: this.CustomerAccount.First_Name,
+            LastName: this.CustomerAccount.Last_Name
+          }
+        });
+      }
 
       this.paymentLoadingMessage = 'Preparing your payment...';
 
@@ -251,7 +262,15 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
           this.paymentSubmittedWithoutError = false;
           console.log('An error occurred charging the paymethod!', error);
           this.paymentLoadingMessage = null;
-        }
+        },
+        () => this.PaymentsHistoryService.AddNewPaymentToHistory({
+          Payment_Date: new Date,
+          Payment_Source: PaymethodToCharge.CreditCard ? PaymethodToCharge.CreditCard.AccountNumber : PaymethodToCharge.BankAccount.AccountNumber,
+          Payment_Type: PaymethodToCharge.CreditCard ? 'Credit Card' : 'eCheck',
+          Amount_Paid: AuthorizationAmount,
+          Payment_Status: 'Processing',
+          Reversal_Reason: ''
+        })
       );
 
     });

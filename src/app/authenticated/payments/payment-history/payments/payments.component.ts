@@ -1,30 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import MockData from './payments.mock-data.json';
-
-interface IHistoryPayment {
-  Id: string;
-  date: Date;
-  amount: number;
-  status: string;
-  method: string;
-  account: string;
-}
+import { BillingAccountService } from 'app/core/BillingAccount.service';
+import { PaymentsHistoryService } from 'app/core/payments-history.service';
+import { PaymentsHistory } from 'app/core/models/payments-history.model';
+import { Subscription } from 'rxjs/Subscription';
+import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
 
 @Component({
   selector: 'mygexa-payment-history-payments',
   templateUrl: './payments.component.html',
   styleUrls: ['./payments.component.scss']
 })
-export class PaymentsComponent implements OnInit {
+export class PaymentsComponent implements OnInit, OnDestroy {
 
-  Payments: IHistoryPayment[] = [];
+  Payments: PaymentsHistory[] = [];
   PaymentsSortingBy: string;
   PaymentsPage: number;
   PaymentsPerPage = 10;
 
+  private ActiveBillingAccountSubscription: Subscription = null;
+  private _activeBillingAccount: BillingAccountClass = null;
+  private get activeBillingAccount(): BillingAccountClass { return this._activeBillingAccount; }
+  private set activeBillingAccount(activeBillingAccount) {
+    if (this._activeBillingAccount !== activeBillingAccount) {
+      this._activeBillingAccount = activeBillingAccount;
+      this.PaymentsHistoryService.GetPaymentsHistory(activeBillingAccount).subscribe(
+        PaymentsHistoryItems => this.Payments = PaymentsHistoryItems
+      );
+    }
+  }
+
   private PaymentsSortingByLesser: number = null;
   private PaymentsSortingByGreater: number = null;
+  get PaymentsSortingByDesc(): boolean { return this.PaymentsSortingByGreater === -1; }
   set PaymentsSortingByDesc(desc: boolean) {
     if (desc) {
       this.PaymentsSortingByLesser = 1;
@@ -34,11 +42,8 @@ export class PaymentsComponent implements OnInit {
       this.PaymentsSortingByGreater = 1;
     }
   }
-  get PaymentsSortingByDesc(): boolean {
-    return this.PaymentsSortingByGreater === -1;
-  }
 
-  private sorting(a: IHistoryPayment, b: IHistoryPayment): number {
+  private sorting(a: PaymentsHistory, b: PaymentsHistory): number {
     if (a[this.PaymentsSortingBy] < b[this.PaymentsSortingBy]) {
       return this.PaymentsSortingByLesser;
     }
@@ -48,7 +53,7 @@ export class PaymentsComponent implements OnInit {
     return 0;
   }
 
-  get currentPageOfPayments(): IHistoryPayment[] {
+  get currentPageOfPayments(): PaymentsHistory[] {
     const sorted = this.Payments.sort((a, b) => this.sorting(a, b));
     const index = this.PaymentsPage * this.PaymentsPerPage;
     const extent = index + this.PaymentsPerPage;
@@ -86,19 +91,23 @@ export class PaymentsComponent implements OnInit {
     }
   }
 
-  constructor() {
+  constructor(
+    private BillingAccountService: BillingAccountService,
+    private PaymentsHistoryService: PaymentsHistoryService
+  ) {
     this.PaymentsPage = 0;
     this.PaymentsSortingBy = 'date';
     this.PaymentsSortingByDesc = true;
-    this.Payments = MockData;
-    // Process the mock data:
-    for (const index in this.Payments) {
-      if (this.Payments[index]) {
-        this.Payments[index].date = new Date(this.Payments[index].date);
-      }
-    }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+      activeBillingAccount => this.activeBillingAccount = activeBillingAccount
+    );
+  }
+
+  ngOnDestroy() {
+    this.ActiveBillingAccountSubscription.unsubscribe();
+  }
 
 }

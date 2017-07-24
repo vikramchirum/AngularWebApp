@@ -9,15 +9,17 @@ import { HttpModule, XHRBackend, RequestOptions } from '@angular/http';
 import { HttpClient } from './httpclient';
 import { httpFactory } from './httpFactory';
 
+import { AddressSearchService } from './addresssearch.service';
 import { AutoBillPayService } from './auto-bill-pay.service';
 import { BillService } from './Bill';
 import { BillingAccountService } from './BillingAccount.service';
+import { BudgetBillingService } from './budgetbilling.service';
 import { CustomerAccountService } from './CustomerAccount.service';
+import { InvoiceService } from './invoiceservice.service';
+import { PaymentsHistoryService } from './payments-history.service';
 import { PaymentsService } from './payments.service';
 import { PaymethodService } from './Paymethod.service';
-import { InvoiceService } from './invoiceservice.service';
-import { BudgetBillingService } from './budgetbilling.service';
-import { AddressSearchService } from './addresssearch.service';
+import { UsageHistoryService } from './usage-history.service';
 
 @NgModule({
   imports: [
@@ -30,16 +32,17 @@ import { AddressSearchService } from './addresssearch.service';
       useFactory: httpFactory,
       deps: [ XHRBackend, RequestOptions ]
     },
+    AddressSearchService,
     AutoBillPayService,
     BillService,
     BillingAccountService,
+    BudgetBillingService,
     CustomerAccountService,
+    InvoiceService,
+    PaymentsHistoryService,
     PaymentsService,
     PaymethodService,
-    InvoiceService,
-    BudgetBillingService,
-    AddressSearchService
+    UsageHistoryService
   ]
 })
-export class CoreModule {
-}
+export class CoreModule { }

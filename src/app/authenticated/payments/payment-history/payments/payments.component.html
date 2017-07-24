@@ -29,15 +29,14 @@
     </td>
   </tr>
   <tr class="payment" *ngFor="let Payment of currentPageOfPayments">
-    <td>{{ Payment.date | date:'d MMM y' }}</td>
-    <td>${{ Payment.amount | NumberToMoneyPipe }}</td>
-    <td>{{ Payment.status }}</td>
-    <td>{{ Payment.method }}</td>
-    <td>{{ Payment.account }}</td>
+    <td>{{ Payment.Payment_Date | date:'d MMM y' }}</td>
+    <td>${{ Payment.Amount_Paid | NumberToMoneyPipe }}</td>
+    <td>{{ Payment.Payment_Status }}</td>
+    <td>{{ Payment.Payment_Type }}</td>
+    <td>{{ Payment.Payment_Source }}</td>
   </tr>
   </tbody>
 </table>
-
 <br/>
 
 <div class="row pagination-container">
