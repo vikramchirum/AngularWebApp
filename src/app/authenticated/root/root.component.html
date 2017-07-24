@@ -9,7 +9,7 @@
             <input type="text" class="form-control" placeholder="Search">
           </div>
         </form><li>-->
-      <li><a href="#"><small><span class="fa fa-user-circle fa-white"></span> <span class="hidden-xs">Hi! </span></small></a></li>
+      <li><a href="#"><small><span class="fa fa-user-circle fa-white"></span> <span class="hidden-xs">Hi! {{ user }} {{ username }}</span></small></a></li>
       <li><a href="#"><small><span class="fa fa-bell fa-white"></span> <span class="hidden-xs">Notifications</span></small></a></li>
       <li><a href="#" (click)="logout($event)"><small><span class="fa fa-sign-out fa-white"></span> <span class="hidden-xs">Logout</span></small></a></li>
       <li><a href="#"><small><span class="fa fa-phone fa-white"></span> <span class="hidden-xs">866-961-9399</span></small></a></li>
@@ -119,12 +119,12 @@
 
         <li role="separator" class="divider"> </li>
         <li class="dropdown-full control-menu">
-          <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/controls-and-insights" class="dropdown-toggle">Control and Insights</a>
+          <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/controls-and-insights" class="dropdown-toggle">Control &amp; Insights</a>
           <div class="dropdown-menu">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hero no-margin">
               <div>
                 <img src="/assets/global/gexa-menu-lyric.png" >
-                <h3><a [routerLinkActive]="['active']" routerLink="/controls-and-insights">Control and Insights</a></h3>
+                <h3><a [routerLinkActive]="['active']" routerLink="/controls-and-insights">Control &amp; Insights</a></h3>
                 <p>Combine the power of Gexa Energy with your smart home.</p>
               </div>
             </div>

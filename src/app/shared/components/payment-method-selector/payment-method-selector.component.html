@@ -11,8 +11,7 @@
     <table cellpadding="0" cellspacing="0" width="100%">
       <tbody>
       <tr>
-        <td width="87%"><h4>Your Payment Options</h4></td>
-        <td width="13%" class="card-abp"><h4 class="text-center">Select</h4></td>
+        <td width="87%"><h4>Select Payment Account</h4></td>
       </tr>
       </tbody>
     </table>
@@ -42,19 +41,13 @@
         </tbody>
       </table>
     </div>
-    <table class="card-table" cellpadding="0" cellspacing="0" width="100%">
-      <tbody>
-      <tr>
-        <td width="87%">&nbsp;</td>
-        <td width="13%" class="card-abp">
+    <br/>
+   <div class="text-center">
           <button
-            class="btn btn-block btn-blank"
+            class="btn btn-block btn-primary"
             [disabled]="!PaymethodSelected"
             (click)="submitPaymethod()"
           >{{ submitText || 'Submit' }}</button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </ng-template>
+    </div>
+    </ng-template>
 </ng-template>

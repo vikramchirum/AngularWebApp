@@ -1,5 +1,5 @@
 <section *ngIf="!IsInRenewalTimeFrame">
-<div layout-align="center center">
+<div layout-align="center">
   <md-card class="current-plan-card" *ngIf="ActiveBillingAccountDetails">
     <!--<md-card-header>-->
       <md-card-title>
@@ -22,18 +22,21 @@
 </section>
 
 <section id="Renewal" *ngIf="IsInRenewalTimeFrame">
-  <div class="plan-card-container">
+  <div class="current-plan-card mat-card">
     <div class="card-content">
-      <div class="corner-ribbon">Best for your home</div>
-      <h5>Gexa Prime 1000 12</h5>
-      <h2>3.9<sup class="sup-text">c</sup><sub class="sub-text">pkw/hr</sub>
-        <i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></h2>
+      <div class="alert alert-warning">Best for your home</div>
+      <div class="mat-card-title">
+      <h2>Gexa Prime 1000 12  <small><i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></small></h2>
       <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
+            </div>
+      <div class="mat-card-content">
+    <h2>3.9<sup>c</sup><small>pkw/hr</small></h2> 
       <p  class="bg-default">at 1000kwh</p>
       <p>TERM:12 months</p>
       <p  class="bg-default">No Sign Up Bonus</p>
+      </div>
     </div>
-    <div *ngIf= "selectCheckBox" class="agreement-section">
+    <div *ngIf= "selectCheckBox">
       <hr>
       <div class="checkbox">
         <label>
@@ -44,9 +47,10 @@
       </div>
       <hr>
     </div>
+    <br/>
     <div class="row">
       <div style="text-align:center">
-        <button class="btn btn-default btn-wireframe" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>Select</button>
+        <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>Select</button>
         <i *ngIf= "selectCheckBox" class="fa fa-times fa-2x" style="margin-left:.5em" (click)="closeCheckBox()" aria-hidden="true"></i>
       </div>
     </div>

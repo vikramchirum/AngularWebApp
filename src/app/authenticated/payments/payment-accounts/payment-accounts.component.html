@@ -6,7 +6,6 @@
   <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
 
   <br/>
-
   <ng-template *ngIf="Paymethods === null; then ShowLoadingScreen else ShowPaymethods;"></ng-template>
   <ng-template #ShowLoadingScreen>
     <p class="text-muted"><i class="fa fa-fw fa-circle-o-notch fa-spin"></i> Loading your saved paymethods.</p>
