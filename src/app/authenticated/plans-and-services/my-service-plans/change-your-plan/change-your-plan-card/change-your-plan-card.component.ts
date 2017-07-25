@@ -23,9 +23,9 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   ActiveBillingAccountDetails: BillingAccountClass;
   billingAccountSubscription: Subscription;
   activebillingAccountOffersSubscription: Subscription;
-
+  clicked: boolean;
   enableSelect = false;
-  clicked = false;
+  chev_clicked: boolean;
   ngOnInit() {
     this.billingAccountSubscription = this.billingAccount_service.ActiveBillingAccountObservable.subscribe(
       result => {
@@ -36,6 +36,7 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
 
   constructor(private viewContainerRef: ViewContainerRef, private billingAccount_service: BillingAccountService,
               private active_billingaccount_service: OfferService) {
+    this.chev_clicked = false;
   }
   showServiceUpgradeModal() {
     this.serviceUpgradeModal.show();
@@ -55,5 +56,8 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
     this.billingAccountSubscription.unsubscribe();
+  }
+  ChevClicked() {
+    this.chev_clicked = !this.chev_clicked;
   }
 }

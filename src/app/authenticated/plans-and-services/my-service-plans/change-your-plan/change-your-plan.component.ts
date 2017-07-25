@@ -27,7 +27,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
 
   constructor(private billingAccount_service: BillingAccountService, private active_billingaccount_service: OfferService) {
     this.IsInRenewalTimeFrame = false;
-    this.clicked = false;
+    this.clicked = true;
   }
 
   ngOnInit() {

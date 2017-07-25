@@ -4,24 +4,33 @@
     border-radius: 0;
     padding: 10px 0;
     margin-bottom: 40px;
-    
+
+    .card-included {
+      margin-right: 2px;
+
+      h4{
+        font-size: 15px !important;
+      }
+          }
+
     .card-title {
-      
+
       h2 {
         font-size:36px;
       }
-      
+
       h4 {
         color:  rgba(46,177,52,1.0);
       }
-      
+
       .fa {
         color: #fea220;
       }
 
     }
-  
+
     .card-content{
+      height: 200px;
         text-align: center;
         .sup-text {
             font-size: 12px;
@@ -42,7 +51,7 @@
       p {
         margin-bottom:0;
         line-height: 25px;
-        
+
         &:nth-child(odd){
           display: inline-block;
           background-color: rgba(255,255,255,0.3);
@@ -53,12 +62,12 @@
     .btn-sm {
           margin-top: 30px;
         }
-  
+
    .agreement-section{
        hr {
            border: 1px solid #000;
-           margin-left:-19px;
-           margin-right:-19px;
+           margin-left:-6px;
+           margin-right:9px;
        }
        label {
            p {
@@ -70,6 +79,8 @@
   .fa-2x {
     vertical-align: middle;
   }
+
+
 .checkbox label:after {
   content: '';
   display: table;
