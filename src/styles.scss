@@ -12,6 +12,14 @@
   border-radius:0;
   text-transform: uppercase;
 }
+.carousel-indicators {
+    position: absolute;
+    bottom: -10px;
+}
+
+.fa-wh {
+  color:#ffffff;
+}
 
 .btn-blank {
   background: transparent !important;
@@ -412,6 +420,17 @@ $control-base:              rgba(27,141,205,1.0)  !default;
   }
 }
 
+.thumbnail-container-height > .thumbnail {
+  min-height: 300px;
+  position:  relative;
+  
+  .caption {
+    width: 100%;
+    bottom: 0;
+    position: absolute;
+    background: #fff;
+  }
+}
 
 @media (max-width: $screen-sm-max) {
 
