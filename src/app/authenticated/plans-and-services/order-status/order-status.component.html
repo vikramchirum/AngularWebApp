@@ -8,9 +8,9 @@
       </div>
     </div>
     <br/>
-    <div class='row' *ngIf="orderData">
+    <div class='row' *ngIf="orderDetails">
       <div class="col-md-10 details">
-        <div *ngFor='let order of orderData' [style.backgroundColor]="orderOpened(order) ? 'aliceblue' : ''">
+        <div *ngFor='let order of orderDetails' [style.backgroundColor]="orderOpened(order) ? 'aliceblue' : ''">
           <div class='row'>
             <div class='col-md-3 date'>{{ order.Order_Placed | date:'longDate' }}</div>
             <div class="col-md-7">

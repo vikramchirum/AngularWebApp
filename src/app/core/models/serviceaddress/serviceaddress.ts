@@ -17,7 +17,6 @@ export class ServiceAddress {
    */
   constructor(opts: any) {
     assign(this, opts);
-    console.log("ASSSSSSSSSSSSSSiiiiiiiiiigggggggggggnnnnnnnnnnnnnnnnn", assign(this,opts));
   }
 
 

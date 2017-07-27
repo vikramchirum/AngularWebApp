@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { indexOf } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 
-import MockData from 'app/authenticated/my-account/order-status/order.mock-data.json';
 import { OrderStatusService } from '../../../core/order-status.service';
 import { OrderStatus } from '../../../core/models/order-status.model';
 import { UserService } from 'app/core/user.service';
@@ -13,8 +12,7 @@ import { UserService } from 'app/core/user.service';
   styleUrls: ['./order-status.component.scss']
 })
 export class OrderStatusComponent implements OnInit {
-
-  public orderData;// = MockData;
+ 
   public openCharges = [];
   public orderDetails: OrderStatus[] = null;
   private UserCustomerAccountSubsciption: Subscription = null;
@@ -41,7 +39,7 @@ export class OrderStatusComponent implements OnInit {
     this.orderStatusService.fetchOrderDetails(customerId).subscribe(
       result => {
         console.log('******Order Status********', result)
-        this.orderData = result;
+        this.orderDetails = result;
       }
     );
   }
@@ -58,5 +56,11 @@ export class OrderStatusComponent implements OnInit {
       this.openCharges.splice(indexOf, 1);
     }
   }
+
+  ngOnDestroy() {
+    // Un-subscribe to prevent memory-leaks:
+    this.UserCustomerAccountSubsciption.unsubscribe();
+  }
+
 
 }
