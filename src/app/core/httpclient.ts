@@ -68,6 +68,7 @@ export class HttpClient extends Http {
   }
 
   handleHttpError(error: Response | any) {
+
     // In a real world app, you might use a remote logging infrastructure
     let errMsg: string;
     if (error instanceof Response) {
@@ -78,6 +79,18 @@ export class HttpClient extends Http {
       errMsg = error.message ? error.message : error.toString();
     }
     console.error(errMsg);
-    return Observable.throw(errMsg);
+    if ((error.status === 401 || error.status === 403)) {
+      this.clearLocalStorage();
+      console.log('The token has expired or the user is not authorised. Please log back again.');
+      // window.location.href = window.location.href + '?' + new Date().getMilliseconds();
+      (<any>window).location.reload(true);
+    } else {
+      return Observable.throw(errMsg);
+    }
+  }
+
+  clearLocalStorage() {
+    localStorage.clear();
+    sessionStorage.clear();
   }
 }
