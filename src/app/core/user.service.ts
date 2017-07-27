@@ -339,8 +339,7 @@ export class UserService implements CanActivate {
     (this.httpClient.post(relativePath, null).map((response: Response) => {
       return <boolean> response.json();
     })).subscribe(res => { console.log('User logged out.'); });
-    this.httpClient.clearLocalStorage();
-    this.ApplyUserData(null);
+    this.httpClient.logout();
   }
 }
 
