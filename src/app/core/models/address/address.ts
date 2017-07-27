@@ -10,3 +10,28 @@ export interface IAddress {
   Zip: string;
   Zip_4: string;
 }
+
+
+/**
+  * Returns back a formatted string of service Address
+  * @param type
+  * @returns {string | null}
+  */
+export function addressString(address): string {
+  if (address) {
+    return [
+      address.Line1,
+      address.Line2 && address.Line2 !== '' ? ' ' + address.Line2 : '',
+      ', ',
+      address.City,
+      ', ',
+      address.State,
+      ' ',
+      address.Zip,
+      address.Zip_4 && address.Zip_4 !== '' ? '-' + address.Zip_4 : ''
+    ].join('');
+  }
+
+  return null;
+
+}

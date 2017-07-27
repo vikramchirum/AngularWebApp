@@ -12,13 +12,11 @@ import { MyServicePlansComponent } from './my-service-plans/my-service-plans.com
 import { OrderStatusComponent } from './order-status/order-status.component';
 import { PlansAndServicesComponent } from './plans-and-services.component';
 import { plans_services_routes } from './plans-and-services-routing.module';
-import { ServiceEnrollmentStatusComponent } from './order-status/service-enrollment-status/service-enrollment-status.component';
 import { MyCurrentPlanComponent } from './my-service-plans/my-current-plan/my-current-plan.component';
 import { DocumentsComponent } from './my-service-plans/documents/documents.component';
 import { ChangeYourPlanComponent } from './my-service-plans/change-your-plan/change-your-plan.component';
 import { ChangeYourPlanCardComponent } from './my-service-plans/change-your-plan/change-your-plan-card/change-your-plan-card.component';
 import { ServicePlanUpgradeModalComponent } from './my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
-import { TransferServiceInfoComponent } from './order-status/service-enrollment-status/transfer-service-info/transfer-service-info.component';
 import { SelectPlanComponent } from './add-services/select-plan/select-plan.component';
 import { CreditCheckComponent } from './add-services/credit-check/credit-check.component';
 import { MovingComponent} from './moving/moving.component';
@@ -43,13 +41,11 @@ import { MovingCenterFormComponent } from './moving-center-form/moving-center-fo
       OrderStatusComponent, 
       AddServicesComponent,
       MyServicePlansComponent,
-      ServiceEnrollmentStatusComponent,
       MyCurrentPlanComponent,
       DocumentsComponent,
       ChangeYourPlanComponent,
       ChangeYourPlanCardComponent,     
       ServicePlanUpgradeModalComponent,
-      TransferServiceInfoComponent,
       SelectPlanComponent,
       CreditCheckComponent,
       MovingComponent,
