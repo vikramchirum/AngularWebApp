@@ -94,7 +94,7 @@
       </div>
       <p>Forgot your <a routerLink="/login/recover-password">Password</a> or <a
             routerLink="/login/recover-username">Username</a>?</p>
-      
+
     </form>
   </div>
 </div>
@@ -123,8 +123,8 @@
 
 <!--Register Modal -->
 <div id="register" class="modal fade" role="dialog">
-  <div class="modal-dialog"> 
-    
+  <div class="modal-dialog">
+
     <!-- Register Modal content-->
     <div class="modal-content">
       <div class="modal-header">
@@ -140,14 +140,14 @@
               <div class="text-center">
                 <form id="registration" novalidate [formGroup]="registerForm"
                       (ngSubmit)="save(registerForm.value, registerForm.valid)">
-                  <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['Billing_Account_Id'].valid
+                  <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['Service_Account_Id'].valid
                   && formSubmitted}">
                     <div class="inner-addon left-addon "> <span class=""><i class="fa fa-wrench fa-fw"></i></span>
-                      <input name="Billing_Account_Id" type="text" class="form-control line-border"
-                             [formControl]="registerForm.controls['Billing_Account_Id']"
+                      <input name="Service_Account_Id" type="text" class="form-control line-border"
+                             [formControl]="registerForm.controls['Service_Account_Id']"
                              placeholder="Enter your Service Account Number">
                     </div>
-                    <div class="has-error" *ngIf="registerForm.controls['Billing_Account_Id'].hasError('required')
+                    <div class="has-error" *ngIf="registerForm.controls['Service_Account_Id'].hasError('required')
                     && formSubmitted"> <span class="help-block">Service number is required.</span> </div>
                   </div>
                   <div class="form-group row inputRow" [ngClass]="{'has-error':!registerForm.controls['Zip_Code'].valid
@@ -160,10 +160,10 @@
                     && formSubmitted"> <span class="help-block">Zip code is required.</span> </div>
                     <div class="has-error"
                          *ngIf="registerForm.controls['Zip_Code'].hasError('validateInteger') && registerForm.controls['Zip_Code'].touched"> <span class="help-block">Zip code should be a number.</span> </div>
-                    
-                    <!--<div class="has-error" *ngIf="registerForm.controls['Zip'].hasError('pattern')--> 
-                    <!--&& formSubmitted">--> 
-                    <!--<span class="help-block">Zip code.</span>--> 
+
+                    <!--<div class="has-error" *ngIf="registerForm.controls['Zip'].hasError('pattern')-->
+                    <!--&& formSubmitted">-->
+                    <!--<span class="help-block">Zip code.</span>-->
                     <!--</div>-->
                     <div *ngIf="registerForm.controls['Zip_Code'].hasError('minlength')
                     && registerForm.controls['Zip_Code'].touched" class="alert alert-danger">Zip must be at least 5

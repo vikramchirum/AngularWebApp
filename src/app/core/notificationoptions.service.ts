@@ -9,8 +9,8 @@ import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
 import { HttpClient } from './httpclient';
-import { INotificationOption } from './models/notificationoptions/notificationoption';
-import { ISearchNotificationOptionRequest } from './models/notificationoptions/searchnotificationoptionrequest';
+import { INotificationOption } from './models/notificationoptions/notificationoption.model';
+import { ISearchNotificationOptionRequest } from './models/notificationoptions/searchnotificationoptionrequest.model';
 
 @Injectable()
 export class NotificationOptionsService {

@@ -1,3 +1,4 @@
+
 export interface IPricing {
   Has_Early_Termination_Fee: boolean;
   Has_Base_Charge: boolean;

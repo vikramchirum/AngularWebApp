@@ -1,10 +1,7 @@
+
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { HttpClient } from './httpclient';
 import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
-import { get } from 'lodash';
+import { HttpClient } from './httpclient';
 
 @Injectable()
 export class TransferService {
@@ -20,5 +17,4 @@ export class TransferService {
     })
     .catch(error => this.http.handleHttpError(error));
   }
-
 }

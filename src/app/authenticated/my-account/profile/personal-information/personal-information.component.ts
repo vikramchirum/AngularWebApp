@@ -2,9 +2,9 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { validateEmail, equalityCheck } from '../../../../validators/validator';
 import {CustomerAccountService} from 'app/core/CustomerAccount.service';
-import { CustomerAccountClass } from 'app/core/models/CustomerAccount.model';
 import {UserService} from 'app/core/user.service';
 import {Subscription} from 'rxjs/Subscription';
+import {CustomerAccount} from "../../../../core/models/customeraccount/customeraccount.model";
 
 @Component({
   selector: 'mygexa-personal-information',
@@ -18,7 +18,7 @@ export class PersonalInformationComponent implements OnInit, OnDestroy {
   accountNumber: string;
   customer_account_service: Subscription;
   userservicesubscription: Subscription;
-  customerDetails: CustomerAccountClass = null;
+  customerDetails: CustomerAccount = null;
   constructor(private customerAccountService: CustomerAccountService, private userService: UserService) {
      this.emailEditing = false;
    }

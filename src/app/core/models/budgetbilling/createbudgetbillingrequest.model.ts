@@ -3,8 +3,7 @@
  */
 
 export class ICreateBudgetBillingRequest {
-
-  Billing_Account_Id: number;
+  Service_Account_Id: number;
   User_Name: string;
   Amount: number;
 }

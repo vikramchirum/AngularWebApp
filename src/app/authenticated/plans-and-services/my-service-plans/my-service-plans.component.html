@@ -1,7 +1,7 @@
 <div class="container-fluid plans-profile">
   <br>
   <mygexa-service-account-selector
-    [setActiveBillingAccount]="true"
+    [setActiveServiceAccount]="true"
   ></mygexa-service-account-selector>
 <section *ngIf="!IsInRenewalTimeFrame">
   <div class="row">
@@ -9,27 +9,27 @@
       <h1>
         My Current Plan
       </h1>
-      <div *ngIf="ActiveBillingAccountDetails">
+      <div *ngIf="ActiveServiceAccountDetails">
         <div>
-          <p>Account No: {{ActiveBillingAccountDetails.Id}} </p>
-        
-        <!-- this is all redundant with the account selector above, or do we want the redundancy   
+          <p>Account No: {{ActiveServiceAccountDetails.Id}} </p>
+
+        <!-- this is all redundant with the account selector above, or do we want the redundancy
           <h5>Service Address</h5>
-          <h4>{{ActiveBillingAccountDetails.Service_Address.Line1 + ','}}</h4>
-          <h4>{{ActiveBillingAccountDetails.Service_Address.City}}</h4>
-          <h4>{{ActiveBillingAccountDetails.Service_Address.State +' - '+ ActiveBillingAccountDetails.Service_Address.Zip}}</h4>
-          
+          <h4>{{ActiveServiceAccountDetails.Service_Address.Line1 + ','}}</h4>
+          <h4>{{ActiveServiceAccountDetails.Service_Address.City}}</h4>
+          <h4>{{ActiveServiceAccountDetails.Service_Address.State +' - '+ ActiveServiceAccountDetails.Service_Address.Zip}}</h4>
+
           -->
           <div class="row">
             <div class=" col-sm-12 col-md-8 col-md-offset-2">
               <mygexa-my-current-plan></mygexa-my-current-plan>
             </div>
           </div>
-       
+
       </div>
       </div>
     </div>
-    <div class="col-md-4" *ngIf="ActiveBillingAccountDetails">
+    <div class="col-md-4" *ngIf="ActiveServiceAccountDetails">
           <div>
               <img src="/assets/global/plan-donut-10.png" class="img-responsive"/>
           </div>
@@ -48,7 +48,7 @@
           <p>
           Your plan is ready to be renewed! Based on your product history, we've found the renewal plan that's best for your home:
         </p>
-         
+
           <div class="row">
             <div class=" col-sm-12 col-md-8 col-md-offset-2">
               <mygexa-my-current-plan></mygexa-my-current-plan>
@@ -56,7 +56,7 @@
           </div>
 
       </div>
-      <div class="col-md-4" *ngIf="ActiveBillingAccountDetails">
+      <div class="col-md-4" *ngIf="ActiveServiceAccountDetails">
           <div>
               <img src="/assets/global/plan-donut-75.png" class="img-responsive"/>
           </div>

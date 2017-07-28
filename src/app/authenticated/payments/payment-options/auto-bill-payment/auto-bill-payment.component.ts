@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
-import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
-import { BillingAccountService } from 'app/core/BillingAccount.service';
-import { PaymethodClass } from 'app/core/models/Paymethod.model';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { Paymethod } from 'app/core/models/paymethod/Paymethod.model';
 import { PaymethodService } from 'app/core/Paymethod.service';
 import { AutoBillPayService } from 'app/core/auto-bill-pay.service';
 import { Subscription } from 'rxjs/Subscription';
 import { find, includes } from 'lodash';
+import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-auto-bill-payment',
@@ -19,24 +19,24 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
 
   switchingAutoBillPay: boolean = null;
 
-  private _autoBillPaymethod: PaymethodClass = null;
-  get autoBillPaymethod(): PaymethodClass { return this._autoBillPaymethod; }
+  private _autoBillPaymethod: Paymethod = null;
+  get autoBillPaymethod(): Paymethod { return this._autoBillPaymethod; }
   set autoBillPaymethod(autoBillPaymethod) {
     this._autoBillPaymethod = autoBillPaymethod;
     this.ChangeDetectorRef.detectChanges();
   }
 
-  private ActiveBillingAccountsSubscription: Subscription = null;
-  private _ActiveBillingAccount: BillingAccountClass = null;
-  get ActiveBillingAccount() { return this._ActiveBillingAccount; }
-  set ActiveBillingAccount(ActiveBillingAccount) {
-    this._ActiveBillingAccount = ActiveBillingAccount;
-    this.autoBillPaymethod = find(this.Paymethods, ['PayMethodId', ActiveBillingAccount.PayMethodId], null);
+  private ActiveServiceAccountsSubscription: Subscription = null;
+  private _ActiveServiceAccount: ServiceAccount = null;
+  get ActiveServiceAccount() { return this._ActiveServiceAccount; }
+  set ActiveServiceAccount(ActiveServiceAccount) {
+    this._ActiveServiceAccount = ActiveServiceAccount;
+    this.autoBillPaymethod = find(this.Paymethods, ['PayMethodId', ActiveServiceAccount.PayMethodId], null);
     this.ChangeDetectorRef.detectChanges();
   }
 
   private PaymethodsSubscription: Subscription = null;
-  private _Paymethods: PaymethodClass[] = null;
+  private _Paymethods: Paymethod[] = null;
   get Paymethods() { return this._Paymethods; }
   set Paymethods(Paymethods) {
     this._Paymethods = Paymethods;
@@ -44,15 +44,15 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
   }
 
   constructor(
-    private BillingAccountService: BillingAccountService,
+    private ServiceAccountService: ServiceAccountService,
     private AutoBillPayService: AutoBillPayService,
     private PaymethodService: PaymethodService,
     private ChangeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
-    this.ActiveBillingAccountsSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
-      ActiveBillingAccount => this.ActiveBillingAccount = ActiveBillingAccount
+    this.ActiveServiceAccountsSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      ActiveServiceAccount => this.ActiveServiceAccount = ActiveServiceAccount
     );
     this.PaymethodsSubscription = this.PaymethodService.PaymethodsObservable.subscribe(
       Paymethods => this.Paymethods = Paymethods
@@ -60,13 +60,13 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.ActiveBillingAccountsSubscription.unsubscribe();
+    this.ActiveServiceAccountsSubscription.unsubscribe();
     this.PaymethodsSubscription.unsubscribe();
   }
 
-  enrollInAutoBillPaySelected(selectedPaymethod: PaymethodClass): void {
+  enrollInAutoBillPaySelected(selectedPaymethod: Paymethod): void {
     this.AutoBillPayService.EnrollInAutoBillPay(
-      this.ActiveBillingAccount,
+      this.ActiveServiceAccount,
       selectedPaymethod,
       () => this.autoBillPaymethod = selectedPaymethod
     );
@@ -74,15 +74,15 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
 
   unenrollInAutoBillPaySelected(): void {
     this.AutoBillPayService.CancelAutoBillPay(
-      this.ActiveBillingAccount,
+      this.ActiveServiceAccount,
       () => this.autoBillPaymethod = null
     );
   }
 
-  switchingAutoBillPaySelected(selectedPaymethod: PaymethodClass) {
+  switchingAutoBillPaySelected(selectedPaymethod: Paymethod) {
     if (selectedPaymethod !== this.autoBillPaymethod) {
       this.AutoBillPayService.UpdateAutoBillPay(
-        this.ActiveBillingAccount,
+        this.ActiveServiceAccount,
         selectedPaymethod,
         () => this.autoBillPaymethod = selectedPaymethod
       );

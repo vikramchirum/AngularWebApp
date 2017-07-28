@@ -40,7 +40,7 @@ export class BudgetBillingSelectorComponent implements OnInit, OnDestroy {
   save(): void {
     // TODO
     this.createBudgetBillingRequest.User_Name = 'test-vikram';
-    this.createBudgetBillingRequest.Billing_Account_Id = this.budgetBillingEstimate.Billing_Account_Id;
+    this.createBudgetBillingRequest.Service_Account_Id = this.budgetBillingEstimate.Service_Account_Id;
     this.createBudgetBillingRequest.Amount = this.budgetBillingFormGroup.get('amount').value;
 
     this.onBudgetBillingEvent.emit({

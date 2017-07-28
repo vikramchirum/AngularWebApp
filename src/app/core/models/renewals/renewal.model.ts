@@ -4,7 +4,7 @@
 
 export interface IRenewal {
   id: number;
-  billing_account_id: number;
+  service_account_id: number;
   user_name: string;
   offeringname: string;
   start_date: Date;

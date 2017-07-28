@@ -1,8 +1,9 @@
+
 export interface IFeaturedChannels {
   Name: string;
   Description: string;
   Internal: boolean;
-  Billing_Id: string;
+  Service_Id: string;
   Client_Email_Addresses: [ string ];
   Id: string;
   Creation_Time: string;

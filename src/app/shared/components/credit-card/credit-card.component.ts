@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
-import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
+
 import { PaymethodService } from 'app/core/Paymethod.service';
-import { PaymethodClass } from 'app/core/models/Paymethod.model';
+import { Paymethod } from 'app/core/models/paymethod/Paymethod.model';
 import { Subscription } from 'rxjs/Subscription';
 import { find } from 'lodash';
+import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-credit-card',
@@ -15,10 +16,10 @@ export class CreditCardComponent implements OnDestroy, OnInit {
 
   @Input() Inactive: boolean = null;
   @Input() PaymethodId: number = null;
-  @Input() ActiveBillingAccount: BillingAccountClass = null;
+  @Input() ActiveServiceAccount: ServiceAccount = null;
 
   private PaymethodsSubscription: Subscription = null;
-  private _Paymethod: PaymethodClass = null;
+  private _Paymethod: Paymethod = null;
   get Paymethod() { return this._Paymethod; }
   set Paymethod(Paymethod) {
     this._Paymethod = Paymethod;
@@ -33,8 +34,8 @@ export class CreditCardComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.PaymethodsSubscription = this.PaymethodService.PaymethodsObservable.subscribe(
       Paymethods => {
-        const targetPaymethod = find(Paymethods, ['PayMethodId', this.ActiveBillingAccount
-          ? this.ActiveBillingAccount.PayMethodId
+        const targetPaymethod = find(Paymethods, ['PayMethodId', this.ActiveServiceAccount
+          ? this.ActiveServiceAccount.PayMethodId
           : this.PaymethodId
         ]);
         if (targetPaymethod) {

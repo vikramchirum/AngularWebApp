@@ -1,4 +1,7 @@
-import {IPartnerInfo} from './partner.model';
+
+import {IAttributes} from './attributes.model';
+import {IIncentives} from './incentives.model';
+
 export interface IPromotion {
   Name: string;
   Description: string;
@@ -12,22 +15,4 @@ export interface IPromotion {
   Creation_Time: string;
   Date_Last_Modified: string;
   Date_Created: string;
-}
-
-export interface IAttributes {
-  Type: string;
-  Value: string;
-}
-
-export interface IIncentives {
-  Name: string;
-  Description: string;
-  Fullfillment_Vendor: string;
-  Monetary: boolean;
-  Amount: number;
-  Partner_Info: IPartnerInfo;
-  Id: string;
-  Creation_Time: string;
-  Date_Created: string;
-  Date_Last_Modified: string;
 }

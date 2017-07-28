@@ -1,71 +1,69 @@
-import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
-import { HttpClient } from './httpclient';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import {BillingAccountService} from 'app/core/BillingAccount.service';
+import {Injectable} from '@angular/core';
+import {Response} from '@angular/http';
+import {HttpClient} from './httpclient';
 
-import { Observer } from 'rxjs/Observer';
-import {observable} from 'rxjs/symbol/observable';
-import { clone, forEach, get, pull, map } from 'lodash';
-import { environment } from 'environments/environment';
+import {Observable} from 'rxjs/Observable';
+import {Observer} from 'rxjs/Observer';
+import 'rxjs/add/operator/map';
+import {clone, forEach, pull, map} from 'lodash';
+
 import {AllOffersClass} from './models/offers/alloffers.model';
+import {ServiceAccountService} from './serviceaccount.service';
 
 @Injectable()
 export class OfferService {
 
-  public ActiveBillingAccountOffersCache: AllOffersClass[] = null;
-  public ActiveBillingAccountOfferObservable: Observable<AllOffersClass[]> = null;
+  public ActiveServiceAccountOffersCache: AllOffersClass[] = null;
+  public ActiveServiceAccountOfferObservable: Observable<AllOffersClass[]> = null;
 
   private initialized: boolean = null;
-  private ActiveBillingAccountOfferObservers: Observer<AllOffersClass>[] = [];
+  private ActiveServiceAccountOfferObservers: Observer<AllOffersClass>[] = [];
   private requestObservable: Observable<Response> = null;
-  private _ActiveBillingAccountId: string = null;
+  private _ActiveServiceAccountId: string = null;
 
-  constructor(private http: HttpClient,
-              private BillingAccountService: BillingAccountService) {
+  constructor(private http: HttpClient, private serviceAccountService: ServiceAccountService) {
     // Make the Observables for others to listen to.
-    this.ActiveBillingAccountOfferObservable = Observable.create((observer: Observer<any>) => {
+    this.ActiveServiceAccountOfferObservable = Observable.create((observer: Observer<any>) => {
       // 1. Collect, or 'push', new observers to the observable's collection.
-      this.ActiveBillingAccountOfferObservers.push(observer);
+      this.ActiveServiceAccountOfferObservers.push(observer);
       // 2. Send the latest cached data to the new observer (only if we've initialized with some data.)
       if (this.initialized) {
-        observer.next(this.ActiveBillingAccountOffersCache);
+        observer.next(this.ActiveServiceAccountOffersCache);
       }
       // 3. Provide the new observer a clean-up function to prevent memory leaks.
-      return () => pull(this.ActiveBillingAccountOfferObservers, observer);
+      return () => pull(this.ActiveServiceAccountOfferObservers, observer);
     });
 
     // Console.log the latest customer account.
-    this.ActiveBillingAccountOfferObservable.subscribe(
+    this.ActiveServiceAccountOfferObservable.subscribe(
     );
 
     // Respond to the first (initializing) call.
-    this.ActiveBillingAccountOfferObservable.first().delay(0).subscribe(() => {
+    this.ActiveServiceAccountOfferObservable.first().delay(0).subscribe(() => {
       this.initialized = true;
     });
 
 
-    // Keep the active billing account id synced.
-    this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
-      ActiveBillingAccountId => this.ActiveBillingAccountId = ActiveBillingAccountId.Id
+    // Keep the active Service account id synced.
+    this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
+      ActiveServiceAccountId => this.ActiveServiceAccountId = ActiveServiceAccountId.Id
     );
   }
 
-  get ActiveBillingAccountId(): string {
-    return this._ActiveBillingAccountId;
+  get ActiveServiceAccountId(): string {
+    return this._ActiveServiceAccountId;
   }
 
-  set ActiveBillingAccountId(ActiveBillingAccountId: string) {
-    if (this._ActiveBillingAccountId !== ActiveBillingAccountId) {
-      this._ActiveBillingAccountId = ActiveBillingAccountId;
+  set ActiveServiceAccountId(ActiveServiceAccountId: string) {
+    if (this._ActiveServiceAccountId !== ActiveServiceAccountId) {
+      this._ActiveServiceAccountId = ActiveServiceAccountId;
       this.getRenewalOffers();
     }
   }
 
 
   /**
-   * Returns billing account usage history based on Id
+   * Returns Service account usage history based on Id
    * @param offer
    * @returns {Observable<any[]>}
    */
@@ -89,27 +87,27 @@ export class OfferService {
       return this.requestObservable;
     }
 
-    // If we don't have a Active Billing Account Id then return null;
-    if (this.ActiveBillingAccountId === null) {
+    // If we don't have a Active Service Account Id then return null;
+    if (this.ActiveServiceAccountId === null) {
       return Observable.from(null);
     }
 
     // Assign the Http request to prevent any similar requests.
-    this.requestObservable = this.http.get(`/billing_accounts/${this.ActiveBillingAccountId}/offers`)
+    this.requestObservable = this.http.get(`/service_accounts/${this.ActiveServiceAccountId}/offers`)
       .map(data => data.json())
       .map(data => map(data, OffersData => new AllOffersClass(OffersData)))
       .catch(error => this.http.handleHttpError(error));
 
-    // Handle the new Billing account data.
+    // Handle the new Service account data.
     this.requestObservable.subscribe(
-      data => this.ActiveBillingAccountOffersCache = <any>data,
+      data => this.ActiveServiceAccountOffersCache = <any>data,
       error => this.http.handleHttpError(error),
       () => {
-        console.log( 'Offers =', this.ActiveBillingAccountOffersCache);
+        console.log( 'Offers =', this.ActiveServiceAccountOffersCache);
         // We're no longer requesting.
         this.requestObservable = null;
         // Emit our new data to all of our observers.
-        this.emitToObservers(this.ActiveBillingAccountOfferObservers, this.ActiveBillingAccountOffersCache);
+        this.emitToObservers(this.ActiveServiceAccountOfferObservers, this.ActiveServiceAccountOffersCache);
       }
     );
     return this.requestObservable;

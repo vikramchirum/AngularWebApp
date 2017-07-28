@@ -62,5 +62,4 @@ export class AutoBillPayService {
       .catch(err => this.HttpClient.handleHttpError(err))
       .map(res => new AutoPaymentConfig(res));
   }
-
 }

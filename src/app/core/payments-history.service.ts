@@ -1,28 +1,25 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { HttpClient } from './httpclient';
-import { Observable } from 'rxjs/Observable';
-import { PaymentsHistory } from './models/payments-history.model';
-import { BillingAccountService } from './BillingAccount.service';
-import { BillingAccountClass } from './models/BillingAccount.model';
-import { map, orderBy } from 'lodash';
+import {map, orderBy} from 'lodash';
+import {HttpClient} from './httpclient';
+import {Observable} from 'rxjs/Observable';
+
+import {PaymentsHistory} from './models/payments/payments-history.model';
+import {ServiceAccountService} from 'app/core/serviceaccount.service';
+import {ServiceAccount} from 'app/core/models/serviceaccount/serviceaccount.model';
 
 @Injectable()
 export class PaymentsHistoryService {
 
-  private activeBillingAccount: BillingAccountClass = null;
-
+  private activeServiceAccount: ServiceAccount = null;
   private cachedPaymentHistory: PaymentsHistory[] = null;
 
-  constructor(
-    private HttpClient: HttpClient,
-    private BillingAccountService: BillingAccountService
-  ) {
-    // Clear the cache if the active billing account changes.
-    this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
-      activeBillingAccount => {
+  constructor(private HttpClient: HttpClient, private serviceAccountService: ServiceAccountService) {
+    // Clear the cache if the active service account changes.
+    this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
+      activeServiceAccount => {
         this.cachedPaymentHistory = null;
-        this.activeBillingAccount = activeBillingAccount;
+        this.activeServiceAccount = activeServiceAccount;
       }
     );
   }
@@ -33,29 +30,19 @@ export class PaymentsHistoryService {
     }
   }
 
-  /**
-   * Returns billing account payments history based on Id
-   * @param billingAccount
-   * @returns {Observable<PaymentsHistory[]>}
-   */
-  GetPaymentsHistory(billingAccount: BillingAccountClass): Observable<PaymentsHistory[]> {
-
+  GetPaymentsHistory(serviceAccount: ServiceAccount): Observable<PaymentsHistory[]> {
     return this.HttpClient
-      .get(`/billing_accounts/${billingAccount.Id}/payments_history`)
+      .get(`/service_accounts/${serviceAccount.Id}/payments_history`)
       .map(res => res.json())
       .catch(error => this.HttpClient.handleHttpError(error))
       .map(res => orderBy(map(res, PaymentsHistoryItem => new PaymentsHistory(PaymentsHistoryItem)), ['Payment_Date'], ['desc']))
       .map(PaymentsHistory => this.cachedPaymentHistory = PaymentsHistory);
   }
 
-  GetPaymentsHistoryCacheable(billingAccount: BillingAccountClass): Observable<PaymentsHistory[]> {
-
+  GetPaymentsHistoryCacheable(serviceAccount: ServiceAccount): Observable<PaymentsHistory[]> {
     if (this.cachedPaymentHistory) {
       return Observable.of(this.cachedPaymentHistory).delay(0);
     }
-
-    return this.GetPaymentsHistory(billingAccount);
-
+    return this.GetPaymentsHistory(serviceAccount);
   }
-
 }

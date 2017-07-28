@@ -10,7 +10,7 @@ import 'rxjs/add/operator/map';
 import { HttpClient } from './httpclient';
 import { IRenewal } from './models/renewals/renewal.model';
 import { ICreateRenewalRequest } from './models/renewals/createrenewalrequest.model';
-import { ICancelRenewalRequest} from './models/renewals/cancelrenewalrequest';
+import { ICancelRenewalRequest} from './models/renewals/cancelrenewalrequest.model';
 import { IGetRenewalRequest } from './models/renewals/getrenewalrequest.model';
 import { IRenewalDetails } from './models/renewals/renewaldetails.model';
 
@@ -20,8 +20,8 @@ export class RenewalService {
   constructor(private http: HttpClient) {
   }
 
-  getRenewal(billingAccountId: number): Observable<IRenewal>   {
-    const relativePath = `/renewals/${billingAccountId}`;
+  getRenewal(serviceAccountId: number): Observable<IRenewal>   {
+    const relativePath = `/renewals/${serviceAccountId}`;
     return this.http.get(relativePath)
       .map((response: Response) => { return <IRenewal> response.json(); })
       .catch(error => this.http.handleHttpError(error));
@@ -43,8 +43,8 @@ export class RenewalService {
       .catch(error => this.http.handleHttpError(error));
   }
 
-  getRenewalDetails(billingAccountId: number): Observable<IRenewalDetails>   {
-    const relativePath = `/renewals/${billingAccountId}/details`;
+  getRenewalDetails(serviceAccountId: number): Observable<IRenewalDetails>   {
+    const relativePath = `/renewals/${serviceAccountId}/details`;
     return this.http.get(relativePath)
       .map((response: Response) => { return <IRenewalDetails> response.json(); })
       .catch(error => this.http.handleHttpError(error));
@@ -52,7 +52,7 @@ export class RenewalService {
 
   createRenewal(request: ICreateRenewalRequest): Observable<IRenewal> {
     const body = JSON.stringify(request);
-    const relativePath = `/renewals/${request.billing_account_id}/create_renewal`;
+    const relativePath = `/renewals/${request.service_account_id}/create_renewal`;
     return this.http.post(relativePath, body)
       .map((response: Response) => { return <IRenewal> response.json(); })
       .catch(error => this.http.handleHttpError(error));
@@ -60,7 +60,7 @@ export class RenewalService {
 
   cancelRenewal(request: ICancelRenewalRequest): Observable<boolean> {
     const body = JSON.stringify(request);
-    const relativePath = `/renewals/${request.billing_account_id}/cancel_renewal`;
+    const relativePath = `/renewals/${request.Service_Account_Id}/cancel_renewal`;
     return this.http.put(relativePath, body)
       .map((response: Response) => { return <boolean> response.json(); })
       .catch(error => this.http.handleHttpError(error));

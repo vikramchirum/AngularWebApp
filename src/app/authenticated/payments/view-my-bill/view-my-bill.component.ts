@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { InvoiceService } from 'app/core/invoiceservice.service';
-import { IBill } from 'app/core/models/bill.model';
-import { IBillLineItem } from 'app/core/models/billlineitem.model';
+import { IInvoice } from 'app/core/models/invoices/invoice.model';
+import { IInvoiceLineItem } from 'app/core/models/invoices/invoicelineitem.model';
 import { first, orderBy, filter } from 'lodash';
-import {BillingAccountService} from 'app/core/BillingAccount.service';
+import {ServiceAccountService} from 'app/core/serviceaccount.service';
 import {Subscription} from 'rxjs/Subscription';
 import { ViewBillComponent } from '../../../shared/components/view-bill/view-bill.component';
 
@@ -14,29 +14,29 @@ import { ViewBillComponent } from '../../../shared/components/view-bill/view-bil
 })
 export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
 
-  all_bills: IBill[];  sort_all_bills: IBill[];
-  public req1_bill: IBill;
+  all_bills: IInvoice[];  sort_all_bills: IInvoice[];
+  public req1_bill: IInvoice;
 
   error: string = null;
-  public req_bill: IBill;
+  public req_bill: IInvoice;
   public latest_invoice_id: string;
-  public billing_account_id: number;
+  public service_account_id: number;
   public id: string;
   date_today = new Date;
   @ViewChild(ViewBillComponent) private viewBill: ViewBillComponent;
 
-  private ActiveBillingAccountSubscription: Subscription = null;
+  private ActiveServiceAccountSubscription: Subscription = null;
 
   constructor(
     private invoice_service: InvoiceService,
-    private BillingAccountService: BillingAccountService
+    private ServiceAccountService: ServiceAccountService
   ) { }
 
   ngAfterViewInit() {
-    this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
+    this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.latest_invoice_id = result.Latest_Invoice_Id;
-        this.billing_account_id = Number(result.Id);
+        this.service_account_id = Number(result.Id);
         this.invoice_service.getBill(this.latest_invoice_id)
           .subscribe(
             response => {
@@ -52,7 +52,7 @@ export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    this.ActiveBillingAccountSubscription.unsubscribe();
+    this.ActiveServiceAccountSubscription.unsubscribe();
   }
 
 }

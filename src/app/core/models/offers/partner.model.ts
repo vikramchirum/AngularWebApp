@@ -1,7 +1,3 @@
-export interface IPartnerInfo {
-  Partner: IPartner;
-  Code: string;
-}
 
 export interface IPartner {
   Description: string;

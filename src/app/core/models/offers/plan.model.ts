@@ -1,8 +1,9 @@
+
 import {IProduct} from './product.model';
 import {ITDU} from './tdu.model';
 import {IPricingDefinition} from './pricingdefinition.model';
-import {IIncentives} from './promotion.model';
 import {IFeaturedChannels} from './featuredchannels.model';
+import {IIncentives} from './incentives.model';
 
 export interface IPlan {
   Name: string;

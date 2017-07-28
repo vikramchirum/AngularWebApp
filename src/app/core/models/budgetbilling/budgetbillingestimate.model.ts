@@ -3,7 +3,7 @@
  */
 
 export interface IBudgetBillingEstimate {
-  Billing_Account_Id: number;
+  Service_Account_Id: number;
   TotalKWH: number;
   TotalMonths: number;
   AverageKWH?: number;

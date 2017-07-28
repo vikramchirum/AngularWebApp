@@ -1,26 +1,30 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { BillingAccountService } from 'app/core/BillingAccount.service';
-import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+
 import { CustomerAccountService } from 'app/core/CustomerAccount.service';
-import { CustomerAccountClass } from 'app/core/models/CustomerAccount.model';
-import { IBill } from 'app/core/models/bill.model';
+
+
 import { InvoiceService } from 'app/core/invoiceservice.service';
 import { PaymentsHistoryService } from 'app/core/payments-history.service';
 import { PaymentsService } from 'app/core/payments.service';
 import { PaymethodAddCcComponent } from 'app/shared/components/payment-method-add-cc/payment-method-add-cc.component';
 import { PaymethodAddEcheckComponent } from 'app/shared/components/payment-method-add-echeck/payment-method-add-echeck.component';
 import { PaymethodService } from 'app/core/Paymethod.service';
-import {
-  IPaymethodRequest, IPaymethodRequestCreditCard, IPaymethodRequestEcheck,
-  PaymethodClass, CardBrands
-} from 'app/core/models/Paymethod.model';
 import { UserService } from 'app/core/user.service';
 import { FloatToMoney } from 'app/shared/pipes/FloatToMoney.pipe';
 import { validMoneyAmount } from 'app/validators/validator';
 import { Subscription } from 'rxjs/Subscription';
 import { assign, endsWith, get, replace, result } from 'lodash';
+import {CustomerAccount} from '../../../core/models/customeraccount/customeraccount.model';
+import {Paymethod} from '../../../core/models/paymethod/Paymethod.model';
+import {IPaymethodRequest} from '../../../core/models/paymethod/paymethodrequest.model';
+import {IPaymethodRequestEcheck} from '../../../core/models/paymethod/paymethodrequestecheck.model';
+import {IPaymethodRequestCreditCard} from '../../../core/models/paymethod/paymethodrequestcreditcard.model';
+import {CardBrands} from '../../../core/models/paymethod/constants';
+import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
+import {IInvoice} from '../../../core/models/invoices/invoice.model';
 
 @Component({
   selector: 'mygexa-make-payment',
@@ -34,14 +38,14 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   paymentSubmittedWithoutError: boolean = null;
   formGroup: FormGroup = null;
 
-  PaymethodSelected: PaymethodClass = null;
+  PaymethodSelected: Paymethod = null;
 
   @ViewChild(PaymethodAddCcComponent) private addCreditCardComponent: PaymethodAddCcComponent;
   @ViewChild(PaymethodAddEcheckComponent) private addEcheckComponent: PaymethodAddEcheckComponent;
 
   private UserCustomerAccountSubscription: Subscription = null;
   private CustomerAccountSubscription: Subscription = null;
-  private CustomerAccount: CustomerAccountClass = null;
+  private CustomerAccount: CustomerAccount = null;
   private CustomerAccountId: string = null;
 
   private _paymentLoadingMessage: string = null;
@@ -56,9 +60,9 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   }
 
   private PaymethodSubscription: Subscription = null;
-  private _Paymethods: PaymethodClass[] = null;
-  get Paymethods(): PaymethodClass[] { return this._Paymethods; }
-  set Paymethods(Paymethods: PaymethodClass[]) {
+  private _Paymethods: Paymethod[] = null;
+  get Paymethods(): Paymethod[] { return this._Paymethods; }
+  set Paymethods(Paymethods: Paymethod[]) {
     this._Paymethods = Paymethods;
     if (Paymethods.length > 0) {
       this.paymentSelectMethod(null, Paymethods[0]);
@@ -67,20 +71,20 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _LatestInvoice: IBill = null;
-  get LatestInvoice(): IBill { return this._LatestInvoice; }
-  set LatestInvoice(LatestInvoice: IBill) {
+  private _LatestInvoice: IInvoice = null;
+  get LatestInvoice(): IInvoice { return this._LatestInvoice; }
+  set LatestInvoice(LatestInvoice: IInvoice) {
     this._LatestInvoice = LatestInvoice;
     this.formGroup.controls['payment_now'].setValue(`$${FloatToMoney(LatestInvoice.Current_Charges + LatestInvoice.Balance_Forward)}`);
   }
 
-  private ActiveBillingAccountSubscription: Subscription = null;
-  private _ActiveBillingAccount: BillingAccountClass = null;
-  get ActiveBillingAccount(): BillingAccountClass { return this._ActiveBillingAccount; }
-  set ActiveBillingAccount(ActiveBillingAccount: BillingAccountClass) {
-    this._ActiveBillingAccount = ActiveBillingAccount;
-    if (ActiveBillingAccount) {
-      this.InvoiceService.getBill(ActiveBillingAccount.Latest_Invoice_Id).subscribe(
+  private ActiveServiceAccountSubscription: Subscription = null;
+  private _ActiveServiceAccount: ServiceAccount = null;
+  get ActiveServiceAccount(): ServiceAccount { return this._ActiveServiceAccount; }
+  set ActiveServiceAccount(ActiveServiceAccount: ServiceAccount) {
+    this._ActiveServiceAccount = ActiveServiceAccount;
+    if (ActiveServiceAccount) {
+      this.InvoiceService.getBill(ActiveServiceAccount.Latest_Invoice_Id).subscribe(
         LatestInvoice => this.LatestInvoice = LatestInvoice
       );
     }
@@ -92,7 +96,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     private PaymentsService: PaymentsService,
     private PaymethodService: PaymethodService,
     private FormBuilder: FormBuilder,
-    private BillingAccountService: BillingAccountService,
+    private ServiceAccountService: ServiceAccountService,
     private InvoiceService: InvoiceService,
     private UserService: UserService
   ) {
@@ -109,8 +113,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     this.PaymethodSubscription = this.PaymethodService.PaymethodsObservable.subscribe(
       Paymethods => this.Paymethods = Paymethods
     );
-    this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
-      ActiveBillingAccount => this.ActiveBillingAccount = ActiveBillingAccount
+    this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      ActiveServiceAccount => this.ActiveServiceAccount = ActiveServiceAccount
     );
     this.UserCustomerAccountSubscription = this.UserService.UserCustomerAccountObservable.subscribe(
       CustomerAccountId => this.CustomerAccountId = CustomerAccountId
@@ -120,7 +124,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.CustomerAccountSubscription.unsubscribe();
     this.PaymethodSubscription.unsubscribe();
-    this.ActiveBillingAccountSubscription.unsubscribe();
+    this.ActiveServiceAccountSubscription.unsubscribe();
     this.UserCustomerAccountSubscription.unsubscribe();
   }
 
@@ -136,7 +140,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     this.paymentOneTimeValid = $event === 'valid';
   }
 
-  paymentSelectMethod($event, paymentMethod: PaymethodClass): void {
+  paymentSelectMethod($event, paymentMethod: Paymethod): void {
     result($event, 'preventDefault');
     this.paymentOneTimeType = null;
     this.paymentOneTimeValid = true;
@@ -240,7 +244,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     })
 
     // Pass the Paymethod data to the Payments service.
-    .then((PaymethodToCharge: PaymethodClass) => {
+    .then((PaymethodToCharge: Paymethod) => {
 
       this.paymentLoadingMessage = 'Submitting your payment...';
 
@@ -250,7 +254,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
       this.PaymentsService.MakePayment(
         AuthorizationAmount,
-        this.ActiveBillingAccount,
+        this.ActiveServiceAccount,
         PaymethodToCharge
       ).subscribe(
         res => {

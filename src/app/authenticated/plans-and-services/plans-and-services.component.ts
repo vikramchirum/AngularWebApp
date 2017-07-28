@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {BillingAccountService} from 'app/core/BillingAccount.service';
+import {ServiceAccountService} from 'app/core/serviceaccount.service';
 import {Subscription} from 'rxjs/Subscription';
 import {OfferService} from '../../core/offer.service';
 
@@ -11,9 +11,9 @@ import {OfferService} from '../../core/offer.service';
 export class PlansAndServicesComponent implements OnInit, OnDestroy, AfterViewInit {
 
   IsInRenewalTimeFrame: boolean;
-  billingAccountSubscription: Subscription;
-  activebillingAccountOffersSubscription: Subscription;
-  constructor(private billingAccount_service: BillingAccountService, private active_billingaccount_service: OfferService) {
+  serviceAccountSubscription: Subscription;
+  activeserviceAccountOffersSubscription: Subscription;
+  constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
     this.IsInRenewalTimeFrame = false;
   }
 
@@ -22,18 +22,18 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngAfterViewInit() {
-    this.billingAccountSubscription = this.billingAccount_service.ActiveBillingAccountObservable.subscribe(
+    this.serviceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.subscribe(
       result => {
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
         console.log('IsInRenewalTimeFrame', this.IsInRenewalTimeFrame);
-        this.activebillingAccountOffersSubscription = this.active_billingaccount_service.ActiveBillingAccountOfferObservable.subscribe(
+        this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
           all_offers => {
           });
       });
   }
 
   ngOnDestroy() {
-    this.billingAccountSubscription.unsubscribe();
-    this.activebillingAccountOffersSubscription.unsubscribe();
+    this.serviceAccountSubscription.unsubscribe();
+    this.activeserviceAccountOffersSubscription.unsubscribe();
   }
 }
