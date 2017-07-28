@@ -1,6 +1,58 @@
-<div class="container-fluid plans-profile">
-<h1>Order Status</h1>
- <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
-<mygexa-service-enrollment-status></mygexa-service-enrollment-status>
-<mygexa-service-enrollment-status></mygexa-service-enrollment-status>
+<div class="account-profile">
+  <section class='order-status'>
+    <h1>Order Status</h1>
+    <br/><br/>
+    <div class='row'>
+        <div class="col-md-2">
+          <strong>&nbsp;ORDER PLACED</strong>
+      </div>
+    </div>
+    <br/>
+    <div class='row' *ngIf="orderDetails">
+      <div class="col-md-10 details">
+        <div *ngFor='let order of orderDetails' [style.backgroundColor]="orderOpened(order) ? 'aliceblue' : ''">
+          <div class='row'>
+            <div class='col-md-3 date'>{{ order.Order_Placed | date:'longDate' }}</div>
+            <div class="col-md-7">
+             <button class="charge-toggle form-inline btn-link" (click)="orderToggle(order)">
+              <i class="fa" [ngClass]="orderOpened(order) ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+            </button>
+            <strong>{{ order.Order_Type }}</strong></div>
+            <div class='status f col-md-2 {{ order.Status }}'>{{ order.Status }}</div>
+          </div>
+          <div *ngIf="orderOpened(order)" border="0" width="100%">
+            <div *ngIf='order.Order_Type === "Moving"'>
+              <div class='row'>
+                <h5 class='lbl col-md-2 col-md-offset-3'>From:</h5>
+                <h5 class='col-md-7'>{{ order.prevServiceAccountAddressString()}}</h5>
+              </div>              
+              <div class='row'>
+                <h5 class='lbl col-md-2  col-md-offset-3'>To: </h5>
+                <h5 class='col-md-7'>{{ order.serviceAccountAddressString()}}</h5>
+              </div>
+              <div class='row'>
+                <h5 class='lbl col-md-2  col-md-offset-3'>On:</h5>
+                <h5 class='col-md-7'>{{ order.Order_Placed | date: 'longDate' }}</h5>
+              </div>
+            </div>
+            <div *ngIf='order.Order_Type == "Upgrade" || order.Order_Type == "Renewal" || order.Order_Type == "Additional_Service" || order.Order_Type == "Reconnect"'>
+              <div class='row'>
+                <h5 class='lbl col-md-2  col-md-offset-3'>Address: </h5>
+                <h5 class='col-md-7'>{{order.serviceAccountAddressString()}}</h5>
+              </div>
+              <div class='row'>
+                <h5 class='lbl col-md-2  col-md-offset-3'>Offer: </h5>
+                <h5 class='col-md-7'>{{ order.Offer.Product_Name }}</h5>
+              </div>
+              <div class='row'>
+                <h5 class='lbl col-md-2  col-md-offset-3'>Date: </h5>
+                <h5 class='col-md-7'>{{ order.Order_Placed | date: 'longDate' }}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
+<br/><br/>

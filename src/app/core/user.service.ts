@@ -2,7 +2,7 @@
  * Created by patrick.purcell on 5/2/2017.
  */
 import { Injectable } from '@angular/core';
-import { Http, Headers, URLSearchParams, RequestOptions } from '@angular/http';
+import { Http, Headers, URLSearchParams, RequestOptions, Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 import { environment } from 'environments/environment';
@@ -90,7 +90,7 @@ export class UserService implements CanActivate {
   constructor(
     private router: Router,
     private Http: Http,
-    private HttpClient: HttpClient
+    private httpClient: HttpClient
   ) {
 
     // Make the Observables (User, Billing Account Ids, Customer Account Id) for others to listen to.
@@ -118,16 +118,11 @@ export class UserService implements CanActivate {
     this.UserObservable.subscribe(user => {
       if (user) {
         this.initialized = true;
-        // this.BillingAccounts = getBillingAccountIds(user);
-        // if (this.BillingAccounts.length === 1) {
-        //   sessionStorage.setItem('ActiveBillingAccount', this.BillingAccounts[0] );
-        // }
         this.emitToObservers(this.UserBillingAccountsObservers, getBillingAccountIds(user));
         this.emitToObservers(this.UserCustomerAccountObservers, getCustomerAccountId(user));
         console.log('user = ', user);
         console.log(`BillingAccountIds = ${getBillingAccountIds(user)}`);
         console.log(`CustomerAccountId = ${getCustomerAccountId(user)}`);
-        //console.log('Active Id for one account', sessionStorage.getItem('ActiveBillingAccount'));
       }
     });
 
@@ -142,7 +137,7 @@ export class UserService implements CanActivate {
 
       this.Http.get(this.getUserFromMongo, options)
         .map(res => res.json())
-        .catch(error => this.HttpClient.handleHttpError(error))
+        .catch(error => this.httpClient.handleHttpError(error))
         .subscribe(res => this.ApplyUserData(res));
     }
 
@@ -155,7 +150,7 @@ export class UserService implements CanActivate {
 
     // Otherwise, save their state and navigate to the login prompt.
     this.UserState = this.UserState || state.url;
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } } );
 
   }
 
@@ -174,7 +169,7 @@ export class UserService implements CanActivate {
     return this.Http.post(this.loginUrl, body.toString(), options)
       .map(res => res.json())
       .map(res => this.ApplyUserData(res))
-      .catch(error => this.HttpClient.handleHttpError(error));
+      .catch(error => this.httpClient.handleHttpError(error));
   }
 
   signup(user: IUserSigningUp): Observable<string> {
@@ -201,7 +196,7 @@ export class UserService implements CanActivate {
     return this.Http.post(this.registerUrl, body, options)
       .map(res => res.json())
       .map(res => this.ApplyUserData(res))
-      .catch(error => this.HttpClient.handleHttpError(error));
+      .catch(error => this.httpClient.handleHttpError(error));
   }
 
   getSecurityQuestions(): Observable<IUserSecurityQuestions[]> {
@@ -211,7 +206,7 @@ export class UserService implements CanActivate {
     return this.Http.get(this.secQuesUrl)
       .map(res => res.json())
       .map(res => this.getSecurityQuestionsCached = res)
-      .catch(error => this.HttpClient.handleHttpError(error));
+      .catch(error => this.httpClient.handleHttpError(error));
   }
 
   getSecQuesByUserName(user_name: string): Observable<string> {
@@ -222,7 +217,7 @@ export class UserService implements CanActivate {
     return this.Http.post(this.getSecQuestionUrl, body, options)
       .map(res => res.json())
       .map(res => get(res, 'length') > 0 ? res : null)
-      .catch(error => this.HttpClient.handleHttpError(error));
+      .catch(error => this.httpClient.handleHttpError(error));
   }
 
   checkSecQuesByUserName(user_name: string, security_answer: string) {
@@ -234,7 +229,7 @@ export class UserService implements CanActivate {
     return this.Http.post(this.checkSecQuesUrl, body, options)
       .map(res => res.json())
       .map(res => get(res, 'length') > 0 ?  localStorage.setItem('reset_password_token', res) : localStorage.setItem('reset_password_token', null))
-      .catch(error => this.HttpClient.handleHttpError(error));
+      .catch(error => this.httpClient.handleHttpError(error));
   }
 
   resetPassword (user_name: string, password: string) {
@@ -250,7 +245,7 @@ export class UserService implements CanActivate {
     if (token && token.length) {
       return this.Http.put(this.resetPasswordUrl, body, options)
         .map(res => res.json())
-        .catch(error => this.HttpClient.handleHttpError(error));
+        .catch(error => this.httpClient.handleHttpError(error));
     }
     return null;
   }
@@ -269,7 +264,7 @@ export class UserService implements CanActivate {
           return false;
         }
       })
-      .catch(error => this.HttpClient.handleHttpError(error));
+      .catch(error => this.httpClient.handleHttpError(error));
   }
 
   updateEmailAddress (Email_Address: string) {
@@ -287,7 +282,7 @@ export class UserService implements CanActivate {
     if (token && token.length) {
       return this.Http.put(this.updateEmail, body, options)
         .map(res => res.json())
-        .catch(error => this.HttpClient.handleHttpError(error));
+        .catch(error => this.httpClient.handleHttpError(error));
     }
     return null;
   }
@@ -307,7 +302,7 @@ export class UserService implements CanActivate {
     if (token && token.length) {
       return this.Http.put(this.updateEmail, body, options)
         .map(res => res.json())
-        .catch(error => this.HttpClient.handleHttpError(error));
+        .catch(error => this.httpClient.handleHttpError(error));
     }
     return null;
   }
@@ -339,15 +334,12 @@ export class UserService implements CanActivate {
   }
 
   logout() {
-    // Remove our token and apply empty data.
-    // TODO: Use cross-browser capable storage solution here.
-    localStorage.removeItem('gexa_active_billing_account_id');
-    localStorage.removeItem('gexa_auth_token');
-    localStorage.removeItem('gexa_auth_token_expire');
-    this.ApplyUserData(null);
-
+    const relativePath = `/user/logout`;
+    (this.httpClient.post(relativePath, null).map((response: Response) => {
+      return <boolean> response.json();
+    })).subscribe(res => { console.log('User logged out.'); });
+    this.httpClient.logout();
   }
-
 }
 
 @Injectable()
