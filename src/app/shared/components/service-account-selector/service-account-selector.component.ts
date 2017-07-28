@@ -5,6 +5,7 @@ import { find, get } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
 import { BillingAccountService } from 'app/core/BillingAccount.service';
+import {UserService} from '../../../core/user.service';
 
 @Component({
   selector: 'mygexa-service-account-selector',
@@ -25,7 +26,8 @@ export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
 
   constructor(
     private BillingAccountService: BillingAccountService,
-    private ChangeDetectorRef: ChangeDetectorRef
+    private ChangeDetectorRef: ChangeDetectorRef,
+    private UserService: UserService
   ) {}
 
   ngOnInit() {

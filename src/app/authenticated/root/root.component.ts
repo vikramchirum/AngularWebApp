@@ -14,25 +14,38 @@ import {BillingAccountService} from 'app/core/BillingAccount.service';
 })
 export class RootComponent implements OnInit, AfterViewInit {
 
+  billing_account_length: number = null;
   env = environment.Name;
   user: string;
   accordionVisible: boolean = false;
-  
+
 
   @ViewChild('homeMultiAccountsModal') homeMultiAccountsModal: HomeMultiAccountsModalComponent;
 
-  constructor(private user_service: UserService, private router: Router, private viewContainerRef: ViewContainerRef, private billingAcctService: BillingAccountService) { }
+  constructor(private user_service: UserService, private router: Router, private viewContainerRef: ViewContainerRef, private billingAcctService: BillingAccountService) {
+    this.billing_account_length = null;
+  }
 
   showHomeMultiAccountsModal() {
     this.homeMultiAccountsModal.show();
   }
   ngAfterViewInit() {
     // this.homeMultiAccountsModal.show();
+    this.user_service.UserObservable.subscribe(
+      result => { this.billing_account_length = result.Account_permissions.length; }
+    );
     if (!this.billingAcctService.ActiveBillingAccountId) {
-      this.homeMultiAccountsModal.show();
+      if ( this.billing_account_length != null && this.billing_account_length === 2 ) {
+        this.homeMultiAccountsModal.hideServiceUpgradeModal();
+      } else if ( this.billing_account_length != null && this.billing_account_length > 2 ) {
+        this.homeMultiAccountsModal.show();
+      }
     }
   }
   ngOnInit() {
+    this.user_service.UserObservable.subscribe(
+      result => { this.billing_account_length = result.Account_permissions.length; }
+    );
     //this.user = this.user_service.logged_in_user;
     //this.user = this.user_service.user_token;
   }

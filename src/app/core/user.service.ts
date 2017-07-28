@@ -48,7 +48,6 @@ export class UserService implements CanActivate {
   private registerUrl = environment.Api_Url + '/user/register';
   private updateEmail = environment.Api_Url + '/user/updateEmailAddress';
 
-
   get user_token(): string {
 
     // See if we already have it cached and return it.
