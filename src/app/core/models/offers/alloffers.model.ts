@@ -13,6 +13,4 @@ export class AllOffersClass {
   constructor(opts: any) {
     assign(this, opts);
   }
-
-
 }

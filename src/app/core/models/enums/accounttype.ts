@@ -3,6 +3,6 @@
  */
 
 export enum AccountType {
-  GEMS_Billing_Account,
+  GEMS_Service_Account,
   GEMS_Residential_Customer_Account
 }

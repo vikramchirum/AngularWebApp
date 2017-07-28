@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { InvoiceService } from 'app/core/invoiceservice.service';
-import { IBill } from 'app/core/models/bill.model';
-import { IBillLineItem } from 'app/core/models/billlineitem.model';
-
-import { Bill, BillService } from 'app/core/Bill';
 
 import { filter } from 'lodash';
+import {IInvoice} from '../../../core/models/invoices/invoice.model';
 
 @Component({
   selector: 'mygexa-current-charges',
@@ -13,21 +10,18 @@ import { filter } from 'lodash';
   styleUrls: ['./current-charges.component.scss']
 })
 export class CurrentChargesComponent implements OnInit {
-  all_bills: IBill[];
+  all_bills: IInvoice[];
   error: string = null;
-  public req_bill: IBill[];
-  Bill: Bill = null;
-  public billing_account_id: number;
-  constructor(
-    private BillService: BillService,
-    private invoice_service: InvoiceService
+  public req_bill: IInvoice[];
+    public service_account_id: number;
+  constructor(private invoice_service: InvoiceService
   ) {
-    this.billing_account_id = 1408663;
+    this.service_account_id = 1408663;
   }
 
   ngOnInit() {
 
-    this.invoice_service.getBills(this.billing_account_id)
+    this.invoice_service.getBills(this.service_account_id)
       .subscribe(
         response => {
           this.all_bills = response;
@@ -35,7 +29,6 @@ export class CurrentChargesComponent implements OnInit {
           const firstDay = new Date(y, m, 1);
           const lastDay = new Date(y, m + 1, 0);
           this.req_bill = filter(this.all_bills, bill => ( bill.Invoice_Date >= firstDay  && bill.Invoice_Date <= lastDay ));
-          debugger;
           sessionStorage.setItem('invoice_id', this.req_bill[0].Invoice_Id.toString());
           sessionStorage.setItem('invoice_date', this.req_bill[0].Invoice_Date.toString());
 
@@ -45,7 +38,5 @@ export class CurrentChargesComponent implements OnInit {
         }
 
       );
-    this.BillService.getCurrentBill()
-      .then((Bill: Bill) => this.Bill = Bill);
   }
 }

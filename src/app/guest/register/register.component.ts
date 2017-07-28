@@ -1,7 +1,6 @@
 import {Directive, Component, OnInit} from '@angular/core';
 import {UserService} from "../../core/user.service";
 import {Router} from "@angular/router";
-import {IToken} from "app/guest/login/login.component.token";
 import {ISecurityQuestions, IUser} from "app/guest/login/register";
 import {FormGroup} from "@angular/forms";
 
@@ -22,7 +21,7 @@ export class RegisterComponent implements OnInit {
     // this.user = {
     //   Email_Address: '',
     //   Zip: '',
-    //   Billing_Account_Id: '',
+    //   Service_Account_Id: '',
     //   User_name: '',
     //   Password: '',
     //   ConfirmPassword:''

@@ -1,11 +1,12 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import { ServicePlanUpgradeModalComponent } from 'app/authenticated/plans-and-services/my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
-import {BillingAccountService} from 'app/core/BillingAccount.service';
+import {ServiceAccountService} from 'app/core/serviceaccount.service';
 import {Subscription} from 'rxjs/Subscription';
-import {BillingAccountClass} from 'app/core/models/BillingAccount.model';
+
 import {OfferService} from '../../../../core/offer.service';
 import {AllOffersClass} from '../../../../core/models/offers/alloffers.model';
 import {IOffers} from '../../../../core/models/offers/offers.model';
+import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -14,8 +15,8 @@ import {IOffers} from '../../../../core/models/offers/offers.model';
 })
 export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy {
   IsInRenewalTimeFrame: boolean;
-  billingAccountSubscription: Subscription;
-  activebillingAccountOffersSubscription: Subscription;
+  serviceAccountSubscription: Subscription;
+  activeserviceAccountOffersSubscription: Subscription;
 
   public All_Offers: AllOffersClass;
   public FeaturedOffers: AllOffersClass[];
@@ -23,20 +24,20 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
 
   selectCheckBox  = false;
   enableSelect = false;
-  ActiveBillingAccountDetails: BillingAccountClass;
+  ActiveServiceAccountDetails: ServiceAccount;
   @ViewChild('serviceUpgradeModal') serviceUpgradeModal: ServicePlanUpgradeModalComponent;
 
-  constructor(private billingAccount_service: BillingAccountService, private active_billingaccount_service: OfferService) {
+  constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
     this.IsInRenewalTimeFrame = false;
   }
 
   ngOnInit() {
-    this.billingAccountSubscription = this.billingAccount_service.ActiveBillingAccountObservable.subscribe(
+    this.serviceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.subscribe(
       result => {
-        this.ActiveBillingAccountDetails = result;
+        this.ActiveServiceAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
       });
-    this.activebillingAccountOffersSubscription = this.active_billingaccount_service.ActiveBillingAccountOfferObservable.subscribe(
+    this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
       all_offers => {
         this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
         this.RenewalOffers = (this.FeaturedOffers[0].Offers)[0];
@@ -49,7 +50,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy() {
-    this.billingAccountSubscription.unsubscribe();
+    this.serviceAccountSubscription.unsubscribe();
   }
   showServiceUpgradeModal() {
     this.serviceUpgradeModal.show();

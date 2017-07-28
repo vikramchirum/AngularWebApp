@@ -17,7 +17,7 @@ export class PreferenceComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Get the preference from the Billing_Account API:
+    // Get the preference from the Service_Account API:
     // Using localStorage for temporary data:
     this.active = localStorage.getItem(`mygexa_view_bill_preference_${this.preference}`) === 'true';
     switch (this.preference) {
@@ -37,7 +37,7 @@ export class PreferenceComponent implements OnInit {
   }
 
   togglePreference() {
-    // Send update to the Billing_Account API:
+    // Send update to the Service_Account API:
     this.active = !this.active;
     // Using localStorage for temporary data:
     localStorage.setItem(`mygexa_view_bill_preference_${this.preference}`, this.active ? 'true' : 'false');

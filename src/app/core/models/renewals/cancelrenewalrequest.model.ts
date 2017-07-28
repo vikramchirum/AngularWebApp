@@ -3,6 +3,6 @@
  */
 
 export interface ICancelRenewalRequest {
-  billing_account_id: number;
-  user_name: string;
+  Service_Account_Id: number;
+  User_Name: string;
 }

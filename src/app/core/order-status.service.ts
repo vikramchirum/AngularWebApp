@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
-import { HttpClient } from './httpclient';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import { map } from 'lodash';
+import {Injectable} from '@angular/core';
+import {Response} from '@angular/http';
 
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import {map} from 'lodash';
+
+import {HttpClient} from './httpclient';
 import {OrderStatus} from './models/order-status.model';
 
 @Injectable()
@@ -12,12 +13,6 @@ export class OrderStatusService {
 
   constructor(private http: HttpClient) {
   }
-
-  /**
-   * Returns order details based on Customer Id
-   * @param CustomerId
-   * @returns {Observable<any[]>}
-   */
 
   fetchOrderDetails(customerId): Observable<any[]> {
     return this.http
@@ -30,5 +25,4 @@ export class OrderStatusService {
   private processApiData(res: Response) {
     return res.json();
   }
-
 }

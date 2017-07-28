@@ -1,5 +1,5 @@
 export interface UsageHistory {
-    Billing_Account_Id: number;
+    Service_Account_Id: number;
     Usage_Month: string;
     Usage_Start_Date: string;
     Usage_End_Date: string;

@@ -4,7 +4,7 @@ import {UserService} from '../../core/user.service';
 import {Router} from '@angular/router';
 import {environment} from '../../../environments/environment';
 import {HomeMultiAccountsModalComponent} from './home-multi-accounts-modal/home-multi-accounts-modal.component';
-import {BillingAccountService} from 'app/core/BillingAccount.service';
+import {ServiceAccountService} from 'app/core/serviceaccount.service';
 
 @Component({
   selector: 'mygexa-root',
@@ -17,18 +17,18 @@ export class RootComponent implements OnInit, AfterViewInit {
   env = environment.Name;
   user: string;
   accordionVisible: boolean = false;
-  
+
 
   @ViewChild('homeMultiAccountsModal') homeMultiAccountsModal: HomeMultiAccountsModalComponent;
 
-  constructor(private user_service: UserService, private router: Router, private viewContainerRef: ViewContainerRef, private billingAcctService: BillingAccountService) { }
+  constructor(private user_service: UserService, private router: Router, private viewContainerRef: ViewContainerRef, private serviceAcctService: ServiceAccountService) { }
 
   showHomeMultiAccountsModal() {
     this.homeMultiAccountsModal.show();
   }
   ngAfterViewInit() {
     // this.homeMultiAccountsModal.show();
-    if (!this.billingAcctService.ActiveBillingAccountId) {
+    if (!this.serviceAcctService.ActiveServiceAccountId) {
       this.homeMultiAccountsModal.show();
     }
   }

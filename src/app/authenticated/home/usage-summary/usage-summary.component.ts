@@ -1,10 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
 
 import { UsageHistoryService } from 'app/core/usage-history.service';
-import { BillingAccountService } from 'app/core/BillingAccount.service';
-import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { map, takeRight, toNumber } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
+import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-usage-summary',
@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class UsageSummaryComponent implements OnDestroy {
 
-  activeBillingAccount: BillingAccountClass = null;
+  activeServiceAccount: ServiceAccount = null;
 
   public barChartOptions: any = {
     scaleShowVerticalLines: false,
@@ -39,32 +39,32 @@ export class UsageSummaryComponent implements OnDestroy {
   ];
   public barChartData = [];
 
-  private BillingAccountsSubscription: Subscription = null;
+  private ServiceAccountsSubscription: Subscription = null;
 
   constructor(
     private usageHistoryService: UsageHistoryService,
-    private BillingAccountService: BillingAccountService
+    private ServiceAccountService: ServiceAccountService
   ) {
-    this.BillingAccountsSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
-      activeBillingAccount => {
-        this.activeBillingAccount = activeBillingAccount;
+    this.ServiceAccountsSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      activeServiceAccount => {
+        this.activeServiceAccount = activeServiceAccount;
         // Empty out the bar chart arrays:
         while (this.barChartData.length > 0) {
           this.barChartData.pop();
         }
-        this.getUsageHistoryByBillingAccountId();
+        this.getUsageHistoryByServiceAccountId();
       }
     );
   }
 
   ngOnDestroy() {
     // Clean up our subscribers to avoid memory leaks.
-    this.BillingAccountsSubscription.unsubscribe();
+    this.ServiceAccountsSubscription.unsubscribe();
   }
 
-  getUsageHistoryByBillingAccountId() {
-    if (this.activeBillingAccount) {
-      this.usageHistoryService.getUsageHistory(toNumber(this.activeBillingAccount.Id))
+  getUsageHistoryByServiceAccountId() {
+    if (this.activeServiceAccount) {
+      this.usageHistoryService.getUsageHistory(toNumber(this.activeServiceAccount.Id))
         .subscribe(usageHistory => this.populateChart(usageHistory));
     }
   }
