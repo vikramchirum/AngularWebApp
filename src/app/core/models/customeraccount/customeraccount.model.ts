@@ -1,24 +1,15 @@
+/**
+ * Created by vikram.chirumamilla on 7/27/2017.
+ */
+
 
 import { assign } from 'lodash';
 
-export interface ICustomerAccountDriversLicense {
-  Number: string;
-  State: string;
-}
-export interface ICustomerAccountPrimaryPhone {
-  Type: string;
-  Area_Code: string;
-  Number: string;
-  Extension: string;
-  Agree_To_Marketing: string;
-}
-export interface ICustomerAccountContacts {
-  First_Name: string;
-  Last_Name: string;
-  Password: string;
-}
+import {ICustomerAccountDriversLicense} from './customeraccountdriverslicense.model';
+import {ICustomerAccountPrimaryPhone} from './customeraccountprimaryphone.model';
+import {ICustomerAccountContacts} from './customeraccountcontacts.model';
 
-export class CustomerAccountClass {
+export class CustomerAccount {
   Id: string;
   Date_Of_Birth: string;
   Email: string;
@@ -37,12 +28,7 @@ export class CustomerAccountClass {
   Primary_Phone: ICustomerAccountPrimaryPhone;
   Contacts: [ ICustomerAccountContacts ];
 
-  /**
-   * Construct a new Customer_Account passing in values (opts) to use.
-   * @param opts
-   */
   constructor(opts: any) {
     assign(this, opts);
   }
-
 }

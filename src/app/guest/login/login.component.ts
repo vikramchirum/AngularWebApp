@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit {
 
   registerFormInit(): FormGroup {
     return this.FormBuilder.group({
-      Billing_Account_Id: ['', Validators.required],
+      Service_Account_Id: ['', Validators.required],
       Zip_Code: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(5), validateInteger])],
       User_name: ['', Validators.required],
       Password: ['', Validators.required],

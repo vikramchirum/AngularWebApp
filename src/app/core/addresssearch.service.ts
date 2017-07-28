@@ -11,8 +11,8 @@ import 'rxjs/add/operator/map';
 
 import { HttpClient } from './httpclient';
 
-import {ISearchAddressRequest} from './models/serviceaddress/searchaddressrequest';
-import {ServiceAddress} from './models/serviceaddress/serviceaddress';
+import {ISearchAddressRequest} from './models/serviceaddress/searchaddressrequest.model';
+import {ServiceAddress} from './models/serviceaddress/serviceaddress.model';
 
 @Injectable()
 export class AddressSearchService {

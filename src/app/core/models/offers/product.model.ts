@@ -1,4 +1,6 @@
+
 import {IPricing} from './pricing.model';
+
 export interface IProduct {
   Name: string;
   Description: string;

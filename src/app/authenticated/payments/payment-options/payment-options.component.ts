@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
-import { BillingAccountService } from 'app/core/BillingAccount.service';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { Subscription } from 'rxjs/Subscription';
+import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-payment-options',
@@ -12,29 +12,29 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class PaymentOptionsComponent implements OnInit, OnDestroy {
 
-  private ActiveBillingAccountSubscription: Subscription = null;
+  private ActiveServiceAccountSubscription: Subscription = null;
 
-  private _ActiveBillingAccount: BillingAccountClass = null;
-  get ActiveBillingAccount() { return this._ActiveBillingAccount; }
-  set ActiveBillingAccount(ActiveBillingAccount) {
-    this._ActiveBillingAccount = ActiveBillingAccount;
+  private _ActiveServiceAccount: ServiceAccount = null;
+  get ActiveServiceAccount() { return this._ActiveServiceAccount; }
+  set ActiveServiceAccount(ActiveServiceAccount) {
+    this._ActiveServiceAccount = ActiveServiceAccount;
     this.ChangeDetectorRef.detectChanges();
   }
 
   constructor(
     public Router: Router,
-    private BillingAccountService: BillingAccountService,
+    private ServiceAccountService: ServiceAccountService,
     private ChangeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
-    this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
-      ActiveBillingAccount => this.ActiveBillingAccount = ActiveBillingAccount
+    this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      ActiveServiceAccount => this.ActiveServiceAccount = ActiveServiceAccount
     );
   }
 
   ngOnDestroy() {
-    this.ActiveBillingAccountSubscription.unsubscribe();
+    this.ActiveServiceAccountSubscription.unsubscribe();
   }
 
 }

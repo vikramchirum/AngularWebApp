@@ -1,3 +1,6 @@
+
+import {ICharges} from './charges.model';
+
 export interface IPricingDefinition {
   Early_Termination_Fee: number;
   Base_Charge: number;
@@ -10,10 +13,4 @@ export interface IPricingDefinition {
   Energy_Charge_Count: number;
   Usage_Credit_Count: number;
   Usage_Charge_Count: number;
-}
-
-export interface ICharges {
-  Min: number;
-  Max: number;
-  Amount: number;
 }

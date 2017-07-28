@@ -3,12 +3,12 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@ang
 import { AutoBillPayService } from 'app/core/auto-bill-pay.service';
 import { PaymethodAddCcComponent } from 'app/shared/components/payment-method-add-cc/payment-method-add-cc.component';
 import { PaymethodAddEcheckComponent } from 'app/shared/components/payment-method-add-echeck/payment-method-add-echeck.component';
-import { BillingAccountService } from 'app/core/BillingAccount.service';
-import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { PaymethodService } from 'app/core/Paymethod.service';
-import { PaymethodClass, IPaymethodRequestEcheck, IPaymethodRequestCreditCard } from 'app/core/models/Paymethod.model';
+import { Paymethod } from 'app/core/models/paymethod/Paymethod.model';
 import { Subscription } from 'rxjs/Subscription';
 import { find, get } from 'lodash';
+import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
 
 interface IPaymentMessage {
   classes: string[];
@@ -31,15 +31,15 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
   addingEcheckFormValid: boolean = null;
   addingCreditCard: boolean = null;
   addingCreditCardFormValid: boolean = null;
-  ActiveBillingAccount: BillingAccountClass = null;
-  ActiveBillingAccountSubscription: Subscription = null;
-  BillingAccounts: BillingAccountClass[] = null;
-  BillingAccountsSubscription: Subscription = null;
+  ActiveServiceAccount: ServiceAccount = null;
+  ActiveServiceAccountSubscription: Subscription = null;
+  ServiceAccounts: ServiceAccount[] = null;
+  ServiceAccountsSubscription: Subscription = null;
   PaymentMessage: IPaymentMessage = null;
-  PaymentAbpSelecting: PaymethodClass = null;
+  PaymentAbpSelecting: Paymethod = null;
 
-  private _PaymentEditting: PaymethodClass = null;
-  get PaymentEditting(): PaymethodClass { return this._PaymentEditting; }
+  private _PaymentEditting: Paymethod = null;
+  get PaymentEditting(): Paymethod { return this._PaymentEditting; }
   set PaymentEditting(payMethod) {
     this._PaymentEditting = payMethod;
     // BUGFIX: The below fixes a rendering bug.
@@ -48,8 +48,8 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     this.ChangeDetectorRef.detectChanges();
   }
 
-  private _PaymentAbpSelected: PaymethodClass = null;
-  get PaymentAbpSelected(): PaymethodClass { return this._PaymentAbpSelected; }
+  private _PaymentAbpSelected: Paymethod = null;
+  get PaymentAbpSelected(): Paymethod { return this._PaymentAbpSelected; }
   set PaymentAbpSelected(payMethod) {
     this._PaymentAbpSelected = payMethod;
     // BUGFIX: The below fixes a rendering bug.
@@ -60,9 +60,9 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
 
   private PaymethodSubscription: Subscription = null;
-  private _Paymethods: PaymethodClass[] = null;
-  get Paymethods(): PaymethodClass[] { return this._Paymethods; }
-  set Paymethods(Paymethods: PaymethodClass[]) {
+  private _Paymethods: Paymethod[] = null;
+  get Paymethods(): Paymethod[] { return this._Paymethods; }
+  set Paymethods(Paymethods: Paymethod[]) {
     this._Paymethods = Paymethods;
     this.ChangeDetectorRef.detectChanges();
   }
@@ -70,16 +70,16 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
   constructor(
     private ChangeDetectorRef: ChangeDetectorRef,
     private AutoBillPayService: AutoBillPayService,
-    private BillingAccountService: BillingAccountService,
+    private ServiceAccountService: ServiceAccountService,
     private PaymethodService: PaymethodService
   ) { }
 
   ngOnInit() {
-    this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
-      ActiveBillingAccount => this.ActiveBillingAccount = ActiveBillingAccount
+    this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      ActiveServiceAccount => this.ActiveServiceAccount = ActiveServiceAccount
     );
-    this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable.subscribe(
-      BillingAccounts => this.BillingAccounts = BillingAccounts
+    this.ServiceAccountsSubscription = this.ServiceAccountService.ServiceAccountsObservable.subscribe(
+      ServiceAccounts => this.ServiceAccounts = ServiceAccounts
     );
     this.PaymethodSubscription = this.PaymethodService.PaymethodsObservable.subscribe(
       Paymethods => this.Paymethods = Paymethods
@@ -87,16 +87,16 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.ActiveBillingAccountSubscription.unsubscribe();
-    this.BillingAccountsSubscription.unsubscribe();
+    this.ActiveServiceAccountSubscription.unsubscribe();
+    this.ServiceAccountsSubscription.unsubscribe();
     this.PaymethodSubscription.unsubscribe();
   }
 
-  isUsedForAutoBillPay(paymethod: PaymethodClass): boolean {
-    return !!find(this.BillingAccounts, ['PayMethodId', paymethod.PayMethodId]);
+  isUsedForAutoBillPay(paymethod: Paymethod): boolean {
+    return !!find(this.ServiceAccounts, ['PayMethodId', paymethod.PayMethodId]);
   }
 
-  removePaymethod(paymentMethod: PaymethodClass): void {
+  removePaymethod(paymentMethod: Paymethod): void {
     if (
       !paymentMethod
       || this.PaymentEditting === paymentMethod
@@ -127,7 +127,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     const PaymethodToDelete = this.PaymentEditting;
 
     // this.AutoBillPayService.CancelAutoBillPay(
-    //   this.ActiveBillingAccount
+    //   this.ActiveServiceAccount
     // );
 
     this.PaymethodService.RemovePaymethod(PaymethodToDelete).subscribe(
@@ -155,7 +155,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     const PaymethodToUse = this.PaymentAbpSelected;
 
     // this.AutoBillPayService.UpdateAutoBillPay(
-    //   this.ActiveBillingAccount,
+    //   this.ActiveServiceAccount,
     //   PaymethodToUse
     // );
 

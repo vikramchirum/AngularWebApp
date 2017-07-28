@@ -3,7 +3,7 @@
  */
 
 export interface ICreateRenewalRequest {
-  billing_account_id: number;
+  service_account_id: number;
   user_name: string;
   start_date: Date;
   offering_id: string;

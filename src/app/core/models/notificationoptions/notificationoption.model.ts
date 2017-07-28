@@ -6,8 +6,8 @@
 import {NotificationType} from '../enums/notificationtype';
 import {ContactMethod} from '../enums/contactmethod';
 import {NotificationStatus} from '../enums/notificationstatus';
-import {IPhoneNumber} from '../address/phonenumber';
-import {IAccountInfo} from '../accountinfo';
+import {IPhoneNumber} from '../address/phonenumber.model';
+import {IAccountInfo} from '../accountinfo.model';
 
 export interface INotificationOption {
   Type: NotificationType;

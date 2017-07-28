@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import {BillingAccountService} from 'app/core/BillingAccount.service';
+import {ServiceAccountService} from 'app/core/serviceaccount.service';
 import {Subscription} from 'rxjs/Subscription';
-import {BillingAccountClass} from 'app/core/models/BillingAccount.model';
 import {OfferService} from '../../../../core/offer.service';
 import { findKey, filter, find } from 'lodash';
 import {ChangeYourPlanCardComponent} from './change-your-plan-card/change-your-plan-card.component';
 import {AllOffersClass} from '../../../../core/models/offers/alloffers.model';
 import {IOffers} from '../../../../core/models/offers/offers.model';
+import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-change-your-plan',
@@ -15,9 +15,9 @@ import {IOffers} from '../../../../core/models/offers/offers.model';
 })
 export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   public IsInRenewalTimeFrame: boolean;
-  ActiveBillingAccountDetails: BillingAccountClass;
-  billingAccountSubscription: Subscription;
-  activebillingAccountOffersSubscription: Subscription;
+  ActiveServiceAccountDetails: ServiceAccount;
+  serviceAccountSubscription: Subscription;
+  activeserviceAccountOffersSubscription: Subscription;
   public All_Offers: AllOffersClass;
   public FeaturedOffers: AllOffersClass[];
   public RenewalOffers: IOffers[];
@@ -25,18 +25,18 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   public AllOfferss: IOffers[];
   clicked: boolean;
 
-  constructor(private billingAccount_service: BillingAccountService, private active_billingaccount_service: OfferService) {
+  constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
     this.IsInRenewalTimeFrame = false;
     this.clicked = true;
   }
 
   ngOnInit() {
-    this.billingAccountSubscription = this.billingAccount_service.ActiveBillingAccountObservable.subscribe(
+    this.serviceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.subscribe(
       result => {
-        this.ActiveBillingAccountDetails = result;
+        this.ActiveServiceAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
       });
-    this.activebillingAccountOffersSubscription = this.active_billingaccount_service.ActiveBillingAccountOfferObservable.subscribe(
+    this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
       all_offers => {
         this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
         this.RenewalOffers = this.FeaturedOffers[0].Offers;
@@ -49,7 +49,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.billingAccountSubscription.unsubscribe();
+    this.serviceAccountSubscription.unsubscribe();
   }
   ChevClicked() {
     this.clicked = !this.clicked ;

@@ -1,33 +1,28 @@
-import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
+import {Injectable} from '@angular/core';
+import {Response} from '@angular/http';
 
-import { HttpClient } from './httpclient';
-import { Observable } from 'rxjs/Observable';
-import { BillingAccountClass } from './models/BillingAccount.model';
-import { PaymethodClass } from './models/Paymethod.model';
-import { isFunction, noop } from 'lodash';
+import {Observable} from 'rxjs/Observable';
+import {isFunction} from 'lodash';
+
+import {HttpClient} from './httpclient';
+import {Paymethod} from './models/paymethod/Paymethod.model';
+import {ServiceAccount} from './models/serviceaccount/serviceaccount.model';
 
 @Injectable()
 export class AutoBillPayService {
 
-  constructor(
-    private HttpClient: HttpClient
-  ) { }
+  constructor(private HttpClient: HttpClient) {
+  }
 
-  EnrollInAutoBillPay(
-    billingAccount: BillingAccountClass,
-    paymethod: PaymethodClass,
-    callback?: Function
-  ): Observable<Response> {
-
+  EnrollInAutoBillPay(serviceAccount: ServiceAccount, paymethod: Paymethod, callback?: Function): Observable<Response> {
     const now = new Date;
     const body = {
       StartDate: now,
       TermAcceptanceDate: now,
       PayMethodId: paymethod.PayMethodId,
-      BillingAccountList: [
+      ServiceAccountList: [
         {
-          BillingAccountId: billingAccount.Id,
+          ServiceAccountId: serviceAccount.Id,
           BillingSystem: 'GEMS',
           AccountTypeName: 'ContractServicePoint',
           BusinessUnit: 'GEXA'
@@ -37,7 +32,7 @@ export class AutoBillPayService {
 
     console.log('/AutoPaymentConfigs/EnrollAutoPay', JSON.stringify(body, null, '  '));
 
-    const request = this.HttpClient.post('/AutoPaymentConfigs/EnrollAutoPay', JSON.stringify(body))
+       const request = this.HttpClient.post('/AutoPaymentConfigs/EnrollAutoPay', JSON.stringify(body))
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err));
 
@@ -45,23 +40,21 @@ export class AutoBillPayService {
       res => console.log('POST api/AutoPaymentConfigs/EnrollAutoPay res', res),
       err => console.log('POST api/AutoPaymentConfigs/EnrollAutoPay err', err),
       () => {
-        billingAccount.Is_Auto_Bill_Pay = true;
-        billingAccount.PayMethodId = paymethod.PayMethodId;
-        if (isFunction(callback)) { callback(); }
+        serviceAccount.Is_Auto_Bill_Pay = true;
+        serviceAccount.PayMethodId = paymethod.PayMethodId;
+        if (isFunction(callback)) {
+          callback();
+        }
       }
     );
 
     return request;
-
   }
 
-  CancelAutoBillPay(
-    billingAccount: BillingAccountClass,
-    callback?: Function
-  ): Observable<Response> {
+  CancelAutoBillPay(serviceAccount: ServiceAccount, callback?: Function): Observable<Response> {
 
     const body = {
-      Billing_Account_Id: billingAccount.Id
+      Service_Account_Id: serviceAccount.Id
     };
 
     console.log('/AutoPaymentConfigs/CancelAutoPay', JSON.stringify(body, null, '  '));
@@ -74,29 +67,24 @@ export class AutoBillPayService {
       res => console.log('PUT api/AutoPaymentConfigs/CancelAutoPay res', res),
       err => console.log('PUT api/AutoPaymentConfigs/CancelAutoPay err', err),
       () => {
-        billingAccount.Is_Auto_Bill_Pay = false;
-        billingAccount.PayMethodId = null;
+        serviceAccount.Is_Auto_Bill_Pay = false;
+        serviceAccount.PayMethodId = null;
         if (isFunction(callback)) { callback(); }
       }
     );
 
     return request;
-
   }
 
-  UpdateAutoBillPay(
-    billingAccount: BillingAccountClass,
-    paymethod: PaymethodClass,
-    callback?: Function
-  ): Observable<Response> {
+  UpdateAutoBillPay(serviceAccount: ServiceAccount, paymethod: Paymethod, callback?: Function): Observable<Response> {
 
     const now = new Date;
     const body = {
       TermAcceptanceDate: now,
       PayMethodId: paymethod.PayMethodId,
-      BillingAccountList: [
+      ServiceAccountList: [
         {
-          BillingAccountId: billingAccount.Id,
+          ServiceAccountId: serviceAccount.Id,
           BillingSystem: 'GEMS',
           AccountTypeName: 'ContractServicePoint',
           BusinessUnit: 'GEXA'
@@ -114,13 +102,11 @@ export class AutoBillPayService {
       res => console.log('PUT api/AutoPaymentConfigs/ModifyAutoPay res', res),
       err => console.log('PUT api/AutoPaymentConfigs/ModifyAutoPay err', err),
       () => {
-        billingAccount.PayMethodId = paymethod.PayMethodId;
+        serviceAccount.PayMethodId = paymethod.PayMethodId;
         if (isFunction(callback)) { callback(); }
       }
     );
 
     return request;
-
   }
-
 }

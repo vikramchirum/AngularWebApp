@@ -23,7 +23,7 @@
           <div class="form-group">
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-id-card-o"></i></span>
-              <input [(ngModel)]="user.Billing_Account_Id" name="Billing_Account_Id" type="text" class="form-control" placeholder="Service Number" required #em="ngModel">
+              <input [(ngModel)]="user.Service_Account_Id" name="Service_Account_Id" type="text" class="form-control" placeholder="Service Number" required #em="ngModel">
             </div>
             <small [hidden]="em.valid || (em.pristine && !f.submitted)" class="text-danger">Service number is required.</small>
           </div>

@@ -5,7 +5,7 @@ import {Subscription} from 'rxjs/Subscription';
 
 import {environment} from 'environments/environment';
 import {BudgetBillingService} from '../../../../core/budgetbilling.service';
-import {BillingAccountService} from '../../../../core/BillingAccount.service';
+import {ServiceAccountService} from '../../../../core/serviceaccount.service';
 import {IBudgetBillingInfo} from '../../../../core/models/budgetbilling/budgetbillinginfo.model';
 import {IBudgetBillingEstimate} from '../../../../core/models/budgetbilling/budgetbillingestimate.model';
 import {CancelBudgetBillingModalComponent} from './cancel-budget-billing-modal/cancel-budget-billing-modal.component';
@@ -34,28 +34,28 @@ export class BudgetBillingComponent implements OnInit, OnDestroy {
   budgetBillingEstimate$: Observable<IBudgetBillingEstimate>;
   cancelBudgetBillingObservable$: Observable<boolean>;
 
-  private ActiveBillingAccountSubscription: Subscription = null;
-  private billingAccountId: number;
+  private ActiveServiceAccountSubscription: Subscription = null;
+  private serviceAccountId: number;
 
   constructor(private budgetBillingService: BudgetBillingService
-    , private billingAccountService: BillingAccountService) {
+    , private serviceAccountService: ServiceAccountService) {
   }
 
   ngOnInit() {
     this.dollarAmountFormatter = environment.DollarAmountFormatter;
-    this.ActiveBillingAccountSubscription = this.billingAccountService.ActiveBillingAccountObservable.subscribe(
+    this.ActiveServiceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         // always reset the budget billing screen to initial screen.
-        // when there is a change in the billing account from the drop down.
+        // when there is a change in the service account from the drop down.
 
-        this.billingAccountId = +(result.Id);
+        this.serviceAccountId = +(result.Id);
         this.reset();
         this.cancelBudgetBillingRequest = this.getCancelBudgetBillingRequest();
 
-        this.budgetBillingInfo$ = this.budgetBillingService.getBudgetBillingInfo(this.billingAccountId).map((budgetBillingInfo: IBudgetBillingInfo) => {
+        this.budgetBillingInfo$ = this.budgetBillingService.getBudgetBillingInfo(this.serviceAccountId).map((budgetBillingInfo: IBudgetBillingInfo) => {
           return budgetBillingInfo;
         }).share();
-        this.budgetBillingEstimate$ = this.budgetBillingService.getBudgetBillingEstimate(this.billingAccountId)
+        this.budgetBillingEstimate$ = this.budgetBillingService.getBudgetBillingEstimate(this.serviceAccountId)
           .map((budgetBillingEstimate: IBudgetBillingEstimate) => {
             return budgetBillingEstimate;
           }).share();
@@ -89,7 +89,7 @@ export class BudgetBillingComponent implements OnInit, OnDestroy {
   handleCancelBudgetBillingEvent(event) {
     if (event.IsCancel) {
       const cancelBudgetBillingRequest = {} as ICancelBudgetBillingRequest;
-      cancelBudgetBillingRequest.Billing_Account_Id = this.billingAccountId;
+      cancelBudgetBillingRequest.Service_Account_Id = this.serviceAccountId;
       cancelBudgetBillingRequest.User_Name = 'test_vikram';
       this.cancelBudgetBillingObservable$.subscribe(response => {
         if (response) {
@@ -115,13 +115,13 @@ export class BudgetBillingComponent implements OnInit, OnDestroy {
 
   private getCancelBudgetBillingRequest(): ICancelBudgetBillingRequest {
     const cancelBudgetBillingRequest = {} as ICancelBudgetBillingRequest;
-    cancelBudgetBillingRequest.Billing_Account_Id = this.billingAccountId;
+    cancelBudgetBillingRequest.Service_Account_Id = this.serviceAccountId;
     // TODO
     cancelBudgetBillingRequest.User_Name = 'test_vikram';
     return cancelBudgetBillingRequest;
   }
 
   ngOnDestroy() {
-    this.ActiveBillingAccountSubscription.unsubscribe();
+    this.ActiveServiceAccountSubscription.unsubscribe();
   }
 }

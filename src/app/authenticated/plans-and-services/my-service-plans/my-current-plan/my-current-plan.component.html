@@ -1,16 +1,16 @@
 <section *ngIf="!IsInRenewalTimeFrame">
 <div layout-align="center">
-  <md-card class="current-plan-card" *ngIf="ActiveBillingAccountDetails">
+  <md-card class="current-plan-card" *ngIf="ActiveServiceAccountDetails">
     <!--<md-card-header>-->
       <md-card-title>
-        <h2>{{ActiveBillingAccountDetails.Current_Offer.Product_Name}} <small><i class="fa fa-info-circle"></i></small></h2>
+        <h2>{{ActiveServiceAccountDetails.Current_Offer.Product_Name}} <small><i class="fa fa-info-circle"></i></small></h2>
       </md-card-title>
     <!--</md-card-header>-->
     <md-card-content>
-      <h2>{{ActiveBillingAccountDetails.Current_Offer.RateAt1000kwh | DollarToCentsPipe | number: '1.2-2'}}<sup class="sup-text">c</sup><sub class="sub-text">per kwh</sub></h2>
-      <p class="bg-default">TERM: {{ActiveBillingAccountDetails.Current_Offer.Term}} Months</p>
-      <p>START: {{ActiveBillingAccountDetails.Current_Offer.Start_Date | date: 'MM/dd/yyyy'}}</p>
-      <p  class="bg-default">END: {{ActiveBillingAccountDetails.Current_Offer.End_Date ? (ActiveBillingAccountDetails.Current_Offer.End_Date | date:'MM/dd/yyyy') : (this.getEndDate(ActiveBillingAccountDetails.Current_Offer.Start_Date) | date: 'MM/dd/yyyy')}}</p>
+      <h2>{{ActiveServiceAccountDetails.Current_Offer.RateAt1000kwh | DollarToCentsPipe | number: '1.2-2'}}<sup class="sup-text">c</sup><sub class="sub-text">per kwh</sub></h2>
+      <p class="bg-default">TERM: {{ActiveServiceAccountDetails.Current_Offer.Term}} Months</p>
+      <p>START: {{ActiveServiceAccountDetails.Current_Offer.Start_Date | date: 'MM/dd/yyyy'}}</p>
+      <p  class="bg-default">END: {{ActiveServiceAccountDetails.Current_Offer.End_Date ? (ActiveServiceAccountDetails.Current_Offer.End_Date | date:'MM/dd/yyyy') : (this.getEndDate(ActiveServiceAccountDetails.Current_Offer.Start_Date) | date: 'MM/dd/yyyy')}}</p>
     </md-card-content>
     <!--<md-card-actions>-->
       <!--<button md-button>Renew Plan</button>-->

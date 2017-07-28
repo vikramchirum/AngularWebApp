@@ -25,7 +25,7 @@ export interface IUserSecurityQuestions {
 export interface IUserSigningUp {
   Email_Address: string;
   Zip_Code: string;
-  Billing_Account_Id: string;
+  Service_Account_Id: string;
   User_name: string;
   Password: string;
   Security_Question_Id: number;

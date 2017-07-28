@@ -1,14 +1,15 @@
 
-import {IPhoneNumber} from './address/phonenumber';
+import {IPhoneNumber} from '../address/phonenumber.model';
+import {IAddress} from '../address/address.model';
 
 export class TransferRequest {
     Email_Address: string;
-    Billing_Account_Id: string;
+    Service_Account_Id: string;
     Current_Service_End_Date: string;
-    Final_Bill_To_Old_Billing_Address?: boolean;
-    Final_Bill_Address: Address;
+    Final_Bill_To_Old_Service_Address?: boolean;
+    Final_Bill_Address: IAddress;
     UAN: string;
-    Billing_Address?: Address;
+    Service_Address?: IAddress;
     TDSP_Instructions?: string;
     New_Service_Start_Date: string;
     Keep_Current_Offer?: boolean;
@@ -21,20 +22,8 @@ export class TransferRequest {
     Date_Sent: string;
 }
 
-
-export interface Address {
-    Line1: string;
-    Line2: string;
-    City: string;
-    State: string;
-    Zip: string;
-    Zip_4: string;
-}
-
-
 export interface ContactInfo {
     Email_Address: string;
     Primary_Phone_Number: IPhoneNumber;
     Secondary_Phone_Number?: IPhoneNumber;
-
 }

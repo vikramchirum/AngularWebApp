@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ModalDirective} from 'ngx-bootstrap';
-import {BillingAccountService} from 'app/core/BillingAccount.service';
-import {BillingAccountClass} from 'app/core/models/BillingAccount.model';
+import {ServiceAccountService} from 'app/core/serviceaccount.service';
 import {Subscription} from 'rxjs/Subscription';
 import {Router} from '@angular/router';
+import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-home-multi-accounts-modal',
@@ -12,19 +12,19 @@ import {Router} from '@angular/router';
 })
 export class HomeMultiAccountsModalComponent implements OnInit {
 
-  private BillingAccounts: BillingAccountClass[] = null;
-  private BillingAccountsSubscription: Subscription = null;
-  public active_billing_account_id: any = null;
+  private ServiceAccounts: ServiceAccount[] = null;
+  private ServiceAccountsSubscription: Subscription = null;
+  public active_service_account_id: any = null;
 
   @ViewChild('homeMultiAccountsModal') public homeMultiAccountsModal: ModalDirective;
-  constructor(private billingAccountService: BillingAccountService, private router: Router) {
-    this.BillingAccountsSubscription = this.billingAccountService.BillingAccountsObservable.subscribe(
-      BillingAccounts => this.BillingAccounts = BillingAccounts
+  constructor(private serviceAccountService: ServiceAccountService, private router: Router) {
+    this.ServiceAccountsSubscription = this.serviceAccountService.ServiceAccountsObservable.subscribe(
+      ServiceAccounts => this.ServiceAccounts = ServiceAccounts
     );
   }
 
   ngOnDestory() {
-    this.BillingAccountsSubscription.unsubscribe();
+    this.ServiceAccountsSubscription.unsubscribe();
   }
 
   public show(): void {
@@ -35,11 +35,11 @@ export class HomeMultiAccountsModalComponent implements OnInit {
     this.homeMultiAccountsModal.hide();
   }
   setActBillAcct(id: any) {
-    this.active_billing_account_id = id;
+    this.active_service_account_id = id;
   }
 
   onContinue() {
-     this.billingAccountService.SetActiveBillingAccount(this.active_billing_account_id);
+     this.serviceAccountService.SetActiveServiceAccount(this.active_service_account_id);
      this.hideServiceUpgradeModal();
   }
 

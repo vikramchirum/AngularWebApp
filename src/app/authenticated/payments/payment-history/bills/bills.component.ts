@@ -2,12 +2,12 @@ import {Component, OnInit, OnDestroy, ViewChild, AfterViewInit} from '@angular/c
 import { CurrencyPipe, DatePipe} from '@angular/common';
 
 import { environment } from 'environments/environment';
-import { IBill } from '../../../../core/models/bill.model';
+import { IInvoice } from '../../../../core/models/invoices/invoice.model';
 import { ColumnHeader } from '../../../../core/models/columnheader.model';
 import { InvoiceService } from '../../../../core/invoiceservice.service';
 import { ViewMyBillModalComponent } from './view-my-bill-modal/view-my-bill-modal.component';
 import { Subscription } from 'rxjs/Subscription';
-import { BillingAccountService } from '../../../../core/BillingAccount.service';
+import { ServiceAccountService } from '../../../../core/serviceaccount.service';
 
 @Component({
   selector: 'mygexa-payment-history-bills',
@@ -30,17 +30,17 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   public currentPage = 1;
   public itemsPerPage = 10;
   public totalItems = 0;
-  public Bills: IBill[];
+  public Bills: IInvoice[];
 
-  private ActiveBillingAccountSubscription: Subscription = null;
-  private billingAccountId: number;
+  private ActiveServiceAccountSubscription: Subscription = null;
+  private serviceAccountId: number;
 
   @ViewChild('viewMyBillModal') viewMyBillModal: ViewMyBillModalComponent;
 
   constructor(private datePipe: DatePipe, private currencyPipe: CurrencyPipe
-    , private invoiceService: InvoiceService, private billingAccountService: BillingAccountService) {
+    , private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService) {
   }
-  public showViewMyBillModal(row: IBill) {
+  public showViewMyBillModal(row: IInvoice) {
     this.viewMyBillModal.show(row);
   }
 
@@ -53,10 +53,10 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.ActiveBillingAccountSubscription = this.billingAccountService.ActiveBillingAccountObservable.subscribe(
+    this.ActiveServiceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
-        this.billingAccountId = +(result.Id);
-        this.invoiceService.getBillsCacheable(this.billingAccountId).subscribe(bills => {
+        this.serviceAccountId = +(result.Id);
+        this.invoiceService.getBillsCacheable(this.serviceAccountId).subscribe(bills => {
           this.Bills = bills;
           this.onChangeTable(this.config);
         });
@@ -159,6 +159,6 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.ActiveBillingAccountSubscription.unsubscribe();
+    this.ActiveServiceAccountSubscription.unsubscribe();
   }
 }

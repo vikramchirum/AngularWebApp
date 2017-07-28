@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 
-import { BillingAccountService } from 'app/core/BillingAccount.service';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { PaymentsHistoryService } from 'app/core/payments-history.service';
-import { PaymentsHistory } from 'app/core/models/payments-history.model';
+import { PaymentsHistory } from 'app/core/models/payments/payments-history.model';
 import { Subscription } from 'rxjs/Subscription';
 import { ColumnHeader } from 'app/core/models/columnheader.model';
 
@@ -29,10 +29,10 @@ export class PaymentsComponent implements OnInit, OnDestroy {
   public totalItems = 0;
   public Payments: PaymentsHistory[];
 
-  private ActiveBillingAccountSubscription: Subscription = null;
+  private ActiveServiceAccountSubscription: Subscription = null;
 
   constructor(
-    private BillingAccountService: BillingAccountService,
+    private ServiceAccountService: ServiceAccountService,
     private PaymentsHistoryService: PaymentsHistoryService,
     private CurrencyPipe: CurrencyPipe,
     private DatePipe: DatePipe
@@ -43,9 +43,9 @@ export class PaymentsComponent implements OnInit, OnDestroy {
       paging: true,
       sorting: { columnHeaders: this.columnHeaders },
     };
-    this.ActiveBillingAccountSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
-      activeBillingAccount => {
-        this.PaymentsHistoryService.GetPaymentsHistoryCacheable(activeBillingAccount).subscribe(
+    this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      activeServiceAccount => {
+        this.PaymentsHistoryService.GetPaymentsHistoryCacheable(activeServiceAccount).subscribe(
           PaymentsHistoryItems => {
             this.Payments = PaymentsHistoryItems;
             this.onChangeTable(this.config);
@@ -139,7 +139,7 @@ export class PaymentsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.ActiveBillingAccountSubscription.unsubscribe();
+    this.ActiveServiceAccountSubscription.unsubscribe();
   }
 
 }

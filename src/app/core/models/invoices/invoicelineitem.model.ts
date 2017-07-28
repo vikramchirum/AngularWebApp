@@ -2,7 +2,7 @@
  * Created by vikram.chirumamilla on 6/19/2017.
  */
 
-export interface IBillLineItem {
+export interface IInvoiceLineItem {
   Descripton: string;
   Amount: number;
   UOM: string;
