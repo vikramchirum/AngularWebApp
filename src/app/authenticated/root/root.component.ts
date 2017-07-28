@@ -14,6 +14,7 @@ import {ServiceAccountService} from 'app/core/serviceaccount.service';
 })
 export class RootComponent implements OnInit, AfterViewInit {
 
+  service_account_length: number = null;
   env = environment.Name;
   user: string;
   accordionVisible: boolean = false;
@@ -22,6 +23,9 @@ export class RootComponent implements OnInit, AfterViewInit {
   @ViewChild('homeMultiAccountsModal') homeMultiAccountsModal: HomeMultiAccountsModalComponent;
 
   constructor(private user_service: UserService, private router: Router, private viewContainerRef: ViewContainerRef, private serviceAcctService: ServiceAccountService) { }
+  constructor(private user_service: UserService, private router: Router, private viewContainerRef: ViewContainerRef, private billingAcctService: BillingAccountService) {
+    this.service_account_length = null;
+  }
 
   showHomeMultiAccountsModal() {
     this.homeMultiAccountsModal.show();
@@ -30,9 +34,21 @@ export class RootComponent implements OnInit, AfterViewInit {
     // this.homeMultiAccountsModal.show();
     if (!this.serviceAcctService.ActiveServiceAccountId) {
       this.homeMultiAccountsModal.show();
+    this.user_service.UserObservable.subscribe(
+      result => { this.service_account_length = result.Account_permissions.length; }
+    );
+    if (!this.serviceAcctService.ActiveBillingAccountId) {
+      if ( this.service_account_length != null && this.service_account_length === 2 ) {
+        this.homeMultiAccountsModal.hideServiceUpgradeModal();
+      } else if ( this.service_account_length != null && this.service_account_length > 2 ) {
+        this.homeMultiAccountsModal.show();
+      }
     }
   }
   ngOnInit() {
+    this.user_service.UserObservable.subscribe(
+      result => { this.billing_account_length = result.Account_permissions.length; }
+    );
     //this.user = this.user_service.logged_in_user;
     //this.user = this.user_service.user_token;
   }

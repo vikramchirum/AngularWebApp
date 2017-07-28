@@ -80,15 +80,24 @@ export class HttpClient extends Http {
     }
     console.error(errMsg);
     if ((error.status === 401 || error.status === 403)) {
-      this.clearLocalStorage();
       console.log('The token has expired or the user is not authorised. Please log back again.');
-      // window.location.href = window.location.href + '?' + new Date().getMilliseconds();
-      (<any>window).location.reload(true);
+      this.logout(true);
     } else {
       return Observable.throw(errMsg);
     }
   }
 
+  logout(maintainRouteState?: boolean) {
+    this.clearLocalStorage();
+    if (maintainRouteState) {
+      (<any>window).location.reload(true);
+    } else {
+      const url = window.location.href;
+      const arr = url.split('/');
+      const result = arr[0] + '//' + arr[2] + '/login/';
+      window.location.href = result + '?' + new Date().getMilliseconds();
+    }
+  }
   clearLocalStorage() {
     localStorage.clear();
     sessionStorage.clear();

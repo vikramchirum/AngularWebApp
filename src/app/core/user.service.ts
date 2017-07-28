@@ -48,7 +48,6 @@ export class UserService implements CanActivate {
   private registerUrl = environment.Api_Url + '/user/register';
   private updateEmail = environment.Api_Url + '/user/updateEmailAddress';
 
-
   get user_token(): string {
 
     // See if we already have it cached and return it.
@@ -339,8 +338,7 @@ export class UserService implements CanActivate {
     (this.httpClient.post(relativePath, null).map((response: Response) => {
       return <boolean> response.json();
     })).subscribe(res => { console.log('User logged out.'); });
-    this.httpClient.clearLocalStorage();
-    this.ApplyUserData(null);
+    this.httpClient.logout();
   }
 }
 
