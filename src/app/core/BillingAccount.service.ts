@@ -59,9 +59,15 @@ export class BillingAccountService {
     );
 
     // Respond to the first (initializing) call.
-    this.BillingAccountsObservable.first().delay(0).subscribe(() => {
-      this.initialized = true;
-      if (this.ActiveBillingAccountId) { this.SetActiveBillingAccount(this.ActiveBillingAccountId); }
+    this.BillingAccountsObservable.first().delay(0).subscribe((result) => {
+        this.initialized = true;
+        if (this.ActiveBillingAccountId) {
+          this.SetActiveBillingAccount(this.ActiveBillingAccountId);
+        } else {
+          if (result.length === 1) {
+            this.SetActiveBillingAccount(result[0].Id);
+          }
+        }
     });
 
     // Keep up-to-date with the user's billing accounts via the customer id.

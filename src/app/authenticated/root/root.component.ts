@@ -32,21 +32,19 @@ export class RootComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // this.homeMultiAccountsModal.show();
     this.user_service.UserObservable.subscribe(
-      result => { this.billing_account_length = result.Account_permissions.length;
-      console.log('Billing account length', this.billing_account_length); }
+      result => { this.billing_account_length = result.Account_permissions.length; }
     );
     if (!this.billingAcctService.ActiveBillingAccountId) {
       if ( this.billing_account_length != null && this.billing_account_length === 2 ) {
         this.homeMultiAccountsModal.hideServiceUpgradeModal();
-      } else if ( this.billing_account_length != null && this.billing_account_length > 2 ){
+      } else if ( this.billing_account_length != null && this.billing_account_length > 2 ) {
         this.homeMultiAccountsModal.show();
       }
     }
   }
   ngOnInit() {
     this.user_service.UserObservable.subscribe(
-      result => { this.billing_account_length = result.Account_permissions.length;
-        console.log('Billing account length oninit', this.billing_account_length); }
+      result => { this.billing_account_length = result.Account_permissions.length; }
     );
     //this.user = this.user_service.logged_in_user;
     //this.user = this.user_service.user_token;

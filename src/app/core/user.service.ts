@@ -48,7 +48,6 @@ export class UserService implements CanActivate {
   private registerUrl = environment.Api_Url + '/user/register';
   private updateEmail = environment.Api_Url + '/user/updateEmailAddress';
 
-
   get user_token(): string {
 
     // See if we already have it cached and return it.
@@ -119,11 +118,16 @@ export class UserService implements CanActivate {
     this.UserObservable.subscribe(user => {
       if (user) {
         this.initialized = true;
+        // this.BillingAccounts = getBillingAccountIds(user);
+        // if (this.BillingAccounts.length === 1) {
+        //   sessionStorage.setItem('ActiveBillingAccount', this.BillingAccounts[0] );
+        // }
         this.emitToObservers(this.UserBillingAccountsObservers, getBillingAccountIds(user));
         this.emitToObservers(this.UserCustomerAccountObservers, getCustomerAccountId(user));
         console.log('user = ', user);
         console.log(`BillingAccountIds = ${getBillingAccountIds(user)}`);
         console.log(`CustomerAccountId = ${getCustomerAccountId(user)}`);
+        //console.log('Active Id for one account', sessionStorage.getItem('ActiveBillingAccount'));
       }
     });
 
@@ -341,6 +345,7 @@ export class UserService implements CanActivate {
     localStorage.removeItem('gexa_auth_token');
     localStorage.removeItem('gexa_auth_token_expire');
     this.ApplyUserData(null);
+
   }
 
 }

@@ -36,9 +36,7 @@ export class LoginComponent implements OnInit {
     this.processing = true;
     this.error = null;
     this.UserService.login(this.user_name, this.password).subscribe(
-      (result) => {this.Router.navigate([this.UserService.UserState || '/']);
-                   console.log('Result', result);
-                   },
+      (result) => {this.Router.navigate([this.UserService.UserState || '/']); },
       error => {
         this.error = error.Message;
         this.processing = false;
