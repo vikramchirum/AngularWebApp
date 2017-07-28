@@ -1,13 +1,13 @@
-import {Component, OnInit, OnDestroy, ViewChild, AfterViewInit} from '@angular/core';
-import { CurrencyPipe, DatePipe} from '@angular/common';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 
-import { environment } from 'environments/environment';
-import { IInvoice } from '../../../../core/models/invoices/invoice.model';
-import { ColumnHeader } from '../../../../core/models/columnheader.model';
-import { InvoiceService } from '../../../../core/invoiceservice.service';
-import { ViewMyBillModalComponent } from './view-my-bill-modal/view-my-bill-modal.component';
 import { Subscription } from 'rxjs/Subscription';
-import { ServiceAccountService } from '../../../../core/serviceaccount.service';
+import { environment } from 'environments/environment';
+import { IInvoice } from 'app/core/models/invoices/invoice.model';
+import { ColumnHeader } from 'app/core/models/columnheader.model';
+import { InvoiceService } from 'app/core/invoiceservice.service';
+import { ViewMyBillModalComponent } from './view-my-bill-modal/view-my-bill-modal.component';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
 
 @Component({
   selector: 'mygexa-payment-history-bills',

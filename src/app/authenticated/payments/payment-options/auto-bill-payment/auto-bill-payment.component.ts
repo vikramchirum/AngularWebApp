@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
+import { Subscription } from 'rxjs/Subscription';
+import { find, includes } from 'lodash';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { Paymethod } from 'app/core/models/paymethod/Paymethod.model';
 import { PaymethodService } from 'app/core/Paymethod.service';
 import { AutoBillPayService } from 'app/core/auto-bill-pay.service';
-import { Subscription } from 'rxjs/Subscription';
-import { find, includes } from 'lodash';
-import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceaccount.model';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-auto-bill-payment',
@@ -65,29 +65,29 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
   }
 
   enrollInAutoBillPaySelected(selectedPaymethod: Paymethod): void {
-    this.AutoBillPayService.EnrollInAutoBillPay(
-      this.ActiveServiceAccount,
-      selectedPaymethod,
-      () => this.autoBillPaymethod = selectedPaymethod
-    );
+    // this.AutoBillPayService.EnrollInAutoBillPay(
+    //   this.ActiveServiceAccount,
+    //   selectedPaymethod,
+    //   () => this.autoBillPaymethod = selectedPaymethod
+    // );
   }
 
   unenrollInAutoBillPaySelected(): void {
-    this.AutoBillPayService.CancelAutoBillPay(
-      this.ActiveServiceAccount,
-      () => this.autoBillPaymethod = null
-    );
+    // this.AutoBillPayService.CancelAutoBillPay(
+    //   this.ActiveServiceAccount,
+    //   () => this.autoBillPaymethod = null
+    // );
   }
 
   switchingAutoBillPaySelected(selectedPaymethod: Paymethod) {
-    if (selectedPaymethod !== this.autoBillPaymethod) {
-      this.AutoBillPayService.UpdateAutoBillPay(
-        this.ActiveServiceAccount,
-        selectedPaymethod,
-        () => this.autoBillPaymethod = selectedPaymethod
-      );
-    }
-    this.switchingAutoBillPay = false;
+    // if (selectedPaymethod !== this.autoBillPaymethod) {
+    //   this.AutoBillPayService.UpdateAutoBillPay(
+    //     this.ActiveServiceAccount,
+    //     selectedPaymethod,
+    //     () => this.autoBillPaymethod = selectedPaymethod
+    //   );
+    // }
+    // this.switchingAutoBillPay = false;
   }
 
 }

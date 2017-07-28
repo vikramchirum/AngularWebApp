@@ -1,15 +1,14 @@
 
-import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Response } from '@angular/http';
 
-import {Observable} from 'rxjs/Observable';
-import {Observer} from 'rxjs/Observer';
-import {clone, find, first, forEach, get, isString, map, pull} from 'lodash';
-
-import {HttpClient} from './httpclient';
-import {UserService} from './user.service';
-import {Paymethod} from './models/paymethod/Paymethod.model';
-import {ServiceAccount} from './models/serviceaccount/serviceaccount.model';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+import { clone, find, first, forEach, get, isString, map, pull } from 'lodash';
+import { HttpClient } from './httpclient';
+import { UserService } from './user.service';
+import { Paymethod } from './models/paymethod/Paymethod.model';
+import { ServiceAccount } from './models/serviceaccount/serviceaccount.model';
 
 @Injectable()
 export class ServiceAccountService {

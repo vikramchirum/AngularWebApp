@@ -1,15 +1,14 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
-
-import {environment} from 'environments/environment';
-import {BudgetBillingService} from '../../../../core/budgetbilling.service';
-import {ServiceAccountService} from '../../../../core/serviceaccount.service';
-import {IBudgetBillingInfo} from '../../../../core/models/budgetbilling/budgetbillinginfo.model';
-import {IBudgetBillingEstimate} from '../../../../core/models/budgetbilling/budgetbillingestimate.model';
-import {CancelBudgetBillingModalComponent} from './cancel-budget-billing-modal/cancel-budget-billing-modal.component';
-import {ICancelBudgetBillingRequest} from '../../../../core/models/budgetbilling/cancelbudgetbillingrequest.model';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { environment } from 'environments/environment';
+import { BudgetBillingService } from 'app/core/budgetbilling.service';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { IBudgetBillingInfo } from 'app/core/models/budgetbilling/budgetbillinginfo.model';
+import { IBudgetBillingEstimate } from 'app/core/models/budgetbilling/budgetbillingestimate.model';
+import { CancelBudgetBillingModalComponent } from './cancel-budget-billing-modal/cancel-budget-billing-modal.component';
+import { ICancelBudgetBillingRequest } from 'app/core/models/budgetbilling/cancelbudgetbillingrequest.model';
 
 @Component({
   selector: 'mygexa-budget-billing',

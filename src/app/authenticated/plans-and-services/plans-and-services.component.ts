@@ -1,7 +1,8 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
-import {Subscription} from 'rxjs/Subscription';
-import {OfferService} from '../../core/offer.service';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { Subscription } from 'rxjs/Subscription';
+import { OfferService } from 'app/core/offer.service';
 
 @Component({
   selector: 'mygexa-plans-and-services',

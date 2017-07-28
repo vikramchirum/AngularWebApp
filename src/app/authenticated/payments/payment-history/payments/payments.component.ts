@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 
+import { Subscription } from 'rxjs/Subscription';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { PaymentsHistoryService } from 'app/core/payments-history.service';
 import { PaymentsHistory } from 'app/core/models/payments/payments-history.model';
-import { Subscription } from 'rxjs/Subscription';
 import { ColumnHeader } from 'app/core/models/columnheader.model';
 
 @Component({

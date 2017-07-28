@@ -1,11 +1,12 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+
 import { InvoiceService } from 'app/core/invoiceservice.service';
 import { IInvoice } from 'app/core/models/invoices/invoice.model';
 import { IInvoiceLineItem } from 'app/core/models/invoices/invoicelineitem.model';
 import { first, orderBy, filter } from 'lodash';
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
-import {Subscription} from 'rxjs/Subscription';
-import { ViewBillComponent } from '../../../shared/components/view-bill/view-bill.component';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { Subscription } from 'rxjs/Subscription';
+import { ViewBillComponent } from 'app/shared/components/view-bill/view-bill.component';
 
 @Component({
   selector: 'mygexa-view-my-bill',

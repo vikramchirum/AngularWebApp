@@ -1,10 +1,10 @@
-import {AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 
-import {UserService} from '../../core/user.service';
-import {Router} from '@angular/router';
-import {environment} from '../../../environments/environment';
-import {HomeMultiAccountsModalComponent} from './home-multi-accounts-modal/home-multi-accounts-modal.component';
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
+import { UserService } from 'app/core/user.service';
+import { environment } from 'environments/environment';
+import { HomeMultiAccountsModalComponent } from './home-multi-accounts-modal/home-multi-accounts-modal.component';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
 
 @Component({
   selector: 'mygexa-root',

@@ -4,8 +4,8 @@
 
 import { assign } from 'lodash';
 
-import {IAddress} from '../address/address.model';
-import {IServiceAccountPlanHistoryOffer} from './serviceaccountplanhistoryoffer.model';
+import { IAddress } from '../address/address.model';
+import { IServiceAccountPlanHistoryOffer } from './serviceaccountplanhistoryoffer.model';
 
 export class ServiceAccount {
   Customer_Account_Id: string;

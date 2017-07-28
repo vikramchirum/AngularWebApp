@@ -1,10 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { validateEmail, equalityCheck } from '../../../../validators/validator';
-import {CustomerAccountService} from 'app/core/CustomerAccount.service';
-import {UserService} from 'app/core/user.service';
-import {Subscription} from 'rxjs/Subscription';
-import {CustomerAccount} from "../../../../core/models/customeraccount/customeraccount.model";
+
+import { Subscription } from 'rxjs/Subscription';
+import { validateEmail, equalityCheck } from 'app/validators/validator';
+import { CustomerAccountService } from 'app/core/CustomerAccount.service';
+import { UserService } from 'app/core/user.service';
+import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
 
 @Component({
   selector: 'mygexa-personal-information',
