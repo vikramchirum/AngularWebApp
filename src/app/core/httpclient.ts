@@ -3,7 +3,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { ConnectionBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers } from '@angular/http';
+import { ConnectionBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers, XHRBackend } from '@angular/http';
 
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs/Rx';
@@ -103,3 +103,15 @@ export class HttpClient extends Http {
     sessionStorage.clear();
   }
 }
+
+export function httpFactory(xhrBackend: XHRBackend, requestOptions: RequestOptions): Http {
+  return new HttpClient(xhrBackend, requestOptions);
+}
+
+const HttpClientProvider = {
+  provide: HttpClient,
+  useFactory: httpFactory,
+  deps: [ XHRBackend, RequestOptions ]
+};
+
+export { HttpClientProvider as HttpClientService };

@@ -11,25 +11,25 @@ export interface ISearchAutoPaymentsRequest {
 }
 
 @Injectable()
-export class AutoBillPayService {
+export class AutoPaymentConfigService {
 
   constructor(
     private HttpClient: HttpClient
   ) { }
 
-  public CancelAutoPayment(id: string): Observable<boolean> {
-    return this.HttpClient.delete(`/AutoPaymentConfigs?autoPayConfigId=${id}`)
+  public CancelAutoPayment(autoPayConfigId: string | number): Observable<boolean> {
+    return this.HttpClient.delete(`/AutoPaymentConfigs?autoPayConfigId=${autoPayConfigId}`)
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err));
   }
 
-  public SearchAutoPayments(request: ISearchAutoPaymentsRequest): Observable<AutoPaymentConfig[]> {
+  public SearchAutoPayments(SearchAutoPaymentsRequest: ISearchAutoPaymentsRequest): Observable<AutoPaymentConfig[]> {
     let query;
 
-    if (request.autoPaymentConfigId) {
-      query = `/AutoPaymentConfigs?autoPaymentConfigId=${request.autoPaymentConfigId}`;
-    } else if (request.paymethodId) {
-      query = `/AutoPaymentConfigs?paymethodId=${request.paymethodId}`;
+    if (SearchAutoPaymentsRequest.autoPaymentConfigId) {
+      query = `/AutoPaymentConfigs?autoPaymentConfigId=${SearchAutoPaymentsRequest.autoPaymentConfigId}`;
+    } else if (SearchAutoPaymentsRequest.paymethodId) {
+      query = `/AutoPaymentConfigs?paymethodId=${SearchAutoPaymentsRequest.paymethodId}`;
     }
 
     if (!query) {
@@ -42,22 +42,22 @@ export class AutoBillPayService {
       .map(res => map(res, data => new AutoPaymentConfig(data)));
   }
 
-  public EnrollAutoPayment(request: IAutoPaymentConfigEnroll): Observable<AutoPaymentConfig> {
-    return this.HttpClient.post('/AutoPaymentConfigs', JSON.stringify(request))
+  public EnrollAutoPayment(AutoPaymentConfigEnroll: IAutoPaymentConfigEnroll): Observable<AutoPaymentConfig> {
+    return this.HttpClient.post('/AutoPaymentConfigs', JSON.stringify(AutoPaymentConfigEnroll))
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err))
       .map(res => new AutoPaymentConfig(res));
   }
 
-  public UpdateAutoPayment(request: IAutoPaymentConfigUpdate): Observable<AutoPaymentConfig> {
-    return this.HttpClient.put('/AutoPaymentConfigs', JSON.stringify(request))
+  public UpdateAutoPayment(AutoPaymentConfigUpdate: IAutoPaymentConfigUpdate): Observable<AutoPaymentConfig> {
+    return this.HttpClient.put('/AutoPaymentConfigs', JSON.stringify(AutoPaymentConfigUpdate))
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err))
       .map(res => new AutoPaymentConfig(res));
   }
 
-  public GetAutoPayment(id: string): Observable<AutoPaymentConfig> {
-    return this.HttpClient.get(`/AutoPaymentConfigs/${id}`)
+  public GetAutoPayment(autoPayConfigId: string | number): Observable<AutoPaymentConfig> {
+    return this.HttpClient.get(`/AutoPaymentConfigs/${autoPayConfigId}`)
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err))
       .map(res => new AutoPaymentConfig(res));

@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@ang
 
 import { Subscription } from 'rxjs/Subscription';
 import { find, get } from 'lodash';
-import { AutoBillPayService } from 'app/core/auto-bill-pay.service';
+import { AutoPaymentConfigService } from 'app/core/auto-payment-config.service';
 import { PaymethodAddCcComponent } from 'app/shared/components/payment-method-add-cc/payment-method-add-cc.component';
 import { PaymethodAddEcheckComponent } from 'app/shared/components/payment-method-add-echeck/payment-method-add-echeck.component';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
@@ -69,7 +69,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
   constructor(
     private ChangeDetectorRef: ChangeDetectorRef,
-    private AutoBillPayService: AutoBillPayService,
+    private AutoPaymentConfigService: AutoPaymentConfigService,
     private ServiceAccountService: ServiceAccountService,
     private PaymethodService: PaymethodService
   ) { }
@@ -126,7 +126,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
     const PaymethodToDelete = this.PaymentEditting;
 
-    // this.AutoBillPayService.CancelAutoBillPay(
+    // this.AutoPaymentConfigService.CancelAutoBillPay(
     //   this.ActiveServiceAccount
     // );
 
@@ -154,7 +154,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     const PaymethodToDelete = this.PaymentEditting;
     const PaymethodToUse = this.PaymentAbpSelected;
 
-    // this.AutoBillPayService.UpdateAutoBillPay(
+    // this.AutoPaymentConfigService.UpdateAutoBillPay(
     //   this.ActiveServiceAccount,
     //   PaymethodToUse
     // );

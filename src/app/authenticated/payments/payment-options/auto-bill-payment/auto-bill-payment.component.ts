@@ -5,7 +5,7 @@ import { find, includes } from 'lodash';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { Paymethod } from 'app/core/models/paymethod/Paymethod.model';
 import { PaymethodService } from 'app/core/Paymethod.service';
-import { AutoBillPayService } from 'app/core/auto-bill-pay.service';
+import { AutoPaymentConfigService } from 'app/core/auto-payment-config.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
 @Component({
@@ -45,7 +45,7 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
 
   constructor(
     private ServiceAccountService: ServiceAccountService,
-    private AutoBillPayService: AutoBillPayService,
+    private AutoPaymentConfigService: AutoPaymentConfigService,
     private PaymethodService: PaymethodService,
     private ChangeDetectorRef: ChangeDetectorRef
   ) { }
@@ -65,7 +65,7 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
   }
 
   enrollInAutoBillPaySelected(selectedPaymethod: Paymethod): void {
-    // this.AutoBillPayService.EnrollInAutoBillPay(
+    // this.AutoPaymentConfigService.EnrollInAutoBillPay(
     //   this.ActiveServiceAccount,
     //   selectedPaymethod,
     //   () => this.autoBillPaymethod = selectedPaymethod
@@ -73,7 +73,7 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
   }
 
   unenrollInAutoBillPaySelected(): void {
-    // this.AutoBillPayService.CancelAutoBillPay(
+    // this.AutoPaymentConfigService.CancelAutoBillPay(
     //   this.ActiveServiceAccount,
     //   () => this.autoBillPaymethod = null
     // );
@@ -81,7 +81,7 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
 
   switchingAutoBillPaySelected(selectedPaymethod: Paymethod) {
     // if (selectedPaymethod !== this.autoBillPaymethod) {
-    //   this.AutoBillPayService.UpdateAutoBillPay(
+    //   this.AutoPaymentConfigService.UpdateAutoBillPay(
     //     this.ActiveServiceAccount,
     //     selectedPaymethod,
     //     () => this.autoBillPaymethod = selectedPaymethod

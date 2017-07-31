@@ -1,39 +1,39 @@
 
 import { assign, isString } from 'lodash';
 
-export interface IBillingAccountModel {
-  BillingAccountId: string;
+export interface IServiceAccountModel {
+  ServiceAccountId: string | number;
   BillingSystem: 'GEMS' | string;
   AccountTypeName: 'ContractServicePoint' | string;
   BusinessUnit: 'GEXA' | string;
 }
 
 export interface IAutoPaymentConfigEnroll {
-  PayMethodId: number;
-  BillingAccountModel: IBillingAccountModel;
+  PayMethodId: string | number;
+  ServiceAccountModel: IServiceAccountModel;
 }
 
 export interface IAutoPaymentConfigUpdate {
-  APCId: string;
-  PayMethodId: string;
+  APCId: string | number;
+  PayMethodId: string | number;
 }
 
 export interface IAutoPaymentConfig {
-  Id: string;
+  Id: string | number;
   StartDate: Date;
   StopDate: Date;
-  PayMethodId: number;
-  BillingAccountModel: IBillingAccountModel;
+  PayMethodId: string | number;
+  ServiceAccountModel: IServiceAccountModel;
 }
 
 export class AutoPaymentConfig implements IAutoPaymentConfig {
 
-  Id: string = null;
+  Id: string | number = null;
   StartDate: Date = null;
   StopDate: Date = null;
-  PayMethodId: number = null;
-  BillingAccountModel: IBillingAccountModel = {
-    BillingAccountId: null,
+  PayMethodId: string | number = null;
+  ServiceAccountModel: IServiceAccountModel = {
+    ServiceAccountId: null,
     BillingSystem: null,
     AccountTypeName: null,
     BusinessUnit: null
