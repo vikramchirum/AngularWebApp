@@ -54,5 +54,4 @@ export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
   ngOnDestroy() {
     this.ActiveServiceAccountSubscription.unsubscribe();
   }
-
 }
