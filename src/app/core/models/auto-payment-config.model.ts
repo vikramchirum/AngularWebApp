@@ -40,7 +40,7 @@ export class AutoPaymentConfig implements IAutoPaymentConfig {
   };
 
   /**
-   * Construct a new Billing_Account passing in values (opts) to use.
+   * Construct a new AutoPaymentConfig passing in values (opts) to use.
    * @param opts
    */
   constructor(opts: any) {
