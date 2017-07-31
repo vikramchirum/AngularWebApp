@@ -2,12 +2,13 @@
  * Created by vikram.chirumamilla on 6/20/2017.
  */
 
-import { Injectable } from '@angular/core';
-import { ConnectionBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers } from '@angular/http';
+import {Injectable} from '@angular/core';
+import {ConnectionBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers, URLSearchParams} from '@angular/http';
 
-import { environment } from 'environments/environment';
-import { Observable } from 'rxjs/Rx';
-import { get } from 'lodash';
+import {Observable} from 'rxjs/Rx';
+import {get, isPlainObject} from 'lodash';
+
+import {environment} from 'environments/environment';
 
 @Injectable()
 export class HttpClient extends Http {
@@ -20,7 +21,13 @@ export class HttpClient extends Http {
     return super.request(url, options);
   }
 
-  public get(url: string, params?: URLSearchParams): Observable<Response> {
+  public search(url: string, searchRequest?: Object): Observable<Response> {
+
+    let params: URLSearchParams = null;
+    if (isPlainObject(searchRequest)) {
+      params = this.getURLSearchParams(searchRequest);
+    }
+
     url = this.getAbsoluteUrl(url);
     const options = this.getRequestOptionArgs();
     if (params != null) {
@@ -28,6 +35,11 @@ export class HttpClient extends Http {
     }
 
     return super.get(url, options);
+  }
+
+  public get(url: string, options?: RequestOptionsArgs): Observable<Response> {
+    url = this.getAbsoluteUrl(url);
+    return super.get(url, this.getRequestOptionArgs(options));
   }
 
   public post(url: string, body: any, options?: RequestOptionsArgs): Observable<Response> {
@@ -40,9 +52,20 @@ export class HttpClient extends Http {
     return super.put(url, body, this.getRequestOptionArgs(options));
   }
 
-  public delete(url: string, options?: RequestOptionsArgs): Observable<Response> {
+  public delete(url: string, deleteRequest?: object): Observable<Response> {
+
+    let params: URLSearchParams = null;
+    if (isPlainObject(deleteRequest)) {
+      params = this.getURLSearchParams(deleteRequest);
+    }
+
     url = this.getAbsoluteUrl(url);
-    return super.delete(url, this.getRequestOptionArgs(options));
+    const options = this.getRequestOptionArgs();
+    if (params != null) {
+      options.params = params;
+    }
+
+    return super.delete(url, options);
   }
 
   private getAbsoluteUrl(relativePath: string) {
@@ -98,8 +121,22 @@ export class HttpClient extends Http {
       window.location.href = result + '?' + new Date().getMilliseconds();
     }
   }
+
   clearLocalStorage() {
     localStorage.clear();
     sessionStorage.clear();
+  }
+
+  private getURLSearchParams(searchRequest): URLSearchParams {
+    const params: URLSearchParams = new URLSearchParams();
+    if (isPlainObject(searchRequest)) {
+      for (const key in searchRequest) {
+        if (searchRequest.hasOwnProperty(key)) {
+          const val = searchRequest[key];
+          params.set(key, val);
+        }
+      }
+    }
+    return params;
   }
 }

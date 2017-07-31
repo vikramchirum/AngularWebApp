@@ -36,7 +36,7 @@ export class ViewBillComponent implements OnInit {
 
   public PopulateItemizedBill(bill_object: IInvoice) {
     const invoice_id = Number(bill_object.Invoice_Id);
-    this.invoice_service.getItemizedBillDetails(invoice_id)
+    this.invoice_service.getItemizedInvoiceDetails(invoice_id)
       .subscribe(
         bill_item_details => {
           this.openCharges = [];

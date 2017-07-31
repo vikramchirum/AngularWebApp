@@ -37,7 +37,7 @@ export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
       result => {
         this.latest_invoice_id = result.Latest_Invoice_Id;
         this.service_account_id = Number(result.Id);
-        this.invoice_service.getBill(this.latest_invoice_id)
+        this.invoice_service.getInvoice(this.latest_invoice_id)
           .subscribe(
             response => {
               this.req_bill = response;
