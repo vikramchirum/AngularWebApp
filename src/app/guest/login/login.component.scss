@@ -343,4 +343,12 @@ body {
     color: #fff;
   }
   
+  .navbar-inverse {
+      border-radius: 0;
+      height: 32px;  
+  }
+}
+
+container.login-container, .hero-wrapper{
+  min-height: 650px;
 }
