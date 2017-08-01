@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 
-import { toNumber } from 'lodash';
+import { reverse, toNumber } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { UsageHistoryService } from 'app/core/usage-history.service';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
@@ -63,7 +63,7 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     if (this.activeServiceAccount) {
       this.usageHistoryService.getUsageHistory(toNumber(this.activeServiceAccount.Id))
         .subscribe(usageHistory => {
-          this.tableData = usageHistory;
+          this.tableData = reverse(usageHistory);
           this.isDataAvailable = true;
         });
     }
