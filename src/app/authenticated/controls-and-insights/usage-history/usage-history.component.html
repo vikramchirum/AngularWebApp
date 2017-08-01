@@ -23,6 +23,8 @@
         ></canvas>
       </div>
     </div>
+
+    <!--
     <div class="line-chart">
       <br/><br/><br/>
       <h3>Year Over Year</h3>
@@ -41,44 +43,7 @@
         ></canvas>
       </div>
     </div>
+    -->
+
   </div>
 </div>
-     
-     <div class="container-fluid container-breakout bg-info" *ngIf="isDataAvailable">
-  <div class="row">
-    <div class="container">
-      <div class="row">
-      <div class="col-md-3">
-         <button class="btn btn-primary btn-block btn-round"><i class="fa fa-fw fa-3x fa-file-excel-o"></i><br/>
-  Insight History <span class="boxed">Download</span></button>
-        </div>
-      <div class="col-md-8 col-md-offset-1" style="margin-bottom: 10px">
-        <h1>Insight History Table</h1>
-        <table class="table table-responsive table-condensed">
-          <tr>
-            <th class='month'>Month</th>
-            <th class='year'>Year</th>
-            <th class='usage'>kwH</th>
-          </tr>
-          <tr *ngFor='let index of currentPage'>
-            <td class='month'>{{ index.date | date:'MMMM' }}</td>
-            <td class='year'>{{ index.date | date:'y' }}</td>
-            <td class='usage'>{{ index.usage }}</td>
-          </tr>
-        </table>
-
-        <pagination
-          (pageChanged)="pageChanged($event)"
-          [boundaryLinks]="true"
-          [totalItems]="totalItems"
-          class="pagination-sm"
-          previousText="&lsaquo;"
-          nextText="&rsaquo;"
-          firstText="&laquo;"
-          lastText="&raquo;"
-        ></pagination>
-
-    </div>
-  </div>
-</div>
-       </div></div>

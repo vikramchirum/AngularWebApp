@@ -135,12 +135,11 @@ export class UserService implements CanActivate {
       const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
       const options = new RequestOptions({ headers, params });
 
-      this.Http.get(this.getUserFromMongo, options)
+      this.httpClient.get('/user/getUserFromMongo')
         .map(res => res.json())
         .catch(error => this.httpClient.handleHttpError(error))
         .subscribe(res => this.ApplyUserData(res));
     }
-
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {

@@ -16,7 +16,7 @@
     </ul>
   </div>
 </nav>
- <nav class="navbar custom-nav">
+<nav class="navbar custom-nav" id="custom-nav">
   <div class="container container-relaxed">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle pull-left" (click)="toggleAccordion($event)"><span>&#9776;</span></button>
@@ -27,7 +27,11 @@
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
        	<li class="dropdown-full account-menu">
-    		  <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/account"  class="dropdown-toggle">My Account</a>
+    		  <a
+            routerLink="/account"
+            [ngClass]="{ 'active': startsWith(router.url, '/account') }"
+            class="dropdown-toggle"
+          >My Account</a>
     		  <div class="dropdown-menu">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hero no-margin">
               <div class="">
@@ -57,7 +61,11 @@
         </li>
         <li role="separator" class="divider"> </li>
         <li class="dropdown-full plans-menu">
-          <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/plans-and-services" class="dropdown-toggle">Plans &amp; Services</a>
+          <a
+            routerLink="/plans-and-services"
+            [ngClass]="{ 'active': startsWith(router.url, '/plans-and-services') }"
+            class="dropdown-toggle"
+          >Plans &amp; Services</a>
            <div class="dropdown-menu plans">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hero no-margin">
               <div class="">
@@ -87,7 +95,11 @@
         </li>
         <li role="separator" class="divider"> </li>
          <li class="dropdown-full payment-menu">
-          <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/payments/view-my-bill/" class="dropdown-toggle">Payment Center</a>
+          <a
+            routerLink="/payments/view-my-bill/"
+            [ngClass]="{ 'active': startsWith(router.url, '/payments/view-my-bill/') }"
+            class="dropdown-toggle"
+          >Payment Center</a>
           <div class="dropdown-menu">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hero no-margin">
               <div class="">
@@ -120,7 +132,11 @@
 
         <li role="separator" class="divider"> </li>
         <li class="dropdown-full control-menu">
-          <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/controls-and-insights" class="dropdown-toggle">Control &amp; Insights</a>
+          <a
+            routerLink="/controls-and-insights"
+            [ngClass]="{ 'active': startsWith(router.url, '/controls-and-insights') }"
+            class="dropdown-toggle"
+          >Control &amp; Insights</a>
           <div class="dropdown-menu">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hero no-margin">
               <div>

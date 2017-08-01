@@ -13,9 +13,10 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
 })
 export class UsageHistoryComponent implements OnDestroy {
 
-  activeServiceAccount: ServiceAccount = null;
-
-  public monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+  private activeServiceAccount: ServiceAccount = null;
+  private ServiceAccountsSubscription: Subscription = null;
+  private isDataAvailable = false;
+  private monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
     'September', 'October', 'November', 'December'];
 
   /* Bar Graph Properties */
@@ -82,13 +83,6 @@ export class UsageHistoryComponent implements OnDestroy {
     { borderColor: 'rgba(27,141,205,1.0)', backgroundColor: 'rgba(27,141,205,1.0)' }
   ];
 
-  /* Table and Pagination Data */
-  public tablePage = 1;
-  public isDataAvailable = false;
-  public tableData: any[] = [];
-
-  private ServiceAccountsSubscription: Subscription = null;
-
   constructor(
     private usageHistoryService: UsageHistoryService,
     private ServiceAccountService: ServiceAccountService
@@ -104,27 +98,6 @@ export class UsageHistoryComponent implements OnDestroy {
   ngOnDestroy() {
     // Clean up our subscribers to avoid memory leaks.
     this.ServiceAccountsSubscription.unsubscribe();
-  }
-
-  get totalItems(): number {
-    return this.tableData.length;
-  }
-
-  private getEntries(page: number) {
-    const index = (page - 1) * 10;
-    const extent = index + 10;
-    if (extent > this.tableData.length) {
-      return this.tableData.slice(index);
-    }
-    return this.tableData.slice(index, extent);
-  }
-
-  get currentPage() {
-    return this.getEntries(this.tablePage);
-  }
-
-  public pageChanged(event: any): void {
-    this.tablePage = event.page;
   }
 
   public chartClicked(e: any): void {
@@ -144,8 +117,6 @@ export class UsageHistoryComponent implements OnDestroy {
 
   // Fetch labels and data from api response and show it on the charts
   populateCharts(usageHistory) {
-
-    this.tableData = usageHistory;
 
     const datagroups = {};
     let tempYear: string;

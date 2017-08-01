@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 
@@ -8,6 +9,7 @@ import { ColumnHeader } from 'app/core/models/columnheader.model';
 import { InvoiceService } from 'app/core/invoiceservice.service';
 import { ViewMyBillModalComponent } from './view-my-bill-modal/view-my-bill-modal.component';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { IInvoiceSearchRequest } from 'app/core/models/invoices/invoicesearchrequest.model';
 
 @Component({
   selector: 'mygexa-payment-history-bills',
@@ -19,7 +21,7 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   public config: any;
   public columnHeaders: ColumnHeader[] = [
     { title: 'Bill Date',       name: 'Invoice_Date',    sort: 'desc', type: 'date' },
-    { title: 'Usage',           name: 'Usage',           sort: '',     type: '' },
+    { title: 'Usage',           name: 'Total_Usage',           sort: '',     type: '' },
     { title: 'Due Date',        name: 'Due_Date',        sort: '',     type: 'date' },
     { title: 'Current Charges', name: 'Current_Charges', sort: '',     type: 'dollar' },
     { title: 'Total',           name: 'Amount_Due',      sort: '',     type: 'dollar' }
@@ -30,7 +32,7 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   public currentPage = 1;
   public itemsPerPage = 10;
   public totalItems = 0;
-  public Bills: IInvoice[];
+  public Invoices: IInvoice[];
 
   private ActiveServiceAccountSubscription: Subscription = null;
   private serviceAccountId: number;
@@ -56,8 +58,10 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.ActiveServiceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.serviceAccountId = +(result.Id);
-        this.invoiceService.getBillsCacheable(this.serviceAccountId).subscribe(bills => {
-          this.Bills = bills;
+        const invoiceSearchRequest = {} as IInvoiceSearchRequest;
+        invoiceSearchRequest.Service_Account_Id = this.serviceAccountId;
+        this.invoiceService.getInvoicesCacheable(invoiceSearchRequest).subscribe(bills => {
+          this.Invoices = bills;
           this.onChangeTable(this.config);
         });
       }
@@ -96,7 +100,7 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
       Object.assign(this.config.sorting, config.sorting);
     }
 
-    const sortedData = this.changeSort(this.Bills, this.config);
+    const sortedData = this.changeSort(this.Invoices, this.config);
     this.rows = sortedData;
     this.totalItems = sortedData.length;
   }
@@ -137,7 +141,6 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public sortByColumn(columnToSort: ColumnHeader) {
-
     const sorting: Array<ColumnHeader> = Object.assign({}, this.config.sorting).columnHeaders;
     const sorted = sorting.map((columnHeader: ColumnHeader) => {
       if (columnToSort.name === columnHeader.name) {

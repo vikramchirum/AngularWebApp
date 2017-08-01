@@ -1,19 +1,16 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { InvoiceService } from 'app/core/invoiceservice.service';
 import { IInvoice } from 'app/core/models/invoices/invoice.model';
-import { IInvoiceLineItem } from 'app/core/models/invoices/invoicelineitem.model';
-import { first, orderBy, filter } from 'lodash';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { Subscription } from 'rxjs/Subscription';
-import { ViewBillComponent } from 'app/shared/components/view-bill/view-bill.component';
 
 @Component({
   selector: 'mygexa-view-my-bill',
   templateUrl: './view-my-bill.component.html',
   styleUrls: ['./view-my-bill.component.scss']
 })
-export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
+export class ViewMyBillComponent implements OnInit, OnDestroy {
 
   all_bills: IInvoice[];  sort_all_bills: IInvoice[];
   public req1_bill: IInvoice;
@@ -24,7 +21,6 @@ export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
   public service_account_id: number;
   public id: string;
   date_today = new Date;
-  @ViewChild(ViewBillComponent) private viewBill: ViewBillComponent;
 
   private ActiveServiceAccountSubscription: Subscription = null;
 
@@ -33,20 +29,15 @@ export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
     private ServiceAccountService: ServiceAccountService
   ) { }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.latest_invoice_id = result.Latest_Invoice_Id;
         this.service_account_id = Number(result.Id);
-        this.invoice_service.getBill(this.latest_invoice_id)
+        this.invoice_service.getInvoice(this.latest_invoice_id)
           .subscribe(
-            response => {
-              this.req_bill = response;
-              this.viewBill.PopulateItemizedBill(this.req_bill);
-            },
-            error => {
-              this.error = error.Message;
-            }
+            response => this.req_bill = response,
+            error => this.error = error.Message
           );
       }
     );
@@ -55,5 +46,4 @@ export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
   ngOnDestroy() {
     this.ActiveServiceAccountSubscription.unsubscribe();
   }
-
 }
