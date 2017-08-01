@@ -12,8 +12,15 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class PaymethodSelectorComponent implements OnInit, OnDestroy {
 
+  @Input() disableIfOnlyOne: boolean = null;
+  @Input() disableIfOnlyOneText: string = null;
+  @Input() headerText: string = null;
+  @Input() cancelText: string = null;
+  @Input() cancelProvide: boolean = null;
   @Input() submitText: string = null;
   @Input() initialPaymethod: Paymethod = null;
+  @Input() initialPaymethodDisable: boolean = null;
+  @Output() canceledSelect: EventEmitter<any> =  new EventEmitter<any>();
   @Output() changedPaymethod: EventEmitter<any> =  new EventEmitter<any>();
 
   PaymethodSelected: Paymethod = null;
@@ -47,6 +54,10 @@ export class PaymethodSelectorComponent implements OnInit, OnDestroy {
 
   submitPaymethod(): void {
     this.changedPaymethod.emit(this.PaymethodSelected);
+  }
+
+  cancelSelect(): void {
+    this.canceledSelect.emit();
   }
 }
 
