@@ -1,6 +1,6 @@
-<div class="container"> 
+<div class="container">
   <div class="row">
-    <div class="col-md-3 col-sm-3 hidden-xs plans-side-panel">
+    <div class="col-sm-3 hidden-xs plans-side-panel">
        <mygexa-left-nav-panel *ngIf="!IsInRenewalTimeFrame" [sideNavData] = "
        {
         'panelTitle':'Plans &amp; Services',
@@ -22,18 +22,15 @@
         ]
       }" ></mygexa-left-nav-panel>
     </div>
-    <div class="col-md-9 col-sm-9 col-xs-12">
+    <div class="col-sm-9">
       <mygexa-status-bar></mygexa-status-bar>
       <router-outlet></router-outlet>
     </div>
   </div>
 </div>
-<div class="container-fluid callout-container plans">
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="container">
-          <mygexa-change-your-plan></mygexa-change-your-plan>
-      </div>
-    </div>
+
+<div class="container-fluid callout-container plans" *ngIf="startsWith(Router.url, '/plans-and-services/my-services-plans')">
+  <div class="container">
+    <mygexa-change-your-plan></mygexa-change-your-plan>
   </div>
 </div>

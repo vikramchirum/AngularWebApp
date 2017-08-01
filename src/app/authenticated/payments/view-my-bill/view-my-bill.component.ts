@@ -5,7 +5,6 @@ import { IInvoiceLineItem } from 'app/core/models/invoices/invoicelineitem.model
 import { first, orderBy, filter } from 'lodash';
 import {ServiceAccountService} from 'app/core/serviceaccount.service';
 import {Subscription} from 'rxjs/Subscription';
-import { ViewBillComponent } from '../../../shared/components/view-bill/view-bill.component';
 
 @Component({
   selector: 'mygexa-view-my-bill',
@@ -23,7 +22,6 @@ export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
   public service_account_id: number;
   public id: string;
   date_today = new Date;
-  @ViewChild(ViewBillComponent) private viewBill: ViewBillComponent;
 
   private ActiveServiceAccountSubscription: Subscription = null;
 
@@ -39,13 +37,8 @@ export class ViewMyBillComponent implements OnDestroy, AfterViewInit {
         this.service_account_id = Number(result.Id);
         this.invoice_service.getInvoice(this.latest_invoice_id)
           .subscribe(
-            response => {
-              this.req_bill = response;
-              this.viewBill.PopulateItemizedBill(this.req_bill);
-            },
-            error => {
-              this.error = error.Message;
-            }
+            response => this.req_bill = response,
+            error => this.error = error.Message
           );
       }
     );
