@@ -84,7 +84,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   set ActiveServiceAccount(ActiveServiceAccount: ServiceAccount) {
     this._ActiveServiceAccount = ActiveServiceAccount;
     if (ActiveServiceAccount) {
-      this.InvoiceService.getBill(ActiveServiceAccount.Latest_Invoice_Id).subscribe(
+      this.InvoiceService.getInvoice(ActiveServiceAccount.Latest_Invoice_Id).subscribe(
         LatestInvoice => this.LatestInvoice = LatestInvoice
       );
     }

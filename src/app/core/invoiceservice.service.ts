@@ -1,34 +1,31 @@
 /**
  * Created by vikram.chirumamilla on 6/19/2017.
  */
+
 import {Injectable } from '@angular/core';
 
 import {forEach} from 'lodash';
 import {Observable} from 'rxjs/Rx';
 
 import {HttpClient} from './httpclient';
-import {IInvoiceLineItem} from './models/invoices/invoicelineitem.model';
 import {IInvoice} from './models/invoices/invoice.model';
 import {ServiceAccountService} from './serviceaccount.service';
+import {IInvoiceSearchRequest} from './models/invoices/invoicesearchrequest.model';
+import {IInvoiceLineItem} from 'app/core/models/invoices/invoicelineitem.model';
 
 @Injectable()
 export class InvoiceService {
 
   private cachedInvoices: IInvoice[] = null;
-
-  constructor(
-    private HttpClient: HttpClient,
-    private ServiceAccountService: ServiceAccountService
-  ) {
+  constructor(private HttpClient: HttpClient, private ServiceAccountService: ServiceAccountService) {
     // Clear the cache if the active service account changes.
     this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       () => this.cachedInvoices = null
     );
   }
 
-  getBills(serviceAccountId: number): Observable<IInvoice[]>   {
-
-    return this.HttpClient.get(`/invoice/${serviceAccountId}/bills`)
+  getInvoices(invoiceSearchRequest: IInvoiceSearchRequest): Observable<IInvoice[]> {
+    return this.HttpClient.search(`/invoice`, invoiceSearchRequest)
       .map(res => res.json())
       .map(bills => forEach(bills, bill => {
         bill.Invoice_Date = new Date(bill.Invoice_Date);
@@ -38,28 +35,23 @@ export class InvoiceService {
       .catch(error => this.HttpClient.handleHttpError(error));
   }
 
-  getBillsCacheable(serviceAccountId: number): Observable<IInvoice[]> {
-
+  getInvoicesCacheable(invoiceSearchRequest: IInvoiceSearchRequest): Observable<IInvoice[]> {
     if (this.cachedInvoices) {
       return Observable.of(this.cachedInvoices).delay(0);
     }
 
-    return this.getBills(serviceAccountId);
-
+    return this.getInvoices(invoiceSearchRequest);
   }
 
-  getBill(invoiceId: string): Observable<IInvoice>   {
-
+  getInvoice(invoiceId: string): Observable<IInvoice>   {
     return this.HttpClient.get(`/invoice/${invoiceId}`)
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err));
   }
 
-  getItemizedBillDetails(invoiceId: number): Observable<IInvoiceLineItem[]>   {
-
+  getItemizedInvoiceDetails(invoiceId: number): Observable<IInvoiceLineItem[]>   {
     return this.HttpClient.get(`/invoice/${invoiceId}/details`)
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err));
   }
-
 }
