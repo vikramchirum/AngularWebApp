@@ -13,8 +13,7 @@ import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount
 @Component({
   selector: 'mygexa-my-bill',
   templateUrl: './my-bill.component.html',
-  styleUrls: ['./my-bill.component.scss'],
-  providers: [ InvoiceService ]
+  styleUrls: ['./my-bill.component.scss']
 })
 export class MyBillComponent implements OnInit, OnDestroy {
 
@@ -22,11 +21,13 @@ export class MyBillComponent implements OnInit, OnDestroy {
   private ActiveServiceAccountSubscription: Subscription = null;
 
   constructor(
-    private invoice_service: InvoiceService,
     private ServiceAccountService: ServiceAccountService
   ) { }
 
   ngOnInit() {
+
+    alert('test bil');
+
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.activeServiceAccount = result;

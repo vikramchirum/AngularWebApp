@@ -10,7 +10,7 @@ import { UsageSummaryComponent } from './usage-summary/usage-summary.component';
 import { ReferFriendProgramComponent } from './refer-friend-program/refer-friend-program.component';
 import { AutoPaySignupComponent } from './auto-pay-signup/auto-pay-signup.component';
 import { HomeCarouselComponent } from './home-carousel/home-carousel.component';
-import { ViewBillComponent } from '../../shared/components/view-bill/view-bill.component';
+import {MyBillComponent} from './my-bill/my-bill.component';
 
 @NgModule({
   imports: [
@@ -25,7 +25,7 @@ import { ViewBillComponent } from '../../shared/components/view-bill/view-bill.c
     UsageSummaryComponent,
     ReferFriendProgramComponent,
     AutoPaySignupComponent,
-    ViewBillComponent,
+    MyBillComponent,
     HomeCarouselComponent]
 })
 export class HomeModule { }
