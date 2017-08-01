@@ -26,8 +26,6 @@ export class MyBillComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    alert('test bil');
-
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.activeServiceAccount = result;
