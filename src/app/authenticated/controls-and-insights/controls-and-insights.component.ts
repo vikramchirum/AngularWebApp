@@ -18,9 +18,13 @@ export class ControlsAndInsightsComponent implements OnInit {
         {
           'title':'Usage History',
           'navUrl':'usage-history'
+        },
+        {
+          'title':'Energy Savings',
+          'navUrl':'energy-savings'
         }
       ]
-    }
+    };
   }
 
 }

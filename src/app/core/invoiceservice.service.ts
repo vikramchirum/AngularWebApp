@@ -27,11 +27,11 @@ export class InvoiceService {
   getInvoices(invoiceSearchRequest: IInvoiceSearchRequest): Observable<IInvoice[]> {
     return this.HttpClient.search(`/invoice`, invoiceSearchRequest)
       .map(res => res.json())
-      .map(bills => forEach(bills, bill => {
-        bill.Invoice_Date = new Date(bill.Invoice_Date);
-        bill.Due_Date = new Date(bill.Due_Date);
+      .map(invoices => forEach(invoices, invoice => {
+        invoice.Invoice_Date = new Date(invoice.Invoice_Date);
+        invoice.Due_Date = new Date(invoice.Due_Date);
       }))
-      .map(bills => this.cachedInvoices = bills)
+      .map(invoices => this.cachedInvoices = invoices)
       .catch(error => this.HttpClient.handleHttpError(error));
   }
 
