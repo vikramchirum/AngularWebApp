@@ -25,8 +25,9 @@ export class ViewBillComponent implements OnInit {
 
   private openCharges = [];
 
-  constructor(private invoice_service: InvoiceService) {
-  }
+  constructor(
+    private invoice_service: InvoiceService
+  ) { }
 
   ngOnInit() {
     if (this.bill_object) {

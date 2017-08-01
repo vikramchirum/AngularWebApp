@@ -1,25 +1,71 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+
+import { toNumber } from 'lodash';
+import { Subscription } from 'rxjs/Subscription';
+import { UsageHistoryService } from 'app/core/usage-history.service';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-controls-and-insights',
   templateUrl: './controls-and-insights.component.html',
   styleUrls: ['./controls-and-insights.component.scss']
 })
-export class ControlsAndInsightsComponent implements OnInit {
+export class ControlsAndInsightsComponent implements OnDestroy {
 
-  sideNavPanelData:any;
+  private activeServiceAccount: ServiceAccount = null;
+  private ServiceAccountsSubscription: Subscription = null;
+  private isDataAvailable = false;
 
-  constructor() { }
+  /* Table and Pagination Data */
+  public tablePage = 1;
+  public tableData: any[] = [];
 
-  ngOnInit() {
-    this.sideNavPanelData = {
-      'panelTitle':'Control and Insights',
-      'items':[
-        {
-          'title':'Usage History',
-          'navUrl':'usage-history'
-        }
-      ]
+  constructor(
+    private usageHistoryService: UsageHistoryService,
+    private ServiceAccountService: ServiceAccountService
+  ) {
+    this.ServiceAccountsSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      activeServiceAccount => {
+        this.activeServiceAccount = activeServiceAccount;
+        this.getUsageHistoryByServiceAccountId();
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    // Clean up our subscribers to avoid memory leaks.
+    this.ServiceAccountsSubscription.unsubscribe();
+  }
+
+  get totalItems(): number {
+    return this.tableData.length;
+  }
+
+  private getEntries(page: number) {
+    const index = (page - 1) * 10;
+    const extent = index + 10;
+    if (extent > this.tableData.length) {
+      return this.tableData.slice(index);
+    }
+    return this.tableData.slice(index, extent);
+  }
+
+  get currentPage() {
+    return this.getEntries(this.tablePage);
+  }
+
+  public pageChanged(event: any): void {
+    this.tablePage = event.page;
+  }
+
+  getUsageHistoryByServiceAccountId() {
+    if (this.activeServiceAccount) {
+      this.usageHistoryService.getUsageHistory(toNumber(this.activeServiceAccount.Id))
+        .subscribe(usageHistory => {
+          this.tableData = usageHistory;
+          this.isDataAvailable = true;
+        });
     }
   }
 

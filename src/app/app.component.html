@@ -1,1 +1,35 @@
-<router-outlet></router-outlet>
+
+<div #content id="mygexa-content">
+  <router-outlet></router-outlet>
+</div>
+
+<footer id="footer" [ngClass]="{ 'fixedToBottom': fixedToBottom }">
+  <div class="footer-dark">
+    <div class="container">
+      <div class="row text-sm-center">
+        <div class="col-sm-6">
+          <a routerLink="#foo">Terms of Use</a>
+          <a routerLink="#foo">Privacy Policy</a>
+          <a routerLink="#foo">Legal Notices &amp; Terms</a>
+        </div>
+        <div class="col-sm-6 text-right">
+          <a routerLink="#foo">Contact Us</a>
+          <a routerLink="#foo">customercare@gexaenergy.com</a>
+          <a routerLink="#foo">855-639-8118</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-dark">
+    <div class="container">
+      <div class="row text-sm-center">
+        <div class="col-sm-6">
+          <a routerLink="#foo">&copy; Gexa Energy, LP All rights reserved</a>
+        </div>
+        <div class="col-sm-6 text-right">
+          <a routerLink="#foo">PUCT CERTIFICATE #10027</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
