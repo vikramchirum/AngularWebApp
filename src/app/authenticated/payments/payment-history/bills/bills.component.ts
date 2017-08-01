@@ -21,7 +21,7 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   public config: any;
   public columnHeaders: ColumnHeader[] = [
     { title: 'Bill Date',       name: 'Invoice_Date',    sort: 'desc', type: 'date' },
-    { title: 'Usage',           name: 'Usage',           sort: '',     type: '' },
+    { title: 'Usage',           name: 'Total_Usage',           sort: '',     type: '' },
     { title: 'Due Date',        name: 'Due_Date',        sort: '',     type: 'date' },
     { title: 'Current Charges', name: 'Current_Charges', sort: '',     type: 'dollar' },
     { title: 'Total',           name: 'Amount_Due',      sort: '',     type: 'dollar' }
