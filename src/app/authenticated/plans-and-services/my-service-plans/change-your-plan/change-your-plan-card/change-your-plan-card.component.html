@@ -1,13 +1,19 @@
-<section *ngIf="!IsInRenewalTimeFrame">
+<section *ngIf="!IsInRenewalTimeFrame && Offer">
+
 <div class="plan-card-container">
   <div class="card-content">
-    <h5>Gexa Prime 1000 12</h5>
-    <h2>3.9<sup class="sup-text">c</sup><sub class="sub-text">pkw/hr</sub>
-      <i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></h2>
+    <div class="card-title">
+    <h4>{{Offer.Plan.Name }}<small><i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></small></h4>
+      <!--//<h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.2-2'}}<sup class="sup-text">c</sup><sub class="sub-text">pkw/hr</sub></h2>-->
+
+    <h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.2-2'}}<sup class="sup-text">c</sup><sub class="sub-text">per kwh</sub>
+      </h2>
+      </div>
     <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
     <p>at 1000kwh</p>
-    <p>TERM:12 months</p>
-    <p>No Sign Up Bonus</p>
+    <p>TERM:{{Offer.Plan.Term}} months</p>
+    <p>{{Offer.Promotion?.Name}}</p>
+    <br/>
   </div>
   <div *ngIf= "selectCheckBox" class="agreement-section">
     <hr>
@@ -15,53 +21,78 @@
       <label>
         <input type="checkbox" value="" (click) = "toggleButton()">
         <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-        <p>By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP(Gexa energy).<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
+        <p class="text-left">By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP(Gexa energy).<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
       </label>
     </div>
     <hr>
-  </div>
-  <div class="row">
-    <div style="text-align:center">
-      <button class="btn btn-default btn-wireframe" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>Select</button>
-      <i *ngIf= "selectCheckBox" class="fa fa-times fa-2x" style="margin-left:.5em" (click)="closeCheckBox()" aria-hidden="true"></i>
+    <div class="row">
+      <div style="text-align:center">
+        <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect">Submit</button>
+        <i class="fa fa-times fa-2x" style="margin-left:.5em" (click)="closeCheckBox()" aria-hidden="true"></i>
+      </div>
     </div>
   </div>
-
+  <br/>
+  <div *ngIf="!selectCheckBox">
+  <div class="row">
+    <div style="text-align:center">
+      <button class="btn btn-sm btn-success" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'> <i class="fa fa-chevron-right"  aria-hidden="true"></i> SIGN UP</button>
+    </div>
+  </div>
+  </div>
 </div>
 </section>
 
-<section id = renewPlan *ngIf="IsInRenewalTimeFrame">
+<section id = renewPlan *ngIf="IsInRenewalTimeFrame && Offer" >
   <div class="plan-card-container">
     <div class="card-content">
-      <h5>Gexa Prime 1000 12</h5>
-      <h2>3.9<sup class="sup-text">c</sup><sub class="sub-text">pkw/hr</sub>
-        <i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></h2>
+      <div class="card-title">
+      <h4>{{Offer.Plan.Name }} <i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></h4>
+      <h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.2-2'}}<sup class="sup-text">c</sup><sub class="sub-text">per kwh</sub></h2>
+      </div>
       <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
       <p>at 1000kwh</p>
-      <p>TERM:12 months</p>
-      <p>No Sign Up Bonus</p>
+      <p>TERM:{{Offer.Plan.Term}} months</p>
+      <p>{{Offer.Promotion?.Name}}</p>
+
     </div>
     <div *ngIf= "selectCheckBox" class="agreement-section">
-      <hr>
       <div class="checkbox">
         <label>
           <input type="checkbox" value="" (click) = "toggleButton()">
           <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-          <p>By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP(Gexa energy).<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
+          <p class="text-left">By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP(Gexa energy).<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
         </label>
       </div>
-      <hr>
-    </div>
-    <div class="row">
-      <div style="text-align:center">
-        <button class="btn btn-default btn-wireframe" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>Select</button>
-        <i *ngIf= "selectCheckBox" class="fa fa-times fa-2x" style="margin-left:.5em" (click)="closeCheckBox()" aria-hidden="true"></i>
+      <div class="row">
+        <div style="text-align:center">
+          <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect">Submit</button>
+          <i class="fa fa-times fa-2x" style="margin-left:.5em" (click)="closeCheckBox()" aria-hidden="true"></i>
+        </div>
       </div>
     </div>
+    <br/>
+    <div *ngIf="!selectCheckBox">
+    <div class="row">
+      <div style="text-align:center">
+        <button class="btn btn-default btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'> Select  <i class="fa fa-chevron-right fa-wh" aria-hidden="true"></i></button>
+      </div>
+    </div>
+    </div>
+    <div class="row card-included">
+     <div class="col-md-12">
+      <h4 class="text-center ">What's included <i class="fa fa-chevron-down" (click)="ChevClicked()" [ngClass] ="chev_clicked ?  'fa-chevron-down':  'fa-chevron-up'"></i>
+        <div class="card-included pull-left" *ngIf="chev_clicked">
+          <ul class="text-left">
+            <li> Best plan for homes that a moderate amount of electricity</li>
+            <li> Eligible for bill credits with Share &amp; Save</li>
+            <li> Price is fixed for 12 month</li>
+          </ul>
+        </div>
+      </h4>
+      </div>
+    </div>
+  </div>
 
-  </div>
-  <div class="row text-center">
-    <h4>What's included <i class="fa fa-caret-down fa-2x"></i></h4>
-  </div>
 </section>
 

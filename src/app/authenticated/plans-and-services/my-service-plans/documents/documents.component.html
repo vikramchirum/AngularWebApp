@@ -1,25 +1,23 @@
 <section *ngIf="!IsInRenewalTimeFrame">
   <b><p class="doc-title">  Documents</p></b>
-<ul class="documents">
-  <li><a>Terms of Use</a></li>
-  <li><a>Electricity Facts Label</a></li>
-  <li><a> Customer Rights</a></li>
+<ul class="list-unstyled">
+  <li><a><i class="fa fa-file-pdf-o"></i> Terms of Use</a></li>
+  <li><a><i class="fa fa-file-pdf-o"></i> Electricity Facts Label</a></li>
+  <li><a><i class="fa fa-file-pdf-o"></i> Customer Rights</a></li>
   </ul>
 
   <p><a href >Get Adobe Reader Free </a></p>
 </section>
 <section id="RenewalPlan" *ngIf="IsInRenewalTimeFrame">
   <b><p class="doc-title">  What's included</p></b>
-  <ul class="documents">
-    <li>> Best plan for homes that a moderate amount of electricity</li>
-    <li>> Eligible for bill credits with Share & Save</li>
-    <li>> Price is fixed for 12 month</li>
+  <ul>
+    <li> Best plan for homes that a moderate amount of electricity</li>
+    <li> Eligible for bill credits with Share &amp; Save</li>
+    <li> Price is fixed for 12 month</li>
   </ul>
-
-  <b><p>Your current plan ends in 38 days!</p></b>
-  <b><p>Renew by {{'hii'}}</p></b>
-  <ul class="documents">
-    <li> <span class="cr"><i class="cr-icon fa fa-question-circle"> What happens if I don't renew</i></span> </li>
-    <li> <span class="cr"><i class="cr-icon fa fa-info-circle"> View current plan details</i></span> </li>
+  <b><p>Renewal Details</p></b>
+  <ul >
+    <li> What happens if I don't renew ?</li>
+    <li> View current plan details</li>
   </ul>
 </section>

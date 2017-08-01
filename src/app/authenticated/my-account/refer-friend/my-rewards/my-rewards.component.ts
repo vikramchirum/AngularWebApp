@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-
-import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
-import { BillingAccountService } from 'app/core/BillingAccount.service';
 import { Subscription } from 'rxjs/Subscription';
+
+import {ServiceAccountService} from '../../../../core/serviceaccount.service';
+import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-my-rewards',
@@ -11,44 +11,43 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class MyRewardsComponent implements OnInit, OnDestroy {
 
-  public selectedBillingAccount: BillingAccountClass = null;
-  public editingBillingAccount: BillingAccountClass = null;
+  public selectedServiceAccount: ServiceAccount = null;
+  public editingServiceAccount: ServiceAccount = null;
   public editingAddress: boolean = null;
 
-  private BillingAccounts: BillingAccountClass[] = null;
-  private BillingAccountsSubscription: Subscription = null;
+  private ServiceAccounts: ServiceAccount[] = null;
+  private ServiceAccountsSubscription: Subscription = null;
 
   constructor(
-    private BillingAccountService: BillingAccountService
+    private ServiceAccountService: ServiceAccountService
   ) {
     this.editingAddress = false;
   }
 
-  serviceChanged(newBillingAccount: BillingAccountClass) {
-    this.editingBillingAccount = newBillingAccount;
+  serviceChanged(newServiceAccount: ServiceAccount) {
+    this.editingServiceAccount = newServiceAccount;
   }
 
   serviceUse() {
-    this.selectedBillingAccount = this.editingBillingAccount;
+    this.selectedServiceAccount = this.editingServiceAccount;
     this.editingAddress = !this.editingAddress;
   }
 
   ngOnInit() {
-    this.BillingAccountsSubscription = this.BillingAccountService.BillingAccountsObservable.subscribe(
-      (BillingAccounts: BillingAccountClass[]) => {
-        this.selectedBillingAccount = this.BillingAccountService.ActiveBillingAccountCache;
-        this.BillingAccounts = BillingAccounts;
+    this.ServiceAccountsSubscription = this.ServiceAccountService.ServiceAccountsObservable.subscribe(
+      (ServiceAccounts: ServiceAccount[]) => {
+        this.selectedServiceAccount = this.ServiceAccountService.ActiveServiceAccountCache;
+        this.ServiceAccounts = ServiceAccounts;
       }
     );
   }
 
   ngOnDestroy() {
-    this.BillingAccountsSubscription.unsubscribe();
+    this.ServiceAccountsSubscription.unsubscribe();
   }
 
   toggleAddressEdit() {
-    this.editingBillingAccount = this.selectedBillingAccount;
+    this.editingServiceAccount = this.selectedServiceAccount;
     this.editingAddress = !this.editingAddress;
   }
-
 }

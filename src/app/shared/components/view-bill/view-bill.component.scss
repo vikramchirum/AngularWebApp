@@ -1,17 +1,7 @@
 
 .view-bill-container {
-  border: 2px solid black;
-  margin-bottom: 4rem;
-  padding: 2rem 4rem;
 
-  .charge-toggle {
-    background: none;
-    border: none;
-    float: right;
-    outline: none;
-  }
   td {
-    font-size: 2rem;
     line-height: 4rem;
   }
   .bill-amount {
@@ -24,8 +14,11 @@
     float: right;
     margin-right: 2rem;
   }
-  .thank-you {
-    font-size: 2rem;
-    padding: 6rem 0 4rem 0;
-  }
+
+}
+
+
+.details, .view-bill-container h4 {
+  color:#000000;
+  
 }

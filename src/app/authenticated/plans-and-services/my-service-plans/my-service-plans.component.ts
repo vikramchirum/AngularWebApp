@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, OnDestroy } from '@angular/core';
-import {BillingAccountService} from 'app/core/BillingAccount.service';
+import {ServiceAccountService} from 'app/core/serviceaccount.service';
 import {Subscription} from 'rxjs/Subscription';
-import {BillingAccountClass} from 'app/core/models/BillingAccount.model';
+import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-my-service-plans',
@@ -10,10 +10,10 @@ import {BillingAccountClass} from 'app/core/models/BillingAccount.model';
 })
 export class MyServicePlansComponent implements OnInit, OnDestroy, AfterViewInit  {
   public IsInRenewalTimeFrame: boolean;
-  ActiveBillingAccountDetails: BillingAccountClass;
-  billingAccountSubscription: Subscription;
+  ActiveServiceAccountDetails: ServiceAccount;
+  serviceAccountSubscription: Subscription;
 
-  constructor(private billingAccount_service: BillingAccountService) {
+  constructor(private serviceAccount_service: ServiceAccountService) {
     this.IsInRenewalTimeFrame = false;
 
   }
@@ -22,15 +22,15 @@ export class MyServicePlansComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngAfterViewInit() {
-    this.billingAccountSubscription = this.billingAccount_service.ActiveBillingAccountObservable.subscribe(
+    this.serviceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.subscribe(
       result => {
-        this.ActiveBillingAccountDetails = result;
+        this.ActiveServiceAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
       });
   }
 
   ngOnDestroy() {
-    this.billingAccountSubscription.unsubscribe();
+    this.serviceAccountSubscription.unsubscribe();
   }
 
 }

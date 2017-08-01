@@ -1,23 +1,54 @@
-<div>
+<div class="account-profile">
   <section class="contact-address">
     <div>
       <h2>Contact Us</h2>
-      <p>veritatis et quasi architecto beatae vitae dicta sunt explicabo.Nemo enim ipsam voluptatem quia voluptas sit aspernatur
-        aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. </p>
+      <p>Questions? Comments? Complete the form below and we’ll reply back to you at the email address provided.  </p>
     </div>
 
-    <div class="account-info">
-      <h3>Charlie Brown</h3>
-    </div>
-    <br>
-    <div>
-      <h5>Email</h5>
-      <div class="profile-inline">
-        <h4>c.brown@gmail.com</h4>
-        <a (click)="toggleEmailEdit($event)">{{ emailEditing ? 'Close' : 'Edit'}}</a></div>
-    </div>
-    <div *ngIf="emailEditing">
-      <mygexa-change-email-address></mygexa-change-email-address>
+   <br/><br/>
+     <div class="account-info">
+     
+     <div class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-sm-2">
+               To:
+            </label>
+           <div class="col-sm-8">
+               <div class="form-control control-value" >
+                Gexa Energy
+             </div>
+          </div>
+       </div>
+       <div class="form-group">
+            <label class="control-label col-sm-2">
+               From:
+            </label>
+           <div class="col-sm-8">
+               <div class="form-control control-value">
+                Charlie Brown
+             </div>
+          </div>
+       </div>
+              <div class="form-group">
+            <label class="control-label col-md-2">
+               Email:
+            </label>
+           <div class="col-md-8">
+               <div class="form-control"> 
+                c.brown@gmail.com
+             </div>
+          </div>
+          <div class="col-md-1">
+                       <a class="btn btn-primary" (click)="toggleEmailEdit($event)">{{ emailEditing ? 'Close' : 'Edit'}}</a></div>
+                </div>
+          <div class="row">
+            <div class="col-md-12">
+                <div *ngIf="emailEditing">
+                    <mygexa-change-email-address></mygexa-change-email-address>
+                </div>
+            </div>
+         </div>
+      </div>
     </div>
   </section>
   <mygexa-contact-form></mygexa-contact-form>

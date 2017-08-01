@@ -1,21 +1,21 @@
 import { Component, OnDestroy } from '@angular/core';
 import { UsageHistoryService } from 'app/core/usage-history.service';
 import { takeRight, toNumber, reverse, values } from 'lodash';
-import { BillingAccountClass } from 'app/core/models/BillingAccount.model';
-import { BillingAccountService } from 'app/core/BillingAccount.service';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { Subscription } from 'rxjs/Subscription';
+import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-usage-history',
   templateUrl: './usage-history.component.html',
-  styleUrls: ['./usage-history.component.scss'],
-  providers: [UsageHistoryService]
+  styleUrls: ['./usage-history.component.scss']
 })
 export class UsageHistoryComponent implements OnDestroy {
 
-  activeBillingAccount: BillingAccountClass = null;
-
-  public monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+  private activeServiceAccount: ServiceAccount = null;
+  private ServiceAccountsSubscription: Subscription = null;
+  private isDataAvailable = false;
+  private monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
     'September', 'October', 'November', 'December'];
 
   /* Bar Graph Properties */
@@ -23,7 +23,7 @@ export class UsageHistoryComponent implements OnDestroy {
     responsive: true,
     tooltips: {
       callbacks: {
-        label: (tooltipItem, data) => {
+        label: (tooltipItem) => {
           return tooltipItem.yLabel + 'kwh';
         }
       }
@@ -43,10 +43,10 @@ export class UsageHistoryComponent implements OnDestroy {
   };
   public barChartData = [];
   public barChartColors: any[] = [
-    { backgroundColor: '#7FFFD4' },
-    { backgroundColor: '#32CD32' },
-    { backgroundColor: '#98FB98' },
-    { backgroundColor: '#6495ED' }
+    { backgroundColor: 'rgba(6,81,128,1.0)' },
+    { backgroundColor: 'rgba(254,162,32,1.0)' },
+    { backgroundColor: 'rgba(46,177,52,1.0)' },
+    { backgroundColor: 'rgba(27,141,205,1.0)' }
   ];
 
   /* Line Graph Properties */
@@ -60,7 +60,7 @@ export class UsageHistoryComponent implements OnDestroy {
     },
     tooltips: {
       callbacks: {
-        label: (tooltipItem, data) => {
+        label: (tooltipItem) => {
           return tooltipItem.yLabel + 'kwh';
         }
       }
@@ -76,56 +76,27 @@ export class UsageHistoryComponent implements OnDestroy {
   };
   public lineChartData = [];
   public lineChartColors: Array<any> = [
-    { borderColor: '#7FFFD4', backgroundColor: '#7FFFD4' },
-    { borderColor: '#32CD32', backgroundColor: '#32CD32' },
-    { borderColor: '#98FB98', backgroundColor: '#98FB98' },
-    { borderColor: '#6495ED', backgroundColor: '#6495ED' }
+    { borderColor: 'rgba(6,81,128,1.0)', backgroundColor: 'rgba(6,81,128,1.0)' },
+    { borderColor: 'rgba(254,162,32,1.0)', backgroundColor: 'rgba(254,162,32,1.0)' },
+    { borderColor: 'rgba(46,177,52,1.0)', backgroundColor: 'rgba(46,177,52,1.0)' },
+    { borderColor: 'rgba(27,141,205,1.0)', backgroundColor: 'rgba(27,141,205,1.0)' }
   ];
-
-  /* Table and Pagination Data */
-  public tablePage: number = 1;
-  public isDataAvailable: boolean = false;
-  public tableData: any[] = [];
-
-  private BillingAccountsSubscription: Subscription = null;
 
   constructor(
     private usageHistoryService: UsageHistoryService,
-    private BillingAccountService: BillingAccountService
+    private ServiceAccountService: ServiceAccountService
   ) {
-    this.BillingAccountsSubscription = this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
-      activeBillingAccount => {
-        this.activeBillingAccount = activeBillingAccount;
-        this.getUsageHistoryByBillingAccountId();
+    this.ServiceAccountsSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      activeServiceAccount => {
+        this.activeServiceAccount = activeServiceAccount;
+        this.getUsageHistoryByServiceAccountId();
       }
     );
   }
 
   ngOnDestroy() {
     // Clean up our subscribers to avoid memory leaks.
-    this.BillingAccountsSubscription.unsubscribe();
-  }
-
-  get totalItems(): number {
-    return this.tableData.length;
-  }
-
-  private getEntries(page: number) {
-    const index = (page - 1) * 10;
-    const extent = index + 10;
-    if (extent > this.tableData.length) {
-      return this.tableData.slice(index);
-    }
-    return this.tableData.slice(index, extent);
-  }
-
-  get currentPage() {
-    const pageEntries = this.getEntries(this.tablePage);
-    return pageEntries;
-  }
-
-  public pageChanged(event: any): void {
-    this.tablePage = event.page;
+    this.ServiceAccountsSubscription.unsubscribe();
   }
 
   public chartClicked(e: any): void {
@@ -136,17 +107,15 @@ export class UsageHistoryComponent implements OnDestroy {
     console.log(e);
   }
 
-  getUsageHistoryByBillingAccountId() {
-    if (this.activeBillingAccount) {
-      this.usageHistoryService.getUsageHistory(toNumber(this.activeBillingAccount.Id))
+  getUsageHistoryByServiceAccountId() {
+    if (this.activeServiceAccount) {
+      this.usageHistoryService.getUsageHistory(toNumber(this.activeServiceAccount.Id))
         .subscribe(usageHistory => this.populateCharts(usageHistory));
     }
   }
 
   // Fetch labels and data from api response and show it on the charts
   populateCharts(usageHistory) {
-
-    this.tableData = usageHistory;
 
     const datagroups = {};
     let tempYear: string;

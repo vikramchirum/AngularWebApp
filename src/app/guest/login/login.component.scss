@@ -227,3 +227,128 @@ body {
  //  display: flex;
  //  flex-direction: column;
  //}
+
+
+.navbar-inverse {
+    border-radius: 0;
+    color: #fff;
+    min-height: 30px;
+    height:32px;
+    margin-bottom:0;
+  
+  .navbar-right {
+    margin-right: 15px;
+  }
+  
+    .navbar-nav > li > a {
+      color:white;
+      padding:5px 15px;
+    }
+    .fa-white {
+      color: #ffffff;
+    }
+     .nav > li > a:hover, .nav > li > a:focus {
+      text-decoration: none;
+      background-color: #2e2e2e;
+    }
+}
+
+.custom-nav {
+    background: url(/assets/global/header-nav.png) repeat-x;
+    border-width:0;
+    border-bottom: thin solid #ccc;
+    border-radius:0;
+    
+    .nav > li > a {  
+      font-size:12px;
+      padding: 30px 20px;      
+    }
+    
+    .nav > li.divider {
+        display: inline-block;
+        width: 1px;
+        height: 50px;
+        margin-top: 12px;
+    }
+  
+    .nav > li > a:hover, .nav > li > a:focus {
+      text-decoration: none;
+      background-color: #ffffff;
+    }
+  
+    .navbar-logo:hover img {
+      background-color:#ffffff;
+    }
+  
+}
+
+.login-container {
+  margin-top: 50px;
+}
+
+.homepage-hero-wrapper {
+  position: absolute;
+  top:0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.homepage-hero-module {
+    border-right: none;
+    border-left: none;
+    position: relative;
+    top: 0;
+    z-index: -1;
+}
+
+.video-container {
+    position: relative;
+    bottom: 0%;
+    left: 0%;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: #000;
+}
+
+.login-container > .row {
+  display:flex;
+}
+
+.ui-light {
+  background-color: rgba(251,248,249,0.45);
+    
+    &:hover {
+        background-color: rgba(251,248,249,0.85);
+        transition: all 1s ease-in;
+    }
+  
+}
+
+.ui-dark {
+  background-color: rgba(46,177,52,0.9);
+  
+  hr {
+      border-color: rgba(251,248,249,0.15);
+  }
+  
+  p {
+    color: #000;
+    
+  }
+  
+  * {
+    color: #fff;
+  }
+  
+  .navbar-inverse {
+      border-radius: 0;
+      height: 32px;  
+  }
+}
+
+container.login-container, .hero-wrapper{
+  min-height: 650px;
+}

@@ -2,42 +2,49 @@
  * Created by vikram.chirumamilla on 6/20/2017.
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpModule, XHRBackend, RequestOptions } from '@angular/http';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {HttpModule, XHRBackend, RequestOptions} from '@angular/http';
 
-import { HttpClient } from './httpclient';
-import { httpFactory } from './httpFactory';
+import {HttpClient} from './httpclient';
+import {httpFactory} from './httpFactory';
 
-import { BillService } from './Bill';
-import { BillingAccountService } from './BillingAccount.service';
-import { CustomerAccountService } from './CustomerAccount.service';
-import { PaymentsService } from './payments.service';
-import { PaymethodService } from './Paymethod.service';
-import { InvoiceService } from './invoiceservice.service';
-import { BudgetBillingService } from './budgetbilling.service';
+import {AddressSearchService} from './addresssearch.service';
+import {AutoBillPayService} from './auto-bill-pay.service';
+import {ServiceAccountService} from './serviceaccount.service';
+import {BudgetBillingService} from './budgetbilling.service';
+import {CustomerAccountService} from './CustomerAccount.service';
+import {InvoiceService} from './invoiceservice.service';
+import {OfferService} from './offer.service';
+import {OrderStatusService} from './order-status.service';
+import {PaymentsHistoryService} from './payments-history.service';
+import {PaymentsService} from './payments.service';
+import {PaymethodService} from './Paymethod.service';
+import {UsageHistoryService} from './usage-history.service';
 
 @NgModule({
   imports: [
     CommonModule,
     HttpModule
   ],
-  declarations: [],
-  exports: [],
   providers: [
     {
       provide: HttpClient,
       useFactory: httpFactory,
       deps: [ XHRBackend, RequestOptions ]
     },
-    BillService,
-    BillingAccountService,
+    AddressSearchService,
+    AutoBillPayService,
+    ServiceAccountService,
+    BudgetBillingService,
     CustomerAccountService,
+    InvoiceService,
+    OfferService,
+    OrderStatusService,
+    PaymentsHistoryService,
     PaymentsService,
     PaymethodService,
-    InvoiceService,
-    BudgetBillingService
+    UsageHistoryService
   ]
 })
-export class CoreModule {
-}
+export class CoreModule { }

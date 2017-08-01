@@ -1,13 +1,15 @@
 import {Component, OnInit, OnDestroy, ViewChild, AfterViewInit} from '@angular/core';
-import { CurrencyPipe, DatePipe} from '@angular/common';
+import {CurrencyPipe, DatePipe} from '@angular/common';
 
-import { environment } from 'environments/environment';
-import { IBill } from '../../../../core/models/bill.model';
-import { ColumnHeader } from '../../../../core/models/columnheader.model';
-import { InvoiceService } from '../../../../core/invoiceservice.service';
-import { ViewMyBillModalComponent } from './view-my-bill-modal/view-my-bill-modal.component';
-import { Subscription } from 'rxjs/Subscription';
-import { BillingAccountService } from '../../../../core/BillingAccount.service';
+import {Subscription} from 'rxjs/Subscription';
+import {environment} from 'environments/environment';
+
+import {IInvoice} from '../../../../core/models/invoices/invoice.model';
+import {ColumnHeader} from '../../../../core/models/columnheader.model';
+import {InvoiceService} from '../../../../core/invoiceservice.service';
+import {ViewMyBillModalComponent} from './view-my-bill-modal/view-my-bill-modal.component';
+import {ServiceAccountService} from '../../../../core/serviceaccount.service';
+import {IInvoiceSearchRequest} from '../../../../core/models/invoices/invoicesearchrequest.model';
 
 @Component({
   selector: 'mygexa-payment-history-bills',
@@ -17,30 +19,35 @@ import { BillingAccountService } from '../../../../core/BillingAccount.service';
 export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public config: any;
-  public columnHeaders: Array<ColumnHeader>;
-  public rows: Array<any> = [];
+  public columnHeaders: ColumnHeader[] = [
+    { title: 'Bill Date',       name: 'Invoice_Date',    sort: 'desc', type: 'date' },
+    { title: 'Usage',           name: 'Total_Usage',           sort: '',     type: '' },
+    { title: 'Due Date',        name: 'Due_Date',        sort: '',     type: 'date' },
+    { title: 'Current Charges', name: 'Current_Charges', sort: '',     type: 'dollar' },
+    { title: 'Total',           name: 'Amount_Due',      sort: '',     type: 'dollar' }
+  ];
+  public rows: any[] = [];
   public documentsUrl;
 
   public currentPage = 1;
   public itemsPerPage = 10;
   public totalItems = 0;
-  public Bills: IBill[];
+  public Invoices: IInvoice[];
 
-  private ActiveBillingAccountSubscription: Subscription = null;
-  private billingAccountId: number;
+  private ActiveServiceAccountSubscription: Subscription = null;
+  private serviceAccountId: number;
 
   @ViewChild('viewMyBillModal') viewMyBillModal: ViewMyBillModalComponent;
 
   constructor(private datePipe: DatePipe, private currencyPipe: CurrencyPipe
-    , private invoiceService: InvoiceService, private billingAccountService: BillingAccountService) {
+    , private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService) {
   }
-  public showViewMyBillModal(row: IBill) {
+  public showViewMyBillModal(row: IInvoice) {
     this.viewMyBillModal.show(row);
   }
 
   ngOnInit() {
     this.documentsUrl = environment.Documents_Url;
-    this.populateColumnHeaders();
     this.config = {
       paging: true,
       sorting: {columnHeaders: this.columnHeaders},
@@ -48,11 +55,13 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.ActiveBillingAccountSubscription = this.billingAccountService.ActiveBillingAccountObservable.subscribe(
+    this.ActiveServiceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
-        this.billingAccountId = +(result.Id);
-        this.invoiceService.getBills(this.billingAccountId).subscribe(bills => {
-          this.Bills = bills;
+        this.serviceAccountId = +(result.Id);
+        const invoiceSearchRequest = {} as IInvoiceSearchRequest;
+        invoiceSearchRequest.Service_Account_Id = this.serviceAccountId;
+        this.invoiceService.getInvoicesCacheable(invoiceSearchRequest).subscribe(bills => {
+          this.Invoices = bills;
           this.onChangeTable(this.config);
         });
       }
@@ -91,7 +100,7 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
       Object.assign(this.config.sorting, config.sorting);
     }
 
-    const sortedData = this.changeSort(this.Bills, this.config);
+    const sortedData = this.changeSort(this.Invoices, this.config);
     this.rows = sortedData;
     this.totalItems = sortedData.length;
   }
@@ -132,7 +141,6 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public sortByColumn(columnToSort: ColumnHeader) {
-
     const sorting: Array<ColumnHeader> = Object.assign({}, this.config.sorting).columnHeaders;
     const sorted = sorting.map((columnHeader: ColumnHeader) => {
       if (columnToSort.name === columnHeader.name) {
@@ -153,16 +161,7 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.onChangeTable(config);
   }
 
-  private populateColumnHeaders() {
-    this.columnHeaders = new Array<ColumnHeader>();
-    this.columnHeaders.push(<ColumnHeader>{ title: 'Bill Date',       name: 'Invoice_Date',    sort: 'desc', type: 'date' });
-    this.columnHeaders.push(<ColumnHeader>{ title: 'Usage',           name: 'Usage',           sort: '', type: '' });
-    this.columnHeaders.push(<ColumnHeader>{ title: 'Due Date',        name: 'Due_Date',        sort: '', type: 'date' });
-    this.columnHeaders.push(<ColumnHeader>{ title: 'Current Charges', name: 'Current_Charges', sort: '', type: 'dollar' });
-    this.columnHeaders.push(<ColumnHeader>{ title: 'Total',           name: 'Amount_Due',      sort: '', type: 'dollar' });
-  }
-
   ngOnDestroy() {
-    this.ActiveBillingAccountSubscription.unsubscribe();
+    this.ActiveServiceAccountSubscription.unsubscribe();
   }
 }

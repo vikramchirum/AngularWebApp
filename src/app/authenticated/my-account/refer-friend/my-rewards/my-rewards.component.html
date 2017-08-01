@@ -5,20 +5,20 @@
       <h5>Your service Referral ID#</h5>
       <h4>695074</h4>
     </div>
-    <div class="col-md-9 col-xs-6" *ngIf="selectedBillingAccount">
+    <div class="col-md-9 col-xs-6" *ngIf="selectedServiceAccount">
       <h5>Address to which your bill</h5>
       <div *ngIf="editingAddress">
         <mygexa-service-account-selector
-          [selectedBillingAccount]="editingBillingAccount"
-          (changedBillingAccount)="serviceChanged($event)"
+          [selectedServiceAccount]="editingServiceAccount"
+          (changedServiceAccount)="serviceChanged($event)"
         ></mygexa-service-account-selector>
         <button class="btn btn-wireframe" (click)="serviceUse()">Use This Address</button>
         <button class="btn btn-wireframe" (click)="toggleAddressEdit()">Cancel</button>
       </div>
       <div *ngIf="!editingAddress">
-        <h4>{{selectedBillingAccount.Service_Address.Line1}} {{selectedBillingAccount.Service_Address.Line2}}</h4>
-        <h4>{{selectedBillingAccount.Service_Address.City}}, {{selectedBillingAccount.Service_Address.State}} {{selectedBillingAccount.Service_Address.Zip}}</h4>
-        <button class="btn btn-wireframe" [hidden]="BillingAccountService.BillingAccounts.length < 2" (click)="toggleAddressEdit()">Change Account</button>
+        <h4>{{selectedServiceAccount.Service_Address.Line1}} {{selectedServiceAccount.Service_Address.Line2}}</h4>
+        <h4>{{selectedServiceAccount.Service_Address.City}}, {{selectedServiceAccount.Service_Address.State}} {{selectedServiceAccount.Service_Address.Zip}}</h4>
+        <button class="btn btn-wireframe" [hidden]="ServiceAccountService.ServiceAccounts.length < 2" (click)="toggleAddressEdit()">Change Account</button>
       </div>
     </div>
   </div>

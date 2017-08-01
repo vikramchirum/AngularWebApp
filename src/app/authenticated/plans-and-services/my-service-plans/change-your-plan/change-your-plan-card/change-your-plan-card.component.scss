@@ -1,8 +1,37 @@
 .plan-card-container{
-    border: 2px solid black;
-    border-radius: 20px;
-    padding: 20px;
+    border: none;
+    border-right:1px solid #fff;
+    border-radius: 0;
+    padding: 10px 0;
+    margin-bottom: 40px;
+
+    .card-included {
+      margin-right: 2px;
+      padding: 8px;
+
+      h4{
+        font-size: 14px !important;
+      }
+          }
+
+    .card-title {
+
+      h2 {
+        font-size:36px;
+      }
+
+      h4 {
+        color:  rgba(46,177,52,1.0);
+      }
+
+      .fa {
+        color: #fea220;
+      }
+
+    }
+
     .card-content{
+      height: 200px;
         text-align: center;
         .sup-text {
             font-size: 12px;
@@ -12,13 +41,30 @@
             font-size:12px;
             right:0.5em;
         }
+      h2 {
+        Font-weight: 800;
+        color: #000;
+      }
+      small, sup {
+        font-weight: 100;
+        font-size: 12px;
+      }
+      p {
+        margin-bottom:0;
+        line-height: 25px;
+
+        &:nth-child(odd){
+          display: inline-block;
+          background-color: rgba(255,255,255,0.3);
+          width: 70%;
+        }
+      }
     }
+    .btn-sm {
+          margin-top: 30px;
+        }
+
    .agreement-section{
-       hr {
-           border: 1px solid #000;
-           margin-left:-19px;
-           margin-right:-19px;
-       }
        label {
            p {
                font-size:0.9em;
@@ -29,6 +75,8 @@
   .fa-2x {
     vertical-align: middle;
   }
+
+
 .checkbox label:after {
   content: '';
   display: table;

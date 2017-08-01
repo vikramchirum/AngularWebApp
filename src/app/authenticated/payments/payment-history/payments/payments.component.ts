@@ -1,104 +1,167 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 
-import MockData from './payments.mock-data.json';
-
-interface IHistoryPayment {
-  Id: string;
-  date: Date;
-  amount: number;
-  status: string;
-  method: string;
-  account: string;
-}
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { PaymentsHistoryService } from 'app/core/payments-history.service';
+import { PaymentsHistory} from 'app/core/models/payments/payments-history.model';
+import { Subscription } from 'rxjs/Subscription';
+import { ColumnHeader } from 'app/core/models/columnheader.model';
 
 @Component({
   selector: 'mygexa-payment-history-payments',
   templateUrl: './payments.component.html',
   styleUrls: ['./payments.component.scss']
 })
-export class PaymentsComponent implements OnInit {
+export class PaymentsComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  Payments: IHistoryPayment[] = [];
-  PaymentsSortingBy: string;
-  PaymentsPage: number;
-  PaymentsPerPage = 10;
+  public config: any;
+  public columnHeaders: ColumnHeader[] = [
+    { title: 'Date', name: 'PaymentDate', sort: 'desc', type: 'date' },
+    { title: 'Payment Amount', name: 'PaymentAmount', sort: '', type: 'dollar' },
+    { title: 'Status', name: 'PaymentStatus', sort: '', type: '' },
+    { title: 'Payment Method', name: 'PaymentMethod', sort: '', type: '' },
+    { title: 'Payment Account', name: 'PaymentAccount', sort: '', type: '' }
+  ];
+  public rows: any[] = [];
 
-  private PaymentsSortingByLesser: number = null;
-  private PaymentsSortingByGreater: number = null;
-  set PaymentsSortingByDesc(desc: boolean) {
-    if (desc) {
-      this.PaymentsSortingByLesser = 1;
-      this.PaymentsSortingByGreater = -1;
-    } else {
-      this.PaymentsSortingByLesser = -1;
-      this.PaymentsSortingByGreater = 1;
-    }
-  }
-  get PaymentsSortingByDesc(): boolean {
-    return this.PaymentsSortingByGreater === -1;
-  }
+  public currentPage = 1;
+  public itemsPerPage = 10;
+  public totalItems = 0;
+  public Payments: PaymentsHistory[] = null;
 
-  private sorting(a: IHistoryPayment, b: IHistoryPayment): number {
-    if (a[this.PaymentsSortingBy] < b[this.PaymentsSortingBy]) {
-      return this.PaymentsSortingByLesser;
-    }
-    if (a[this.PaymentsSortingBy] > b[this.PaymentsSortingBy]) {
-      return this.PaymentsSortingByGreater;
-    }
-    return 0;
-  }
+  private ActiveServiceAccountSubscription: Subscription = null;
 
-  get currentPageOfPayments(): IHistoryPayment[] {
-    const sorted = this.Payments.sort((a, b) => this.sorting(a, b));
-    const index = this.PaymentsPage * this.PaymentsPerPage;
-    const extent = index + this.PaymentsPerPage;
-    if (extent > sorted.length) {
-      return sorted.slice(index);
-    }
-    return sorted.slice(index, extent);
+  constructor(
+    private ServiceAccountService: ServiceAccountService,
+    private PaymentsHistoryService: PaymentsHistoryService,
+    private CurrencyPipe: CurrencyPipe,
+    private DatePipe: DatePipe
+  ) { }
+
+  ngOnInit() {
+    this.config = {
+      paging: true,
+      sorting: { columnHeaders: this.columnHeaders },
+    };
   }
 
-  get currentPageNumber(): number {
-    return this.PaymentsPage + 1;
-  }
-  get totalPages(): number {
-    return Math.ceil(this.Payments.length / this.PaymentsPerPage);
-  }
-
-  nextPage(): void {
-    this.PaymentsPage++;
-  }
-
-  gotoPage(index: number): void {
-    this.PaymentsPage = index;
-  }
-
-  previousPage(): void {
-    this.PaymentsPage--;
-  }
-
-  sortBy(attribute: string): void {
-    if (this.PaymentsSortingBy === attribute) {
-      this.PaymentsSortingByDesc = !this.PaymentsSortingByDesc;
-    } else {
-      this.PaymentsSortingBy = attribute;
-      this.PaymentsSortingByDesc = true;
-    }
-  }
-
-  constructor() {
-    this.PaymentsPage = 0;
-    this.PaymentsSortingBy = 'date';
-    this.PaymentsSortingByDesc = true;
-    this.Payments = MockData;
-    // Process the mock data:
-    for (const index in this.Payments) {
-      if (this.Payments[index]) {
-        this.Payments[index].date = new Date(this.Payments[index].date);
+  ngAfterViewInit() {
+    this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      activeServiceAccount => {
+        this.PaymentsHistoryService.GetPaymentsHistoryCacheable(activeServiceAccount).subscribe(
+          PaymentsHistoryItems => {
+            this.Payments = PaymentsHistoryItems;
+            this.onChangeTable(this.config);
+          });
       }
+    );
+  }
+
+  public getData(row: any, columnHeader: ColumnHeader): any {
+    if (!row) {
+      return '';
+    }
+
+    if (columnHeader.type === 'date') {
+      return this.DatePipe.transform(row[columnHeader.name], 'd MMM y');
+    }
+
+    if (columnHeader.type === 'dollar') {
+      return this.CurrencyPipe.transform(row[columnHeader.name], 'USD', true, '.2');
+    }
+    return row[columnHeader.name];
+  }
+
+  onChangeTable(config: any, pageNumber?: number): any {
+    if (config.sorting) {
+      Object.assign(this.config.sorting, config.sorting);
+    }
+
+    const sortedData = this.changeSort(this.Payments, this.config);
+    this.rows = sortedData;
+    this.totalItems = sortedData.length;
+  }
+
+  changeSort(data: any, config: any): any {
+    if (!config.sorting) {
+      return data;
+    }
+    const columnHeaders = this.config.sorting.columnHeaders || [];
+    // get the first column by default that has a sort value
+    const columnWithSort: ColumnHeader = columnHeaders.find((columnHeader: ColumnHeader) => {
+      /* Checking if sort prop exists and column needs to be sorted */
+      if (columnHeader.hasOwnProperty('sort') && columnHeader.sort !== '') {
+        return true;
+      }
+    });
+
+    return data.sort((previous: any, current: any) => {
+      if (previous[columnWithSort.name] > current[columnWithSort.name]) {
+        return columnWithSort.sort === 'desc'
+          ? -1
+          : 1;
+      } else if (previous[columnWithSort.name] < current[columnWithSort.name]) {
+        return columnWithSort.sort === 'asc'
+          ? -1
+          : 1;
+      }
+      return 0;
+    });
+  }
+
+  columnSortWay(columnHeader: ColumnHeader): 'asc' | 'desc' | '' {
+    if (columnHeader.sort || columnHeader.sort !== '') {
+      return columnHeader.sort;
+    } else {
+      return '';
     }
   }
 
-  ngOnInit() {}
+  sortByColumn(columnToSort: ColumnHeader) {
+
+    const sorting: ColumnHeader[] = Object.assign({}, this.config.sorting).columnHeaders;
+    const sorted = sorting.map((columnHeader: ColumnHeader) => {
+      if (columnToSort.name === columnHeader.name) {
+        const newSort = columnHeader.sort === 'asc'
+          ? 'desc'
+          : 'asc';
+        return Object.assign(columnHeader, {sort: newSort});
+      } else {
+        return Object.assign(columnHeader, {sort: ''});
+      }
+    });
+
+    const config = Object.assign({}, this.config, {
+      sorting: {columns: sorted}
+    });
+
+    this.currentPage = 1;
+    this.onChangeTable(config);
+  }
+
+  ngOnDestroy() {
+    this.ActiveServiceAccountSubscription.unsubscribe();
+  }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

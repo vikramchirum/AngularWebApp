@@ -36,9 +36,7 @@ export class LoginComponent implements OnInit {
     this.processing = true;
     this.error = null;
     this.UserService.login(this.user_name, this.password).subscribe(
-      (result) => {this.Router.navigate([this.UserService.UserState || '/']);
-                   console.log('Result', result);
-                   },
+      (result) => {this.Router.navigate([this.UserService.UserState || '/']); },
       error => {
         this.error = error.Message;
         this.processing = false;
@@ -67,7 +65,7 @@ export class LoginComponent implements OnInit {
 
   registerFormInit(): FormGroup {
     return this.FormBuilder.group({
-      Billing_Account_Id: ['', Validators.required],
+      Service_Account_Id: ['', Validators.required],
       Zip_Code: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(5), validateInteger])],
       User_name: ['', Validators.required],
       Password: ['', Validators.required],

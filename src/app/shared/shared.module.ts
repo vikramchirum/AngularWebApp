@@ -20,6 +20,7 @@ import { ChangePhoneNumberComponent } from './components/change-phone-number/cha
 import { PaymethodAddCcComponent } from './components/payment-method-add-cc/payment-method-add-cc.component';
 import { PaymethodAddEcheckComponent } from './components/payment-method-add-echeck/payment-method-add-echeck.component';
 import { ViewBillComponent } from './components/view-bill/view-bill.component';
+import { DollarToCentsPipe } from './pipes/DollarToCents.pipe';
 
 @NgModule({
   imports: [
@@ -45,7 +46,8 @@ import { ViewBillComponent } from './components/view-bill/view-bill.component';
     ChangePhoneNumberComponent,
     PaymethodAddCcComponent,
     PaymethodAddEcheckComponent,
-    ViewBillComponent
+    ViewBillComponent,
+    DollarToCentsPipe
   ],
   exports: [
     ChangeUserNameComponent,
@@ -63,7 +65,8 @@ import { ViewBillComponent } from './components/view-bill/view-bill.component';
     ChangePhoneNumberComponent,
     PaymethodAddCcComponent,
     PaymethodAddEcheckComponent,
-    ViewBillComponent
+    ViewBillComponent,
+    DollarToCentsPipe
   ]
 })
 export class SharedModule { }

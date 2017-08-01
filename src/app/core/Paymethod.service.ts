@@ -1,32 +1,34 @@
 
-import { Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { environment } from 'environments/environment';
-import {
-  CardBrands, PaymethodClass, IPaymethodRequest,
-  IPaymethodRequestEcheck, IPaymethodRequestCreditCard
-} from './models/Paymethod.model';
-import { HttpClient } from './httpclient';
-import { Observer } from 'rxjs/Observer';
-import { Observable } from 'rxjs/Observable';
-import { UserService } from './user.service';
-import { CustomerAccountService } from './CustomerAccount.service';
-import { CustomerAccountClass } from './models/CustomerAccount.model';
-import { clone, cloneDeep, find, forEach, get, isError, noop, map, pull, replace, set } from 'lodash';
+import {HttpClient} from './httpclient';
+import {Observer} from 'rxjs/Observer';
+import {Observable} from 'rxjs/Observable';
+import {clone, cloneDeep, endsWith, find, forEach, get, isError, noop, map, pull, replace, set} from 'lodash';
+
+import {environment} from 'environments/environment';
+import {UserService} from './user.service';
+import {CustomerAccountService} from './CustomerAccount.service';
+import {CustomerAccount} from './models/CustomerAccount/CustomerAccount.model';
+import { Paymethod} from './models/paymethod/Paymethod.model';
+import {IPaymethodRequest} from './models/paymethod/paymethodrequest.model';
+import {IPaymethodRequestCreditCard} from './models/paymethod/paymethodrequestcreditcard.model';
+import {IPaymethodRequestEcheck} from './models/paymethod/paymethodrequestecheck.model';
+import {CardBrands} from './models/paymethod/constants';
 
 @Injectable()
 export class PaymethodService {
 
   ForteJsCache: any = null;
   ForteJsObservable: Observable<any> = null;
-  PaymethodsCache: PaymethodClass[] = null;
-  PaymethodsObservable: Observable<PaymethodClass[]> = null;
+  PaymethodsCache: Paymethod[] = null;
+  PaymethodsObservable: Observable<Paymethod[]> = null;
 
   private initialized: boolean = null;
   private ForteJsObservers: Observer<any>[] = [];
   private PaymethodsObservers: Observer<any>[] = [];
   private requestObservable: Observable<Response> = null;
-  private CustomerAccount: CustomerAccountClass = null;
+  private CustomerAccount: CustomerAccount = null;
   private _CustomerAccountId: string = null;
 
   constructor(
@@ -105,9 +107,9 @@ export class PaymethodService {
     if (this.CustomerAccountId === null) { return Observable.from(null); }
 
     // Assign the Http request to prevent any similar requests.
-    this.requestObservable = this.HttpClient.get(`/Paymethods?userKey=${ this.CustomerAccountId }&isActive=true`)
+    this.requestObservable = this.HttpClient.get(`/Paymethods?isActive=true&userKey=${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`)
       .map(data => data.json())
-      .map(data => map(data, PaymethodData => new PaymethodClass(PaymethodData)))
+      .map(data => map(data, PaymethodData => new Paymethod(PaymethodData)))
       .catch(error => error);
 
     // Handle the new payment methods data.
@@ -236,7 +238,7 @@ export class PaymethodService {
           const body = {
             Token: ForteResult.onetime_token,
             Paymethod_Customer: {
-              Id: this.CustomerAccountId,
+              Id: `${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`,
               FirstName: this.CustomerAccount.First_Name,
               LastName: this.CustomerAccount.Last_Name
             },
@@ -268,7 +270,7 @@ export class PaymethodService {
 
   }
 
-  RemovePaymethod(Paymethod: PaymethodClass): Observable<any> {
+  RemovePaymethod(Paymethod: Paymethod): Observable<any> {
     return Observable.create((observer: Observer<any>) => {
       // Call out to the API to set the isActive to "false".
       this.HttpClient.put(`/Paymethods?id=${Paymethod.PayMethodId}`, '')

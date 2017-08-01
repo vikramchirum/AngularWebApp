@@ -2,7 +2,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 
 import { PaymethodService } from 'app/core/Paymethod.service';
-import { PaymethodClass } from 'app/core/models/Paymethod.model';
+import { Paymethod } from 'app/core/models/paymethod/Paymethod.model';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -13,21 +13,19 @@ import { Subscription } from 'rxjs/Subscription';
 export class PaymethodSelectorComponent implements OnInit, OnDestroy {
 
   @Input() submitText: string = null;
-  @Input() initialPaymethod: PaymethodClass = null;
+  @Input() initialPaymethod: Paymethod = null;
   @Output() changedPaymethod: EventEmitter<any> =  new EventEmitter<any>();
 
-  PaymethodSelected: PaymethodClass = null;
+  PaymethodSelected: Paymethod = null;
   private PaymethodSubscription: Subscription = null;
-  private _Paymethods: PaymethodClass[] = null;
+  private _Paymethods: Paymethod[] = null;
 
   constructor(
     private PaymethodService: PaymethodService
   ) { }
 
-  get Paymethods(): PaymethodClass[] {
-    return this._Paymethods;
-  }
-  set Paymethods(Paymethods: PaymethodClass[]) {
+  get Paymethods(): Paymethod[] { return this._Paymethods; }
+  set Paymethods(Paymethods: Paymethod[]) {
     this._Paymethods = Paymethods;
     if (
       this.initialPaymethod

@@ -3,7 +3,7 @@
  */
 
 export interface IBudgetBillingInfo {
-  Billing_Account_Id: number;
+  Service_Account_Id: number;
   Indicator: boolean;
   Amount: number;
   Create_Date: Date;

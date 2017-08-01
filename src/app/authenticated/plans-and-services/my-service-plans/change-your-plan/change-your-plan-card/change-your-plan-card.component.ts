@@ -1,8 +1,12 @@
-import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
-import { ServicePlanUpgradeModalComponent } from './service-plan-upgrade-modal/service-plan-upgrade-modal.component';
-import {BillingAccountService} from 'app/core/BillingAccount.service';
+import {Component, OnInit, ViewChild, OnDestroy, Input} from '@angular/core';
+
 import {Subscription} from 'rxjs/Subscription';
-import {BillingAccountClass} from 'app/core/models/BillingAccount.model';
+
+import {IOffers} from '../../../../../core/models/offers/offers.model';
+import {ServicePlanUpgradeModalComponent} from './service-plan-upgrade-modal/service-plan-upgrade-modal.component';
+import {ServiceAccountService} from 'app/core/serviceaccount.service';
+import {ServiceAccount} from '../../../../../core/models/serviceaccount/serviceaccount.model';
+
 @Component({
   selector: 'mygexa-change-your-plan-card',
   templateUrl: './change-your-plan-card.component.html',
@@ -10,23 +14,27 @@ import {BillingAccountClass} from 'app/core/models/BillingAccount.model';
 })
 export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
 
+  @Input() Offer: IOffers;
   @ViewChild('serviceUpgradeModal') serviceUpgradeModal: ServicePlanUpgradeModalComponent;
   selectCheckBox = false;
-  public IsInRenewalTimeFrame: boolean;
-  ActiveBillingAccountDetails: BillingAccountClass;
-  billingAccountSubscription: Subscription;
+  IsInRenewalTimeFrame: boolean;
+  activeServiceAccountDetails: ServiceAccount;
+  serviceAccountSubscription: Subscription;
   enableSelect = false;
-  clicked = false;
+  chev_clicked: boolean;
+
+  constructor(private serviceAccountService: ServiceAccountService) {
+    this.chev_clicked = false;
+  }
+
   ngOnInit() {
-    this.billingAccountSubscription = this.billingAccount_service.ActiveBillingAccountObservable.subscribe(
+    this.serviceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
-        this.ActiveBillingAccountDetails = result;
+        this.activeServiceAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
       });
   }
 
-  constructor(private viewContainerRef: ViewContainerRef, private billingAccount_service: BillingAccountService) {
-  }
   showServiceUpgradeModal() {
     this.serviceUpgradeModal.show();
 
@@ -44,6 +52,9 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
     this.enableSelect = false;
   }
   ngOnDestroy() {
-    this.billingAccountSubscription.unsubscribe();
+    this.serviceAccountSubscription.unsubscribe();
+  }
+  ChevClicked() {
+    this.chev_clicked = !this.chev_clicked;
   }
 }

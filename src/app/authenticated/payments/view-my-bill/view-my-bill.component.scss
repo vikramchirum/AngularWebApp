@@ -1,61 +1,17 @@
 
-.current-charges-container {
-  border: 2px solid black;
-  margin-bottom: 4rem;
-  padding: 2rem 4rem;
-}
-
-table.current-charges-make-a-payment {
-  td {
-    font-size: 2rem;
-    line-height: 4rem;
-  }
-}
-
-.current-charges-make-a-payment-container {
-  text-align: right;
-  padding: 4rem 0;
-}
-
-.view-my-bill-billing-payment-preferences,
-.view-my-bill-billing-meter-information,
-.view-my-bill-billing-power-outage {
-  border: 2px solid black;
-  margin-bottom: 4rem;
-}
-
-.view-my-bill-billing-pad {
-  padding: 4rem;
-}
-
-.view-my-bill-billing-payment-preferences {
-  p {
-    font-weight: bold;
-    text-align: center;
-  }
-}
-
-.view-my-bill-billing-meter-information {
-  .view-my-bill-billing-header {
-    background: black;
-    color: white;
-    font-size: 1.4em;
-    line-height: 6rem;
-
-    i {
-      width: 4rem;
+table {
+  tr.bg-success{
+    td {
+      line-height: 4rem;
+          padding:5px 10px;
+      margin-bottom: 5px;
     }
   }
-}
+  tr.total {
+    border-top: 1px solid #999;
 
-.view-my-bill-billing-power-outage {
-  background: black;
-  color: white;
-
-  p, h1, h2 {
-    font-weight: bold;
-  }
-  p {
-    padding: 2rem 0;
+    td {
+      padding-top: 20px;
+    }
   }
 }

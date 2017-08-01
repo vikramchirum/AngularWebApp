@@ -1,10 +1,13 @@
-import {AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 
 import {UserService} from '../../core/user.service';
 import {Router} from '@angular/router';
 import {environment} from '../../../environments/environment';
 import {HomeMultiAccountsModalComponent} from './home-multi-accounts-modal/home-multi-accounts-modal.component';
-import {BillingAccountService} from 'app/core/BillingAccount.service';
+import {ServiceAccountService} from 'app/core/serviceaccount.service';
+import { startsWith } from 'lodash';
+
+declare const $: any;
 
 @Component({
   selector: 'mygexa-root',
@@ -14,31 +17,63 @@ import {BillingAccountService} from 'app/core/BillingAccount.service';
 })
 export class RootComponent implements OnInit, AfterViewInit {
 
+  startsWith = startsWith;
+  service_account_length: number = null;
   env = environment.Name;
   user: string;
   accordionVisible: boolean = false;
 
+
   @ViewChild('homeMultiAccountsModal') homeMultiAccountsModal: HomeMultiAccountsModalComponent;
 
-  constructor(private user_service: UserService, private router: Router, private viewContainerRef: ViewContainerRef, private billingAcctService: BillingAccountService) { }
+  constructor(
+    private UserService: UserService,
+    private router: Router,
+    private viewContainerRef: ViewContainerRef,
+    private serviceAcctService: ServiceAccountService
+  ) {
+    this.service_account_length = null;
+  }
 
   showHomeMultiAccountsModal() {
     this.homeMultiAccountsModal.show();
   }
+
   ngAfterViewInit() {
     // this.homeMultiAccountsModal.show();
-    if (!this.billingAcctService.ActiveBillingAccountId) {
+    if (!this.serviceAcctService.ActiveServiceAccountId) {
       this.homeMultiAccountsModal.show();
+      this.UserService.UserObservable.subscribe(
+        result => {
+          this.service_account_length = result.Account_permissions.length;
+        }
+      );
+      if (!this.serviceAcctService.ActiveServiceAccountId) {
+        if (this.service_account_length != null && this.service_account_length === 2) {
+          this.homeMultiAccountsModal.hideServiceUpgradeModal();
+        } else if (this.service_account_length != null && this.service_account_length > 2) {
+          this.homeMultiAccountsModal.show();
+        }
+      }
     }
+    $('.custom-nav li.dropdown-full > a:link').mouseenter(function() {
+      $(this).closest('.custom-nav').find('li').removeClass('open');
+      $(this).parent().addClass('open');
+    });
+    $('.custom-nav li.dropdown-full .dropdown-menu').mouseleave(function() {
+      $(this).closest('li').removeClass('open');
+    });
   }
+
   ngOnInit() {
-    //this.user = this.user_service.logged_in_user;
-    //this.user = this.user_service.user_token;
+    this.UserService.UserObservable.subscribe(
+      result => { this.service_account_length = result.Account_permissions.length; }
+    );
   }
 
   logout($event) {
     if ($event && $event.preventDefault) { $event.preventDefault(); }
-    this.user_service.logout();
+    this.UserService.logout();
     this.router.navigate(['/login']);
   }
 

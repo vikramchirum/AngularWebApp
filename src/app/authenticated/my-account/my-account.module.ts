@@ -13,7 +13,6 @@ import { SharedModule } from 'app/shared/shared.module';
 import { SecurityQuestionComponent } from './profile/security-information/security-question/security-question.component';
 import { MessageCenterComponent } from './message-center/message-center.component';
 import { ContactFormComponent } from './message-center/contact-form/contact-form.component';
-import { OrderStatusComponent } from './order-status/order-status.component';
 
 @NgModule({
   imports: [
@@ -33,8 +32,7 @@ import { OrderStatusComponent } from './order-status/order-status.component';
     PersonalInformationComponent,
     SecurityQuestionComponent,
     MessageCenterComponent,
-    ContactFormComponent,
-    OrderStatusComponent
+    ContactFormComponent
   ]
 })
 export class MyAccountModule { }

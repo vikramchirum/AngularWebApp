@@ -7,14 +7,12 @@ tr.options {
 }
 
 tr.bill {
-  border-top: 2px solid black;
 
   td {
-    font-weight: bold;
-    height: 6rem;
     vertical-align: middle !important;
   }
-  button {
+  button,
+  td > div {
     padding: 10px 0;
   }
 }

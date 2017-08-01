@@ -1,6 +1,10 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {BillingAccountService} from 'app/core/BillingAccount.service';
+import { Router } from '@angular/router';
+
+import {ServiceAccountService} from 'app/core/serviceaccount.service';
 import {Subscription} from 'rxjs/Subscription';
+import {OfferService} from '../../core/offer.service';
+import { result, startsWith } from 'lodash';
 
 @Component({
   selector: 'mygexa-plans-and-services',
@@ -8,10 +12,17 @@ import {Subscription} from 'rxjs/Subscription';
   styleUrls: ['./plans-and-services.component.scss']
 })
 export class PlansAndServicesComponent implements OnInit, OnDestroy, AfterViewInit {
-  IsInRenewalTimeFrame: boolean;
-  billingAccountSubscription: Subscription;
 
-  constructor(private billingAccount_service: BillingAccountService) {
+  private startsWith = startsWith;
+
+  IsInRenewalTimeFrame: boolean;
+  serviceAccountSubscription: Subscription;
+  activeserviceAccountOffersSubscription: Subscription;
+  constructor(
+    private serviceAccount_service: ServiceAccountService,
+    private active_serviceaccount_service: OfferService,
+    private Router: Router
+  ) {
     this.IsInRenewalTimeFrame = false;
   }
 
@@ -20,14 +31,18 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngAfterViewInit() {
-    this.billingAccountSubscription = this.billingAccount_service.ActiveBillingAccountObservable.subscribe(
+    this.serviceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.subscribe(
       result => {
-        //console.log('Billing Account', result);
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
+        console.log('IsInRenewalTimeFrame', this.IsInRenewalTimeFrame);
+        this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
+          all_offers => {
+          });
       });
   }
 
   ngOnDestroy() {
-    this.billingAccountSubscription.unsubscribe();
+    result(this.serviceAccountSubscription, 'unsubscribe');
+    result(this.activeserviceAccountOffersSubscription, 'unsubscribe');
   }
 }

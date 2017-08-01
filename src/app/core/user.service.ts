@@ -2,19 +2,19 @@
  * Created by patrick.purcell on 5/2/2017.
  */
 import { Injectable } from '@angular/core';
-import { Http, Headers, URLSearchParams, RequestOptions } from '@angular/http';
+import { Http, Headers, URLSearchParams, RequestOptions, Response } from '@angular/http';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
-import { IUser, IUserSecurityQuestions, IUserSigningUp } from './models/User.model';
+import { IUser, IUserSecurityQuestions, IUserSigningUp } from './models/user/User.model';
 import { HttpClient } from './httpclient';
 import { clone, filter, find, forEach, get, map, pull } from 'lodash';
 
-function getBillingAccountIds(user: IUser): string[] {
+function getServiceAccountIds(user: IUser): string[] {
   return user
-    ? map(filter(get(user, 'Account_permissions', []), ['AccountType', 'Billing_Account_Id']), 'AccountNumber')
+    ? map(filter(get(user, 'Account_permissions', []), ['AccountType', 'Service_Account_Id']), 'AccountNumber')
     : null;
 }
 
@@ -29,14 +29,14 @@ export class UserService implements CanActivate {
 
   public UserCache: IUser = null;
   public UserObservable: Observable<IUser> = null;
-  public UserBillingAccountsObservable: Observable<string[]> = null;
+  public UserServiceAccountsObservable: Observable<string[]> = null;
   public UserCustomerAccountObservable: Observable<string> = null;
   public UserState: string = null;
   public getSecurityQuestionsCached: IUserSecurityQuestions[] = [];
 
   private initialized: boolean = null;
   private UserObservers: Observer<IUser>[] = [];
-  private UserBillingAccountsObservers: Observer<string[]>[] = [];
+  private UserServiceAccountsObservers: Observer<string[]>[] = [];
   private UserCustomerAccountObservers: Observer<string>[] = [];
   private getUserFromMongo = environment.Api_Url + '/user/getUserFromMongo';
   private secQuesUrl = environment.Api_Url + '/user/securityQues';
@@ -47,7 +47,6 @@ export class UserService implements CanActivate {
   private loginUrl = environment.Api_Url + '/user/authenticate';
   private registerUrl = environment.Api_Url + '/user/register';
   private updateEmail = environment.Api_Url + '/user/updateEmailAddress';
-
 
   get user_token(): string {
 
@@ -80,8 +79,8 @@ export class UserService implements CanActivate {
     return !!this.user_token;
   };
 
-  get UserCacheBillingAccountIds(): string[] {
-    return getBillingAccountIds(this.UserCache);
+  get UserCacheServiceAccountIds(): string[] {
+    return getServiceAccountIds(this.UserCache);
   }
 
   get UserCacheCustomerAccountId(): string {
@@ -91,10 +90,10 @@ export class UserService implements CanActivate {
   constructor(
     private router: Router,
     private Http: Http,
-    private HttpClient: HttpClient
+    private httpClient: HttpClient
   ) {
 
-    // Make the Observables (User, Billing Account Ids, Customer Account Id) for others to listen to.
+    // Make the Observables (User, Service Account Ids, Customer Account Id) for others to listen to.
     // Each will:
     // 1. Collect, or 'push', new observers to the observable's collection.
     // 2. Send the latest cached data to the new observer (only if we've initialized with some data.)
@@ -104,10 +103,10 @@ export class UserService implements CanActivate {
       if (this.initialized) { observer.next(this.UserCache); }
       return () => pull(this.UserObservers, observer);
     });
-    this.UserBillingAccountsObservable = Observable.create((observer: Observer<string[]>) => {
-      this.UserBillingAccountsObservers.push(observer);
-      if (this.initialized) { observer.next(getBillingAccountIds(this.UserCache)); }
-      return () => pull(this.UserBillingAccountsObservers, observer);
+    this.UserServiceAccountsObservable = Observable.create((observer: Observer<string[]>) => {
+      this.UserServiceAccountsObservers.push(observer);
+      if (this.initialized) { observer.next(getServiceAccountIds(this.UserCache)); }
+      return () => pull(this.UserServiceAccountsObservers, observer);
     });
     this.UserCustomerAccountObservable = Observable.create((observer: Observer<string>) => {
       this.UserCustomerAccountObservers.push(observer);
@@ -115,14 +114,14 @@ export class UserService implements CanActivate {
       return () => pull(this.UserCustomerAccountObservers, observer);
     });
 
-    // Keep observers of the user's customer and billing account Ids updated.
+    // Keep observers of the user's customer and service account Ids updated.
     this.UserObservable.subscribe(user => {
       if (user) {
         this.initialized = true;
-        this.emitToObservers(this.UserBillingAccountsObservers, getBillingAccountIds(user));
+        this.emitToObservers(this.UserServiceAccountsObservers, getServiceAccountIds(user));
         this.emitToObservers(this.UserCustomerAccountObservers, getCustomerAccountId(user));
         console.log('user = ', user);
-        console.log(`BillingAccountIds = ${getBillingAccountIds(user)}`);
+        console.log(`ServiceAccountIds = ${getServiceAccountIds(user)}`);
         console.log(`CustomerAccountId = ${getCustomerAccountId(user)}`);
       }
     });
@@ -136,12 +135,11 @@ export class UserService implements CanActivate {
       const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
       const options = new RequestOptions({ headers, params });
 
-      this.Http.get(this.getUserFromMongo, options)
+      this.httpClient.get('/user/getUserFromMongo')
         .map(res => res.json())
-        .catch(error => this.HttpClient.handleHttpError(error))
+        .catch(error => this.httpClient.handleHttpError(error))
         .subscribe(res => this.ApplyUserData(res));
     }
-
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
@@ -151,7 +149,7 @@ export class UserService implements CanActivate {
 
     // Otherwise, save their state and navigate to the login prompt.
     this.UserState = this.UserState || state.url;
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } } );
 
   }
 
@@ -170,7 +168,7 @@ export class UserService implements CanActivate {
     return this.Http.post(this.loginUrl, body.toString(), options)
       .map(res => res.json())
       .map(res => this.ApplyUserData(res))
-      .catch(error => this.HttpClient.handleHttpError(error));
+      .catch(error => this.httpClient.handleHttpError(error));
   }
 
   signup(user: IUserSigningUp): Observable<string> {
@@ -189,7 +187,7 @@ export class UserService implements CanActivate {
         Question: user.Security_Question_Id.valueOf()
       },
       Security_Question_Answer: user.Security_Question_Answer,
-      Billing_Account_Id: user.Billing_Account_Id,
+      Service_Account_Id: user.Service_Account_Id,
       Zip_Code: user.Zip_Code
     });
     const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
@@ -197,7 +195,7 @@ export class UserService implements CanActivate {
     return this.Http.post(this.registerUrl, body, options)
       .map(res => res.json())
       .map(res => this.ApplyUserData(res))
-      .catch(error => this.HttpClient.handleHttpError(error));
+      .catch(error => this.httpClient.handleHttpError(error));
   }
 
   getSecurityQuestions(): Observable<IUserSecurityQuestions[]> {
@@ -207,7 +205,7 @@ export class UserService implements CanActivate {
     return this.Http.get(this.secQuesUrl)
       .map(res => res.json())
       .map(res => this.getSecurityQuestionsCached = res)
-      .catch(error => this.HttpClient.handleHttpError(error));
+      .catch(error => this.httpClient.handleHttpError(error));
   }
 
   getSecQuesByUserName(user_name: string): Observable<string> {
@@ -218,7 +216,7 @@ export class UserService implements CanActivate {
     return this.Http.post(this.getSecQuestionUrl, body, options)
       .map(res => res.json())
       .map(res => get(res, 'length') > 0 ? res : null)
-      .catch(error => this.HttpClient.handleHttpError(error));
+      .catch(error => this.httpClient.handleHttpError(error));
   }
 
   checkSecQuesByUserName(user_name: string, security_answer: string) {
@@ -230,7 +228,7 @@ export class UserService implements CanActivate {
     return this.Http.post(this.checkSecQuesUrl, body, options)
       .map(res => res.json())
       .map(res => get(res, 'length') > 0 ?  localStorage.setItem('reset_password_token', res) : localStorage.setItem('reset_password_token', null))
-      .catch(error => this.HttpClient.handleHttpError(error));
+      .catch(error => this.httpClient.handleHttpError(error));
   }
 
   resetPassword (user_name: string, password: string) {
@@ -246,7 +244,7 @@ export class UserService implements CanActivate {
     if (token && token.length) {
       return this.Http.put(this.resetPasswordUrl, body, options)
         .map(res => res.json())
-        .catch(error => this.HttpClient.handleHttpError(error));
+        .catch(error => this.httpClient.handleHttpError(error));
     }
     return null;
   }
@@ -265,7 +263,7 @@ export class UserService implements CanActivate {
           return false;
         }
       })
-      .catch(error => this.HttpClient.handleHttpError(error));
+      .catch(error => this.httpClient.handleHttpError(error));
   }
 
   updateEmailAddress (Email_Address: string) {
@@ -283,7 +281,7 @@ export class UserService implements CanActivate {
     if (token && token.length) {
       return this.Http.put(this.updateEmail, body, options)
         .map(res => res.json())
-        .catch(error => this.HttpClient.handleHttpError(error));
+        .catch(error => this.httpClient.handleHttpError(error));
     }
     return null;
   }
@@ -303,7 +301,7 @@ export class UserService implements CanActivate {
     if (token && token.length) {
       return this.Http.put(this.updateEmail, body, options)
         .map(res => res.json())
-        .catch(error => this.HttpClient.handleHttpError(error));
+        .catch(error => this.httpClient.handleHttpError(error));
     }
     return null;
   }
@@ -335,14 +333,12 @@ export class UserService implements CanActivate {
   }
 
   logout() {
-    // Remove our token and apply empty data.
-    // TODO: Use cross-browser capable storage solution here.
-    localStorage.removeItem('gexa_active_billing_account_id');
-    localStorage.removeItem('gexa_auth_token');
-    localStorage.removeItem('gexa_auth_token_expire');
-    this.ApplyUserData(null);
+    const relativePath = `/user/logout`;
+    (this.httpClient.post(relativePath, null).map((response: Response) => {
+      return <boolean> response.json();
+    })).subscribe(res => { console.log('User logged out.'); });
+    this.httpClient.logout();
   }
-
 }
 
 @Injectable()

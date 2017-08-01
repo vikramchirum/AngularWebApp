@@ -3,7 +3,6 @@
  */
 
 export class ICancelBudgetBillingRequest {
-
-  Billing_Account_Id: number;
+  Service_Account_Id: number;
   User_Name: string;
 }

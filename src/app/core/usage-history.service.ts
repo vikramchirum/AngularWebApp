@@ -1,62 +1,48 @@
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
+import {HttpClient} from './httpclient';
 
-import { HttpClient } from './httpclient';
-import { Observable } from 'rxjs/Observable';
-import { UsageHistory } from './models/usage-history.model';
-import { BillingAccountService } from './BillingAccount.service';
-import { BillingAccountClass } from './models/BillingAccount.model';
-import { sortBy, values } from 'lodash';
+import {Observable} from 'rxjs/Observable';
+import {sortBy, values} from 'lodash';
+
+import {UsageHistory} from './models/usage-history.model';
+import {ServiceAccount} from './models/serviceaccount/serviceaccount.model';
+import {ServiceAccountService} from './serviceaccount.service';
 
 @Injectable()
 export class UsageHistoryService {
 
-  private activeBillingAccount: BillingAccountClass = null;
+  private activeServiceAccount: ServiceAccount = null;
 
-  constructor(
-    private HttpClient: HttpClient,
-    private BillingAccountService: BillingAccountService
-  ) {
-    this.BillingAccountService.ActiveBillingAccountObservable.subscribe(
-      activeBillingAccount => this.activeBillingAccount = activeBillingAccount
+  constructor(private HttpClient: HttpClient, private serviceAccountService: ServiceAccountService) {
+    this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
+      activeServiceAccount => this.activeServiceAccount = activeServiceAccount
     );
   }
 
-  /**
-   * Returns billing account usage history based on Id
-   * @param billingAccountId
-   * @returns {Observable<UsageHistory[]>}
-   */
-  getUsageHistory(billingAccountId: number): Observable<UsageHistory[]> {
-
+  getUsageHistory(serviceAccountId: number): Observable<UsageHistory[]> {
     return this.HttpClient
-      .get(`/billing_accounts/${billingAccountId}/usage_history`)
+      .get(`/service_accounts/${serviceAccountId}/usage_history`)
       .map(res => res.json())
       .map(res => this.processApiData(res))
       .catch(error => this.HttpClient.handleHttpError(error));
   }
 
   private processApiData(data) {
-
     const months = {};
 
     for (const index in data) {
       if (data[index]) {
-
         if (!months[data[index].Usage_Month]) {
           months[data[index].Usage_Month] = {
             usage: 0,
             date: new Date(data[index].Usage_Month)
           };
         }
-
         months[data[index].Usage_Month].usage += data[index].Usage;
-
       }
     }
 
     return sortBy(values(months));
-
   }
-
 }

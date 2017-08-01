@@ -1,24 +1,24 @@
-<div *ngIf="billingAccounts" class="my-bill-grid thumbnail">
-       <div class="alert pull-right bg-danger">Due Date: {{billingAccounts.Due_Date | date:'d/M/yy'  }}
-    </div>
-    <h1>My Bill</h1>
-    
-    <table class="table table-condensed table-striped" border="0" width="100%">    
+<div *ngIf="activeServiceAccount" class="my-bill-grid thumbnail">
+  <div class="alert pull-right bg-danger">Due Date: {{activeServiceAccount.Due_Date | date:'d/M/yy'  }}
+  </div>
+  <h1>My Bill</h1>
+
+  <table class="table table-condensed table-striped" border="0" width="100%">
     <tbody>
-      <tr>
-        <td><h5>Amount Due:</h5></td>
-        <td><h4>${{billingAccounts.Due_Amount | NumberToMoneyPipe }}</h4></td>
-      </tr>
-      <tr>
-        <td><h5>Current Bill</h5></td>
-        <td><h4>${{billingAccounts.Current_Due | NumberToMoneyPipe }}</h4></td>
-      </tr>
-      <tr>
-        <td><h5>Past Due</h5></td>
-        <td><h4>${{billingAccounts.Past_Due | NumberToMoneyPipe }}</h4></td>
-      </tr>
-      </tbody>
+    <tr>
+      <td><h5>Amount Due:</h5></td>
+      <td><h4>${{activeServiceAccount.Due_Amount | NumberToMoneyPipe }}</h4></td>
+    </tr>
+    <tr>
+      <td><h5>Current Bill</h5></td>
+      <td><h4>${{activeServiceAccount.Current_Due | NumberToMoneyPipe }}</h4></td>
+    </tr>
+    <tr>
+      <td><h5>Past Due</h5></td>
+      <td><h4>${{activeServiceAccount.Past_Due | NumberToMoneyPipe }}</h4></td>
+    </tr>
+    </tbody>
   </table>
-         <button class="btn btn-block btn-success btn-lg" routerLink="/payments/view-my-bill" type="button">Make a Payment</button>
-         <button class="btn btn-small btn-link pull-right"  routerLink="/payments/make-payment" type="button">View Bill</button>
+  <button class="btn btn-small btn-link pull-right"  routerLink="/payments/make-payment" type="button">View Bill</button>
+  <button class="btn btn-block btn-success btn-lg" routerLink="/payments/view-my-bill" type="button">Make a Payment</button>
 </div>

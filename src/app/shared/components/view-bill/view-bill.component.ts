@@ -2,8 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { filter, forEach, clone } from 'lodash';
 
 import { InvoiceService } from 'app/core/invoiceservice.service';
-import { IBillLineItem } from 'app/core/models/billlineitem.model';
-import { IBill } from 'app/core/models/bill.model';
+import { IInvoiceLineItem } from 'app/core/models/invoices/invoicelineitem.model';
+import { IInvoice } from 'app/core/models/invoices/invoice.model';
 
 @Component({
   selector: 'mygexa-view-bill',
@@ -11,22 +11,23 @@ import { IBill } from 'app/core/models/bill.model';
   styleUrls: ['./view-bill.component.scss']
 })
 export class ViewBillComponent implements OnInit {
-  @Input() bill_object: IBill;
+  @Input() bill_object: IInvoice;
 
   error: string = null;
-  public  bill_item_details: IBillLineItem[] = [];
-  public  bill_item_details_gexa_charges: IBillLineItem[] = [];
-  public  bill_item_details_other_charges: IBillLineItem[] = [];
-  public  bill_item_details_TDU_charges: IBillLineItem[] = [];
-  public  bill_item_details_tax: IBillLineItem[] = [];
+  public  bill_item_details: IInvoiceLineItem[] = [];
+  public  bill_item_details_gexa_charges: IInvoiceLineItem[] = [];
+  public  bill_item_details_other_charges: IInvoiceLineItem[] = [];
+  public  bill_item_details_TDU_charges: IInvoiceLineItem[] = [];
+  public  bill_item_details_tax: IInvoiceLineItem[] = [];
 
   public invoice_num: number;
   public invoice_date: Date;
 
   private openCharges = [];
 
-  constructor(private invoice_service: InvoiceService) {
-  }
+  constructor(
+    private invoice_service: InvoiceService
+  ) { }
 
   ngOnInit() {
     if (this.bill_object) {
@@ -34,9 +35,9 @@ export class ViewBillComponent implements OnInit {
     }
   }
 
-  public PopulateItemizedBill(bill_object: IBill) {
+  public PopulateItemizedBill(bill_object: IInvoice) {
     const invoice_id = Number(bill_object.Invoice_Id);
-    this.invoice_service.getItemizedBillDetails(invoice_id)
+    this.invoice_service.getItemizedInvoiceDetails(invoice_id)
       .subscribe(
         bill_item_details => {
           this.openCharges = [];

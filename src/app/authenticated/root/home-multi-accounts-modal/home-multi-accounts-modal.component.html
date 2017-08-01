@@ -18,8 +18,8 @@
 
           <!--Plan information -->
           <div class="row">
-            <div class="col-md-4 col-xs-12" *ngFor="let acct of BillingAccounts">
-              <div class="select-account-container" [ngClass]="{ 'select-account-container-active': active_billing_account_id === acct.Id }" (click)="setActBillAcct(acct.Id)" >
+            <div class="col-md-4 col-xs-12" *ngFor="let acct of ServiceAccounts">
+              <div class="select-account-container" [ngClass]="{ 'select-account-container-active': active_service_account_id === acct.Id }" (click)="setActBillAcct(acct.Id)" >
                 <div class="box">
                 <div class="account-header">
                   <p class="account-title">Account No: {{acct.Id}} </p>
@@ -32,7 +32,7 @@
               </div>
             </div>
 
-            <div><button type="submit" class="btn btn-wireframe pull-right continue-button" [disabled] = '!active_billing_account_id' (click)="onContinue()">Continue</button></div>
+            <div><button type="submit" class="btn btn-primary pull-right continue-button" [disabled] = '!active_service_account_id' (click)="onContinue()">Continue</button></div>
           </div>
 
       </div>

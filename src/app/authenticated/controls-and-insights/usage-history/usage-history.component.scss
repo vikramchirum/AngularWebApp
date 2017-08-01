@@ -1,14 +1,5 @@
 @import '../../../../styles';
 
-.usage-history {
-  border: 1px solid black;
-  padding: 4rem;
-}
-
-pagination {
-  float: right;
-}
-
 table {
   table-layout: fixed;
   width: 100%;
@@ -16,4 +7,8 @@ table {
 
 .month {
   width: 25%;
+}
+
+.btn-round, .pagination .active > a {
+  background-color:   rgba(27,141,205,1.0);
 }
