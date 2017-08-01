@@ -12,7 +12,7 @@
     <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
     <p>at 1000kwh</p>
     <p>TERM:{{Offer.Plan.Term}} months</p>
-    <p>{{Offer.Promotion.Name}}</p>
+    <p>{{Offer.Promotion?.Name}}</p>
     <br/>
   </div>
   <div *ngIf= "selectCheckBox" class="agreement-section">
@@ -53,7 +53,7 @@
       <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
       <p>at 1000kwh</p>
       <p>TERM:{{Offer.Plan.Term}} months</p>
-      <p>{{Offer.Promotion.Name}}</p>
+      <p>{{Offer.Promotion?.Name}}</p>
 
     </div>
     <div *ngIf= "selectCheckBox" class="agreement-section">

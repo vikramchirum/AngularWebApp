@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { PaymentsHistoryService } from 'app/core/payments-history.service';
-import { PaymentsHistory } from 'app/core/models/payments/payments-history.model';
+import { PaymentsHistory} from 'app/core/models/payments/payments-history.model';
 import { Subscription } from 'rxjs/Subscription';
 import { ColumnHeader } from 'app/core/models/columnheader.model';
 
@@ -12,22 +12,22 @@ import { ColumnHeader } from 'app/core/models/columnheader.model';
   templateUrl: './payments.component.html',
   styleUrls: ['./payments.component.scss']
 })
-export class PaymentsComponent implements OnInit, OnDestroy {
+export class PaymentsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public config: any;
   public columnHeaders: ColumnHeader[] = [
-    { title: 'Date', name: 'Payment_Date', sort: 'desc', type: 'date' },
-    { title: 'Payment Amount', name: 'Amount_Paid', sort: '', type: 'dollar' },
-    { title: 'Status', name: 'Payment_Status', sort: '', type: '' },
-    { title: 'Payment Method', name: 'Payment_Type', sort: '', type: '' },
-    { title: 'Payment Account', name: 'Payment_Source', sort: '', type: '' }
+    { title: 'Date', name: 'PaymentDate', sort: 'desc', type: 'date' },
+    { title: 'Payment Amount', name: 'PaymentAmount', sort: '', type: 'dollar' },
+    { title: 'Status', name: 'PaymentStatus', sort: '', type: '' },
+    { title: 'Payment Method', name: 'PaymentMethod', sort: '', type: '' },
+    { title: 'Payment Account', name: 'PaymentAccount', sort: '', type: '' }
   ];
   public rows: any[] = [];
 
   public currentPage = 1;
   public itemsPerPage = 10;
   public totalItems = 0;
-  public Payments: PaymentsHistory[];
+  public Payments: PaymentsHistory[] = null;
 
   private ActiveServiceAccountSubscription: Subscription = null;
 
@@ -43,14 +43,16 @@ export class PaymentsComponent implements OnInit, OnDestroy {
       paging: true,
       sorting: { columnHeaders: this.columnHeaders },
     };
+  }
+
+  ngAfterViewInit() {
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       activeServiceAccount => {
         this.PaymentsHistoryService.GetPaymentsHistoryCacheable(activeServiceAccount).subscribe(
           PaymentsHistoryItems => {
             this.Payments = PaymentsHistoryItems;
             this.onChangeTable(this.config);
-          }
-        );
+          });
       }
     );
   }
@@ -67,7 +69,6 @@ export class PaymentsComponent implements OnInit, OnDestroy {
     if (columnHeader.type === 'dollar') {
       return this.CurrencyPipe.transform(row[columnHeader.name], 'USD', true, '.2');
     }
-
     return row[columnHeader.name];
   }
 
@@ -143,3 +144,24 @@ export class PaymentsComponent implements OnInit, OnDestroy {
   }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

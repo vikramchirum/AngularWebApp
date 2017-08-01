@@ -7,6 +7,7 @@ export interface IInvoice {
   Invoice_Date: Date;
   Due_Date: Date;
   Usage: number;
+  Total_Usage: string;
   Current_Charges: number;
   Amount_Due: number;
   Credit: number;
