@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, OnInit, OnDestroy } from '@angular/core';
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
-import {Subscription} from 'rxjs/Subscription';
-import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
+import { AfterViewInit, Component, OnDestroy, ChangeDetectorRef, OnInit } from '@angular/core';
+
+import { Subscription } from 'rxjs/Subscription';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-my-service-plans',
@@ -9,28 +10,31 @@ import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount
   styleUrls: ['./my-service-plans.component.scss']
 })
 export class MyServicePlansComponent implements OnInit, OnDestroy, AfterViewInit  {
-  public IsInRenewalTimeFrame: boolean;
+
+  IsInRenewalTimeFrame: boolean = null;
   ActiveServiceAccountDetails: ServiceAccount;
-  serviceAccountSubscription: Subscription;
+  ActiveServiceAccountSubscription: Subscription;
 
-  constructor(private serviceAccount_service: ServiceAccountService) {
-    this.IsInRenewalTimeFrame = false;
-
-  }
+  constructor(
+    private ServiceAccountService: ServiceAccountService,
+    private ChangeDetectorRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
+    this.IsInRenewalTimeFrame = false;
   }
 
   ngAfterViewInit() {
-    this.serviceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.subscribe(
+    this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.ActiveServiceAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
+        this.ChangeDetectorRef.detectChanges();
       });
   }
 
   ngOnDestroy() {
-    this.serviceAccountSubscription.unsubscribe();
+    this.ActiveServiceAccountSubscription.unsubscribe();
   }
 
 }

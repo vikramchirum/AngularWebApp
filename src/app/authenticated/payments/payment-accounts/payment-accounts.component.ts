@@ -176,7 +176,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
   removePaymethodEditAutoPayConfirm(): void {
 
-    const PaymethodToDelete = this.PaymentEditting;
+    const PaymethodToDelete = this.PaymentAbpSelecting;
     const PaymethodToUse = this.PaymentAbpSelected;
 
     forEach(this.autoPayConfigIdsToModify, autoPayConfigId => {

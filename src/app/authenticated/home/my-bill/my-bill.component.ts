@@ -1,14 +1,12 @@
 /**
  * Created by vikram.chirumamilla on 7/31/2017.
  */
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-
-import {Subscription} from 'rxjs/Subscription';
-
-import {InvoiceService} from '../../../core/invoiceservice.service';
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
-import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
+import { Subscription } from 'rxjs/Subscription';
+import { InvoiceService } from 'app/core/invoiceservice.service';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-my-bill',
@@ -17,7 +15,7 @@ import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount
 })
 export class MyBillComponent implements OnInit, OnDestroy {
 
-  activeServiceAccount: ServiceAccount
+  activeServiceAccount: ServiceAccount;
   private ActiveServiceAccountSubscription: Subscription = null;
 
   constructor(

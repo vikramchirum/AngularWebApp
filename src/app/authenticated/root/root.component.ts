@@ -21,7 +21,7 @@ export class RootComponent implements OnInit, AfterViewInit {
   service_account_length: number = null;
   env = environment.Name;
   user: string;
-  accordionVisible: boolean = false;
+  accordionVisible: boolean = null;
 
 
   @ViewChild('homeMultiAccountsModal') homeMultiAccountsModal: HomeMultiAccountsModalComponent;
@@ -63,6 +63,10 @@ export class RootComponent implements OnInit, AfterViewInit {
     $('.custom-nav li.dropdown-full .dropdown-menu').mouseleave(function() {
       $(this).closest('li').removeClass('open');
     });
+  }
+
+  routerClick() {
+    $('.custom-nav li.dropdown-full .dropdown-menu').closest('li').removeClass('open');
   }
 
   ngOnInit() {

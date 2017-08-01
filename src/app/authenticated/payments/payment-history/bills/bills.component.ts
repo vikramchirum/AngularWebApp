@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 
@@ -39,8 +38,12 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('viewMyBillModal') viewMyBillModal: ViewMyBillModalComponent;
 
-  constructor(private datePipe: DatePipe, private currencyPipe: CurrencyPipe
-    , private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService) {
+  constructor(
+    private datePipe: DatePipe,
+    private currencyPipe: CurrencyPipe,
+    private invoiceService: InvoiceService,
+    private serviceAccountService: ServiceAccountService
+  ) {
   }
   public showViewMyBillModal(row: IInvoice) {
     this.viewMyBillModal.show(row);

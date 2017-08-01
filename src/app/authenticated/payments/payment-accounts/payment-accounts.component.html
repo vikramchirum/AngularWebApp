@@ -64,26 +64,30 @@
             <ng-template *ngIf="PaymentEdittingIsUsedForAutoPayment; then IsUsedForAutoPayment else IsNotUsedForAutoPayment"></ng-template>
             <ng-template #IsUsedForAutoPayment>
               <h1>
-                <b>Warning!</b>
-                <div>This Payment Account is Being Used For Auto Pay.</div>
+                <b>Delete Payment Account</b>
+              </h1>
+              <div class="alert alert-warning"><i class="fa fa-fw fa-info-circle"></i> <b>You are about to delete a saved pay method that is set up for Auto Pay.</b></div>
+              <h1>
                 <small>What Would You Like To Do?</small>
               </h1>
               <div class="row">
-                <div class="col-sm-6">
-                  <button class="btn btn-block btn-warning" (click)="removePaymethodStopAutoPay()">Delete and Stop Auto Pay</button>
-                </div>
-                <div class="col-sm-6">
-                  <ng-template *ngIf="Paymethods.length > 1; then AllowToDeleteAndEdit else DoNotAllowToDeleteAndEdit"></ng-template>
-                  <ng-template #AllowToDeleteAndEdit>
+                <ng-template *ngIf="Paymethods.length > 1; then AllowToDeleteAndEdit else DoNotAllowToDeleteAndEdit"></ng-template>
+                <ng-template #AllowToDeleteAndEdit>
+                  <div class="col-sm-6">
+                    <button class="btn btn-block btn-warning" (click)="removePaymethodStopAutoPay()">Delete and Stop Auto Pay</button>
+                  </div>
+                  <div class="col-sm-6">
                     <button class="btn btn-block btn-success" (click)="removePaymethodEditAutoPay()">Delete and Edit Auto Pay</button>
-                  </ng-template>
-                  <ng-template #DoNotAllowToDeleteAndEdit>
-                    <div class="DoNotAllowToDeleteAndEdit text-muted">Please add another pay method to use for auto payment.</div>
-                  </ng-template>
-                </div>
+                  </div>
+                </ng-template>
+                <ng-template #DoNotAllowToDeleteAndEdit>
+                  <div class="col-sm-6 col-sm-offset-3">
+                    <button class="btn btn-block btn-warning" (click)="removePaymethodStopAutoPay()">Delete and Stop Auto Pay</button>
+                  </div>
+                </ng-template>
               </div>
-              <div class="text-right">
-                <button class="btn  btn-link" (click)="removePaymethod()">Cancel</button>
+              <div class="text-center">
+                <button class="btn btn-lg btn-link" (click)="removePaymethod()">Cancel</button>
               </div>
             </ng-template>
             <ng-template #IsNotUsedForAutoPayment>
@@ -94,10 +98,10 @@
               </h1>
               <div class="row">
                 <div class="col-sm-6">
-                  <button class="btn  btn-block btn-warning" (click)="removePaymethodConfirm()">Yes - delete this payment method.</button>
+                  <button class="btn btn-block btn-warning" (click)="removePaymethodConfirm()">Yes - delete this payment method.</button>
                 </div>
                 <div class="col-sm-6">
-                  <button class="btn  btn-block btn-secondary" (click)="removePaymethod()">No - cancel and go back.</button>
+                  <button class="btn btn-block btn-secondary" (click)="removePaymethod()">No - cancel and go back.</button>
                 </div>
               </div>
             </ng-template>
@@ -125,39 +129,63 @@
 
   <h4 class="new-header">NEW PAYMENT ACCOUNT</h4>
 
-<div class="row">
- <div class="col-md-12">
-  <button class="btn  btn-link new-button" [disabled]="addingCreditCard" (click)="addingCreditCardToggle()"><i class="fa fa-fw fa-plus-circle"></i>ADD NEW CREDIT CARD</button>
-  <ng-container *ngIf="addingCreditCard">
-    <mygexa-payment-method-add-cc
-      (changed)="addingCreditCardFormChanged($event)"
-    ></mygexa-payment-method-add-cc>
-    <br/>
-    <div >
-      <button type="button" class="btn  btn-primary" [disabled]="!addingCreditCardFormValid" (click)="addingCreditCardSubmit()">Add Now</button>
-            <button type="button" class="btn  btn-link" (click)="addingCreditCardToggle(false)">Cancel</button>
-
+  <div class="row">
+    <div class="col-md-12">
+      <button
+        class="btn btn-link new-button"
+        [disabled]="addingCreditCard"
+        (click)="addingCreditCardToggle()"
+      ><i class="fa fa-fw fa-plus-circle"></i>ADD NEW CREDIT CARD</button>
+      <ng-container *ngIf="addingCreditCard">
+        <mygexa-payment-method-add-cc
+          (changed)="addingCreditCardFormChanged($event)"
+        ></mygexa-payment-method-add-cc>
+        <br/>
+        <div class="text-right">
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="!addingCreditCardFormValid"
+            (click)="addingCreditCardSubmit()"
+          >Add Now</button>
+          <button
+            type="button"
+            class="btn btn-link"
+            (click)="addingCreditCardToggle(false)"
+          >Cancel</button>
+        </div>
+        <hr/>
+      </ng-container>
     </div>
-    <hr/>
-  </ng-container>
-  </div>
   </div>
 
- <div class="row">
- <div class="col-md-12">
-  <button class="btn  btn-link new-button" [disabled]="addingEcheck" (click)="addingEcheckToggle()"><i class="fa fa-fw fa-plus-circle"></i>ADD NEW E-CHECK</button>
-  <ng-container *ngIf="addingEcheck">
-    <mygexa-payment-method-add-echeck
-      (changed)="addingEcheckFormChanged($event)"
-    ></mygexa-payment-method-add-echeck>
-    <br/>
-    <div class="text-right">
-      <button type="button" class="btn  btn-primary" [disabled]="!addingEcheckFormValid" (click)="addingEcheckSubmit()">Add Now</button>
-
-            <button type="button" class="btn  btn-link" (click)="addingEcheckToggle(false)">Cancel</button>
+  <div class="row">
+    <div class="col-md-12">
+      <button
+        class="btn btn-link new-button"
+        [disabled]="addingEcheck"
+        (click)="addingEcheckToggle()"
+      ><i class="fa fa-fw fa-plus-circle"></i>ADD NEW E-CHECK</button>
+      <ng-container *ngIf="addingEcheck">
+        <mygexa-payment-method-add-echeck
+          (changed)="addingEcheckFormChanged($event)"
+        ></mygexa-payment-method-add-echeck>
+        <br/>
+        <div class="text-right">
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="!addingEcheckFormValid"
+            (click)="addingEcheckSubmit()"
+          >Add Now</button>
+          <button
+            type="button"
+            class="btn btn-link"
+            (click)="addingEcheckToggle(false)"
+          >Cancel</button>
+        </div>
+      </ng-container>
     </div>
-  </ng-container>
-   </div>
   </div>
 
 </section>
