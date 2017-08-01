@@ -33,7 +33,7 @@
         <h2>{{RenewalOffers.Price_At_1000_kwh | DollarToCentsPipe | number: '1.2-2'}}<sup class="sup-text">c</sup><sub class="sub-text">per kwh</sub></h2>
         <p  class="bg-default">at 1000kwh</p>
       <p>TERM:{{RenewalOffers.Plan.Term}} months</p>
-        <p class="bg-default">{{RenewalOffers.Promotion.Name}} </p>
+        <p class="bg-default">{{RenewalOffers.Promotion?.Name}} </p>
       </div>
     </div>
     <div *ngIf= "selectCheckBox">
