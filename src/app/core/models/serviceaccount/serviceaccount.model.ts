@@ -4,8 +4,8 @@
 
 import { assign } from 'lodash';
 
-import {IAddress} from '../address/address.model';
-import {IServiceAccountPlanHistoryOffer} from './serviceaccountplanhistoryoffer.model';
+import { IAddress } from '../address/address.model';
+import { IServiceAccountPlanHistoryOffer } from './serviceaccountplanhistoryoffer.model';
 
 export class ServiceAccount {
   Customer_Account_Id: string;
@@ -34,6 +34,7 @@ export class ServiceAccount {
   New_Charges: string;
   Enrolled_In_Auto_Bill_Pay: boolean;
   Is_Auto_Bill_Pay: boolean;
+  AutoPayConfigId: number;
   PayMethodId: number;
   Is_Happiness_Guranteed: boolean;
   Latest_Invoice_Id: string;

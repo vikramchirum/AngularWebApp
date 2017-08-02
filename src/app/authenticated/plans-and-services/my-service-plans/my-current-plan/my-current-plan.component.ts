@@ -1,12 +1,12 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
-import { ServicePlanUpgradeModalComponent } from 'app/authenticated/plans-and-services/my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
-import {Subscription} from 'rxjs/Subscription';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 
-import {OfferService} from '../../../../core/offer.service';
-import {AllOffersClass} from '../../../../core/models/offers/alloffers.model';
-import {IOffers} from '../../../../core/models/offers/offers.model';
-import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceaccount.model';
+import { Subscription } from 'rxjs/Subscription';
+import { ServicePlanUpgradeModalComponent } from 'app/authenticated/plans-and-services/my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { OfferService } from 'app/core/offer.service';
+import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
+import { IOffers } from 'app/core/models/offers/offers.model';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-my-current-plan',

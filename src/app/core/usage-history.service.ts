@@ -1,13 +1,12 @@
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from './httpclient';
+import { Injectable } from '@angular/core';
 
-import {Observable} from 'rxjs/Observable';
-import {sortBy, values} from 'lodash';
-
-import {UsageHistory} from './models/usage-history.model';
-import {ServiceAccount} from './models/serviceaccount/serviceaccount.model';
-import {ServiceAccountService} from './serviceaccount.service';
+import { Observable } from 'rxjs/Observable';
+import { sortBy, values } from 'lodash';
+import { HttpClient } from './httpclient';
+import { UsageHistory } from './models/usage-history.model';
+import { ServiceAccount } from './models/serviceaccount/serviceaccount.model';
+import { ServiceAccountService } from './serviceaccount.service';
 
 @Injectable()
 export class UsageHistoryService {

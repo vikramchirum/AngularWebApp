@@ -7,7 +7,6 @@ import { Response, URLSearchParams } from '@angular/http';
 
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
-
 import { HttpClient } from './httpclient';
 import { INotificationOption } from './models/notificationoptions/notificationoption.model';
 import { ISearchNotificationOptionRequest } from './models/notificationoptions/searchnotificationoptionrequest.model';

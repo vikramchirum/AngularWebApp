@@ -1,23 +1,28 @@
-<section *ngIf="!IsInRenewalTimeFrame">
-  <b><p class="doc-title">  Documents</p></b>
-<ul class="list-unstyled">
-  <li><a><i class="fa fa-file-pdf-o"></i> Terms of Use</a></li>
-  <li><a><i class="fa fa-file-pdf-o"></i> Electricity Facts Label</a></li>
-  <li><a><i class="fa fa-file-pdf-o"></i> Customer Rights</a></li>
-  </ul>
+<ng-template *ngIf="IsInRenewalTimeFrame; then ShowWhatIsIncluded else ShowDocuments"></ng-template>
+<ng-template #ShowWhatIsIncluded>
+  <section id="RenewalPlan">
+    <b><p class="doc-title">  What's included</p></b>
+    <ul>
+      <li> Best plan for homes that a moderate amount of electricity</li>
+      <li> Eligible for bill credits with Share &amp; Save</li>
+      <li> Price is fixed for 12 month</li>
+    </ul>
+    <b><p>Renewal Details</p></b>
+    <ul >
+      <li> What happens if I don't renew ?</li>
+      <li> View current plan details</li>
+    </ul>
+  </section>
+</ng-template>
+<ng-template #ShowDocuments>
+  <section>
+    <b><p class="doc-title">  Documents</p></b>
+    <ul class="list-unstyled">
+      <li><a><i class="fa fa-file-pdf-o"></i> Terms of Use</a></li>
+      <li><a><i class="fa fa-file-pdf-o"></i> Electricity Facts Label</a></li>
+      <li><a><i class="fa fa-file-pdf-o"></i> Customer Rights</a></li>
+    </ul>
+    <p><a href >Get Adobe Reader Free </a></p>
+  </section>
+</ng-template>
 
-  <p><a href >Get Adobe Reader Free </a></p>
-</section>
-<section id="RenewalPlan" *ngIf="IsInRenewalTimeFrame">
-  <b><p class="doc-title">  What's included</p></b>
-  <ul>
-    <li> Best plan for homes that a moderate amount of electricity</li>
-    <li> Eligible for bill credits with Share &amp; Save</li>
-    <li> Price is fixed for 12 month</li>
-  </ul>
-  <b><p>Renewal Details</p></b>
-  <ul >
-    <li> What happens if I don't renew ?</li>
-    <li> View current plan details</li>
-  </ul>
-</section>

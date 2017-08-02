@@ -8,9 +8,9 @@ import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
+import { clone, filter, find, forEach, get, map, pull } from 'lodash';
 import { IUser, IUserSecurityQuestions, IUserSigningUp } from './models/user/User.model';
 import { HttpClient } from './httpclient';
-import { clone, filter, find, forEach, get, map, pull } from 'lodash';
 
 function getServiceAccountIds(user: IUser): string[] {
   return user
@@ -320,6 +320,8 @@ export class UserService implements CanActivate {
         localStorage.setItem('gexa_auth_token', this.UserCache.Token);
         localStorage.setItem('gexa_auth_token_expire', (this.UserCache.Date_Created.getTime() + 1000 * 60 * 60 * 12).toString());
       }
+    } else {
+      this.httpClient.logout();
     }
 
     // Emit the new data to all observers.

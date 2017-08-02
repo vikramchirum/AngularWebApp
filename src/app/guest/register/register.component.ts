@@ -1,8 +1,9 @@
-import {Directive, Component, OnInit} from '@angular/core';
-import {UserService} from "../../core/user.service";
-import {Router} from "@angular/router";
-import {ISecurityQuestions, IUser} from "app/guest/login/register";
-import {FormGroup} from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { UserService } from 'app/core/user.service';
+import { ISecurityQuestions, IUser } from 'app/guest/login/register';
 
 @Component({
   templateUrl: './register.component.html',

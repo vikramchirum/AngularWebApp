@@ -2,13 +2,12 @@
  * Created by vikram.chirumamilla on 6/20/2017.
  */
 
-import {Injectable} from '@angular/core';
-import {ConnectionBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers, URLSearchParams} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { ConnectionBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers, XHRBackend, URLSearchParams } from '@angular/http';
 
-import {Observable} from 'rxjs/Rx';
-import {get, isPlainObject} from 'lodash';
-
-import {environment} from 'environments/environment';
+import { Observable } from 'rxjs/Rx';
+import { get, isPlainObject } from 'lodash';
+import { environment } from 'environments/environment';
 
 @Injectable()
 export class HttpClient extends Http {
@@ -140,3 +139,15 @@ export class HttpClient extends Http {
     return params;
   }
 }
+
+export function httpFactory(xhrBackend: XHRBackend, requestOptions: RequestOptions): Http {
+  return new HttpClient(xhrBackend, requestOptions);
+}
+
+const HttpClientProvider = {
+  provide: HttpClient,
+  useFactory: httpFactory,
+  deps: [ XHRBackend, RequestOptions ]
+};
+
+export { HttpClientProvider as HttpClientService };

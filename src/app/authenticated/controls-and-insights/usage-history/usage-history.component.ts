@@ -1,9 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
-import { UsageHistoryService } from 'app/core/usage-history.service';
+
+import { Subscription } from 'rxjs/Subscription';
 import { takeRight, toNumber, reverse, values } from 'lodash';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
-import { Subscription } from 'rxjs/Subscription';
-import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
+import { UsageHistoryService } from 'app/core/usage-history.service';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-usage-history',
