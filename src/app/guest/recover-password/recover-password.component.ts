@@ -17,11 +17,11 @@ export class RecoverPasswordComponent implements OnInit {
   resetPassForm: FormGroup;
   IsResetSucessfull: boolean;
   public question: string;  error: string = null; public token: string;
-  IsUserNameValid: boolean;
+  IsUserNameValid: boolean; IsResNull: boolean; IsResNull1: boolean;
   public IsSecurityQuestionValid: boolean;
 
   constructor(private user_service: UserService, private router: Router, private fb: FormBuilder, private _http: Http) {
-    this.IsUserNameValid = this.IsSecurityQuestionValid = this.IsResetSucessfull = false;
+    this.IsUserNameValid = this.IsSecurityQuestionValid = this.IsResetSucessfull = this.IsResNull = this.IsResNull1 = false ;
     this.resetPassForm = this.resetPasswordFormInit();
   }
 
@@ -40,9 +40,13 @@ export class RecoverPasswordComponent implements OnInit {
     if (user_name && user_name.length) {
       this.user_service.getSecQuesByUserName(user_name).subscribe(
         result => {
-          this.question = result;
-          console.log( 'Question', this.question);
-          this.IsUserNameValid = true;
+          if (result) {
+            this.question = result;
+            console.log( 'Question', this.question);
+            this.IsUserNameValid = true;
+          } else {
+            this.IsResNull = true;
+          }
         },
         error => {
           this.error = error.Message;
@@ -55,10 +59,12 @@ export class RecoverPasswordComponent implements OnInit {
     if ((user_name && user_name.length) && (SecQues_Answer && SecQues_Answer.length)) {
       this.user_service.checkSecQuesByUserName(user_name, SecQues_Answer).subscribe(
         result => {
-          this.token = result;
-          //localStorage.setItem('reset_password_token', this.token);
-          console.log('Token', this.token);
-          this.IsSecurityQuestionValid = true;
+          if (result) {
+            this.token = result;
+            this.IsSecurityQuestionValid = true;
+          } else {
+            this.IsResNull1 = true;
+          }
         },
         error => {
           this.error = error.Message;

@@ -220,14 +220,17 @@ export class UserService implements CanActivate {
   }
 
   checkSecQuesByUserName(user_name: string, security_answer: string) {
-    const body = new URLSearchParams();
-    body.append('Username', user_name);
-    body.append('SecurityAnswer', security_answer);
-
-    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }) });
+    const body = JSON.stringify({
+      Username: user_name,
+      SecurityAnswer: security_answer
+    });
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
     return this.Http.post(this.checkSecQuesUrl, body, options)
       .map(res => res.json())
-      .map(res => get(res, 'length') > 0 ?  localStorage.setItem('reset_password_token', res) : localStorage.setItem('reset_password_token', null))
+      .map(res => {
+        localStorage.setItem('reset_password_token', get(res, 'length') > 0 ? res : null);
+        return res;
+      })
       .catch(error => this.httpClient.handleHttpError(error));
   }
 

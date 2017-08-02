@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 
 import { UserService } from 'app/core/user.service';
 import { IUser, ISecurityQuestions } from './register';
 import { equalCheck, validateEmail, validateInteger } from 'app/validators/validator';
+import {LoginRegisterModalComponent} from './login-register-modal/login-register-modal.component';
 
 @Component({
   templateUrl: './login.component.html',
@@ -12,6 +13,9 @@ import { equalCheck, validateEmail, validateInteger } from 'app/validators/valid
   encapsulation: ViewEncapsulation.None
 })
 export class LoginComponent implements OnInit {
+
+  @ViewChild('loginRegisterModal') loginRegisterModal: LoginRegisterModalComponent;
+
   invalidCreds: boolean;
   processing: boolean = null;
   registerForm: FormGroup = null;
@@ -31,7 +35,9 @@ export class LoginComponent implements OnInit {
     this.registerForm = this.registerFormInit();
     this.invalidCreds = false;
   }
-
+  showRegisterModal() {
+    this.loginRegisterModal.showLoginRegisterModal();
+  }
   login() {
     this.processing = true;
     this.error = null;
