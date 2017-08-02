@@ -4,7 +4,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
-import { InvoiceService } from 'app/core/invoiceservice.service';
+import { environment } from 'environments/environment';
+
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
@@ -14,7 +15,7 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
   styleUrls: ['./my-bill.component.scss']
 })
 export class MyBillComponent implements OnInit, OnDestroy {
-
+  dollarAmountFormatter: string;
   activeServiceAccount: ServiceAccount;
   private ActiveServiceAccountSubscription: Subscription = null;
 
@@ -23,7 +24,7 @@ export class MyBillComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-
+    this.dollarAmountFormatter = environment.DollarAmountFormatter;
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.activeServiceAccount = result;
