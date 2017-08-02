@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormControl, FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'mygexa-paperless-settings',
@@ -8,17 +8,57 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 })
 export class PaperlessSettingsComponent implements OnInit {
 
-paperlessEditing: boolean = false;
+  sendBillsForm: FormGroup;
+  planDocumentsForm: FormGroup;
+  billingOptions = [{ option: 'Email', checked: false }, { option: 'Paper', checked: false }];
+  plansOptions = [{ option: 'Email', checked: false }, { option: 'Paper', checked: false }];
+  paperlessSettings: boolean = false;
+  goPaperless: boolean = false;
 
-  constructor() { }
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
+    this.sendBillsForm = this.fb.group({
+      billOptions: this.fb.array([])
+    });
+    this.planDocumentsForm = this.fb.group({
+      planDocsOptions: this.fb.array([])
+    });
   }
+ 
+  togglePaperless(isChecked, option) {
+    if (isChecked) {
+      if (option == 'Email') {
+        this.paperlessSettings = !this.paperlessSettings;
+      } else {
+        this.goPaperless = !this.goPaperless;
+      }
 
-  togglePaperlessEdit($event) {
-    $event.preventDefault();
-    this.paperlessEditing = !this.paperlessEditing;
+    } else {
+      this.paperlessSettings = false;
+      this.goPaperless = false;
+    }
+
   }
-
+  onBillCheckSelected(option: string, isChecked: boolean) {
+    this.billingOptions.forEach(checkbox => {
+      if (checkbox.option !== option) {
+        checkbox.checked = !checkbox.checked;
+      }
+    });
+    this.togglePaperless(isChecked, option);
+  }
+  onPlansCheckSelected(option: string, isChecked: boolean) {
+    this.plansOptions.forEach(checkbox => {
+      if (checkbox.option !== option) {
+        checkbox.checked = !checkbox.checked;
+      }
+    });
+    this.togglePaperless(isChecked, option);
+  }
 
 }
+
+
+
+
