@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {PhonePipe} from '../../../../shared/pipes/phone.pipe';
 import {Contact} from './contact-form.interface';
 
@@ -8,18 +8,17 @@ import {Contact} from './contact-form.interface';
   styleUrls: ['./contact-form.component.scss']
 })
 export class ContactFormComponent implements OnInit {
-
+ @Input() phoneNumber;
   public contact: Contact;
   public submitted: boolean = false;
   message: string = '';
-  phoneNumber: string = '';
 
   constructor() {
   }
 
   ngOnInit() {
     this.contact = {
-      phoneNumber: '',
+      phoneNumber: this.phoneNumber,
       message: ''
     }
   }
