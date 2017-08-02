@@ -1,52 +1,89 @@
-<section class="section-container-highlight"> <a routerLink="/payments/payment-options" class="visible-xs"><i class="fa fa-4x fa-arrow-left"></i></a>
-  <ng-template *ngIf="ActiveServiceAccount?.Is_Auto_Bill_Pay === true; then Enrolled_In_Auto_Bill_Pay else Not_Enrolled_In_Auto_Bill_Pay"></ng-template>
-  <ng-template #Enrolled_In_Auto_Bill_Pay>
-    <div class="row">
-      <div class="col-sm-12">
-        <h3>Auto Bill Payment Details</h3>
-      </div>
-    </div>
-    <hr/>
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="form-group">
-          <label class="form-control-label col-sm-4">Enrollment </label>
-          <div class="col-sm-8">
-            <button class="btn  btn-warning" (click)="unenrollInAutoBillPaySelected()">UN-ENROLL AND STOP AUTO BILL PAY</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr/>
-    <div class="row">
-      <div class="col-sm-12">
-        <mygexa-credit-card
-      [ActiveServiceAccount]="ActiveServiceAccount"
-    ></mygexa-credit-card>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="form-group">
-          <label class="form-control-label col-sm-4">Payment Account </label>
-          <div class="col-sm-8">
-            <button class="btn btn-blank switchAutoBillPayButton" (click)="switchingAutoBillPay = !switchingAutoBillPay"><i class="fa" [ngClass]="switchingAutoBillPay ? 'fa-chevron-up' : 'fa-chevron-down' "></i>  SWITCH PAYMENT ACCOUNTS </button>
-            <mygexa-payment-method-selector
-      *ngIf="switchingAutoBillPay"
-      [initialPaymethod]="autoBillPaymethod"
-      (changedPaymethod)="switchingAutoBillPaySelected($event)"
-    ></mygexa-payment-method-selector>
-          </div>
-        </div>
-      </div>
-    </div>
+<section class="section-container-highlight">
+  <ng-template *ngIf="unenrollingFromAutoBillPay === true; then DoShowUnenrolling else DoNotShowUnenrolling"></ng-template>
+  <ng-template #DoShowUnenrolling>
+    <h2><i class="fa fa-spin fa-circle-o-notch"></i> Un-enrolling from Autopay...</h2>
   </ng-template>
-  <ng-template #Not_Enrolled_In_Auto_Bill_Pay>
-    <h2>Enroll In Auto Bill Pay</h2>
-    <br/>
-    <mygexa-payment-method-selector
-      (changedPaymethod)="enrollInAutoBillPaySelected($event)"
-    ></mygexa-payment-method-selector>
+  <ng-template #DoNotShowUnenrolling>
+    <ng-template *ngIf="enrollingToAutoBillPay === true; then DoShowEnrolling else DoNotShowEnrolling"></ng-template>
+    <ng-template #DoShowEnrolling>
+      <h2><i class="fa fa-spin fa-circle-o-notch"></i> Enrolling into Autopay...</h2>
+    </ng-template>
+    <ng-template #DoNotShowEnrolling>
+      <a routerLink="/payments/payment-options" class="visible-xs"><i class="fa fa-4x fa-arrow-left"></i></a>
+      <ng-template *ngIf="ActiveServiceAccount === null; then LoadingActiveServiceAccount else LoadedActiveServiceAccount"></ng-template>
+      <ng-template #LoadingActiveServiceAccount>
+        <h2><i class="fa fa-spin fa-circle-o-notch"></i> Loading your service account information</h2>
+      </ng-template>
+      <ng-template #LoadedActiveServiceAccount>
+        <ng-template *ngIf="ActiveServiceAccount.AutoPayConfigId; then Enrolled_In_Auto_Bill_Pay else Not_Enrolled_In_Auto_Bill_Pay"></ng-template>
+        <ng-template #Enrolled_In_Auto_Bill_Pay>
+          <div class="row">
+            <div class="col-sm-12">
+              <h3>Auto Bill Payment Details</h3>
+            </div>
+          </div>
+          <hr/>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label class="form-control-label col-sm-4">Enrollment </label>
+                <div class="col-sm-8">
+                  <button class="btn  btn-warning" (click)="unenrollInAutoBillPaySelected()">UN-ENROLL AND STOP AUTO BILL PAY</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label class="form-control-label col-sm-4">Payment Account </label>
+                <div class="col-sm-8">
+                  <div *ngIf="!switchingAutoBillPay">
+                    <ng-template *ngIf="autoBillPaymethod; then ShowCurrentPaymethod else LoadingCurrentPaymethod"></ng-template>
+                    <ng-template #ShowCurrentPaymethod>
+                    <span>
+                      <i class="fa fa-fw" [ngClass]="autoBillPaymethod.getFontAwesomeTag()"></i> <b>{{ autoBillPaymethod.getBrand() }}</b> ending in <b>{{ autoBillPaymethod.getLast() }}</b>
+                    </span>
+                    </ng-template>
+                    <ng-template #LoadingCurrentPaymethod>
+                    <span>
+                      <i class="fa fa-fw fa-spin fa-circle-o-notch"></i> Loading current pay method...
+                    </span>
+                    </ng-template>
+                    <br/>
+                    <button
+                      class="btn btn-blank switchAutoBillPayButton"
+                      (click)="switchingAutoBillPay = true"
+                    >
+                      <h4><i class="fa fa-chevron-down"></i> Switch Payment Accounts</h4>
+                    </button>
+                  </div>
+                  <mygexa-payment-method-selector
+                    *ngIf="switchingAutoBillPay"
+                    [headerText]="'Switch Payment Accounts'"
+                    [disableIfOnlyOne]="true"
+                    [disableIfOnlyOneText]="'You have no other saved pay method to switch to.'"
+                    [initialPaymethod]="autoBillPaymethod"
+                    [initialPaymethodDisable]="true"
+                    (changedPaymethod)="switchingAutoBillPaySelected($event)"
+                    (canceledSelect)="switchingAutoBillPayCanceled()"
+                  ></mygexa-payment-method-selector>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #Not_Enrolled_In_Auto_Bill_Pay>
+          <h2>Enroll In Auto Bill Pay</h2>
+          <br/>
+          <mygexa-payment-method-selector
+            (changedPaymethod)="enrollInAutoBillPaySelected($event)"
+            [cancelProvide]="false"
+          ></mygexa-payment-method-selector>
+        </ng-template>
+      </ng-template>
+    </ng-template>
   </ng-template>
 </section>
 

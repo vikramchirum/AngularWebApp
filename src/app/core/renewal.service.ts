@@ -6,7 +6,6 @@ import { Response, URLSearchParams } from '@angular/http';
 
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
-
 import { HttpClient } from './httpclient';
 import { IRenewal } from './models/renewals/renewal.model';
 import { ICreateRenewalRequest } from './models/renewals/createrenewalrequest.model';

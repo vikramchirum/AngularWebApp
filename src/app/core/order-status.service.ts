@@ -1,12 +1,11 @@
-import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Response } from '@angular/http';
 
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import {map} from 'lodash';
-
-import {HttpClient} from './httpclient';
-import {OrderStatus} from './models/order-status.model';
+import { map } from 'lodash';
+import { HttpClient } from './httpclient';
+import { OrderStatus } from './models/order-status.model';
 
 @Injectable()
 export class OrderStatusService {

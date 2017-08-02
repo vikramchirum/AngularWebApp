@@ -20,7 +20,7 @@
   </div>
 </div>
 
-<ng-container *ngIf="startsWith(Router.url, '/payments/view-my-bill')">
+<div [hidden]="!startsWith(Router.url, '/payments/view-my-bill')">
   <br/>
   <div class="container-fluid container-breakout bg-success">
     <div class="container">
@@ -43,4 +43,4 @@
       </div>
     </div>
   </div>
-</ng-container>
+</div>

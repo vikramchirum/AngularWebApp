@@ -1,8 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import {ServiceAccountService} from '../../../../core/serviceaccount.service';
-import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceaccount.model';
+import { Subscription } from 'rxjs/Subscription';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-my-rewards',
