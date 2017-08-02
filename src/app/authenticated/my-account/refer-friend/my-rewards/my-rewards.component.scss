@@ -14,13 +14,12 @@
   }
 }
 label{
-  display: inline-block;
-  text-align: center;
-  background-color: Black;
-  color: white;
-  height:55px;
-  width:55px;
-  padding:15px
+    display: inline-block;
+    text-align: center;
+    border: 10px solid rgba(46,177,52,1.0);
+    padding: 50px;
+    border-radius: 280px;
+    min-width: 140px;
 }
 
 .addressPanel{
@@ -32,4 +31,13 @@ label{
   display: inline-block;
   height:100px;
   padding: 15px 5px 5px 5px;
+}
+section.details {
+  div {
+    text-align: center
+  }
+
+  h5 {
+    text-align: center;
+  }
 }

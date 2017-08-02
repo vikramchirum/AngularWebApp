@@ -12,28 +12,18 @@
 
 .col-xs-4 {
   text-align: center;
-
-  .option {
-    background: black;
-    color: white;
-    line-height: 6rem;
-  }
 }
 
 .friends {
-  .input-group-lg {
-    margin-bottom: 10px;
-
-    .btn-wireframe {
-      border-width: 2px;
-      border-right: none;
-    }
-  }
+  margin-bottom: 10px;
   input.ng-invalid {
     border-color: red !important;
   }
   input.ng-pristine {
-    border-color: black !important;
+    border-color: #ccc !important;
+  }
+  .row {
+    margin-bottom: 15px;
   }
 }
 
