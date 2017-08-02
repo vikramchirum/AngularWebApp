@@ -1,6 +1,6 @@
 
 import { assign, get } from 'lodash';
-import {CardBrands, CardFontAwesomeClasses} from './constants';
+import { CardBrands, CardFontAwesomeClasses } from './constants';
 
 export interface IPaymethod {
   PayMethodId: number;

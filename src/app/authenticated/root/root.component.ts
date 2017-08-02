@@ -1,10 +1,13 @@
-import {AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 
-import {UserService} from '../../core/user.service';
-import {Router} from '@angular/router';
-import {environment} from '../../../environments/environment';
-import {HomeMultiAccountsModalComponent} from './home-multi-accounts-modal/home-multi-accounts-modal.component';
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
+import { UserService } from 'app/core/user.service';
+import { environment } from 'environments/environment';
+import { HomeMultiAccountsModalComponent } from './home-multi-accounts-modal/home-multi-accounts-modal.component';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { startsWith } from 'lodash';
+
+declare const $: any;
 
 @Component({
   selector: 'mygexa-root',
@@ -14,26 +17,33 @@ import {ServiceAccountService} from 'app/core/serviceaccount.service';
 })
 export class RootComponent implements OnInit, AfterViewInit {
 
+  startsWith = startsWith;
   service_account_length: number = null;
   env = environment.Name;
   user: string;
-  accordionVisible: boolean = false;
+  accordionVisible: boolean = null;
 
 
   @ViewChild('homeMultiAccountsModal') homeMultiAccountsModal: HomeMultiAccountsModalComponent;
 
-  constructor(private user_service: UserService, private router: Router, private viewContainerRef: ViewContainerRef, private serviceAcctService: ServiceAccountService) {
+  constructor(
+    private UserService: UserService,
+    private router: Router,
+    private viewContainerRef: ViewContainerRef,
+    private serviceAcctService: ServiceAccountService
+  ) {
     this.service_account_length = null;
   }
 
   showHomeMultiAccountsModal() {
     this.homeMultiAccountsModal.show();
   }
+
   ngAfterViewInit() {
     // this.homeMultiAccountsModal.show();
     if (!this.serviceAcctService.ActiveServiceAccountId) {
       this.homeMultiAccountsModal.show();
-      this.user_service.UserObservable.subscribe(
+      this.UserService.UserObservable.subscribe(
         result => {
           this.service_account_length = result.Account_permissions.length;
         }
@@ -46,19 +56,28 @@ export class RootComponent implements OnInit, AfterViewInit {
         }
       }
     }
+    $('.custom-nav li.dropdown-full > a:link').mouseenter(function() {
+      $(this).closest('.custom-nav').find('li').removeClass('open');
+      $(this).parent().addClass('open');
+    });
+    $('.custom-nav li.dropdown-full .dropdown-menu').mouseleave(function() {
+      $(this).closest('li').removeClass('open');
+    });
+  }
+
+  routerClick() {
+    $('.custom-nav li.dropdown-full .dropdown-menu').closest('li').removeClass('open');
   }
 
   ngOnInit() {
-    this.user_service.UserObservable.subscribe(
+    this.UserService.UserObservable.subscribe(
       result => { this.service_account_length = result.Account_permissions.length; }
     );
-    //this.user = this.user_service.logged_in_user;
-    //this.user = this.user_service.user_token;
   }
 
   logout($event) {
     if ($event && $event.preventDefault) { $event.preventDefault(); }
-    this.user_service.logout();
+    this.UserService.logout();
     this.router.navigate(['/login']);
   }
 

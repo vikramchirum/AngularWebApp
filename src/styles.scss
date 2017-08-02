@@ -32,7 +32,7 @@
   display: none !important;
 }
 
-.btn-blank:active,
+.btn-blank:active
 {
   box-shadow: none !important;
   outline: none !important;
@@ -52,37 +52,48 @@ $control-base:              rgba(27,141,205,1.0)  !default;
 $footer-base:              rgba(231,231,231,1.0)  !default;
 $dark-base:                rgba(10,10,10,1.0)  !default;
 
-footer {
-    font-size: 12px;
+footer#footer {
+  background-color: #222222;
+  font-size: 12px;
 
-    .footer-gray {
-      background-color: $footer-base;
-      padding-top: 15px;
-      padding-bottom: 15px;
-      border-top: 1px solid #ccc;
+  .footer-dark {
+    background-color: #222222;
+    border-top: 1px solid #090909;
+    overflow: hidden;
 
-      &.gradient {
-        background-image: url(/assets/global/header-nav.png);
+    div.container {
+      line-height: 32px;
+
+      div.row {
+        padding: 0 1rem;
+
+        a,
+        a.active {
+          color: #ffffff;
+          margin: 0 3px;
+        }
+      }
+
+      @media (max-width: $screen-xs-max) {
+        .text-sm-center,
+        .text-sm-center * {
+          text-align: center !important;
+        }
       }
     }
-
-    .footer-dark {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      background-color: $dark-base;
-      color: #fff;
-
-      a, a:link {
-          color: #fff;
-      }
-    }
+  }
   h4 {
     font-weight:bold;
   }
   .navbar {
     margin-bottom: 0;
   }
+}
+footer.fixedToBottom {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
 }
 
 .fa-green {

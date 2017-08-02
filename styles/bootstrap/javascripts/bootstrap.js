@@ -2374,17 +2374,4 @@ if (typeof jQuery === 'undefined') {
     })
   })
 
-}(jQuery);-
- // I AM SURE THERE IS A MUCH BETTER PLACE FOR THIS BOOTSTRAP DROP DOWN ADD ON.
-  // ==============
-
-
-$(document).ready(function() {
-    $('.custom-nav li.dropdown-full > a:link').mouseenter(function() {
-        $(this).closest('.custom-nav').find('li').removeClass('open');
-        $(this).parent().addClass('open');
-    });
-   $('.custom-nav li.dropdown-full .dropdown-menu').mouseleave(function() {
-        $(this).closest('li').removeClass('open');
-    });
-});
+}(jQuery);

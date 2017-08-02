@@ -16,7 +16,7 @@
     </ul>
   </div>
 </nav>
- <nav class="navbar custom-nav">
+<nav class="navbar custom-nav" id="custom-nav">
   <div class="container container-relaxed">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle pull-left" (click)="toggleAccordion($event)"><span>&#9776;</span></button>
@@ -27,21 +27,29 @@
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
        	<li class="dropdown-full account-menu">
-    		  <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/account"  class="dropdown-toggle">My Account</a>
+    		  <a
+            routerLink="/account"
+            (click)="routerClick()"
+            [ngClass]="{ 'active': startsWith(router.url, '/account') }"
+            class="dropdown-toggle"
+          >My Account</a>
     		  <div class="dropdown-menu">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hero no-margin">
               <div class="">
-                <h3><a [routerLinkActive]="['active']" routerLink="/account"> My Account</a></h3>
+                <h3><a
+                  routerLink="/account"
+                  (click)="routerClick()"
+                  [routerLinkActive]="['active']"
+                > My Account</a></h3>
                 <p>Update your security or Go Paperless! Set your personal preferences with ease.</p>
                 <p>And don’t forget check your Referrals for even more savings.</p>
               </div>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
               <ul class="list-unstyled list-center list-rule">
-                <li><a routerLink="/account/profile">Profile and Preferences</a></li>
-                <li><a routerLink="/account/message-center">Message Center</a></li>
-                <li><a routerLink="/account/refer-a-friend/referral-options">Rewards and Referrals</a></li>
-                <li><a routerLink="/account/order-status">Order Status</a></li>
+                <li><a (click)="routerClick()" routerLink="/account/profile">Profile and Preferences</a></li>
+                <li><a (click)="routerClick()" routerLink="/account/message-center">Message Center</a></li>
+                <li><a (click)="routerClick()" routerLink="/account/refer-a-friend/referral-options">Rewards and Referrals</a></li>
               </ul>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
@@ -57,21 +65,30 @@
         </li>
         <li role="separator" class="divider"> </li>
         <li class="dropdown-full plans-menu">
-          <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/plans-and-services" class="dropdown-toggle">Plans &amp; Services</a>
+          <a
+            routerLink="/plans-and-services"
+            (click)="routerClick()"
+            [ngClass]="{ 'active': startsWith(router.url, '/plans-and-services') }"
+            class="dropdown-toggle"
+          >Plans &amp; Services</a>
            <div class="dropdown-menu plans">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hero no-margin">
               <div class="">
-                <h3><a [routerLinkActive]="['active']" routerLink="/plans-and-services"> Plans &amp; Services</a></h3>
+                <h3><a
+                  routerLink="/plans-and-services"
+                  (click)="routerClick()"
+                  [routerLinkActive]="['active']"
+                > Plans &amp; Services</a></h3>
                 <p>Check often to see the latest incentives in Plans and Services.</p>
                 <p> Don’t get caught off guard when you plan expires,  be prepared to save.</p>
               </div>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
               <ul class="list-unstyled list-center list-rule">
-                <li><a routerLink="/plans-and-services/my-services-plans">My Service Plans</a></li>
-                <li><a routerLink="/plans-and-services/add-service-location">Add Service Location</a></li>
-                <li><a routerLink="/plans-and-services/moving">Moving Center</a></li>
-                <li><a routerLink="/plans-and-services/order-status">Order Status</a></li>
+                <li><a (click)="routerClick()" routerLink="/plans-and-services/my-services-plans">My Service Plans</a></li>
+                <li><a (click)="routerClick()" routerLink="/plans-and-services/add-service-location">Add Service Location</a></li>
+                <li><a (click)="routerClick()" routerLink="/plans-and-services/moving">Moving Center</a></li>
+                <li><a (click)="routerClick()" routerLink="/plans-and-services/order-status">Order Status</a></li>
               </ul>￼
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
@@ -87,21 +104,31 @@
         </li>
         <li role="separator" class="divider"> </li>
          <li class="dropdown-full payment-menu">
-          <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/payments/view-my-bill/" class="dropdown-toggle">Payment Center</a>
+          <a
+            routerLink="/payments"
+            (click)="routerClick()"
+            [ngClass]="{ 'active': startsWith(router.url, '/payments/') }"
+            class="dropdown-toggle"
+          >Payment Center</a>
           <div class="dropdown-menu">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hero no-margin">
               <div class="">
-                <h3><a [routerLinkActive]="['active']" routerLink="/payment-center/view-my-bill/">Payment Center</a></h3>
+                <h3><a
+                  routerLink="/payments"
+                  (click)="routerClick()"
+                  [routerLinkActive]="['active']"
+                >Payment Center</a></h3>
                 <p>We make it easy for you to stay on top of and renew your plans.</p>
                 <p>You can set up convenient ways to manage your account.</p>
               </div>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
               <ul class="list-unstyled list-center list-rule">
-                <li><a routerLink="/payments/view-my-bill"> View My Bill</a></li>
-                <li><a routerLink="/payments/make-payment">Make a Payment</a></li>
-                <li><a routerLink="/payments/payment-options">Payment Options</a></li>
-                <li><a routerLink="/payment/payment-history">Payment History</a></li>
+                <li><a (click)="routerClick()" routerLink="/payments/view-my-bill"> View My Bill</a></li>
+                <li><a (click)="routerClick()" routerLink="/payments/make-payment">Make a Payment</a></li>
+                <li><a (click)="routerClick()" routerLink="/payments/payment-accounts">Payment Accounts</a></li>
+                <li><a (click)="routerClick()" routerLink="/payments/payment-options">Payment Options</a></li>
+                <li><a (click)="routerClick()" routerLink="/payments/payment-history">Payment History</a></li>
               </ul>￼
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
@@ -119,24 +146,33 @@
 
         <li role="separator" class="divider"> </li>
         <li class="dropdown-full control-menu">
-          <a data-toggle="dropdown" [routerLinkActive]="['active']" routerLink="/controls-and-insights" class="dropdown-toggle">Control &amp; Insights</a>
+          <a
+            routerLink="/controls-and-insights"
+            (click)="routerClick()"
+            [ngClass]="{ 'active': startsWith(router.url, '/controls-and-insights') }"
+            class="dropdown-toggle"
+          >Control &amp; Insights</a>
           <div class="dropdown-menu">
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 hero no-margin">
               <div>
-                <img src="/assets/global/gexa-menu-lyric.png" >
-                <h3><a [routerLinkActive]="['active']" routerLink="/controls-and-insights">Control &amp; Insights</a></h3>
+                <img src="/assets/global/gexa-menu-lyric.png"/>
+                <h3><a
+                  routerLink="/controls-and-insights"
+                  (click)="routerClick()"
+                  [routerLinkActive]="['active']"
+                >Control &amp; Insights</a></h3>
                 <p>Combine the power of Gexa Energy with your smart home.</p>
               </div>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
               <ul class="list-unstyled list-center list-rule">
-                <li><a routerLink="/control-and-insights/usage-history"> Usage History</a></li>
-                <li><a routerLink="/control-and-insights/usage-history">Insights</a></li>
-                <li><a routerLink="/control-and-insights/usage-history">Things</a></li>
-                <li><a routerLink="/control-and-insights/usage-history">Home Profile</a></li>
+                <li><a (click)="routerClick()" routerLink="/control-and-insights/usage-history"> Usage History</a></li>
+                <li><a (click)="routerClick()" routerLink="/control-and-insights/usage-history">Insights</a></li>
+                <li><a (click)="routerClick()" routerLink="/control-and-insights/usage-history">Things</a></li>
+                <li><a (click)="routerClick()" routerLink="/control-and-insights/usage-history">Home Profile</a></li>
              </ul>￼
             </div>
-                <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+            <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">
               <ul class="list-unstyled list-center">
                 <li><strong>Other Control and Insights Favorites </strong></li>
                 <li>Check Your Home Temperature</li>

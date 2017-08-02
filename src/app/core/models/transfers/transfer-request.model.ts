@@ -1,6 +1,6 @@
 
-import {IPhoneNumber} from '../address/phonenumber.model';
-import {IAddress} from '../address/address.model';
+import { IPhoneNumber } from '../address/phonenumber.model';
+import { IAddress } from '../address/address.model';
 
 export class TransferRequest {
     Email_Address: string;

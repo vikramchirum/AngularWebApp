@@ -2,12 +2,11 @@
  * Created by vikram.chirumamilla on 7/27/2017.
  */
 
-
 import { assign } from 'lodash';
 
-import {ICustomerAccountDriversLicense} from './customeraccountdriverslicense.model';
-import {ICustomerAccountPrimaryPhone} from './customeraccountprimaryphone.model';
-import {ICustomerAccountContacts} from './customeraccountcontacts.model';
+import { ICustomerAccountDriversLicense } from './customeraccountdriverslicense.model';
+import { ICustomerAccountPrimaryPhone } from './customeraccountprimaryphone.model';
+import { ICustomerAccountContacts } from './customeraccountcontacts.model';
 
 export class CustomerAccount {
   Id: string;

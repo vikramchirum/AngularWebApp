@@ -1,27 +1,32 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
-import {Subscription} from 'rxjs/Subscription';
-import {OfferService} from '../../core/offer.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { Subscription } from 'rxjs/Subscription';
+import { OfferService } from 'app/core/offer.service';
+import { result, startsWith } from 'lodash';
 
 @Component({
   selector: 'mygexa-plans-and-services',
   templateUrl: './plans-and-services.component.html',
   styleUrls: ['./plans-and-services.component.scss']
 })
-export class PlansAndServicesComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PlansAndServicesComponent implements OnInit, OnDestroy {
+
+  private startsWith = startsWith;
 
   IsInRenewalTimeFrame: boolean;
   serviceAccountSubscription: Subscription;
   activeserviceAccountOffersSubscription: Subscription;
-  constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
+  constructor(
+    private serviceAccount_service: ServiceAccountService,
+    private active_serviceaccount_service: OfferService,
+    private Router: Router
+  ) {
     this.IsInRenewalTimeFrame = false;
   }
 
   ngOnInit() {
-
-  }
-
-  ngAfterViewInit() {
     this.serviceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.subscribe(
       result => {
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
@@ -33,7 +38,7 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngOnDestroy() {
-    this.serviceAccountSubscription.unsubscribe();
-    this.activeserviceAccountOffersSubscription.unsubscribe();
+    result(this.serviceAccountSubscription, 'unsubscribe');
+    result(this.activeserviceAccountOffersSubscription, 'unsubscribe');
   }
 }

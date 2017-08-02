@@ -1,14 +1,13 @@
 /**
  * Created by vikram.chirumamilla on 7/31/2017.
  */
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+import { environment } from 'environments/environment';
 
-import {Subscription} from 'rxjs/Subscription';
-
-import {InvoiceService} from '../../../core/invoiceservice.service';
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
-import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-my-bill',
@@ -16,8 +15,8 @@ import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount
   styleUrls: ['./my-bill.component.scss']
 })
 export class MyBillComponent implements OnInit, OnDestroy {
-
-  activeServiceAccount: ServiceAccount
+  dollarAmountFormatter: string;
+  activeServiceAccount: ServiceAccount;
   private ActiveServiceAccountSubscription: Subscription = null;
 
   constructor(
@@ -25,7 +24,7 @@ export class MyBillComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-
+    this.dollarAmountFormatter = environment.DollarAmountFormatter;
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.activeServiceAccount = result;

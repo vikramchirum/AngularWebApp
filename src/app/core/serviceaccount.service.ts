@@ -1,15 +1,14 @@
 
-import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Response } from '@angular/http';
 
-import {Observable} from 'rxjs/Observable';
-import {Observer} from 'rxjs/Observer';
-import {clone, find, first, forEach, get, isString, map, pull} from 'lodash';
-
-import {HttpClient} from './httpclient';
-import {UserService} from './user.service';
-import {Paymethod} from './models/paymethod/Paymethod.model';
-import {ServiceAccount} from './models/serviceaccount/serviceaccount.model';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+import { clone, find, first, forEach, get, isString, map, pull } from 'lodash';
+import { HttpClient } from './httpclient';
+import { UserService } from './user.service';
+import { Paymethod } from './models/paymethod/Paymethod.model';
+import { ServiceAccount } from './models/serviceaccount/serviceaccount.model';
 
 @Injectable()
 export class ServiceAccountService {
@@ -172,24 +171,21 @@ export class ServiceAccountService {
     forEach(clone(observers), observer => observer.next(data));
   }
 
-  /**
-   * Set the provided Service Account's Auto Bill Pay setting to the provided Payment Method.
-   * @param paymentMethod
-   * @param ServiceAccount
-   * @param value
-   * @returns {Promise<void>}
-   */
-  applyNewAutoBillPay(paymentMethod: Paymethod, ServiceAccount: ServiceAccount, value?: boolean): Promise<any> {
-
-    // TODO: Interact with the API to make this change. Use the below temporarily.
-    for (const index in this.ServiceAccountsCache) {
-      if (this.ServiceAccountsCache[index]) {
-        this.ServiceAccountsCache[index].Is_Auto_Bill_Pay = value === true;
-        this.emitToObservers(this.ServiceAccountsObservers, this.ServiceAccountsCache);
-        break;
+  RemoveAutoPaymentConfig(autoPaymentConfigId: number): void {
+    forEach(this.ServiceAccountsCache, ServiceAccount => {
+      if (ServiceAccount.AutoPayConfigId === autoPaymentConfigId) {
+        ServiceAccount.AutoPayConfigId = null;
+        ServiceAccount.Is_Auto_Bill_Pay = false;
+        ServiceAccount.PayMethodId = null;
       }
-    }
+    });
+  }
 
-    return Promise.resolve();
+  UpdateAutoPaymentConfig(autoPaymentConfigId: number, PaymethodId: number): void {
+    forEach(this.ServiceAccountsCache, ServiceAccount => {
+      if (ServiceAccount.AutoPayConfigId === autoPaymentConfigId) {
+        ServiceAccount.PayMethodId = PaymethodId;
+      }
+    });
   }
 }

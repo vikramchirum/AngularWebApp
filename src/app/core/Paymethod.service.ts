@@ -1,20 +1,18 @@
+import { Injectable } from '@angular/core';
 
-import {Injectable} from '@angular/core';
-
-import {HttpClient} from './httpclient';
-import {Observer} from 'rxjs/Observer';
-import {Observable} from 'rxjs/Observable';
-import {clone, cloneDeep, endsWith, find, forEach, get, isError, noop, map, pull, replace, set} from 'lodash';
-
-import {environment} from 'environments/environment';
-import {UserService} from './user.service';
-import {CustomerAccountService} from './CustomerAccount.service';
-import {CustomerAccount} from './models/CustomerAccount/CustomerAccount.model';
-import { Paymethod} from './models/paymethod/Paymethod.model';
-import {IPaymethodRequest} from './models/paymethod/paymethodrequest.model';
-import {IPaymethodRequestCreditCard} from './models/paymethod/paymethodrequestcreditcard.model';
-import {IPaymethodRequestEcheck} from './models/paymethod/paymethodrequestecheck.model';
-import {CardBrands} from './models/paymethod/constants';
+import { Observer } from 'rxjs/Observer';
+import { Observable } from 'rxjs/Observable';
+import { clone, cloneDeep, endsWith, find, forEach, get, isError, noop, map, pull, replace, set } from 'lodash';
+import { HttpClient } from './httpclient';
+import { environment } from 'environments/environment';
+import { UserService } from './user.service';
+import { CustomerAccountService } from './CustomerAccount.service';
+import { CustomerAccount } from './models/CustomerAccount/CustomerAccount.model';
+import { Paymethod } from './models/paymethod/Paymethod.model';
+import { IPaymethodRequest } from './models/paymethod/paymethodrequest.model';
+import { IPaymethodRequestCreditCard } from './models/paymethod/paymethodrequestcreditcard.model';
+import { IPaymethodRequestEcheck } from './models/paymethod/paymethodrequestecheck.model';
+import { CardBrands } from './models/paymethod/constants';
 
 @Injectable()
 export class PaymethodService {
