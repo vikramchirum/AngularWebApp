@@ -3,7 +3,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { ConnectionBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers, XHRBackend } from '@angular/http';
+import { ConnectionBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers, XHRBackend, URLSearchParams } from '@angular/http';
 
 import { Observable } from 'rxjs/Rx';
 import { get, isPlainObject } from 'lodash';
