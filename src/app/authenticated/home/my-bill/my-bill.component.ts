@@ -4,8 +4,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
-
-import {environment} from 'environments/environment';
+import { environment } from 'environments/environment';
 
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
