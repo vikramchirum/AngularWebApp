@@ -1,0 +1,10 @@
+ul {
+    &.moving-service {
+        list-style-type: none;
+        li:before {
+            content: '-';
+            position: absolute;
+            margin-left: -20px;
+            }
+    }
+} 

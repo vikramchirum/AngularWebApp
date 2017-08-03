@@ -3,56 +3,48 @@
   <mygexa-service-account-selector
     [setActiveServiceAccount]="true"
   ></mygexa-service-account-selector>
-  <section>
-    <div class="row">
-      <ng-template *ngIf="IsInRenewalTimeFrame; then ShowRenewalView else ShowCurrentPlanView"></ng-template>
-      <ng-template #ShowRenewalView>
-        <div class="col-md-8">
-          <h1>Renew your plan</h1>
-          <p>Your plan is ready to be renewed! Based on your product history, we've found the renewal plan that's best for your home:</p>
+  <section id="renewPlan">
+    <div class="row" [hidden]="!IsInRenewalTimeFrame">
+      <div class="col-md-8">
+        <h1>Renew your plan</h1>
+        <p>Your plan is ready to be renewed! Based on your product history, we've found the renewal plan that's best for your home:</p>
+        <div class="row">
+          <div class="col-md-9 col-md-offset-1">
+            <mygexa-my-current-plan></mygexa-my-current-plan>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <mygexa-documents></mygexa-documents>
+      </div>
+    </div>
+    <div class="row" [hidden]="IsInRenewalTimeFrame">
+      <div class="col-md-8">
+        <h1>My Current Plan</h1>
+        <div *ngIf="ActiveServiceAccountDetails">
+          <p>Account No: {{ActiveServiceAccountDetails.Id}}</p>
           <div class="row">
-            <div class=" col-sm-12 col-md-8 col-md-offset-2">
+            <div class="col-md-9 col-md-offset-1">
               <mygexa-my-current-plan></mygexa-my-current-plan>
             </div>
           </div>
         </div>
-      </ng-template>
-      <ng-template #ShowCurrentPlanView>
-        <div class="col-md-8">
-          <h1>My Current Plan</h1>
-          <div *ngIf="ActiveServiceAccountDetails">
-            <p>Account No: {{ActiveServiceAccountDetails.Id}}</p>
-            <!-- this is all redundant with the account selector above, or do we want the redundancy
-            <h5>Service Address</h5>
-            <h4>{{ActiveServiceAccountDetails.Service_Address.Line1 + ','}}</h4>
-            <h4>{{ActiveServiceAccountDetails.Service_Address.City}}</h4>
-            <h4>{{ActiveServiceAccountDetails.Service_Address.State +' - '+ ActiveServiceAccountDetails.Service_Address.Zip}}</h4>
-            -->
-            <div class="row">
-              <div class="col-md-8 col-md-offset-2">
-                <mygexa-my-current-plan></mygexa-my-current-plan>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ng-template>
-      <!--<div class="col-md-4" *ngIf="ActiveServiceAccountDetails">-->
+      </div>
       <div class="col-md-4">
-        <div class="canvasContainer" *ngIf="doughnutChartDataSet">
-          <canvas
-            class="gaugeChart"
-            baseChart
-            chartType="doughnut"
-            [colors]="doughnutChartColors"
-            [labels]="doughnutChartLabels"
-            [data]="doughnutChartDataSet | async"
-            [options]="{ cutoutPercentage: 80 }"
-            [legend]="false"
-          ></canvas>
+        <div class="canvasContainer">
+          <ng-container *ngIf="doughnutChartDataReady">
+            <canvas
+              class="gaugeChart"
+              baseChart
+              chartType="doughnut"
+              [colors]="doughnutChartColors"
+              [labels]="doughnutChartLabels"
+              [data]="doughnutChartDataSet | async"
+              [options]="{ cutoutPercentage: 80 }"
+              [legend]="false"
+            ></canvas>
+          </ng-container>
           <canvas class="gaugeText" #gaugeText width="1000" height="1000"></canvas>
-        </div>
-        <div class="account-info">
-          <mygexa-documents></mygexa-documents>
         </div>
       </div>
     </div>
