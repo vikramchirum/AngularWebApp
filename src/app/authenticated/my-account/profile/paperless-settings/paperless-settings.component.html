@@ -6,7 +6,7 @@
                     <h3>Paperless <br/>Settings</h3>
 
          <div><small>Congrats! <br/> You are <br/> Paperless</small></div></h4>
-         <h4 *ngIf="goPaperless" class="status"><br/><br/><br>
+         <h4 *ngIf="!paperlessSettings" class="status"><br/><br/><br>
            <h3>Go Paperless</h3></h4>
      </div>
    <div class="col-xs-12 col-md-8">
@@ -26,7 +26,7 @@
       <div class="col-md-6">
         <form [formGroup]="sendBillsForm">
           <ng-container *ngFor='let data of billingOptions'>
-             <input type="checkbox"  [disabled]="data.checked" (change)="onBillCheckSelected(data.option, $event.target.checked)"> {{data.option}}  &nbsp;&nbsp;&nbsp;
+             <input type="checkbox"  [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, billingOptions)"> {{data.option}}  &nbsp;&nbsp;&nbsp;
           </ng-container>
         </form>     
        </div>
@@ -40,7 +40,7 @@
       <div class="col-md-6">
        <form [formGroup]="planDocumentsForm">
           <ng-container *ngFor='let data of plansOptions'>
-             <input type="checkbox"  [disabled]="data.checked" (change)="onPlansCheckSelected(data.option, $event.target.checked)"> {{data.option}}  &nbsp;&nbsp;&nbsp;
+             <input type="checkbox"  [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, plansOptions)"> {{data.option}}  &nbsp;&nbsp;&nbsp;
           </ng-container>
         </form>
        </div>
