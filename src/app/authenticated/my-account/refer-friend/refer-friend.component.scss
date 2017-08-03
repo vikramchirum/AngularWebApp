@@ -47,45 +47,13 @@
   .checkbox label input[type="checkbox"]:disabled + .cr {
     opacity: .5;
   }
-  .btn-wireframe {
-    float: right;
-  }
 }
 .hang-indent {
   display: inline-block;
   width: 95%;
   float: right;
 }
-
-.rewards-and-referrals {
-  .btn {
-    margin-top: 25px;
-    font-size: 10px;
-    padding: 15px 45px 15px 45px;
-    background-color: white;
-    box-shadow: 5px 5px 2px #999999;
-    border: 1.5px outset #999999;
-    border-radius: 0;
-  }
-  .btn-group {
-    .btn {
-      margin-top: 25px;
-      font-size: 10px;
-      padding: 15px 45px 15px 45px;
-      background-color: white;
-      color: black;
-      box-shadow: 5px 5px 2px #999999;
-      border: 1.5px outset #999999;
-      border-radius: 0;
-    }
-    .btn-primary:hover,
-    .btn-primary:focus,
-    .btn-primary:active,
-    .btn-primary.active,
-    .open > .dropdown-toggle.btn-primary {
-      color: white;
-      background-color: black;
-      border-color: #999999; /*set the color you want here*/
-    }
-  }
+.btn-group button.active {
+  background-color: green;
+  color: white;
 }

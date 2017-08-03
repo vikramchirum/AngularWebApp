@@ -1,9 +1,9 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
-import {Subscription} from 'rxjs/Subscription';
-import {OfferService} from '../../core/offer.service';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { Subscription } from 'rxjs/Subscription';
+import { OfferService } from 'app/core/offer.service';
 import { result, startsWith } from 'lodash';
 
 @Component({
@@ -11,7 +11,7 @@ import { result, startsWith } from 'lodash';
   templateUrl: './plans-and-services.component.html',
   styleUrls: ['./plans-and-services.component.scss']
 })
-export class PlansAndServicesComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PlansAndServicesComponent implements OnInit, OnDestroy {
 
   private startsWith = startsWith;
 
@@ -27,10 +27,6 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngOnInit() {
-
-  }
-
-  ngAfterViewInit() {
     this.serviceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.subscribe(
       result => {
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;

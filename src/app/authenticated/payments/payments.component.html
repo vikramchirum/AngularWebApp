@@ -20,7 +20,7 @@
   </div>
 </div>
 
-<ng-container *ngIf="startsWith(Router.url, '/payments/view-my-bill')">
+<div [hidden]="!startsWith(Router.url, '/payments/view-my-bill')">
   <br/>
   <div class="container-fluid container-breakout bg-success">
     <div class="container">
@@ -33,8 +33,7 @@
             </div>
             <div class="view-my-bill-billing-pad">
               <h4><i class="fa fa-calendar"></i> {{ 'April 14 2017' }}.</h4>
-              <br/>
-              <p>Quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi.</p>
+    
               <br/>
               <button class="btn btn-warning">Meter re-read / test</button>
             </div>
@@ -43,4 +42,4 @@
       </div>
     </div>
   </div>
-</ng-container>
+</div>

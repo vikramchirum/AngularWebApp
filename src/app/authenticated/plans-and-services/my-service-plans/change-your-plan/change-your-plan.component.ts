@@ -1,12 +1,13 @@
 import { AfterViewInit, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
-import {Subscription} from 'rxjs/Subscription';
-import {OfferService} from '../../../../core/offer.service';
+
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { Subscription } from 'rxjs/Subscription';
+import { OfferService } from 'app/core/offer.service';
 import { findKey, filter, find } from 'lodash';
-import {ChangeYourPlanCardComponent} from './change-your-plan-card/change-your-plan-card.component';
-import {AllOffersClass} from '../../../../core/models/offers/alloffers.model';
-import {IOffers} from '../../../../core/models/offers/offers.model';
-import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceaccount.model';
+import { ChangeYourPlanCardComponent } from './change-your-plan-card/change-your-plan-card.component';
+import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
+import { IOffers } from 'app/core/models/offers/offers.model';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-change-your-plan',
@@ -24,6 +25,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   public AllOffers: AllOffersClass[];
   public AllOfferss: IOffers[];
   clicked: boolean;
+  havePromoCode:boolean = false;
 
   constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
     this.IsInRenewalTimeFrame = false;
@@ -53,5 +55,9 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   }
   ChevClicked() {
     this.clicked = !this.clicked ;
+  }
+
+  showPromoCodeInput(){
+    this.havePromoCode = !this.havePromoCode;
   }
 }

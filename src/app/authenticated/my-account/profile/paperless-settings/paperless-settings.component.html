@@ -1,59 +1,51 @@
 <section class="paperless-status">
    <div class="row">
      <div class="col-xs-12 col-md-3">
-       <h4 class="status">
+       <h4 *ngIf= "paperlessSettings" class="status">
                    <br/>
                     <h3>Paperless <br/>Settings</h3>
 
          <div><small>Congrats! <br/> You are <br/> Paperless</small></div></h4>
+         <h4 *ngIf="!paperlessSettings" class="status"><br/><br/><br>
+           <h3>Go Paperless</h3></h4>
      </div>
    <div class="col-xs-12 col-md-8">
      <h2>Set your <strong>Communication Preferences</strong></h2>
      <br/>
+     <!--<form [formGroup]="myForm">
+      <div *ngFor="let data of emails">
+          <input type="checkbox" (change)="onChange(data.email, $event.target.checked)"> {{data.email}}<br>
+      </div>
+  </form>-->
+ 
     <div class="row form-control">
       <div class="form-group clearfix">
       <div class="col-md-4">
-       <label class="form-control-label"> Send  Bills Via </label>
+       <label class="form-control-label"> Send  Bills Via </label> &nbsp;<i aria-hidden="true" class="fa fa-info-circle" tooltip="You’ll receive a statement each time your utility reads your meter, usually once per month."></i>
        </div>
       <div class="col-md-6">
-       <input type="checkbox" checked /> Email  &nbsp;&nbsp;&nbsp; <input type="checkbox"/> Paper
+        <form [formGroup]="sendBillsForm">
+          <ng-container *ngFor='let data of billingOptions'>
+             <input type="checkbox"  [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, billingOptions)"> {{data.option}}  &nbsp;&nbsp;&nbsp;
+          </ng-container>
+        </form>     
        </div>
      </div>
      </div>
       <div class="row  form-control">
        <div class="form-group clearfix">
       <div class="col-md-4">
-       <label class="form-control-label"> Send  Contracts Via </label>
+       <label class="form-control-label"> Send  Plan Documents Via </label> &nbsp;<i aria-hidden="true" class="fa fa-info-circle" tooltip="Your plan documents include any contracts and disclosures, as well as the contract expiration notice at the end of your plan."></i>
        </div>
       <div class="col-md-6">
-       <input type="checkbox" checked /> Email  &nbsp;&nbsp;&nbsp; <input type="checkbox"/> Paper
+       <form [formGroup]="planDocumentsForm">
+          <ng-container *ngFor='let data of plansOptions'>
+             <input type="checkbox"  [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, plansOptions)"> {{data.option}}  &nbsp;&nbsp;&nbsp;
+          </ng-container>
+        </form>
        </div>
      </div>
      </div>
-     
-      <div class="profile-inline" style="display: none">
-        <a (click)="togglePaperlessEdit($event)">{{ paperlessEditing ? 'Close' : 'Edit'}}</a></div>
-
-      <div *ngIf="paperlessEditing">
-        <div class="row switch-to-paperless">
-          <div class="col-md-12">
-            <h4>Switch to paperless and Go Green</h4>
-            <h5>Benefits</h5>
-            <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam,
-              eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-            <form>
-              <div class="terms">
-                <label><input type="checkbox" name="checkbox" value="value"><span> sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</span></label>
-              </div> <br>
-              <div class="row">
-                <div class="col-xs-12 text-right">
-                  <button class="btn btn-default">Switch Now</button>
-                </div><br>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
    </div>
   </div>
 </section>

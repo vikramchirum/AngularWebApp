@@ -1,14 +1,14 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import { AutoBillPayService } from 'app/core/auto-bill-pay.service';
+import { Subscription } from 'rxjs/Subscription';
+import { forEach, get, isNumber, map, now, random } from 'lodash';
+import { AutoPaymentConfigService } from 'app/core/auto-payment-config.service';
 import { PaymethodAddCcComponent } from 'app/shared/components/payment-method-add-cc/payment-method-add-cc.component';
 import { PaymethodAddEcheckComponent } from 'app/shared/components/payment-method-add-echeck/payment-method-add-echeck.component';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { PaymethodService } from 'app/core/Paymethod.service';
 import { Paymethod } from 'app/core/models/paymethod/Paymethod.model';
-import { Subscription } from 'rxjs/Subscription';
-import { find, get } from 'lodash';
-import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
 interface IPaymentMessage {
   classes: string[];
@@ -35,13 +35,27 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
   ActiveServiceAccountSubscription: Subscription = null;
   ServiceAccounts: ServiceAccount[] = null;
   ServiceAccountsSubscription: Subscription = null;
+  PaymentEdittingIsUsedForAutoPaymentTimestamp: number = null;
   PaymentMessage: IPaymentMessage = null;
   PaymentAbpSelecting: Paymethod = null;
+
+  private autoPayConfigIdsToModify: string[] = null;
+
+  private _PaymentEdittingIsUsedForAutoPayment: boolean = null;
+  get PaymentEdittingIsUsedForAutoPayment(): boolean { return this._PaymentEdittingIsUsedForAutoPayment; }
+  set PaymentEdittingIsUsedForAutoPayment(PaymentEdittingIsUsedForAutoPayment) {
+    this._PaymentEdittingIsUsedForAutoPayment = PaymentEdittingIsUsedForAutoPayment;
+    // BUGFIX: The below fixes a rendering bug.
+    // If the user adds a Paymethod, and tries to remove a
+    // paymethod the editing prompt won't show.
+    this.ChangeDetectorRef.detectChanges();
+  }
 
   private _PaymentEditting: Paymethod = null;
   get PaymentEditting(): Paymethod { return this._PaymentEditting; }
   set PaymentEditting(payMethod) {
     this._PaymentEditting = payMethod;
+    this.PaymentEdittingIsUsedForAutoPayment = null;
     // BUGFIX: The below fixes a rendering bug.
     // If the user adds a Paymethod, and tries to remove a
     // paymethod the editing prompt won't show.
@@ -58,7 +72,6 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     this.ChangeDetectorRef.detectChanges();
   }
 
-
   private PaymethodSubscription: Subscription = null;
   private _Paymethods: Paymethod[] = null;
   get Paymethods(): Paymethod[] { return this._Paymethods; }
@@ -69,7 +82,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
   constructor(
     private ChangeDetectorRef: ChangeDetectorRef,
-    private AutoBillPayService: AutoBillPayService,
+    private AutoPaymentConfigService: AutoPaymentConfigService,
     private ServiceAccountService: ServiceAccountService,
     private PaymethodService: PaymethodService
   ) { }
@@ -92,11 +105,8 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     this.PaymethodSubscription.unsubscribe();
   }
 
-  isUsedForAutoBillPay(paymethod: Paymethod): boolean {
-    return !!find(this.ServiceAccounts, ['PayMethodId', paymethod.PayMethodId]);
-  }
-
   removePaymethod(paymentMethod: Paymethod): void {
+    const timestamp = this.PaymentEdittingIsUsedForAutoPaymentTimestamp = now();
     if (
       !paymentMethod
       || this.PaymentEditting === paymentMethod
@@ -104,6 +114,15 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
       this.PaymentEditting = null;
     } else if (paymentMethod) {
       this.PaymentEditting = paymentMethod;
+      this.AutoPaymentConfigService.SearchAutoPayments({ paymethodId: paymentMethod.PayMethodId })
+        // Simulate loading as too quick of a response does not result in good UX.
+        .delay(random(500, 1500))
+        // Only continue if our local timestamp matches the components, otherwise it's safe to assume the user navigated away.
+        .filter(() => timestamp === this.PaymentEdittingIsUsedForAutoPaymentTimestamp)
+        .subscribe(res => {
+          this.autoPayConfigIdsToModify = <string[]>map(res, apc => apc.Id);
+          this.PaymentEdittingIsUsedForAutoPayment = get(res, 'length', 0) > 0;
+        });
     }
   }
 
@@ -126,21 +145,27 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
     const PaymethodToDelete = this.PaymentEditting;
 
-    // this.AutoBillPayService.CancelAutoBillPay(
-    //   this.ActiveServiceAccount
-    // );
+    forEach(this.autoPayConfigIdsToModify, autoPayConfigId => {
+      this.ServiceAccountService.RemoveAutoPaymentConfig(isNumber(autoPayConfigId) ? autoPayConfigId : Number(autoPayConfigId));
+      this.AutoPaymentConfigService.CancelAutoPayment(autoPayConfigId).subscribe(
+        res => console.log('CancelAutoPayment res', res),
+        err => console.log('CancelAutoPayment err', err)
+      );
+    });
 
-    this.PaymethodService.RemovePaymethod(PaymethodToDelete).subscribe(
-      result => this.PaymentMessage = {
-        classes: ['alert', 'alert-success'],
-        innerHTML: [
-          `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted`,
-          ` and <b>Auto Pay</b> has been stopped!`
-        ].join('')
-      },
-      error => console.log('handle error => ', error),
-      () => this.removePaymethodEditAutoPayCancel()
-    );
+    this.PaymethodService.RemovePaymethod(PaymethodToDelete)
+      .delay(random(500, 1500))
+      .subscribe(
+        result => this.PaymentMessage = {
+          classes: ['alert', 'alert-success'],
+          innerHTML: [
+            `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted`,
+            ` and <b>Auto Pay</b> has been stopped!`
+          ].join('')
+        },
+        error => console.log('handle error => ', error),
+        () => this.removePaymethodEditAutoPayCancel()
+      );
 
   }
 
@@ -151,13 +176,23 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
   removePaymethodEditAutoPayConfirm(): void {
 
-    const PaymethodToDelete = this.PaymentEditting;
+    const PaymethodToDelete = this.PaymentAbpSelecting;
     const PaymethodToUse = this.PaymentAbpSelected;
 
-    // this.AutoBillPayService.UpdateAutoBillPay(
-    //   this.ActiveServiceAccount,
-    //   PaymethodToUse
-    // );
+    forEach(this.autoPayConfigIdsToModify, autoPayConfigId => {
+      this.ServiceAccountService.UpdateAutoPaymentConfig(
+        isNumber(autoPayConfigId) ? autoPayConfigId : Number(autoPayConfigId),
+        PaymethodToUse.PayMethodId
+      );
+
+      this.AutoPaymentConfigService.UpdateAutoPayment({
+        APCId: autoPayConfigId,
+        PayMethodId: PaymethodToUse.PayMethodId
+      }).subscribe(
+        res => console.log('UpdateAutoPayment res', res),
+        err => console.log('UpdateAutoPayment err', err)
+      );
+    });
 
     this.PaymethodService.RemovePaymethod(PaymethodToDelete).subscribe(
       () => this.PaymentMessage = {

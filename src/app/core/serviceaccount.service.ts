@@ -1,15 +1,14 @@
 
-import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Response } from '@angular/http';
 
-import {Observable} from 'rxjs/Observable';
-import {Observer} from 'rxjs/Observer';
-import {clone, find, first, forEach, get, isString, map, pull} from 'lodash';
-
-import {HttpClient} from './httpclient';
-import {UserService} from './user.service';
-import {Paymethod} from './models/paymethod/Paymethod.model';
-import {ServiceAccount} from './models/serviceaccount/serviceaccount.model';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+import { clone, find, first, forEach, get, isString, map, pull } from 'lodash';
+import { HttpClient } from './httpclient';
+import { UserService } from './user.service';
+import { Paymethod } from './models/paymethod/Paymethod.model';
+import { ServiceAccount } from './models/serviceaccount/serviceaccount.model';
 
 @Injectable()
 export class ServiceAccountService {
@@ -55,9 +54,15 @@ export class ServiceAccountService {
     );
 
     // Respond to the first (initializing) call.
-    this.ServiceAccountsObservable.first().delay(0).subscribe(() => {
+    this.ServiceAccountsObservable.first().delay(0).subscribe((result) => {
       this.initialized = true;
-      if (this.ActiveServiceAccountId) { this.SetActiveServiceAccount(this.ActiveServiceAccountId); }
+      if (this.ActiveServiceAccountId) {
+        this.SetActiveServiceAccount(this.ActiveServiceAccountId);
+      }  else {
+        if (result.length === 1) {
+          this.SetActiveServiceAccount(result[0].Id);
+        }
+      }
     });
 
     // Keep up-to-date with the user's Service accounts via the customer id.
@@ -136,8 +141,8 @@ export class ServiceAccountService {
   }
 
   SetIsUpFOrRenewalFlag(ActiveServiceAccount: ServiceAccount): ServiceAccount {
-    const Start_Date = ActiveServiceAccount.Current_Offer.Start_Date;
-    const End_Date =  ActiveServiceAccount.Current_Offer.End_Date;
+    const Start_Date = ActiveServiceAccount.Contract_Start_Date;
+    const End_Date =  ActiveServiceAccount.Contract_End_Date;
     const Term = ActiveServiceAccount.Current_Offer.Term;
 
     const startDate = new Date(Start_Date);
@@ -146,12 +151,16 @@ export class ServiceAccountService {
 
     if (End_Date === null) {
       const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ));
+      console.log('End date', endDate);
       req90Day = new Date(new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ))
         .setDate(new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 )).getDate() - 90 ));
       console.log('End date null mark', req90Day);
     } else {
-      req90Day = new Date(End_Date);
-      console.log('End date not null mark', req90Day);
+
+      const end_Date = new Date(End_Date);
+      console.log('End date', end_Date);
+      req90Day = new Date(end_Date.setDate(end_Date.getDate() - 90));
+      console.log('End date null mark', req90Day);
     }
     if ( currentDate > req90Day) {
       ActiveServiceAccount.IsUpForRenewal = true;
@@ -166,24 +175,21 @@ export class ServiceAccountService {
     forEach(clone(observers), observer => observer.next(data));
   }
 
-  /**
-   * Set the provided Service Account's Auto Bill Pay setting to the provided Payment Method.
-   * @param paymentMethod
-   * @param ServiceAccount
-   * @param value
-   * @returns {Promise<void>}
-   */
-  applyNewAutoBillPay(paymentMethod: Paymethod, ServiceAccount: ServiceAccount, value?: boolean): Promise<any> {
-
-    // TODO: Interact with the API to make this change. Use the below temporarily.
-    for (const index in this.ServiceAccountsCache) {
-      if (this.ServiceAccountsCache[index]) {
-        this.ServiceAccountsCache[index].Is_Auto_Bill_Pay = value === true;
-        this.emitToObservers(this.ServiceAccountsObservers, this.ServiceAccountsCache);
-        break;
+  RemoveAutoPaymentConfig(autoPaymentConfigId: number): void {
+    forEach(this.ServiceAccountsCache, ServiceAccount => {
+      if (ServiceAccount.AutoPayConfigId === autoPaymentConfigId) {
+        ServiceAccount.AutoPayConfigId = null;
+        ServiceAccount.Is_Auto_Bill_Pay = false;
+        ServiceAccount.PayMethodId = null;
       }
-    }
+    });
+  }
 
-    return Promise.resolve();
+  UpdateAutoPaymentConfig(autoPaymentConfigId: number, PaymethodId: number): void {
+    forEach(this.ServiceAccountsCache, ServiceAccount => {
+      if (ServiceAccount.AutoPayConfigId === autoPaymentConfigId) {
+        ServiceAccount.PayMethodId = PaymethodId;
+      }
+    });
   }
 }

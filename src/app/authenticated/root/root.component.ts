@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 
-import {UserService} from '../../core/user.service';
-import {Router} from '@angular/router';
-import {environment} from '../../../environments/environment';
-import {HomeMultiAccountsModalComponent} from './home-multi-accounts-modal/home-multi-accounts-modal.component';
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
+import { UserService } from 'app/core/user.service';
+import { environment } from 'environments/environment';
+import { HomeMultiAccountsModalComponent } from './home-multi-accounts-modal/home-multi-accounts-modal.component';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { startsWith } from 'lodash';
 
 declare const $: any;
@@ -21,7 +21,7 @@ export class RootComponent implements OnInit, AfterViewInit {
   service_account_length: number = null;
   env = environment.Name;
   user: string;
-  accordionVisible: boolean = false;
+  accordionVisible: boolean = null;
 
 
   @ViewChild('homeMultiAccountsModal') homeMultiAccountsModal: HomeMultiAccountsModalComponent;
@@ -63,6 +63,10 @@ export class RootComponent implements OnInit, AfterViewInit {
     $('.custom-nav li.dropdown-full .dropdown-menu').mouseleave(function() {
       $(this).closest('li').removeClass('open');
     });
+  }
+
+  routerClick() {
+    $('.custom-nav li.dropdown-full .dropdown-menu').closest('li').removeClass('open');
   }
 
   ngOnInit() {

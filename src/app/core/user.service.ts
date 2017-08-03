@@ -8,9 +8,9 @@ import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
+import { clone, filter, find, forEach, get, map, pull } from 'lodash';
 import { IUser, IUserSecurityQuestions, IUserSigningUp } from './models/user/User.model';
 import { HttpClient } from './httpclient';
-import { clone, filter, find, forEach, get, map, pull } from 'lodash';
 
 function getServiceAccountIds(user: IUser): string[] {
   return user
@@ -220,14 +220,17 @@ export class UserService implements CanActivate {
   }
 
   checkSecQuesByUserName(user_name: string, security_answer: string) {
-    const body = new URLSearchParams();
-    body.append('Username', user_name);
-    body.append('SecurityAnswer', security_answer);
-
-    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }) });
+    const body = JSON.stringify({
+      Username: user_name,
+      SecurityAnswer: security_answer
+    });
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
     return this.Http.post(this.checkSecQuesUrl, body, options)
       .map(res => res.json())
-      .map(res => get(res, 'length') > 0 ?  localStorage.setItem('reset_password_token', res) : localStorage.setItem('reset_password_token', null))
+      .map(res => {
+        localStorage.setItem('reset_password_token', get(res, 'length') > 0 ? res : null);
+        return res;
+      })
       .catch(error => this.httpClient.handleHttpError(error));
   }
 
@@ -320,6 +323,8 @@ export class UserService implements CanActivate {
         localStorage.setItem('gexa_auth_token', this.UserCache.Token);
         localStorage.setItem('gexa_auth_token_expire', (this.UserCache.Date_Created.getTime() + 1000 * 60 * 60 * 12).toString());
       }
+    } else {
+      this.httpClient.logout();
     }
 
     // Emit the new data to all observers.

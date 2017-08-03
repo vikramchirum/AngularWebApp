@@ -1,15 +1,14 @@
-import {Component, OnInit, OnDestroy, ViewChild, AfterViewInit} from '@angular/core';
-import {CurrencyPipe, DatePipe} from '@angular/common';
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 
-import {Subscription} from 'rxjs/Subscription';
-import {environment} from 'environments/environment';
-
-import {IInvoice} from '../../../../core/models/invoices/invoice.model';
-import {ColumnHeader} from '../../../../core/models/columnheader.model';
-import {InvoiceService} from '../../../../core/invoiceservice.service';
-import {ViewMyBillModalComponent} from './view-my-bill-modal/view-my-bill-modal.component';
-import {ServiceAccountService} from '../../../../core/serviceaccount.service';
-import {IInvoiceSearchRequest} from '../../../../core/models/invoices/invoicesearchrequest.model';
+import { Subscription } from 'rxjs/Subscription';
+import { environment } from 'environments/environment';
+import { IInvoice } from 'app/core/models/invoices/invoice.model';
+import { ColumnHeader } from 'app/core/models/columnheader.model';
+import { InvoiceService } from 'app/core/invoiceservice.service';
+import { ViewMyBillModalComponent } from './view-my-bill-modal/view-my-bill-modal.component';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { IInvoiceSearchRequest } from 'app/core/models/invoices/invoicesearchrequest.model';
 
 @Component({
   selector: 'mygexa-payment-history-bills',
@@ -39,8 +38,12 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('viewMyBillModal') viewMyBillModal: ViewMyBillModalComponent;
 
-  constructor(private datePipe: DatePipe, private currencyPipe: CurrencyPipe
-    , private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService) {
+  constructor(
+    private datePipe: DatePipe,
+    private currencyPipe: CurrencyPipe,
+    private invoiceService: InvoiceService,
+    private serviceAccountService: ServiceAccountService
+  ) {
   }
   public showViewMyBillModal(row: IInvoice) {
     this.viewMyBillModal.show(row);

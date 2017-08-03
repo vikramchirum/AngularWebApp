@@ -1,14 +1,13 @@
-import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
-import {HttpClient} from './httpclient';
+import { Injectable } from '@angular/core';
+import { Response } from '@angular/http';
 
-import {Observable} from 'rxjs/Observable';
-import {Observer} from 'rxjs/Observer';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
 import 'rxjs/add/operator/map';
-import {clone, forEach, pull, map} from 'lodash';
-
-import {AllOffersClass} from './models/offers/alloffers.model';
-import {ServiceAccountService} from './serviceaccount.service';
+import { clone, forEach, pull, map } from 'lodash';
+import { HttpClient } from './httpclient';
+import { AllOffersClass } from './models/offers/alloffers.model';
+import { ServiceAccountService } from './serviceaccount.service';
 
 @Injectable()
 export class OfferService {
