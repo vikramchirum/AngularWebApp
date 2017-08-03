@@ -10,8 +10,8 @@ export class PaperlessSettingsComponent implements OnInit {
 
   sendBillsForm: FormGroup;
   planDocumentsForm: FormGroup;
-  billingOptions = [{ option: 'Email', checked: false }, { option: 'Paper', checked: false }];
-  plansOptions = [{ option: 'Email', checked: false }, { option: 'Paper', checked: false }];
+  billingOptions = [{ option: 'Email', checked: false }, { option: 'Paper', checked: true }];
+  plansOptions = [{ option: 'Email', checked: false }, { option: 'Paper', checked: true }];
   paperlessSettings: boolean = false;
   goPaperless: boolean = false;
 
@@ -19,44 +19,49 @@ export class PaperlessSettingsComponent implements OnInit {
 
   ngOnInit() {
     this.sendBillsForm = this.fb.group({
-      billOptions: this.fb.array([])
+      billingOptions: this.fb.array([])
     });
     this.planDocumentsForm = this.fb.group({
-      planDocsOptions: this.fb.array([])
+      plansOptions: this.fb.array([])
     });
   }
- 
-  togglePaperless(isChecked, option) {
-    if (isChecked) {
-      if (option == 'Email') {
-        this.paperlessSettings = !this.paperlessSettings;
+
+  togglePaperless(checkboxOptions) {
+    checkboxOptions.forEach(x => {
+      if ((x.option == "Email" || "Paper") && x.checked) {
+        this.paperlessSettings = false;
       } else {
-        this.goPaperless = !this.goPaperless;
+        this.paperlessSettings = true;
       }
 
-    } else {
-      this.paperlessSettings = false;
-      this.goPaperless = false;
+    });
+  }
+
+  validateCheckbox(element, index, array) {
+    if (element.checked) {
+      return false;
     }
-
-  }
-  onBillCheckSelected(option: string, isChecked: boolean) {
-    this.billingOptions.forEach(checkbox => {
-      if (checkbox.option !== option) {
-        checkbox.checked = !checkbox.checked;
-      }
-    });
-    this.togglePaperless(isChecked, option);
-  }
-  onPlansCheckSelected(option: string, isChecked: boolean) {
-    this.plansOptions.forEach(checkbox => {
-      if (checkbox.option !== option) {
-        checkbox.checked = !checkbox.checked;
-      }
-    });
-    this.togglePaperless(isChecked, option);
+    return true;
   }
 
+  onCheckSelected(option: string, isChecked: boolean, CheckOptions: any) {
+    let newValue = isChecked;
+    CheckOptions.forEach(checkbox => {
+      if (checkbox.option == option) {
+        checkbox.checked = newValue;
+      }
+    });
+    //toggle Checkbox
+    let isUnchecked = CheckOptions.every(this.validateCheckbox);
+    if (isUnchecked) {
+      CheckOptions.forEach(checkbox => {
+        if (checkbox.option !== option) {
+          checkbox.checked = true;
+        }
+      });
+    }
+    this.togglePaperless(CheckOptions);
+  }
 }
 
 

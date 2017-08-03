@@ -90,11 +90,12 @@ export class HttpClient extends Http {
   }
 
   handleHttpError(error: Response | any) {
-
+    console.log('Error', error);
     // In a real world app, you might use a remote logging infrastructure
-    let errMsg: string;
+    let errMsg: string; let DisplayErrMsg: string;
     if (error instanceof Response) {
       const body = error.json() || '';
+      DisplayErrMsg = body.Message;
       const err = get(body, 'error', JSON.stringify(body));
       errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
     } else {
@@ -104,10 +105,13 @@ export class HttpClient extends Http {
     if ((error.status === 401 || error.status === 403)) {
       console.log('The token has expired or the user is not authorised. Please log back again.');
       this.logout(true);
+    } else if (error.status === 400) {
+      return Observable.throw(DisplayErrMsg);
     } else {
       return Observable.throw(errMsg);
     }
   }
+
 
   logout(maintainRouteState?: boolean) {
     this.clearLocalStorage();

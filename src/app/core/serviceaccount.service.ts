@@ -54,9 +54,15 @@ export class ServiceAccountService {
     );
 
     // Respond to the first (initializing) call.
-    this.ServiceAccountsObservable.first().delay(0).subscribe(() => {
+    this.ServiceAccountsObservable.first().delay(0).subscribe((result) => {
       this.initialized = true;
-      if (this.ActiveServiceAccountId) { this.SetActiveServiceAccount(this.ActiveServiceAccountId); }
+      if (this.ActiveServiceAccountId) {
+        this.SetActiveServiceAccount(this.ActiveServiceAccountId);
+      }  else {
+        if (result.length === 1) {
+          this.SetActiveServiceAccount(result[0].Id);
+        }
+      }
     });
 
     // Keep up-to-date with the user's Service accounts via the customer id.

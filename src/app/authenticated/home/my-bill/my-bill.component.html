@@ -7,15 +7,15 @@
     <tbody>
     <tr>
       <td><h5>Amount Due:</h5></td>
-      <td><h4>${{activeServiceAccount.Due_Amount | NumberToMoneyPipe }}</h4></td>
+      <td><h4>${{activeServiceAccount.Due_Amount | number : dollarAmountFormatter }}</h4></td>
     </tr>
     <tr>
       <td><h5>Current Bill</h5></td>
-      <td><h4>${{activeServiceAccount.Current_Due | NumberToMoneyPipe }}</h4></td>
+      <td><h4>${{activeServiceAccount.Current_Due | number : dollarAmountFormatter }}</h4></td>
     </tr>
     <tr>
       <td><h5>Past Due</h5></td>
-      <td><h4>${{activeServiceAccount.Past_Due | NumberToMoneyPipe }}</h4></td>
+      <td><h4>${{activeServiceAccount.Past_Due | number : dollarAmountFormatter }}</h4></td>
     </tr>
     </tbody>
   </table>

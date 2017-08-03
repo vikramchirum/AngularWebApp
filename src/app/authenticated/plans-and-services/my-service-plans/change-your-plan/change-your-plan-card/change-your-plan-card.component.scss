@@ -3,7 +3,7 @@
     border-right:1px solid #fff;
     border-radius: 0;
     padding: 10px 0;
-    margin-bottom: 40px;
+    margin-bottom: 5px;
 
     .card-included {
       margin-right: 2px;
@@ -31,7 +31,6 @@
     }
 
     .card-content{
-      height: 200px;
         text-align: center;
         .sup-text {
             font-size: 12px;
@@ -125,3 +124,30 @@
 
 
 }
+
+.fa-in-circle {
+  
+  background:  rgba(254,162,32,1.0);
+    color: #fff;
+    border-radius: 30px;
+    display: inline-block;
+    padding: 8px 0;
+    width: 30px;
+    height: 30px;
+
+}
+.card-included {
+  
+  .form-control {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+ 
+  .col-sm-10 {
+    text-align: left;
+    line-height: 1em;
+    margin-bottom: 10px;
+  }
+}
+
