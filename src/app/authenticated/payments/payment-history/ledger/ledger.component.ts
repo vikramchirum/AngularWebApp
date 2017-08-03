@@ -1,6 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
-import MockData from './ledger.mock-data.json';
+import { environment } from 'environments/environment';
+import { Subscription } from 'rxjs/Subscription';
+import { clone, forEach, result, reverse } from 'lodash';
+import { ColumnHeader } from 'app/core/models/columnheader.model';
+import { IInvoiceSearchRequest } from 'app/core/models/invoices/invoicesearchrequest.model';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { InvoiceService } from 'app/core/invoiceservice.service';
+import { PaymentsHistoryService } from 'app/core/payments-history.service';
+import { PaymentsHistory } from 'app/core/models/payments/payments-history.model';
+import { IInvoice } from 'app/core/models/invoices/invoice.model';
 
 interface IHistoryLedger {
   Id: string;
@@ -15,52 +24,149 @@ interface IHistoryLedger {
   templateUrl: './ledger.component.html',
   styleUrls: ['./ledger.component.scss']
 })
-export class LedgerComponent implements OnInit {
+export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
 
-  Transactions: IHistoryLedger[] = [];
-  TransactionsPage: number;
-  TransactionsPerPage = 20;
+  private dollarAmountFormatter = environment.DollarAmountFormatter;
+  public config: any;
+  public columnHeaders: ColumnHeader[] = [
+    { title: 'Date', name: 'date', type: 'date' },
+    { title: 'Ref', name: 'ref', type: '' },
+    { title: 'Charges ($)', name: 'charge', type: 'dollar' },
+    { title: 'Payments ($)', name: 'payment', type: 'dollar' },
+    { title: 'Balance ($)', name: 'balance', type: 'dollar' }
+  ];
+  public rows: any[] = [];
 
-  get currentPageOfTransactions(): IHistoryLedger[] {
-    const index = this.TransactionsPage * this.TransactionsPerPage;
-    const extent = index + this.TransactionsPerPage;
-    if (extent > this.Transactions.length) {
-      return this.Transactions.slice(index);
-    }
-    return this.Transactions.slice(index, extent);
+  public currentPage = 1;
+  public itemsPerPage = 10;
+  public totalItems = 0;
+  public transactions: IHistoryLedger[] = null;
+
+  private _Payments: PaymentsHistory[] = null;
+  private get Payments(): PaymentsHistory[] { return this._Payments; }
+  private set Payments(Payments) {
+    this._Payments = Payments;
+    this.processData();
   }
 
-  get currentPageNumber(): number {
-    return this.TransactionsPage + 1;
-  }
-  get totalPages(): number {
-    return Math.ceil(this.Transactions.length / this.TransactionsPerPage);
-  }
-
-  nextPage(): void {
-    this.TransactionsPage++;
+  private _Invoices: IInvoice[] = null;
+  private get Invoices(): IInvoice[] { return this._Invoices; }
+  private set Invoices(Invoices) {
+    this._Invoices = Invoices;
+    this.processData();
   }
 
-  gotoPage(index: number): void {
-    this.TransactionsPage = index;
+  private ActiveServiceAccountSubscription: Subscription = null;
+
+  constructor(
+    private ServiceAccountService: ServiceAccountService,
+    private PaymentsHistoryService: PaymentsHistoryService,
+    private InvoiceService: InvoiceService
+  ) { }
+
+  ngOnInit() {
+    this.config = {
+      paging: true
+    };
   }
 
-  previousPage(): void {
-    this.TransactionsPage--;
+  ngAfterViewInit() {
+    this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      activeServiceAccount => {
+        this.PaymentsHistoryService.GetPaymentsHistory(activeServiceAccount).subscribe(
+          PaymentsHistoryItems => {
+            console.log('PaymentsHistoryItems', PaymentsHistoryItems);
+            this.Payments = clone(PaymentsHistoryItems);
+          }
+        );
+        const invoiceSearchRequest = {} as IInvoiceSearchRequest;
+        invoiceSearchRequest.Service_Account_Id = Number(activeServiceAccount.Id);
+        this.InvoiceService.getInvoices(invoiceSearchRequest).subscribe(
+          Invoices => {
+            console.log('Invoices', Invoices);
+            this.Invoices = clone(Invoices);
+          }
+        );
+        this.processData();
+      }
+    );
   }
 
-  constructor() {
-    this.TransactionsPage = 0;
-    this.Transactions = MockData;
-    // Process the mock data.
-    for (const index in this.Transactions) {
-      if (this.Transactions[index]) {
-        this.Transactions[index].date = new Date(this.Transactions[index].date);
+  processData() {
+
+    // Only process once we have both payment and invoice data.
+    if (!this.Payments || !this.Invoices) { return; }
+
+    // Reverse the order of both payments and invoices from oldest to newest.
+    const paymentsOrdered: PaymentsHistory[] = reverse(this.Payments);
+    const invoicesOrdered: IInvoice[] = reverse(this.Invoices);
+
+    // Prepare the final transaction collection.
+    const transactions: IHistoryLedger[] = [];
+
+    const addInvoice = (Invoice: IInvoice) => {
+      // Use any conditions here.
+      transactions.push({
+        Id: Invoice.Invoice_Id.toString(),
+        date: Invoice.Invoice_Date,
+        type: 'invoice',
+        amount: Invoice.Current_Charges,
+        balance: 0
+      });
+    };
+    const addPayment = (Payment: PaymentsHistory) => {
+      // Use any conditions here.
+      transactions.push({
+        Id: '',
+        date: Payment.PaymentDate,
+        type: 'payment',
+        amount: Payment.PaymentAmount,
+        balance: 0
+      });
+    };
+
+    // Process the payments and invoices until neither of them are left remaining.
+    while (invoicesOrdered.length || paymentsOrdered.length) {
+      if (invoicesOrdered.length === 0) { // If there are no more invoices to process, add the payments.
+        addPayment(paymentsOrdered.shift());
+      } else if (paymentsOrdered.length === 0) { // If there are no more invoices to process, add the payments.
+        addInvoice(invoicesOrdered.shift());
+      } else { // There are invoices and payments to compare.
+        if (paymentsOrdered[0].PaymentDate < invoicesOrdered[0].Invoice_Date) { // If the next payment is before the next invoice.
+          addPayment(paymentsOrdered.shift());
+        } else { // Otherwise the next invoice is before the next payment.
+          addInvoice(invoicesOrdered.shift());
+        }
       }
     }
+
+    // Before we assign the new transactions, calculate the balance, bottom-up.
+    let balance = 0;
+    forEach(transactions, transaction => {
+      if (transaction.type === 'invoice') {
+        balance -= transaction.amount;
+      } else {
+        balance += transaction.amount;
+      }
+      transaction.balance = balance;
+    });
+
+    this.transactions = reverse(transactions);
+
+    this.onChangeTable(this.config);
   }
 
-  ngOnInit() {}
+  onChangeTable(config: any, pageNumber?: number): any {
+
+    this.rows = this.transactions;
+
+    this.totalItems = this.transactions.length;
+
+  }
+
+  ngOnDestroy() {
+    result(this.ActiveServiceAccountSubscription, 'unsubscribe');
+  }
 
   openBill(bill: IHistoryLedger) {
     alert(`open up bill: ${bill.Id}`);
