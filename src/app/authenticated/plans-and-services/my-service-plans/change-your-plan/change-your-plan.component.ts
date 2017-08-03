@@ -24,6 +24,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   public AllOffers: AllOffersClass[];
   public AllOfferss: IOffers[];
   clicked: boolean;
+  havePromoCode:boolean = false;
 
   constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
     this.IsInRenewalTimeFrame = false;
@@ -53,5 +54,9 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   }
   ChevClicked() {
     this.clicked = !this.clicked ;
+  }
+
+  showPromoCodeInput(){
+    this.havePromoCode = !this.havePromoCode;
   }
 }
