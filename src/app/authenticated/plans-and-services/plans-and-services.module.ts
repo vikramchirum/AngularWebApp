@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MdCardModule, MaterialModule } from '@angular/material';
+
 import { ModalModule } from 'ngx-bootstrap';
 import { DatePickerModule } from 'ng2-datepicker';
-import { MdCardModule, MaterialModule } from '@angular/material';
 import { MyDatePickerModule } from 'mydatepicker';
-
-import { SharedModule } from '../../shared/shared.module';
+import { SharedModule } from 'app/shared/shared.module';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { AddServicesComponent } from './add-services/add-services.component';
 import { MyServicePlansComponent } from './my-service-plans/my-service-plans.component';
 import { OrderStatusComponent } from './order-status/order-status.component';
@@ -29,6 +30,7 @@ import { MovingCenterFormComponent } from './moving-center-form/moving-center-fo
     CommonModule,
     MdCardModule,
     MaterialModule,
+    ChartsModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
@@ -37,20 +39,20 @@ import { MovingCenterFormComponent } from './moving-center-form/moving-center-fo
     MyDatePickerModule
   ],
   declarations: [
-      PlansAndServicesComponent,
-      OrderStatusComponent, 
-      AddServicesComponent,
-      MyServicePlansComponent,
-      MyCurrentPlanComponent,
-      DocumentsComponent,
-      ChangeYourPlanComponent,
-      ChangeYourPlanCardComponent,     
-      ServicePlanUpgradeModalComponent,
-      SelectPlanComponent,
-      CreditCheckComponent,
-      MovingComponent,
-      SelectPlanModalDialogComponent,
-      MovingCenterFormComponent    
-      ]
+    PlansAndServicesComponent,
+    OrderStatusComponent,
+    AddServicesComponent,
+    MyServicePlansComponent,
+    MyCurrentPlanComponent,
+    DocumentsComponent,
+    ChangeYourPlanComponent,
+    ChangeYourPlanCardComponent,
+    ServicePlanUpgradeModalComponent,
+    SelectPlanComponent,
+    CreditCheckComponent,
+    MovingComponent,
+    SelectPlanModalDialogComponent,
+    MovingCenterFormComponent
+  ]
 })
 export class PlansAndServicesModule { }
