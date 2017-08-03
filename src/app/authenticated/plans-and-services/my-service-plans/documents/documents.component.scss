@@ -1,31 +1,31 @@
 .documents {
-     padding:0px;
-    li {
-        list-style: none;
-       
-    }
+  padding: 0;
+
+  li {
+    list-style: none;
+  }
 }
 
 .fa-in-circle {
-  
-  background:  rgba(254,162,32,1.0);
-    color: #fff;
-    border-radius: 30px;
-    display: inline-block;
-    padding: 8px 0;
-    width: 30px;
-    height: 30px;
-
+  background: rgba(254,162,32,1.0);
+  color: #fff;
+  border-radius: 30px;
+  display: inline-block;
+  padding: 8px 0;
+  width: 30px;
+  height: 30px;
 }
+
 #RenewalPlan {
-  
   .form-control {
     color: rgba(46,177,52,1.0);
     border-color: rgba(46,177,52,1.0);
   }
- 
   .col-sm-10 {
     line-height: 1em;
     margin-bottom: 10px;
   }
+}
+#RenewalPlan > .row {
+  margin-bottom: 4px;
 }

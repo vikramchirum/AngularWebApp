@@ -32,18 +32,16 @@
       </div>
       <div class="col-md-4">
         <div class="canvasContainer">
-          <ng-container *ngIf="doughnutChartDataReady">
-            <canvas
-              class="gaugeChart"
-              baseChart
-              chartType="doughnut"
-              [colors]="doughnutChartColors"
-              [labels]="doughnutChartLabels"
-              [data]="doughnutChartDataSet | async"
-              [options]="{ cutoutPercentage: 80 }"
-              [legend]="false"
-            ></canvas>
-          </ng-container>
+          <canvas
+            class="gaugeChart"
+            baseChart
+            chartType="doughnut"
+            [colors]="doughnutChartColors"
+            [labels]="doughnutChartLabels"
+            [data]="doughnutChartDataSet | async"
+            [options]="{ cutoutPercentage: 80 }"
+            [legend]="false"
+          ></canvas>
           <canvas class="gaugeText" #gaugeText width="1000" height="1000"></canvas>
         </div>
       </div>

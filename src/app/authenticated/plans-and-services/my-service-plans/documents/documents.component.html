@@ -1,63 +1,40 @@
 <ng-template *ngIf="IsInRenewalTimeFrame; then ShowWhatIsIncluded else ShowDocuments"></ng-template>
 <ng-template #ShowWhatIsIncluded>
   <section id="RenewalPlan">
-    <b><p class="form-control">  What's included</p></b>
+    <b><p class="form-control">What's included</p></b>
     <div class="row">
-      <div class="col-sm-2">
-        <i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>
-      </div>
-      <div class="col-sm-10">
-        Best plan for homes that a moderate amount of electricity
-      </div>
+      <div class="col-sm-2"><i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i></div>
+      <div class="col-sm-10">Best plan for homes that a moderate amount of electricity</div>
     </div>
-        <div class="row">
-      <div class="col-sm-2">
-              <i class="fa fa-handshake-o fa-fw  fa-in-circle"></i>
-
-      </div>
-      <div class="col-sm-10">
-        Eligible for bill credits with Share &amp; Save
-      </div>
+    <div class="row">
+      <div class="col-sm-2"><i class="fa fa-handshake-o fa-fw fa-in-circle"></i></div>
+      <div class="col-sm-10">Eligible for bill credits with Share &amp; Save</div>
     </div>
-        <div class="row">
-      <div class="col-sm-2">
-              <i class="fa fa-calendar-o fa-fw  fa-in-circle"></i>
-
-      
-      </div>
-      <div class="col-sm-10">
-        Price is fixed <br> for 12 months
-      </div>
+    <div class="row">
+      <div class="col-sm-2"><i class="fa fa-calendar-o fa-fw fa-in-circle"></i></div>
+      <div class="col-sm-10">Price is fixed<br/>for 12 months</div>
     </div>
     <br/>
     <b><p class="form-control">Renewal Details</p></b>
     <div class="row">
-      <div class="col-sm-2">
-        <i class="fa fa-info fa-fw  fa-in-circle"></i>
-      </div>
-      <div class="col-sm-10">
-        What happens if I don't renew ?
-      </div>
+      <div class="col-sm-2"><i class="fa fa-info fa-fw fa-in-circle"></i></div>
+      <div class="col-sm-10">What happens if I don't renew?</div>
     </div>
     <div class="row">
-      <div class="col-sm-2">
-        <i class="fa fa-list fa-fw  fa-in-circle"></i>
-      </div>
-      <div class="col-sm-10">
-        View your current plan details
-      </div>
+      <div class="col-sm-2"><i class="fa fa-list fa-fw fa-in-circle"></i></div>
+      <div class="col-sm-10">View your current plan details</div>
     </div>
   </section>
 </ng-template>
 <ng-template #ShowDocuments>
   <section>
-    <b><p class="doc-title">  Documents</p></b>
+    <b><p class="doc-title">Documents</p></b>
     <ul class="list-unstyled">
       <li><a><i class="fa fa-file-pdf-o"></i> Terms of Use</a></li>
       <li><a><i class="fa fa-file-pdf-o"></i> Electricity Facts Label</a></li>
       <li><a><i class="fa fa-file-pdf-o"></i> Customer Rights</a></li>
     </ul>
-    <p><a href >Get Adobe Reader Free </a></p>
+    <p><a href>Get Adobe Reader Free</a></p>
   </section>
 </ng-template>
 
