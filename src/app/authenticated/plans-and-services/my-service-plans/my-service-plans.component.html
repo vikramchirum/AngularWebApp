@@ -38,7 +38,7 @@
       </ng-template>
       <!--<div class="col-md-4" *ngIf="ActiveServiceAccountDetails">-->
       <div class="col-md-4">
-        <div class="canvasContainer">
+        <div class="canvasContainer" *ngIf="doughnutChartDataSet">
           <canvas
             class="gaugeChart"
             baseChart
@@ -54,8 +54,6 @@
         <div class="account-info">
           <mygexa-documents></mygexa-documents>
         </div>
-        <button (click)="tempGenerate()">generate</button>
-        <button (click)="tempSetDays()">set days</button>
       </div>
     </div>
   </section>
