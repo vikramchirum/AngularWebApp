@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MdCardModule, MaterialModule } from '@angular/material';
+import { TooltipModule } from 'ngx-bootstrap';
 
 import { my_account_routes } from './my-account-routing.module';
 import { ProfileComponent } from './profile/profile.component';
@@ -22,7 +23,8 @@ import { ContactFormComponent } from './message-center/contact-form/contact-form
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    TooltipModule.forRoot()
   ],
   declarations: [
     ProfileComponent,
