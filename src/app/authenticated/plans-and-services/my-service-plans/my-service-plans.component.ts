@@ -35,6 +35,12 @@ export class MyServicePlansComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    this.doughnutChartDataSet = Observable.create(observer => {
+      this.chartObservers.push(observer);
+      observer.next([]);
+      return () => pull(this.chartObservers, observer);
+    });
+
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
 
@@ -48,12 +54,6 @@ export class MyServicePlansComponent implements OnInit, OnDestroy {
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
         this.ChangeDetectorRef.detectChanges();
       });
-
-    this.doughnutChartDataSet = Observable.create(observer => {
-      this.chartObservers.push(observer);
-      observer.next([]);
-      return () => pull(this.chartObservers, observer);
-    });
 
   }
 

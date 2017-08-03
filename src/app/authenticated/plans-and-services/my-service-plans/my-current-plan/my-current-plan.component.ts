@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
-import { result } from 'lodash';
+import { get, result } from 'lodash';
 import { ServicePlanUpgradeModalComponent } from 'app/authenticated/plans-and-services/my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { OfferService } from 'app/core/offer.service';
@@ -15,6 +15,7 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
   styleUrls: ['./my-current-plan.component.scss']
 })
 export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy {
+  IsOffersReady: boolean = null;
   IsInRenewalTimeFrame: boolean;
   serviceAccountSubscription: Subscription;
   activeserviceAccountOffersSubscription: Subscription;
@@ -30,6 +31,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
 
   constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
     this.IsInRenewalTimeFrame = false;
+    this.RenewalOffers = null;
   }
 
   ngOnInit() {
@@ -37,12 +39,13 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
       result => {
         this.ActiveServiceAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
+        this.IsOffersReady = false;
       });
     this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
       all_offers => {
         this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
-        this.RenewalOffers = (this.FeaturedOffers[0].Offers)[0];
-
+        this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+        this.IsOffersReady = true;
         console.log('Featured_Offers', this.RenewalOffers);
       });
   }

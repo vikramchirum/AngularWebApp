@@ -4,45 +4,47 @@
     [setActiveServiceAccount]="true"
   ></mygexa-service-account-selector>
   <section id="renewPlan">
-    <div class="row" [hidden]="!IsInRenewalTimeFrame">
+    <div class="row">
       <div class="col-md-8">
-        <h1>Renew your plan</h1>
-        <p>Your plan is ready to be renewed! Based on your product history, we've found the renewal plan that's best for your home:</p>
+
+        <ng-template *ngIf="IsInRenewalTimeFrame; then ShowRenewal else ShowCurrentPlan"></ng-template>
+        <ng-template #ShowRenewal>
+          <h1>Renew your plan</h1>
+          <p>Your plan is ready to be renewed! Based on your product history, we've found the renewal plan that's best for your home:</p>
+        </ng-template>
+        <ng-template #ShowCurrentPlan>
+          <h1>My Current Plan</h1>
+          <p *ngIf="ActiveServiceAccountDetails">Account No: {{ActiveServiceAccountDetails?.Id}}</p>
+        </ng-template>
+
         <div class="row">
           <div class="col-md-9 col-md-offset-1">
             <mygexa-my-current-plan></mygexa-my-current-plan>
           </div>
         </div>
+
       </div>
       <div class="col-md-4">
-        <mygexa-documents></mygexa-documents>
-      </div>
-    </div>
-    <div class="row" [hidden]="IsInRenewalTimeFrame">
-      <div class="col-md-8">
-        <h1>My Current Plan</h1>
-        <div *ngIf="ActiveServiceAccountDetails">
-          <p>Account No: {{ActiveServiceAccountDetails.Id}}</p>
-          <div class="row">
-            <div class="col-md-9 col-md-offset-1">
-              <mygexa-my-current-plan></mygexa-my-current-plan>
-            </div>
+        <div [hidden]="!ActiveServiceAccountDetails">
+          <div class="canvasContainer" [hidden]="IsInRenewalTimeFrame">
+            <canvas
+              baseChart
+              class="gaugeChart"
+              chartType="doughnut"
+              [colors]="doughnutChartColors"
+              [labels]="doughnutChartLabels"
+              [data]="doughnutChartDataSet | async"
+              [options]="{ cutoutPercentage: 80 }"
+              [legend]="false"
+            ></canvas>
+            <canvas
+              #gaugeText
+              class="gaugeText"
+              width="1000"
+              height="1000"
+            ></canvas>
           </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="canvasContainer">
-          <canvas
-            class="gaugeChart"
-            baseChart
-            chartType="doughnut"
-            [colors]="doughnutChartColors"
-            [labels]="doughnutChartLabels"
-            [data]="doughnutChartDataSet | async"
-            [options]="{ cutoutPercentage: 80 }"
-            [legend]="false"
-          ></canvas>
-          <canvas class="gaugeText" #gaugeText width="1000" height="1000"></canvas>
+          <mygexa-documents></mygexa-documents>
         </div>
       </div>
     </div>

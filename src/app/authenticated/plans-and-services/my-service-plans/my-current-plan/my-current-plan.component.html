@@ -1,27 +1,27 @@
 <section *ngIf="!IsInRenewalTimeFrame">
-<div layout-align="center">
-  <md-card class="current-plan-card" *ngIf="ActiveServiceAccountDetails">
-    <!--<md-card-header>-->
-      <md-card-title>
-        <h2>{{ActiveServiceAccountDetails.Current_Offer.Product_Name}} <small><i class="fa fa-info-circle"></i></small></h2>
-      </md-card-title>
-    <!--</md-card-header>-->
-    <md-card-content>
-      <h2>{{ActiveServiceAccountDetails.Current_Offer.RateAt1000kwh | DollarToCentsPipe | number: '1.2-2'}}<sup class="sup-text">c</sup><sub class="sub-text">per kwh</sub></h2>
-      <p class="bg-default">TERM: {{ActiveServiceAccountDetails.Current_Offer.Term}} Months</p>
-      <p>START: {{ActiveServiceAccountDetails.Current_Offer.Start_Date | date: 'MM/dd/yyyy'}}</p>
-      <p  class="bg-default">END: {{ActiveServiceAccountDetails.Current_Offer.End_Date ? (ActiveServiceAccountDetails.Current_Offer.End_Date | date:'MM/dd/yyyy') : (this.getEndDate(ActiveServiceAccountDetails.Current_Offer.Start_Date) | date: 'MM/dd/yyyy')}}</p>
-    </md-card-content>
-    <!--<md-card-actions>-->
-      <!--<button md-button>Renew Plan</button>-->
-    <!--</md-card-actions>
-        <i class="material-icons pull-right check-mark">check_circle</i>
-    -->
-  </md-card>
-</div>
+  <div layout-align="center">
+    <md-card class="current-plan-card" *ngIf="ActiveServiceAccountDetails">
+      <!--<md-card-header>-->
+        <md-card-title>
+          <h2>{{ActiveServiceAccountDetails.Current_Offer.Product_Name}} <small><i class="fa fa-info-circle"></i></small></h2>
+        </md-card-title>
+      <!--</md-card-header>-->
+      <md-card-content>
+        <h2>{{ActiveServiceAccountDetails.Current_Offer.RateAt1000kwh | DollarToCentsPipe | number: '1.2-2'}}<sup class="sup-text">c</sup><sub class="sub-text">per kwh</sub></h2>
+        <p class="bg-default">TERM: {{ActiveServiceAccountDetails.Current_Offer.Term}} Months</p>
+        <p>START: {{ActiveServiceAccountDetails.Current_Offer.Start_Date | date: 'MM/dd/yyyy'}}</p>
+        <p  class="bg-default">END: {{ActiveServiceAccountDetails.Current_Offer.End_Date ? (ActiveServiceAccountDetails.Current_Offer.End_Date | date:'MM/dd/yyyy') : (this.getEndDate(ActiveServiceAccountDetails.Current_Offer.Start_Date) | date: 'MM/dd/yyyy')}}</p>
+      </md-card-content>
+      <!--<md-card-actions>-->
+        <!--<button md-button>Renew Plan</button>-->
+      <!--</md-card-actions>
+          <i class="material-icons pull-right check-mark">check_circle</i>
+      -->
+    </md-card>
+  </div>
 </section>
 
-<section id="Renewal" *ngIf="IsInRenewalTimeFrame && RenewalOffers">
+<section id="Renewal" *ngIf="IsOffersReady && IsInRenewalTimeFrame && RenewalOffers">
   <div class="current-plan-card mat-card">
     <div class="card-content">
       <div class="alert alert-warning">Best for your home</div>
@@ -61,5 +61,4 @@
     </div>
     </div>
   </div>
-
 </section>
