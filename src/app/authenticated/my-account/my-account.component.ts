@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { result, startsWith } from 'lodash';
+
+
 
 @Component({
   selector: 'mygexa-my-account',
@@ -7,9 +11,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MyAccountComponent implements OnInit {
 
-  constructor() { }
+    private startsWith = startsWith;
+
+
+  constructor(
+    private Router: Router    
+  ){}
 
   ngOnInit() {
   }
-
 }
