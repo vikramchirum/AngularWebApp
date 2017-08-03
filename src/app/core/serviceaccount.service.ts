@@ -141,8 +141,8 @@ export class ServiceAccountService {
   }
 
   SetIsUpFOrRenewalFlag(ActiveServiceAccount: ServiceAccount): ServiceAccount {
-    const Start_Date = ActiveServiceAccount.Current_Offer.Start_Date;
-    const End_Date =  ActiveServiceAccount.Current_Offer.End_Date;
+    const Start_Date = ActiveServiceAccount.Contract_Start_Date;
+    const End_Date =  ActiveServiceAccount.Contract_End_Date;
     const Term = ActiveServiceAccount.Current_Offer.Term;
 
     const startDate = new Date(Start_Date);
@@ -151,12 +151,16 @@ export class ServiceAccountService {
 
     if (End_Date === null) {
       const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ));
+      console.log('End date', endDate);
       req90Day = new Date(new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ))
         .setDate(new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 )).getDate() - 90 ));
       console.log('End date null mark', req90Day);
     } else {
-      req90Day = new Date(End_Date);
-      console.log('End date not null mark', req90Day);
+
+      const end_Date = new Date(End_Date);
+      console.log('End date', end_Date);
+      req90Day = new Date(end_Date.setDate(end_Date.getDate() - 90));
+      console.log('End date null mark', req90Day);
     }
     if ( currentDate > req90Day) {
       ActiveServiceAccount.IsUpForRenewal = true;
