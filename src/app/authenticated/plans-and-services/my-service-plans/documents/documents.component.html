@@ -1,17 +1,52 @@
 <ng-template *ngIf="IsInRenewalTimeFrame; then ShowWhatIsIncluded else ShowDocuments"></ng-template>
 <ng-template #ShowWhatIsIncluded>
   <section id="RenewalPlan">
-    <b><p class="doc-title">  What's included</p></b>
-    <ul>
-      <li> Best plan for homes that a moderate amount of electricity</li>
-      <li> Eligible for bill credits with Share &amp; Save</li>
-      <li> Price is fixed for 12 month</li>
-    </ul>
-    <b><p>Renewal Details</p></b>
-    <ul >
-      <li> What happens if I don't renew ?</li>
-      <li> View current plan details</li>
-    </ul>
+    <b><p class="form-control">  What's included</p></b>
+    <div class="row">
+      <div class="col-sm-2">
+        <i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>
+      </div>
+      <div class="col-sm-10">
+        Best plan for homes that a moderate amount of electricity
+      </div>
+    </div>
+        <div class="row">
+      <div class="col-sm-2">
+              <i class="fa fa-handshake-o fa-fw  fa-in-circle"></i>
+
+      </div>
+      <div class="col-sm-10">
+        Eligible for bill credits with Share &amp; Save
+      </div>
+    </div>
+        <div class="row">
+      <div class="col-sm-2">
+              <i class="fa fa-calendar-o fa-fw  fa-in-circle"></i>
+
+      
+      </div>
+      <div class="col-sm-10">
+        Price is fixed <br> for 12 months
+      </div>
+    </div>
+    <br/>
+    <b><p class="form-control">Renewal Details</p></b>
+    <div class="row">
+      <div class="col-sm-2">
+        <i class="fa fa-info fa-fw  fa-in-circle"></i>
+      </div>
+      <div class="col-sm-10">
+        What happens if I don't renew ?
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-2">
+        <i class="fa fa-list fa-fw  fa-in-circle"></i>
+      </div>
+      <div class="col-sm-10">
+        View your current plan details
+      </div>
+    </div>
   </section>
 </ng-template>
 <ng-template #ShowDocuments>
