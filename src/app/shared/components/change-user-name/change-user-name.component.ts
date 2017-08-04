@@ -34,5 +34,9 @@ export class ChangeUserNameComponent implements OnInit {
      }  
 
   }
+     
+  toggleUserNameEdit($event) {
+    $event.preventDefault();
+  }
 
 }

@@ -36,5 +36,10 @@ export class ChangeEmailAddressComponent implements OnInit {
      }
 
   }
+  
+       
+  toggleEditEmailAddress($event) {
+    $event.preventDefault();
+  }
 
 }

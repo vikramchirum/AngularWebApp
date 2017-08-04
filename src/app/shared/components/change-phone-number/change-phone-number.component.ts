@@ -32,4 +32,8 @@ export class ChangePhoneNumberComponent implements OnInit {
 
   }
 
+     
+  togglePhoneNumberEdit($event) {
+    $event.preventDefault();
+  }  
 }

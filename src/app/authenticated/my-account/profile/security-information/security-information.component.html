@@ -7,7 +7,7 @@
     </div>
     <div class="col-md-6 col-xs-12">
         <div class="form-control">{{userName}}</div>
-         <a class="btn btn-primary btn-link" (click)="toggleUserNameEdit($event)">{{ userNameEditing ? 'Close' : 'Edit'}}</a>
+         <a class="btn btn-primary btn-link" (click)="toggleUserNameEdit($event)"><i class="fa fa-{{ userNameEditing ? 'remove' : 'pencil'}}"></i></a>
     </div>
   </div>
     <div *ngIf="userNameEditing" class="row">
@@ -23,7 +23,8 @@
     <div class="col-md-6 col-xs-12">
       <div class="form-control">***************</div>
 
-         <a class="btn btn-primary btn-link"  (click)="togglePasswordEdit($event)">{{ passwordEditing ? 'Close' : 'Edit'}}</a>
+         <a class="btn btn-primary btn-link"  (click)="togglePasswordEdit($event)">
+           <i class="fa fa-{{ passwordEditing ? 'remove' : 'pencil'}}"></i></a>       
     </div>
   </div>
 
@@ -34,7 +35,7 @@
       <p>Password</p>
       <div class="profile-inline">
         <h4>***************</h4>
-        <a (click)="togglePasswordEdit($event)">{{ editing ? 'Close' : 'Edit'}}</a>
+        <a (click)="togglePasswordEdit($event)"><i class="fa fa-{{ editing ? 'remove' : 'pencil'}}"></i></a>
     </div>
   </div></div>
 

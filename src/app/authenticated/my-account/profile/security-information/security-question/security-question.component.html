@@ -5,7 +5,7 @@
     </div>
     <div class="col-md-6 col-xs-12">
         <div class="form-control">{{securityQuestion}}</div>
-         <button type="button" class="btn btn-primary btn-link" href="#" (click)="toggleEdit($event)">{{ editing ? 'Close' : 'Edit'}}</button>
+         <button type="button" class="btn btn-primary btn-link" (click)="toggleEdit($event)"><i class="fa fa-{{ editing ? 'remove' : 'pencil'}}"></i></button>
     </div>
   </div>
  

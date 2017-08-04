@@ -146,20 +146,8 @@ footer.fixedToBottom {
       position: absolute;
       right: 10px;
       top: 0;
-      text-indent: -300px;
       overflow: hidden;
-      &:after {
-           font-family: "FontAwesome";
-          content: "\F040";
-          display: inline-block;
-          top: 6px;
-          text-indent: 0;
-          position: absolute;
-          right: 12px;
-            color: $payment-base;
-
-      }
-
+      color: $payment-base;
   }
 }
 
@@ -476,6 +464,10 @@ footer.fixedToBottom {
     position: absolute;
     background: #fff;
   }
+}
+
+.form-group .fa.fa-asterisk {
+  font-size: 8px;
 }
 
 @media (max-width: $screen-sm-max) {

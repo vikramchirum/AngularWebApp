@@ -4,7 +4,7 @@
   (ngSubmit)="save()"
   novalidate>
 
-  <div class="form-group form-group-lg" [ngClass]="{'has-error': (budgetBillingFormGroup.get('amount').touched ||
+  <div class="form-group" [ngClass]="{'has-error': (budgetBillingFormGroup.get('amount').touched ||
                                                                   budgetBillingFormGroup.get('amount').dirty) &&
                                                                   !budgetBillingFormGroup.get('amount').valid}">
 
@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <div class="form-group form-group-lg" [ngClass]="{'has-error': (budgetBillingFormGroup.get('agree').touched ||
+  <div class="form-group" [ngClass]="{'has-error': (budgetBillingFormGroup.get('agree').touched ||
                                                                   budgetBillingFormGroup.get('agree').dirty) &&
                                                                   !budgetBillingFormGroup.get('agree').valid}">
     <div class="col-md-offset-4 col-md-8 col-lg-offset-2 col-lg-10">
@@ -62,8 +62,8 @@
 
   <div class="form-group">
     <div class="col-md-offset-4 col-md-8 col-lg-offset-2 col-lg-10">
-      <button type="submit" class="btn btn-primary btn-lg" [disabled]="!budgetBillingFormGroup.valid">Start Now</button>
-      <button type="button" class="btn btn-primary btn-lg" (click)="cancel()">Back
+      <button type="submit" class="btn btn-primary" [disabled]="!budgetBillingFormGroup.valid">Start Now</button>
+      <button type="button" class="btn btn-link " (click)="cancel()">Back
       </button>
     </div>
   </div>

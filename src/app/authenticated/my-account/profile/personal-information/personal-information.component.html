@@ -19,7 +19,7 @@
     </div>
     <div class="col-md-6 col-xs-12">
         <div class="form-control">{{emailAddress}}</div>
-         <a class="btn btn-link" (click)="toggleEmailEdit($event)">{{ emailEditing ? 'Close' : 'Edit'}}</a>
+      <a class="btn btn-primary btn-link" (click)="toggleEmailEdit($event)"><i class="fa fa-{{ emailEditing ? 'remove' : 'pencil'}}"></i></a>
     </div>
   </div>
 
@@ -34,8 +34,8 @@
     </div>
     <div class="col-md-6 col-xs-12">
       <div class="form-control">{{customerDetails.Phone}}</div>
-         <a class="btn btn-link"  (click)="togglePhoneEdit($event)">{{ phoneEditing ? 'Close' : 'Edit'}}</a>
-         </div>
+         <a class="btn btn-primary btn-link"  (click)="togglePhoneEdit($event)"><i class="fa fa-{{ phoneEditing ? 'remove' : 'pencil'}}"></i></a>
+      </div>
     </div>
 
 
