@@ -9,7 +9,7 @@ a, a:link, a:visited, a:active {
 }
 
 .btn {
-  border-radius:0;
+  border-radius: 0;
   text-transform: uppercase;
 }
 .carousel-indicators {
@@ -18,7 +18,7 @@ a, a:link, a:visited, a:active {
 }
 
 .fa-wh {
-  color:#ffffff;
+  color: #fff;
 }
 
 .btn-blank {
@@ -45,11 +45,11 @@ hr.breaker {
 
 
 footer#footer {
-  background-color: #222222;
+  background-color: #222;
   font-size: 12px;
 
   .footer-dark {
-    background-color: #222222;
+    background-color: #222;
     border-top: 1px solid #090909;
     overflow: hidden;
 
@@ -61,7 +61,7 @@ footer#footer {
 
         a,
         a.active {
-          color: #ffffff;
+          color: #fff;
           margin: 0 3px;
         }
       }
@@ -75,7 +75,7 @@ footer#footer {
     }
   }
   h4 {
-    font-weight:bold;
+    font-weight: bold;
   }
   .navbar {
     margin-bottom: 0;
@@ -95,7 +95,7 @@ footer.fixedToBottom {
 .account-menu, .account-menu.open {
   a.active {
     background-color: $account-base !important;
-    color: #ffffff !important;
+    color: #fff !important;
   }
 }
 
@@ -125,6 +125,7 @@ footer.fixedToBottom {
 
 .my-account {
   .btn-link {
+    color: $payment-base;
     position: absolute;
     right: 10px;
     top: 0;
@@ -147,7 +148,7 @@ footer.fixedToBottom {
 .plans-menu, .plans-menu.open {
   .active {
     background-color: $plans-base !important;
-    color: #ffffff;
+    color: #fff;
   }
 }
 
@@ -274,7 +275,7 @@ footer.fixedToBottom {
 .custom-nav {
   .nav > li.open > a {
     text-decoration: none;
-    background-color: #ffffff;
+    background-color: #fff;
   }
   .navbar-nav>li.dropdown-full {
     position: static;
@@ -293,7 +294,7 @@ footer.fixedToBottom {
     min-height: 245px;
 
     a, a:link, a:visited, a:active {
-      color: #ffffff;
+      color: #fff;
     }
   }
   .list-center li {
@@ -330,6 +331,10 @@ footer.fixedToBottom {
     position: absolute;
     background: #fff;
   }
+}
+
+.form-group .fa.fa-asterisk {
+  font-size: 8px;
 }
 
 @media (max-width: $screen-sm-max) { }
