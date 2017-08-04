@@ -1,48 +1,42 @@
 <section class="security-info">
   <h3>Security Information</h3>
   <br/>
+
   <div class="row">
-    <div class="col-md-4 col-xs-12">
+    <div class="col-md-4">
       <label class="control-label">Username</label>
     </div>
-    <div class="col-md-6 col-xs-12">
-        <div class="form-control">{{userName}}</div>
-         <a class="btn btn-primary btn-link" (click)="toggleUserNameEdit($event)"><i class="fa fa-{{ userNameEditing ? 'remove' : 'pencil'}}"></i></a>
+    <div class="col-md-6">
+      <div class="form-control">{{userName}}</div>
+      <a class="btn btn-primary btn-link" (click)="toggleUserNameEdit($event)">
+        <i class="fa" [ngClass]="'fa-' + (userNameEditing ? 'remove' : 'pencil')"></i>
+      </a>
     </div>
   </div>
-    <div *ngIf="userNameEditing" class="row">
-   <div class="col-xs-12">
-    <mygexa-change-user-name></mygexa-change-user-name>
-    </div>
+
+  <div *ngIf="userNameEditing">
+    <mygexa-change-user-name (onCancel)="toggleUserNameEdit()"></mygexa-change-user-name>
   </div>
+
   <br/>
+
   <div class="row">
-    <div class="col-md-4 hidden-xs">
+    <div class="col-md-4">
       <label class="control-label">Password</label>
     </div>
-    <div class="col-md-6 col-xs-12">
+    <div class="col-md-6">
       <div class="form-control">***************</div>
-
-         <a class="btn btn-primary btn-link"  (click)="togglePasswordEdit($event)">
-           <i class="fa fa-{{ passwordEditing ? 'remove' : 'pencil'}}"></i></a>       
+      <a class="btn btn-primary btn-link" (click)="togglePasswordEdit($event)">
+        <i class="fa" [ngClass]="'fa-' + (passwordEditing ? 'remove' : 'pencil')"></i>
+      </a>
     </div>
   </div>
-
-
-
-  <div class="row  hidden-md hidden-lg">
-    <div class="col-xs-12">
-      <p>Password</p>
-      <div class="profile-inline">
-        <h4>***************</h4>
-        <a (click)="togglePasswordEdit($event)"><i class="fa fa-{{ editing ? 'remove' : 'pencil'}}"></i></a>
-    </div>
-  </div></div>
 
   <div *ngIf="passwordEditing">
-    <mygexa-change-password></mygexa-change-password>
+    <mygexa-change-password (onCancel)="togglePasswordEdit()"></mygexa-change-password>
   </div>
 
+  <br/>
 
   <mygexa-security-question></mygexa-security-question>
 
