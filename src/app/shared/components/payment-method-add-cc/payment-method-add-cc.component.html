@@ -7,7 +7,6 @@
 >
   <ng-template *ngIf="!!form_horizontal; then FormHorizontal else FormNormal"></ng-template>
   <ng-template #FormHorizontal>
-
     <div class="form-group">
       <label for="payment-horizontal-cc-name-on-card" class="col-md-3 control-label">Name on Card</label>
       <div class="col-md-8 col-lg-6">
@@ -18,13 +17,8 @@
           formControlName="cc_name"
           maxlength="32"
         />
-              </div>
-       <div class="col-md-12">
-        <small class="text-danger" *ngIf="formGroup.controls?.cc_name.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
-        <small class="text-success" *ngIf="formGroup.controls?.cc_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
-      </div>
+        <small class="text-danger" *ngIf="formGroup.controls?.cc_name.errors"><i class="fa fa-fw fa-asterisk"></i> required</small> <small class="text-success" *ngIf="formGroup.controls?.cc_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
     </div>
-
     <div class="form-group">
       <label for="payment-horizontal-cc-number" class="col-md-3 control-label">Number</label>
       <div class="col-md-8 col-lg-6">
@@ -35,14 +29,8 @@
           formControlName="cc_number"
           maxlength="19"
         />
-              </div>
-       <div class="col-md-12">
-        <small class="text-danger" *ngIf="formGroup.controls?.cc_number.pristine"><i class="fa fa-fw fa-asterisk"></i> required</small>
-        <small class="text-danger" *ngIf="formGroup.controls?.cc_number.errors && !formGroup.controls?.cc_number.pristine"><i class="fa fa-fw fa-asterisk"></i> requires a valid credit card number</small>
-        <small class="text-success" *ngIf="formGroup.controls?.cc_number.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
-      </div>
+        <small class="text-danger" *ngIf="formGroup.controls?.cc_number.pristine"><i class="fa fa-fw fa-asterisk"></i> required</small> <small class="text-danger" *ngIf="formGroup.controls?.cc_number.errors && !formGroup.controls?.cc_number.pristine"><i class="fa fa-fw fa-asterisk"></i> requires a valid credit card number</small> <small class="text-success" *ngIf="formGroup.controls?.cc_number.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
     </div>
-
     <div class="form-group">
       <label for="payment-horizontal-cc-month" class="col-md-3 control-label">Expiration</label>
       <div class="col-md-3 col-lg-3">
@@ -53,8 +41,7 @@
         >
           <option *ngFor="let month of months" [value]="month[0]">{{ month[0] }} - {{ month[1] }}</option>
         </select>
-        <small class="text-success"><i class="fa fa-fw fa-check"></i> Ok</small>
-      </div>
+        <small class="text-success"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
       <div class="col-md-3 col-lg-3">
         <select
           class="form-control "
@@ -63,10 +50,8 @@
         >
           <option *ngFor="let year of years" [value]="year">{{ year }}</option>
         </select>
-        <small class="text-success"><i class="fa fa-fw fa-check"></i> Ok</small>
-      </div>
+        <small class="text-success"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
     </div>
-
     <div class="form-group">
       <label for="payment-horizontal-cc-cvv" class="col-md-3 control-label">CVV</label>
       <div class="col-md-8 col-lg-6">
@@ -77,17 +62,11 @@
           formControlName="cc_ccv"
           maxlength="3"
         />
-              </div>
-       <div class="col-md-12">
-        <small class="text-danger" *ngIf="formGroup.controls?.cc_ccv.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
-        <small class="text-success" *ngIf="formGroup.controls?.cc_ccv.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
-      </div>
+        <small class="text-danger" *ngIf="formGroup.controls?.cc_ccv.errors"><i class="fa fa-fw fa-asterisk"></i> required</small> <small class="text-success" *ngIf="formGroup.controls?.cc_ccv.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
     </div>
-
   </ng-template>
   <ng-template #FormNormal>
     <div class="row">
-
       <div class="col-md-6 col-lg-3">
         <div class="form-group">
           <label for="payment-normal-cc-name-on-card">Name on Card</label>
@@ -98,13 +77,8 @@
             formControlName="cc_name"
             maxlength="32"
           />
-                </div>
-       <div class="col-md-12">
-          <small class="text-danger" *ngIf="formGroup.controls?.cc_name.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
-          <small class="text-success" *ngIf="formGroup.controls?.cc_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
-        </div>
+          <small class="text-danger" *ngIf="formGroup.controls?.cc_name.errors"><i class="fa fa-fw fa-asterisk"></i> required</small> <small class="text-success" *ngIf="formGroup.controls?.cc_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
       </div>
-
       <div class="col-md-6 col-lg-3">
         <div class="form-group">
           <label for="payment-normal-cc-number">Card Number</label>
@@ -115,14 +89,8 @@
             formControlName="cc_number"
             maxlength="19"
           />
-                </div>
-       <div class="col-md-12">
-          <small class="text-danger" *ngIf="formGroup.controls?.cc_number.pristine"><i class="fa fa-fw fa-asterisk"></i> required</small>
-          <small class="text-danger" *ngIf="formGroup.controls?.cc_number.errors && !formGroup.controls?.cc_number.pristine"><i class="fa fa-fw fa-asterisk"></i> requires a valid credit card number</small>
-          <small class="text-success" *ngIf="formGroup.controls?.cc_number.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
-        </div>
+          <small class="text-danger" *ngIf="formGroup.controls?.cc_number.pristine"><i class="fa fa-fw fa-asterisk"></i> required</small> <small class="text-danger" *ngIf="formGroup.controls?.cc_number.errors && !formGroup.controls?.cc_number.pristine"><i class="fa fa-fw fa-asterisk"></i> requires a valid credit card number</small> <small class="text-success" *ngIf="formGroup.controls?.cc_number.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
       </div>
-
       <div class="col-xs-6 col-md-2">
         <div class="form-group">
           <label for="payment-normal-cc-month">Expiration</label>
@@ -135,7 +103,6 @@
           </select>
         </div>
       </div>
-
       <div class="col-xs-6 col-md-2">
         <div class="form-group">
           <label for="payment-normal-cc-year">&nbsp;</label>
@@ -148,7 +115,6 @@
           </select>
         </div>
       </div>
-
       <div class="col-xs-3 col-xs-offset-9 col-sm-4 col-sm-offset-8 col-md-3 col-md-offset-0 col-lg-1">
         <div class="form-group">
           <label for="payment-normal-cc-ccv">CCV</label>
@@ -159,13 +125,8 @@
             formControlName="cc_ccv"
             maxlength="3"
           />
-                </div>
-       <div class="col-md-12">
-          <small class="text-danger" *ngIf="formGroup.controls?.cc_ccv.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
-          <small class="text-success" *ngIf="formGroup.controls?.cc_ccv.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
-        </div>
+          <small class="text-danger" *ngIf="formGroup.controls?.cc_ccv.errors"><i class="fa fa-fw fa-asterisk"></i> required</small> <small class="text-success" *ngIf="formGroup.controls?.cc_ccv.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
       </div>
-
     </div>
   </ng-template>
 </form>
