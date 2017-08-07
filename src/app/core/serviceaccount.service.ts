@@ -7,7 +7,6 @@ import { Observer } from 'rxjs/Observer';
 import { clone, find, first, forEach, get, isString, map, pull } from 'lodash';
 import { HttpClient } from './httpclient';
 import { UserService } from './user.service';
-import { Paymethod } from './models/paymethod/Paymethod.model';
 import { ServiceAccount } from './models/serviceaccount/serviceaccount.model';
 
 @Injectable()
@@ -143,7 +142,6 @@ export class ServiceAccountService {
   SetIsUpFOrRenewalFlag(ActiveServiceAccount: ServiceAccount): ServiceAccount {
     const Start_Date = ActiveServiceAccount.Contract_Start_Date;
     const End_Date =  ActiveServiceAccount.Contract_End_Date;
-    const Term = ActiveServiceAccount.Current_Offer.Term;
 
     const startDate = new Date(Start_Date);
     const currentDate = new Date(Date.now());

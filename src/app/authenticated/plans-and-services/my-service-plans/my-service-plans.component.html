@@ -14,7 +14,7 @@
         </ng-template>
         <ng-template #ShowCurrentPlan>
           <h1>My Current Plan</h1>
-          <p *ngIf="ActiveServiceAccountDetails">Account No: {{ActiveServiceAccountDetails?.Id}}</p>
+          <p *ngIf="ActiveServiceAccount">Account No: {{ActiveServiceAccount?.Id}}</p>
         </ng-template>
 
         <div class="row">
@@ -25,27 +25,24 @@
 
       </div>
       <div class="col-md-4">
-        <div [hidden]="!ActiveServiceAccountDetails">
-          <div class="canvasContainer" [hidden]="IsInRenewalTimeFrame">
-            <canvas
-              baseChart
-              class="gaugeChart"
-              chartType="doughnut"
-              [colors]="doughnutChartColors"
-              [labels]="doughnutChartLabels"
-              [data]="doughnutChartDataSet | async"
-              [options]="{ cutoutPercentage: 80 }"
-              [legend]="false"
-            ></canvas>
-            <canvas
-              #gaugeText
-              class="gaugeText"
-              width="1000"
-              height="1000"
-            ></canvas>
-          </div>
-          <mygexa-documents></mygexa-documents>
+        <div class="canvasContainer">
+          <canvas
+            baseChart
+            class="gaugeChart"
+            chartType="doughnut"
+            [colors]="[{ backgroundColor: ['rgba(6,81,128,1.0)', 'rgba(46,177,52,1.0)', 'rgba(254,162,32,1.0)', 'red'] }]"
+            [data]="doughnutChartDataSet | async"
+            [options]="{ cutoutPercentage: 80, tooltips: { enabled: false } }"
+            [legend]="false"
+          ></canvas>
+          <canvas
+            #gaugeText
+            class="gaugeText"
+            width="1000"
+            height="1000"
+          ></canvas>
         </div>
+        <mygexa-documents></mygexa-documents>
       </div>
     </div>
   </section>
