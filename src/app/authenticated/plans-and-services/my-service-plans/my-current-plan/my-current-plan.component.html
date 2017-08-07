@@ -7,7 +7,7 @@
       </md-card-title>
     <!--</md-card-header>-->
     <md-card-content>
-      <h2>{{ActiveServiceAccountDetails.Current_Offer.RateAt1000kwh | DollarToCentsPipe | number: '1.2-2'}}<sup class="sup-text">c</sup><small>per kwh</small></h2>
+      <h2>{{ActiveServiceAccountDetails.Current_Offer.RateAt1000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">c</sup><small>per kwh</small></h2>
       <p class="bg-default">TERM: {{ActiveServiceAccountDetails.Current_Offer.Term}} Months</p>
       <p>START: {{ActiveServiceAccountDetails.Current_Offer.Start_Date | date: 'MM/dd/yyyy'}}</p>
       <p  class="bg-default">END: {{ActiveServiceAccountDetails.Current_Offer.End_Date ? (ActiveServiceAccountDetails.Current_Offer.End_Date | date:'MM/dd/yyyy') : (this.getEndDate(ActiveServiceAccountDetails.Current_Offer.Start_Date) | date: 'MM/dd/yyyy')}}</p>
@@ -30,7 +30,7 @@
       <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
             </div>
       <div class="mat-card-content">
-        <h2>{{RenewalOffers.Price_At_1000_kwh | DollarToCentsPipe | number: '1.2-2'}}<sup class="sup-text">c</sup><small>per kwh</small></h2>
+        <h2>{{RenewalOffers.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">c</sup><small>per kwh</small></h2>
         <p  class="bg-default">at 1000kwh</p>
       <p>TERM:{{RenewalOffers.Plan.Term}} months</p>
         <p class="bg-default">{{RenewalOffers.Promotion?.Name}} </p>
