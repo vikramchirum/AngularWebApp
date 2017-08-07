@@ -2,23 +2,23 @@
 
 @import '../styles/bootstrap/stylesheets/bootstrap/_variables';
 @import './breakpoints';
+@import './basecolors';
 
-   a, a:link, a:visited, a:active {
-
-     text-decoration: none;
-    }
+a, a:link, a:visited, a:active {
+  text-decoration: none;
+}
 
 .btn {
-  border-radius:0;
+  border-radius: 0;
   text-transform: uppercase;
 }
 .carousel-indicators {
-    position: absolute;
-    bottom: -10px;
+  position: absolute;
+  bottom: -10px;
 }
 
 .fa-wh {
-  color:#ffffff;
+  color: #fff;
 }
 
 .btn-blank {
@@ -32,8 +32,7 @@
   display: none !important;
 }
 
-.btn-blank:active
-{
+.btn-blank:active {
   box-shadow: none !important;
   outline: none !important;
 }
@@ -44,20 +43,13 @@ hr.breaker {
 
 
 
-/* will refactor this into sass vars for menu color rules */
-$account-base:              rgba(6,81,128,1.0) !default;
-$plans-base:                rgba(254,162,32,1.0)  !default;
-$payment-base:              rgba(46,177,52,1.0)  !default;
-$control-base:              rgba(27,141,205,1.0)  !default;
-$footer-base:              rgba(231,231,231,1.0)  !default;
-$dark-base:                rgba(10,10,10,1.0)  !default;
 
 footer#footer {
-  background-color: #222222;
+  background-color: #222;
   font-size: 12px;
 
   .footer-dark {
-    background-color: #222222;
+    background-color: #222;
     border-top: 1px solid #090909;
     overflow: hidden;
 
@@ -69,7 +61,7 @@ footer#footer {
 
         a,
         a.active {
-          color: #ffffff;
+          color: #fff;
           margin: 0 3px;
         }
       }
@@ -83,7 +75,7 @@ footer#footer {
     }
   }
   h4 {
-    font-weight:bold;
+    font-weight: bold;
   }
   .navbar {
     margin-bottom: 0;
@@ -103,210 +95,173 @@ footer.fixedToBottom {
 .account-menu, .account-menu.open {
   a.active {
     background-color: $account-base !important;
-    color: #ffffff !important;
+    color: #fff !important;
   }
 }
 
 .account-profile {
-
-  h1, h2  {
-    color:$account-base;
+  h1, h2 {
+    color: $account-base;
   }
-
 }
 .account-side-panel {
-
   h1 {
-    color:$account-base;
+    color: $account-base;
   }
-
   li:hover {
     background-color: lighten($account-base, 70%);
-         a, a:link, a:visited {
-            color: $account-base;
-        }
+
+    a, a:link, a:visited {
+      color: $account-base;
+    }
   }
-
-
   li.active a {
-
     color: $account-base;
   }
-
   li.active:before {
-
     color: $account-base;
-
   }
-
 }
 
 .my-account {
   .btn-link {
+    color: $payment-base;
+    position: absolute;
+    right: 10px;
+    top: 0;
+    text-indent: -300px;
+    overflow: hidden;
+
+    &:after {
+      font-family: "FontAwesome";
+      content: "\F040";
+      display: inline-block;
+      top: 6px;
+      text-indent: 0;
       position: absolute;
-      right: 10px;
-      top: 0;
-      text-indent: -300px;
-      overflow: hidden;
-      &:after {
-           font-family: "FontAwesome";
-          content: "\F040";
-          display: inline-block;
-          top: 6px;
-          text-indent: 0;
-          position: absolute;
-          right: 12px;
-            color: $payment-base;
-
-      }
-
+      right: 12px;
+      color: $payment-base;
+    }
   }
 }
 
-.plans-menu, .plans-menu.open  {
+.plans-menu, .plans-menu.open {
   .active {
     background-color: $plans-base !important;
-    color: #ffffff;
+    color: #fff;
   }
-
 }
 
 .plans-profile, .callout-container.plans {
-
-  h1, h2  {
+  h1, h2 {
     color:$plans-base;
   }
-
 }
 
 .plans-side-panel {
-
   h1 {
     color:$plans-base;
   }
-
   li:hover {
     background-color: lighten($plans-base, 41%);
-      a, a:link, a:visited {
-            color: $plans-base;
-        }
+
+    a, a:link, a:visited {
+      color: $plans-base;
+    }
   }
-
   li.active a {
-
     color: $plans-base;
   }
-
   li.active:before {
-
     color: $plans-base;
     border-bottom-color: $plans-base;
   }
-
 }
 
 .payment-menu, .payment-menu.open {
-.active {
-  background-color: $payment-base !important;
-  color: #ffffff;
+  .active {
+    background-color: $payment-base !important;
+    color: #fff;
   }
-
-
 }
 
 .payment-side-panel {
-
   h1 {
-    color:$payment-base;
+    color: $payment-base;
   }
-
   li:hover {
     background-color: lighten($payment-base, 55%);
-      a, a:link, a:visited {
-            color: $payment-base;
-        }
-  }
 
+    a, a:link, a:visited {
+      color: $payment-base;
+    }
+  }
   li.active a {
     color: $payment-base;
   }
-
   li.active:before {
-
     color: $payment-base;
     border-bottom-color: $payment-base;;
   }
-
 }
 
 .payment-profile, .callout-container.payment {
-
-  h1, h2, h3, h4  {
+  h1, h2, h3, h4 {
     color:$payment-base;
   }
-
 }
 
 .control-menu, .control-menu.open {
-.active {
-  background-color: $control-base !important;
-  color: #ffffff;
+  .active {
+    background-color: $control-base !important;
+    color: #fff;
   }
 }
 
 .control-side-panel {
-
   h1 {
-    color:$control-base;
+    color: $control-base;
   }
-
   li:hover {
     background-color: lighten($control-base, 55%);
-      a, a:link, a:visited {
-            color: $control-base;
-        }
-  }
 
+    a, a:link, a:visited {
+      color: $control-base;
+    }
+  }
   li.active a {
     color: $control-base;
   }
-
   li.active:before {
-
     color: $control-base;
     border-bottom-color: $control-base;;
   }
-
 }
 
 .control-profile, .callout-container.control {
-
-  h1, h2, h3, h4  {
+  h1, h2, h3, h4 {
     color:$control-base;
   }
-
 }
 
 .btn-round {
-    height: 250px;
-    border-radius: 100%;
+  height: 250px;
+  border-radius: 100%;
 
   .fa {
     margin-bottom: 10px;
   }
-
-    .boxed {
-        display: block;
-        border: 1px solid #fff;
-        padding: 10px;
-        width: 70%;
-        margin: 10px auto;
-    }
+  .boxed {
+    display: block;
+    border: 1px solid #fff;
+    padding: 10px;
+    width: 70%;
+    margin: 10px auto;
+  }
 }
 .has-success {
-
   .form-control {
-    border:1px solid $payment-base;
+    border: 1px solid $payment-base;
     color: $payment-base;
 
     &:focus {
@@ -318,15 +273,13 @@ footer.fixedToBottom {
 
 
 .custom-nav {
-   .nav > li.open > a {
+  .nav > li.open > a {
     text-decoration: none;
-    background-color: #ffffff;
-}
-
+    background-color: #fff;
+  }
   .navbar-nav>li.dropdown-full {
     position: static;
   }
-
   .navbar-nav>li.dropdown-full>.dropdown-menu {
     width:1170px;
     left: 0;
@@ -334,7 +287,6 @@ footer.fixedToBottom {
     padding: 15px;
     margin: 0 auto;
   }
-
   .no-margin {
     padding: 10px 40px 40px 40px;
     margin: -15px 0 -15px -15px;
@@ -342,28 +294,23 @@ footer.fixedToBottom {
     min-height: 245px;
 
     a, a:link, a:visited, a:active {
-      color: #ffffff;
+      color: #fff;
     }
   }
-
   .list-center li {
     text-align: center;
     padding: 5px 7px;
     display: block;
   }
-
   .list-rule {
-
     a, a:link, a:visited, a:active {
       padding: 10px 15px;
       border-bottom: 1px solid #000;
       display: inline-block;
     }
-
     strong {
       color: $account-base;
     }
-
   }
 }
 
@@ -374,101 +321,9 @@ footer.fixedToBottom {
   background-color: rgba(239,236,201,1.0)
 }
 
-/* THEMES */
-
-.custom-nav {
-  .account-menu {
-      .hero {
-      background-color: $account-base;
-      color:#ffffff;
-      }
-  .list-rule {
-      a, a:link, a:visited, a:active {
-        border-bottom: 1px solid $account-base;
-      }
-      a:hover {
-            background-color: lighten($account-base, 55%);
-            color: $account-base;
-        }
-
-    }
-    strong {
-      color:$account-base
-    }
-  }
-  .plans-menu {
-
-    .hero {
-      background-color: $plans-base;
-      color:#ffffff;
-    }
-    .list-rule {
-      a, a:link, a:visited, a:active {
-        border-bottom: 1px solid $plans-base;
-        padding: 4px 15px;
-        }
-       a:hover {
-            background-color: lighten($plans-base, 55%);
-            color: $plans-base;
-        }
-
-      }
-  }
-    .payment-menu {
-
-    .hero {
-      background-color: $payment-base;
-      color:#ffffff;
-    }
-    .list-rule {
-      a, a:link, a:visited, a:active {
-        border-bottom: 1px solid $payment-base;
-        padding: 4px 15px;
-      }
-
-       a:hover {
-            background-color: lighten($payment-base, 55%);
-            color: $payment-base;
-        }
-
-
-      }
-      strong {
-        color:$payment-base
-    }
-  }
-    .control-menu {
-
-    .hero {
-      background-color: $control-base;
-      color:#ffffff;
-      padding-bottom: 0;
-
-      img {
-        margin: 0 auto;
-        display:block;
-      }
-    }
-    .list-rule {
-      a, a:link, a:visited, a:active {
-        border-bottom: 1px solid $control-base;
-        padding: 4px 15px;
-      }
-      a:hover {
-            background-color: lighten($control-base, 65%);
-            color: $control-base;
-        }
-
-      }
-      strong {
-        color:$control-base
-    }
-  }
-}
-
 .thumbnail-container-height > .thumbnail {
   min-height: 300px;
-  position:  relative;
+  position: relative;
 
   .caption {
     width: 100%;
@@ -478,14 +333,15 @@ footer.fixedToBottom {
   }
 }
 
-@media (max-width: $screen-sm-max) {
-
+.form-group .fa.fa-asterisk {
+  font-size: 8px;
 }
+
+@media (max-width: $screen-sm-max) { }
 @media (max-width: $screen-xs-max) {
   .text-xs-left {
     text-align: left !important;
   }
-
 }
 
 .card-container {
@@ -497,23 +353,26 @@ footer.fixedToBottom {
   position:relative;
   &.card-container-height{
     height:20em;
-     @include phone-landscape {
-         height:auto;
-     }
+
+    @include phone-landscape {
+      height:auto;
+    }
   }
   .card-content {
     height:12.5em;
-     @include phone-landscape {
-         height:auto;
-     }
+
+    @include phone-landscape {
+      height:auto;
+    }
   }
   .card-button{
     position:absolute;
     bottom:0;
     right:0;
+
     @include phone-landscape {
-          position: inherit;
-      }
+      position: inherit;
+    }
   }
 }
 
@@ -523,6 +382,6 @@ footer.fixedToBottom {
 
 .moving-address-date-picker {
   .datepicker-container{
-    top : 1em;
+    top: 1em;
   }
 }
