@@ -1,35 +1,44 @@
-import { Component, OnInit } from '@angular/core';
-import { CustomValidators } from 'ng2-validation';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { validatePhone, equalCheck } from '../../../validators/validator'
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
+import { validatePhone, equalCheck } from 'app/validators/validator';
 
 @Component({
   selector: 'mygexa-change-phone-number',
   templateUrl: './change-phone-number.component.html',
   styleUrls: ['./change-phone-number.component.scss']
 })
-export class ChangePhoneNumberComponent implements OnInit {
+export class ChangePhoneNumberComponent {
 
-  changePhoneNumberForm: FormGroup;
-  submitAttempt: boolean = false;
+  @Output() onCancel: EventEmitter<any> = new EventEmitter();
 
-  constructor(fb: FormBuilder) {
-    
-     this.changePhoneNumberForm = fb.group({
-      'phone': [null, Validators.compose([Validators.required, validatePhone])],
-      'confirmPhone': [null, Validators.compose([Validators.required, validatePhone])]
-   }, {validator: equalCheck('phone', 'confirmPhone')});
-   }
+  changePhoneNumberForm: FormGroup = null;
+  submitAttempt: boolean = null;
 
-  ngOnInit() {
+  constructor(
+    FormBuilder: FormBuilder
+  ) {
+    this.changePhoneNumberForm = FormBuilder.group(
+      {
+        phone: [null, Validators.compose([Validators.required, validatePhone])],
+        confirmPhone: [null, Validators.compose([Validators.required, validatePhone])]
+      },
+      {
+        validator: equalCheck('phone', 'confirmPhone')
+      }
+    );
   }
-  
-   submitForm(value: any, valid:boolean) {
+
+  submitForm() {
     this.submitAttempt = true;
-     if(valid){
-     /** send form data to api to update in database */
-     }  
-
+    console.log('value', this.changePhoneNumberForm.value);
+    console.log('valid', this.changePhoneNumberForm.valid);
+    if (this.changePhoneNumberForm.valid) {
+      /** send form data to api to update in database */
+    }
   }
 
+  emitCancel() {
+    this.onCancel.emit();
+  }
 }
