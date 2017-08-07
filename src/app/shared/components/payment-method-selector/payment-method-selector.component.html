@@ -1,11 +1,11 @@
 <ng-template *ngIf="Paymethods === null; then WaitForPaymethods else LoadedPaymethods"></ng-template>
 <ng-template #WaitForPaymethods>
-  <h4 class="text-muted"><i class="fa fa-fw fa-spinner fa-spin"></i> Loading your saved payment methods.</h4>
+  <small class="text-muted"><i class="fa fa-fw fa-circle-o-notch fa-spin"></i> Loading your saved payment methods.</small>
 </ng-template>
 <ng-template #LoadedPaymethods>
   <ng-template *ngIf="Paymethods.length < 1; then NoPaymethodsToList else ListPaymethods"></ng-template>
   <ng-template #NoPaymethodsToList>
-    <h4 class="text-muted"><i class="fa fa-fw fa-info-circle"></i> You have no saved payment methods to list.</h4>
+    <small class="text-muted"><i class="fa fa-fw fa-info-circle"></i> You have no saved payment methods to list.</small>
   </ng-template>
   <ng-template #ListPaymethods>
     <ng-template *ngIf="!!disableIfOnlyOne && Paymethods.length === 1; then DisabledWithOnlyOnePaymethod else ShowingAllPaymethods"></ng-template>
@@ -18,20 +18,7 @@
         <table class="card-table" cellpadding="0" cellspacing="0" width="100%" [ngClass]="{ 'card-table-odd': i % 2 !== 0 }">
           <tbody>
           <tr>
-            <td width="87%">
-              <div class="row">
-                <div class="card-brand col-xs-6 col-md-4">
-                  <i class="fa fa-fw" [ngClass]="paymentMethod.getFontAwesomeTag()"></i>{{ paymentMethod.getBrand() }}
-                </div>
-                <div class="card-ending col-xs-6 col-md-4">
-                  ENDING IN <b>{{ paymentMethod.getLast() }}</b>
-                </div>
-                <div class="card-expires col-xs-6 col-xs-offset-6 col-md-4 col-md-offset-0">
-                  {{ paymentMethod.CreditCard ? 'EXP ' + paymentMethod.getExpiration() : '' }}
-                </div>
-              </div>
-            </td>
-            <td class="card-abp" width="13%">
+           <td class="card-abp" width="10%">
               <ng-template *ngIf="initialPaymethod && initialPaymethodDisable === true; then AllowOnlyOtherPaymethodSelection else AllowPaymethodSelection"></ng-template>
               <ng-template #AllowOnlyOtherPaymethodSelection>
                 <ng-template *ngIf="initialPaymethod === paymentMethod; then DoNotAllowSelection else DoAllowSelection"></ng-template>
@@ -52,20 +39,34 @@
                 </button>
               </ng-template>
             </td>
+            <td width="90%">
+              <div class="row">
+                <div class="card-brand col-xs-6 col-md-4">
+                  <i class="fa fa-fw" [ngClass]="paymentMethod.getFontAwesomeTag()"></i>{{ paymentMethod.getBrand() }}
+                </div>
+                <div class="card-ending col-xs-6 col-md-4">
+                  ENDING IN <b>{{ paymentMethod.getLast() }}</b>
+                </div>
+                <div class="card-expires col-xs-6 col-xs-offset-6 col-md-4 col-md-offset-0">
+                  {{ paymentMethod.CreditCard ? 'EXP ' + paymentMethod.getExpiration() : '' }}
+                </div>
+              </div>
+            </td>
+            
           </tr>
           </tbody>
         </table>
       </div>
       <br/>
       <div class="row">
-        <div class="col-xs-6">
+        <div class="col-xs-8">
           <button
-            class="btn btn-block btn-default"
+            class="btn btn-link"
             (click)="cancelSelect()"
             *ngIf="cancelProvide !== false"
           >{{ cancelText || 'Cancel' }}</button>
         </div>
-        <div class="col-xs-6">
+        <div class="col-xs-4">
           <button
             class="btn btn-block btn-primary"
             [disabled]="!PaymethodSelected"

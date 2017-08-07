@@ -1,50 +1,66 @@
- <br/>
-   <div class="row security-question">
-    <div class="col-md-4 col-xs-12">
-      <label class="control-label">Security Question 1</label>
-    </div>
-    <div class="col-md-6 col-xs-12">
-        <div class="form-control">{{securityQuestion}}</div>
-         <button type="button" class="btn btn-primary btn-link" href="#" (click)="toggleEdit($event)">{{ editing ? 'Close' : 'Edit'}}</button>
-    </div>
+
+<div class="row security-question">
+  <div class="col-md-4">
+    <label class="control-label">Security Question 1</label>
   </div>
- 
+  <div class="col-md-6">
+    <div class="form-control">{{securityQuestion}}</div>
+    <button type="button" class="btn btn-primary btn-link" (click)="editing = !editing"><i class="fa fa-{{ editing ? 'remove' : 'pencil'}}"></i></button>
+  </div>
+</div>
+<br/>
 
 <div [hidden]="!editing">
-  <br/>
-  <div  class="row bg-info">
-     <hr/>
+  <div class="row bg-info">
+    <div class="col-xs-12">
+      <hr/>
+    </div>
     <div class="col-md-4">
       <label class="form-control-label">Security Question 1</label>
     </div>
-     <div class="col-md-6">
-      <form id="changeForm" novalidate [formGroup]="securityQuestionForm">
+    <div class="col-md-6">
+      <form
+        id="changeForm"
+        novalidate
+        [formGroup]="securityQuestionForm"
+      >
         <div class="form-group" [ngClass]="{'has-error':!securityQuestionForm.controls['question1'].valid && submitAttempt}">
           <p>Answer Questions to Continue</p>
           <label class="control-label">{{securityQuestion}}</label>
-          <input type="text" name="question1" class="form-control" [formControl]="securityQuestionForm.controls['question1']" placeholder="">
+          <input
+            type="text"
+            name="question1"
+            class="form-control"
+            [formControl]="securityQuestionForm.controls['question1']" placeholder=""
+          />
           <div class="has-error" *ngIf="securityQuestionForm.controls['question1'].hasError('required') && submitAttempt">
             <span class="help-block">Required</span>
           </div>
         </div>
+
         <!--<div class="form-group" [ngClass]="{'has-error':!securityQuestionForm.controls['question2'].valid && submitAttempt}">-->
           <!--<p>Security Question 2</p>-->
           <!--<label class="control-label">whats your favourite movie title ?</label>-->
-          <!--<input type="text" name="question2" class="form-control" [formControl]="securityQuestionForm.controls['question2']" placeholder="">-->
+          <!--<input-->
+            <!--type="text"-->
+            <!--name="question2"-->
+            <!--class="form-control"-->
+            <!--[formControl]="securityQuestionForm.controls['question2']"-->
+            <!--placeholder=""-->
+          <!--/>-->
           <!--<div class="has-error" *ngIf="securityQuestionForm.controls['question2'].hasError('required') && submitAttempt">-->
             <!--<span class="help-block">Required</span>-->
           <!--</div>-->
         <!--</div>-->
-        <div class="row">
-          <div class="col-xs-12 text-right">
-            <button class="btn btn-primary" [disabled]="">Continue</button>
-            <a class="btn btn-default" href="#" (click)="toggleEdit($event)">Cancel</a>
 
-          </div>
+        <div class="text-right">
+          <button class="btn btn-primary" [disabled]="">Continue</button>
+          <button class="btn btn-default" type="button" (click)="editing = false">Cancel</button>
         </div>
+
       </form>
       <hr/>
     </div>
   </div>
-  </div>
-<br/>
+  <br/>
+</div>

@@ -1,47 +1,67 @@
-<section class="account-profile-edit" *ngIf="customerDetails">
+<section class="account-profile-edit">
+
   <div class="row">
-    <div class="col-md-8">
-      <h2>
-        Hello, {{customerDetails.First_Name + ' ' + customerDetails.Last_Name}}
-        <!--<i class="fa fa-user-circle fa-spin"></i>-->
-      </h2>
-    </div>
-    <div class="col-md-4">
-             <div class="alert alert-info pull-right" style="display: none">Account No: {{accountNumber}}</div>
-    </div>
+    <ng-template *ngIf="customerDetails; then DoShowCustomerDetails else DoNotShowCustomerDetails"></ng-template>
+    <ng-template #DoShowCustomerDetails>
+      <div class="col-md-8">
+        <h2>Hello, {{customerDetails.First_Name + ' ' + customerDetails.Last_Name}}</h2>
+      </div>
+      <div class="col-md-4">
+        <div class="alert alert-info pull-right" style="display: none;">Account No: {{accountNumber}}</div>
+      </div>
+    </ng-template>
+    <ng-template #DoNotShowCustomerDetails>
+      <div class="col-md-8">
+        <h2><i class="fa fa-spin fa-circle-o-notch"></i> Loading your information...</h2>
+      </div>
+    </ng-template>
   </div>
-
-        <p></p>
+  <br/>
 
   <div class="row">
-    <div class="col-md-4 col-xs-12">
+    <div class="col-md-4">
       <label class="control-label">Email Address</label>
     </div>
-    <div class="col-md-6 col-xs-12">
-        <div class="form-control">{{emailAddress}}</div>
-         <a class="btn btn-link" (click)="toggleEmailEdit($event)">{{ emailEditing ? 'Close' : 'Edit'}}</a>
+    <div class="col-md-6">
+      <ng-template *ngIf="customerDetails; then DoShowCustomerEmail else DoNotShowCustomerEmail"></ng-template>
+      <ng-template #DoShowCustomerEmail>
+        <div class="form-control">{{ emailAddress }}</div>
+        <a class="btn btn-primary btn-link" (click)="toggleEmailEdit($event)">
+          <i class="fa" [ngClass]="'fa-' + (emailEditing ? 'remove' : 'pencil')"></i>
+        </a>
+      </ng-template>
+      <ng-template #DoNotShowCustomerEmail>
+        <div class="form-control"><i class="fa fa-fw fa-spin fa-circle-o-notch"></i> Loading...</div>
+      </ng-template>
     </div>
   </div>
 
-   <div *ngIf="emailEditing">
-    <mygexa-change-email-address></mygexa-change-email-address>
+  <div *ngIf="emailEditing">
+    <mygexa-change-email-address (onCancel)="toggleEmailEdit()"></mygexa-change-email-address>
   </div>
 
-<br>
+  <br/>
+
   <div class="row">
-    <div class="col-md-4 col-xs-12">
+    <div class="col-md-4">
       <label class="control-label">Phone Number</label>
     </div>
-    <div class="col-md-6 col-xs-12">
-      <div class="form-control">{{customerDetails.Phone}}</div>
-         <a class="btn btn-link"  (click)="togglePhoneEdit($event)">{{ phoneEditing ? 'Close' : 'Edit'}}</a>
-         </div>
+    <div class="col-md-6">
+      <ng-template *ngIf="customerDetails; then DoShowCustomerPhoneNumber else DoNotShowCustomerPhoneNumber"></ng-template>
+      <ng-template #DoShowCustomerPhoneNumber>
+        <div class="form-control">{{ customerDetails.Phone }}</div>
+        <a class="btn btn-primary btn-link" (click)="togglePhoneEdit($event)">
+          <i class="fa" [ngClass]="'fa-' + (phoneEditing ? 'remove' : 'pencil')"></i>
+        </a>
+      </ng-template>
+      <ng-template #DoNotShowCustomerPhoneNumber>
+        <div class="form-control"><i class="fa fa-fw fa-spin fa-circle-o-notch"></i> Loading...</div>
+      </ng-template>
     </div>
-
-
-   <div *ngIf="phoneEditing">
-    <mygexa-change-phone-number></mygexa-change-phone-number>
   </div>
 
+  <div *ngIf="phoneEditing">
+    <mygexa-change-phone-number (onCancel)="togglePhoneEdit()"></mygexa-change-phone-number>
+  </div>
 
 </section>
