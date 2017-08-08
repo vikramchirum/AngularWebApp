@@ -8,7 +8,7 @@
   </thead>
   <tbody>
     <tr class="ledger" *ngFor="let row of rows | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage, totalItems: totalItems }">
-      <td class="date">{{ row.date | date:'d/M/y' }}</td>
+      <td class="date">{{ row.date | date:'M/d/y' }}</td>
       <ng-template *ngIf="row.type === 'invoice'; then TransactionInvoice else TransactionPayment"></ng-template>
       <ng-template #TransactionInvoice>
         <td class="ref">
@@ -22,9 +22,7 @@
         <td class="charge"></td>
         <td class="payment">{{ row.amount | number : dollarAmountFormatter }}</td>
       </ng-template>
-      <td *ngIf="row.balance === 0"></td>
-      <td *ngIf="row.balance < 0" class="balance text-danger">{{ row.balance | number : dollarAmountFormatter }}</td>
-      <td *ngIf="row.balance > 0" class="balance">{{ row.balance | number : dollarAmountFormatter }}</td>
+      <td class="balance" [ngClass]="{ 'text-danger': row.balance < 0 }">{{ row.balance | number : dollarAmountFormatter }}</td>
     </tr>
   </tbody>
 </table>

@@ -72,21 +72,32 @@ export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
-      activeServiceAccount => {
-        this.PaymentsHistoryService.GetPaymentsHistory(activeServiceAccount).subscribe(
+      ActiveServiceAccount => {
+
+        this.Payments = null;
+        this.PaymentsHistoryService.GetPaymentsHistoryCacheable(ActiveServiceAccount).subscribe(
           PaymentsHistoryItems => {
-            console.log('PaymentsHistoryItems', PaymentsHistoryItems);
             this.Payments = clone(PaymentsHistoryItems);
+            let total = 0;
+            forEach(PaymentsHistoryItems, payment => total += payment.PaymentAmount);
+            console.log('Payments Total:', total);
+            console.log('Payments', PaymentsHistoryItems.length, PaymentsHistoryItems);
           }
         );
+
+        this.Invoices = null;
         const invoiceSearchRequest = {} as IInvoiceSearchRequest;
-        invoiceSearchRequest.Service_Account_Id = Number(activeServiceAccount.Id);
-        this.InvoiceService.getInvoices(invoiceSearchRequest).subscribe(
+        invoiceSearchRequest.Service_Account_Id = Number(ActiveServiceAccount.Id);
+        this.InvoiceService.getInvoicesCacheable(invoiceSearchRequest).subscribe(
           Invoices => {
-            console.log('Invoices', Invoices);
             this.Invoices = clone(Invoices);
+            let total = 0;
+            forEach(Invoices, invoice => total += invoice.Current_Charges);
+            console.log('Invoices Total:', total);
+            console.log('Invoices', Invoices.length, Invoices);
           }
         );
+
         this.processData();
       }
     );
