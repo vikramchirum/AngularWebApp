@@ -30,7 +30,7 @@
       <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
             </div>
       <div class="mat-card-content">
-        <h2>{{RenewalOffers.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">c</sup><small>per kwh</small></h2>
+        <h2>{{RenewalOffers.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small></h2>
         <p  class="bg-default">at 1000kwh</p>
       <p>TERM:{{RenewalOffers.Plan.Term}} months</p>
         <p class="bg-default">{{RenewalOffers.Promotion?.Name}} </p>

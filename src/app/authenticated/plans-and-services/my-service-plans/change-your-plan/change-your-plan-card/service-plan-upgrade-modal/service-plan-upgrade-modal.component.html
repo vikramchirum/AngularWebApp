@@ -1,73 +1,65 @@
 <section class="service-upgrade-modal">
   <div bsModal #serviceUpgradeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-body">
-           <div class="plan-header bg-success"><h3 class="plan-title ">Gexa Prime 1000 12</h3>
+           <div class="plan-header"><h3 class="plan-title ">Gexa Prime 1000 12</h3>
           <button type="button" class="close text-right" aria-label="Close" (click)="hideServiceUpgradeModal()">
             <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button></div><br>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-          <h2 class="text-center">3.1 per KWh</h2>
-          <hr>
-          <div class="row plan-benefits">
-            <div class="col-md-4 col-sm-4 col-xs-12">
-              <h5>Benefits</h5>
-              <ul>
-                <li>quis nostrud exercitation ullamco</li>
-                <li>quis nostrud exercitation ullamco</li>
-                <li>quis nostrud exercitation ullamco</li>
-                <li>quis nostrud exercitation ullamco</li>
-              </ul>
+          <h3 class="text-center plan-info">3.1<sup>&cent;</sup> per KWh</h3>
+          <p class="text-center">AT 1000kwh</p>
+          <div class="row plan-documents">
+            <div class="col-md-12">
+            <h4>Cost Plan Documents</h4>
             </div>
-            <div class="col-md-4 col-sm-4 col-xs-12">
-              <h5>Features</h5>
-              <ul>
-                <li>quis nostrud exercitation ullamco</li>
-                <li>quis nostrud exercitation ullamco</li>
-                <li>quis nostrud exercitation ullamco</li>
-                <li>quis nostrud exercitation ullamco</li>
-              </ul>
+            <div class="col-md-4">
+               <div class="col-md-12 text-center">
+                 <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
+              </div>
+              <small><a href="#stay" target="_blank">Electricty Facts Label</a></small>
             </div>
-            <div class="col-md-4 col-sm-4 col-xs-12">
-              <h5>Plan Documents</h5>
-              <ul>
-                <li>quis nostrud exercitation ullamco</li>
-                <li>quis nostrud exercitation ullamco</li>
-                <li>quis nostrud exercitation ullamco</li>
-                <li>quis nostrud exercitation ullamco</li>
-              </ul>
+            <div class="col-md-4">           
+              <div class="col-md-12 text-center">
+                 <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
+              </div>
+              <small><a href="#stay" target="_blank">Your Rights as a Customer</a></small>
             </div>
-          </div>
-          <hr/>
-          <div class="row cost-components">
-            <h3>Cost Components</h3>
-            <div class="col-md-5 col-sm-5">
-              <h5>Gexa Energy</h5>
-              <table border="0" width="100%">
+            <div class="col-md-4">
+              <div class="col-md-12 text-center">
+                 <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
+              </div>
+              <small><a href="#stay" target="_blank">Term and Conditions</a></small>
+            </div>
+
+                         </div>   
+                <div class="row cost-components">
+            <div class="col-md-12">
+            <h4>Cost Components</h4>
+            <h5>Gexa Energy</h5>
+              <table border="0" width="100%" class="table-condensed table-striped">
                 <tbody>
                   <tr>
-                    <td class="bill-name">Energy Charge(per KWh)</td>
+                    <td class="bill-name">Energy Charge<small>(per KWh)</small></td>
                     <td class="bill-amount">$0.0929</td>
                   </tr>
                   <tr>
-                    <td class="bill-name">Base charge per month</td>
+                    <td class="bill-name">Base charge<small>(per month)</small></td>
                     <td class="bill-amount">$0.00*</td>
                   </tr>
                 </tbody>
               </table>
             </div>
-            <div class="col-md-5 col-sm-5">
+            <div class="col-md-12">
               <h5>Oncor electric delivery company (TDU)</h5>
-              <table border="0" width="100%">
+              <table border="0" width="100%" class="table-condensed table-striped">
                 <tbody>
                   <tr>
-                    <td class="bill-name">TDU delivery charges (per month)</td>
+                    <td class="bill-name">TDU delivery charges <small>(per month)</small></td>
                     <td class="bill-amount">$5.25</td>
                   </tr>
                   <tr>
-                    <td class="bill-name">TDU delivery charges (per month)</td>
+                    <td class="bill-name">TDU delivery charges <small>(per month)</small></td>
                     <td class="bill-amount">$0.0329</td>
                   </tr>
                 </tbody>
@@ -77,13 +69,12 @@
           </div>
           <div class="row">
           <div class="col-md-6">
-           
-            <h3>Contract term</h3>
-            <p>12 months</p>
+            <small><strong>Contract term</strong>
+            <p>12 months</p></small>
           </div>
           <div class="col-md-6">
-            <h3>Cancellation fee</h3>
-            <p>$150</p>
+            <small><strong>Cancellation fee</strong>
+            <p>$150</p></small>
           </div>
           </div>
           <!--<div class="text-right"><input type="text" class="promotional-code hidden-xs" placeholder="Promotional Code(optional)"/>-->
