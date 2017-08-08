@@ -45,13 +45,10 @@ export class PaperlessSettingsComponent implements OnInit {
         }
       }   
     });
-    console.log("flag value", flag)
     if(flag == 1) {
-      console.log("inside flag 1")
       this.paperlessSettings = true;
     }else {
        this.paperlessSettings = false;
-
     }
   
 

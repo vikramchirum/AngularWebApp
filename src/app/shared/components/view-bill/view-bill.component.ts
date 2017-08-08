@@ -40,9 +40,7 @@ export class ViewBillComponent implements OnInit {
    }
 
   ngOnInit() {
-     console.log("bill Object", this.bill_object)
     if (this.bill_object) {
-      console.log("Inside if", this.bill_object )
       this.PopulateItemizedBill(this.bill_object);
     }
 
@@ -54,13 +52,10 @@ export class ViewBillComponent implements OnInit {
   }
 
   public PopulateItemizedBill(bill_object: IInvoice) {
-      console.log("bill Object inside function", bill_object)
     const invoice_id = Number(bill_object.Invoice_Id);
-  console.log('Invoice Id......', bill_object.Invoice_Id )
     this.invoice_service.getItemizedInvoiceDetails(invoice_id)
       .subscribe(
         bill_item_details => {
-          console.log("BIll_item_details", bill_item_details)
           this.openCharges = [];
           this.bill_object = bill_object;
           this.invoice_num = invoice_id;
