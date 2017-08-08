@@ -6,7 +6,7 @@
     <h4>{{Offer.Plan.Name }}<small><i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></small></h4>
       <!--//<h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.2-2'}}<sup class="sup-text">c</sup><sub class="sub-text">pkw/hr</sub></h2>-->
 
-    <h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">c</sup><sub class="sub-text">per kwh</sub>
+    <h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub>
       </h2>
       </div>
     <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
@@ -48,7 +48,7 @@
     <div class="card-content">
       <div class="card-title">
       <h4>{{Offer.Plan.Name }} <i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></h4>
-      <h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">c</sup><sub class="sub-text">per kwh</sub></h2>
+      <h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
       </div>
       <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
       <p>at 1000kwh</p>

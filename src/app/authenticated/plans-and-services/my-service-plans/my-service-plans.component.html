@@ -12,14 +12,6 @@
       <div *ngIf="ActiveServiceAccountDetails">
         <div>
           <p>Account No: {{ActiveServiceAccountDetails.Id}} </p>
-
-        <!-- this is all redundant with the account selector above, or do we want the redundancy
-          <h5>Service Address</h5>
-          <h4>{{ActiveServiceAccountDetails.Service_Address.Line1 + ','}}</h4>
-          <h4>{{ActiveServiceAccountDetails.Service_Address.City}}</h4>
-          <h4>{{ActiveServiceAccountDetails.Service_Address.State +' - '+ ActiveServiceAccountDetails.Service_Address.Zip}}</h4>
-
-          -->
           <div class="row">
             <div class=" col-sm-12 col-md-9 col-md-offset-1">
               <mygexa-my-current-plan></mygexa-my-current-plan>
