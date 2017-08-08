@@ -87,8 +87,6 @@ export class PaperlessSettingsComponent implements OnInit {
       });
     }
     this.togglePaperless(this.billingOptions, this.plansOptions);
-    console.log('plansOptions',);
-    console.log('Billing Options', this.billingOptions);
   }
 }
 
