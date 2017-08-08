@@ -45,13 +45,10 @@ export class PaperlessSettingsComponent implements OnInit {
         }
       }   
     });
-    console.log("flag value", flag)
     if(flag == 1) {
-      console.log("inside flag 1")
       this.paperlessSettings = true;
     }else {
        this.paperlessSettings = false;
-
     }
   
 
@@ -90,8 +87,6 @@ export class PaperlessSettingsComponent implements OnInit {
       });
     }
     this.togglePaperless(this.billingOptions, this.plansOptions);
-    console.log('plansOptions',);
-    console.log('Billing Options', this.billingOptions);
   }
 }
 

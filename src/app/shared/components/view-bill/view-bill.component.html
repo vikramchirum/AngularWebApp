@@ -48,7 +48,7 @@
       <ng-template #listTDUCharges>
         <h4>
           <button class="charge-toggle btn-link" (click)="chargeToggle(bill_item_details_TDU_charges)"> <i class="fa fa-fw" [ngClass]="chargeOpened(bill_item_details_TDU_charges) ? 'fa-chevron-up' : 'fa-chevron-down'"></i> </button>
-          TDU Charges </h4>
+          {{tduName}}</h4>
         <table *ngIf="chargeOpened(bill_item_details_TDU_charges)" border="0" width="100%" class="table-condensed table-striped">
           <colgroup>
           <col width="75%"/>
@@ -70,7 +70,7 @@
         </table>
       </ng-template>
       <ng-template #noTDUChargesToList>
-        <h2>TDU Charges <small>(No TDU charges to list.)</small></h2>
+        <h2>{{tduName}} <small>(No TDU charges to list.)</small></h2>
       </ng-template>
     </div>
     <div>
