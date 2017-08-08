@@ -1,9 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { filter, forEach, clone } from 'lodash';
+import { Subscription } from 'rxjs/Subscription';
 
 import { InvoiceService } from 'app/core/invoiceservice.service';
 import { IInvoiceLineItem } from 'app/core/models/invoices/invoicelineitem.model';
 import { IInvoice } from 'app/core/models/invoices/invoice.model';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+
 
 @Component({
   selector: 'mygexa-view-bill',
@@ -24,19 +28,35 @@ export class ViewBillComponent implements OnInit {
   public invoice_date: Date;
 
   private openCharges = [];
+  
+  private ActiveServiceAccountSubscription: Subscription = null;
+  private tduName: string;
 
-  constructor(
-    private invoice_service: InvoiceService
-  ) { }
+  constructor(   
+    private invoice_service: InvoiceService,
+    private serviceAccountService : ServiceAccountService
+  ) {
+    
+   }
 
   ngOnInit() {
+     console.log("bill Object", this.bill_object)
     if (this.bill_object) {
+      console.log("Inside if", this.bill_object )
       this.PopulateItemizedBill(this.bill_object);
     }
+
+     this.ActiveServiceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
+      result => {
+        this.tduName = result.TDU_Name;      
+      }
+    );
   }
 
   public PopulateItemizedBill(bill_object: IInvoice) {
+      console.log("bill Object inside function", bill_object)
     const invoice_id = Number(bill_object.Invoice_Id);
+  console.log('Invoice Id......', bill_object.Invoice_Id )
     this.invoice_service.getItemizedInvoiceDetails(invoice_id)
       .subscribe(
         bill_item_details => {
