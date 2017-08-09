@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ModalModule } from 'ngx-bootstrap';
+import { ModalModule, PopoverModule  } from 'ngx-bootstrap';
 import { DatePickerModule } from 'ng2-datepicker';
 import { MdCardModule, MaterialModule } from '@angular/material';
 import { MyDatePickerModule } from 'mydatepicker';
@@ -22,6 +22,7 @@ import { CreditCheckComponent } from './add-services/credit-check/credit-check.c
 import { MovingComponent} from './moving/moving.component';
 import { SelectPlanModalDialogComponent } from './moving-center-form/select-plan-modal-dialog/select-plan-modal-dialog.component';
 import { MovingCenterFormComponent } from './moving-center-form/moving-center-form.component';
+import { OfferDetailsPopoverComponent } from './my-service-plans/change-your-plan/offer-details-popover/offer-details-popover.component';
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import { MovingCenterFormComponent } from './moving-center-form/moving-center-fo
     SharedModule,
     ModalModule.forRoot(),
     DatePickerModule,
-    MyDatePickerModule
+    MyDatePickerModule,
+    PopoverModule.forRoot()
   ],
   declarations: [
       PlansAndServicesComponent,
@@ -50,7 +52,8 @@ import { MovingCenterFormComponent } from './moving-center-form/moving-center-fo
       CreditCheckComponent,
       MovingComponent,
       SelectPlanModalDialogComponent,
-      MovingCenterFormComponent    
+      MovingCenterFormComponent,
+      OfferDetailsPopoverComponent    
       ]
 })
 export class PlansAndServicesModule { }

@@ -3,7 +3,7 @@
 <div class="plan-card-container">
   <div class="card-content">
     <div class="card-title">
-    <h4>{{Offer.Plan.Name }}<small><i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></small></h4>
+    <h4>{{Offer.Plan.Name }}<small><i class="fa fa-info-circle" aria-hidden="true"  [popover]="offerDetailsModal"  popoverTitle= {{Offer.Plan.Name}} placement="bottom" container="body"> </i></small></h4>
       <!--//<h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.2-2'}}<sup class="sup-text">c</sup><sub class="sub-text">pkw/hr</sub></h2>-->
 
     <h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub>
@@ -47,14 +47,13 @@
   <div class="plan-card-container">
     <div class="card-content">
       <div class="card-title">
-      <h4>{{Offer.Plan.Name }} <i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></h4>
+      <h4>{{Offer.Plan.Name }} <i class="fa fa-info-circle"  aria-hidden="true" #pop="bs-popover" [popover]="offerDetailsModal"  popoverTitle= {{Offer.Plan.Name}} placement="bottom" container="body"></i></h4>
       <h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
       </div>
       <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
       <p>at 1000kwh</p>
       <p>TERM:{{Offer.Plan.Term}} months</p>
       <p>{{Offer.Promotion?.Name}}</p>
-
     </div>
     <div *ngIf= "selectCheckBox" class="agreement-section">
       <div class="checkbox">
@@ -118,3 +117,6 @@
 
 </section>
 
+<template #offerDetailsModal>  
+    <mygexa-offer-details-popover></mygexa-offer-details-popover>
+</template>

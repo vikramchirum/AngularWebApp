@@ -6,6 +6,7 @@ import {IOffers} from '../../../../../core/models/offers/offers.model';
 import {ServicePlanUpgradeModalComponent} from './service-plan-upgrade-modal/service-plan-upgrade-modal.component';
 import {ServiceAccountService} from 'app/core/serviceaccount.service';
 import {ServiceAccount} from '../../../../../core/models/serviceaccount/serviceaccount.model';
+import {OfferDetailsPopoverComponent} from '../offer-details-popover/offer-details-popover.component';
 
 @Component({
   selector: 'mygexa-change-your-plan-card',
@@ -16,6 +17,7 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
 
   @Input() Offer: IOffers;
   @ViewChild('serviceUpgradeModal') serviceUpgradeModal: ServicePlanUpgradeModalComponent;
+
   selectCheckBox = false;
   IsInRenewalTimeFrame: boolean;
   activeServiceAccountDetails: ServiceAccount;
