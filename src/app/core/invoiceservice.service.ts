@@ -49,7 +49,7 @@ export class InvoiceService {
       .catch(err => this.HttpClient.handleHttpError(err));
   }
 
-  getItemizedInvoiceDetails(invoiceId: number): Observable<IInvoiceLineItem[]>   {
+  getItemizedInvoiceDetails(invoiceId: number | string): Observable<IInvoiceLineItem[]>   {
     return this.HttpClient.get(`/invoice/${invoiceId}/details`)
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err));

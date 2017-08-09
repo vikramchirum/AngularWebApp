@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { environment } from 'environments/environment';
 import { Subscription } from 'rxjs/Subscription';
-import { clone, forEach, result, reverse } from 'lodash';
+import { clone, find, forEach, result, reverse } from 'lodash';
 import { ColumnHeader } from 'app/core/models/columnheader.model';
 import { IInvoiceSearchRequest } from 'app/core/models/invoices/invoicesearchrequest.model';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
@@ -10,6 +10,7 @@ import { InvoiceService } from 'app/core/invoiceservice.service';
 import { PaymentsHistoryService } from 'app/core/payments-history.service';
 import { PaymentsHistory } from 'app/core/models/payments/payments-history.model';
 import { IInvoice } from 'app/core/models/invoices/invoice.model';
+import { ViewMyBillModalComponent } from '../view-my-bill-modal/view-my-bill-modal.component';
 
 interface IHistoryLedger {
   Id: string;
@@ -25,6 +26,8 @@ interface IHistoryLedger {
   styleUrls: ['./ledger.component.scss']
 })
 export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
+
+  @ViewChild('viewMyBillModal') viewMyBillModal: ViewMyBillModalComponent;
 
   private dollarAmountFormatter = environment.DollarAmountFormatter;
   public config: any;
@@ -109,8 +112,8 @@ export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
     if (!this.Payments || !this.Invoices) { return; }
 
     // Reverse the order of both payments and invoices from oldest to newest.
-    const paymentsOrdered: PaymentsHistory[] = reverse(this.Payments);
-    const invoicesOrdered: IInvoice[] = reverse(this.Invoices);
+    const paymentsOrdered: PaymentsHistory[] = reverse(clone(this.Payments));
+    const invoicesOrdered: IInvoice[] = reverse(clone(this.Invoices));
 
     // Prepare the final transaction collection.
     const transactions: IHistoryLedger[] = [];
@@ -179,8 +182,8 @@ export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
     result(this.ActiveServiceAccountSubscription, 'unsubscribe');
   }
 
-  openBill(bill: IHistoryLedger) {
-    alert(`open up bill: ${bill.Id}`);
+  openBill(invoice: IHistoryLedger) {
+    this.viewMyBillModal.show(find(this.Invoices, { Invoice_Id: Number(invoice.Id) }));
   }
 
 }
