@@ -147,25 +147,32 @@ export class ServiceAccountService {
 
     const startDate = new Date(Start_Date);
     const currentDate = new Date(Date.now());
-    let req90Day: Date;
+    let req90Day: Date; let end_date_for_renewals: Date;
 
     if (End_Date === null) {
-      const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ));
-      console.log('End date', endDate);
+      end_date_for_renewals = new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ));
+      console.log('End date', end_date_for_renewals);
       req90Day = new Date(new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ))
         .setDate(new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 )).getDate() - 90 ));
       console.log('End date null mark', req90Day);
     } else {
 
       const end_Date = new Date(End_Date);
-      console.log('End date', end_Date);
+      end_date_for_renewals = end_Date;
+      console.log('End date', end_date_for_renewals);
       req90Day = new Date(end_Date.setDate(end_Date.getDate() - 90));
       console.log('End date null mark', req90Day);
     }
-    if ( currentDate > req90Day) {
+    //Set proper flag
+    if ( currentDate > req90Day && Term > 1) {
       ActiveServiceAccount.IsUpForRenewal = true;
+      ActiveServiceAccount.IsOnHoldOver = false;
+    } else if (currentDate > end_date_for_renewals && Term === 1) {
+      ActiveServiceAccount.IsOnHoldOver = true;
+      ActiveServiceAccount.IsUpForRenewal = false;
     } else {
       ActiveServiceAccount.IsUpForRenewal = false;
+      ActiveServiceAccount.IsOnHoldOver = false;
     }
     return ActiveServiceAccount;
   }
