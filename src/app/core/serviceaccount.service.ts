@@ -139,25 +139,28 @@ export class ServiceAccountService {
 
   }
 
-  SetIsUpFOrRenewalFlag(ActiveServiceAccount: ServiceAccount): ServiceAccount {
+  SetIsUpFOrRenewalFlag(ServiceAccount: ServiceAccount): ServiceAccount {
 
     const currentDate = new Date();
-    const startDate = new Date(ActiveServiceAccount.Contract_Start_Date);
 
     // End dates should not be null - for dev purposes, handle null dates:
-    const endDate = ActiveServiceAccount.Contract_End_Date === null
+    const endDate = ServiceAccount.Contract_End_Date === null
       // If no end date, take the current time and add a year's milliseconds to it.
       ? new Date(currentDate.getTime() + 1000 * 60 * 60 * 24 * 365)
       // Otherwise, use the provided date.
-      : new Date(ActiveServiceAccount.Contract_End_Date);
+      : new Date(ServiceAccount.Contract_End_Date);
 
     // Get the first day of the 90 day period by subtracting 90 day's milliseconds from the end date.
     const req90Day: Date = new Date(endDate.getTime() - 1000 * 60 * 60 * 24 * 90);
 
     // Determine if the current day is past the first day of the 90 day period.
-    ActiveServiceAccount.IsUpForRenewal = currentDate > req90Day;
+    ServiceAccount.IsUpForRenewal = currentDate > req90Day;
 
-    return ActiveServiceAccount;
+    // Determine if the service account is on hold over using its' current offer.
+    // Term === 1 would mean a monthly plan but should we determine with another attribute?
+    ServiceAccount.IsOnHoldOver = ServiceAccount.Current_Offer.Term === 1;
+
+    return ServiceAccount;
   }
 
   private emitToObservers(observers: Observer<any>[], data: any) {

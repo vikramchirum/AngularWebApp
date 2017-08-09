@@ -1,11 +1,15 @@
 import {Component, OnInit, ViewEncapsulation, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { get } from 'lodash';
 
 import { UserService } from 'app/core/user.service';
-import { IUser, ISecurityQuestions } from './register';
+import { ISecurityQuestions } from './register';
 import { equalCheck, validateEmail, validateInteger } from 'app/validators/validator';
 import {LoginRegisterModalComponent} from './login-register-modal/login-register-modal.component';
+import {LoginAddClaimsModalComponent} from './login-add-claims-modal/login-add-claims-modal.component';
+import {IUser} from '../../core/models/user/User.model';
+import {IRegUser} from '../../core/models/register/register-user.model';
 
 @Component({
   templateUrl: './login.component.html',
@@ -15,16 +19,18 @@ import {LoginRegisterModalComponent} from './login-register-modal/login-register
 export class LoginComponent implements OnInit {
 
   @ViewChild('loginRegisterModal') loginRegisterModal: LoginRegisterModalComponent;
+  @ViewChild('loginAddClaimModal') public loginAddClaimModal: LoginAddClaimsModalComponent;
 
   invalidCreds: boolean;
   processing: boolean = null;
   registerForm: FormGroup = null;
   formSubmitted: boolean = null;
-  user: IUser = null;
+  user: IRegUser = null;
   user_name: string = null;
   error: string = null;
   password: string = null;
   secQuesArray: ISecurityQuestions[] = [];
+  userObj: IUser;
 
   constructor(
     private UserService: UserService,
@@ -42,7 +48,15 @@ export class LoginComponent implements OnInit {
     this.processing = true;
     this.error = null;
     this.UserService.login(this.user_name, this.password).subscribe(
-      (result) => {this.Router.navigate([this.UserService.UserState || '/']); },
+      (result) => {
+        if ( get(result, 'Account_permissions.length', 0 ) <= 0 ) {
+          //this.processing = false;
+          this.userObj = result;
+          this.loginAddClaimModal.getUserCreds(result);
+          this.loginAddClaimModal.showLoginAddClaimModal();
+        } else {
+          this.Router.navigate([this.UserService.UserState || '/']); }
+      },
       error => {
         this.error = error.Message;
         this.processing = false;
@@ -51,7 +65,7 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  save(model: IUser, isValid: boolean) {
+  save(model: IRegUser, isValid: boolean) {
     this.formSubmitted = true;
     // call API to save customer
     if (isValid) {
