@@ -6,7 +6,7 @@
     chartType="doughnut"
     [colors]="[{ backgroundColor: ['rgba(6,81,128,1.0)', 'rgba(46,177,52,1.0)', 'rgba(254,162,32,1.0)', 'red'] }]"
     [data]="doughnutChartDataSet | async"
-    [options]="{ cutoutPercentage: 80, tooltips: { enabled: false } }"
+    [options]="doughnutChartOptions | async"
     [legend]="false"
   ></canvas>
   <canvas

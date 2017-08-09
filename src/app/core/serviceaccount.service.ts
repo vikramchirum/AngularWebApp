@@ -57,7 +57,7 @@ export class ServiceAccountService {
       this.initialized = true;
       if (this.ActiveServiceAccountId) {
         this.SetActiveServiceAccount(this.ActiveServiceAccountId);
-      }  else {
+      } else {
         if (result.length === 1) {
           this.SetActiveServiceAccount(result[0].Id);
         }
@@ -140,27 +140,21 @@ export class ServiceAccountService {
   }
 
   SetIsUpFOrRenewalFlag(ActiveServiceAccount: ServiceAccount): ServiceAccount {
-    const Start_Date = ActiveServiceAccount.Contract_Start_Date;
-    const End_Date =  ActiveServiceAccount.Contract_End_Date;
 
-    const startDate = new Date(Start_Date);
-    const currentDate = new Date(Date.now());
-    let req90Day: Date;
+    const currentDate = new Date();
+    const startDate = new Date(ActiveServiceAccount.Contract_Start_Date);
 
-    if (End_Date === null) {
-      const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ));
-      console.log('End date', endDate);
-      req90Day = new Date(new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ))
-        .setDate(new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 )).getDate() - 90 ));
-      console.log('End date null mark', req90Day);
-    } else {
+    // End dates should not be null - for dev purposes, handle null dates:
+    const endDate = ActiveServiceAccount.Contract_End_Date === null
+      // If no end date, take the current time and add a year's milliseconds to it.
+      ? new Date(currentDate.getTime() + 1000 * 60 * 60 * 24 * 365)
+      // Otherwise, use the provided date.
+      : new Date(ActiveServiceAccount.Contract_End_Date);
 
-      const end_Date = new Date(End_Date);
-      console.log('End date', end_Date);
-      req90Day = new Date(end_Date.setDate(end_Date.getDate() - 90));
-      console.log('End date null mark', req90Day);
-    }
+    // Get the first day of the 90 day period by subtracting 90 day's milliseconds from the end date.
+    const req90Day: Date = new Date(endDate.getTime() - 1000 * 60 * 60 * 24 * 90);
 
+    // Determine if the current day is past the first day of the 90 day period.
     ActiveServiceAccount.IsUpForRenewal = currentDate > req90Day;
 
     return ActiveServiceAccount;

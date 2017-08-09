@@ -12,12 +12,39 @@ export class RenewalGaugeComponent {
 
   @ViewChild('gaugeText') gaugeText;
 
+  public doughnutChartOptions: any = Observable.of({});
   public doughnutChartDataSet: Observable<any[]> = Observable.of([0, 0, 0, 0]);
   public clearTimeout = null;
   public clearIsDone = null;
   public chartTimestamp: Date = null;
+  public chartType: string = null;
 
-  constructor() { }
+  constructor() {
+    this.doughnutChartOptions = Observable.of({
+      cutoutPercentage: 80,
+      tooltips: {
+        callbacks: {
+          label: (tooltipItem) => {
+
+            if (this.chartType === 'holdover') {
+              return 'Green Holdover Bar';
+            }
+
+            if (this.chartType === 'renewal') {
+              return 'Green Renewal Bar';
+            }
+
+            return [
+              ' Blue Standard Bar',
+              ' Green Standard Bar',
+              ' Yellow Standard Bar',
+              ' Red Standard Bar'
+            ][tooltipItem.index];
+          }
+        }
+      }
+    });
+  }
 
   clearFirst(callback: Function) {
 
@@ -64,6 +91,8 @@ export class RenewalGaugeComponent {
 
   buildChart(Start_Date: Date, Today: Date, End_Date: Date): void {
 
+    this.chartType = 'standard';
+
     this.clearFirst(() => {
 
       const timestamp = this.chartTimestamp = new Date;
@@ -80,12 +109,12 @@ export class RenewalGaugeComponent {
       const totalTimeRemaining = totalDaysOfContract - totalDaysUsed;
       const percentageOfTimeRemaining = Math.round((totalTimeRemaining * 100) / totalDaysOfContract);
       const renewalWindow = 30;
+      // Hard-code in values for testing.
       // const totalDaysOfContract: number = 100;
-      // const totalDaysUsed: number = 50;
+      // const totalDaysUsed: number = 1;
       // const totalTimeRemaining: number = totalDaysOfContract - totalDaysUsed;
       // const percentageOfTimeRemaining = Math.round((totalTimeRemaining * 100) / totalDaysOfContract);
       // const renewalWindow: number = 30;
-      const DataSet = [];
 
       if (totalTimeRemaining <= renewalWindow - 15) {
         // 15 days or less remain - show blue bar touching the red.
@@ -156,6 +185,8 @@ export class RenewalGaugeComponent {
 
   buildRenewedChart(): void {
 
+    this.chartType = 'renewed';
+
     this.clearFirst(() => {
 
       // Keep aside a timestamp to tell if we've stopped the later animation.
@@ -204,6 +235,8 @@ export class RenewalGaugeComponent {
   }
 
   buildHoldoverChart(): void {
+
+    this.chartType = 'holdover';
 
     this.clearFirst(() => {
 
