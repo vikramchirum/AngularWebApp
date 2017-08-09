@@ -1,31 +1,69 @@
+@import '../../../../../../../basecolors';
+
 .service-upgrade-modal{
     text-align: initial;
     .plan-header{
           margin: -15px;
           padding: 15px;
+         background-color: $payment-base;
+          color:#ffffff;
       
         .plan-title{
             display: inline-block;
             }
         .close-btn {
-            font-size: 40px;
+            font-size: 20px;
         } 
     }
+    .plan-info {
+          color:$plans-base;
+
+    }
+  
     .plan-benefits {
     ul {
         list-style: none;
         padding-left:0;
         }
     }
+  
     h1,h2,h3,h4,h5 {
         font-weight:bold;
     }
-    .cost-components {
+    .cost-components, .plan-documents {
         h3 {
             margin-left:15px;
         }
 
     }
+  
+  .fa-in-circle{
+    background: $plans-base;
+    color: #fff;
+    border-radius: 30px;
+    display: inline-block;
+    padding: 8px 0;
+    width: 30px;
+    height: 30px;
+    margin-bottom: 3fvvpx;
+  }
+  
+    .plan-documents small {
+      font-size: 10px;
+      line-height: 11px;
+      display: block;
+      text-align: center;
+    }  
+  
+    .bill-amount{
+      text-align: right;
+      font-size: 11px;
+    }
+    .bill-name{
+      text-align: left;
+      font-size: 11px;
+    }
+  
     input[type="text"].promotional-code{
         padding: 10px 16px;
         font-size: 18px;
@@ -33,5 +71,8 @@
         border: 2px solid black;
         margin-right:30px;
 
+    }
+    .modal-body { 
+      padding-bottom: 0;
     }
 }

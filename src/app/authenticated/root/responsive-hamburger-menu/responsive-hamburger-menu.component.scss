@@ -1,11 +1,8 @@
-.dx-panel-default{
-  background: black;
-  color: white;
+@import '../../../../basecolors';
 
+
+.dx-panel-default{
   .dx-panel-heading {
-    h4 {
-      margin-left: 40px;
-    }
     .accordion-toggle{
       &:after {
         font-family: 'Glyphicons Halflings';
@@ -21,17 +18,110 @@
       }
     }
   }
-  .panel-body {
-    padding: 0;
+}
 
-    li {
-      list-style: none;
+#accordion {
+      .panel-body { 
+     
+        > li > a {
+          font-size: 12px;
+          padding: 30px 20px;
+        }
+        
+        > li.divider {
+          display: inline-block;
+          width: 1px;
+          height: 50px;
+          margin-top: 12px;
+        }
+
     }
-  }
-}
 
-a {
-  text-decoration: none;
-  color: white;
-  display: block;
-}
+
+.account-menu {
+  .dx-panel-heading {
+      a:not(.collapsed) {
+        background-color:  $account-base;
+        color:#fff;
+                
+      }
+    }
+  
+  .list-rule {
+      a, a:link, a:visited, a:active {
+        border-bottom: 1px solid $account-base;
+        display: block;
+        padding: 20px 10px;
+      }
+  }
+  
+  }
+  .payments-menu {
+    .dx-panel-heading {
+      a:not(.collapsed) {
+        background-color: $payment-base;
+        color:#fff;
+        
+      }
+    }
+      .list-rule {
+        a, a:link, a:visited, a:active {
+          border-bottom: 1px solid $payment-base;
+          display: block;
+          padding: 20px 10px;
+        }
+      }
+  }
+  .plans-menu {
+    .dx-panel-heading {
+      a:not(.collapsed) {
+        background-color: $plans-base;
+        color: #fff;
+        
+      }
+    }
+      .list-rule {
+        a, a:link, a:visited, a:active {
+          border-bottom: 1px solid $plans-base;
+          display: block;
+          padding: 20px 10px;
+        }
+      }
+    
+  }
+    
+  .control-menu {
+        .dx-panel-heading {
+      a:not(.collapsed) {
+        background-color:  $control-base;
+        color:#fff;
+      }
+    }
+      .list-rule {
+        a, a:link, a:visited, a:active {
+          border-bottom: 1px solid $control-base;
+          display: block;
+          padding: 20px 10px;
+        }
+      }
+  }
+  
+    .dx-panel-heading { 
+      border-bottom: thin solid #ccc;
+      border-width: 0;
+      border-radius: 0;
+      
+      a, a:link a:visited {
+          font-size: 16px;
+          padding: 30px 20px;
+      
+            &.collapsed {
+              background: url('/assets/global/header-nav.png') repeat-x;
+              background-position:  0 1px;
+            }
+
+      }
+  }
+  
+  }
+  

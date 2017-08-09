@@ -6,27 +6,15 @@
     //overflow-y: scroll;
   }
   .modal-header {
-    padding-top:70px;
+    padding-top:20px;
     border-bottom: 0px white;
     .modal-title{
-      padding:10px 0px 5px 75px ;
+      padding:2px 0px 5px 75px ;
       font: bold;
     }
   }
-
-
-  .inner-addon .fa {
-    position: absolute;
-    padding: 10px;
-    pointer-events: none;
+  .control-label {
+    text-align: left;
+    display: block;
   }
-
-  /* align icon */
-  .left-addon .fa  { left:  0px;}
-  .right-addon .fa { right: 0px;}
-
-  /* add padding  */
-  .left-addon input  { padding-left:  30px; }
-  .right-addon input { padding-right: 30px; }
-
-}// end
+}

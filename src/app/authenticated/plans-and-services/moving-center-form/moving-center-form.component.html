@@ -81,15 +81,17 @@
     </div><br/>
 
     <!--If we don't offer service in the moving address, we should show the message-->
-
-    <div *ngIf="availableOffers && availableOffers.Items.length === 0" class="alert alert-info fade in alert-dismissable">
+    <ng-container *ngIf="availableOffers">
+    <div *ngIf="availableOffers.Items.length === 0" class="alert alert-info fade in alert-dismissable">
       <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
       <strong>We're Sorry!</strong> We cannot register your move online, please call 1-888 888 8888 for assistance.
     </div>
 
-    <!-- If user has past due balance, show hte message -->
-     <small class="text-danger" *ngIf="pastDueErrorMessage && availableOffers.Items.length > 0"><p>{{pastDueErrorMessage}} <b>$ {{customerDetails.Past_Due | number : dollarAmountFormatter}}</b> </p> </small>
+     <!-- If user has past due balance, show hte message -->
+      <small class="text-danger" *ngIf="pastDueErrorMessage && availableOffers.Items.length > 0"><p>{{pastDueErrorMessage}} <b>$ {{customerDetails.Past_Due | number : dollarAmountFormatter}}</b> </p> </small> 
+  </ng-container>
 
+   
     <br/>
 
     <div class="text-right">
@@ -122,7 +124,7 @@
             <div class="current-plan-card" *ngIf="selectedOffer">
               <div class="card-content">
                 <p>{{selectedOffer.Plan.Name}}</p>
-                <p>{{selectedOffer.Price_At_2000_kwh | number : '1.2-4'}}¢ pkw/hr</p>
+                <p>{{selectedOffer.Price_At_1000_kwh | number : '1.1-1'}}¢ pkw/hr</p>
                 <p>Expires {{selectedOffer.End_Date | date:'d/M/yy'}}</p>
               </div>
             </div>
@@ -132,7 +134,7 @@
             <div *ngIf="ActiveServiceAccount" [hidden]="selectedOffer" class="current-plan-card">
               <div class="card-content">
                 <p>{{ActiveServiceAccount.Current_Offer.Product_Name}}</p>
-                <p>{{ActiveServiceAccount.Current_Offer.RateAt2000kwh | number : '1.2-4'}}¢ pkw/hr</p>
+                <p>{{ActiveServiceAccount.Current_Offer.RateAt1000kwh | number : '1.1-1'}}¢ pkw/hr</p>
                 <p>Expires {{ActiveServiceAccount.Current_Offer.End_Date | date:'d/M/yy'}}</p>
               </div>
             </div>
