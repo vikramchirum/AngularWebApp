@@ -1,4 +1,5 @@
 <div class="container-fluid plans-profile">
+
   <div class="row add-services">
     <div class="col-md-12">
       <h2>Add Service Location</h2>
@@ -48,59 +49,57 @@
     <div class="col-md-6  new-service-address">
       <h3>Service Type</h3>
       <form>
-      <div class="row">
-        <div class="col-md-5">
-       <div class="form-control">
-        <label class="radio-inline">
-         <input type="radio" name="serviceType">I'm Moving
-        </label>
-        </div>
-        </div>
-        <div class="col-md-5 col-md-offset-1">
-        <div class="form-control">
-        <label class="radio-inline">
-         <input type="radio" name="serviceType">I'm Switching
-       </label>
-        </div>
-        </div>
+        <div class="row">
+          <div class="col-md-5">
+            <div class="form-control">
+              <label class="radio-inline">
+                <input type="radio" name="serviceType">I'm Moving
+              </label>
+            </div>
+          </div>
+          <div class="col-md-5 col-md-offset-1">
+            <div class="form-control">
+              <label class="radio-inline">
+                <input type="radio" name="serviceType">I'm Switching
+              </label>
+            </div>
+          </div>
         </div>
       </form>
-  </div>
-  </div>
-
-
-  <!-- Select Plan -->
-   <h2>Select a Plan</h2>
-  <div class="row">   
-    <div class="col-md-4" *ngFor="let i of [0, 1, 2, 3, 4, 5, 6, 7, 8]">    
-      <mygexa-select-plan></mygexa-select-plan>
     </div>
   </div>
 
+  <!-- Select Plan -->
+  <h2>Select a Plan</h2>
+  <div class="row">
+    <div class="col-md-4" *ngFor="let i of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
+      <mygexa-select-plan></mygexa-select-plan>
+    </div>
+  </div>
 
   <!-- Credit Check -->
   <!--<h4>Credit Check</h4>
   <mygexa-credit-check></mygexa-credit-check>-->
 
   <div class="add-services-verify-info">
-  <div class="row">
-         <div class="alert alert-info clearfix">
-           <div class="col-md-9">
-      Please review all your information and make it is accurate before submitting
-          </div>
-    <div class="col-md-3">
-      <i class="fa fa-arrow-up pull-right" aria-hidden="true" (click)="scrollTop()"></i>
-    </div> 
-  </div>
-  <br/>
-  <div class="row">
-    <div class="col-md-12 col-xs-12 text-center">
-      <button class="btn btn-primary btn-lg ">Add New Service Location</button>
+    <div class="alert alert-info clearfix">
+      <div class="row">
+        <div class="col-md-9">
+          Please review all your information and make it is accurate before submitting
+        </div>
+        <div class="col-md-3">
+          <i class="fa fa-arrow-up pull-right" aria-hidden="true" (click)="scrollTop()"></i>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col-md-12 col-xs-12 text-center">
+        <button class="btn btn-primary btn-lg ">Add New Service Location</button>
+      </div>
     </div>
   </div>
-  </div>
 </div>
-
 
 <br/>
 <br/>

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { Subscription } from 'rxjs/Subscription';
@@ -25,7 +25,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   public AllOffers: AllOffersClass[];
   public AllOfferss: IOffers[];
   clicked: boolean;
-  havePromoCode:boolean = false;
+  havePromoCode: boolean = false;
 
   constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
     this.IsInRenewalTimeFrame = false;
@@ -57,7 +57,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
     this.clicked = !this.clicked ;
   }
 
-  showPromoCodeInput(){
+  showPromoCodeInput() {
     this.havePromoCode = !this.havePromoCode;
   }
 }
