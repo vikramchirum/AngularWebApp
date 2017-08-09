@@ -122,7 +122,7 @@
             <div class="current-plan-card" *ngIf="selectedOffer">
               <div class="card-content">
                 <p>{{selectedOffer.Plan.Name}}</p>
-                <p>{{selectedOffer.Price_At_2000_kwh | number : '1.2-4'}}¢ pkw/hr</p>
+                <p>{{selectedOffer.Price_At_1000_kwh | number : '1.1-1'}}¢ pkw/hr</p>
                 <p>Expires {{selectedOffer.End_Date | date:'d/M/yy'}}</p>
               </div>
             </div>
@@ -132,7 +132,7 @@
             <div *ngIf="ActiveServiceAccount" [hidden]="selectedOffer" class="current-plan-card">
               <div class="card-content">
                 <p>{{ActiveServiceAccount.Current_Offer.Product_Name}}</p>
-                <p>{{ActiveServiceAccount.Current_Offer.RateAt2000kwh | number : '1.2-4'}}¢ pkw/hr</p>
+                <p>{{ActiveServiceAccount.Current_Offer.RateAt1000kwh | number : '1.1-1'}}¢ pkw/hr</p>
                 <p>Expires {{ActiveServiceAccount.Current_Offer.End_Date | date:'d/M/yy'}}</p>
               </div>
             </div>

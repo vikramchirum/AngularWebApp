@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+ import { forEach, get, isNumber, map, now, random } from 'lodash';
 
 @Component({
   selector: 'mygexa-paperless-settings',
@@ -26,22 +27,50 @@ export class PaperlessSettingsComponent implements OnInit {
     });
   }
 
-  togglePaperless(checkboxOptions) {
-    checkboxOptions.forEach(x => {
-      if ((x.option == "Email" || "Paper") && x.checked) {
-        this.paperlessSettings = false;
-      } else {
-        this.paperlessSettings = true;
-      }
-
+  togglePaperless(billingOptions, plansOptions) {
+    let flag = 1;
+    
+    billingOptions.forEach(x => {
+      if (x.checked) {
+        if(x.option == 'Paper'){
+          flag = 0;
+        }
+      }    
     });
+
+     plansOptions.forEach(x => {
+     if (x.checked) {
+        if(x.option == 'Paper'){
+          flag = 0;
+        }
+      }   
+    });
+    console.log("flag value", flag)
+    if(flag == 1) {
+      console.log("inside flag 1")
+      this.paperlessSettings = true;
+    }else {
+       this.paperlessSettings = false;
+
+    }
+  
+
+    // checkboxOptions.forEach(x => {
+    //   if ((x.option == "Email" || "Paper") && x.checked) {
+    //     this.paperlessSettings = false;
+    //   } else {
+    //     this.paperlessSettings = true;
+    //   }
+    // });
+  
+   
   }
 
   validateCheckbox(element, index, array) {
     if (element.checked) {
       return false;
     }
-    return true;
+   return true;
   }
 
   onCheckSelected(option: string, isChecked: boolean, CheckOptions: any) {
@@ -60,7 +89,9 @@ export class PaperlessSettingsComponent implements OnInit {
         }
       });
     }
-    this.togglePaperless(CheckOptions);
+    this.togglePaperless(this.billingOptions, this.plansOptions);
+    console.log('plansOptions',);
+    console.log('Billing Options', this.billingOptions);
   }
 }
 
