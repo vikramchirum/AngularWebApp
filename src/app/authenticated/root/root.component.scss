@@ -1,74 +1,86 @@
-ins.overlay-menu{
-    height: 100%;
-    width: 100%;
-    position: fixed;
-    z-index: 30;
-    top: 0;
-    left: 0;
-    background-color: #000;    
-    .accordion-panel{
-        padding: 5px 40px 0 60px;
-        .nav-close {
-          font-size:40px;
-        }
+
+@import '../../../basecolors';
+
+ins.overlay-menu {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  background-color: #000;
+
+  .accordion-panel {
+    padding: 5px 40px 0 60px;
+
+    .nav-close {
+      font-size: 40px;
     }
-    a{      
-      display: block;
-      color:white;
-    }
+  }
+  a {
+    display: block;
+    color: white;
+  }
 }
 
 .navbar-inverse {
-    border-radius: 0;
-    color: #fff;
-    min-height: 30px;
-    height:32px;
-    margin-bottom:0;
-  
+  border-radius: 0;
+  color: #fff;
+  min-height: 30px;
+  height:32px;
+  margin-bottom:0;
+
   .navbar-right {
     margin-right: 15px;
   }
-  
-    .navbar-nav > li > a {
-      color:white;
-      padding:5px 15px;
-    }
-    .fa-white {
-      color: #ffffff;
-    }
-     .nav > li > a:hover, .nav > li > a:focus {
-      text-decoration: none;
-      background-color: #2e2e2e;
-    }
+  .navbar-nav > li > a {
+    color:white;
+    padding:5px 15px;
+  }
+  .fa-white {
+    color: #ffffff;
+  }
+  .nav > li > a:hover, .nav > li > a:focus {
+    text-decoration: none;
+    background-color: #2e2e2e;
+  }
 }
 
 .custom-nav {
-    background: url(/assets/global/header-nav.png) repeat-x;
-    border-width:0;
-    border-bottom: thin solid #ccc;
-    border-radius:0;
-    
-    .nav > li > a {  
-      font-size:12px;
-      padding: 30px 20px;      
-    }
-    
-    .nav > li.divider {
-        display: inline-block;
-        width: 1px;
-        height: 50px;
-        margin-top: 12px;
-    }
+  background: url('/assets/global/header-nav.png') repeat-x;
+  border-width: 0;
+  border-bottom: thin solid #ccc;
+  border-radius: 0;
+  background-position: 0 3px;
   
-    .nav > li > a:hover, .nav > li > a:focus {
-      text-decoration: none;
-      background-color: #ffffff;
-    }
   
-    .navbar-logo:hover img {
-      background-color:#ffffff;
-    }
-  
+
+.navbar-toggle.no-hamburger {
+    border: 2px $payment-base solid;
+    border-radius: 5px;
+    font-weight: 700;
+    margin: 20px;
+    color: $payment-base
+}
+
+
+  .nav > li > a {
+    font-size: 12px;
+    padding: 30px 20px;
+  }
+  .nav > li.divider {
+    display: inline-block;
+    width: 1px;
+    height: 50px;
+    margin-top: 12px;
+  }
+  .nav > li > a:hover, .nav > li > a:focus {
+    text-decoration: none;
+    background-color: #fff;
+  }
+  .navbar-logo:hover img {
+    background-color: #fff;
+  }
 }
 
 .thumbnail {
@@ -77,11 +89,10 @@ ins.overlay-menu{
   border: 0;
   border-radius:0;
   padding:0;
-  
+
   > img {
     width: 100%;
- }
-  
+  }
   h4 {
     font-family: "Open Sans";
     font-size: 16px;
@@ -96,12 +107,10 @@ ins.overlay-menu{
     font-family: "Open Sans";
     color: #2F2F2F;
     text-align: center;
-    
   }
   h1, .btn-link {
-  color:  #5CB85C
+    color: #5CB85C;
   }
-
 }
 .my-bill-grid.thumbnail {
   margin-top: 20px;
@@ -112,47 +121,148 @@ ins.overlay-menu{
   max-height: 164px
 }
 
+.navbar.custom-nav {
+  margin-bottom: 0
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+  .navbar-inverse {    
+    .nav {
+      
+      margin-top: 0;
+      
+      > li > a {
+        font-size: 14px;
+        padding: 5px;
+        margin-top: 0;
+
+      }
+    }
+  }
+}
+
 
 /* Small Devices, Tablets */
 @media only screen and (min-width : 768px) {
-.custom-nav {
-    .nav > li > a {  
-      font-size:14px;
-      padding: 30px 18px;      
+  .custom-nav {
+    .nav > li > a {
+      font-size: 14px;
+      padding: 30px 18px;
     }
-   
     .navbar-logo img {
       width: 165px;
     }
   }
-
 }
 
 /* Medium Devices, Desktops */
 @media only screen and (min-width : 992px) {
   .custom-nav {
-
-    .nav > li > a {  
-      font-size:16px;
-      padding: 30px 20px;      
-    }
     
-    .navbar-logo img {
-      width:auto;
+    margin-bottom: 20px;
+    
+    .nav > li > a {
+      font-size: 16px;
+      padding: 30px 20px;
     }
-
+    .navbar-logo img {
+      width: auto;
+    }
   }
 }
 
 /* Large Devices, Wide Screens */
-  @media only screen and (min-width : 1200px) {
-    
-      .custom-nav {
-
-    .nav > li > a {  
-      font-size:18px;
-      padding: 30px 25px;      
+@media only screen and (min-width : 1200px) {
+  .custom-nav {
+    .nav > li > a {
+      font-size: 18px;
+      padding: 30px 25px;
     }
+  }
+}
 
+#custom-nav{
+  .hero {
+    color: #fff;
+  }
+  .list-rule {
+    a {
+      padding: 4px 15px;
+    }
+  }
+  .account-menu {
+    .hero {
+      background-color: $account-base;
+    }
+    .list-rule {
+      a, a:link, a:visited, a:active {
+        border-bottom: 1px solid $account-base;
+      }
+      a:hover {
+        background-color: lighten($account-base, 65%);
+        color: $account-base;
+      }
+    }
+    strong {
+      color: $account-base
+    }
+  }
+  .plans-menu {
+    .hero {
+      background-color: $plans-base;
+    }
+    .list-rule {
+      a, a:link, a:visited, a:active {
+        border-bottom: 1px solid $plans-base;
+      }
+      a:hover {
+        background-color: lighten($plans-base, 40%);
+        color: $plans-base;
+      }
+    }
+    strong {
+      color: $plans-base
+    }
+  }
+  .payment-menu {
+    .hero {
+      background-color: $payment-base;
+    }
+    .list-rule {
+      a, a:link, a:visited, a:active {
+        border-bottom: 1px solid $payment-base;
+      }
+      a:hover {
+        background-color: lighten($payment-base, 50%);
+        color: $payment-base;
+      }
+    }
+    strong {
+      color: $payment-base
+    }
+  }
+  .control-menu {
+    .hero {
+      background-color: $control-base;
+      padding-bottom: 0;
+
+      img {
+        margin: 0 auto;
+        display: block;
+      }
+    }
+    .list-rule {
+      a, a:link, a:visited, a:active {
+        border-bottom: 1px solid $control-base;
+      }
+      a:hover {
+        background-color: lighten($control-base, 50%);
+        color: $control-base;
+      }
+    }
+    strong {
+      color: $control-base
+    }
   }
 }

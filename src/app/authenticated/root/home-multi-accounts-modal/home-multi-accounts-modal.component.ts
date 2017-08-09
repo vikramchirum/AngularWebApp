@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { ModalDirective } from 'ngx-bootstrap';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import {UserService} from '../../../core/user.service';
 
 @Component({
   selector: 'mygexa-home-multi-accounts-modal',
@@ -18,7 +19,7 @@ export class HomeMultiAccountsModalComponent implements OnInit {
   public active_service_account_id: any = null;
 
   @ViewChild('homeMultiAccountsModal') public homeMultiAccountsModal: ModalDirective;
-  constructor(private serviceAccountService: ServiceAccountService, private router: Router) {
+  constructor(private serviceAccountService: ServiceAccountService, private router: Router, private userService: UserService) {
     this.ServiceAccountsSubscription = this.serviceAccountService.ServiceAccountsObservable.subscribe(
       ServiceAccounts => this.ServiceAccounts = ServiceAccounts
     );

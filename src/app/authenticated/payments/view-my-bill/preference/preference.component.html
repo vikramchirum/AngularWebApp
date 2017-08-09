@@ -1,4 +1,16 @@
-<button class="billing-payment-preference" (click)="togglePreference()">
-  <i class="fa fa-fw" [ngClass]="{ 'fa-check fa-green': active === true, 'fa-check fa-green': active === false }"></i>
-  {{ preference_text }}
+<div *ngIf="serviceAccountDetails">
+<button class="billing-payment-preference" (click)="togglePreference()" routerLink="/payments/payment-options/auto-bill-payment">
+  <i class="fa fa-fw" [ngClass]="{ 'fa-check fa-green active': serviceAccountDetails.Is_Auto_Bill_Pay}"></i>
+ Automatic Payments
 </button>
+
+<button class="billing-payment-preference" (click)="togglePreference()" routerLink="/payments/payment-options/budget-billing">
+  <i class="fa fa-fw" [ngClass]="{ 'fa-check fa-green active': serviceAccountDetails.Budget_Billing }"></i>
+ Budget Billing
+</button>
+
+<button class="billing-payment-preference" (click)="togglePreference()" routerLink="/account/profile">
+  <i class="fa fa-fw" [ngClass]="{ 'fa-check fa-green active' : serviceAccountDetails.Paperless_Billing}"></i>
+ eBill (Paperless)
+</button>
+</div>
