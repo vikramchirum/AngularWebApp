@@ -32,8 +32,11 @@ export class MyServicePlansComponent implements OnInit, OnDestroy {
         // Has_Renewed needs to be updated to whatever we specify in the API.
         // Is_In_Holdover needs to be updated to whatever we specify in the API.
         if (get(ActiveServiceAccount, 'Has_Renewed', false)) {
-          this.RenewalGaugeComponent.buildRenewedChart();
-        } else if (get(ActiveServiceAccount, 'Is_In_Holdover', false)) {
+          this.RenewalGaugeComponent.buildRenewedChart(
+            new Date(),
+            new Date(ActiveServiceAccount.Contract_End_Date)
+          );
+        } else if (ActiveServiceAccount.IsOnHoldOver === true) {
           this.RenewalGaugeComponent.buildHoldoverChart();
         } else {
           this.RenewalGaugeComponent.buildChart(
@@ -53,14 +56,12 @@ export class MyServicePlansComponent implements OnInit, OnDestroy {
     result(this.ActiveServiceAccountSubscription, 'unsubscribe');
   }
 
-  // TODO: Remove these once we have identified CSPs to use.
-  temp_holdover() {
-    this.RenewalGaugeComponent.buildHoldoverChart();
-  }
-
-  // TODO: Remove these once we have identified CSPs to use.
-  temp_renewed() {
-    this.RenewalGaugeComponent.buildRenewedChart();
+  get hideGauge(): boolean {
+    return (
+      this.ActiveServiceAccount
+      && !this.ActiveServiceAccount.IsOnHoldOver
+      && new Date(this.ActiveServiceAccount.Contract_End_Date) < new Date()
+    );
   }
 
 }

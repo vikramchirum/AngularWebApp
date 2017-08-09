@@ -183,7 +183,7 @@ export class RenewalGaugeComponent {
 
   }
 
-  buildRenewedChart(): void {
+  buildRenewedChart(Today: Date, Start_Date: Date): void {
 
     this.chartType = 'renewed';
 
@@ -195,8 +195,10 @@ export class RenewalGaugeComponent {
       // Show a completely green chart.
       this.doughnutChartDataSet = Observable.of([0, 1, 0, 0]);
 
-      // Calculate the amount of days left using the this.ActiveServiceAccount data.
-      const daysLeft: number = 101;
+      // Calculate the amount of days between now and the start date of the new contract.
+      const start_Date_Time = Start_Date.getTime();
+      const today_Time = Today.getTime();
+      const daysLeft = Math.round(Math.abs((start_Date_Time - today_Time) / (24 * 60 * 60 * 1000)));
 
       try {
         const gaugeText = this.prepareTextCanvas();
