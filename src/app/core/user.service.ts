@@ -47,8 +47,8 @@ export class UserService implements CanActivate {
   private loginUrl = environment.Api_Url + '/user/authenticate';
   private registerUrl = environment.Api_Url + '/user/register';
   private updateEmail = environment.Api_Url + '/user/updateEmailAddress';
-  //private updateClaims = environment.Api_Url + '/user/updateClaims';
-  private updateClaims = 'http://localhost:49433/api/user/updateClaims'
+  private updateClaims = environment.Api_Url + '/user/updateClaims';
+
   get user_token(): string {
 
     // See if we already have it cached and return it.
@@ -322,7 +322,7 @@ export class UserService implements CanActivate {
       const params = new URLSearchParams();
       params.append('Token', token);
       const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-      //const options = new RequestOptions({ headers, params });
+      // const options = new RequestOptions({ headers, params });
 
       this.httpClient.get('/user/getUserFromMongo')
         .map(res => res.json())

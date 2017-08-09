@@ -1,4 +1,7 @@
 .home-multi-accounts-modal {
+  .modal-body {
+    overflow: hidden;
+  }
   .modal-content {
     border-radius: 0;
     box-shadow: none;
@@ -53,14 +56,14 @@
     zoom: 1;
     filter: alpha(opacity=100);
     opacity: 1;
-    
+
     h3 {
       color:#fff;
     }
   }
 
   .continue-button{
-    margin: 15px 25px 0px 0px;
+    margin: 15px 25px 0 0;
   }
 
 }

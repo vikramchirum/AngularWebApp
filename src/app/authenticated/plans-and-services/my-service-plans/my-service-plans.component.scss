@@ -1,37 +1,16 @@
 section {
-    .account-info{
-        margin-top:30px;
-        p{
-        background-color : #000000;
-        color:#ffffff;
-        padding:10px;
-        display: inline-block;
-        }
-        .pie-chart {
-             margin-top: 40px;
-             font-size: 2em;
+  .account-info {
+    margin-top: 30px;
 
-        }
+    p {
+      background-color : #000000;
+      color: #ffffff;
+      padding: 10px;
+      display: inline-block;
     }
-
-}
-
-.canvasContainer {
-  float: left;
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-
-  .gaugeChart {
-    z-index: -1000;
-  }
-  .gaugeText {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: -1001;
+    .pie-chart {
+      margin-top: 40px;
+      font-size: 2em;
+    }
   }
 }
-

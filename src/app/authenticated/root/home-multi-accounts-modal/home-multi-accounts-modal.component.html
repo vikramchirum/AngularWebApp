@@ -13,30 +13,49 @@
       <div class="modal-content">
         <div class="modal-body">
 
-          <!--<button type="button" class="close text-right" aria-label="Close" (click)="hideMovingServiceModal()">-->
-          <h3>Select Account</h3>
+          <ng-template *ngIf="ServiceAccounts === null; then ShowLoadingScreen else ShowServiceAccounts;"></ng-template>
+          <ng-template #ShowLoadingScreen>
+            <div class="text-center">
+              <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
+              <h2>
+                <small class="text-muted">Loading your service accounts...</small>
+              </h2>
+            </div>
+          </ng-template>
+          <ng-template #ShowServiceAccounts>
 
-          <!--Plan information -->
-          <div class="row">
-            <div class="col-md-4 col-xs-12" *ngFor="let acct of ServiceAccounts">
-              <div class="select-account-container" [ngClass]="{ 'select-account-container-active': active_service_account_id === acct.Id }" (click)="setActBillAcct(acct.Id)" >
-                <div class="box">
-                <div class="account-header">
-                  <p class="account-title">Account No: {{acct.Id}} </p>
-                  <h4>Service Address</h4>
-                  <h5>{{acct.Service_Address.Line1 + ','}}</h5>
-                  <h5>{{acct.Service_Address.City}}</h5>
-                  <h5>{{acct.Service_Address.State + ' - '+ acct.Service_Address.Zip}} </h5>
-                </div>
+            <!--<button type="button" class="close text-right" aria-label="Close" (click)="hideMovingServiceModal()">-->
+            <h3>Select Account</h3>
+            <!--Plan information -->
+            <div class="row">
+              <div class="col-md-4 col-xs-12" *ngFor="let acct of ServiceAccounts">
+                <div class="select-account-container" [ngClass]="{ 'select-account-container-active': active_service_account_id === acct.Id }" (click)="setActBillAcct(acct.Id)" >
+                  <div class="box">
+                    <div class="account-header">
+                      <p class="account-title">Account No: {{acct.Id}} </p>
+                      <h4>Service Address</h4>
+                      <h5>{{ acct.Service_Address.Line1 + ',' }}</h5>
+                      <h5>{{ acct.Service_Address.City }}</h5>
+                      <h5>{{ acct.Service_Address.State + ' - '+ acct.Service_Address.Zip }} </h5>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div><button type="submit" class="btn btn-primary pull-right continue-button" [disabled] = '!active_service_account_id' (click)="onContinue()">Continue</button></div>
-          </div>
+            <div class="text-right">
+              <button
+                type="button"
+                class="btn btn-primary pull-right continue-button"
+                [disabled]='!active_service_account_id'
+                (click)="onContinue()"
+              >Continue</button>
+            </div>
 
+          </ng-template>
+
+        </div>
       </div>
     </div>
-  </div>
   </div>
 </section>

@@ -15,6 +15,7 @@ import { PlansAndServicesComponent } from './plans-and-services.component';
 import { plans_services_routes } from './plans-and-services-routing.module';
 import { MyCurrentPlanComponent } from './my-service-plans/my-current-plan/my-current-plan.component';
 import { DocumentsComponent } from './my-service-plans/documents/documents.component';
+import { RenewalGaugeComponent } from './my-service-plans/renewal-gauge/renewal-gauge.component';
 import { ChangeYourPlanComponent } from './my-service-plans/change-your-plan/change-your-plan.component';
 import { ChangeYourPlanCardComponent } from './my-service-plans/change-your-plan/change-your-plan-card/change-your-plan-card.component';
 import { ServicePlanUpgradeModalComponent } from './my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
@@ -45,6 +46,7 @@ import { MovingCenterFormComponent } from './moving-center-form/moving-center-fo
     MyServicePlansComponent,
     MyCurrentPlanComponent,
     DocumentsComponent,
+    RenewalGaugeComponent,
     ChangeYourPlanComponent,
     ChangeYourPlanCardComponent,
     ServicePlanUpgradeModalComponent,

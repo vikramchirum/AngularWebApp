@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
     this.UserService.login(this.user_name, this.password).subscribe(
       (result) => {
         if ( get(result, 'Account_permissions.length', 0 ) <= 0 ) {
-          //this.processing = false;
+          ///this.processing = false;
           this.userObj = result;
           this.loginAddClaimModal.getUserCreds(result);
           this.loginAddClaimModal.showLoginAddClaimModal();
