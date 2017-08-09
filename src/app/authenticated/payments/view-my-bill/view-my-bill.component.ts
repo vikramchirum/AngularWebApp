@@ -32,7 +32,6 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
-        console.log('result......', result);
         this.latest_invoice_id = result.Latest_Invoice_Id;
         this.service_account_id = Number(result.Id);
         this.invoice_service.getInvoice(this.latest_invoice_id)
