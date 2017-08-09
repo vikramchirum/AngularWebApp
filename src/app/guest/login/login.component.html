@@ -29,94 +29,96 @@
   </div>
 </div>
 <div class="container login-container">
-<div class="row">
-<div class="col-md-6 col-xs-12 ui-light">
-  <div class="my-gexa-login-form">
-    <h2><b>Sign in to MyGexa!</b></h2>
-    <br>
-    <br>
-    <form (ngSubmit)="login()" #myGexaLoginForm="ngForm">
-      <div class="form-group" [ngClass]="{ 'has-error': !username.valid && !username.pristine && !processing }">
-        <label class="cols-sm-2 control-label">Username</label>
-        <input
-              [(ngModel)]="user_name"
-              [disabled]="processing"
-              name="user_name"
-              type="text"
-              class="form-control"
-              style="border-radius: 5px;"
-              placeholder="Username"
-              required
-              #username="ngModel"
-            />
-        <small [hidden]="username.valid || username.pristine || processing" class="text-danger">Username is
-        required </small> </div>
-      <div class="form-group" [ngClass]="{ 'has-error': !em.valid && !em.pristine && !processing }">
-        <label class="cols-sm-2 control-label">Password</label>
-        <input
-              [(ngModel)]="password"
-              [disabled]="processing"
-              name="password"
-              type="password"
-              class="form-control"
-              style="border-radius: 5px;"
-              placeholder="Type your Password"
-              required
-              #em="ngModel"
-            />
-        <small [hidden]="em.valid || em.pristine || processing" class="text-danger">Password is required</small> </div>
-      <div class="text-danger" *ngIf="invalidCreds">Either username or password is wrong</div>
-      <br>
-      <div class="row">
-        <div class="col-md-6">
-          <button
+  <div class="row">
+    <div class="col-md-6 col-xs-12 ui-light">
+      <div class="my-gexa-login-form">
+        <h2><b>Sign in to MyGexa!</b></h2>
+        <br>
+        <br>
+        <form (ngSubmit)="login()" #myGexaLoginForm="ngForm">
+          <div class="form-group" [ngClass]="{ 'has-error': !username.valid && !username.pristine && !processing }">
+            <label class="cols-sm-2 control-label">Username</label>
+            <input
+                  [(ngModel)]="user_name"
+                  [disabled]="processing"
+                  name="user_name"
+                  type="text"
+                  class="form-control"
+                  style="border-radius: 5px;"
+                  placeholder="Username"
+                  required
+                  #username="ngModel"
+                />
+            <small [hidden]="username.valid || username.pristine || processing" class="text-danger">Username is
+            required </small> </div>
+          <div class="form-group" [ngClass]="{ 'has-error': !em.valid && !em.pristine && !processing }">
+            <label class="cols-sm-2 control-label">Password</label>
+            <input
+                  [(ngModel)]="password"
+                  [disabled]="processing"
+                  name="password"
+                  type="password"
+                  class="form-control"
+                  style="border-radius: 5px;"
+                  placeholder="Type your Password"
+                  required
+                  #em="ngModel"
+                />
+            <small [hidden]="em.valid || em.pristine || processing" class="text-danger">Password is required</small> </div>
+          <div class="text-danger" *ngIf="invalidCreds">Either username or password is wrong</div>
+          <br>
+          <div class="row">
+            <div class="col-md-6">
+              <button
                 type="submit"
-                class="btn  btn-block btn-success"
+                class="btn btn-block btn-success"
                 *ngIf="!processing"
               >Login </button>
-          <button
+              <button
                 type="button"
                 class="btn btn-block btn-primary"
                 *ngIf="processing"
+                disabled
               ><i class="fa fa-spin fa-cog"></i> Logging in... </button>
-          <br/>
-        </div>
-        <div class="col-md-6">
-          <button
+              <br/>
+            </div>
+            <div class="col-md-6">
+              <button
                 type="button"
-                class="btn  btn-block btn-default"
+                class="btn btn-block btn-default"
+                [disabled]="processing"
                 (click)="showRegisterModal()"
-                  > Register <i class="fa fa-chevron-right"></i></button>
-          <br/>
+              > Register <i class="fa fa-chevron-right"></i></button>
+              <br/>
+            </div>
+          </div>
+          <p>Forgot your <a routerLink="/login/recover-password">Password</a> or <a routerLink="/login/recover-username">Username</a>?</p>
+        </form>
+      </div>
+    </div>
+    <div class="ui-dark col-md-6 hidden-xs">
+      <h1>Enroll in our Share &amp; Save Referral Program</h1>
+      <p>You'll earn a $5 bill credit every month for each friend or family member who signs up for a new Gexa Energy Plan!</p>
+      <hr/>
+      <div class="media">
+        <div class="media-left"><i class="fa fa-cubes fa-3x"></i></div>
+        <div class="media-body">
+          <h4 class="media-heading">Heading One</h4>
+          <p>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
         </div>
       </div>
-      <p>Forgot your <a routerLink="/login/recover-password">Password</a> or <a
-            routerLink="/login/recover-username">Username</a>?</p>
-
-    </form>
-  </div>
-</div>
-<div class="ui-dark col-md-6 hidden-xs">
-  <h1>Enroll in our Share &amp; Save Referral Program</h1>
-  <p>You'll earn a $5 bill credit every month for each friend or family member who signs up for a new Gexa Energy Plan!</p>
-  <hr/>
-  <div class="media">
-    <div class="media-left"><i class="fa fa-cubes fa-3x"></i></div>
-    <div class="media-body">
-      <h4 class="media-heading">Heading One</h4>
-      <p>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
-    </div>
-  </div>
-    <hr/>
-  <div class="media">
-    <div class="media-left"><i class="fa fa-leaf fa-3x"></i></div>
-    <div class="media-body">
-      <h4 class="media-heading">Heading Two</h4>
-      <p>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+        <hr/>
+      <div class="media">
+        <div class="media-left"><i class="fa fa-leaf fa-3x"></i></div>
+        <div class="media-body">
+          <h4 class="media-heading">Heading Two</h4>
+          <p>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <!--Register Modal -->
-  <mygexa-login-register-modal #loginRegisterModal ></mygexa-login-register-modal>
-<mygexa-login-add-claims-modal #loginAddClaimModal ></mygexa-login-add-claims-modal>
+<mygexa-login-register-modal #loginRegisterModal></mygexa-login-register-modal>
+<mygexa-login-add-claims-modal #loginAddClaimModal></mygexa-login-add-claims-modal>
