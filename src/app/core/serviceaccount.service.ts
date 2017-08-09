@@ -163,6 +163,7 @@ export class ServiceAccountService {
       req90Day = new Date(end_Date.setDate(end_Date.getDate() - 90));
       console.log('End date null mark', req90Day);
     }
+    //Set proper flag
     if ( currentDate > req90Day && Term > 1) {
       ActiveServiceAccount.IsUpForRenewal = true;
       ActiveServiceAccount.IsOnHoldOver = false;
