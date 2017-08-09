@@ -3,50 +3,20 @@
   <mygexa-service-account-selector
     [setActiveServiceAccount]="true"
   ></mygexa-service-account-selector>
-<!--<<<<<<< HEAD-->
-  <section id="renewPlan">
-<!--=======-->
-<!--<section *ngIf="!IsInRenewalTimeFrame">-->
-  <!--<div class="row">-->
-    <!--<div class="col-md-8">-->
-      <!--<h1>-->
-        <!--My Current Plan-->
-      <!--</h1>-->
-      <!--<div *ngIf="ActiveServiceAccountDetails">-->
-        <!--<div>-->
-          <!--<p>Account No: {{ActiveServiceAccountDetails.Id}} </p>-->
-          <!--<div class="row">-->
-            <!--<div class=" col-sm-12 col-md-9 col-md-offset-1">-->
-              <!--<mygexa-my-current-plan></mygexa-my-current-plan>-->
-            <!--</div>-->
-          <!--</div>-->
 
-      <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<div class="col-md-4" *ngIf="ActiveServiceAccountDetails">-->
-          <!--<div>-->
-              <!--<img src="/assets/global/plan-donut-10.png" class="img-responsive"/>-->
-          <!--</div>-->
-          <!--<div class="account-info col-md-offset-1">-->
-             <!--<mygexa-documents></mygexa-documents>-->
-          <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</section>-->
-  <!--<section id="renewPlan" *ngIf="IsInRenewalTimeFrame" >-->
-<!--&gt;>>>>>> 8b5638750e4c397c800a058b8f2553f626fc516c-->
+  <section id="renewPlan" [hidden]="!ActiveServiceAccount">
     <div class="row">
       <div class="col-md-8">
 
-        <ng-template *ngIf="IsInRenewalTimeFrame; then ShowRenewal else ShowCurrentPlan"></ng-template>
+        <ng-template *ngIf="ActiveServiceAccount?.IsUpForRenewal; then ShowRenewal else ShowCurrentPlan"></ng-template>
         <ng-template #ShowRenewal>
           <h1>Renew your plan</h1>
+          <p>Account No: {{ ActiveServiceAccount?.Id }}</p>
           <p>Your plan is ready to be renewed! Based on your product history, we've found the renewal plan that's best for your home:</p>
         </ng-template>
         <ng-template #ShowCurrentPlan>
           <h1>My Current Plan</h1>
-          <p *ngIf="ActiveServiceAccount">Account No: {{ActiveServiceAccount?.Id}}</p>
+          <p>Account No: {{ ActiveServiceAccount?.Id }}</p>
         </ng-template>
 
         <div class="row">
@@ -57,25 +27,18 @@
 
       </div>
       <div class="col-md-4">
-        <div class="canvasContainer">
-          <canvas
-            baseChart
-            class="gaugeChart"
-            chartType="doughnut"
-            [colors]="[{ backgroundColor: ['rgba(6,81,128,1.0)', 'rgba(46,177,52,1.0)', 'rgba(254,162,32,1.0)', 'red'] }]"
-            [data]="doughnutChartDataSet | async"
-            [options]="{ cutoutPercentage: 80, tooltips: { enabled: false } }"
-            [legend]="false"
-          ></canvas>
-          <canvas
-            #gaugeText
-            class="gaugeText"
-            width="1000"
-            height="1000"
-          ></canvas>
-        </div>
-        <mygexa-documents></mygexa-documents>
+        <mygexa-renewal-gauge></mygexa-renewal-gauge>
+        <mygexa-documents
+          [ActiveServiceAccount]="ActiveServiceAccount"
+        ></mygexa-documents>
+
+        <!--Temporary-->
+        <button type="button" class="btn btn-sm btn-link" (click)="temp_holdover()">holdover</button>
+        <button type="button" class="btn btn-sm btn-link" (click)="temp_renewed()">renewed</button>
+        <!--/Temporary-->
       </div>
     </div>
   </section>
+
+
 </div>
