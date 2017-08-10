@@ -1,7 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import {Component, Input, ViewChild} from '@angular/core';
 
-import { Subscription } from 'rxjs/Subscription';
 import { ModalDirective } from 'ngx-bootstrap';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
@@ -11,22 +9,17 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
   templateUrl: './home-multi-accounts-modal.component.html',
   styleUrls: ['./home-multi-accounts-modal.component.scss']
 })
-export class HomeMultiAccountsModalComponent implements OnInit {
+export class HomeMultiAccountsModalComponent {
 
-  private ServiceAccounts: ServiceAccount[] = null;
-  private ServiceAccountsSubscription: Subscription = null;
-  public active_service_account_id: any = null;
+  @Input() ServiceAccounts: ServiceAccount[] = null;
 
   @ViewChild('homeMultiAccountsModal') public homeMultiAccountsModal: ModalDirective;
-  constructor(private serviceAccountService: ServiceAccountService, private router: Router) {
-    this.ServiceAccountsSubscription = this.serviceAccountService.ServiceAccountsObservable.subscribe(
-      ServiceAccounts => this.ServiceAccounts = ServiceAccounts
-    );
-  }
 
-  ngOnDestory() {
-    this.ServiceAccountsSubscription.unsubscribe();
-  }
+  public active_service_account_id: any = null;
+
+  constructor(
+    private ServiceAccountService: ServiceAccountService
+  ) { }
 
   public show(): void {
     this.homeMultiAccountsModal.show();
@@ -35,16 +28,17 @@ export class HomeMultiAccountsModalComponent implements OnInit {
   public hideServiceUpgradeModal(): void {
     this.homeMultiAccountsModal.hide();
   }
-  setActBillAcct(id: any) {
+
+  setActBillAcct(id: any): void {
     this.active_service_account_id = id;
   }
 
-  onContinue() {
-     this.serviceAccountService.SetActiveServiceAccount(this.active_service_account_id);
-     this.hideServiceUpgradeModal();
-  }
+  onContinue(): void {
 
-  ngOnInit() {
+    this.ServiceAccountService.SetActiveServiceAccount(this.active_service_account_id);
+
+    this.hideServiceUpgradeModal();
+
   }
 
 }

@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalModule, PopoverModule  } from 'ngx-bootstrap';
-import { DatePickerModule } from 'ng2-datepicker';
 import { MdCardModule, MaterialModule } from '@angular/material';
+import { DatePickerModule } from 'ng2-datepicker';
 import { MyDatePickerModule } from 'mydatepicker';
-
-import { SharedModule } from '../../shared/shared.module';
+import { SharedModule } from 'app/shared/shared.module';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { AddServicesComponent } from './add-services/add-services.component';
 import { MyServicePlansComponent } from './my-service-plans/my-service-plans.component';
 import { OrderStatusComponent } from './order-status/order-status.component';
@@ -14,6 +14,7 @@ import { PlansAndServicesComponent } from './plans-and-services.component';
 import { plans_services_routes } from './plans-and-services-routing.module';
 import { MyCurrentPlanComponent } from './my-service-plans/my-current-plan/my-current-plan.component';
 import { DocumentsComponent } from './my-service-plans/documents/documents.component';
+import { RenewalGaugeComponent } from './my-service-plans/renewal-gauge/renewal-gauge.component';
 import { ChangeYourPlanComponent } from './my-service-plans/change-your-plan/change-your-plan.component';
 import { ChangeYourPlanCardComponent } from './my-service-plans/change-your-plan/change-your-plan-card/change-your-plan-card.component';
 import { ServicePlanUpgradeModalComponent } from './my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
@@ -30,6 +31,7 @@ import { OfferDetailsPopoverComponent } from './my-service-plans/change-your-pla
     CommonModule,
     MdCardModule,
     MaterialModule,
+    ChartsModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
@@ -53,7 +55,8 @@ import { OfferDetailsPopoverComponent } from './my-service-plans/change-your-pla
       MovingComponent,
       SelectPlanModalDialogComponent,
       MovingCenterFormComponent,
-      OfferDetailsPopoverComponent    
+      OfferDetailsPopoverComponent,
+      RenewalGaugeComponent    
       ]
 })
 export class PlansAndServicesModule { }

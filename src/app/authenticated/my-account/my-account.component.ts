@@ -1,23 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { result, startsWith } from 'lodash';
 
-
+import { startsWith } from 'lodash';
 
 @Component({
   selector: 'mygexa-my-account',
   templateUrl: './my-account.component.html',
   styleUrls: ['./my-account.component.scss']
 })
-export class MyAccountComponent implements OnInit {
+export class MyAccountComponent {
 
-    private startsWith = startsWith;
-
+  private startsWith = startsWith;
 
   constructor(
-    private Router: Router    
-  ){}
-
-  ngOnInit() {
-  }
+    private Router: Router
+  ) {}
 }

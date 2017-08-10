@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { Subscription } from 'rxjs/Subscription';
 import { OfferService } from 'app/core/offer.service';
 import { result, startsWith } from 'lodash';
@@ -15,30 +16,30 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
 
   private startsWith = startsWith;
 
-  IsInRenewalTimeFrame: boolean;
-  serviceAccountSubscription: Subscription;
-  activeserviceAccountOffersSubscription: Subscription;
+  public ActiveServiceAccount: ServiceAccount = null;
+
+  ServiceAccountServiceSubscription: Subscription = null;
+  ActiveServiceAccountOfferSubscription: Subscription = null;
+
   constructor(
-    private serviceAccount_service: ServiceAccountService,
-    private active_serviceaccount_service: OfferService,
+    private ServiceAccountService: ServiceAccountService,
+    private OfferService: OfferService,
     private Router: Router
-  ) {
-    this.IsInRenewalTimeFrame = false;
-  }
+  ) { }
 
   ngOnInit() {
-    this.serviceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.subscribe(
-      result => {
-        this.IsInRenewalTimeFrame = result.IsUpForRenewal;
-        console.log('IsInRenewalTimeFrame', this.IsInRenewalTimeFrame);
-        this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
-          all_offers => {
-          });
-      });
+    this.ServiceAccountServiceSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      ActiveServiceAccount => {
+        this.ActiveServiceAccount = ActiveServiceAccount;
+        this.ActiveServiceAccountOfferSubscription = this.OfferService.ActiveServiceAccountOfferObservable.subscribe(
+          all_offers => { }
+        );
+      }
+    );
   }
 
   ngOnDestroy() {
-    result(this.serviceAccountSubscription, 'unsubscribe');
-    result(this.activeserviceAccountOffersSubscription, 'unsubscribe');
+    result(this.ServiceAccountServiceSubscription, 'unsubscribe');
+    result(this.ActiveServiceAccountOfferSubscription, 'unsubscribe');
   }
 }

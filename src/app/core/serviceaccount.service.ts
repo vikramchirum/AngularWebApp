@@ -7,7 +7,6 @@ import { Observer } from 'rxjs/Observer';
 import { clone, find, first, forEach, get, isString, map, pull } from 'lodash';
 import { HttpClient } from './httpclient';
 import { UserService } from './user.service';
-import { Paymethod } from './models/paymethod/Paymethod.model';
 import { ServiceAccount } from './models/serviceaccount/serviceaccount.model';
 
 @Injectable()
@@ -58,7 +57,7 @@ export class ServiceAccountService {
       this.initialized = true;
       if (this.ActiveServiceAccountId) {
         this.SetActiveServiceAccount(this.ActiveServiceAccountId);
-      }  else {
+      } else {
         if (result.length === 1) {
           this.SetActiveServiceAccount(result[0].Id);
         }
@@ -140,34 +139,28 @@ export class ServiceAccountService {
 
   }
 
-  SetIsUpFOrRenewalFlag(ActiveServiceAccount: ServiceAccount): ServiceAccount {
-    const Start_Date = ActiveServiceAccount.Contract_Start_Date;
-    const End_Date =  ActiveServiceAccount.Contract_End_Date;
-    const Term = ActiveServiceAccount.Current_Offer.Term;
+  SetIsUpFOrRenewalFlag(ServiceAccount: ServiceAccount): ServiceAccount {
 
-    const startDate = new Date(Start_Date);
-    const currentDate = new Date(Date.now());
-    let req90Day: Date;
+    const currentDate = new Date();
 
-    if (End_Date === null) {
-      const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ));
-      console.log('End date', endDate);
-      req90Day = new Date(new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 ))
-        .setDate(new Date(new Date(startDate).setMonth(startDate.getMonth() + 12 )).getDate() - 90 ));
-      console.log('End date null mark', req90Day);
-    } else {
+    // End dates should not be null - for dev purposes, handle null dates:
+    const endDate = ServiceAccount.Contract_End_Date === null
+      // If no end date, take the current time and add a year's milliseconds to it.
+      ? new Date(currentDate.getTime() + 1000 * 60 * 60 * 24 * 365)
+      // Otherwise, use the provided date.
+      : new Date(ServiceAccount.Contract_End_Date);
 
-      const end_Date = new Date(End_Date);
-      console.log('End date', end_Date);
-      req90Day = new Date(end_Date.setDate(end_Date.getDate() - 90));
-      console.log('End date null mark', req90Day);
-    }
-    if ( currentDate > req90Day) {
-      ActiveServiceAccount.IsUpForRenewal = true;
-    } else {
-      ActiveServiceAccount.IsUpForRenewal = false;
-    }
-    return ActiveServiceAccount;
+    // Get the first day of the 90 day period by subtracting 90 day's milliseconds from the end date.
+    const req90Day: Date = new Date(endDate.getTime() - 1000 * 60 * 60 * 24 * 90);
+
+    // Determine if the current day is past the first day of the 90 day period.
+    ServiceAccount.IsUpForRenewal = currentDate > req90Day;
+
+    // Determine if the service account is on hold over using its' current offer.
+    // Term === 1 would mean a monthly plan but should we determine with another attribute?
+    ServiceAccount.IsOnHoldOver = ServiceAccount.Current_Offer.Term === 1;
+
+    return ServiceAccount;
   }
 
   private emitToObservers(observers: Observer<any>[], data: any) {

@@ -238,4 +238,7 @@
   </div>
 </div>
 
-<mygexa-home-multi-accounts-modal #homeMultiAccountsModal></mygexa-home-multi-accounts-modal>
+<mygexa-home-multi-accounts-modal
+  [ServiceAccounts]="ServiceAccountService.ServiceAccountsObservable | async"
+  #homeMultiAccountsModal
+></mygexa-home-multi-accounts-modal>
