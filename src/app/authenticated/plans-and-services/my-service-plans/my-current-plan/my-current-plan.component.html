@@ -25,8 +25,14 @@
     <div class="card-content">
       <div class="alert alert-warning">Best for your home</div>
       <div class="mat-card-title">
-      <h2>{{RenewalOffers.Plan.Name}}  <small><i class="fa fa-info-circle" (click)="showServiceUpgradeModal()" aria-hidden="true"></i></small></h2>
-      <mygexa-service-plan-upgrade-modal #serviceUpgradeModal></mygexa-service-plan-upgrade-modal>
+      <h2>{{RenewalOffers.Plan.Name}}  <small><i class="fa fa-info-circle" (click)="pop.show()" aria-hidden="true"></i></small></h2>
+        <div #pop="bs-popover" [popover]="options" placement="bottom">
+          <ng-template #options>
+            <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
+            <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+            <mygexa-offer-details-popover></mygexa-offer-details-popover>
+          </ng-template>
+        </div>
             </div>
       <div class="mat-card-content">
         <h2>{{RenewalOffers.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small></h2>

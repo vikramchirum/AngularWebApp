@@ -17,7 +17,6 @@ import { DocumentsComponent } from './my-service-plans/documents/documents.compo
 import { RenewalGaugeComponent } from './my-service-plans/renewal-gauge/renewal-gauge.component';
 import { ChangeYourPlanComponent } from './my-service-plans/change-your-plan/change-your-plan.component';
 import { ChangeYourPlanCardComponent } from './my-service-plans/change-your-plan/change-your-plan-card/change-your-plan-card.component';
-import { ServicePlanUpgradeModalComponent } from './my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
 import { SelectPlanComponent } from './add-services/select-plan/select-plan.component';
 import { CreditCheckComponent } from './add-services/credit-check/credit-check.component';
 import { MovingComponent} from './moving/moving.component';
@@ -48,8 +47,7 @@ import { OfferDetailsPopoverComponent } from './my-service-plans/change-your-pla
       MyCurrentPlanComponent,
       DocumentsComponent,
       ChangeYourPlanComponent,
-      ChangeYourPlanCardComponent,     
-      ServicePlanUpgradeModalComponent,
+      ChangeYourPlanCardComponent,
       SelectPlanComponent,
       CreditCheckComponent,
       MovingComponent,

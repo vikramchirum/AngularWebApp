@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewContainerRe
 
 import { Subscription } from 'rxjs/Subscription';
 import { get, result } from 'lodash';
-import { ServicePlanUpgradeModalComponent } from 'app/authenticated/plans-and-services/my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { OfferService } from 'app/core/offer.service';
 import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
@@ -27,7 +26,6 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   selectCheckBox  = false;
   enableSelect = false;
   ActiveServiceAccountDetails: ServiceAccount;
-  @ViewChild('serviceUpgradeModal') serviceUpgradeModal: ServicePlanUpgradeModalComponent;
 
   constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
     this.IsInRenewalTimeFrame = false;
@@ -55,10 +53,6 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnDestroy() {
     result(this.serviceAccountSubscription, 'unsubscribe');
     result(this.activeserviceAccountOffersSubscription, 'unsubscribe');
-  }
-
-  showServiceUpgradeModal() {
-    this.serviceUpgradeModal.show();
   }
 
   onSelect(event) {

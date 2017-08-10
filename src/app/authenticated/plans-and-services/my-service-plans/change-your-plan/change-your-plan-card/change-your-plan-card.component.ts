@@ -1,9 +1,8 @@
-import {Component, OnInit, ViewChild, OnDestroy, Input} from '@angular/core';
-
+import {Component, OnInit, ViewChild, OnDestroy, Input, ViewContainerRef} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 
+
 import {IOffers} from '../../../../../core/models/offers/offers.model';
-import {ServicePlanUpgradeModalComponent} from './service-plan-upgrade-modal/service-plan-upgrade-modal.component';
 import {ServiceAccountService} from 'app/core/serviceaccount.service';
 import {ServiceAccount} from '../../../../../core/models/serviceaccount/serviceaccount.model';
 import {OfferDetailsPopoverComponent} from '../offer-details-popover/offer-details-popover.component';
@@ -16,7 +15,6 @@ import {OfferDetailsPopoverComponent} from '../offer-details-popover/offer-detai
 export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
 
   @Input() Offer: IOffers;
-  @ViewChild('serviceUpgradeModal') serviceUpgradeModal: ServicePlanUpgradeModalComponent;
 
   selectCheckBox = false;
   IsInRenewalTimeFrame: boolean;
@@ -25,7 +23,8 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   enableSelect = false;
   chev_clicked: boolean;
 
-  constructor(private serviceAccountService: ServiceAccountService) {
+  constructor(private serviceAccountService: ServiceAccountService,
+  private viewContainerRef: ViewContainerRef) {
     this.chev_clicked = false;
   }
 
@@ -36,11 +35,7 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
       });
   }
-
-  showServiceUpgradeModal() {
-    this.serviceUpgradeModal.show();
-
-  }
+ 
   onSelect(event) {
     event.preventDefault();
     this.selectCheckBox = true;
