@@ -56,6 +56,7 @@ export class ViewBillComponent implements OnInit {
     this.invoice_service.getItemizedInvoiceDetails(invoice_id)
       .subscribe(
         bill_item_details => {
+          console.log("bill item details", bill_item_details);
           this.openCharges = [];
           this.bill_object = bill_object;
           this.invoice_num = invoice_id;

@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ModalModule, PopoverModule  } from 'ngx-bootstrap';
 import { MdCardModule, MaterialModule } from '@angular/material';
-
-import { ModalModule } from 'ngx-bootstrap';
 import { DatePickerModule } from 'ng2-datepicker';
 import { MyDatePickerModule } from 'mydatepicker';
 import { SharedModule } from 'app/shared/shared.module';
@@ -18,12 +17,12 @@ import { DocumentsComponent } from './my-service-plans/documents/documents.compo
 import { RenewalGaugeComponent } from './my-service-plans/renewal-gauge/renewal-gauge.component';
 import { ChangeYourPlanComponent } from './my-service-plans/change-your-plan/change-your-plan.component';
 import { ChangeYourPlanCardComponent } from './my-service-plans/change-your-plan/change-your-plan-card/change-your-plan-card.component';
-import { ServicePlanUpgradeModalComponent } from './my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
 import { SelectPlanComponent } from './add-services/select-plan/select-plan.component';
 import { CreditCheckComponent } from './add-services/credit-check/credit-check.component';
 import { MovingComponent} from './moving/moving.component';
 import { SelectPlanModalDialogComponent } from './moving-center-form/select-plan-modal-dialog/select-plan-modal-dialog.component';
 import { MovingCenterFormComponent } from './moving-center-form/moving-center-form.component';
+import { OfferDetailsPopoverComponent } from './my-service-plans/change-your-plan/offer-details-popover/offer-details-popover.component';
 
 @NgModule({
   imports: [
@@ -37,24 +36,25 @@ import { MovingCenterFormComponent } from './moving-center-form/moving-center-fo
     SharedModule,
     ModalModule.forRoot(),
     DatePickerModule,
-    MyDatePickerModule
+    MyDatePickerModule,
+    PopoverModule.forRoot()
   ],
   declarations: [
-    PlansAndServicesComponent,
-    OrderStatusComponent,
-    AddServicesComponent,
-    MyServicePlansComponent,
-    MyCurrentPlanComponent,
-    DocumentsComponent,
-    RenewalGaugeComponent,
-    ChangeYourPlanComponent,
-    ChangeYourPlanCardComponent,
-    ServicePlanUpgradeModalComponent,
-    SelectPlanComponent,
-    CreditCheckComponent,
-    MovingComponent,
-    SelectPlanModalDialogComponent,
-    MovingCenterFormComponent
-  ]
+      PlansAndServicesComponent,
+      OrderStatusComponent, 
+      AddServicesComponent,
+      MyServicePlansComponent,
+      MyCurrentPlanComponent,
+      DocumentsComponent,
+      ChangeYourPlanComponent,
+      ChangeYourPlanCardComponent,
+      SelectPlanComponent,
+      CreditCheckComponent,
+      MovingComponent,
+      SelectPlanModalDialogComponent,
+      MovingCenterFormComponent,
+      OfferDetailsPopoverComponent,
+      RenewalGaugeComponent    
+      ]
 })
 export class PlansAndServicesModule { }

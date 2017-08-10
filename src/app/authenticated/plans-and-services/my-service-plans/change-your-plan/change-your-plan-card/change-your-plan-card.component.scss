@@ -1,3 +1,4 @@
+@import '../../../../../../basecolors';
 .plan-card-container{
     border: none;
     border-right:1px solid #fff;
@@ -150,4 +151,12 @@
     margin-bottom: 10px;
   }
 }
+
+ .close-btn {
+    font-size: 20px;
+    .fa{
+          color:#000 !important;
+    }
+} 
+
 

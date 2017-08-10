@@ -1,13 +1,11 @@
-@import '../../../../../../../basecolors';
+@import '../../../../../../basecolors';
 
 .service-upgrade-modal{
     text-align: initial;
-    .plan-header{
-          margin: -15px;
-          padding: 15px;
+    .plan-header{         
          background-color: $payment-base;
           color:#ffffff;
-      
+          margin: -9px -14px;      
         .plan-title{
             display: inline-block;
             }
@@ -71,8 +69,6 @@
         border: 2px solid black;
         margin-right:30px;
 
-    }
-    .modal-body { 
-      padding-bottom: 0;
-    }
+    }   
 }
+
