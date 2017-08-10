@@ -6,7 +6,7 @@ import { environment } from 'environments/environment';
 import { IInvoice } from 'app/core/models/invoices/invoice.model';
 import { ColumnHeader } from 'app/core/models/columnheader.model';
 import { InvoiceService } from 'app/core/invoiceservice.service';
-import { ViewMyBillModalComponent } from './view-my-bill-modal/view-my-bill-modal.component';
+import { ViewMyBillModalComponent } from '../view-my-bill-modal/view-my-bill-modal.component';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { IInvoiceSearchRequest } from 'app/core/models/invoices/invoicesearchrequest.model';
 
@@ -43,8 +43,8 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
     private currencyPipe: CurrencyPipe,
     private invoiceService: InvoiceService,
     private serviceAccountService: ServiceAccountService
-  ) {
-  }
+  ) { }
+
   public showViewMyBillModal(row: IInvoice) {
     this.viewMyBillModal.show(row);
   }

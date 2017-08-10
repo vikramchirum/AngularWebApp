@@ -8,7 +8,7 @@ import { PaymentsComponent } from './payments/payments.component';
 import { LedgerComponent } from './ledger/ledger.component';
 import { PaymentHistoryComponent } from './payment-history.component';
 import { SharedModule } from 'app/shared/shared.module';
-import {ViewMyBillModalComponent} from './bills/view-my-bill-modal/view-my-bill-modal.component';
+import { ViewMyBillModalComponent } from './view-my-bill-modal/view-my-bill-modal.component';
 import { ModalModule } from 'ngx-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
 
