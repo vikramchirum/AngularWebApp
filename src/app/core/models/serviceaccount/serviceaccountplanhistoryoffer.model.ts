@@ -26,4 +26,5 @@ export interface IServiceAccountPlanHistoryOffer {
   Usage_Charges: [IServiceAccountPlanHistoryOfferCharge];
   Start_Date: string;
   End_Date: string;
+  IsHoldOverRate: boolean;
 }
