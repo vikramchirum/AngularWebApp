@@ -1,6 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { PopoverDirective} from 'ngx-bootstrap';
-
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 
 @Component({
   selector: 'mygexa-offer-details-popover',
@@ -8,7 +6,7 @@ import { PopoverDirective} from 'ngx-bootstrap';
   styleUrls: ['./offer-details-popover.component.scss']
 })
 export class OfferDetailsPopoverComponent implements OnInit {
-@ViewChild('pop') public pop:PopoverDirective;
+  @Input() offerDetails;
   constructor() { }
 
   ngOnInit() {

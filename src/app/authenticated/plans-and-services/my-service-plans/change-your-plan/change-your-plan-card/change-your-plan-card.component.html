@@ -9,7 +9,7 @@
           <ng-template #options>
             <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
             <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-            <mygexa-offer-details-popover></mygexa-offer-details-popover>
+            <mygexa-offer-details-popover [offerDetails]=Offer></mygexa-offer-details-popover>
           </ng-template>
         </div>
         <h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub>
@@ -49,7 +49,7 @@
   </div>
 </section>
 
-<section id=r enewPlan *ngIf="IsInRenewalTimeFrame && Offer">
+<section id="renewPlan" *ngIf="IsInRenewalTimeFrame && Offer">
   <div class="plan-card-container">
     <div class="card-content">
       <div class="card-title">
@@ -58,7 +58,7 @@
           <ng-template #options>
             <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
             <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-            <mygexa-offer-details-popover></mygexa-offer-details-popover>
+            <mygexa-offer-details-popover [offerDetails]=Offer></mygexa-offer-details-popover>
           </ng-template>
         </div>
         <h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>

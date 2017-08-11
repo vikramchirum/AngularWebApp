@@ -34,6 +34,7 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
         this.activeServiceAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
       });
+      //console.log("Offer Details", this.Offer)
   }
  
   onSelect(event) {
