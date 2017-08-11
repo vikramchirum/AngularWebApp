@@ -23,6 +23,8 @@ import { MovingComponent} from './moving/moving.component';
 import { SelectPlanModalDialogComponent } from './moving-center-form/select-plan-modal-dialog/select-plan-modal-dialog.component';
 import { MovingCenterFormComponent } from './moving-center-form/moving-center-form.component';
 import { OfferDetailsPopoverComponent } from './my-service-plans/change-your-plan/offer-details-popover/offer-details-popover.component';
+import { TooltipModule } from 'ngx-bootstrap';
+import { PlanConfirmationPopoverComponent } from './my-service-plans/plan-confirmation-popover/plan-confirmation-popover.component';
 
 @NgModule({
   imports: [
@@ -37,11 +39,12 @@ import { OfferDetailsPopoverComponent } from './my-service-plans/change-your-pla
     ModalModule.forRoot(),
     DatePickerModule,
     MyDatePickerModule,
-    PopoverModule.forRoot()
+    PopoverModule.forRoot(),
+    TooltipModule.forRoot()
   ],
   declarations: [
       PlansAndServicesComponent,
-      OrderStatusComponent, 
+      OrderStatusComponent,
       AddServicesComponent,
       MyServicePlansComponent,
       MyCurrentPlanComponent,
@@ -54,7 +57,8 @@ import { OfferDetailsPopoverComponent } from './my-service-plans/change-your-pla
       SelectPlanModalDialogComponent,
       MovingCenterFormComponent,
       OfferDetailsPopoverComponent,
-      RenewalGaugeComponent    
+      RenewalGaugeComponent,
+      PlanConfirmationPopoverComponent
       ]
 })
 export class PlansAndServicesModule { }

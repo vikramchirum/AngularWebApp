@@ -8,7 +8,7 @@ import { PopoverDirective} from 'ngx-bootstrap';
   styleUrls: ['./offer-details-popover.component.scss']
 })
 export class OfferDetailsPopoverComponent implements OnInit {
-@ViewChild('pop') public pop:PopoverDirective;
+@ViewChild('pop') public pop: PopoverDirective;
   constructor() { }
 
   ngOnInit() {

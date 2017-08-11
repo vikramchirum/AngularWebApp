@@ -7,7 +7,7 @@
       </md-card-title>
     <!--</md-card-header>-->
     <md-card-content>
-      <h2>{{ActiveServiceAccountDetails.Current_Offer.RateAt1000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">c</sup><small>per kwh</small></h2>
+      <h2>{{ActiveServiceAccountDetails.Current_Offer.RateAt1000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small></h2>
       <p class="bg-default">TERM: {{ActiveServiceAccountDetails.Current_Offer.Term}} Months</p>
       <p>START: {{ActiveServiceAccountDetails.Current_Offer.Start_Date | date: 'MM/dd/yyyy'}}</p>
       <p  class="bg-default">END: {{ActiveServiceAccountDetails.Current_Offer.End_Date ? (ActiveServiceAccountDetails.Current_Offer.End_Date | date:'MM/dd/yyyy') : (this.getEndDate(ActiveServiceAccountDetails.Current_Offer.Start_Date) | date: 'MM/dd/yyyy')}}</p>
@@ -41,17 +41,30 @@
         <p class="bg-default">{{RenewalOffers.Promotion?.Name}} </p>
       </div>
     </div>
+    <div #plan_pop="bs-popover" [popover]="showpop" placement="bottom">
+      <ng-template #showpop>
+        <button type="button" class="close text-right" aria-label="Close" (click)="plan_pop.hide()">
+          <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+        <mygexa-plan-confirmation-popover></mygexa-plan-confirmation-popover>
+      </ng-template>
+
+    </div>
     <div *ngIf= "selectCheckBox">
       <hr>
       <div class="checkbox">
         <label>
-          <p class="text-left"><input type="checkbox" value="" (click) = "toggleButton()"> By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP(Gexa energy).<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
+          <input type="checkbox" value="" (click) = "toggleButton()">
+          <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+          <p class="text-left">By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
         </label>
+        <!--<label>-->
+          <!--<p class="text-left"><input type="checkbox" value="" (click) = "toggleButton()"> By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>-->
+        <!--</label>-->
       </div>
       <hr>
       <div class="row">
         <div style="text-align:center">
-          <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect">Submit</button>
+          <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)="showConfirmationPop()">Submit</button>
           <i class="fa fa-times fa-2x" style="margin-left:.5em" (click)="closeCheckBox()" aria-hidden="true"> </i>
         </div>
       </div>
@@ -66,3 +79,4 @@
     </div>
   </div>
 </section>
+<mygexa-plan-confirmation-popover #planPopModal></mygexa-plan-confirmation-popover>

@@ -6,7 +6,7 @@
       <div class="modal-content ">
         <div class="modal-header">
           <button type="button" class="close" aria-label="Close" (click)="reset()" style="padding:15px 100px 10px 0px;"> <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-          <!--<button type="button" class="close fa fa-times fa-2x" style="padding:15px 100px 10px 0px"--> 
+          <!--<button type="button" class="close fa fa-times fa-2x" style="padding:15px 100px 10px 0px"-->
           <!--data-dismiss="modal" (click)="reset()"></button>-->
           <h2 class="modal-title"><b>Register <span class="hidden-xs">for MyGexa</span></b></h2>
         </div>
@@ -24,8 +24,8 @@
                   <div class="has-error" *ngIf="registerForm.controls['Service_Account_Id'].hasError('required')
                     && formSubmitted"> <div class="help-block">Service number is required.</div> </div>
                 </div>
-                
-                 
+
+
                  <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Zip_Code'].valid
                   && formSubmitted}">
                    <label class="control-label">Zip Code</label>
@@ -36,37 +36,60 @@
                     && registerForm.controls['Zip_Code'].touched">
                     <div class="help-block">
                         <span *ngIf="registerForm.controls['Zip_Code'].hasError('required')
-                    && formSubmitted"> Zip code is required. </span><span  *ngIf="registerForm.controls['Zip_Code'].hasError('validateInteger') && registerForm.controls['Zip_Code'].touched">Zip code should be a number. </span>             <span *ngIf="registerForm.controls['Zip_Code'].hasError('minlength')
+                    && formSubmitted"> Zip code is required. </span><span  *ngIf="registerForm.controls['Zip_Code'].hasError('validateInteger') && registerForm.controls['Zip_Code'].touched">Zip code should be a number. </span>
+                      <span *ngIf="registerForm.controls['Zip_Code'].hasError('minlength')
                     && registerForm.controls['Zip_Code'].touched">Zip must be at least 5 characters long. </span><span *ngIf="registerForm.controls['Zip_Code'].hasError('maxlength')
                     && registerForm.controls['Zip_Code'].touched">Zip cannot exceed 5
                     characters. </span>
                     </div>
-                   </div>               
+                   </div>
                 </div>
-                
+
                 <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['User_name'].valid
                   && formSubmitted}">
                   <label class="control-label">User Name</label>
                     <input name="User_name" type="text" class="form-control "
                                  placeholder="Create A Username"
                                  [formControl]="registerForm.controls['User_name']">
-                
-                  <div class="has-error" *ngIf="registerForm.controls['User_name'].hasError('required')
-                    && formSubmitted"> <div class="help-block">Username is required.</div> </div>
+                  <!--<div class="help-block" >Username must be at least 8 characters.</div>-->
+                  <div class="has-error" *ngIf="registerForm.controls['User_name'].hasError('required') && formSubmitted  || registerForm.controls['User_name'].hasError('minlength')
+                    && registerForm.controls['User_name'].touched || registerForm.controls['User_name'].hasError('maxlength')
+                    && registerForm.controls['User_name'].touched">
+                    <div class="help-block">
+                        <span *ngIf="registerForm.controls['User_name'].hasError('required')
+                    && formSubmitted"> Username is required. </span>
+                      <span *ngIf="registerForm.controls['User_name'].hasError('minlength')
+                    && registerForm.controls['User_name'].touched">Username must be 8 characters long. </span><span *ngIf="registerForm.controls['User_name'].hasError('maxlength')
+                    && registerForm.controls['User_name'].touched">Username must be 8 characters long.</span>
+                    </div>
+                  </div>
                 </div>
-                
+
                 <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Password'].valid
                   && formSubmitted}">
                   <label class="control-label">Password</label>
                     <input name="Password" type="password" class="form-control "
                                  placeholder="Create A Password"
                                  [formControl]="registerForm.controls['Password']">
-                  
-                  <div class="help-block" >Passwords must be at least 6 characters.</div>
-                  <div class="has-error" *ngIf="registerForm.controls['Password'].hasError('required')
-                    && formSubmitted"> <span class="help-block">Password is required.</span> </div>
+
+                  <!--<div class="help-block" ><span *ngIf="registerForm.controls['Password'].hasError('required')-->
+                    <!--&& formSubmitted"> Password is required. </span>Passwords must be at least 6 characters, one non letter or digit character, one uppercase ('A'-'Z').</div>-->
+                  <!--<div class="has-error" *ngIf="registerForm.controls['Password'].hasError('required') && registerForm.controls['Password'].hasError('validatePassword')-->
+                    <!--&& formSubmitted"> <span class="help-block">Password is required.</span> </div>-->
+                  <div class="has-error" *ngIf="registerForm.controls['Password'].hasError('required') && formSubmitted ||  registerForm.controls['Password'].hasError('validatePassword') && registerForm.controls['Password'].touched || registerForm.controls['Password'].hasError('minlength')
+                    && registerForm.controls['Password'].touched || registerForm.controls['Password'].hasError('maxlength')
+                    && registerForm.controls['Password'].touched">
+                    <div class="help-block">
+                        <span *ngIf="registerForm.controls['Password'].hasError('required')
+                    && formSubmitted"> Password is required. </span><span  *ngIf="registerForm.controls['Password'].hasError('validatePassword') && registerForm.controls['Password'].touched">Password must have at least one uppercase letter, one lowercase letter, one number and one special character. </span>
+                      <span *ngIf="registerForm.controls['Password'].hasError('minlength')
+                    && registerForm.controls['Password'].touched">Password be at least 6 characters long. </span><span *ngIf="registerForm.controls['Password'].hasError('maxlength')
+                    && registerForm.controls['Password'].touched">Password cannot exceed 10 characters. </span>
+                    </div>
+                  </div>
+
                 </div>
-                
+
                  <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['ConfirmPassword'].valid
                   && formSubmitted}">
                    <label class="control-label">Confirm Password</label>
@@ -90,19 +113,20 @@
                   <div class="has-error" *ngIf="!registerForm.controls['Email_Address'].hasError('required')
                     && registerForm.controls['Email_Address'].hasError('validateEmail') && formSubmitted"> <div class="help-block">Enter a valid email. Email format should be <i>john@doe.com</i>.</div> </div>
                 </div>
-                
+
                  <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Security_Question_Id'].valid
                   && formSubmitted}">
                    <label class="control-label">Security Question</label>
                     <select name="Security_Question_Id" class="form-control" style="padding-left:40px "
                                   [formControl]="registerForm.controls['Security_Question_Id']">
-                      <option value="none">Please select a security question</option>
+                      <option value="">Please select a security question</option>
                       <option *ngFor="let secQues of secQuesArray" [value]="secQues.Id">{{ secQues.Question }} </option>
                     </select>
                   <div class="has-error" *ngIf="registerForm.controls['Security_Question_Id'].hasError('required')
-                     && formSubmitted"> <div class="help-block">Security question is required.</div> </div>
+                     && formSubmitted "> <div class="help-block">Security question is required.</div> </div>
+
                 </div>
-                
+
                  <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Security_Question_Answer'].valid
                   && formSubmitted}">
                    <label class="control-label">Security Answer</label>
@@ -112,7 +136,7 @@
                   <div class="has-error" *ngIf="registerForm.controls['Security_Question_Answer'].hasError('required')
                     && formSubmitted"> <div class="help-block">Response is required.</div> </div>
                 </div>
-                
+
                  <div class="form-group"  *ngIf="errorMsg">
                   <div class="alert alert-danger" ><b>Error message: {{errorMsg}}</b></div>
                 </div>

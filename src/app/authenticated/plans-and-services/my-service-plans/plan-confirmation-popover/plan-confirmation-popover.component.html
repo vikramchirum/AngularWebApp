@@ -1,0 +1,52 @@
+<section class="confirmation-modal">
+  <div     [config]="{ backdrop: 'static', keyboard: false }"
+           bsModal #planPopModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+           aria-hidden="true">
+    <div class="modal-dialog modal-md ">
+      <div class="modal-content ">
+        <div class="modal-header">
+          <button type="button" class="close" aria-label="Close" (click)="hidePlanPopModal()" style="padding:15px 100px 10px 0px;"> <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+          <h2 class="modal-title"><b>Thanks, <span class="hidden-xs">{{customerDetails?.First_Name + ', ' +  customerDetails?.Last_Name }}</span></b></h2>
+          <div class="modal-body container-fluid">
+            <div class="row">
+              <h4 class="text-center plan-info">Your plans renewal is all set.</h4>
+              <h5 class="bill-name"> A confirmation will be sent to your email address with your plan documents. Your new plan will start when your current plan ends.</h5>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="text-center">
+                  <button class="btn btn-primary" (click)="renewedNewplan()">Got it</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<!--<div class="plan-confirmation-modal" >-->
+  <!--<div class="plan-header"><h3 class="plan-title ">Thanks, xxxx</h3></div>-->
+  <!--<br><br>-->
+  <!--<h4 class="text-center plan-info">Your plans renewal is all set.</h4>-->
+  <!--<div class="row cost-components">-->
+    <!--<div class="col-md-12">-->
+      <!--<table border="0" width="100%" class="table-condensed table-striped">-->
+        <!--<tbody>-->
+        <!--<tr>-->
+          <!--<td class="bill-name"> A confirmation will be sent to your email address with your plan documents. Your new plan will start when your current plan ends.</td>-->
+        <!--</tr>-->
+        <!--</tbody>-->
+      <!--</table>-->
+    <!--</div>-->
+  <!--</div>-->
+  <!--<br><br>-->
+  <!--<div class="row">-->
+    <!--<div class="col-md-12">-->
+      <!--<div class="text-center">-->
+        <!--<button class="btn btn-primary" (click)="renewedNewplan()">Got it</button>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
