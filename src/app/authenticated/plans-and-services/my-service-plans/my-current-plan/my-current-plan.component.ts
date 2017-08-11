@@ -7,6 +7,7 @@ import { OfferService } from 'app/core/offer.service';
 import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import {PlanConfirmationPopoverComponent} from '../plan-confirmation-popover/plan-confirmation-popover.component';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -26,6 +27,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   selectCheckBox  = false;
   enableSelect = false;
   ActiveServiceAccountDetails: ServiceAccount;
+  @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
 
   constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
     this.IsInRenewalTimeFrame = false;
@@ -71,6 +73,13 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   getEndDate(startDate): Date {
     startDate = new Date(startDate);
     return new Date(new Date(startDate).setMonth(startDate.getMonth() + 12));
+  }
+  selectRenewal() {
+
+  }
+
+  showConfirmationPop() {
+    this.planPopModal.showPlanPopModal();
   }
 
 }

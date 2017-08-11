@@ -1,0 +1,28 @@
+
+
+.confirmation-modal{
+  .modal-dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .modal-content{
+    text-align: center;
+  }
+  .modal-header {
+    padding-top:20px;
+    border-bottom: 0px white;
+    .modal-title{
+      padding:2px 0px 5px 75px ;
+      font: bold;
+      background-color: green;
+      color:white;
+    }
+  }
+  //.control-label {
+  //  text-align: left;
+  //  display: block;
+  //}
+}
+
