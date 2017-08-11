@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
- import { forEach, get, isNumber, map, now, random } from 'lodash';
+import { forEach, get, isNumber, map, now, random } from 'lodash';
 
+ import {ISearchNotificationOptionRequest} from 'app/core/models/notificationoptions/searchnotificationoptionrequest.model';
+ import {AccountType} from 'app/core/models/enums/accounttype';
+ import {NotificationType} from 'app/core/models/enums/notificationtype';
+ import {NotificationStatus} from 'app/core/models/enums/notificationstatus';
+ import {NotificationOptionsService} from 'app/core/notificationoptions.service';
+  
 @Component({
   selector: 'mygexa-paperless-settings',
   templateUrl: './paperless-settings.component.html',
@@ -14,9 +20,12 @@ export class PaperlessSettingsComponent implements OnInit {
   billingOptions = [{ option: 'Email', checked: false }, { option: 'Paper', checked: true }];
   plansOptions = [{ option: 'Email', checked: false }, { option: 'Paper', checked: true }];
   paperlessSettings: boolean = false;
-  goPaperless: boolean = false;
+  goPaperless: boolean = false;  
 
-  constructor(private fb: FormBuilder) { }
+  searchNotificationOptionRequest: ISearchNotificationOptionRequest = null;
+
+  constructor(private fb: FormBuilder,
+  private notificationService:NotificationOptionsService) { }
 
   ngOnInit() {
     this.sendBillsForm = this.fb.group({
@@ -25,6 +34,19 @@ export class PaperlessSettingsComponent implements OnInit {
     this.planDocumentsForm = this.fb.group({
       plansOptions: this.fb.array([])
     });
+
+    this.searchNotificationOptionRequest = {
+      Account_Info : {
+        Account_Type: AccountType.GEMS_Residential_Customer_Account,
+       Account_Number: "288673"
+      },
+      Type: NotificationType.Bill,
+      Status: NotificationStatus.Active
+    }
+    // this.notificationService.searchNotificationOption(this.searchNotificationOptionRequest).subscribe(result =>{
+    //   console.log('Notification Result', result);
+    // })
+    
   }
 
   togglePaperless(billingOptions, plansOptions) {
