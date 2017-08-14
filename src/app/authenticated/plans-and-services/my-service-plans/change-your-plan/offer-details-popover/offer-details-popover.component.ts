@@ -1,5 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { PopoverDirective} from 'ngx-bootstrap';
+import {IOffers} from '../../../../../core/models/offers/offers.model';
+import {ServiceAccountService} from '../../../../../core/serviceaccount.service';
+import {Subscription} from 'rxjs/Subscription';
+import {ServiceAccount} from '../../../../../core/models/serviceaccount/serviceaccount.model';
 
 
 @Component({
@@ -9,7 +13,11 @@ import { PopoverDirective} from 'ngx-bootstrap';
 })
 export class OfferDetailsPopoverComponent implements OnInit {
 @ViewChild('pop') public pop: PopoverDirective;
-  constructor() { }
+@Input() OfferDetails: IOffers;
+@Input() ActiveOfferDetails: ServiceAccount;
+
+  constructor(private serviceAccountService: ServiceAccountService) {
+  }
 
   ngOnInit() {
   }

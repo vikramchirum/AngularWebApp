@@ -21,7 +21,7 @@
       <b><p class="form-control">Renewal Details</p></b>
       <br>
       <div class="row">
-          <div class="col-sm-2"><i class="fa fa-info fa-fw fa-in-circle" tooltip="Don’t worry! Your electric service will continue on our month-to-month plan. You’ll receive the details for that plan in your contract expiration notice."></i></div>
+          <div class="col-sm-2"><i class="fa fa-info fa-fw fa-in-circle"  tooltip="Don’t worry! Your electric service will continue on our month-to-month plan. You’ll receive the details for that plan in your contract expiration notice."></i></div>
         <div class="col-sm-10">What happens if I don't renew?</div>
       </div>
       <div class="row">
@@ -33,7 +33,7 @@
           <ng-template #options>
             <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
               <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-            <mygexa-offer-details-popover></mygexa-offer-details-popover>
+            <mygexa-offer-details-popover [ActiveOfferDetails]="ActiveServiceAccount"></mygexa-offer-details-popover>
           </ng-template>
         </div>
 
