@@ -14,8 +14,7 @@
 <div class="row" *ngIf="IsInRenewalTimeFrame">
   <section id="renewPlan">
     <div class="col-sm-3">
-      <p>View more renewal plans</p>
-      <!--<h2> renewal plans </h2>-->
+      <h2>View more renewal plans </h2>
       <a  (click)="showPromoCodeInput($event)"> <p> Have a promo code?</p></a>
        <form #promoCodeForm="ngForm"  *ngIf="havePromoCode">
       <input type="text" class="form-control" required ngModel name="name"

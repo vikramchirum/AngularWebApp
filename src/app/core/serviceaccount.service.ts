@@ -163,6 +163,24 @@ export class ServiceAccountService {
     return ServiceAccount;
   }
 
+  OnUpgradeOrRenew(choice: string) {
+    if (choice === 'Renewal') {
+      this.ActiveServiceAccountObservable.subscribe(
+        ActiveServiceAccount => {
+          ActiveServiceAccount.IsRenewed = true;
+          console.log('Renewed');
+        }
+      );
+    } else if (choice === 'Upgrade') {
+      this.ActiveServiceAccountObservable.subscribe(
+        ActiveServiceAccount => {
+          ActiveServiceAccount.IsUpgraded = true;
+          console.log('Upgraded');
+        }
+      );
+    }
+  }
+
   private emitToObservers(observers: Observer<any>[], data: any) {
     // We "clone" because an observer may remove itself out of the original array - this solves an indexing problem.
     forEach(clone(observers), observer => observer.next(data));

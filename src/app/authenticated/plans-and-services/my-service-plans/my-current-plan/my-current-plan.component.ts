@@ -17,6 +17,7 @@ import {PlanConfirmationPopoverComponent} from '../plan-confirmation-popover/pla
 export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy {
   IsOffersReady: boolean = null;
   IsInRenewalTimeFrame: boolean;
+  IsRenewed: boolean; IsUpgraded: boolean;
   serviceAccountSubscription: Subscription;
   activeserviceAccountOffersSubscription: Subscription;
 
@@ -40,6 +41,8 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
         this.ActiveServiceAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
         this.IsOffersReady = false;
+        this.IsRenewed = result.IsRenewed;
+        this.IsUpgraded = result.IsUpgraded;
       });
     this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
       all_offers => {

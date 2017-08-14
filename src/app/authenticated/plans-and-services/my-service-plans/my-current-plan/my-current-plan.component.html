@@ -3,7 +3,14 @@
   <md-card class="current-plan-card" *ngIf="ActiveServiceAccountDetails">
     <!--<md-card-header>-->
       <md-card-title>
-        <h2>{{ActiveServiceAccountDetails.Current_Offer.Product_Name}} <small><i class="fa fa-info-circle"></i></small></h2>
+        <h2>{{ActiveServiceAccountDetails.Current_Offer.Product_Name}} <small><i class="fa fa-info-circle" (click)="pop.show()" ></i></small></h2>
+        <div #pop="bs-popover" [popover]="options" placement="bottom">
+          <ng-template #options>
+            <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
+              <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+            <mygexa-offer-details-popover [ActiveOfferDetails]="ActiveServiceAccountDetails" ></mygexa-offer-details-popover>
+          </ng-template>
+        </div>
       </md-card-title>
     <!--</md-card-header>-->
     <md-card-content>
@@ -30,7 +37,7 @@
           <ng-template #options>
             <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
             <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-            <mygexa-offer-details-popover></mygexa-offer-details-popover>
+            <mygexa-offer-details-popover [OfferDetails]="RenewalOffers"></mygexa-offer-details-popover>
           </ng-template>
         </div>
             </div>
@@ -49,6 +56,7 @@
       </ng-template>
 
     </div>
+    <div *ngIf="IsRenewed"> Pending...</div>
     <div *ngIf= "selectCheckBox">
       <hr>
       <div class="checkbox">
@@ -79,4 +87,5 @@
     </div>
   </div>
 </section>
+
 <mygexa-plan-confirmation-popover #planPopModal></mygexa-plan-confirmation-popover>
