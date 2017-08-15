@@ -18,7 +18,7 @@ export class RootComponent implements OnInit, AfterViewInit {
   startsWith = startsWith;
   service_account_length: number = null;
   env = environment.Name;
-  user: string;
+  username: string = null;
   accordionVisible: boolean = null;
   hoverMenu: string = null;
 
@@ -39,7 +39,9 @@ export class RootComponent implements OnInit, AfterViewInit {
     if (!this.ServiceAccountService.ActiveServiceAccountId) {
       this.homeMultiAccountsModal.show();
       this.UserService.UserObservable.subscribe(
-        result => this.service_account_length = result.Account_permissions.length
+        result => { this.service_account_length = result.Account_permissions.length;
+                    this.username = result.Profile.Username;
+        console.log('Usrename', this.username); }
       );
       if (!this.ServiceAccountService.ActiveServiceAccountId) {
         if (this.service_account_length != null && this.service_account_length === 2) {
