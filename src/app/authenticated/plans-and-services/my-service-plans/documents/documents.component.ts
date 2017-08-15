@@ -29,7 +29,9 @@ export class DocumentsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.IsInRenewalTimeFrame = this.ActiveServiceAccount.IsUpForRenewal;
+    if (this.ActiveServiceAccount) {
+      this.IsInRenewalTimeFrame = this.ActiveServiceAccount.IsUpForRenewal;
+    }
 
     this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
       all_offers => {

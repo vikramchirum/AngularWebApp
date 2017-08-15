@@ -93,37 +93,48 @@
     </div>
     <div class="row card-included" >
       <div class="col-md-12">
-        <h4 class="text-center form-control ">What's included <i class="fa fa-chevron-down" (click)="ChevClicked()" [ngClass]="chev_clicked ?  'fa-chevron-down':  'fa-chevron-up'"></i>
+        <h4 class="text-center form-control ">What's included <i class="fa fa-chevron-down" (click)="ChevClicked()" [ngClass]="chev_clicked ?  'fa-chevron-down':  'fa-chevron-up'"></i><br>
           <div class="card-included pull-left" *ngIf="chev_clicked">
-            <div *ngIf="Offer.Plan?.Product.Product_Features != null ; then features else noFeatures"></div>
+            <div *ngIf="Offer?.Plan?.Product?.Product_Features != null ; then features else noFeatures"></div>
             <ng-template #features>
-              <div class="row">
-                <div class="col-sm-2">
-                  <i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>
+              <div *ngFor="let feature of Offer?.Plan?.Product?.Product_Features">
+                <div class="row">
+                  <div class="col-sm-2">
+                    <i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>
+                  </div>
+                  <div class="col-sm-10">
+                    {{feature}}
+                  </div>
                 </div>
-                <div class="col-sm-10">
-                  Best plan for homes that a moderate amount of electricity
-                </div>
+                <br>
               </div>
-              <div class="row">
-                <div class="col-sm-2">
-                  <i class="fa fa-handshake-o fa-fw  fa-in-circle"></i>
+              <!--<div class="row">-->
+                <!--<div class="col-sm-2">-->
+                  <!--<i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>-->
+                <!--</div>-->
+                <!--<div class="col-sm-10">-->
+                  <!--Best plan for homes that a moderate amount of electricity-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div class="row">-->
+                <!--<div class="col-sm-2">-->
+                  <!--<i class="fa fa-handshake-o fa-fw  fa-in-circle"></i>-->
 
-                </div>
-                <div class="col-sm-10">
-                  Eligible for bill credits with Share &amp; Save
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-sm-2">
-                  <i class="fa fa-calendar-o fa-fw  fa-in-circle"></i>
+                <!--</div>-->
+                <!--<div class="col-sm-10">-->
+                  <!--Eligible for bill credits with Share &amp; Save-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div class="row">-->
+                <!--<div class="col-sm-2">-->
+                  <!--<i class="fa fa-calendar-o fa-fw  fa-in-circle"></i>-->
 
 
-                </div>
-                <div class="col-sm-10">
-                  Price is fixed <br> for 12 months
-                </div>
-              </div>
+                <!--</div>-->
+                <!--<div class="col-sm-10">-->
+                  <!--Price is fixed <br> for 12 months-->
+                <!--</div>-->
+              <!--</div>-->
             </ng-template>
             <ng-template #noFeatures>
               <div class="row">
