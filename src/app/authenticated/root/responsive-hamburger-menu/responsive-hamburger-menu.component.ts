@@ -10,7 +10,8 @@ export class ResponsiveHamburgerMenuComponent implements OnInit {
   @Output() signout = new EventEmitter<string>();
   @Output() notify = new EventEmitter<string>();
 
-  constructor() { }
+  constructor(
+  ) { }
 
   ngOnInit() { }
 
