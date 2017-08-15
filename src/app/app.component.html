@@ -8,12 +8,12 @@
     <div class="container">
       <div class="row text-sm-center">
         <div class="col-sm-6">
-          <a routerLink="#foo">Terms of Use</a>
-          <a routerLink="#foo">Privacy Policy</a>
-          <a routerLink="#foo">Legal Notices &amp; Terms</a>
+          <a (click)="onNavigate('http://www.gexaenergy.com/terms-of-use/')">Terms of Use</a>
+          <a (click)="onNavigate('http://www.gexaenergy.com/privacy-policy/')">Privacy Policy</a>
+          <a (click)="onNavigate('http://www.gexaenergy.com/legal-notices-and-terms/')">Legal Notices &amp; Terms</a>
         </div>
         <div class="col-sm-6 text-right">
-          <a routerLink="#foo">Contact Us</a>
+          <a (click)="onNavigate('http://www.gexaenergy.com/for-home/support/contact-us/')">Contact Us</a>
           <a routerLink="#foo">customercare@gexaenergy.com</a>
           <a routerLink="#foo">855-639-8118</a>
         </div>
