@@ -6,7 +6,7 @@ import {IOffers} from '../../../../core/models/offers/offers.model';
 import {AllOffersClass} from '../../../../core/models/offers/alloffers.model';
 import {OfferService} from '../../../../core/offer.service';
 import {ServiceAccountService} from '../../../../core/serviceaccount.service';
-
+import {MdTooltipModule} from '@angular/material';
 @Component({
   selector: 'mygexa-documents',
   templateUrl: './documents.component.html',

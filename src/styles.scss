@@ -386,11 +386,19 @@ footer.fixedToBottom {
   }
 }
 
- .popover-title{         
+ .popover-title{
          background-color: $payment-base !important;
-          color:#ffffff;      
-        
+          color:#ffffff;
+
     }
 .popover {
   padding:0px;
+}
+
+.tooltipClass {
+  background-color: black !important;
+  color:white !important;
+  width: 170px !important;
+  font-size:12px !important;
+  padding: 5px 5px 5px 5px !important;
 }
