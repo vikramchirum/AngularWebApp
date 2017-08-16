@@ -1,75 +1,155 @@
+<section *ngIf="ActiveOfferDetails">
   <div class="service-upgrade-modal" >
-             <div class="plan-header"><h3 class="plan-title ">{{offerDetails.Plan.Name }}</h3></div>
-          <h3 class="text-center plan-info">{{offerDetails.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup>&cent;</sup> per KWh</h3>
-          <p class="text-center">AT 1000kwh</p>
-          <div class="row plan-documents">
-            <div class="col-md-12">
-            <h4>Plan Documents</h4>
-            </div>
-            <div class="col-md-4">
-               <div class="col-md-12 text-center">
-                 <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
-              </div>
-              <small><a href="#stay" target="_blank">Electricty Facts Label</a></small>
-            </div>
-            <div class="col-md-4">           
-              <div class="col-md-12 text-center">
-                 <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
-              </div>
-              <small><a href="#stay" target="_blank">Your Rights as a Customer</a></small>
-            </div>
-            <div class="col-md-4">
-              <div class="col-md-12 text-center">
-                 <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
-              </div>
-              <small><a href="#stay" target="_blank">Term and Conditions</a></small>
-            </div>
-
-                         </div>   
-                <div class="row cost-components">
-            <div class="col-md-12">
-            <h4>Cost Components</h4>
-            <h5>Gexa Energy</h5>
-              <table border="0" width="100%" class="table-condensed table-striped">
-                <tbody>
-                  <tr>
-                    <td class="bill-name">Energy Charge<small>(per KWh)</small></td>
-                    <td class="bill-amount">$0.0929</td>
-                  </tr>
-                  <tr>
-                    <td class="bill-name">Base charge<small>(per month)</small></td>
-                    <td class="bill-amount">{{offerDetails.Actual_Pricing.Base_Charge}}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="col-md-12">
-              <h5>{{offerDetails.Plan.TDU.Name}}(TDU)</h5>
-              <table border="0" width="100%" class="table-condensed table-striped">
-                <tbody>
-                  <tr>
-                    <td class="bill-name">TDU delivery charges <small>(per month)</small></td>
-                    <td class="bill-amount">${{offerDetails.Plan.TDU.Delivery_Charge | FloatToMoneyPipe}}</td>
-                  </tr>
-                  <!-- <tr>
-                    <td class="bill-name">TDU delivery charges <small>(per month)</small></td>
-                    <td class="bill-amount">$0.0329</td>
-                  </tr> -->
-                </tbody>
-              </table>
-            </div>
-
-          </div>
-          <div class="row">
-          <div class="col-md-6">
-            <small><strong>Contract term</strong>
-            <p>{{offerDetails.Plan.Term}} months</p></small>
-          </div>
-          <div class="col-md-6">
-            <small><strong>Cancellation fee</strong>
-            <p>${{offerDetails.Actual_Pricing.Early_Termination_Fee}}</p></small>
-          </div>
-          </div>
-          <!--<div class="text-right"><input type="text" class="promotional-code hidden-xs" placeholder="Promotional Code(optional)"/>-->
-          <!--<button class="btn btn-default btn-wireframe">Sign up Now</button></div>-->
+    <div class="plan-header"><h3 class="plan-title ">{{ActiveOfferDetails.Current_Offer.Product_Name}}</h3></div>
+    <h3 class="text-center plan-info">{{ActiveOfferDetails.Current_Offer.RateAt1000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup>&cent;</sup> per KWh</h3>
+    <p class="text-center">AT 1000kwh</p>
+    <div class="row plan-documents">
+      <div class="col-md-12">
+        <h4>Plan Documents</h4>
+      </div>
+      <div class="col-md-4">
+        <div class="col-md-12 text-center">
+          <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
         </div>
+        <small><a href="#stay" target="_blank">Electricty Facts Label</a></small>
+      </div>
+      <div class="col-md-4">
+        <div class="col-md-12 text-center">
+          <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
+        </div>
+        <small><a href="#stay" target="_blank">Your Rights as a Customer</a></small>
+      </div>
+      <div class="col-md-4">
+        <div class="col-md-12 text-center">
+          <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
+        </div>
+        <small><a href="#stay" target="_blank">Term and Conditions</a></small>
+      </div>
+
+    </div>
+    <div class="row cost-components">
+      <div class="col-md-12">
+        <h4>Cost Components</h4>
+        <h5>Gexa Energy</h5>
+        <table border="0" width="100%" class="table-condensed table-striped">
+          <tbody>
+          <tr *ngFor="let charge of ActiveOfferDetails.Current_Offer.Energy_Charges">
+            <td class="bill-name">Energy Charge<small>(per KWh)</small></td>
+            <td class="bill-amount">${{charge.Amount | number: '1.1-4' }}</td>
+          </tr>
+          <tr *ngIf="ActiveOfferDetails.Current_Offer.Base_Charge">
+            <td class="bill-name">Base charge<small>(per month)</small></td>
+            <td class="bill-amount">${{ActiveOfferDetails.Current_Offer.Base_Charge | number: '1.1-2' }}*</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-12">
+        <h5>{{ActiveOfferDetails.TDU_Name}} (TDU)</h5>
+        <table border="0" width="100%" class="table-condensed table-striped">
+          <tbody>
+          <tr>
+            <td class="bill-name">TDU delivery charges <small>(per kWh)</small></td>
+            <td class="bill-amount">${{ActiveOfferDetails.Current_Offer.Delivery_Charge | number: '1.1-2' }}</td>
+          </tr>
+          <tr>
+            <td class="bill-name">TDU meter charges <small>(per month)</small></td>
+            <td class="bill-amount">${{ActiveOfferDetails.Current_Offer.Meter_Charge | number: '1.1-4' }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <small><strong>Contract term</strong>
+          <p>{{ActiveOfferDetails.Current_Offer.Term}} months</p></small>
+      </div>
+      <div class="col-md-6">
+        <small><strong>Cancellation fee</strong>
+          <p>${{ActiveOfferDetails.Current_Offer.Early_Termination_Fee}}</p></small>
+      </div>
+    </div>
+    <!--<div class="text-right"><input type="text" class="promotional-code hidden-xs" placeholder="Promotional Code(optional)"/>-->
+    <!--<button class="btn btn-default btn-wireframe">Sign up Now</button></div>-->
+  </div>
+
+</section>
+<section id="Renewal" *ngIf="OfferDetails" >
+  <div class="service-upgrade-modal" >
+    <div class="plan-header"><h3 class="plan-title ">{{OfferDetails?.Plan.Name}}</h3></div>
+    <h3 class="text-center plan-info">{{OfferDetails?.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup>&cent;</sup> per KWh</h3>
+    <p class="text-center">AT 1000kwh</p>
+    <div class="row plan-documents">
+      <div class="col-md-12">
+        <h4>Plan Documents</h4>
+      </div>
+      <div class="col-md-4">
+        <div class="col-md-12 text-center">
+          <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
+        </div>
+        <small><a href="#stay" target="_blank">Electricty Facts Label</a></small>
+      </div>
+      <div class="col-md-4">
+        <div class="col-md-12 text-center">
+          <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
+        </div>
+        <small><a href="#stay" target="_blank">Your Rights as a Customer</a></small>
+      </div>
+      <div class="col-md-4">
+        <div class="col-md-12 text-center">
+          <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
+        </div>
+        <small><a href="#stay" target="_blank">Term and Conditions</a></small>
+      </div>
+
+    </div>
+    <div class="row cost-components">
+      <div class="col-md-12">
+        <h4>Cost Components</h4>
+        <h5>Gexa Energy</h5>
+        <table border="0" width="100%" class="table-condensed table-striped">
+          <tbody>
+          <tr *ngFor="let charge of OfferDetails?.Actual_Pricing.Energy_Charges">
+            <td class="bill-name">Energy Charge<small>(per KWh)</small></td>
+            <td class="bill-amount">${{charge.Amount | number: '1.1-4' }}</td>
+          </tr>
+          <tr *ngIf="OfferDetails?.Actual_Pricing.Base_Charge">
+            <td class="bill-name">Base charge<small>(per month)</small></td>
+            <td class="bill-amount">${{OfferDetails?.Plan.Pricing_Definition.Base_Charge | number: '1.1-2' }}*</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-12">
+        <h5>{{OfferDetails.Plan.TDU.Name}} (TDU)</h5>
+        <table border="0" width="100%" class="table-condensed table-striped">
+          <tbody>
+          <tr>
+            <td class="bill-name">TDU delivery charges <small>(per kWh)</small></td>
+            <td class="bill-amount">${{OfferDetails.Plan.TDU.Delivery_Charge | number: '1.1-2' }}</td>
+          </tr>
+          <tr>
+          <td class="bill-name">TDU meter charges <small>(per month)</small></td>
+          <td class="bill-amount">${{OfferDetails.Plan.TDU.Meter_Charge | number: '1.1-4' }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <small><strong>Contract term</strong>
+          <p>{{OfferDetails?.Plan.Term}} months</p></small>
+      </div>
+      <div class="col-md-6">
+        <small><strong>Cancellation fee</strong>
+          <p>${{OfferDetails?.Actual_Pricing.Early_Termination_Fee}}</p></small>
+      </div>
+    </div>
+    <!--<div class="text-right"><input type="text" class="promotional-code hidden-xs" placeholder="Promotional Code(optional)"/>-->
+    <!--<button class="btn btn-default btn-wireframe">Sign up Now</button></div>-->
+  </div>
+</section>

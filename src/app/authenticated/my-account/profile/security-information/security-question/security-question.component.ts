@@ -56,6 +56,9 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
       }
     );
   }
+  updateSecQuesResponse(response: string) {
+
+  }
 
   ngOnDestroy() {
     localStorage.removeItem('security_Question_Cache');

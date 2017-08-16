@@ -92,6 +92,16 @@ export function validateEmail(c: FormControl) {
 }
 
 
+export function validatePassword(c: FormControl) {
+  const PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,10}$/;
+  return PASSWORD_REGEXP.test(c.value) ? null : {
+    validatePassword: {
+      valid: false
+    }
+  };
+}
+
+
 // FORM GROUP VALIDATORS
 export function equalityCheck(emailKey: string, confirmEmailKey: string) {
   return (group: FormGroup): { [key: string]: any } => {

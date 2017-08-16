@@ -7,6 +7,7 @@ import { OfferService } from 'app/core/offer.service';
 import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import {PlanConfirmationPopoverComponent} from '../plan-confirmation-popover/plan-confirmation-popover.component';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -16,6 +17,7 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
 export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy {
   IsOffersReady: boolean = null;
   IsInRenewalTimeFrame: boolean;
+  IsRenewed: boolean; IsUpgraded: boolean;
   serviceAccountSubscription: Subscription;
   activeserviceAccountOffersSubscription: Subscription;
 
@@ -26,6 +28,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   selectCheckBox  = false;
   enableSelect = false;
   ActiveServiceAccountDetails: ServiceAccount;
+  @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
 
   constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
     this.IsInRenewalTimeFrame = false;
@@ -38,6 +41,8 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
         this.ActiveServiceAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
         this.IsOffersReady = false;
+        this.IsRenewed = result.IsRenewed;
+        this.IsUpgraded = result.IsUpgraded;
       });
     this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
       all_offers => {
@@ -71,6 +76,13 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   getEndDate(startDate): Date {
     startDate = new Date(startDate);
     return new Date(new Date(startDate).setMonth(startDate.getMonth() + 12));
+  }
+  selectRenewal() {
+
+  }
+
+  showConfirmationPop() {
+    this.planPopModal.showPlanPopModal();
   }
 
 }

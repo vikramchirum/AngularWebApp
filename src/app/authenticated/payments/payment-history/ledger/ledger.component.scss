@@ -1,4 +1,28 @@
 
+tr.ledger {
+
+  td {
+    vertical-align: middle !important;
+  }
+  button {
+    border: 0;
+    margin: 0;
+    padding: 0;
+
+  }
+  i.fa {
+    padding: 10px 0;
+  }
+}
+
+.my-pagination {
+  text-align: center;
+}
+
+.my-pagination /deep/ .ngx-pagination .current {
+  text-align: center;
+}
+
 table {
   thead {
     tr {
@@ -8,21 +32,10 @@ table {
   tbody {
     tr {
       border-top: 1px solid #DBDADC;
-
-      td {
-        button {
-          font-size: 2rem;
-          padding: 0;
-        }
-      }
     }
   }
-  td {
-    padding-right: 2rem;
-    vertical-align: middle;
-  }
   td.date {
-    padding: 0 0 0 2rem;
+    padding-right: 2rem;
   }
   td.charge {
     background: #FCF8E3;
@@ -34,24 +47,5 @@ table {
   td.payment,
   td.balance {
     text-align: right;
-  }
-}
-
-.pagination-container {
-  padding: 6rem 0;
-
-  button {
-    background: white;
-    color: black;
-    outline: none !important;
-  }
-  .text-center {
-    button {
-    }
-    .badge {
-      background: black;
-      border-color: black;
-      color: white;
-    }
   }
 }

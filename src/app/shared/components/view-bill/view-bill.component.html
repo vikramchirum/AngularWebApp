@@ -16,15 +16,15 @@
             <col width="75%" />
             <col width="20%" />
             <col width="5%" />
-          </colgroup>          
-          <tbody>          
+          </colgroup>
+          <tbody>
             <tr>
               <td><button class="charge-toggle btn-link" (click)="chargeToggle(bill_item_details_gexa_charges)"> <i class="fa fa-fw" [ngClass]="chargeOpened(bill_item_details_gexa_charges) ? 'fa-chevron-up' : 'fa-chevron-down'"></i> </button><b> Gexa Charges</b> </td>
               <td><b>${{ subtotal(bill_item_details_gexa_charges) + subtotal(bill_item_details_other_charges) | FloatToMoneyPipe}}</b></td>
-            </tr>          
+            </tr>
             <ng-container *ngIf="chargeOpened(bill_item_details_gexa_charges)">
             <tr *ngFor="let item of bill_item_details_gexa_charges">
-              <td class="bill-name"><span>{{ item.Descripton }}</span><span class="bill-uasge" *ngIf="item.Quantity">{{ item.Quantity }}</span></td>
+              <td class="bill-name"><span>{{ item.Descripton }}</span><span class="bill-uasge" *ngIf="item.Quantity">{{ item.Quantity }}@{{item.Multiplier}} </span></td>
               <td class="bill-amount">${{ item.Amount | FloatToMoneyPipe }}</td>
               <td></td>
             </tr>
@@ -47,7 +47,7 @@
     </div>
     <div>
       <div *ngIf="bill_item_details_TDU_charges.length > 0; then listTDUCharges else noTDUChargesToList"></div>
-      <ng-template #listTDUCharges>        
+      <ng-template #listTDUCharges>
         <table border="0" width="100%" class="table-condensed table-striped">
           <colgroup>
             <col width="75%" />
@@ -58,7 +58,7 @@
              <tr>
               <td><button class="charge-toggle btn-link" (click)="chargeToggle(bill_item_details_TDU_charges)"> <i class="fa fa-fw" [ngClass]="chargeOpened(bill_item_details_TDU_charges) ? 'fa-chevron-up' : 'fa-chevron-down'"></i> </button> <b>{{tduName}}</b></td>
               <td><b>${{ subtotal(bill_item_details_TDU_charges) | FloatToMoneyPipe }}</b></td>
-             </tr>         
+             </tr>
             <ng-container  *ngIf="chargeOpened(bill_item_details_TDU_charges)">
             <tr *ngFor="let item of bill_item_details_TDU_charges">
               <td class="bill-name"><span>{{ item.Descripton }}</span></td>
@@ -85,7 +85,7 @@
             <col width="75%" />
             <col width="20%" />
             <col width="5%" />
-          </colgroup>         
+          </colgroup>
           <tbody >
              <tr>
               <td><button class="charge-toggle btn-link" (click)="chargeToggle(bill_item_details_tax)"> <i class="fa fa-fw" [ngClass]="chargeOpened(bill_item_details_tax) ? 'fa-chevron-up' : 'fa-chevron-down'"></i> </button>       <b>   Tax Charges </b></td>
