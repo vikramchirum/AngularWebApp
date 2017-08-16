@@ -137,6 +137,10 @@
      font-weight: 100;
      vertical-align: super;
   }
+  .fa-remove {
+    font-size: 20px;
+    color:black !important;
+  }
 
   .mat-card-content {
     h2 {
@@ -144,6 +148,7 @@
       color:#000;
 
     }
+
     .bg-default {
       background-color: #ececec;
       margin-bottom:0;

@@ -3,6 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalModule, PopoverModule  } from 'ngx-bootstrap';
 import { MdCardModule, MaterialModule } from '@angular/material';
+import {ToolTipModule} from 'angular2-tooltip';
 import { DatePickerModule } from 'ng2-datepicker';
 import { MyDatePickerModule } from 'mydatepicker';
 import { SharedModule } from 'app/shared/shared.module';
@@ -32,6 +33,7 @@ import { PlanConfirmationPopoverComponent } from './my-service-plans/plan-confir
     CommonModule,
     MdCardModule,
     MaterialModule,
+    ToolTipModule,
     ChartsModule,
     FormsModule,
     ReactiveFormsModule,
