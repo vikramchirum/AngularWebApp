@@ -40,8 +40,7 @@ export class RootComponent implements OnInit, AfterViewInit {
       this.homeMultiAccountsModal.show();
       this.UserService.UserObservable.subscribe(
         result => { this.service_account_length = result.Account_permissions.length;
-                    this.username = result.Profile.Username;
-        console.log('Usrename', this.username); }
+                    this.username = result.Profile.Username; }
       );
       if (!this.ServiceAccountService.ActiveServiceAccountId) {
         if (this.service_account_length != null && this.service_account_length === 2) {
@@ -55,7 +54,8 @@ export class RootComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.UserService.UserObservable.subscribe(
-      result => this.service_account_length = result.Account_permissions.length
+      result => { this.service_account_length = result.Account_permissions.length;
+                  this.username = result.Profile.Username; }
     );
   }
 
