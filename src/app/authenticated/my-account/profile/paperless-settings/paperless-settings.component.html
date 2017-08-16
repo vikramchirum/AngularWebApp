@@ -1,51 +1,50 @@
 <section class="paperless-status">
-   <div class="row">
-     <div class="col-xs-12 col-md-3">
-       <h4 *ngIf= "paperlessSettings" class="status">
-                   <br/>
-                    <h3>Paperless <br/>Settings</h3>
-
-         <div><small>Congrats! <br/> You are <br/> Paperless</small></div></h4>
-         <h4 *ngIf="!paperlessSettings" class="status"><br/><br/><br>
-           <h3>Go Paperless</h3></h4>
-     </div>
-   <div class="col-xs-12 col-md-8">
-     <h2>Set your <strong>Communication Preferences</strong></h2>
-     <br/>
-     <!--<form [formGroup]="myForm">
-      <div *ngFor="let data of emails">
-          <input type="checkbox" (change)="onChange(data.email, $event.target.checked)"> {{data.email}}<br>
+  <div class="row">
+    <div class="col-xs-12 col-md-3">
+      <div *ngIf= "paperlessSettings" class="status">
+        <h3><strong> Congrats!</strong><br/>
+          You are <br/>
+          Paperless</h3>
       </div>
-  </form>-->
- 
-    <div class="row form-control">
-      <div class="form-group clearfix">
-      <div class="col-md-4">
-       <label class="form-control-label"> Send  Bills Via </label> &nbsp;<i aria-hidden="true" class="fa fa-info-circle" tooltip="You’ll receive a statement each time your utility reads your meter, usually once per month."></i>
-       </div>
-      <div class="col-md-6">
+      <div *ngIf="!paperlessSettings" class="status">
+        <h3 class="go">Go Paperless!</h3>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-8">
+      <h2>Set your <strong>Communication Preferences</strong></h2>
+      <br/>
+      <div class="row">
+        <div class="col-xs-12 col-sm-4">
+          <h4>Send  My Bills       &nbsp;<small><i aria-hidden="true" class="fa fa-info-circle" tooltip="You’ll receive a statement each time your utility reads your meter, usually once per month."></i></small></h4>
+        </div>
         <form [formGroup]="sendBillsForm">
           <ng-container *ngFor='let data of billingOptions'>
-             <input type="checkbox"  [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, billingOptions)"> {{data.option}}  &nbsp;&nbsp;&nbsp;
-          </ng-container>
-        </form>     
-       </div>
-     </div>
-     </div><br>
-      <div class="row  form-control">
-       <div class="form-group clearfix">
-      <div class="col-md-4">
-       <label class="form-control-label"> Send  Plan Documents Via </label> &nbsp;<i aria-hidden="true" class="fa fa-info-circle" tooltip="Your plan documents include any contracts and disclosures, as well as the contract expiration notice at the end of your plan."></i>
-       </div>
-      <div class="col-md-6">
-       <form [formGroup]="planDocumentsForm">
-          <ng-container *ngFor='let data of plansOptions'>
-             <input type="checkbox"  [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, plansOptions)"> {{data.option}}  &nbsp;&nbsp;&nbsp;
+            <div class="col-xs-6 col-sm-3">
+              <div class="input-group"> <span class="input-group-addon">
+                <input type="checkbox" [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, billingOptions)" >
+                </span>
+                <div class="form-control"> {{data.option}} </div>
+              </div>
+            </div>
           </ng-container>
         </form>
-       </div>
-     </div>
-     </div>
-   </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12 col-sm-4">
+          <h4>Send My Plan Docs  &nbsp;<small><i aria-hidden="true" class="fa fa-info-circle" tooltip="Your plan documents include any contracts and disclosures, as well as the contract expiration notice at the end of your plan."></i></small></h4>
+        </div>
+        <form [formGroup]="planDocumentsForm">
+          <ng-container *ngFor='let data of plansOptions'>
+            <div class="col-xs-6 col-sm-3">
+              <div class="input-group"> <span class="input-group-addon">
+                <input type="checkbox"  [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, plansOptions)">
+                </span>
+                <div class="form-control"> {{data.option}} </div>
+              </div>
+            </div>
+          </ng-container>
+        </form>
+      </div>
+    </div>
   </div>
 </section>
