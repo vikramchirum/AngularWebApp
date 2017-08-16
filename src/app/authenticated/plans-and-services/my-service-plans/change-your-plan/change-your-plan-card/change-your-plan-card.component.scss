@@ -1,3 +1,4 @@
+@import '../../../../../../basecolors';
 .plan-card-container{
     border: none;
     border-right:1px solid #fff;
@@ -33,8 +34,9 @@
     .card-content{
         text-align: center;
         .sup-text {
-            font-size: 12px;
-            top: -1.5em;
+            font-weight: 200;
+            font-size: 20px;
+            top: -0.9em;
         }
         .sub-text {
             font-size:12px;
@@ -126,7 +128,7 @@
 }
 
 .fa-in-circle {
-  
+
   background:  rgba(254,162,32,1.0);
     color: #fff;
     border-radius: 30px;
@@ -137,17 +139,25 @@
 
 }
 .card-included {
-  
+
   .form-control {
     background: transparent;
     border: none;
     box-shadow: none;
   }
- 
+
   .col-sm-10 {
     text-align: left;
     line-height: 1em;
     margin-bottom: 10px;
   }
 }
+
+ .close-btn {
+    font-size: 20px;
+    .fa{
+          color:#000 !important;
+    }
+}
+
 

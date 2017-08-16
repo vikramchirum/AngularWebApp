@@ -1,8 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { equalityCheck } from '../../../../validators/validator';
-import {UserService} from 'app/core/user.service';
-import {Subscription} from 'rxjs/Subscription';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+
+import { result } from 'lodash';
+import { Subscription } from 'rxjs/Subscription';
+import { UserService } from 'app/core/user.service';
 
 @Component({
   selector: 'mygexa-security-information',
@@ -11,40 +11,34 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class SecurityInformationComponent implements OnInit, OnDestroy {
 
-  userName: string;
-  userNameEditing: boolean;
-  passwordEditing: boolean;
-  editing: boolean;
-  user_service_subscription: Subscription;
+  userName: string = null;
+  userNameEditing: boolean = null;
+  passwordEditing: boolean = null;
+  submitAttempt: boolean = null;
 
-  submitAttempt: boolean;
-  constructor(fb: FormBuilder, private user_service: UserService) {
-    this.submitAttempt = false;
-    this.userNameEditing = false;
-    this.passwordEditing = false;
-  }
+  UserServiceSubscription: Subscription = null;
+
+  constructor(
+    private UserService: UserService
+  ) { }
 
   ngOnInit() {
-
-    this.user_service_subscription = this.user_service.UserObservable.subscribe(
-      result => { this.userName = result.Profile.Username; }
+    this.UserServiceSubscription = this.UserService.UserObservable.subscribe(
+      result => this.userName = result.Profile.Username
     );
   }
 
   toggleUserNameEdit($event) {
-    $event.preventDefault();
-    this.passwordEditing = false;
+    result($event, 'preventDefault');
     this.userNameEditing = !this.userNameEditing;
   }
   togglePasswordEdit($event) {
-    $event.preventDefault();
-    this.userNameEditing = false;
+    result($event, 'preventDefault');
     this.passwordEditing = !this.passwordEditing;
   }
 
   ngOnDestroy() {
-    this.user_service_subscription.unsubscribe();
+    result(this.UserServiceSubscription, 'unsubscribe');
   }
-
 
 }

@@ -221,6 +221,7 @@ export class MovingCenterFormComponent implements OnInit {
     this.offerService.getOffers(this.offerRequestParams)
       .subscribe(result => {
         this.availableOffers = result;
+        console.log("this.available offers", this.availableOffers);
         //prevent user from navigating to plans page if we don't offer service in the moving address
         //prevent user from submitting the form if past due balance over 40
         if( this.availableOffers.Items.length > 0 && this.customerDetails.Past_Due < 40){

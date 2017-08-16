@@ -1,12 +1,13 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
-import { ServicePlanUpgradeModalComponent } from 'app/authenticated/plans-and-services/my-service-plans/change-your-plan/change-your-plan-card/service-plan-upgrade-modal/service-plan-upgrade-modal.component';
+import { get, result } from 'lodash';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { OfferService } from 'app/core/offer.service';
 import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import {PlanConfirmationPopoverComponent} from '../plan-confirmation-popover/plan-confirmation-popover.component';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -14,7 +15,9 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
   styleUrls: ['./my-current-plan.component.scss']
 })
 export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy {
-  IsInRenewalTimeFrame: boolean;
+  IsOffersReady: boolean = null;
+  IsInRenewalTimeFrame: boolean; IsOnHoldOver: boolean;
+  IsRenewed: boolean; IsUpgraded: boolean;
   serviceAccountSubscription: Subscription;
   activeserviceAccountOffersSubscription: Subscription;
 
@@ -25,10 +28,11 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   selectCheckBox  = false;
   enableSelect = false;
   ActiveServiceAccountDetails: ServiceAccount;
-  @ViewChild('serviceUpgradeModal') serviceUpgradeModal: ServicePlanUpgradeModalComponent;
+  @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
 
   constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
-    this.IsInRenewalTimeFrame = false;
+    this.IsInRenewalTimeFrame = this.IsOnHoldOver = false;
+    this.RenewalOffers = null;
   }
 
   ngOnInit() {
@@ -36,26 +40,27 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
       result => {
         this.ActiveServiceAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
+        this.IsOnHoldOver = result.IsOnHoldOver;
+        this.IsOffersReady = false;
+        this.IsRenewed = result.IsRenewed;
+        this.IsUpgraded = result.IsUpgraded;
       });
     this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
       all_offers => {
         this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
-        this.RenewalOffers = (this.FeaturedOffers[0].Offers)[0];
-
+        this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+        this.IsOffersReady = true;
         console.log('Featured_Offers', this.RenewalOffers);
       });
   }
-  ngAfterViewInit() {
 
-  }
+  ngAfterViewInit() { }
 
   ngOnDestroy() {
-    this.serviceAccountSubscription.unsubscribe();
+    result(this.serviceAccountSubscription, 'unsubscribe');
+    result(this.activeserviceAccountOffersSubscription, 'unsubscribe');
   }
-  showServiceUpgradeModal() {
-    this.serviceUpgradeModal.show();
 
-  }
   onSelect(event) {
     event.preventDefault();
     this.selectCheckBox = true;
@@ -72,6 +77,13 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   getEndDate(startDate): Date {
     startDate = new Date(startDate);
     return new Date(new Date(startDate).setMonth(startDate.getMonth() + 12));
+  }
+  selectRenewal() {
+
+  }
+
+  showConfirmationPop() {
+    this.planPopModal.showPlanPopModal();
   }
 
 }

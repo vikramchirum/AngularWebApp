@@ -8,7 +8,7 @@ import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
-import { clone, filter, find, forEach, get, map, pull } from 'lodash';
+import { clone, filter, find, forEach, get, map, pull, startsWith } from 'lodash';
 import { IUser, IUserSecurityQuestions, IUserSigningUp } from './models/user/User.model';
 import { HttpClient } from './httpclient';
 
@@ -47,6 +47,7 @@ export class UserService implements CanActivate {
   private loginUrl = environment.Api_Url + '/user/authenticate';
   private registerUrl = environment.Api_Url + '/user/register';
   private updateEmail = environment.Api_Url + '/user/updateEmailAddress';
+  private updateClaims = environment.Api_Url + '/user/updateClaims';
 
   get user_token(): string {
 
@@ -127,6 +128,7 @@ export class UserService implements CanActivate {
     });
 
     // If we have a valid token then get our user data.
+
     const storedToken = this.user_token;
     if (storedToken) {
 
@@ -158,7 +160,7 @@ export class UserService implements CanActivate {
     forEach(clone(observers), observer => observer.next(data));
   }
 
-  login(user_name: string, password: string): Observable<string> {
+  login(user_name: string, password: string): Observable<IUser> {
 
     const body = new URLSearchParams();
     body.append('username', user_name);
@@ -167,7 +169,12 @@ export class UserService implements CanActivate {
 
     return this.Http.post(this.loginUrl, body.toString(), options)
       .map(res => res.json())
-      .map(res => this.ApplyUserData(res))
+      .map(res => {
+        if (res.Account_permissions.length > 0 ) {
+          this.ApplyUserData(res);
+        }
+        return res;
+      })
       .catch(error => this.httpClient.handleHttpError(error));
   }
 
@@ -309,7 +316,22 @@ export class UserService implements CanActivate {
     return null;
   }
 
-  ApplyUserData(user: IUser): IUser {
+  public setUserFromMongo(token: string) {
+    if (token) {
+
+      const params = new URLSearchParams();
+      params.append('Token', token);
+      const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+      // const options = new RequestOptions({ headers, params });
+
+      this.httpClient.get('/user/getUserFromMongo')
+        .map(res => res.json())
+        .catch(error => this.httpClient.handleHttpError(error))
+        .subscribe(res => this.ApplyUserData(res));
+    }
+  }
+
+  public ApplyUserData(user: IUser): IUser {
 
     this.UserCache = user || null;
 
@@ -324,6 +346,9 @@ export class UserService implements CanActivate {
         localStorage.setItem('gexa_auth_token_expire', (this.UserCache.Date_Created.getTime() + 1000 * 60 * 60 * 12).toString());
       }
     } else {
+      // if (this.UserCache.Token && this.UserCache.Account_permissions.length < 0 ) {
+      //
+      // }
       this.httpClient.logout();
     }
 
@@ -335,6 +360,27 @@ export class UserService implements CanActivate {
     // Return the new user's data.
     return this.UserCache;
 
+  }
+
+  public updateClaim( tok: string, zip: string, value: string ) {
+    const token =  localStorage.getItem('gexa_auth_token');
+    const body = JSON.stringify({
+      Zip: zip,
+      Claim: {
+        Claim: {
+          key: 'Service_Account_Id',
+          value: value
+        },
+        Token: tok
+      }
+    });
+    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
+    if (tok && tok.length) {
+      return this.Http.post(this.updateClaims, body, options)
+        .map(res => res.json())
+        .catch(error => this.httpClient.handleHttpError(error));
+    }
+    return null;
   }
 
   logout() {
@@ -357,7 +403,7 @@ export class RedirectLoggedInUserToHome implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (
       this.UserService.user_logged_in
-      && state.url === '/login'
+      && startsWith(state.url, '/login')
     ) {
       this.Router.navigate(['/']);
     }

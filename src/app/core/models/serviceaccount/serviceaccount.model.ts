@@ -42,6 +42,9 @@ export class ServiceAccount {
   Current_Offer: IServiceAccountPlanHistoryOffer;
   Offering_Name: string;
   IsUpForRenewal: boolean;
+  IsOnHoldOver: boolean;
+  IsUpgraded: boolean;
+  IsRenewed: boolean;
 
   constructor(opts: any) {
     assign(this, opts);

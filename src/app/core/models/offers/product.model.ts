@@ -15,6 +15,7 @@ export interface IProduct {
   Green_Percentage: number;
   Pricing: IPricing;
   Product_Family: string;
+  Product_Features: string[];
   Usage_Profile: string;
   Id: string;
   Creation_Time: string;

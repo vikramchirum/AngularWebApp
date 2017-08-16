@@ -8,7 +8,8 @@ import {Contact} from './contact-form.interface';
   styleUrls: ['./contact-form.component.scss']
 })
 export class ContactFormComponent implements OnInit {
- @Input() phoneNumber;
+
+  @Input() phoneNumber;
   public contact: Contact;
   public submitted: boolean = false;
   message: string = '';
@@ -20,10 +21,10 @@ export class ContactFormComponent implements OnInit {
     this.contact = {
       phoneNumber: this.phoneNumber,
       message: ''
-    }
+    };
   }
 
-  //submitted = false;
+  // submitted = false;
 
   onSubmit(model: Contact, isValid: boolean) {
     console.log(model, isValid);

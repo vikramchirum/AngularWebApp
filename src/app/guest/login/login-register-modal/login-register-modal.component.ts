@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ISecurityQuestions, IUser} from '../register';
+import {ISecurityQuestions} from '../register';
 import {UserService} from '../../../core/user.service';
 import {Router} from '@angular/router';
-import { equalCheck, validateEmail, validateInteger } from 'app/validators/validator';
+import { equalCheck, validateEmail, validateInteger, validatePassword } from 'app/validators/validator';
 import {HttpClient} from '../../../core/httpclient';
+import {IRegUser} from '../../../core/models/register/register-user.model';
 
 @Component({
   selector: 'mygexa-login-register-modal',
@@ -17,7 +18,7 @@ export class LoginRegisterModalComponent implements OnInit {
   processing: boolean = null;
   registerForm: FormGroup = null;
   formSubmitted: boolean = null;
-  user: IUser = null;
+  user: IRegUser = null;
   error: string = null;
   errorMsg: string = null;
   secQuesArray: ISecurityQuestions[] = [];
@@ -40,7 +41,7 @@ export class LoginRegisterModalComponent implements OnInit {
       );
   }
 
-  save(model: IUser, isValid: boolean) {
+  save(model: IRegUser, isValid: boolean) {
     this.formSubmitted = true;
     // call API to save customer
     if (isValid) {
@@ -67,11 +68,11 @@ export class LoginRegisterModalComponent implements OnInit {
     return this.FormBuilder.group({
       Service_Account_Id: ['', Validators.required],
       Zip_Code: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(5), validateInteger])],
-      User_name: ['', Validators.required],
-      Password: ['', Validators.required],
+      User_name: ['', Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(8)])],
+      Password: ['', Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(10), validatePassword])],
       ConfirmPassword: ['', Validators.required],
       Email_Address: ['', Validators.compose([Validators.required, validateEmail])],
-      Security_Question_Id: ['none', Validators.required],
+      Security_Question_Id: ['', Validators.required],
       Security_Question_Answer: ['', Validators.required]
     }, {
       validator: equalCheck('Password', 'ConfirmPassword')

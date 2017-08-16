@@ -1,4 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
+
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model'
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
 
 @Component({
   selector: 'mygexa-view-my-bill-preference',
@@ -6,40 +10,48 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./preference.component.scss']
 })
 export class PreferenceComponent implements OnInit {
-  @Input() preference: string;
+ // @Input() preference: string;
 
-  active: boolean;
-  preference_text: string;
+  // active: boolean;
+  // preference_text: string;
+  public serviceAccountDetails : ServiceAccount = null;
+  
+  private ActiveServiceAccountSubscription: Subscription = null;
 
-  constructor() {
+  constructor(private ServiceAccountService: ServiceAccountService) {
     // Make 'null' to tell the view we're loading:
-    this.active = true;
+    //this.active = true;
   }
 
   ngOnInit() {
     // Get the preference from the Service_Account API:
+    this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      result => {
+        this.serviceAccountDetails = result;
+
+      })
     // Using localStorage for temporary data:
-    this.active = localStorage.getItem(`mygexa_view_bill_preference_${this.preference}`) === 'true';
-    switch (this.preference) {
-      case 'auto-pay': {
-        this.preference_text = 'Automatic Payments';
-        break;
-      }
-      case 'budget-billing': {
-        this.preference_text = 'Budget Billing';
-        break;
-      }
-      case 'ebill-paperless': {
-        this.preference_text = 'eBill (Paperless)';
-        break;
-      }
-    }
+    // this.active = localStorage.getItem(`mygexa_view_bill_preference_${this.preference}`) === 'true';
+    // switch (this.preference) {
+    //   case 'auto-pay': {
+    //     this.preference_text = 'Automatic Payments';
+    //     break;
+    //   }
+    //   case 'budget-billing': {
+    //     this.preference_text = 'Budget Billing';
+    //     break;
+    //   }
+    //   case 'ebill-paperless': {
+    //     this.preference_text = 'eBill (Paperless)';
+    //     break;
+    //   }
+    // }
   }
 
   togglePreference() {
     // Send update to the Service_Account API:
-    this.active = !this.active;
+   // this.active = !this.active;
     // Using localStorage for temporary data:
-    localStorage.setItem(`mygexa_view_bill_preference_${this.preference}`, this.active ? 'true' : 'false');
+  //  localStorage.setItem(`mygexa_view_bill_preference_${this.preference}`, this.active ? 'true' : 'false');
   }
 }

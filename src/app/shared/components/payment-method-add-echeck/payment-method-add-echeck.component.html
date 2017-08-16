@@ -16,7 +16,7 @@
 
     <div class="form-group ">
       <label for="payment-horizontal-echeck-name" class="col-md-3 control-label">Account Name</label>
-      <div class="col-md-8 col-lg-6">
+      <div class="col-md-9 col-lg-6">
         <input
           type="text"
           class="form-control form-control-wireframe"
@@ -24,16 +24,15 @@
           formControlName="echeck_name"
           maxlength="32"
         />
-      </div>
-       <div class="col-md-1">
         <small class="text-danger" *ngIf="formGroup.controls?.echeck_name.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
         <small class="text-success" *ngIf="formGroup.controls?.echeck_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
-      </div>
+
+            </div>
     </div>
 
     <div class="form-group ">
       <label for="payment-horizontal-echeck-routing" class="col-md-3 control-label">Routing Number</label>
-      <div class="col-md-8 col-lg-6">
+      <div class="col-md-9 col-lg-6">
         <input
           type="text"
           class="form-control form-control-wireframe"
@@ -41,11 +40,10 @@
           formControlName="echeck_routing"
           maxlength="17"
         />
-              </div>
-       <div class="col-md-1">
         <small class="text-danger" *ngIf="formGroup.controls?.echeck_routing.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
         <small class="text-success" *ngIf="formGroup.controls?.echeck_routing.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
-      </div>
+   
+                         </div>
     </div>
 
     <div class="form-group ">
@@ -58,11 +56,10 @@
           formControlName="echeck_accounting"
           maxlength="17"
         />
-              </div>
-       <div class="col-md-1">
         <small class="text-danger" *ngIf="formGroup.controls?.echeck_accounting.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
         <small class="text-success" *ngIf="formGroup.controls?.echeck_accounting.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
-      </div>
+  
+                          </div>
     </div>
 
     <div class="form-group ">

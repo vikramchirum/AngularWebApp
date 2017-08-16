@@ -1,28 +1,46 @@
-import {Component, OnInit, EventEmitter, Output} from '@angular/core';
-import {FormGroup, FormBuilder, Validators, FormControl} from '@angular/forms';
-import {equalityCheck} from '../../../validators/validator'
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
+import { equalityCheck } from 'app/validators/validator';
 
 @Component({
   selector: 'mygexa-change-password',
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.scss']
 })
-export class ChangePasswordComponent implements OnInit {
+export class ChangePasswordComponent {
 
-  changePasswordForm: FormGroup;
+  @Output() onCancel: EventEmitter<any> = new EventEmitter();
 
-  submitAttempt: boolean = false;
+  changePasswordForm: FormGroup = null;
+  submitAttempt: boolean = null;
 
-  constructor(fb: FormBuilder) {
-
-    this.changePasswordForm = fb.group({
-      'currentPassword': [null, Validators.required],
-      'password': [null, Validators.required],
-      'confirmPassword': [null, Validators.required]
-    }, {validator: equalityCheck('password', 'confirmPassword')});
+  constructor(
+    FormBuilder: FormBuilder
+  ) {
+    this.changePasswordForm = FormBuilder.group(
+      {
+        currentPassword: [null, Validators.required],
+        password: [null, Validators.required],
+        confirmPassword: [null, Validators.required]
+      },
+      {
+        validator: equalityCheck('password', 'confirmPassword')
+      }
+    );
   }
 
-  ngOnInit() {
+  submitForm() {
+    this.submitAttempt = true;
+    console.log('value', this.changePasswordForm.value);
+    console.log('valid', this.changePasswordForm.valid);
+    if (this.changePasswordForm.valid) {
+      /** send form data to api to update in database */
+    }
+  }
+
+  emitCancel() {
+    this.onCancel.emit();
   }
 
 }
