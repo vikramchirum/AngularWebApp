@@ -31,7 +31,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
 
   constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
-    this.IsInRenewalTimeFrame = this.IsOnHoldOver = false;
+    this.IsInRenewalTimeFrame = this.IsOnHoldOver = null;
     this.RenewalOffers = null;
   }
 
@@ -45,20 +45,24 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
         this.IsRenewed = result.IsRenewed;
         this.IsUpgraded = result.IsUpgraded;
       });
-    this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
-      all_offers => {
-        this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
-        this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
-        this.IsOffersReady = true;
-        console.log('Featured_Offers', this.RenewalOffers);
-      });
+    if (this.IsInRenewalTimeFrame) {
+      this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
+        all_offers => {
+          this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
+          this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+          this.IsOffersReady = true;
+          console.log('Featured_Offers', this.RenewalOffers);
+        });
+    }
   }
 
   ngAfterViewInit() { }
 
   ngOnDestroy() {
     result(this.serviceAccountSubscription, 'unsubscribe');
-    result(this.activeserviceAccountOffersSubscription, 'unsubscribe');
+    if (this.IsInRenewalTimeFrame) {
+      result(this.activeserviceAccountOffersSubscription, 'unsubscribe');
+    }
   }
 
   onSelect(event) {

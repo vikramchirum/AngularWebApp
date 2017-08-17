@@ -23,7 +23,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   IsInRenewalTimeFrame: boolean;
 
   constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
-    this.IsInRenewalTimeFrame = false;
+    this.IsInRenewalTimeFrame = null;
     this.RenewalOffers = null;
   }
 
@@ -32,17 +32,21 @@ export class DocumentsComponent implements OnInit, OnDestroy {
     if (this.ActiveServiceAccount) {
       this.IsInRenewalTimeFrame = this.ActiveServiceAccount.IsUpForRenewal;
     }
+if (this.IsInRenewalTimeFrame) {
+  this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
+    all_offers => {
+      this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
+      this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+      this.IsOffersReady = true;
+      console.log('Featured_Offers', this.RenewalOffers);
+    });
+}
 
-    this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
-      all_offers => {
-        this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
-        this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
-        this.IsOffersReady = true;
-        console.log('Featured_Offers', this.RenewalOffers);
-      });
   }
 
   ngOnDestroy() {
-    result(this.activeserviceAccountOffersSubscription, 'unsubscribe');
+    if (this.IsInRenewalTimeFrame) {
+      result(this.activeserviceAccountOffersSubscription, 'unsubscribe');
+    }
   }
 }

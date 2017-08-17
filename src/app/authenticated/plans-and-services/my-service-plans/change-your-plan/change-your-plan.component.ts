@@ -15,8 +15,8 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
   styleUrls: ['./change-your-plan.component.scss']
 })
 export class ChangeYourPlanComponent implements OnInit, OnDestroy {
-  public IsInRenewalTimeFrame: boolean;
-  public IsOnHoldOver: boolean;
+  public IsInRenewalTimeFrame: boolean = null;
+  public IsOnHoldOver: boolean = null;
   ActiveServiceAccountDetails: ServiceAccount;
   serviceAccountSubscription: Subscription;
   activeserviceAccountOffersSubscription: Subscription;
@@ -32,8 +32,8 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   havePromoCode: boolean = false;
 
   constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
-    this.IsInRenewalTimeFrame = false;
     this.clicked = true;
+    this.IsInRenewalTimeFrame = this.IsOnHoldOver = null;
   }
 
   ngOnInit() {
@@ -42,7 +42,6 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
         this.ActiveServiceAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
         this.IsOnHoldOver = result.IsOnHoldOver;
-
       });
     if (!this.IsInRenewalTimeFrame && !this.IsOnHoldOver) {
       this.activeserviceAccountUpgradeOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountUpgradeOfferObservable.subscribe(
@@ -69,8 +68,11 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.serviceAccountSubscription.unsubscribe();
+    if (!this.IsInRenewalTimeFrame && !this.IsOnHoldOver) {
     this.activeserviceAccountUpgradeOffersSubscription.unsubscribe();
-    this.activeserviceAccountOffersSubscription.unsubscribe();
+    }  else if (this.IsInRenewalTimeFrame) {
+      this.activeserviceAccountOffersSubscription.unsubscribe();
+    }
   }
   ChevClicked() {
     this.clicked = !this.clicked ;

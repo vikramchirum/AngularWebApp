@@ -138,7 +138,7 @@ export class OfferService {
         }
       );
 
-    } else {
+    } else if (this.ActiveServiceAccount.IsUpForRenewal) {
       // Assign the Http request to prevent any similar requests.
       this.requestObservable = this.http.get(`/service_accounts/${this.ActiveServiceAccountId}/offers`)
         .map(data => data.json())
