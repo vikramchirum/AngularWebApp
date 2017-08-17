@@ -1,4 +1,4 @@
-<section class="paperless-status" *ngIf="notificationOptions">
+<section class="paperless-status">
   <div class="row">
     <div class="col-xs-12 col-md-3">
       <div *ngIf= "paperlessSettings" class="status">
@@ -21,7 +21,7 @@
           <ng-container *ngFor='let data of billingOptions'>
             <div class="col-xs-6 col-sm-3">
               <div class="input-group"> <span class="input-group-addon">
-                <input type="checkbox" [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, billingOptions)" >
+                <input type="checkbox" [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, billingOptions, notificationOptionsForBills)" >
                 </span>
                 <div class="form-control"> {{data.option}} </div>
               </div>
@@ -37,7 +37,7 @@
           <ng-container *ngFor='let data of plansOptions'>
             <div class="col-xs-6 col-sm-3">
               <div class="input-group"> <span class="input-group-addon">
-                <input type="checkbox"  [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, plansOptions)">
+                <input type="checkbox"  [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, plansOptions, notificationOptionsForPlans)">
                 </span>
                 <div class="form-control"> {{data.option}} </div>
               </div>
