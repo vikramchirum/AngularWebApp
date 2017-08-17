@@ -1,36 +1,57 @@
-<div class="row" *ngIf="!IsInRenewalTimeFrame">
-  <section>
-    <div class="col-sm-2">
-      <h2> Want to Upgrade your Plan? </h2>
-    </div>
-    <div class="col-sm-9">
-      <div class="row change-plans-grid" *ngIf="AllOffers">
-        <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
-        <div class="col-md-4 plan-card" *ngFor="let offer of AllOfferss">
-          <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
+
+<div *ngIf="!IsInRenewalTimeFrame && UpgradeOffers?.length > 0; then UpgradeOffers"></div>
+<div *ngIf="IsInRenewalTimeFrame && AllOffers?.length > 0; then RenewalOffers"></div>
+<div *ngIf="!(UpgradeOffers?.length > 0 || AllOffers?.length > 0); then NoOffers"></div>
+
+<ng-template #UpgradeOffers>
+  <div class="row">
+    <section>
+      <div class="col-sm-2">
+        <h2> Want to Upgrade your Plan? </h2>
+      </div>
+      <div class="col-sm-9">
+        <div class="row change-plans-grid" *ngIf="UpgradeOffers">
+          <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
+          <div class="col-md-4 plan-card" *ngFor="let offer of UpgradeOffers">
+            <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-</div>
+    </section>
+  </div>
+</ng-template>
+<ng-template #RenewalOffers>
+  <div class="row">
+    <section id="renewPlan">
+      <div class="col-sm-2">
+        <h2>View more renewal plans </h2>
+        <a  (click)="showPromoCodeInput($event)"> <p> Have a promo code?</p></a>
+        <form #promoCodeForm="ngForm"  *ngIf="havePromoCode">
+          <input type="text" class="form-control" required ngModel name="name"
+                 #name="ngModel"><br>
+          <a class="boxed btn btn-primary" [class.disabled]="!promoCodeForm.form.valid">Submit</a></form></div>
 
-<div class="row" *ngIf="IsInRenewalTimeFrame">
-  <section id="renewPlan">
-    <div class="col-sm-2">
-      <h2>View more renewal plans </h2>
-      <a  (click)="showPromoCodeInput($event)"> <p> Have a promo code?</p></a>
-       <form #promoCodeForm="ngForm"  *ngIf="havePromoCode">
-      <input type="text" class="form-control" required ngModel name="name"
-               #name="ngModel"><br>
-      <a class="boxed btn btn-primary" [class.disabled]="!promoCodeForm.form.valid">Submit</a></form></div>
-
-    <div class="col-sm-9">
-      <div class="row change-plans-grid" *ngIf="AllOffers">
-        <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
-        <div class="col-md-4 plan-card" *ngFor="let offer of AllOfferss">
-          <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
+      <div class="col-sm-9">
+        <div class="row change-plans-grid" *ngIf="AllOffers">
+          <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
+          <div class="col-md-4 plan-card" *ngFor="let offer of AllOfferss">
+            <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
+          </div>
         </div>
       </div>
+    </section>
+  </div>
+</ng-template>
+<ng-template #NoOffers>
+  <div class="row">
+    <div class="col-sm-24">
+      <h2> No available offers for this service account. </h2>
     </div>
-  </section>
-</div>
+  </div>
+</ng-template>
+
+
+
+
+
+

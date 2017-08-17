@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { OfferService } from 'app/core/offer.service';
 import { findKey, filter, find } from 'lodash';
 import { ChangeYourPlanCardComponent } from './change-your-plan-card/change-your-plan-card.component';
-import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
+import {AllOffersClass, UpgradeOffersClass} from 'app/core/models/offers/alloffers.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
@@ -16,6 +16,7 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
 })
 export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   public IsInRenewalTimeFrame: boolean;
+  public IsOnHoldOver: boolean;
   ActiveServiceAccountDetails: ServiceAccount;
   serviceAccountSubscription: Subscription;
   activeserviceAccountOffersSubscription: Subscription;
@@ -23,6 +24,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   public FeaturedOffers: AllOffersClass[];
   public RenewalOffers: IOffers[];
   public AllOffers: AllOffersClass[];
+  public UpgradeOffers: IOffers[];
   public AllOfferss: IOffers[];
   clicked: boolean;
   havePromoCode: boolean = false;
@@ -37,17 +39,29 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
       result => {
         this.ActiveServiceAccountDetails = result;
         this.IsInRenewalTimeFrame = result.IsUpForRenewal;
-      });
-    this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
-      all_offers => {
-        this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
-        this.RenewalOffers = this.FeaturedOffers[0].Offers;
-        console.log('Featured_Offers', this.RenewalOffers);
+        this.IsOnHoldOver = result.IsOnHoldOver;
 
-        this.AllOffers = all_offers.filter(item => item.Type === 'All_Offers');
-        this.AllOfferss = this.AllOffers[0].Offers;
-        console.log('All_Offers', this.AllOfferss);
       });
+    if (!this.IsInRenewalTimeFrame && !this.IsOnHoldOver) {
+      this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountUpgradeOfferObservable.subscribe(
+        all_offers => {
+            this.UpgradeOffers = all_offers;
+            console.log('Upgraded_Offers', this.UpgradeOffers);
+        });
+    } else {
+      this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
+        all_offers => {
+            this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
+            this.RenewalOffers = this.FeaturedOffers[0].Offers;
+            console.log('Featured_Offers', this.RenewalOffers);
+
+            this.AllOffers = all_offers.filter(item => item.Type === 'All_Offers');
+            this.AllOfferss = this.AllOffers[0].Offers;
+            console.log('All_Offers', this.AllOfferss);
+        });
+
+    }
+
   }
 
   ngOnDestroy() {

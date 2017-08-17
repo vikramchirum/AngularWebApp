@@ -74,10 +74,10 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
     this.enableSelect = false;
   }
 
-  getEndDate(startDate): Date {
-    startDate = new Date(startDate);
-    return new Date(new Date(startDate).setMonth(startDate.getMonth() + 12));
-  }
+  getEndDate(startDate, term: number ): Date {
+  startDate = new Date(startDate);
+  return new Date(new Date(startDate).setMonth(startDate.getMonth() + Number(term) ));
+}
   selectRenewal() {
 
   }

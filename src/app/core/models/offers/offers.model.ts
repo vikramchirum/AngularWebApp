@@ -7,7 +7,7 @@ import {IPricingDefinition} from './pricingdefinition.model';
 export interface IOffers {
   Promotion: IPromotion;
   Plan: IPlan;
-  Channel: [ IFeaturedChannels ];
+  Channels: [ IFeaturedChannels ];
   Start_Date: string;
   End_Date: string;
   Rate_Code: string;
@@ -22,3 +22,4 @@ export interface IOffers {
   Date_Created: string;
   Date_Last_Modified: string;
 }
+

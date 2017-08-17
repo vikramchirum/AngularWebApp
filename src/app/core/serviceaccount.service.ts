@@ -7,7 +7,7 @@ import { Observer } from 'rxjs/Observer';
 import { clone, find, first, forEach, get, isString, map, pull } from 'lodash';
 import { HttpClient } from './httpclient';
 import { UserService } from './user.service';
-import { ServiceAccount } from './models/serviceaccount/serviceaccount.model';
+import {ServiceAccount} from './models/serviceaccount/serviceaccount.model';
 
 @Injectable()
 export class ServiceAccountService {
@@ -145,20 +145,23 @@ export class ServiceAccountService {
 
     // End dates should not be null - for dev purposes, handle null dates:
     const endDate = ServiceAccount.Contract_End_Date === null
-      // If no end date, take the current time and add a year's milliseconds to it.
-      ? new Date(currentDate.getTime() + 1000 * 60 * 60 * 24 * 365)
+      // If no end date, take the current offer's term and add it.
+      ? new Date(new Date(ServiceAccount.Contract_Start_Date).setMonth(new Date(ServiceAccount.Contract_Start_Date).getMonth() + Number(ServiceAccount.Current_Offer.Term)))
+
       // Otherwise, use the provided date.
       : new Date(ServiceAccount.Contract_End_Date);
 
     // Get the first day of the 90 day period by subtracting 90 day's milliseconds from the end date.
     const req90Day: Date = new Date(endDate.getTime() - 1000 * 60 * 60 * 24 * 90);
-
+    console.log('Required 90 day', req90Day);
+    // Set calculated end date
+    ServiceAccount.Calculated_Contract_End_Date = endDate;
     // Determine if the current day is past the first day of the 90 day period.
-    ServiceAccount.IsUpForRenewal = currentDate > req90Day;
+    ServiceAccount.IsUpForRenewal = currentDate > req90Day && currentDate < ServiceAccount.Calculated_Contract_End_Date;
 
     // Determine if the service account is on hold over using its' current offer.
     // Term === 1 would mean a monthly plan but should we determine with another attribute?
-    ServiceAccount.IsOnHoldOver = ServiceAccount.Current_Offer.Term === 1;
+    ServiceAccount.IsOnHoldOver = ServiceAccount.Current_Offer.Term === 1 && currentDate > ServiceAccount.Calculated_Contract_End_Date;
 
     return ServiceAccount;
   }
