@@ -51,10 +51,6 @@ export class AppComponent implements OnInit, OnDestroy {
     clearInterval(this.intervalCheck);
   }
 
-  onNavigate(url: string) {
-    window.open(url, '_blank');
-  }
-
   determineFooterPosition(target): void {
     this.fixedToBottom = target.innerHeight > (this.$content.clientHeight + 66);
     this.ChangeDetectorRef.detectChanges();

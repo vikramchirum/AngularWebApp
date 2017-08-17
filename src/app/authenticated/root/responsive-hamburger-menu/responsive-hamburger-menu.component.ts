@@ -1,4 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { result, startsWith } from 'lodash';
+
 
 @Component({
   selector: 'mygexa-responsive-hamburger-menu',
@@ -9,8 +12,10 @@ export class ResponsiveHamburgerMenuComponent implements OnInit {
 
   @Output() signout = new EventEmitter<string>();
   @Output() notify = new EventEmitter<string>();
+  startsWith = startsWith;
 
   constructor(
+        private Router: Router,
   ) { }
 
   ngOnInit() { }
