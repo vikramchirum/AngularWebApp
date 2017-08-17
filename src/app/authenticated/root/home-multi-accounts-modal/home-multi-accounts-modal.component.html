@@ -42,14 +42,17 @@
                 </div>
               </div>
             </div>
-
-            <div class="text-right">
-              <button
-                type="button"
-                class="btn btn-primary pull-right continue-button"
-                [disabled]='!active_service_account_id'
-                (click)="onContinue()"
-              >Continue</button>
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="text-center">
+                  <button
+                    type="button"
+                    class="btn btn-primary pull-right continue-button"
+                    [disabled]='!active_service_account_id'
+                    (click)="onContinue()"
+                  >Continue</button>
+                </div>
+              </div>
             </div>
 
           </ng-template>
