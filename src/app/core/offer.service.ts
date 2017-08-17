@@ -121,7 +121,7 @@ export class OfferService {
     if (!this.ActiveServiceAccount.IsUpForRenewal && !this.ActiveServiceAccount.IsOnHoldOver) {
       // Assign the Http request to prevent any similar requests.
       this.requestObservable = this.http.get(`/v2/Offers?option.approved=true&option.startDate=${new Date}&option.plan.term_Greater_Than=${this.ActiveServiceAccount.Current_Offer.Term}&option.plan.tDU.duns_Number=${this.ActiveServiceAccount.TDU_DUNS_Number}`)
-        .map(data => { data.json(); return data.json(); })
+        .map(data => { data.json(); console.log('Offers', data.json()); return data.json(); })
         .map(data => <IOffers[]>data['Items'] )
         .catch(error => this.http.handleHttpError(error));
 

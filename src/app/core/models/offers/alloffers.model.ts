@@ -16,7 +16,7 @@ export class AllOffersClass {
 }
 
 export class UpgradeOffersClass {
-  Items: IOffers[];
+  Items: [ IOffers ];
 
   /**
    * Construct a new AllOffersClass passing in values (opts) to use.
