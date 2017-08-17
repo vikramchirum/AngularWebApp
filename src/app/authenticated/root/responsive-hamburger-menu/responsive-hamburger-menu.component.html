@@ -1,9 +1,9 @@
  <div class="panel-group" id="accordion">
- <div class="panel account-menu">
+ <div class="panel account-menu" >
     <div class="dx-panel-heading clearfix">
-        <a class="accordion-toggle collapsed col-xs-12"  data-toggle="collapse" data-parent="#accordion" href="#myAccountCollapse">My Account</a>
+        <a class="accordion-toggle col-xs-12" [ngClass]="startsWith(Router.url, '/account') ? 'open' : 'collapsed'"  data-toggle="collapse" data-parent="#accordion" href="#myAccountCollapse">My Account</a>
     </div>
-    <div id="myAccountCollapse" class="panel-collapse collapse">
+    <div id="myAccountCollapse" class="panel-collapse collapse"  [ngClass]="{ 'in': startsWith(Router.url, '/account')}" > 
       <div class="panel-body">
               <ul class="list-unstyled list-center list-rule">
           <li><a (click)='routerOnClick()' routerLink="/account/profile">Profile &amp; Preferences</a></li>
@@ -15,11 +15,12 @@
    </div>
  <div class="panel plans-menu">
     <div class="dx-panel-heading clearfix">
-        <a class="accordion-toggle collapsed col-xs-12" data-toggle="collapse" data-parent="#accordion" href="#plansAndServicesCollapse">Plans &amp; Services</a>
+        <a class="accordion-toggle col-xs-12" [ngClass]="startsWith(Router.url, '/plans-and-services') ? 'open' : 'collapsed'"  data-toggle="collapse" data-parent="#accordion" href="#plansAndServicesCollapse">Plans &amp; Services</a>
     </div>
-    <div id="plansAndServicesCollapse" class="panel-collapse collapse">
+    <div id="plansAndServicesCollapse" class="panel-collapse collapse"  [ngClass]="{ 'in': startsWith(Router.url, '/plans-and-services') }"
+>
       <div class="panel-body">
-              <ul class="list-unstyled list-center list-rule">
+        <ul class="list-unstyled list-center list-rule">
           <li><a (click)='routerOnClick()' routerLink="/plans-and-services/my-services-plans">My Service Plans</a></li>
           <li><a (click)='routerOnClick()' routerLink="/plans-and-services/add-service-location">Add Service Locations</a></li>
           <li><a (click)='routerOnClick()' routerLink="/plans-and-services/moving">Moving </a></li>
@@ -30,9 +31,10 @@
   </div>
 <div class="panel payments-menu">
     <div class="dx-panel-heading clearfix">
-        <a class="accordion-toggle collapsed col-xs-12" data-toggle="collapse" data-parent="#accordion" href="#paymentsCenterCollapse">Payments Center</a>
+        <a class="accordion-toggle  col-xs-12" [ngClass]="startsWith(Router.url, '/payments/') ? 'open' : 'collapsed'"  data-toggle="collapse" data-parent="#accordion" href="#paymentsCenterCollapse">Payments Center</a>
     </div>
-    <div id="paymentsCenterCollapse" class="panel-collapse collapse">
+    <div id="paymentsCenterCollapse" class="panel-collapse collapse"  [ngClass]="{ 'in': startsWith(Router.url, '/payments/') }"
+>
       <div class="panel-body">
               <ul class="list-unstyled list-center list-rule">
           <li><a (click)="routerOnClick()" routerLink="/payments/view-my-bill">View My Bill</a></li>
@@ -47,12 +49,14 @@
    
     <div class="panel control-menu">
     <div class="dx-panel-heading clearfix">
-        <a class="accordion-toggle collapsed col-xs-12" data-toggle="collapse" data-parent="#accordion" href="#controlInsightsCollapse">Control &amp; Insights</a>
+        <a class="accordion-toggle  col-xs-12" [ngClass]="startsWith(Router.url, '/controls-and-insights') ? 'open' : 'collapsed'"  data-toggle="collapse" data-parent="#accordion" href="#controlInsightsCollapse">Control &amp; Insights</a>
     </div>
-    <div id="controlInsightsCollapse" class="panel-collapse collapse">
+    <div id="controlInsightsCollapse" class="panel-collapse collapse"  [ngClass]="{ 'in': startsWith(Router.url, '/controls-and-insights') }"
+
+>
       <div class="panel-body">
         <ul class="list-unstyled list-center list-rule">
-          <li><a (click)="routerOnClick()" routerLink="/controls-and-insights/usage-history">View My Bill</a></li>
+          <li><a (click)="routerOnClick()" routerLink="/controls-and-insights/usage-history">Control and Inights</a></li>
         </ul>
       </div>
     </div>

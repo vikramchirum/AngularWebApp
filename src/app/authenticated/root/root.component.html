@@ -13,8 +13,8 @@
           <!--</div>-->
         <!--</form>-->
       <!--<li>-->
-      <li><a href="#"><small><span class="fa fa-user-circle fa-white"></span> <span class="hidden-xs">Hi! {{ user }} {{ username }}</span></small></a></li>
-      <li><a href="#"><small><span class="fa fa-bell fa-white"></span> <span class="hidden-xs">Notifications</span></small></a></li>
+      <li><a routerLink="/account/profile"><small><span class="fa fa-user-circle fa-white"></span> <span class="hidden-xs">Hi,  {{ username }}!</span></small></a></li>
+      <li class="hidden"><a href="#"><small><span class="fa fa-bell fa-white"></span> <span class="hidden-xs">Notifications</span></small></a></li>
       <li><a href="#" (click)="logout($event)"><small><span class="fa fa-sign-out fa-white"></span> <span class="hidden-xs">Logout</span></small></a></li>
       <li><a href="#"><small><span class="fa fa-phone fa-white"></span> <span class="hidden-xs">866-961-9399</span></small></a></li>
     </ul>
@@ -224,13 +224,7 @@
         (notify)="onNotify($event)"
       ></mygexa-responsive-hamburger-menu>
     </div>
-  <!--      <div class="row accordion-panel">
-      <div class="xs-4">
-        <a id="accordionToggle" class="closebtn pull-right nav-close" (click)="toggleAccordion($event)">&times;</a>
-      </div>
-    </div> -->
 </div>
-<br class="visible-xs">
 
 <div class="container-fluid">
   <div class="row">

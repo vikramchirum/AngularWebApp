@@ -19,9 +19,9 @@
 #RenewalPlan {
   clear: both;
 
-  .tooltip-inner {
-    white-space:nowrap;
-    max-width:none;
+  .tooltipClass {
+    background-color: black !important;
+    color:white !important;
   }
   .form-control {
     color: rgba(46,177,52,1.0);
@@ -34,5 +34,9 @@
 }
 #RenewalPlan > .row {
   margin-bottom: 4px;
+  .tooltipClass {
+    background-color: black !important;
+    color:white !important;
+  }
 }
 
