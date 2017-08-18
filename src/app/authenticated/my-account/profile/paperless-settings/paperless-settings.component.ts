@@ -11,6 +11,8 @@ import { NotificationStatus } from 'app/core/models/enums/notificationstatus';
 import { NotificationOptionsService } from 'app/core/notificationoptions.service';
 import { INotificationOption } from 'app/core/models/notificationoptions/notificationoption.model';
 import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
+import { ContactMethod } from 'app/core/models/enums/contactmethod';
+import { UserService } from 'app/core/user.service';
 
 @Component({
   selector: 'mygexa-paperless-settings',
@@ -19,8 +21,6 @@ import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount
 })
 export class PaperlessSettingsComponent implements OnInit {
 
-  sendBillsForm: FormGroup;
-  planDocumentsForm: FormGroup;
   billingOptions = [{ option: 'Email', checked: false }, { option: 'Paper', checked: false }];
   plansOptions = [{ option: 'Email', checked: false }, { option: 'Paper', checked: false }];
   paperlessSettings: boolean = false;
@@ -28,51 +28,55 @@ export class PaperlessSettingsComponent implements OnInit {
   notificationOptionsForBills = null;
   notificationOptionsForPlans = null;
 
-  searchNotificationOptionRequestForBill  = null;
+  searchNotificationOptionRequestForBill = null;
   searchNotificationOptionRequestForPlans = null;
   CustomerAccountServiceSubscription: Subscription = null;
+  UserServiceSubscription: Subscription = null;
   customerDetails: CustomerAccount = null;
   updateNotification = null;
+  notificationType; emailAddress;
 
   constructor(private fb: FormBuilder,
     private notificationService: NotificationOptionsService,
-    private CustomerAccountService: CustomerAccountService
+    private CustomerAccountService: CustomerAccountService,
+    private UserService: UserService
   ) { }
 
   ngOnInit() {
-    this.sendBillsForm = this.fb.group({
-      billingOptions: this.fb.array([])
-    });
-    this.planDocumentsForm = this.fb.group({
-      plansOptions: this.fb.array([])
-    });
     this.CustomerAccountServiceSubscription = this.CustomerAccountService.CustomerAccountObservable.subscribe(
       result => {
         this.customerDetails = result;
         this.getNotificationOption(this.customerDetails.Id);
       }
     );
+    this.UserServiceSubscription = this.UserService.UserObservable.subscribe(
+      result => {
+        this.emailAddress = result.Profile.Email_Address;
+      }
+    );
+    this.notificationType = NotificationType;
   }
 
+  //fetch notification options for bills and Plans based on Notification Type(Bill, Contract_Expiration)
   getNotificationOption(custId) {
     this.searchNotificationOptionRequestForBill = {
       Account_Info: {
-        Account_Type:"GEMS_Residential_Customer_Account",
+        Account_Type: AccountType.GEMS_Residential_Customer_Account,
         Account_Number: custId
       },
-      Type: "Bill",
-      Status: "Active"
+      Type: NotificationType.Bill,
+      Status: NotificationStatus.Active
     }
     this.searchNotificationOptionRequestForPlans = {
       Account_Info: {
-        Account_Type: "GEMS_Residential_Customer_Account",
+        Account_Type: AccountType.GEMS_Residential_Customer_Account,
         Account_Number: custId
       },
-      Type: "Contract_Expiration",
-      Status: "Active"
+      Type: NotificationType.Contract_Expiration,
+      Status: NotificationStatus.Active
     }
     this.notificationService.searchNotificationOption(this.searchNotificationOptionRequestForBill).subscribe(result => {
-      console.log('Notification Result for Bill', result);
+      //console.log('Notification Result for Bill', result);
       this.notificationOptionsForBills = result;
       if (this.notificationOptionsForBills && this.notificationOptionsForBills.length > 0) {
         this.selectedPreference(this.notificationOptionsForBills, this.billingOptions);
@@ -81,7 +85,7 @@ export class PaperlessSettingsComponent implements OnInit {
       }
     })
     this.notificationService.searchNotificationOption(this.searchNotificationOptionRequestForPlans).subscribe(result => {
-      console.log('Notification Result for plans', result);
+      //console.log('Notification Result for plans', result);
       this.notificationOptionsForPlans = result;
       if (this.notificationOptionsForPlans && this.notificationOptionsForPlans.length > 0) {
         this.selectedPreference(this.notificationOptionsForPlans, this.plansOptions);
@@ -98,7 +102,6 @@ export class PaperlessSettingsComponent implements OnInit {
       preferenceOptions[0].checked = true;
       preferenceOptions[1].checked = true;
     }
-    console.log('this.billOptions', this.billingOptions)
   }
 
   togglePaperless(billingOptions, plansOptions) {
@@ -123,33 +126,7 @@ export class PaperlessSettingsComponent implements OnInit {
       this.paperlessSettings = true;
     } else {
       this.paperlessSettings = false;
-    }  
-  }
-  
-  updateNotificationOption(notificationResponse, selectedOptions) { 
-     
-     let paperless = false;
-     if(selectedOptions[0].checked && !selectedOptions[1].checked){
-       paperless = true;       
-     }
-     
-    this.updateNotification = {
-      Type: notificationResponse[0].Type,
-      Paperless: paperless,
-      Preferred_Contact_Method: 'Email',
-      Email: notificationResponse[0].Email,
-      Status: notificationResponse[0].Status,
-      Phone_Number: this.customerDetails.Primary_Phone,
-      Account_Info: notificationResponse[0].Account_Info,
-      Id:notificationResponse[0].Id
     }
-    
-    this.notificationService.updateNotificationOption(this.updateNotification).subscribe(
-      () => console.log()),
-      error => {
-        console.log('update notification API error', error.Message);
-      }
-
   }
 
   //To validate if all the elements in array is checked
@@ -160,14 +137,14 @@ export class PaperlessSettingsComponent implements OnInit {
     return true;
   }
 
-  onCheckSelected(option: string, isChecked: boolean, CheckOptions: any, notificationResponse:any) {
+  onCheckSelected(option: string, isChecked: boolean, CheckOptions: any, notificationResponse: any, notificationType) {
     let newValue = isChecked;
     CheckOptions.forEach(checkbox => {
       if (checkbox.option == option) {
         checkbox.checked = newValue;
       }
     });
-    //toggle Checkbox
+    //toggle Checkbox(When one is unchecked and other becomes checked)
     let isUnchecked = CheckOptions.every(this.validateCheckbox);
     if (isUnchecked) {
       CheckOptions.forEach(checkbox => {
@@ -177,9 +154,68 @@ export class PaperlessSettingsComponent implements OnInit {
       });
     }
     this.togglePaperless(this.billingOptions, this.plansOptions);
-    this.updateNotificationOption(notificationResponse, CheckOptions);
+    if (notificationResponse.length > 0) {
+      this.updateNotificationOption(notificationResponse, CheckOptions);
+    } else {
+      this.createNotification(notificationType, CheckOptions);
+    }
+
+  }
+
+//If there is no notification option, call create notification when user makes changes in UI
+  createNotification(notificationType, selectedOptions) {
+    let paperless = false;
+    if (selectedOptions[0].checked && !selectedOptions[1].checked) {
+      paperless = true;
+    }
+    let notificationRequest = {
+      Account_Info: {
+        Account_Type: AccountType.GEMS_Residential_Customer_Account,
+        Account_Number: this.customerDetails.Id
+      },
+      Type: notificationType,
+      Paperless: paperless,
+      Preferred_Contact_Method: ContactMethod.Email,
+      Email: this.emailAddress,//this.customerDetails.Email,
+      Phone_Number: this.customerDetails.Primary_Phone,
+      Status: NotificationStatus.Active
+    }
+    //console.log('Notification Request',notificationRequest);
+    this.notificationService.createNotificationOption(notificationRequest).subscribe(
+      () => console.log()),
+      error => {
+        console.log('create notification API error', error.Message);
+      }
+  }
+  //If we have notification option already then call update notification(PUT request)
+  updateNotificationOption(notificationResponse, selectedOptions) {
+
+    let paperless = false;
+    if (selectedOptions[0].checked && !selectedOptions[1].checked) {
+      paperless = true;
+    }
+
+    this.updateNotification = {
+      Type: notificationResponse[0].Type,
+      Paperless: paperless,
+      Preferred_Contact_Method: 'Email',
+      Email: notificationResponse[0].Email,
+      Status: notificationResponse[0].Status,
+      Phone_Number: this.customerDetails.Primary_Phone,
+      Account_Info: notificationResponse[0].Account_Info,
+      Id: notificationResponse[0].Id
+    }
+    //console.log('Update Notification Request', this.updateNotification)
+    this.notificationService.updateNotificationOption(this.updateNotification).subscribe(
+      () => console.log()),
+      error => {
+        console.log('update notification API error', error.Message);
+      }
   }
 }
+
+
+
 
 
 
