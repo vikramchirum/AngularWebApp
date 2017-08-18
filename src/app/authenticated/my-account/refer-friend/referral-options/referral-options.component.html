@@ -1,7 +1,7 @@
 <section class="refer-friend-options">
   <div class="row">
     <div class="col-xs-4 col-md-2">
-      <h3>Option 1</h3>
+      <h2>Option 1</h2>
     </div>
     <div class="col-xs-8 col-md-10">
       <div class="content">Enter your friend’s information in the fields below. If you would like to refer more than one friend, click the “Refer Another Friend” link. Once you have entered all your friends’ information, click the “Send Email” button. That’s it! Come back to this page anytime to enter more friends’ names and email addresses.</div>
@@ -16,7 +16,7 @@
             <div *ngFor="let friend of friendsForm.controls.friends.controls; let i = index">
               <div class="row" [formGroupName]="i">
                 <div [formGroupName]="'name'">
-                  <div class="col-sm-4">
+                  <div class="col-xs-6 col-sm-4">
                     <div *ngIf="i === 0" >
                       <input type="text" class="form-control" placeholder="First Name" formControlName="first"/>
                     </div>
@@ -27,14 +27,16 @@
                       <input type="text" class="form-control" placeholder="First Name" formControlName="first"/>
                     </div>
                   </div>
-                  <div class="col-sm-4">
+                  <div class="col-xs-6 col-sm-4">
                       <input type="text" class="form-control" placeholder="Last Name" formControlName="last"/>
                   </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-xs-12 col-sm-4">
+                    <br class="visible-xs">
                     <input type="email" class="form-control" [ngClass]="{ 'ng-invalid': !friend.controls['email'].hasError('validateEmail') }" placeholder="Email Address" formControlName="email"/>
                 </div>
               </div>
+              <hr/>
             </div>
           </div>
         </div>
@@ -54,7 +56,7 @@
 <hr/>
   <div class="row">
     <div class="col-xs-4 col-md-2">
-      <h3>Option 2</h3>
+      <h2>Option 2</h2>
     </div>
     <div class="col-xs-8 col-md-10">
       <div class="content">If you don’t know your friends’ email addresses, you can still share the savings. Tell your friends to go to www.gexaenergy.com. Be sure to give them your Personal Referral ID# so that you both receive your Share & Save bill credits.</div>

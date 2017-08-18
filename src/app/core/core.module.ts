@@ -19,6 +19,7 @@ import { PaymentsHistoryService } from './payments-history.service';
 import { PaymentsService } from './payments.service';
 import { PaymethodService } from './Paymethod.service';
 import { UsageHistoryService } from './usage-history.service';
+import {NotificationOptionsService} from './notificationoptions.service';
 import { RenewalService } from './renewal.service';
 
 @NgModule({
@@ -40,6 +41,7 @@ import { RenewalService } from './renewal.service';
     PaymentsService,
     PaymethodService,
     UsageHistoryService,
+    NotificationOptionsService,
     RenewalService
   ]
 })

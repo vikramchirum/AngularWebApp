@@ -1,7 +1,12 @@
 @import '../../../../../../basecolors';
+
+.plan-card {
+      border-right:1px solid #fff;
+
+}
+
 .plan-card-container{
     border: none;
-    border-right:1px solid #fff;
     border-radius: 0;
     padding: 10px 0;
     margin-bottom: 5px;
@@ -65,7 +70,16 @@
           margin-top: 30px;
         }
 
-   .agreement-section{
+   .agreement-section {
+     
+      position: absolute;
+      top: 45px;
+      background-color: rgba(255,255,255,1);
+      padding: 20px;
+      border-radius: 5px;
+      left: 0;
+
+     
        label {
            p {
                font-size:0.9em;

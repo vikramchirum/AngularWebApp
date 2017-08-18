@@ -17,11 +17,11 @@
         <div class="col-xs-12 col-sm-4">
           <h4>Send  My Bills       &nbsp;<small><i aria-hidden="true" class="fa fa-info-circle" tooltip="You’ll receive a statement each time your utility reads your meter, usually once per month."></i></small></h4>
         </div>
-        <form [formGroup]="sendBillsForm">
+        <form>
           <ng-container *ngFor='let data of billingOptions'>
             <div class="col-xs-6 col-sm-3">
               <div class="input-group"> <span class="input-group-addon">
-                <input type="checkbox" [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, billingOptions)" >
+                <input type="checkbox" [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, billingOptions, notificationOptionsForBills, notificationType.Bill)" >
                 </span>
                 <div class="form-control"> {{data.option}} </div>
               </div>
@@ -33,11 +33,11 @@
         <div class="col-xs-12 col-sm-4">
           <h4>Send My Plan Docs  &nbsp;<small><i aria-hidden="true" class="fa fa-info-circle" tooltip="Your plan documents include any contracts and disclosures, as well as the contract expiration notice at the end of your plan."></i></small></h4>
         </div>
-        <form [formGroup]="planDocumentsForm">
+        <form>
           <ng-container *ngFor='let data of plansOptions'>
             <div class="col-xs-6 col-sm-3">
               <div class="input-group"> <span class="input-group-addon">
-                <input type="checkbox"  [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, plansOptions)">
+                <input type="checkbox"  [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, plansOptions, notificationOptionsForPlans, notificationType.Contract_Expiration)">
                 </span>
                 <div class="form-control"> {{data.option}} </div>
               </div>
