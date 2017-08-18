@@ -50,7 +50,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
             console.log('Upgraded_Offers', this.UpgradeOffers);
             this.upgradeOffersArraylength = all_offers.length;
         });
-    } else if (this.IsInRenewalTimeFrame) {
+    } else {
       this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
         all_offers => {
             this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');

@@ -33,7 +33,6 @@ export class NotificationOptionsService {
         params.set(key, val);
       }
     }
-      
     // const relativePath = `/Notification_Options/`;
     // return this.http.get(relativePath, params)
     //   .map((response: Response) => { return <INotificationOption[]> response.json(); })

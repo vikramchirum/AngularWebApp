@@ -6,6 +6,7 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
 import { Subscription } from 'rxjs/Subscription';
 import { OfferService } from 'app/core/offer.service';
 import { result, startsWith } from 'lodash';
+import {RenewalService} from '../../core/renewal.service';
 
 @Component({
   selector: 'mygexa-plans-and-services',
@@ -15,14 +16,16 @@ import { result, startsWith } from 'lodash';
 export class PlansAndServicesComponent implements OnInit, OnDestroy {
 
   private startsWith = startsWith;
-
+  public IsUpForRenewal: boolean = null;
   public ActiveServiceAccount: ServiceAccount = null;
 
   ServiceAccountServiceSubscription: Subscription = null;
   ActiveServiceAccountOfferSubscription: Subscription = null;
+  ActiveServiceAccount_Renewaldetails_Subscription: Subscription = null;
 
   constructor(
     private ServiceAccountService: ServiceAccountService,
+    private RenewalService: RenewalService,
     private OfferService: OfferService,
     private Router: Router
   ) { }
@@ -31,6 +34,9 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
     this.ServiceAccountServiceSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
+        this.ActiveServiceAccount_Renewaldetails_Subscription = this.RenewalService.ActiveServiceAccount_RenewalDetailsObservable.subscribe(
+          result => {  this.IsUpForRenewal = result.Is_Account_Eligible_Renewal;  }
+        );
         this.ActiveServiceAccountOfferSubscription = this.OfferService.ActiveServiceAccountOfferObservable.subscribe(
           all_offers => { }
         );
@@ -40,6 +46,7 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     result(this.ServiceAccountServiceSubscription, 'unsubscribe');
+    result(this.ActiveServiceAccount_Renewaldetails_Subscription, 'unsubscribe');
     result(this.ActiveServiceAccountOfferSubscription, 'unsubscribe');
   }
 }

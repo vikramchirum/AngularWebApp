@@ -64,9 +64,11 @@ export class ServiceAccountService {
     this.ServiceAccountsObservable.first().delay(0).subscribe((result) => {
       this.initialized = true;
       if (this.ActiveServiceAccountId) {
+        // this.SetIsOnRenewalFlag(this.ActiveServiceAccountId);
         this.SetActiveServiceAccount(this.ActiveServiceAccountId);
       } else {
         if (result.length === 1) {
+          // this.SetIsOnRenewalFlag(result[0].Id);
           this.SetActiveServiceAccount(result[0].Id);
         }
       }
@@ -131,6 +133,9 @@ export class ServiceAccountService {
 
     // If no Service account was found then use the first one.
     if (ActiveServiceAccount === null) { ActiveServiceAccount = first(this.ServiceAccountsCache); }
+    // else {
+    //   this.SetIsOnRenewalFlag(this.ActiveServiceAccountId);
+    // }
 
     // Assign the newly active Service account.
     this.ActiveServiceAccountCache = ActiveServiceAccount;
@@ -146,36 +151,37 @@ export class ServiceAccountService {
   }
 
   SetFlags(ServiceAccount: ServiceAccount): ServiceAccount {
-    this.SetIsOnRenewalFlag(ServiceAccount);
     const currentDate = new Date();
     // End dates should not be null - for dev purposes, handle null dates:
     const endDate = ServiceAccount.Contract_End_Date === null
       // If no end date, take the current offer's term and add it.
       ? new Date(new Date(ServiceAccount.Contract_Start_Date).setMonth(new Date(ServiceAccount.Contract_Start_Date).getMonth() + Number(ServiceAccount.Current_Offer.Term)))
-    // ? new Date((new Date()).getTime() + (1000 * 60 * 60 * 24 * 60))
       // Otherwise, use the provided date.
       : new Date(ServiceAccount.Contract_End_Date);
 
-    // Get the first day of the 90 day period by subtracting 90 day's milliseconds from the end date.
-    // const req90Day: Date = new Date(endDate.getTime() - 1000 * 60 * 60 * 24 * 90);
-    // console.log('Required 90 day', req90Day);
+
     // // Set calculated end date
-    // ServiceAccount.Calculated_Contract_End_Date = endDate;
-    // // Determine if the current day is past the first day of the 90 day period.
-    // ServiceAccount.IsUpForRenewal = currentDate > req90Day && currentDate < ServiceAccount.Calculated_Contract_End_Date;
+     ServiceAccount.Calculated_Contract_End_Date = endDate;
 
     // Determine if the service account is on hold over using its' current offer.
-    // Term === 1 would mean a monthly plan but should we determine with another attribute?
-    this.ActiveServiceAccount_RenewalDetails_Subscription = this.ActiveServiceAccount_RenewalDetailsObservable.subscribe(
-      RenewalDetails => ServiceAccount.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal );
+
+    // if (this.ActiveServiceAccount_RenewalDetailsCache) { ServiceAccount.IsUpForRenewal = this.ActiveServiceAccount_RenewalDetailsCache.Is_Account_Eligible_Renewal;
+    //   console.log('ServiceAccounts renewal is set' );
+    // } else {
+    //   this.ActiveServiceAccount_RenewalDetailsObservable.subscribe(
+    //     RenewalDetails => {
+    //       ServiceAccount.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+    //       console.log('ServiceAccounts renewal is set');
+    //     });
+    // }
+    //
     ServiceAccount.IsOnHoldOver = ServiceAccount.Current_Offer.IsHoldOverRate;
     return  ServiceAccount;
   }
 
-  SetIsOnRenewalFlag(ServiceAccount: ServiceAccount): Observable<IRenewalDetails> {
+  SetIsOnRenewalFlag(AServiceAccountId: string): Observable<IRenewalDetails> {
     if (this.ActiveServiceAccount_RenewalDetailsObservable) { return this.ActiveServiceAccount_RenewalDetailsObservable; }
-    if (this.ActiveServiceAccountId === null ) { return Observable.from(null); }
-    this.ActiveServiceAccount_RenewalDetailsObservable = this.RenewalService.getRenewalDetails(Number(ServiceAccount.Id));
+    this.ActiveServiceAccount_RenewalDetailsObservable = this.RenewalService.getRenewalDetails(Number(AServiceAccountId));
     this.ActiveServiceAccount_RenewalDetailsObservable.subscribe(
       RenewalDetails => this.ActiveServiceAccount_RenewalDetailsCache = <any>RenewalDetails,
       error => this.HttpClient.handleHttpError(error),

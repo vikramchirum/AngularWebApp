@@ -1,5 +1,5 @@
 
-<div *ngIf="!IsInRenewalTimeFrame && !IsOnHoldOver && upgradeOffersArraylength > 0 ">
+<div *ngIf="!IsInRenewalTimeFrame">
   <div class="row">
     <section>
       <div class="col-sm-2">
@@ -17,7 +17,7 @@
   </div>
 </div>
 
-<div  *ngIf="IsInRenewalTimeFrame && !IsOnHoldOver">
+<div  *ngIf="IsInRenewalTimeFrame || IsOnHoldOver">
   <div class="row">
     <section id="renewPlan">
       <div class="col-sm-2">
@@ -39,7 +39,8 @@
   </section>
 </div>
 </div>
-  <div *ngIf="upgradeOffersArraylength <= 0 || IsOnHoldOver" class="row">
+
+  <div *ngIf="upgradeOffersArraylength <= 0" class="row">
     <div class="col-sm-24">
       <h2> No available offers for this service account. </h2>
     </div>

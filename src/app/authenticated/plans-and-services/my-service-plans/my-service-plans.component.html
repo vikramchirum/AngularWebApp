@@ -7,7 +7,7 @@
     <div class="row">
       <div class="col-md-8">
 
-        <ng-template *ngIf="ActiveServiceAccount?.IsUpForRenewal; then ShowRenewal else ShowCurrentPlan"></ng-template>
+        <ng-template *ngIf="ActiveServiceAccount?.IsUpForRenewal && !ActiveServiceAccount?.IsOnHoldOver; then ShowRenewal else ShowCurrentPlan"></ng-template>
         <ng-template #ShowRenewal>
           <h1>Renew your plan</h1>
           <p>Account No: {{ ActiveServiceAccount?.Id }}</p>
