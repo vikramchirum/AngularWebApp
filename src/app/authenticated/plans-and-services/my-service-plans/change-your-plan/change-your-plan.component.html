@@ -27,16 +27,15 @@
                  #name="ngModel"><br>
           <a class="boxed btn btn-primary" [class.disabled]="!promoCodeForm.form.valid">Submit</a></form></div>
 
-      <div class="col-sm-9">
-        <div class="row change-plans-grid" *ngIf="AllOffers">
-          <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
-          <div class="col-md-4 plan-card" *ngFor="let offer of AllOfferss">
-            <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
-          </div>
+    <div class="col-sm-9">
+      <div class="row change-plans-grid" *ngIf="AllOffers">
+        <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
+        <div class="col-xs-6 col-md-4 plan-card" *ngFor="let offer of AllOfferss">
+          <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
         </div>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </div>
   <div *ngIf="upgradeOffersArraylength <= 0 || IsOnHoldOver" class="row">
     <div class="col-sm-24">
