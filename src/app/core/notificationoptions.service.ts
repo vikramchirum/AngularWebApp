@@ -17,10 +17,10 @@ export class NotificationOptionsService {
   constructor(private http: HttpClient) {
   }
 
-  getNotificationOption(id: string): Observable<INotificationOption>   {
+  getNotificationOption(id: string): Observable<INotificationOption> {
     const relativePath = `/Notification_Options/${id}`;
     return this.http.get(relativePath)
-      .map((response: Response) => { return <INotificationOption> response.json(); })
+      .map((response: Response) => { return <INotificationOption>response.json(); })
       .catch(error => this.http.handleHttpError(error));
   }
 
@@ -33,10 +33,14 @@ export class NotificationOptionsService {
         params.set(key, val);
       }
     }
-
-    const relativePath = `/Notification_Options/`;
-    return this.http.get(relativePath, params)
-      .map((response: Response) => { return <INotificationOption[]> response.json(); })
+      
+    // const relativePath = `/Notification_Options/`;
+    // return this.http.get(relativePath, params)
+    //   .map((response: Response) => { return <INotificationOption[]> response.json(); })
+    //   .catch(error => this.http.handleHttpError(error));
+    const relativePath = `/Notification_Options?option.account_Info.account_Type=${searchRequest.Account_Info.Account_Type}&option.account_Info.account_Number=${searchRequest.Account_Info.Account_Number}&option.type=${searchRequest.Type}&option.status=${searchRequest.Status}`;
+    return this.http.get(relativePath)
+      .map((response: Response) => { return <INotificationOption[]>response.json(); })
       .catch(error => this.http.handleHttpError(error));
   }
 
@@ -44,7 +48,7 @@ export class NotificationOptionsService {
     const body = JSON.stringify(request);
     const relativePath = `/Notification_Options/`;
     return this.http.post(relativePath, body)
-      .map((response: Response) => { return <INotificationOption> response.json(); })
+      .map((response: Response) => { return <INotificationOption>response.json(); })
       .catch(error => this.http.handleHttpError(error));
   }
 
@@ -52,7 +56,7 @@ export class NotificationOptionsService {
     const body = JSON.stringify(request);
     const relativePath = `/Notification_Options/`;
     return this.http.put(relativePath, body)
-      .map((response: Response) => { return <INotificationOption> response.json(); })
+      .map((response: Response) => { return <INotificationOption>response.json(); })
       .catch(error => this.http.handleHttpError(error));
   }
 }
