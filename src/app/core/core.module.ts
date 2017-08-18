@@ -19,6 +19,7 @@ import { PaymentsHistoryService } from './payments-history.service';
 import { PaymentsService } from './payments.service';
 import { PaymethodService } from './Paymethod.service';
 import { UsageHistoryService } from './usage-history.service';
+import { RenewalService } from './renewal.service';
 
 @NgModule({
   imports: [
@@ -38,7 +39,8 @@ import { UsageHistoryService } from './usage-history.service';
     PaymentsHistoryService,
     PaymentsService,
     PaymethodService,
-    UsageHistoryService
+    UsageHistoryService,
+    RenewalService
   ]
 })
 export class CoreModule { }

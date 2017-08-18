@@ -16,6 +16,7 @@
     </section>
   </div>
 </div>
+
 <div  *ngIf="IsInRenewalTimeFrame && !IsOnHoldOver">
   <div class="row">
     <section id="renewPlan">
@@ -36,6 +37,7 @@
       </div>
     </div>
   </section>
+</div>
 </div>
   <div *ngIf="upgradeOffersArraylength <= 0 || IsOnHoldOver" class="row">
     <div class="col-sm-24">

@@ -8,6 +8,9 @@ import { clone, find, first, forEach, get, isString, map, pull } from 'lodash';
 import { HttpClient } from './httpclient';
 import { UserService } from './user.service';
 import {ServiceAccount} from './models/serviceaccount/serviceaccount.model';
+import {RenewalService} from './renewal.service';
+import {IRenewalDetails} from './models/renewals/renewaldetails.model';
+import {Subscription} from 'rxjs/Subscription';
 
 @Injectable()
 export class ServiceAccountService {
@@ -16,6 +19,11 @@ export class ServiceAccountService {
   public ActiveServiceAccountObservable: Observable<ServiceAccount> = null;
   public ServiceAccountsCache: ServiceAccount[] = null;
   public ServiceAccountsObservable: Observable<ServiceAccount[]> = null;
+
+  public ActiveServiceAccount_RenewalDetailsObservable: Observable<IRenewalDetails> = null;
+  public ActiveServiceAccount_RenewalDetailsCache: IRenewalDetails = null;
+  private ActiveServiceAccount_RenewalDetailsObservers: Observer<any>[]= [];
+  public ActiveServiceAccount_RenewalDetails_Subscription: Subscription;
 
   private initialized: boolean = null;
   private ActiveServiceAccountObservers: Observer<any>[] = [];
@@ -30,7 +38,7 @@ export class ServiceAccountService {
     return localStorage.getItem('gexa_active_Service_account_id');
   }
 
-  constructor(private HttpClient: HttpClient, private UserService: UserService) {
+  constructor(private HttpClient: HttpClient, private UserService: UserService, private RenewalService: RenewalService) {
 
     // Make Observables (Active Service Account and Service Accounts) for others to listen to.
     // 1. Collect, or 'push', new observers to the observable's collection.
@@ -107,9 +115,7 @@ export class ServiceAccountService {
         this.emitToObservers(this.ServiceAccountsObservers, this.ServiceAccountsCache);
       }
     );
-
     return this.requestObservable;
-
   }
 
   SetActiveServiceAccount(ServiceAccount: ServiceAccount | string): ServiceAccount {
@@ -130,7 +136,7 @@ export class ServiceAccountService {
     this.ActiveServiceAccountCache = ActiveServiceAccount;
     if (this.ActiveServiceAccountCache) { this.ActiveServiceAccountId = this.ActiveServiceAccountCache.Id; }
 
-    this.ActiveServiceAccountCache = this.SetIsUpFOrRenewalFlag(this.ActiveServiceAccountCache);
+    this.ActiveServiceAccountCache = this.SetFlags(this.ActiveServiceAccountCache);
 
     // Emit our new data to all of our observers.
     this.emitToObservers(this.ActiveServiceAccountObservers, this.ActiveServiceAccountCache);
@@ -139,31 +145,49 @@ export class ServiceAccountService {
 
   }
 
-  SetIsUpFOrRenewalFlag(ServiceAccount: ServiceAccount): ServiceAccount {
-
+  SetFlags(ServiceAccount: ServiceAccount): ServiceAccount {
+    this.SetIsOnRenewalFlag(ServiceAccount);
     const currentDate = new Date();
-
     // End dates should not be null - for dev purposes, handle null dates:
     const endDate = ServiceAccount.Contract_End_Date === null
       // If no end date, take the current offer's term and add it.
-      //? new Date(new Date(ServiceAccount.Contract_Start_Date).setMonth(new Date(ServiceAccount.Contract_Start_Date).getMonth() + Number(ServiceAccount.Current_Offer.Term)))
-    ? new Date((new Date()).getTime() + (1000 * 60 * 60 * 24 * 60))
+      ? new Date(new Date(ServiceAccount.Contract_Start_Date).setMonth(new Date(ServiceAccount.Contract_Start_Date).getMonth() + Number(ServiceAccount.Current_Offer.Term)))
+    // ? new Date((new Date()).getTime() + (1000 * 60 * 60 * 24 * 60))
       // Otherwise, use the provided date.
       : new Date(ServiceAccount.Contract_End_Date);
 
     // Get the first day of the 90 day period by subtracting 90 day's milliseconds from the end date.
-    const req90Day: Date = new Date(endDate.getTime() - 1000 * 60 * 60 * 24 * 90);
-    console.log('Required 90 day', req90Day);
-    // Set calculated end date
-    ServiceAccount.Calculated_Contract_End_Date = endDate;
-    // Determine if the current day is past the first day of the 90 day period.
-    ServiceAccount.IsUpForRenewal = currentDate > req90Day && currentDate < ServiceAccount.Calculated_Contract_End_Date;
+    // const req90Day: Date = new Date(endDate.getTime() - 1000 * 60 * 60 * 24 * 90);
+    // console.log('Required 90 day', req90Day);
+    // // Set calculated end date
+    // ServiceAccount.Calculated_Contract_End_Date = endDate;
+    // // Determine if the current day is past the first day of the 90 day period.
+    // ServiceAccount.IsUpForRenewal = currentDate > req90Day && currentDate < ServiceAccount.Calculated_Contract_End_Date;
 
     // Determine if the service account is on hold over using its' current offer.
     // Term === 1 would mean a monthly plan but should we determine with another attribute?
-    ServiceAccount.IsOnHoldOver = ServiceAccount.Current_Offer.Term === 1 && currentDate > ServiceAccount.Calculated_Contract_End_Date;
+    this.ActiveServiceAccount_RenewalDetails_Subscription = this.ActiveServiceAccount_RenewalDetailsObservable.subscribe(
+      RenewalDetails => ServiceAccount.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal );
+    ServiceAccount.IsOnHoldOver = ServiceAccount.Current_Offer.IsHoldOverRate;
+    return  ServiceAccount;
+  }
 
-    return ServiceAccount;
+  SetIsOnRenewalFlag(ServiceAccount: ServiceAccount): Observable<IRenewalDetails> {
+    if (this.ActiveServiceAccount_RenewalDetailsObservable) { return this.ActiveServiceAccount_RenewalDetailsObservable; }
+    if (this.ActiveServiceAccountId === null ) { return Observable.from(null); }
+    this.ActiveServiceAccount_RenewalDetailsObservable = this.RenewalService.getRenewalDetails(Number(ServiceAccount.Id));
+    this.ActiveServiceAccount_RenewalDetailsObservable.subscribe(
+      RenewalDetails => this.ActiveServiceAccount_RenewalDetailsCache = <any>RenewalDetails,
+      error => this.HttpClient.handleHttpError(error),
+      () => {
+        console.log('ServiceAccount_Renewaldetails =', this.ActiveServiceAccount_RenewalDetailsCache);
+        // We're no longer requesting.
+        this.ActiveServiceAccount_RenewalDetailsObservable = null;
+        // Emit our new data to all of our observers.
+        this.emitToObservers(this.ActiveServiceAccount_RenewalDetailsObservers, this.ActiveServiceAccount_RenewalDetailsCache );
+      }
+    );
+    return this.ActiveServiceAccount_RenewalDetailsObservable;
   }
 
   OnUpgradeOrRenew(choice: string) {
