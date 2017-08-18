@@ -18,7 +18,6 @@ export class PersonalInformationComponent implements OnInit, OnDestroy {
   phoneEditing: boolean = null;
   accountNumber: string = null;
   customerDetails: CustomerAccount = null;
-
   CustomerAccountServiceSubscription: Subscription = null;
   UserServiceSubscription: Subscription = null;
 
@@ -29,7 +28,7 @@ export class PersonalInformationComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.CustomerAccountServiceSubscription = this.CustomerAccountService.CustomerAccountObservable.subscribe(
-      result => this.customerDetails = result
+      result => { this.customerDetails = result; }
     );
     this.UserServiceSubscription = this.UserService.UserObservable.subscribe(
       result => {

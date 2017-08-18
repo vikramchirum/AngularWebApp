@@ -20,8 +20,9 @@
         <md-card-content>
           <h2>{{ActiveServiceAccountDetails.Current_Offer.RateAt1000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small></h2>
           <p class="bg-default">TERM: {{ActiveServiceAccountDetails.Current_Offer.Term}} Months</p>
-          <p>START: {{ActiveServiceAccountDetails.Current_Offer.Start_Date | date: 'MM/dd/yyyy'}}</p>
-          <p  class="bg-default">END: {{ActiveServiceAccountDetails.Current_Offer.End_Date ? (ActiveServiceAccountDetails.Current_Offer.End_Date | date:'MM/dd/yyyy') : (this.getEndDate(ActiveServiceAccountDetails.Current_Offer.Start_Date) | date: 'MM/dd/yyyy')}}</p>
+          <p>START: {{ActiveServiceAccountDetails.Contract_Start_Date | date: 'MM/dd/yyyy'}}</p>
+          <p  class="bg-default">END: {{ActiveServiceAccountDetails.Calculated_Contract_End_Date | date:'MM/dd/yyyy'}}</p>
+          <!--<p  class="bg-default">END: {{ActiveServiceAccountDetails.Contract_End_Date ? (ActiveServiceAccountDetails.Contract_End_Date | date:'MM/dd/yyyy') : (this.getEndDate(ActiveServiceAccountDetails.Contract_Start_Date, ActiveServiceAccountDetails.Current_Offer.Term) | date: 'MM/dd/yyyy')}}</p>-->
         </md-card-content>
       </md-card>
     </div>

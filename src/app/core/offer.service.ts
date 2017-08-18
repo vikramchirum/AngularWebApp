@@ -6,8 +6,11 @@ import { Observer } from 'rxjs/Observer';
 import 'rxjs/add/operator/map';
 import { clone, forEach, pull, map } from 'lodash';
 import { HttpClient } from './httpclient';
-import { AllOffersClass } from './models/offers/alloffers.model';
+import {AllOffersClass, UpgradeOffersClass} from './models/offers/alloffers.model';
 import { ServiceAccountService } from './serviceaccount.service';
+import {ServiceAccount} from './models/serviceaccount/serviceaccount.model';
+import {IOffers} from './models/offers/offers.model';
+
 
 @Injectable()
 export class OfferService {
@@ -15,10 +18,16 @@ export class OfferService {
   public ActiveServiceAccountOffersCache: AllOffersClass[] = null;
   public ActiveServiceAccountOfferObservable: Observable<AllOffersClass[]> = null;
 
+  public ActiveServiceAccountUpgradeOffersCache: IOffers[] = null;
+  public ActiveServiceAccountUpgradeOfferObservable: Observable<IOffers[]> = null;
+
   private initialized: boolean = null;
   private ActiveServiceAccountOfferObservers: Observer<AllOffersClass>[] = [];
+  private ActiveServiceAccountUpgradeOfferObservers: Observer<IOffers>[] = [];
+
   private requestObservable: Observable<Response> = null;
   private _ActiveServiceAccountId: string = null;
+  private ActiveServiceAccount: ServiceAccount = null;
 
   constructor(private http: HttpClient, private serviceAccountService: ServiceAccountService) {
     // Make the Observables for others to listen to.
@@ -33,8 +42,22 @@ export class OfferService {
       return () => pull(this.ActiveServiceAccountOfferObservers, observer);
     });
 
+    // Make the Observables for others to listen to.
+    this.ActiveServiceAccountUpgradeOfferObservable = Observable.create((observer: Observer<any>) => {
+      // 1. Collect, or 'push', new observers to the observable's collection.
+      this.ActiveServiceAccountUpgradeOfferObservers.push(observer);
+      // 2. Send the latest cached data to the new observer (only if we've initialized with some data.)
+      if (this.initialized) {
+        observer.next(this.ActiveServiceAccountUpgradeOffersCache);
+      }
+      // 3. Provide the new observer a clean-up function to prevent memory leaks.
+      return () => pull(this.ActiveServiceAccountUpgradeOfferObservers, observer);
+    });
+
     // Console.log the latest customer account.
     this.ActiveServiceAccountOfferObservable.subscribe(
+    );
+    this.ActiveServiceAccountUpgradeOfferObservable.subscribe(
     );
 
     // Respond to the first (initializing) call.
@@ -42,10 +65,15 @@ export class OfferService {
       this.initialized = true;
     });
 
+    this.ActiveServiceAccountUpgradeOfferObservable.first().delay(0).subscribe(() => {
+      this.initialized = true;
+    });
+
 
     // Keep the active Service account id synced.
     this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
-      ActiveServiceAccountId => this.ActiveServiceAccountId = ActiveServiceAccountId.Id
+      ActiveServiceAccountId => { this.ActiveServiceAccount = ActiveServiceAccountId;
+                                  this.ActiveServiceAccountId = ActiveServiceAccountId.Id; }
     );
   }
 
@@ -74,7 +102,6 @@ export class OfferService {
       .map((response: Response) => this.processApiData(response))
       .catch(error => this.http.handleHttpError(error));
   }
-
   private processApiData(res: Response) {
     return res.json();
   }
@@ -91,24 +118,47 @@ export class OfferService {
       return Observable.from(null);
     }
 
-    // Assign the Http request to prevent any similar requests.
-    this.requestObservable = this.http.get(`/service_accounts/${this.ActiveServiceAccountId}/offers`)
-      .map(data => data.json())
-      .map(data => map(data, OffersData => new AllOffersClass(OffersData)))
-      .catch(error => this.http.handleHttpError(error));
+    if (!this.ActiveServiceAccount.IsUpForRenewal && !this.ActiveServiceAccount.IsOnHoldOver) {
+      // Assign the Http request to prevent any similar requests.
+      this.requestObservable = this.http.get(`/v2/Offers?option.approved=true&option.startDate=${new Date}&option.plan.term_Greater_Than=${this.ActiveServiceAccount.Current_Offer.Term}&option.plan.tDU.duns_Number=${this.ActiveServiceAccount.TDU_DUNS_Number}`)
+        .map(data => { data.json(); console.log('Offers', data.json()); return data.json(); })
+        .map(data => <IOffers[]>data['Items'] )
+        .catch(error => this.http.handleHttpError(error));
 
-    // Handle the new Service account data.
-    this.requestObservable.subscribe(
-      data => this.ActiveServiceAccountOffersCache = <any>data,
-      error => this.http.handleHttpError(error),
-      () => {
-        console.log( 'Offers =', this.ActiveServiceAccountOffersCache);
-        // We're no longer requesting.
-        this.requestObservable = null;
-        // Emit our new data to all of our observers.
-        this.emitToObservers(this.ActiveServiceAccountOfferObservers, this.ActiveServiceAccountOffersCache);
-      }
-    );
+      // Handle the new Service account data.
+      this.requestObservable.subscribe(
+        data => this.ActiveServiceAccountUpgradeOffersCache = <any>data,
+        error => this.http.handleHttpError(error),
+        () => {
+          console.log( 'Upgrade Offers =', this.ActiveServiceAccountUpgradeOffersCache);
+          // We're no longer requesting.
+          this.requestObservable = null;
+          // Emit our new data to all of our observers.
+          this.emitToObservers(this.ActiveServiceAccountUpgradeOfferObservers, this.ActiveServiceAccountUpgradeOffersCache);
+        }
+      );
+
+    } else if (this.ActiveServiceAccount.IsUpForRenewal) {
+      // Assign the Http request to prevent any similar requests.
+      this.requestObservable = this.http.get(`/service_accounts/${this.ActiveServiceAccountId}/offers`)
+        .map(data => data.json())
+        .map(data => map(data, OffersData => new AllOffersClass(OffersData)))
+        .catch(error => this.http.handleHttpError(error));
+
+      // Handle the new Service account data.
+      this.requestObservable.subscribe(
+        data => this.ActiveServiceAccountOffersCache = <any>data,
+        error => this.http.handleHttpError(error),
+        () => {
+          console.log( 'Offers =', this.ActiveServiceAccountOffersCache);
+          // We're no longer requesting.
+          this.requestObservable = null;
+          // Emit our new data to all of our observers.
+          this.emitToObservers(this.ActiveServiceAccountOfferObservers, this.ActiveServiceAccountOffersCache);
+        }
+      );
+    }
+
     return this.requestObservable;
   }
 

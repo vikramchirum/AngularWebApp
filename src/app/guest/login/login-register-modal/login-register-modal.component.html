@@ -59,8 +59,9 @@
                         <span *ngIf="registerForm.controls['User_name'].hasError('required')
                     && formSubmitted"> Username is required. </span>
                       <span *ngIf="registerForm.controls['User_name'].hasError('minlength')
-                    && registerForm.controls['User_name'].touched">Username must be 8 characters long. </span><span *ngIf="registerForm.controls['User_name'].hasError('maxlength')
-                    && registerForm.controls['User_name'].touched">Username must be 8 characters long.</span>
+                    && registerForm.controls['User_name'].touched">Username must be at least 8 characters long. </span>
+                      <span *ngIf="registerForm.controls['User_name'].hasError('maxlength')
+                    && registerForm.controls['User_name'].touched">Username must be at least 8 characters long.</span>
                     </div>
                   </div>
                 </div>

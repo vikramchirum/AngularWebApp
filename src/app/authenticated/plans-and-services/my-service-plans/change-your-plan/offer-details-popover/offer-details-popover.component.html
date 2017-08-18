@@ -1,9 +1,6 @@
 <section *ngIf="ActiveOfferDetails">
   <div class="service-upgrade-modal" >
-   <!-- need this for modal, not popover
-    <div class="plan-header"><h3 class="plan-title ">{{ActiveOfferDetails.Current_Offer.Product_Name}}</h3></div>
-    -->
-    <h3 class="text-center plan-info">{{ActiveOfferDetails.Current_Offer.RateAt1000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup>&cent;</sup> per KWh</h3> 
+    <h3 class="text-center plan-info">{{ActiveOfferDetails.Current_Offer.RateAt1000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup>&cent;</sup> per KWh</h3>
     <p class="text-center">AT 1000kwh</p>
     <hr>
     <div class="row plan-documents">
@@ -74,18 +71,14 @@
           <p>${{ActiveOfferDetails.Current_Offer.Early_Termination_Fee}}</p></small>
       </div>
     </div>
-    
+
   </div>
 
 </section>
 <section id="Renewal" *ngIf="OfferDetails" >
   <div class="service-upgrade-modal" >
-      <!-- need this for modal, not popover
-
-    <div class="plan-header"><h3 class="plan-title ">{{OfferDetails?.Plan.Name}}</h3></div>
--->
-        <h3 class="text-center plan-info">{{OfferDetails?.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup>&cent;</sup> per KWh</h3>
-    <p class="text-center">AT 1000kwh</p>
+    <h3 class="text-center plan-info">{{OfferDetails?.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup>&cent;</sup> per KWh</h3>
+    <p class="text-center">AT {{OfferDetails?.Plan?.Product?.Featured_Usage_Level}}</p>
     <hr>
     <div class="row plan-documents">
       <div class="col-md-12">
