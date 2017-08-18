@@ -146,8 +146,8 @@ export class ServiceAccountService {
     // End dates should not be null - for dev purposes, handle null dates:
     const endDate = ServiceAccount.Contract_End_Date === null
       // If no end date, take the current offer's term and add it.
-      ? new Date(new Date(ServiceAccount.Contract_Start_Date).setMonth(new Date(ServiceAccount.Contract_Start_Date).getMonth() + Number(ServiceAccount.Current_Offer.Term)))
-
+      //? new Date(new Date(ServiceAccount.Contract_Start_Date).setMonth(new Date(ServiceAccount.Contract_Start_Date).getMonth() + Number(ServiceAccount.Current_Offer.Term)))
+    ? new Date((new Date()).getTime() + (1000 * 60 * 60 * 24 * 60))
       // Otherwise, use the provided date.
       : new Date(ServiceAccount.Contract_End_Date);
 
