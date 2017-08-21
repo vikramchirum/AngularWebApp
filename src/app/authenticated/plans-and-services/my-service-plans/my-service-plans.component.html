@@ -7,7 +7,7 @@
     <div class="row">
       <div class="col-md-8">
 
-        <ng-template *ngIf="ActiveServiceAccount?.IsUpForRenewal && !ActiveServiceAccount?.IsOnHoldOver; then ShowRenewal else ShowCurrentPlan"></ng-template>
+        <ng-template *ngIf="IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then ShowRenewal else ShowCurrentPlan"></ng-template>
         <ng-template #ShowRenewal>
           <h1>Renew your plan</h1>
           <p>Account No: {{ ActiveServiceAccount?.Id }}</p>
@@ -20,7 +20,7 @@
 
         <div class="row">
           <div class="col-md-9 col-md-offset-1">
-            <mygexa-my-current-plan></mygexa-my-current-plan>
+            <mygexa-my-current-plan [ActiveServiceAccount]="ActiveServiceAccount"></mygexa-my-current-plan>
           </div>
         </div>
 

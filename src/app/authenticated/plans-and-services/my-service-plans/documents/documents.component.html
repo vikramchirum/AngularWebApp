@@ -1,7 +1,7 @@
 
 <ng-template *ngIf="ActiveServiceAccount; then HasLoadedActiveServiceAccount else LoadingActiveServiceAccount"></ng-template>
 <ng-template #HasLoadedActiveServiceAccount>
-  <ng-template *ngIf="ActiveServiceAccount.IsUpForRenewal; then ShowWhatIsIncluded else ShowDocuments"></ng-template>
+  <ng-template *ngIf="IsInRenewalTimeFrame; then ShowWhatIsIncluded else ShowDocuments"></ng-template>
   <ng-template #ShowWhatIsIncluded>
     <section id="RenewalPlan">
       <b><p class="form-control">What's included</p></b><br>
@@ -17,14 +17,6 @@
       </ng-template>
 
       <ng-template #noFeatures>
-        <!--<div class="row">-->
-          <!--<div class="col-sm-2">-->
-            <!--<i class="fa fa-exclamation-triangle fa-fw fa-in-circle"></i>-->
-          <!--</div>-->
-          <!--<div class="col-sm-10">-->
-            <!--No features available for this plan yet!!-->
-          <!--</div>-->
-        <!--</div>-->
       </ng-template>
       <br/>
       <b><p class="form-control">Renewal Details</p></b>

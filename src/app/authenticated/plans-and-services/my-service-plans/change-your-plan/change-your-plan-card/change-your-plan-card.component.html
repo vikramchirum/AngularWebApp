@@ -75,7 +75,7 @@
       </div>
     </div>
   </div>
-  <mygexa-plan-confirmation-popover #planPopModal></mygexa-plan-confirmation-popover>
+  <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame"></mygexa-plan-confirmation-popover>
 </section>
 
 <section id=renewPlan *ngIf="IsInRenewalTimeFrame && Offer">
@@ -154,5 +154,5 @@
       </div>
     </div>
   </div>
-  <mygexa-plan-confirmation-popover #planPopModal></mygexa-plan-confirmation-popover>
+  <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame"></mygexa-plan-confirmation-popover>
 </section>

@@ -7,6 +7,7 @@ import {ServiceAccountService} from 'app/core/serviceaccount.service';
 import {ServiceAccount} from '../../../../../core/models/serviceaccount/serviceaccount.model';
 import {OfferDetailsPopoverComponent} from '../offer-details-popover/offer-details-popover.component';
 import {PlanConfirmationPopoverComponent} from '../../plan-confirmation-popover/plan-confirmation-popover.component';
+import {RenewalService} from '../../../../../core/renewal.service';
 
 @Component({
   selector: 'mygexa-change-your-plan-card',
@@ -22,10 +23,12 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   IsInRenewalTimeFrame: boolean;
   activeServiceAccountDetails: ServiceAccount;
   serviceAccountSubscription: Subscription;
+  RenewalServiceSubscription: Subscription;
   enableSelect = false;
   chev_clicked: boolean;
 
   constructor(private serviceAccountService: ServiceAccountService,
+  private RenewalService: RenewalService,
   private viewContainerRef: ViewContainerRef) {
     this.chev_clicked = false;
   }
@@ -38,9 +41,10 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
     this.serviceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.activeServiceAccountDetails = result;
-        this.IsInRenewalTimeFrame = result.IsUpForRenewal;
+        this.RenewalServiceSubscription = this.RenewalService.getRenewalDetails(Number(this.activeServiceAccountDetails.Id)).subscribe(
+          RenewalDetails => this.IsInRenewalTimeFrame = RenewalDetails.Is_Account_Eligible_Renewal
+        );
       });
-      // console.log("Offer Details", this.Offer)
   }
 
   onSelect(event) {

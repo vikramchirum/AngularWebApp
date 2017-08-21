@@ -20,11 +20,6 @@ export class ServiceAccountService {
   public ServiceAccountsCache: ServiceAccount[] = null;
   public ServiceAccountsObservable: Observable<ServiceAccount[]> = null;
 
-  public ActiveServiceAccount_RenewalDetailsObservable: Observable<IRenewalDetails> = null;
-  public ActiveServiceAccount_RenewalDetailsCache: IRenewalDetails = null;
-  private ActiveServiceAccount_RenewalDetailsObservers: Observer<any>[]= [];
-  public ActiveServiceAccount_RenewalDetails_Subscription: Subscription;
-
   private initialized: boolean = null;
   private ActiveServiceAccountObservers: Observer<any>[] = [];
   private ServiceAccountsObservers: Observer<any>[] = [];
@@ -64,11 +59,9 @@ export class ServiceAccountService {
     this.ServiceAccountsObservable.first().delay(0).subscribe((result) => {
       this.initialized = true;
       if (this.ActiveServiceAccountId) {
-        // this.SetIsOnRenewalFlag(this.ActiveServiceAccountId);
         this.SetActiveServiceAccount(this.ActiveServiceAccountId);
       } else {
         if (result.length === 1) {
-          // this.SetIsOnRenewalFlag(result[0].Id);
           this.SetActiveServiceAccount(result[0].Id);
         }
       }
@@ -158,42 +151,17 @@ export class ServiceAccountService {
       ? new Date(new Date(ServiceAccount.Contract_Start_Date).setMonth(new Date(ServiceAccount.Contract_Start_Date).getMonth() + Number(ServiceAccount.Current_Offer.Term)))
       // Otherwise, use the provided date.
       : new Date(ServiceAccount.Contract_End_Date);
-
-
     // // Set calculated end date
      ServiceAccount.Calculated_Contract_End_Date = endDate;
-
-    // Determine if the service account is on hold over using its' current offer.
-
-    // if (this.ActiveServiceAccount_RenewalDetailsCache) { ServiceAccount.IsUpForRenewal = this.ActiveServiceAccount_RenewalDetailsCache.Is_Account_Eligible_Renewal;
-    //   console.log('ServiceAccounts renewal is set' );
-    // } else {
-    //   this.ActiveServiceAccount_RenewalDetailsObservable.subscribe(
-    //     RenewalDetails => {
-    //       ServiceAccount.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-    //       console.log('ServiceAccounts renewal is set');
-    //     });
-    // }
-    //
-    ServiceAccount.IsOnHoldOver = ServiceAccount.Current_Offer.IsHoldOverRate;
+     // Determine if the service account is eligible for renewal
+     //  this.RenewalService.getRenewalDetails(Number(ServiceAccount.Id)).subscribe(
+     //    RenewalDetails => {  ServiceAccount.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+     //      console.log ('Renewal Flag after',  ServiceAccount.IsUpForRenewal);
+     //      console.log('ServiceAccount_Renewaldetails =', RenewalDetails ); },
+     //    error => this.HttpClient.handleHttpError(error),
+     //    () => {}
+     //  );
     return  ServiceAccount;
-  }
-
-  SetIsOnRenewalFlag(AServiceAccountId: string): Observable<IRenewalDetails> {
-    if (this.ActiveServiceAccount_RenewalDetailsObservable) { return this.ActiveServiceAccount_RenewalDetailsObservable; }
-    this.ActiveServiceAccount_RenewalDetailsObservable = this.RenewalService.getRenewalDetails(Number(AServiceAccountId));
-    this.ActiveServiceAccount_RenewalDetailsObservable.subscribe(
-      RenewalDetails => this.ActiveServiceAccount_RenewalDetailsCache = <any>RenewalDetails,
-      error => this.HttpClient.handleHttpError(error),
-      () => {
-        console.log('ServiceAccount_Renewaldetails =', this.ActiveServiceAccount_RenewalDetailsCache);
-        // We're no longer requesting.
-        this.ActiveServiceAccount_RenewalDetailsObservable = null;
-        // Emit our new data to all of our observers.
-        this.emitToObservers(this.ActiveServiceAccount_RenewalDetailsObservers, this.ActiveServiceAccount_RenewalDetailsCache );
-      }
-    );
-    return this.ActiveServiceAccount_RenewalDetailsObservable;
   }
 
   OnUpgradeOrRenew(choice: string) {

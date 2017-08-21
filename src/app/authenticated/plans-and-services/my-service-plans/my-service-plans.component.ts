@@ -14,13 +14,11 @@ import {RenewalService} from '../../../core/renewal.service';
 })
 export class MyServicePlansComponent implements OnInit, OnDestroy {
 
-  ActiveServiceAccount: ServiceAccount = null;
+  public ActiveServiceAccount: ServiceAccount = null;
   ActiveServiceAccountSubscription: Subscription = null;
-  ActiveServiceAccount_Renewaldetails_Subscription: Subscription = null;
-  public Contract_End_Date: Date;
-  public IsUpForRenewal: boolean;
-
+  RenewalServiceAccountSubscription: Subscription = null;
   @ViewChild(RenewalGaugeComponent) RenewalGaugeComponent;
+  public IsUpForRenewal: boolean = null;
 
   constructor(
     private ServiceAccountService: ServiceAccountService,
@@ -32,40 +30,37 @@ export class MyServicePlansComponent implements OnInit, OnDestroy {
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
-        this.ActiveServiceAccount_Renewaldetails_Subscription = this.RenewalService.ActiveServiceAccount_RenewalDetailsObservable.subscribe(
-          result => { this.IsUpForRenewal = result.Is_Account_Eligible_Renewal; }
-        );
-        // Has_Renewed needs to be updated to whatever we specify in the API.
-        // Is_In_Holdover needs to be updated to whatever we specify in the API.
-        if (get(result, 'Is_Account_Eligible_Renewal', false)) {
-          this.RenewalGaugeComponent.buildRenewedChart(
-            new Date(),
-            ActiveServiceAccount.Contract_End_Date ? ActiveServiceAccount.Contract_End_Date : this.Contract_End_Date
-          );
-        } else if (ActiveServiceAccount.IsOnHoldOver === true) {
-          this.RenewalGaugeComponent.buildHoldoverChart();
-        } else {
-          this.RenewalGaugeComponent.buildChart(
-            new Date(ActiveServiceAccount.Contract_Start_Date),
-            new Date(),
-            ActiveServiceAccount.Contract_End_Date ? ActiveServiceAccount.Contract_End_Date : this.Contract_End_Date
-          );
-        }
+        this.RenewalServiceAccountSubscription = this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
+          RenewalDetails => { this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+            // Is_In_Holdover needs to be updated to whatever we specify in the API.
+            if (RenewalDetails.Is_Account_Eligible_Renewal === false) {
+              this.RenewalGaugeComponent.buildRenewedChart(
+                new Date(),
+                ActiveServiceAccount.Contract_End_Date ? new Date(ActiveServiceAccount.Contract_End_Date) : ActiveServiceAccount.Calculated_Contract_End_Date
+              );
+            } else if (ActiveServiceAccount.Current_Offer.IsHoldOverRate === true) {
+              this.RenewalGaugeComponent.buildHoldoverChart();
+            } else {
+              this.RenewalGaugeComponent.buildChart(
+                new Date(ActiveServiceAccount.Contract_Start_Date),
+                new Date(),
+                ActiveServiceAccount.Contract_End_Date ? new Date(ActiveServiceAccount.Contract_End_Date) : ActiveServiceAccount.Calculated_Contract_End_Date
+              );
+            }
+          });
       }
     );
-
   }
 
   ngOnDestroy() {
     result(this.ActiveServiceAccountSubscription, 'unsubscribe');
-    result(this.ActiveServiceAccount_Renewaldetails_Subscription, 'unsubscribe');
-
+    result(this.RenewalServiceAccountSubscription, 'unsubscribe');
   }
 
   get hideGauge(): boolean {
     return (
       this.ActiveServiceAccount
-      && !this.ActiveServiceAccount.IsOnHoldOver
+      && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate
       && ((this.ActiveServiceAccount.Contract_End_Date ? this.ActiveServiceAccount.Contract_End_Date : this.ActiveServiceAccount.Calculated_Contract_End_Date) < new Date()));
   }
 

@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-3 hidden-xs plans-side-panel">
 
-      <ng-template *ngIf="ActiveServiceAccount?.IsUpForRenewal; then ShowRenewalNav else ShowStandardNav;"></ng-template>
+      <ng-template *ngIf="IsUpForRenewal; then ShowRenewalNav else ShowStandardNav;"></ng-template>
       <ng-template #ShowRenewalNav>
         <mygexa-left-nav-panel [sideNavData] = "
          {
