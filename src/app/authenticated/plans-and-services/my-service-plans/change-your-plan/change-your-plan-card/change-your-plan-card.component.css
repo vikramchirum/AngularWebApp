@@ -1,0 +1,109 @@
+.plan-card {
+  border-right: 1px solid #fff; }
+
+.plan-card-container {
+  border: none;
+  border-radius: 0;
+  padding: 10px 0;
+  margin-bottom: 5px; }
+  .plan-card-container .card-included {
+    margin-right: 2px;
+    padding: 8px; }
+    .plan-card-container .card-included h4 {
+      font-size: 14px !important; }
+  .plan-card-container .card-title h2 {
+    font-size: 36px; }
+  .plan-card-container .card-title h4 {
+    color: #2eb134; }
+  .plan-card-container .card-title .fa {
+    color: #fea220; }
+  .plan-card-container .card-content {
+    text-align: center; }
+    .plan-card-container .card-content .sup-text {
+      font-weight: 200;
+      font-size: 20px;
+      top: -0.9em; }
+    .plan-card-container .card-content .sub-text {
+      font-size: 12px;
+      right: 0.5em; }
+    .plan-card-container .card-content h2 {
+      Font-weight: 800;
+      color: #000; }
+    .plan-card-container .card-content small, .plan-card-container .card-content sup {
+      font-weight: 100;
+      font-size: 12px; }
+    .plan-card-container .card-content p {
+      margin-bottom: 0;
+      line-height: 25px; }
+      .plan-card-container .card-content p:nth-child(odd) {
+        display: inline-block;
+        background-color: rgba(255, 255, 255, 0.3);
+        width: 70%; }
+  .plan-card-container .btn-sm {
+    margin-top: 30px; }
+  .plan-card-container .agreement-section {
+    position: absolute;
+    top: 45px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    left: 0;
+    z-index: 1; }
+    .plan-card-container .agreement-section label p {
+      font-size: 0.9em; }
+  .plan-card-container .fa-2x {
+    vertical-align: middle; }
+  .plan-card-container .checkbox label:after {
+    content: '';
+    display: table;
+    clear: both; }
+  .plan-card-container .checkbox .cr {
+    position: relative;
+    display: inline-block;
+    border: 1px solid #a9a9a9;
+    border-radius: .25em;
+    width: 1.5em;
+    height: 1.5em;
+    float: left;
+    margin-left: -1.8em; }
+  .plan-card-container .checkbox .cr .cr-icon {
+    position: absolute;
+    font-size: 1em;
+    line-height: 0;
+    top: 50%;
+    left: 20%; }
+  .plan-card-container .checkbox label input[type="checkbox"] {
+    display: none;
+    padding-left: 1.4em; }
+  .plan-card-container .checkbox label input[type="checkbox"] + .cr > .cr-icon {
+    transform: scale(3) rotateZ(-20deg);
+    opacity: 0;
+    transition: all .3s ease-in; }
+  .plan-card-container .checkbox label input[type="checkbox"]:checked + .cr > .cr-icon {
+    transform: scale(1) rotateZ(0deg);
+    opacity: 1; }
+  .plan-card-container .checkbox label input[type="checkbox"]:disabled + .cr {
+    opacity: .5; }
+
+.fa-in-circle {
+  background: #fea220;
+  color: #fff;
+  border-radius: 30px;
+  display: inline-block;
+  padding: 8px 0;
+  width: 30px;
+  height: 30px; }
+
+.card-included .form-control {
+  background: transparent;
+  border: none;
+  box-shadow: none; }
+.card-included .col-sm-10 {
+  text-align: left;
+  line-height: 1em;
+  margin-bottom: 10px; }
+
+.close-btn {
+  font-size: 20px; }
+  .close-btn .fa {
+    color: #000 !important; }
