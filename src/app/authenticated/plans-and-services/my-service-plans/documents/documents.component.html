@@ -1,7 +1,7 @@
 
 <ng-template *ngIf="ActiveServiceAccount; then HasLoadedActiveServiceAccount else LoadingActiveServiceAccount"></ng-template>
 <ng-template #HasLoadedActiveServiceAccount>
-  <ng-template *ngIf="IsInRenewalTimeFrame; then ShowWhatIsIncluded else ShowDocuments"></ng-template>
+  <ng-template *ngIf="IsInRenewalTimeFrame && !ActiveServiceAccount.Current_Offer.IsHoldOverRate; then ShowWhatIsIncluded else ShowDocuments"></ng-template>
   <ng-template #ShowWhatIsIncluded>
     <section id="RenewalPlan">
       <b><p class="form-control">What's included</p></b><br>
@@ -38,7 +38,7 @@
           <ng-template #options>
             <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
               <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-            <mygexa-offer-details-popover [ActiveOfferDetails]="ActiveServiceAccount"></mygexa-offer-details-popover>
+            <mygexa-offer-details-popover [ActiveOfferDetails]="ActiveServiceAccount" [IsCurrentPlanPopOver] = "true"></mygexa-offer-details-popover>
           </ng-template>
         </div>
 

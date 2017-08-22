@@ -1,6 +1,6 @@
 
 <div *ngIf="!IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then CurrentPlan"></div>
-<div *ngIf="IsUpForRenewal; then RenewalPlan"></div>
+<div *ngIf="IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then RenewalPlan"></div>
 <div *ngIf="ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then HoldOverPlan"></div>
 
 <ng-template #CurrentPlan>
@@ -18,7 +18,7 @@
           </div>
         </md-card-title>
         <md-card-content>
-          <h2>{{ActiveServiceAccount.Current_Offer.RateAt1000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small></h2>
+          <h2>{{ActiveServiceAccount.Current_Offer.RateAt2000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small></h2>
           <p class="bg-default">TERM: {{ActiveServiceAccount.Current_Offer.Term}} Months</p>
           <p>START: {{ActiveServiceAccount.Contract_Start_Date | date: 'MM/dd/yyyy'}}</p>
           <p  class="bg-default">END: {{ActiveServiceAccount.Calculated_Contract_End_Date | date:'MM/dd/yyyy'}}</p>
@@ -47,14 +47,14 @@
                   <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
                 <mygexa-offer-details-popover [OfferDetails]="RenewalOffers"></mygexa-offer-details-popover>
               </ng-template>
-            </div>
+          </div>
           </div>
           <div class="mat-card-content">
-            <h2>{{RenewalOffers.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup
+            <h2>{{ RenewalOffers.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup
               class="sup-text">&cent;</sup>
               <small>per kwh</small>
             </h2>
-            <p class="bg-default">at 1000kwh</p>
+            <p class="bg-default">{{RenewalOffers.Plan.Product.Featured_Usage_Level}}</p>
             <p>TERM:{{RenewalOffers.Plan.Term}} months</p>
             <p class="bg-default">{{RenewalOffers.Promotion?.Name}} </p>
           </div>
@@ -118,7 +118,7 @@
 <ng-template #HoldOverPlan>
   <section id="HoldOver">
     <div layout-align="center">
-      <md-card class="current-plan-card" *ngIf="ActiveServiceAccount">
+      <md-card class="current-plan-card" *ngIf="ActiveServiceAccount.Current_Offer.IsHoldOverRate">
         <md-card-title>
           <h2>{{ActiveServiceAccount.Current_Offer.Product_Name}} <small><i class="fa fa-info-circle" (click)="pop.show()" ></i></small></h2>
           <div #pop="bs-popover" [popover]="options" placement="bottom">
@@ -138,5 +138,5 @@
     </div>
   </section>
 </ng-template>
+<mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsUpForRenewal"></mygexa-plan-confirmation-popover>
 
-<mygexa-plan-confirmation-popover #planPopModal></mygexa-plan-confirmation-popover>

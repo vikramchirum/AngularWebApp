@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
-import { get, result } from 'lodash';
+import { get, result, includes } from 'lodash';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { OfferService } from 'app/core/offer.service';
 import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
@@ -57,6 +57,13 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
   }
 
   ngAfterViewInit() { }
+
+  checkFeaturedUsageLevel(RenewalOffer: IOffers) {
+
+    // let StringArray = ['RateAt500kwh', 'RateAt1000kwh', 'RateAt2000kwh'];
+    // let featured_usage_level = RenewalOffer.Plan.Product.Featured_Usage_Level;
+    // let value: boolean = includes(StringArray, featured_usage_level);
+  }
 
   ngOnDestroy() {
     result(this.RenewalServiceSubscription, 'unsubscribe');

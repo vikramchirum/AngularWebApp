@@ -15,7 +15,7 @@ export class OfferDetailsPopoverComponent implements OnInit {
 @ViewChild('pop') public pop: PopoverDirective;
 @Input() OfferDetails: IOffers;
 @Input() ActiveOfferDetails: ServiceAccount;
-
+@Input() IsCurrentPlanPopOver: boolean;
   constructor(private serviceAccountService: ServiceAccountService) {
   }
 

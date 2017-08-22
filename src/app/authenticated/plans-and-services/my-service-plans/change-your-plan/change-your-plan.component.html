@@ -22,7 +22,7 @@
   </div>
 </div>
 
-<div  *ngIf="IsUpForRenewal || ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate">
+<div  *ngIf="IsUpForRenewal && !ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate">
   <div class="row">
     <section id="renewPlan">
       <div class="col-sm-2">
@@ -43,6 +43,29 @@
     </div>
   </section>
 </div>
+</div>
+
+<div  *ngIf="ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate">
+  <div class="row">
+    <section>
+      <div class="col-sm-2">
+        <h2> Want to Upgrade your Plan? </h2>
+      </div>
+      <div class="col-sm-9">
+        <div class="row change-plans-grid" *ngIf="UpgradeOffers">
+          <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
+          <div class="col-md-4 plan-card" *ngFor="let offer of UpgradeOffers">
+            <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
+          </div>
+        </div>
+        <div *ngIf="upgradeOffersArraylength <= 0" class="row">
+          <div class="col-sm-24">
+            <h2> No available offers for this service account. </h2>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>
 
 
