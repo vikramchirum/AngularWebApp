@@ -19,7 +19,8 @@ import { PaymentsHistoryService } from './payments-history.service';
 import { PaymentsService } from './payments.service';
 import { PaymethodService } from './Paymethod.service';
 import { UsageHistoryService } from './usage-history.service';
-import {NotificationOptionsService} from './notificationoptions.service';
+import { NotificationOptionsService } from './notificationoptions.service';
+import { DocumentsService } from './documents.service';
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import {NotificationOptionsService} from './notificationoptions.service';
     PaymentsService,
     PaymethodService,
     UsageHistoryService,
-    NotificationOptionsService
+    NotificationOptionsService,
+    DocumentsService
   ]
 })
 export class CoreModule { }
