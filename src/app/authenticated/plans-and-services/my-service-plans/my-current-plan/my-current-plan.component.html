@@ -50,11 +50,11 @@
           </div>
           </div>
           <div class="mat-card-content">
-            <h2>{{ RenewalOffers.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup
+            <h2>{{ Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup
               class="sup-text">&cent;</sup>
               <small>per kwh</small>
             </h2>
-            <p class="bg-default">{{RenewalOffers.Plan.Product.Featured_Usage_Level}}</p>
+            <p class="bg-default">at {{RenewalOffers.Plan.Product.Featured_Usage_Level}}</p>
             <p>TERM:{{RenewalOffers.Plan.Term}} months</p>
             <p class="bg-default">{{RenewalOffers.Promotion?.Name}} </p>
           </div>

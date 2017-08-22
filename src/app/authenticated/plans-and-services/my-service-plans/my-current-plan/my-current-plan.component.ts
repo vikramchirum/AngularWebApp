@@ -26,7 +26,8 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
   public All_Offers: AllOffersClass[];
   public FeaturedOffers: AllOffersClass[];
   public RenewalOffers: IOffers = null;
-
+  public Featured_Usage_Level: string = null;
+  public Price_atFeatured_Usage_Level: number;
   selectCheckBox  = false;
   enableSelect = false;
   @Input() ActiveServiceAccount: ServiceAccount;
@@ -50,6 +51,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
             all_offers => {
               this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
               this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+              this.checkFeaturedUsageLevel(this.RenewalOffers);
               this.IsOffersReady = true;
             });
         } });
@@ -59,10 +61,30 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
   ngAfterViewInit() { }
 
   checkFeaturedUsageLevel(RenewalOffer: IOffers) {
+    if (RenewalOffer) {
+      if (RenewalOffer.Plan.Product.Featured_Usage_Level != null) {
+        switch (RenewalOffer.Plan.Product.Featured_Usage_Level) {
+          case  '500 kWh': {
+            this.Price_atFeatured_Usage_Level = RenewalOffer.Price_At_500_kwh;
+            break;
+          }
+          case  '1000 kWh': {
+            this.Price_atFeatured_Usage_Level = RenewalOffer.Price_At_1000_kwh;
+            break;
+          }
+          case  '2000 kWh': {
+            this.Price_atFeatured_Usage_Level = RenewalOffer.Price_At_2000_kwh;
+            break;
+          }
+          default: {
+            RenewalOffer.Plan.Product.Featured_Usage_Level = '2000 kWh';
+            this.Price_atFeatured_Usage_Level = RenewalOffer.Price_At_2000_kwh;
+            break;
+          }
+        }
+      }
+    }
 
-    // let StringArray = ['RateAt500kwh', 'RateAt1000kwh', 'RateAt2000kwh'];
-    // let featured_usage_level = RenewalOffer.Plan.Product.Featured_Usage_Level;
-    // let value: boolean = includes(StringArray, featured_usage_level);
   }
 
   ngOnDestroy() {

@@ -57,18 +57,17 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
           }
         );
         // this.IsInRenewalTimeFrame = this.ActiveServiceAccount.IsUpForRenewal;
-      }
+        let docId = '';
+        if (this.ActiveServiceAccount.Current_Offer.IsLegacyOffer) {
+          docId = this.ActiveServiceAccount.Current_Offer.Rate_Code;
+        } else {
+          docId = this.ActiveServiceAccount.Current_Offer.Client_Key;
+        }
 
-      let docId = '';
-      if (this.ActiveServiceAccount.Current_Offer.IsLegacyOffer) {
-        docId = this.ActiveServiceAccount.Current_Offer.Rate_Code;
-      } else {
-        docId = this.ActiveServiceAccount.Current_Offer.Client_Key;
+        this.eflLink = this.documentsService.getEFLLink(docId);
+        this.tosLink = this.documentsService.getTOSLink(this.ActiveServiceAccount.Current_Offer.IsFixed);
+        this.yraacLink = this.documentsService.getYRAACLink();
       }
-
-      this.eflLink = this.documentsService.getEFLLink(docId);
-      this.tosLink = this.documentsService.getTOSLink(this.ActiveServiceAccount.Current_Offer.IsFixed);
-      this.yraacLink = this.documentsService.getYRAACLink();
     }
   }
 

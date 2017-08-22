@@ -16,7 +16,9 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
  @Input() ActiveOfferDetails: ServiceAccount;
  @Input() IsCurrentPlanPopOver: boolean;
 
- public eflLink;
+ public Featured_Usage_Level: string = null;
+  public Price_atFeatured_Usage_Level: number;
+  public eflLink;
  public tosLink;
  public yraacLink;
 
@@ -30,6 +32,7 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
 
     if (changes['ActiveOfferDetails']) {
 
+
       let docId = '';
       if (this.ActiveOfferDetails.Current_Offer.IsLegacyOffer) {
         docId = this.ActiveOfferDetails.Current_Offer.Rate_Code;
@@ -42,6 +45,30 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
       this.yraacLink = this.documentsService.getYRAACLink();
 
     } else if (changes['OfferDetails']) {
+
+    if (this.OfferDetails) {
+  if (this.OfferDetails.Plan.Product.Featured_Usage_Level != null) {
+    switch (this.OfferDetails.Plan.Product.Featured_Usage_Level) {
+      case  '500 kWh': {
+        this.Price_atFeatured_Usage_Level = this.OfferDetails.Price_At_500_kwh;
+        break;
+      }
+      case  '1000 kWh': {
+        this.Price_atFeatured_Usage_Level = this.OfferDetails.Price_At_1000_kwh;
+        break;
+      }
+      case  '2000 kWh': {
+        this.Price_atFeatured_Usage_Level = this.OfferDetails.Price_At_2000_kwh;
+        break;
+      }
+      default: {
+        this.OfferDetails.Plan.Product.Featured_Usage_Level = '2000 kWh';
+        this.Price_atFeatured_Usage_Level = this.OfferDetails.Price_At_2000_kwh;
+        break;
+      }
+    }
+  }
+}
 
       this.eflLink = this.documentsService.getEFLLink(this.OfferDetails.Id);
       this.tosLink = this.documentsService.getTOSLink(this.OfferDetails.Plan.Product.Fixed);

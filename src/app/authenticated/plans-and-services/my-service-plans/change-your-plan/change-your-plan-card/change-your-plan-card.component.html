@@ -12,7 +12,7 @@
             <mygexa-offer-details-popover [OfferDetails] = Offer ></mygexa-offer-details-popover>
           </ng-template>
         </div>
-        <h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
+        <h2>{{Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
       </div>
       <p>at {{Offer?.Plan?.Product?.Featured_Usage_Level}}</p>
       <p>TERM:{{Offer.Plan.Term}} months</p>
@@ -82,7 +82,7 @@
             <mygexa-offer-details-popover [OfferDetails] = Offer></mygexa-offer-details-popover>
           </ng-template>
         </div>
-        <h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
+        <h2>{{Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
       </div>
       <p>at {{Offer?.Plan?.Product?.Featured_Usage_Level}}</p>
       <p>TERM:{{Offer.Plan.Term}} months</p>
@@ -161,7 +161,7 @@
             <mygexa-offer-details-popover [OfferDetails] = Offer></mygexa-offer-details-popover>
           </ng-template>
         </div>
-        <h2>{{Offer.Price_At_1000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
+        <h2>{{Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
       </div>
       <p>at {{Offer?.Plan?.Product?.Featured_Usage_Level}}</p>
       <p>TERM:{{Offer.Plan.Term}} months</p>

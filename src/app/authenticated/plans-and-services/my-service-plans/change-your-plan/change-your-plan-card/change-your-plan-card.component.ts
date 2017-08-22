@@ -26,7 +26,8 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   RenewalServiceSubscription: Subscription;
   enableSelect = false;
   chev_clicked: boolean;
-
+  public Featured_Usage_Level: string = null;
+  public Price_atFeatured_Usage_Level: number;
   constructor(private serviceAccountService: ServiceAccountService,
   private RenewalService: RenewalService,
   private viewContainerRef: ViewContainerRef) {
@@ -38,6 +39,28 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    if (this.Offer.Plan.Product.Featured_Usage_Level != null) {
+      switch (this.Offer.Plan.Product.Featured_Usage_Level) {
+        case  '500 kWh': {
+          this.Price_atFeatured_Usage_Level = this.Offer.Price_At_500_kwh;
+          break;
+        }
+        case  '1000 kWh': {
+          this.Price_atFeatured_Usage_Level = this.Offer.Price_At_1000_kwh;
+          break;
+        }
+        case  '2000 kWh': {
+          this.Price_atFeatured_Usage_Level = this.Offer.Price_At_2000_kwh;
+          break;
+        }
+        default: {
+          this.Offer.Plan.Product.Featured_Usage_Level = '2000 kWh';
+          this.Price_atFeatured_Usage_Level = this.Offer.Price_At_2000_kwh;
+          break;
+        }
+      }
+    }
+
     this.serviceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.activeServiceAccountDetails = result;
