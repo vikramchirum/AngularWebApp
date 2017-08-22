@@ -27,4 +27,6 @@ export interface IServiceAccountPlanHistoryOffer {
   Start_Date: string;
   End_Date: string;
   IsHoldOverRate: boolean;
+  IsLegacyOffer: boolean;
+  IsFixed: boolean;
 }
