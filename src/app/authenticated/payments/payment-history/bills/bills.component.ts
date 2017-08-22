@@ -26,7 +26,7 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
     { title: 'Total',           name: 'Amount_Due',      sort: '',     type: 'dollar' }
   ];
   public rows: any[] = [];
-  public documentsUrl;
+  public invoicesUrl;
 
   public currentPage = 1;
   public itemsPerPage = 10;
@@ -50,7 +50,7 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.documentsUrl = environment.Documents_Url;
+    this.invoicesUrl = environment.Documents_Url.concat('/invoice/generate/');
     this.config = {
       paging: true,
       sorting: {columnHeaders: this.columnHeaders},
