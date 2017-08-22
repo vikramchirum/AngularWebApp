@@ -21,6 +21,7 @@ import { PaymethodAddCcComponent } from './components/payment-method-add-cc/paym
 import { PaymethodAddEcheckComponent } from './components/payment-method-add-echeck/payment-method-add-echeck.component';
 import { ViewBillComponent } from './components/view-bill/view-bill.component';
 import { DollarToCentsPipe } from './pipes/DollarToCents.pipe';
+import { AddressSearchComponent } from './components/address-search/address-search.component';
 
 @NgModule({
   imports: [
@@ -47,7 +48,8 @@ import { DollarToCentsPipe } from './pipes/DollarToCents.pipe';
     PaymethodAddCcComponent,
     PaymethodAddEcheckComponent,
     ViewBillComponent,
-    DollarToCentsPipe
+    DollarToCentsPipe,
+    AddressSearchComponent
   ],
   exports: [
     ChangeUserNameComponent,
@@ -66,7 +68,8 @@ import { DollarToCentsPipe } from './pipes/DollarToCents.pipe';
     PaymethodAddCcComponent,
     PaymethodAddEcheckComponent,
     ViewBillComponent,
-    DollarToCentsPipe
+    DollarToCentsPipe,
+    AddressSearchComponent
   ]
 })
 export class SharedModule { }

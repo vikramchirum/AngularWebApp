@@ -1,24 +1,11 @@
 <div class="container-fluid plans-profile">
-
+<form [formGroup]="addServiceForm" novalidate>
   <div class="row add-services">
     <div class="col-md-12">
-      <h2>Add Service Location</h2>
-      <!--<div class="progress">
-        <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:50%">
-          <span class="sr-only">70% Complete</span>
-        </div>
-      </div>-->
+      <h2>Add Service Location</h2>    
     </div>
   </div>
-  <!-- Current Service Address -->
-  <!--<div class="row">
-    <div class="col-md-12 current-service-address">
-      <h5>Current Service Address</h5>
-      <p>20455 TX-249 #200,</p>
-      <p>Houston,</p>
-      <p>TX 77070</p>
-    </div>
-  </div>-->
+ 
 
   <!-- Enter New Service Address -->
   <div class="row">
@@ -26,7 +13,8 @@
       <h3>
         Enter New Service Address
       </h3>
-      <input type="text" class="form-control" placeholder="Enter New Address">
+      <!-- <input type="text" class="form-control" placeholder="Enter New Address"> -->
+     <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)" ></mygexa-address-search>
     </div>
   </div>
 
@@ -34,46 +22,37 @@
   <div class="row">
     <div class="col-md-6">
       <h3>When would you like start service?</h3>
-      <ng2-datepicker [options]="options" [(ngModel)]="date"></ng2-datepicker>
-      <!--<div class="input-group">
-        <input type="text" id="datepicker-my" class="form-control" placeholder="Select Date" />
-        <span class="input-group-addon" id="btn" style="cursor:pointer;">
-                    <span class="glyphicon glyphicon-calendar"></span>
-        </span>
-      </div>-->
+       <my-date-picker name="New_Service_Start_Date" [options]="ServiceStartDate" formControlName="Service_Start_Date"></my-date-picker>
     </div>
   </div>
-
   <!-- Service Type Selection -->
   <div class="row">
     <div class="col-md-6  new-service-address">
-      <h3>Service Type</h3>
-      <form>
+      <h3>Service Type</h3>   
         <div class="row">
           <div class="col-xs-6 col-md-5">
             <div class="form-control">
               <label class="radio-inline">
-                <input type="radio" name="serviceType">I'm Moving
+                <input type="radio" formControlName="serviceType" value="moving" (click)="getFeaturedOffers()">I'm Moving
               </label>
             </div>
           </div>
           <div class="col-xs-6 col-md-5 col-md-offset-1">
             <div class="form-control">
               <label class="radio-inline">
-                <input type="radio" name="serviceType">I'm Switching
+                <input type="radio" formControlName="serviceType" value="switching" (click)="getFeaturedOffers()">I'm Switching
               </label>
             </div>
           </div>
-        </div>
-      </form>
+        </div>      
     </div>
   </div>
 
   <!-- Select Plan -->
   <h2>Select a Plan</h2>
-  <div class="row">
-    <div class="col-md-4" *ngFor="let i of [0, 1, 2, 3, 4, 5, 6, 7, 8]">
-      <mygexa-select-plan></mygexa-select-plan>
+  <div class="row" *ngIf="availableOffers">
+    <div class="col-md-4" *ngFor="let featuredOffer of availableOffers.Items">
+      <mygexa-select-plan [featuredOffer]="featuredOffer"></mygexa-select-plan>
     </div>
   </div>
 
@@ -99,6 +78,7 @@
       </div>
     </div>
   </div>
+</form>
 </div>
 
 <br/>
