@@ -50,7 +50,7 @@
 
   <!-- Select Plan -->
   <h2>Select a Plan</h2>
-  <div class="row" *ngIf="availableOffers">
+  <div class="row" *ngIf="availableOffers" class="featured-offers">
     <div class="col-md-4" *ngFor="let featuredOffer of availableOffers.Items">
       <mygexa-select-plan [featuredOffer]="featuredOffer"></mygexa-select-plan>
     </div>
