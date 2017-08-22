@@ -4,13 +4,13 @@ import { IRenewal } from './renewal.model';
  */
 
 export interface IRenewalDetails {
-  service_account_id: number;
-  service_account_status: string;
-  is_account_eligible_renewal: boolean;
-  is_pending_renewal: boolean;
-  is_moveout_scheduled: boolean;
-  contract_enddate?: Date;
-  tdu_duns_number: string;
-  remaining_contractterm_in_days?: number;
-  existing_renewal: IRenewal;
+  Service_Account_Id: number;
+  Service_Account_Status: string;
+  Is_Account_Eligible_Renewal: boolean;
+  Is_Pending_Renewal: boolean;
+  Is_MoveOut_Scheduled: boolean;
+  Contract_EndDate?: Date;
+  TDU_DUNS_Number: string;
+  Remaining_ContractTerm_In_Days?: number;
+  Existing_Renewal: IRenewal;
 }

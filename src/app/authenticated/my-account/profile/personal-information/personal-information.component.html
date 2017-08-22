@@ -50,7 +50,7 @@
     <div class="col-md-6">
       <ng-template *ngIf="customerDetails; then DoShowCustomerPhoneNumber else DoNotShowCustomerPhoneNumber"></ng-template>
       <ng-template #DoShowCustomerPhoneNumber>
-        <div class="form-control">{{ customerDetails.Phone }}</div>
+        <div class="form-control">{{ customerDetails.Primary_Phone?.Area_Code===null ? '' : customerDetails.Primary_Phone?.Area_Code}} {{customerDetails.Primary_Phone?.Number }}</div>
         <a class="btn btn-primary btn-link" (click)="togglePhoneEdit($event)">
           <i class="fa" [ngClass]="'fa-' + (phoneEditing ? 'remove' : 'pencil')"></i>
         </a>
