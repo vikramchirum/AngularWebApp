@@ -1,0 +1,121 @@
+.current-plan-card {
+  text-align: center; }
+  .current-plan-card .mat-button {
+    color: black; }
+  .current-plan-card .check-mark {
+    margin-top: -15px;
+    margin-right: -10px; }
+
+.plan-card-container {
+  border: 2px solid black;
+  border-radius: 20px;
+  padding: 20px; }
+  .plan-card-container .card-content {
+    position: relative;
+    text-align: center; }
+    .plan-card-container .card-content .sup-text {
+      font-size: 12px;
+      top: -1.5em; }
+    .plan-card-container .card-content .sub-text {
+      font-size: 12px;
+      right: 0.5em; }
+    .plan-card-container .card-content .corner-ribbon {
+      width: 125px;
+      height: 63px;
+      background: none;
+      display: inline-block;
+      border: none;
+      border-bottom-color: black;
+      position: absolute;
+      top: -15px;
+      left: -32px;
+      text-align: center;
+      line-height: 22px;
+      letter-spacing: 1px;
+      color: black;
+      transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg); }
+    .plan-card-container .card-content .fa-in-circle {
+      background: #fea220;
+      color: #fff;
+      border-radius: 30px;
+      display: inline-block;
+      padding: 8px 0;
+      width: 30px;
+      height: 30px; }
+    .plan-card-container .card-content .corner-ribbon.top-left {
+      transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg); }
+  .plan-card-container .agreement-section hr {
+    border: 1px solid #000;
+    margin-left: -19px;
+    margin-right: -19px; }
+  .plan-card-container .agreement-section label p {
+    font-size: 0.9em; }
+  .plan-card-container .checkbox label:after {
+    content: '';
+    display: table;
+    clear: both; }
+  .plan-card-container .checkbox .cr {
+    position: relative;
+    display: inline-block;
+    border: 1px solid #a9a9a9;
+    border-radius: .25em;
+    width: 1.5em;
+    height: 1.5em;
+    float: left;
+    margin-left: -1.8em; }
+  .plan-card-container .checkbox .cr .cr-icon {
+    position: absolute;
+    font-size: 1em;
+    line-height: 0;
+    top: 50%;
+    left: 20%; }
+  .plan-card-container .checkbox label input[type="checkbox"] {
+    display: none;
+    padding-left: 1.4em; }
+  .plan-card-container .checkbox label input[type="checkbox"] + .cr > .cr-icon {
+    transform: scale(3) rotateZ(-20deg);
+    opacity: 0;
+    transition: all .3s ease-in; }
+  .plan-card-container .checkbox label input[type="checkbox"]:checked + .cr > .cr-icon {
+    transform: scale(1) rotateZ(0deg);
+    opacity: 1; }
+  .plan-card-container .checkbox label input[type="checkbox"]:disabled + .cr {
+    opacity: .5; }
+
+.mat-card.current-plan-card {
+  box-shadow: none; }
+  .mat-card.current-plan-card h2, .mat-card.current-plan-card .fa {
+    color: #2eb134; }
+  .mat-card.current-plan-card small .fa {
+    font-size: 18px;
+    font-weight: 100;
+    vertical-align: super; }
+  .mat-card.current-plan-card .fa-remove {
+    font-size: 20px;
+    color: black !important; }
+  .mat-card.current-plan-card .mat-card-content h2 {
+    font-weight: 800;
+    color: #000; }
+  .mat-card.current-plan-card .mat-card-content .bg-default {
+    background-color: #ececec;
+    margin-bottom: 0;
+    line-height: 30px; }
+  .mat-card.current-plan-card .mat-card-content p {
+    margin-bottom: 0;
+    line-height: 30px; }
+
+.popover.in {
+  max-width: 350px !important; }
+
+.agreement-section {
+  position: absolute;
+  top: 45px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  left: 0;
+  z-index: 1; }
+  .agreement-section label p {
+    font-size: 0.9em; }

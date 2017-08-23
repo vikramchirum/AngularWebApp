@@ -1,7 +1,7 @@
 
 <ng-template *ngIf="ActiveServiceAccount; then HasLoadedActiveServiceAccount else LoadingActiveServiceAccount"></ng-template>
 <ng-template #HasLoadedActiveServiceAccount>
-  <ng-template *ngIf="ActiveServiceAccount.IsUpForRenewal; then ShowWhatIsIncluded else ShowDocuments"></ng-template>
+  <ng-template *ngIf="IsInRenewalTimeFrame && !ActiveServiceAccount.Current_Offer.IsHoldOverRate; then ShowWhatIsIncluded else ShowDocuments"></ng-template>
   <ng-template #ShowWhatIsIncluded>
     <section id="RenewalPlan">
       <b><p class="form-control">What's included</p></b><br>
@@ -17,14 +17,6 @@
       </ng-template>
 
       <ng-template #noFeatures>
-        <!--<div class="row">-->
-          <!--<div class="col-sm-2">-->
-            <!--<i class="fa fa-exclamation-triangle fa-fw fa-in-circle"></i>-->
-          <!--</div>-->
-          <!--<div class="col-sm-10">-->
-            <!--No features available for this plan yet!!-->
-          <!--</div>-->
-        <!--</div>-->
       </ng-template>
       <br/>
       <b><p class="form-control">Renewal Details</p></b>
@@ -46,7 +38,7 @@
           <ng-template #options>
             <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
               <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-            <mygexa-offer-details-popover [ActiveOfferDetails]="ActiveServiceAccount"></mygexa-offer-details-popover>
+            <mygexa-offer-details-popover [ActiveOfferDetails]="ActiveServiceAccount" [IsCurrentPlanPopOver] = "true"></mygexa-offer-details-popover>
           </ng-template>
         </div>
 
@@ -57,11 +49,11 @@
     <section>
       <b><p class="doc-title">Documents</p></b>
       <ul class="list-unstyled">
-        <li><a><i class="fa fa-file-pdf-o"></i> Terms of Use</a></li>
-        <li><a><i class="fa fa-file-pdf-o"></i> Electricity Facts Label</a></li>
-        <li><a><i class="fa fa-file-pdf-o"></i> Customer Rights</a></li>
+        <li><a  href="{{tosLink}}"   target="_blank"><i class="fa fa-file-pdf-o"></i> Terms of Use</a></li>
+        <li><a  href="{{eflLink}}"   target="_blank"><i class="fa fa-file-pdf-o"></i> Electricity Facts Label</a></li>
+        <li><a  href="{{yraacLink}}" target="_blank"><i class="fa fa-file-pdf-o"></i> Customer Rights</a></li>
       </ul>
-      <p><a href>Get Adobe Reader Free</a></p>
+      <p><a href="https://get.adobe.com/reader/" target="_blank">Get Adobe Reader Free</a></p>
     </section>
   </ng-template>
 </ng-template>

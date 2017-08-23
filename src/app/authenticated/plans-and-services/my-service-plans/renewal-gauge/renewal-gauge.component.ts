@@ -184,7 +184,6 @@ export class RenewalGaugeComponent {
   }
 
   buildRenewedChart(Today: Date, Start_Date: Date): void {
-
     this.chartType = 'renewed';
 
     this.clearFirst(() => {

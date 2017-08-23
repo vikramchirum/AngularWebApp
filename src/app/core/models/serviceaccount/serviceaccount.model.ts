@@ -42,9 +42,9 @@ export class ServiceAccount {
   Current_Offer: IServiceAccountPlanHistoryOffer;
   Offering_Name: string;
   IsUpForRenewal: boolean;
-  IsOnHoldOver: boolean;
   IsUpgraded: boolean;
   IsRenewed: boolean;
+  Calculated_Contract_End_Date: Date;
 
   constructor(opts: any) {
     assign(this, opts);
