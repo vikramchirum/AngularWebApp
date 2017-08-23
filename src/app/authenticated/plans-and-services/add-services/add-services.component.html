@@ -1,84 +1,93 @@
 <div class="container-fluid plans-profile">
-<form [formGroup]="addServiceForm" novalidate>
-  <div class="row add-services">
-    <div class="col-md-12">
-      <h2>Add Service Location</h2>    
+  <form [formGroup]="addServiceForm" novalidate>
+    <div class="row add-services">
+      <div class="col-md-12">
+        <h2>Add Service Location</h2>
+      </div>
     </div>
-  </div>
- 
 
-  <!-- Enter New Service Address -->
-  <div class="row">
-    <div class="col-md-6 new-service-address">
-      <h3>
-        Enter New Service Address
-      </h3>
-      <!-- <input type="text" class="form-control" placeholder="Enter New Address"> -->
-     <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)" ></mygexa-address-search>
-    </div>
-  </div>
 
-  <!-- start service -->
-  <div class="row">
-    <div class="col-md-6">
-      <h3>When would you like start service?</h3>
-       <my-date-picker name="New_Service_Start_Date" [options]="ServiceStartDate" formControlName="Service_Start_Date"></my-date-picker>
+    <!-- Enter New Service Address -->
+    <div class="row">
+      <div class="col-md-6 new-service-address">
+        <h3>
+          Enter New Service Address
+        </h3>
+        <!-- <input type="text" class="form-control" placeholder="Enter New Address"> -->
+        <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)"></mygexa-address-search>
+      </div>
     </div>
-  </div>
-  <!-- Service Type Selection -->
-  <div class="row">
-    <div class="col-md-6  new-service-address">
-      <h3>Service Type</h3>   
+
+    <!-- start service -->
+    <div class="row">
+      <h3 class="start-service-text">When would you like start service?</h3>
+      <div class="col-md-6">
+        <my-date-picker name="New_Service_Start_Date" [selDate]="selDate" [options]="ServiceStartDate" formControlName="Service_Start_Date"
+          (dateChanged)="onStartDateChanged($event)"></my-date-picker>
+      </div>
+      <small><i aria-hidden="true" class="fa fa-info-circle" tooltip="If you require service before 3 business days then call 855-639-8118."></i></small>
+    </div>
+    <!-- Service Type Selection -->
+    <div class="row">
+      <div class="col-md-6  new-service-address">
+        <h3>Service Type</h3>
         <div class="row">
           <div class="col-xs-6 col-md-5">
             <div class="form-control">
               <label class="radio-inline">
-                <input type="radio" formControlName="serviceType" value="moving" (click)="getFeaturedOffers()">I'm Moving
+                <input type="radio" formControlName="serviceType" value="moving">I'm Moving
               </label>
             </div>
           </div>
           <div class="col-xs-6 col-md-5 col-md-offset-1">
             <div class="form-control">
               <label class="radio-inline">
-                <input type="radio" formControlName="serviceType" value="switching" (click)="getFeaturedOffers()">I'm Switching
+                <input type="radio" formControlName="serviceType" value="switching">I'm Switching
               </label>
             </div>
           </div>
-        </div>      
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- Select Plan -->
-  <h2>Select a Plan</h2>
-  <div class="row" *ngIf="availableOffers" class="featured-offers">
-    <div class="col-md-4" *ngFor="let featuredOffer of availableOffers.Items">
-      <mygexa-select-plan [featuredOffer]="featuredOffer"></mygexa-select-plan>
+    <!-- Select Plan -->
+    <div *ngIf="this.featuredOffers">
+      <h2>Select a Plan</h2>
+      <div class="row" class="featured-offers">
+        <div class="col-md-4" *ngFor="let featuredOffer of this.featuredOffers">
+          <mygexa-select-plan [featuredOffer]="featuredOffer"></mygexa-select-plan>
+        </div>
+      </div>
+      <div *ngIf="this.featuredOffers.length <= 0" >      
+          <h2> No available offers for this service account. </h2>
+      </div>
     </div>
-  </div>
 
-  <!-- Credit Check -->
-  <!--<h4>Credit Check</h4>
+
+
+    <!-- Credit Check -->
+    <!--<h4>Credit Check</h4>
   <mygexa-credit-check></mygexa-credit-check>-->
 
-  <div class="add-services-verify-info">
-    <div class="alert alert-info clearfix">
+    <div class="add-services-verify-info">
+      <div class="alert alert-info clearfix">
+        <div class="row">
+          <div class="col-md-9">
+            Please review all your information and make it is accurate before submitting
+          </div>
+          <div class="col-md-3">
+            <i class="fa fa-arrow-up pull-right" aria-hidden="true" (click)="scrollTop()"></i>
+          </div>
+        </div>
+      </div>
+      <br/>
       <div class="row">
-        <div class="col-md-9">
-          Please review all your information and make it is accurate before submitting
-        </div>
-        <div class="col-md-3">
-          <i class="fa fa-arrow-up pull-right" aria-hidden="true" (click)="scrollTop()"></i>
+        <div class="col-md-12 col-xs-12 text-center">
+          <button class="btn btn-primary btn-lg ">Add New Service Location</button>
         </div>
       </div>
     </div>
-    <br/>
-    <div class="row">
-      <div class="col-md-12 col-xs-12 text-center">
-        <button class="btn btn-primary btn-lg ">Add New Service Location</button>
-      </div>
-    </div>
-  </div>
-</form>
+  </form>
 </div>
 
 <br/>
