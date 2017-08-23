@@ -18,11 +18,12 @@ export class OfferService {
   constructor(private http: HttpClient, private serviceAccountService: ServiceAccountService) {
   }
 
-  getOffers(offer): Observable<any[]> {
+  getOffers(offer): Observable<IOffers[]> {
     console.log ( 'Offer params', offer);
     return this.http
       .get(`/v2/Offers?option.startDate=${offer.startDate}&option.plan.tDU.duns_Number=${offer.dunsNumber}`)
-      .map((response: Response) => this.processApiData(response))
+      .map(data => { data.json(); return data.json(); })
+      .map(data =>  <IOffers[]>data['Items'])
       .catch(error => this.http.handleHttpError(error));
   }
   private processApiData(res: Response) {
