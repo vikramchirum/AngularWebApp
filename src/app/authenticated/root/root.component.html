@@ -13,7 +13,7 @@
           <!--</div>-->
         <!--</form>-->
       <!--<li>-->
-      <li><a routerLink="/account/profile"><small><span class="fa fa-user-circle fa-white"></span> <span class="hidden-xs">Hi,  {{ username }}!</span></small></a></li>
+      <li><a routerLink="/account/profile"><small><span class="fa fa-user-circle fa-white"></span> <span class="hidden-xs">Hi,  {{ customerDetails?.First_Name.charAt(0).toUpperCase() +  customerDetails?.First_Name.slice(1).toLowerCase()  }}!</span></small></a></li>
       <li class="hidden"><a href="#"><small><span class="fa fa-bell fa-white"></span> <span class="hidden-xs">Notifications</span></small></a></li>
       <li><a href="#" (click)="logout($event)"><small><span class="fa fa-sign-out fa-white"></span> <span class="hidden-xs">Logout</span></small></a></li>
       <li><a href="#"><small><span class="fa fa-phone fa-white"></span> <span class="hidden-xs">866-961-9399</span></small></a></li>
