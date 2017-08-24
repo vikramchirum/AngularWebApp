@@ -12,6 +12,11 @@ a, a:link, a:visited, a:active {
   border-radius: 0;
   text-transform: uppercase;
 }
+
+.btn:disabled {
+  cursor: pointer !important;
+}
+
 .carousel-indicators {
   position: absolute;
   bottom: -10px;
