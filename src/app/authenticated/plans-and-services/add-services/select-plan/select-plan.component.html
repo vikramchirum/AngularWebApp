@@ -1,14 +1,14 @@
 <div class="select-plan-card-container">
   <div class="card-content">
     <div class="card-title">
-    <h4>Gexa Prime 1000 12 <small><i class="fa fa-info-circle" aria-hidden="true"></i></small></h4>
+    <h4>{{featuredOffer.Plan.Name}} <small><i class="fa fa-info-circle" aria-hidden="true"></i></small></h4>
     
-    <h2>3.9&cent;<small>pkw/hr</small>
+    <h2>{{featuredOffer.Price_At_1000_kwh | number : '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small>
       </h2>
       </div>
     <p>at 1000kwh</p>
-    <p>TERM:12 months</p>
-    <p>No Sign Up Bonus</p>
+    <p>TERM:{{featuredOffer.Plan.Term}} months</p>
+    <p>{{featuredOffer.Promotion?.Name}}</p>
     <br/>
   </div>
   <div *ngIf= "selectCheckBox" class="agreement-section">

@@ -1,16 +1,16 @@
 /**
  * Created by patrick.purcell on 5/2/2017.
  */
-import { Injectable } from '@angular/core';
-import { Http, Headers, URLSearchParams, RequestOptions, Response } from '@angular/http';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import {Injectable} from '@angular/core';
+import {Http, URLSearchParams, Response} from '@angular/http';
+import {CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 
-import { environment } from 'environments/environment';
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
-import { clone, filter, find, forEach, get, map, pull, startsWith } from 'lodash';
-import { IUser, IUserSecurityQuestions, IUserSigningUp } from './models/user/User.model';
-import { HttpClient } from './httpclient';
+import {environment} from 'environments/environment';
+import {Observable} from 'rxjs/Observable';
+import {Observer} from 'rxjs/Observer';
+import {clone, filter, find, forEach, get, map, pull, startsWith} from 'lodash';
+import {IUser, IUserSecurityQuestions, IUserSigningUp} from './models/user/User.model';
+import {HttpClient} from './httpclient';
 
 function getServiceAccountIds(user: IUser): string[] {
   return user
@@ -38,22 +38,24 @@ export class UserService implements CanActivate {
   private UserObservers: Observer<IUser>[] = [];
   private UserServiceAccountsObservers: Observer<string[]>[] = [];
   private UserCustomerAccountObservers: Observer<string>[] = [];
-  private getUserFromMongo = environment.Api_Url + '/user/getUserFromMongo';
-  private secQuesUrl = environment.Api_Url + '/user/securityQues';
-  private getSecQuestionUrl = environment.Api_Url + '/user/getSecQues';
-  private checkSecQuesUrl = environment.Api_Url + '/user/checkSecurityQues';
-  private resetPasswordUrl = environment.Api_Url + '/user/resetPassword';
-  private getUsernameUrl = environment.Api_Url + '/user/getUsername';
-  private loginUrl = environment.Api_Url + '/user/authenticate';
-  private registerUrl = environment.Api_Url + '/user/register';
-  private updateEmail = environment.Api_Url + '/user/updateEmailAddress';
-  private updateClaims = environment.Api_Url + '/user/updateClaims';
+  private secQuesUrl = '/user/securityQues';
+  private getUserFromMongo = '/user/getUserFromMongo';
+  private getSecQuestionUrl = '/user/getSecQues';
+  private checkSecQuesUrl = '/user/checkSecurityQues';
+  private resetPasswordUrl = '/user/resetPassword';
+  private getUsernameUrl = '/user/getUsername';
+  private loginUrl = '/user/authenticate';
+  private registerUrl = '/user/register';
+  private updateEmail = '/user/updateEmailAddress';
+  private updateClaims = '/user/updateClaims';
 
   get user_token(): string {
 
     // See if we already have it cached and return it.
     const cachedToken = get(this.UserCache, 'Token', null);
-    if (cachedToken) { return cachedToken; }
+    if (cachedToken) {
+      return cachedToken;
+    }
 
     // Try getting it from localStorage / sessionStorage / cookie / etc...
     const token = localStorage.getItem('gexa_auth_token');
@@ -88,11 +90,9 @@ export class UserService implements CanActivate {
     return getCustomerAccountId(this.UserCache);
   }
 
-  constructor(
-    private router: Router,
-    private Http: Http,
-    private httpClient: HttpClient
-  ) {
+  constructor(private router: Router,
+              private Http: Http,
+              private httpClient: HttpClient) {
 
     // Make the Observables (User, Service Account Ids, Customer Account Id) for others to listen to.
     // Each will:
@@ -101,17 +101,23 @@ export class UserService implements CanActivate {
     // 3. Provide the new observer a clean-up function to prevent memory leaks.
     this.UserObservable = Observable.create((observer: Observer<IUser>) => {
       this.UserObservers.push(observer);
-      if (this.initialized) { observer.next(this.UserCache); }
+      if (this.initialized) {
+        observer.next(this.UserCache);
+      }
       return () => pull(this.UserObservers, observer);
     });
     this.UserServiceAccountsObservable = Observable.create((observer: Observer<string[]>) => {
       this.UserServiceAccountsObservers.push(observer);
-      if (this.initialized) { observer.next(getServiceAccountIds(this.UserCache)); }
+      if (this.initialized) {
+        observer.next(getServiceAccountIds(this.UserCache));
+      }
       return () => pull(this.UserServiceAccountsObservers, observer);
     });
     this.UserCustomerAccountObservable = Observable.create((observer: Observer<string>) => {
       this.UserCustomerAccountObservers.push(observer);
-      if (this.initialized) { observer.next(getCustomerAccountId(this.UserCache)); }
+      if (this.initialized) {
+        observer.next(getCustomerAccountId(this.UserCache));
+      }
       return () => pull(this.UserCustomerAccountObservers, observer);
     });
 
@@ -132,12 +138,7 @@ export class UserService implements CanActivate {
     const storedToken = this.user_token;
     if (storedToken) {
 
-      const params = new URLSearchParams();
-      params.append('Token', storedToken);
-      const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-      const options = new RequestOptions({ headers, params });
-
-      this.httpClient.get('/user/getUserFromMongo')
+      this.httpClient.get(this.getUserFromMongo)
         .map(res => res.json())
         .catch(error => this.httpClient.handleHttpError(error))
         .subscribe(res => this.ApplyUserData(res));
@@ -147,11 +148,13 @@ export class UserService implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
 
     // The user is logged in so yes, they can activate.
-    if (this.user_logged_in) { return true; }
+    if (this.user_logged_in) {
+      return true;
+    }
 
     // Otherwise, save their state and navigate to the login prompt.
     this.UserState = this.UserState || state.url;
-    this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } } );
+    this.router.navigate(['/login'], {queryParams: {returnUrl: state.url}});
 
   }
 
@@ -162,15 +165,12 @@ export class UserService implements CanActivate {
 
   login(user_name: string, password: string): Observable<IUser> {
 
-    const body = new URLSearchParams();
-    body.append('username', user_name);
-    body.append('password', password);
-    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' }) });
+    const body = {'username': user_name, 'password': password};
 
-    return this.Http.post(this.loginUrl, body.toString(), options)
+    return this.httpClient.post(this.loginUrl, body)
       .map(res => res.json())
       .map(res => {
-        if (res.Account_permissions.length > 0 ) {
+        if (res.Account_permissions.length > 0) {
           this.ApplyUserData(res);
         }
         return res;
@@ -180,7 +180,7 @@ export class UserService implements CanActivate {
 
   signup(user: IUserSigningUp): Observable<string> {
 
-    const body = JSON.stringify({
+    const body = {
       Credentials: {
         Username: user.User_name,
         Password: user.Password
@@ -196,10 +196,9 @@ export class UserService implements CanActivate {
       Security_Question_Answer: user.Security_Question_Answer,
       Service_Account_Id: user.Service_Account_Id,
       Zip_Code: user.Zip_Code
-    });
-    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
+    };
 
-    return this.Http.post(this.registerUrl, body, options)
+    return this.httpClient.post(this.registerUrl, body)
       .map(res => res.json())
       .map(res => this.ApplyUserData(res))
       .catch(error => this.httpClient.handleHttpError(error));
@@ -207,9 +206,11 @@ export class UserService implements CanActivate {
 
   getSecurityQuestions(): Observable<IUserSecurityQuestions[]> {
 
-    if (this.getSecurityQuestionsCached.length) { return Observable.of(this.getSecurityQuestionsCached); }
+    if (this.getSecurityQuestionsCached.length) {
+      return Observable.of(this.getSecurityQuestionsCached);
+    }
 
-    return this.Http.get(this.secQuesUrl)
+    return this.httpClient.get(this.secQuesUrl)
       .map(res => res.json())
       .map(res => this.getSecurityQuestionsCached = res)
       .catch(error => this.httpClient.handleHttpError(error));
@@ -218,21 +219,19 @@ export class UserService implements CanActivate {
   getSecQuesByUserName(user_name: string): Observable<string> {
 
     const body = JSON.stringify(user_name);
-    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
 
-    return this.Http.post(this.getSecQuestionUrl, body, options)
+    return this.httpClient.post(this.getSecQuestionUrl, body)
       .map(res => res.json())
       .map(res => get(res, 'length') > 0 ? res : null)
       .catch(error => this.httpClient.handleHttpError(error));
   }
 
   checkSecQuesByUserName(user_name: string, security_answer: string) {
-    const body = JSON.stringify({
+    const body = {
       Username: user_name,
       SecurityAnswer: security_answer
-    });
-    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
-    return this.Http.post(this.checkSecQuesUrl, body, options)
+    };
+    return this.httpClient.post(this.checkSecQuesUrl, body)
       .map(res => res.json())
       .map(res => {
         localStorage.setItem('reset_password_token', get(res, 'length') > 0 ? res : null);
@@ -241,29 +240,27 @@ export class UserService implements CanActivate {
       .catch(error => this.httpClient.handleHttpError(error));
   }
 
-  resetPassword (user_name: string, password: string) {
+  resetPassword(user_name: string, password: string) {
     const token = localStorage.getItem('reset_password_token');
-    const body = JSON.stringify({
+    const body = {
       creds: {
         Username: user_name,
         Password: password
       },
       Token: token
-    });
-    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
+    };
     if (token && token.length) {
-      return this.Http.put(this.resetPasswordUrl, body, options)
+      return this.httpClient.put(this.resetPasswordUrl, body)
         .map(res => res.json())
         .catch(error => this.httpClient.handleHttpError(error));
     }
     return null;
   }
 
-  recoverUsername (Email_Address) {
-    const body = JSON.stringify(Email_Address);
-    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
+  recoverUsername(Email_Address) {
+    const body = Email_Address;
 
-    return this.Http.post(this.getUsernameUrl, body, options)
+    return this.httpClient.post(this.getUsernameUrl, body)
       .map(res => res.json())
       .map(res => {
         if (res && res.length) {
@@ -276,40 +273,38 @@ export class UserService implements CanActivate {
       .catch(error => this.httpClient.handleHttpError(error));
   }
 
-  updateEmailAddress (Email_Address: string) {
+  updateEmailAddress(Email_Address: string) {
     // Using http client
     // const realtivePath = `/user/updateEmailAddress/`;
     // this._http.put(realtivePath, Email_Address).map((res: Response) => {
     // }).catch(error => this.HttpClient.handleHttpError(error));
 
-    const token =  localStorage.getItem('gexa_auth_token');
-    const body = JSON.stringify({
+    const token = localStorage.getItem('gexa_auth_token');
+    const body = {
       Token: token,
       Email_Address: Email_Address
-    });
-    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
+    };
     if (token && token.length) {
-      return this.Http.put(this.updateEmail, body, options)
+      return this.httpClient.put(this.updateEmail, body)
         .map(res => res.json())
         .catch(error => this.httpClient.handleHttpError(error));
     }
     return null;
   }
 
-  updateSecurityQuestion (Email_Address: string) {
+  updateSecurityQuestion(Email_Address: string) {
     // Using http client
     // const realtivePath = `/user/updateEmailAddress/`;
     // this._http.put(realtivePath, Email_Address).map((res: Response) => {
     // }).catch(error => this.HttpClient.handleHttpError(error));
 
-    const token =  localStorage.getItem('gexa_auth_token');
-    const body = JSON.stringify({
+    const token = localStorage.getItem('gexa_auth_token');
+    const body = {
       Token: token,
       Email_Address: Email_Address
-    });
-    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
+    };
     if (token && token.length) {
-      return this.Http.put(this.updateEmail, body, options)
+      return this.httpClient.put(this.updateEmail, body)
         .map(res => res.json())
         .catch(error => this.httpClient.handleHttpError(error));
     }
@@ -318,12 +313,6 @@ export class UserService implements CanActivate {
 
   public setUserFromMongo(token: string) {
     if (token) {
-
-      const params = new URLSearchParams();
-      params.append('Token', token);
-      const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-      // const options = new RequestOptions({ headers, params });
-
       this.httpClient.get('/user/getUserFromMongo')
         .map(res => res.json())
         .catch(error => this.httpClient.handleHttpError(error))
@@ -362,9 +351,9 @@ export class UserService implements CanActivate {
 
   }
 
-  public updateClaim( tok: string, zip: string, value: string ) {
-    const token =  localStorage.getItem('gexa_auth_token');
-    const body = JSON.stringify({
+  public updateClaim(tok: string, zip: string, value: string) {
+    const token = localStorage.getItem('gexa_auth_token');
+    const body = {
       Zip: zip,
       Claim: {
         Claim: {
@@ -373,10 +362,9 @@ export class UserService implements CanActivate {
         },
         Token: tok
       }
-    });
-    const options = new RequestOptions({ headers: new Headers({ 'Content-Type': 'application/json' }) });
+    };
     if (tok && tok.length) {
-      return this.Http.post(this.updateClaims, body, options)
+      return this.httpClient.post(this.updateClaims, body)
         .map(res => res.json())
         .catch(error => this.httpClient.handleHttpError(error));
     }
@@ -387,7 +375,9 @@ export class UserService implements CanActivate {
     const relativePath = `/user/logout`;
     (this.httpClient.post(relativePath, null).map((response: Response) => {
       return <boolean> response.json();
-    })).subscribe(res => { console.log('User logged out.'); });
+    })).subscribe(res => {
+      console.log('User logged out.');
+    });
     this.httpClient.logout();
   }
 }
@@ -395,10 +385,9 @@ export class UserService implements CanActivate {
 @Injectable()
 export class RedirectLoggedInUserToHome implements CanActivate {
 
-  constructor (
-    private UserService: UserService,
-    private Router: Router
-  ) {}
+  constructor(private UserService: UserService,
+              private Router: Router) {
+  }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (

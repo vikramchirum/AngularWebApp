@@ -46,7 +46,7 @@ export class HttpClient extends Http {
     return super.post(url, body, this.getRequestOptionArgs(options));
   }
 
-  public put(url: string, body: string, options?: RequestOptionsArgs): Observable<Response> {
+  public put(url: string, body: any, options?: RequestOptionsArgs): Observable<Response> {
     url = this.getAbsoluteUrl(url);
     return super.put(url, body, this.getRequestOptionArgs(options));
   }

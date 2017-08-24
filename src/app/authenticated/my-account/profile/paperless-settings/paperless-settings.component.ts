@@ -64,17 +64,15 @@ export class PaperlessSettingsComponent implements OnInit {
         Account_Type: AccountType.GEMS_Residential_Customer_Account,
         Account_Number: custId
       },
-      Type: NotificationType.Bill,
-      Status: NotificationStatus.Active
-    };
+      Type: NotificationType.Bill
+    }
     this.searchNotificationOptionRequestForPlans = {
       Account_Info: {
         Account_Type: AccountType.GEMS_Residential_Customer_Account,
         Account_Number: custId
       },
-      Type: NotificationType.Contract_Expiration,
-      Status: NotificationStatus.Active
-    };
+      Type: NotificationType.Contract_Expiration
+    }
     this.notificationService.searchNotificationOption(this.searchNotificationOptionRequestForBill).subscribe(result => {
       // console.log('Notification Result for Bill', result);
       this.notificationOptionsForBills = result;
@@ -96,10 +94,14 @@ export class PaperlessSettingsComponent implements OnInit {
 
   }
   selectedPreference(preference, preferenceOptions) {
-    if (preference[0].Paperless) {
-      preferenceOptions[0].checked = preference[0].Paperless;
+    if (preference[0].Status === 'Active') {
+      if (preference[0].Paperless) {
+        preferenceOptions[0].checked = preference[0].Paperless;
+      } else {
+        preferenceOptions[0].checked = true;
+        preferenceOptions[1].checked = true;
+      }
     } else {
-      preferenceOptions[0].checked = true;
       preferenceOptions[1].checked = true;
     }
   }
@@ -162,7 +164,7 @@ export class PaperlessSettingsComponent implements OnInit {
 
   }
 
-// If there is no notification option, call create notification when user makes changes in UI
+  // If there is no notification option, call create notification when user makes changes in UI
   createNotification(notificationType, selectedOptions) {
     let paperless = false;
     if (selectedOptions[0].checked && !selectedOptions[1].checked) {
@@ -191,8 +193,15 @@ export class PaperlessSettingsComponent implements OnInit {
   updateNotificationOption(notificationResponse, selectedOptions) {
 
     let paperless = false;
+    let status = notificationResponse[0].Status;
     if (selectedOptions[0].checked && !selectedOptions[1].checked) {
       paperless = true;
+    }
+    //If user selects paper only, change status to Canceled(setting record as inactive)
+    if (!selectedOptions[0].checked && selectedOptions[1].checked) {
+      status = NotificationStatus.Canceled;
+    } else {
+      status = NotificationStatus.Active;
     }
 
     this.updateNotification = {
@@ -200,7 +209,7 @@ export class PaperlessSettingsComponent implements OnInit {
       Paperless: paperless,
       Preferred_Contact_Method: 'Email',
       Email: notificationResponse[0].Email,
-      Status: notificationResponse[0].Status,
+      Status: status,
       Phone_Number: this.customerDetails.Primary_Phone,
       Account_Info: notificationResponse[0].Account_Info,
       Id: notificationResponse[0].Id
