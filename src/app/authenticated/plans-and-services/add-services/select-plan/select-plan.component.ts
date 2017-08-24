@@ -1,4 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+
+
+import { PlanConfirmationPopoverComponent } from 'app/authenticated/plans-and-services/my-service-plans/plan-confirmation-popover/plan-confirmation-popover.component';
+
 
 @Component({
   selector: 'mygexa-select-plan',
@@ -6,10 +10,57 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./select-plan.component.scss']
 })
 export class SelectPlanComponent implements OnInit {
-@Input() featuredOffer;
+
+  @Input() featuredOffer;
+  @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
+
+  selectCheckBox = false;
+  public Price_atFeatured_Usage_Level: number;
+  enableSelect = false;
+
   constructor() { }
 
   ngOnInit() {
+    if (this.featuredOffer.Plan.Product.Featured_Usage_Level != null) {
+      switch (this.featuredOffer.Plan.Product.Featured_Usage_Level) {
+        case  '500 kWh': {
+          this.Price_atFeatured_Usage_Level = this.featuredOffer.Price_At_500_kwh;
+          break;
+        }
+        case  '1000 kWh': {
+          this.Price_atFeatured_Usage_Level = this.featuredOffer.Price_At_1000_kwh;
+          break;
+        }
+        case  '2000 kWh': {
+          this.Price_atFeatured_Usage_Level = this.featuredOffer.Price_At_2000_kwh;
+          break;
+        }
+        default: {
+          this.featuredOffer.Plan.Product.Featured_Usage_Level = '2000 kWh';
+          this.Price_atFeatured_Usage_Level = this.featuredOffer.Price_At_2000_kwh;
+          break;
+        }
+      }
+    }
   }
+
+  showConfirmationPop() {
+    this.planPopModal.showPlanPopModal();
+  }
+
+  onSelect(event) {
+    event.preventDefault();
+    this.selectCheckBox = true;
+  }
+
+   toggleButton() {
+    this.enableSelect = !this.enableSelect;
+  }
+  closeCheckBox() {
+    this.selectCheckBox = false;
+    this.enableSelect = false;
+  }
+
+
 
 }

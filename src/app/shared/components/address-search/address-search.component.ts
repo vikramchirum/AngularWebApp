@@ -45,7 +45,7 @@ export class AddressSearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.newAddressList = this.searchTerms
-      .debounceTime(100)        // wait 300ms after each keystroke before considering the term
+      .debounceTime(100)        // wait 100ms after each keystroke before considering the term
       .distinctUntilChanged()   // ignore if next search term is same as previous
       .switchMap(term => term   // switch to new observable each time the term changes
         // return the http search observable
@@ -69,8 +69,6 @@ export class AddressSearchComponent implements OnInit {
    selectNewServiceAddress(value, event) {
     event.stopPropagation();
     this.selectedAddress = value.newAddressString();
-    //this.movingAddressForm.controls.newAddressSearchField.setValue(value.newAddressString());
-    //this.newServiceAddress = value;
     console.log("New service address", value)
     this.onSelectedServiceAddress.emit(value);
     this.showAddressList = !this.showAddressList;

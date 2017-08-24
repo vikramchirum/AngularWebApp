@@ -1,32 +1,46 @@
 <div class="select-plan-card-container">
   <div class="card-content">
     <div class="card-title">
-    <h4>{{featuredOffer.Plan.Name}} <small><i class="fa fa-info-circle" aria-hidden="true"></i></small></h4>
-    
-    <h2>{{featuredOffer.Price_At_1000_kwh | number : '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small>
+    <h4>{{featuredOffer.Plan.Name}} <small><i class="fa fa-info-circle" aria-hidden="true" (click)="pop.show()"></i></small></h4>
+    <div #pop="bs-popover" [popover]="options" placement="bottom">
+          <ng-template #options>
+            <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
+            <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+            <mygexa-offer-details-popover [OfferDetails] = featuredOffer ></mygexa-offer-details-popover>
+          </ng-template>
+        </div>
+    <h2>{{Price_atFeatured_Usage_Level | DollarToCentsPipe | number : '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small>
       </h2>
       </div>
-    <p>at 1000kwh</p>
+    <p>at {{featuredOffer?.Plan?.Product?.Featured_Usage_Level}}</p>
     <p>TERM:{{featuredOffer.Plan.Term}} months</p>
     <p>{{featuredOffer.Promotion?.Name}}</p>
-    <br/>
-  </div>
-  <div *ngIf= "selectCheckBox" class="agreement-section">
-    <hr>
-    <div class="checkbox">
-      <label>
+    <br/>  
+
+  <div *ngIf="selectCheckBox" class="agreement-section">
+      <div class="checkbox">
+        <label>
         <input type="checkbox" value="" (click) = "toggleButton()">
         <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-        <p>By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP(Gexa energy).<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
+        <p class="text-left">By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
       </label>
+      </div>
+      <div class="row">
+        <div style="text-align:center">
+          <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)="showConfirmationPop()" >Submit</button>
+          <button class="btn btn-link" (click)="closeCheckBox()" aria-hidden="true">Cancel</button>
+        </div>
+      </div>
     </div>
-    <hr>
-  </div>
-  <div class="row">
-    <div style="text-align:center">
-      <button class="btn btn-sm btn-success" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>SELECT PLAN</button>
-      <i *ngIf= "selectCheckBox" class="fa fa-times fa-2x" style="margin-left:.5em" (click)="closeCheckBox()" aria-hidden="true"></i>
+    <br/>
+    <div *ngIf="!selectCheckBox">
+      <div class="row">
+        <div style="text-align:center">
+          <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>
+            Select <i class="fa fa-chevron-right fa-wh" style="color: white" aria-hidden="true"></i></button>
+        </div>
+      </div>
     </div>
-  </div>
+     <mygexa-plan-confirmation-popover #planPopModal></mygexa-plan-confirmation-popover>
 
 </div>
