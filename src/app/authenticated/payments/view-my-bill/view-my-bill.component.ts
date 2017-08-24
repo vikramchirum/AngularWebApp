@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-
+import { orderBy, sortBy, reverse } from 'lodash';
 import { InvoiceService } from 'app/core/invoiceservice.service';
 import { IInvoice } from 'app/core/models/invoices/invoice.model';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { Subscription } from 'rxjs/Subscription';
+import {PaymentsHistoryService} from '../../../core/payments-history.service';
+import {PaymentsHistory} from '../../../core/models/payments/payments-history.model';
 
 @Component({
   selector: 'mygexa-view-my-bill',
@@ -21,12 +23,15 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
   public service_account_id: number;
   public id: string;
   date_today = new Date;
-
+  LatestBillAmount: number;
+  LatestBillPaymentDate: Date;
+  private payments: PaymentsHistory[] = null;
   private ActiveServiceAccountSubscription: Subscription = null;
 
   constructor(
     private invoice_service: InvoiceService,
-    private ServiceAccountService: ServiceAccountService
+    private ServiceAccountService: ServiceAccountService,
+    private PaymentsHistoryService: PaymentsHistoryService
   ) { }
 
   ngOnInit() {
@@ -39,6 +44,17 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
             response => this.req_bill = response,
             error => this.error = error.Message
           );
+        this.PaymentsHistoryService.GetPaymentsHistoryCacheable(result).subscribe(
+          PaymentsHistoryItems => {
+            // No need to sort as the data we get is sorted from API
+            // this.payments = reverse(sortBy(PaymentsHistoryItems, 'PaymentDate' ));
+            this.payments = PaymentsHistoryItems;
+            this.LatestBillAmount = this.payments[0].PaymentAmount;
+            this.LatestBillPaymentDate = this.payments[0].PaymentDate;
+            console.log('Payments', PaymentsHistoryItems.length,  PaymentsHistoryItems);
+            // console.log('Payments in view my bill component', PaymentsHistoryItems.length,  this.payments);
+          }
+        );
       }
     );
   }
