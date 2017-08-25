@@ -20,6 +20,7 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
   private startsWith = startsWith;
   public ActiveServiceAccount: ServiceAccount = null;
   public IsUpForRenewal: boolean = null;
+  public IsRenewalPending: boolean = null;
   public UpgradeOffers: IOffers[] = [];
   public AllOffers: AllOffersClass[] = [];
 
@@ -39,7 +40,9 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
         this.ActiveServiceAccount = ActiveServiceAccount;
         this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
           RenewalDetails => {  this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+          this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
             console.log('Renewal eligibility', this.IsUpForRenewal);
+            console.log('Renewal status', this.IsRenewalPending);
             return this.IsUpForRenewal;
           });
       });

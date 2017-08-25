@@ -6,6 +6,7 @@ import { RenewalGaugeComponent } from './renewal-gauge/renewal-gauge.component';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import {RenewalService} from '../../../core/renewal.service';
+import {IRenewalDetails} from '../../../core/models/renewals/renewaldetails.model';
 
 @Component({
   selector: 'mygexa-my-service-plans',
@@ -15,11 +16,12 @@ import {RenewalService} from '../../../core/renewal.service';
 export class MyServicePlansComponent implements OnInit, OnDestroy {
 
   public ActiveServiceAccount: ServiceAccount = null;
+  public RenewalAccount: IRenewalDetails = null;
   ActiveServiceAccountSubscription: Subscription = null;
   RenewalServiceAccountSubscription: Subscription = null;
   @ViewChild(RenewalGaugeComponent) RenewalGaugeComponent;
   public IsUpForRenewal: boolean = null;
-
+  public IsRenewalPending: boolean = null;
   constructor(
     private ServiceAccountService: ServiceAccountService,
     private RenewalService: RenewalService
@@ -32,6 +34,11 @@ export class MyServicePlansComponent implements OnInit, OnDestroy {
         this.ActiveServiceAccount = ActiveServiceAccount;
         this.RenewalServiceAccountSubscription = this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
           RenewalDetails => { this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+          this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
+
+          if (this.IsRenewalPending) {
+            this.RenewalAccount = RenewalDetails;
+          }
             // Is_In_Holdover needs to be updated to whatever we specify in the API.
             if (RenewalDetails.Is_Account_Eligible_Renewal === false) {
               this.RenewalGaugeComponent.buildRenewedChart(

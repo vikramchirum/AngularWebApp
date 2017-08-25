@@ -12,6 +12,7 @@ import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import {PlanConfirmationPopoverComponent} from '../plan-confirmation-popover/plan-confirmation-popover.component';
 import {RenewalService} from '../../../../core/renewal.service';
+import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.model';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -31,6 +32,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
   selectCheckBox  = false;
   enableSelect = false;
   @Input() ActiveServiceAccount: ServiceAccount;
+  public RenewalAccount: IRenewalDetails;
   @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
 
   constructor(private Serviceaccount: ServiceAccountService, private OfferService: OfferService, private RenewalService: RenewalService) {
@@ -46,7 +48,8 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
     if (changes['ActiveServiceAccount'] && this.ActiveServiceAccount) {
     this.RenewalServiceSubscription = this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
       RenewalDetails => { this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-        if (this.IsUpForRenewal) {
+      this.RenewalAccount = RenewalDetails;
+        if (this.IsUpForRenewal && !RenewalDetails.Is_Pending_Renewal) {
           this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccount.Id)).subscribe(
             all_offers => {
               this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');

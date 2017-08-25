@@ -1,7 +1,8 @@
 
-<div *ngIf="!IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then CurrentPlan"></div>
-<div *ngIf="IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then RenewalPlan"></div>
-<div *ngIf="ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then HoldOverPlan"></div>
+<div *ngIf="!IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !RenewalAccount?.Is_Pending_Renewal; then CurrentPlan"></div>
+<div *ngIf="IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !RenewalAccount?.Is_Pending_Renewal; then RenewalPlan"></div>
+<div *ngIf="!IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && RenewalAccount?.Is_Pending_Renewal; then PendingRenewalPlan"></div>
+<div *ngIf="ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !IsUpForRenewal; then HoldOverPlan"></div>
 
 <ng-template #CurrentPlan>
   <section>
@@ -22,6 +23,32 @@
           <p class="bg-default">TERM: {{ActiveServiceAccount.Current_Offer.Term}} Months</p>
           <p>START: {{ActiveServiceAccount.Contract_Start_Date | date: 'MM/dd/yyyy'}}</p>
           <p  class="bg-default">END: {{ActiveServiceAccount.Calculated_Contract_End_Date | date:'MM/dd/yyyy'}}</p>
+          <!--<p  class="bg-default">END: {{ActiveServiceAccount.Contract_End_Date ? (ActiveServiceAccount.Contract_End_Date | date:'MM/dd/yyyy') : (this.getEndDate(ActiveServiceAccount.Contract_Start_Date, ActiveServiceAccount.Current_Offer.Term) | date: 'MM/dd/yyyy')}}</p>-->
+        </md-card-content>
+      </md-card>
+    </div>
+  </section>
+</ng-template>
+
+<ng-template #PendingRenewalPlan>
+  <section>
+    <div layout-align="center">
+      <md-card class="current-plan-card" *ngIf="RenewalAccount">
+        <md-card-title>
+          <h2>{{RenewalAccount?.Existing_Renewal?.Offer?.Plan?.Name}} <small><i class="fa fa-info-circle" (click)="pop.show()" ></i></small></h2>
+          <div #pop="bs-popover" [popover]="options" placement="bottom">
+            <ng-template #options>
+              <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
+                <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+              <mygexa-offer-details-popover [RenewalAccountDetails]="RenewalAccount" ></mygexa-offer-details-popover>
+            </ng-template>
+          </div>
+        </md-card-title>
+        <md-card-content>
+          <h2>{{RenewalAccount?.Existing_Renewal?.Offer?.Price_At_2000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small></h2>
+          <p class="bg-default">TERM: {{RenewalAccount?.Existing_Renewal?.Offer?.Plan?.Term}} Months</p>
+          <p>START: {{RenewalAccount?.Existing_Renewal?.Start_Date | date: 'MM/dd/yyyy'}}</p>
+          <p  class="bg-default">END: {{RenewalAccount?.Contract_EndDate | date:'MM/dd/yyyy'}}</p>
           <!--<p  class="bg-default">END: {{ActiveServiceAccount.Contract_End_Date ? (ActiveServiceAccount.Contract_End_Date | date:'MM/dd/yyyy') : (this.getEndDate(ActiveServiceAccount.Contract_Start_Date, ActiveServiceAccount.Current_Offer.Term) | date: 'MM/dd/yyyy')}}</p>-->
         </md-card-content>
       </md-card>
