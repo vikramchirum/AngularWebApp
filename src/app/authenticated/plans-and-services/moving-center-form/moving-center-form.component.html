@@ -32,32 +32,9 @@
 
     <div class="row">
       <div class="col-md-6">
-        <h3>You are Moving To</h3>
-        <!--<input type="text" class="form-control" placeholder="Enter New Address" />-->
-        <section class="filter-wrapper">
-          <div class="keyword-wrapper">
-            <input type="text" formControlName="newAddressSearchField" class="form-control" id="keyword" placeholder="Enter New Address"
-               autocomplete="off"  />
-          </div>
-          <ul class="filter-select" *ngIf="results && showHideAdressList">
-            <li *ngFor="let result of results" class="filter-select-list">
-              <p (click)="selectNewServiceAddress(result, $event)" class="artist-name">{{result.newAddressString()}}
-              </p>
-            </li>
-          </ul>
-        </section>
-        <small class="text-danger" *ngIf="movingAddressForm.get('newAddressSearchField').touched && movingAddressForm.controls?.newAddressSearchField.errors?.required">Please Enter Address</small>
-        <!--<input formControlName="queryField"
-         [typeahead]="dataSource"
-         typeaheadOptionsLimit="7"
-         typeaheadMinLength="0"
-         placeholder="Enter New Address"
-         typeaheadOptionField="Address.City"
-         class="form-control"
-         [typeaheadWaitMs]="600"
-        >-->
-
-      </div>
+        <h3>You are Moving To</h3>      
+         <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)"></mygexa-address-search>
+     </div>
 
       <!-- select date when customer wants their service turned on at the new home  -->
       <div class="col-md-6">
@@ -82,13 +59,13 @@
 
     <!--If we don't offer service in the moving address, we should show the message-->
     <ng-container *ngIf="availableOffers">
-    <div *ngIf="availableOffers.Items.length === 0" class="alert alert-info fade in alert-dismissable">
+    <div *ngIf="availableOffers.length === 0" class="alert alert-info fade in alert-dismissable">
       <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
       <strong>We're Sorry!</strong> We cannot register your move online, please call 1-888 888 8888 for assistance.
     </div>
 
      <!-- If user has past due balance, show hte message -->
-      <small class="text-danger" *ngIf="pastDueErrorMessage && availableOffers.Items.length > 0"><p>{{pastDueErrorMessage}} <b>$ {{customerDetails.Past_Due | number : dollarAmountFormatter}}</b> </p> </small> 
+      <small class="text-danger" *ngIf="pastDueErrorMessage && availableOffers.length > 0"><p>{{pastDueErrorMessage}} <b>$ {{customerDetails.Past_Due | number : dollarAmountFormatter}}</b> </p> </small> 
   </ng-container>
 
    

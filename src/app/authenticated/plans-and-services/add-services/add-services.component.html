@@ -22,10 +22,15 @@
     <div class="row">
       <h3 class="start-service-text">When would you like start service?</h3>
       <div class="col-md-6">
-        <my-date-picker name="New_Service_Start_Date" [selDate]="selDate" [options]="ServiceStartDate" formControlName="Service_Start_Date"
-          (dateChanged)="onStartDateChanged($event)"></my-date-picker>
+        <my-date-picker name="Service_Start_Date" [selDate]="selDate" [options]="ServiceStartDate" formControlName="Service_Start_Date"
+          (dateChanged)="onStartDateChanged($event)"></my-date-picker>    
+          <small class="text-danger" *ngIf="addServiceForm.controls?.Service_Start_Date.errors?.checkIfJuly4th">Select business day</small>  
+          <small class="text-danger" *ngIf="addServiceForm.controls?.Service_Start_Date.errors?.checkIfNewYear">New Year day is not a valid start date</small>
+          <small class="text-danger" *ngIf="addServiceForm.controls?.Service_Start_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid start date</small>
+          <small class="text-danger" *ngIf="addServiceForm.controls?.Service_Start_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid start date</small>
+          
       </div>
-      <small><i aria-hidden="true" class="fa fa-info-circle" tooltip="If you require service before 3 business days then call 855-639-8118."></i></small>
+      <small class="start-date-tooltip"><i aria-hidden="true" class="fa fa-info-circle" tooltip="If you require service before 3 business days then call 855-639-8118."></i></small>
     </div>
     <!-- Service Type Selection -->
     <div class="row">
