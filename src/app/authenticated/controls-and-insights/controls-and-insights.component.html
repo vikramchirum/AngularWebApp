@@ -4,16 +4,15 @@
       <mygexa-left-nav-panel [sideNavData] = "{
         'panelTitle': 'Control and Insights',
         'items': [
-          {
-            'title': 'Usage History',
-            'navUrl': 'usage-history'
-          }
+          { 'title': 'Usage History', 'navUrl': 'usage-history'},
+          { 'title': 'Energy Savings Tips', 'navUrl': 'energy-savings-tips'}
+
         ]
       }" ></mygexa-left-nav-panel>
     </div>
     <div class="col-sm-9 control-profile">
       <mygexa-service-account-selector
-        [setActiveServiceAccount]="true"
+        [setActiveServiceAccount]="true" *ngIf="startsWith(Router.url, '/controls-and-insights/usage-history')"
       ></mygexa-service-account-selector>
       <mygexa-status-bar></mygexa-status-bar>
       <router-outlet></router-outlet>
@@ -21,7 +20,7 @@
   </div>
 </div>
 
-<div class="container-fluid container-breakout bg-info">
+<div class="container-fluid container-breakout bg-info"  *ngIf="startsWith(Router.url, '/controls-and-insights/usage-history')">
   <div class="container">
     <div class="row">
       <div class="col-md-3">
