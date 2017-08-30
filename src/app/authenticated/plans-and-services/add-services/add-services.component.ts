@@ -7,6 +7,8 @@ import { OfferService } from 'app/core/offer.service';
 import { ServiceAddress } from 'app/core/models/serviceaddress/serviceaddress.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 
+import { checkIfSunday, checkIfNewYear, checkIfChristmasEve, checkIfChristmasDay, checkIfJuly4th } from 'app/validators/moving-form.validator';
+
 @Component({
   selector: 'mygexa-add-services',
   templateUrl: './add-services.component.html',
@@ -40,7 +42,12 @@ export class AddServicesComponent implements OnInit {
 
   ngOnInit() {
     this.addServiceForm = this.fb.group({
-      Service_Start_Date: [Validators.required],
+      Service_Start_Date:  [{date:this.selDate}, Validators.compose([
+        Validators.required,
+        checkIfNewYear,
+        checkIfChristmasEve,
+        checkIfChristmasDay,
+        checkIfJuly4th])],
       serviceType: ''
     });
 
