@@ -7,6 +7,7 @@ import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import {RenewalService} from '../../../core/renewal.service';
 import {IRenewalDetails} from '../../../core/models/renewals/renewaldetails.model';
+import {RenewalDetails} from '../../../core/models/renewals/renewaldetailsclass.model';
 
 @Component({
   selector: 'mygexa-my-service-plans',
@@ -22,16 +23,21 @@ export class MyServicePlansComponent implements OnInit, OnDestroy {
   @ViewChild(RenewalGaugeComponent) RenewalGaugeComponent;
   public IsUpForRenewal: boolean = null;
   public IsRenewalPending: boolean = null;
+
+  public RenewalDetailsCache: RenewalDetails = null;
+
   constructor(
     private ServiceAccountService: ServiceAccountService,
     private RenewalService: RenewalService
   ) { }
 
   ngOnInit() {
-
+    console.log('Hi');
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
+        console.log('hello');
+        this.RenewalService.SetRenewalDetails(Number(this.ActiveServiceAccount.Id));
         this.RenewalServiceAccountSubscription = this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
           RenewalDetails => { this.RenewalDetails = RenewalDetails;
             this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
@@ -54,6 +60,9 @@ export class MyServicePlansComponent implements OnInit, OnDestroy {
           });
       }
     );
+  }
+
+  setRenewalDetails() {
   }
 
   ngOnDestroy() {

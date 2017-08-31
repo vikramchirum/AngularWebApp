@@ -15,6 +15,7 @@ import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.m
 export class ChangeYourPlanComponent implements OnInit, OnDestroy, OnChanges {
   @Input() ActiveServiceAccount: ServiceAccount;
   @Input() RenewalDetails: IRenewalDetails;
+  @Input() RenewalOffers: AllOffersClass[];
   OffersServiceSubscription: Subscription;
 
   public IsUpForRenewal: boolean = null;
@@ -38,6 +39,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy, OnChanges {
     if (changes['RenewalDetails'] && this.ActiveServiceAccount && this.RenewalDetails) {
         this.IsUpForRenewal = this.RenewalDetails.Is_Account_Eligible_Renewal;
         this.IsRenewalPending = this.RenewalDetails.Is_Pending_Renewal;
+        console.log('renewal offers in chnage your plan', this.RenewalOffers);
         if (this.IsUpForRenewal === true && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate && !this.IsRenewalPending) {
           this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccount.Id)).subscribe(
             All_Offers => {
@@ -61,7 +63,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit() {
-
+    console.log('renewal offers in chnage your plan', this.RenewalOffers);
   }
 
   extractOffers(All_Offers: AllOffersClass[]) {

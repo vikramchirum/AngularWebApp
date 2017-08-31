@@ -33,7 +33,7 @@ export class ServiceAccountService {
     return localStorage.getItem('gexa_active_Service_account_id');
   }
 
-  constructor(private HttpClient: HttpClient, private UserService: UserService, private RenewalService: RenewalService) {
+  constructor(private HttpClient: HttpClient, private UserService: UserService) {
 
     // Make Observables (Active Service Account and Service Accounts) for others to listen to.
     // 1. Collect, or 'push', new observers to the observable's collection.
