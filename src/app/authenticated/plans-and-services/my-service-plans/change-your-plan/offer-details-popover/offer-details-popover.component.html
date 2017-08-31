@@ -3,7 +3,6 @@
 
       <h4><b>{{ActiveOfferDetails?.Current_Offer.Product_Name}}</b></h4>
       <hr>
-
   </div>
   <div class="service-upgrade-modal" >
    <!-- need this for modal, not popover
@@ -87,10 +86,8 @@
 
 <section *ngIf="RenewalAccountDetails">
   <div class="row col-md-12">
-
     <h4><b>{{RenewalAccountDetails?.Existing_Renewal?.Offer?.Product_Name}}</b></h4>
     <hr>
-
   </div>
   <div class="service-upgrade-modal" >
     <!-- need this for modal, not popover
@@ -172,8 +169,7 @@
 
 </section>
 
-
-<section id="Renewal" *ngIf="OfferDetails" >
+<section *ngIf="OfferDetails" >
   <div class="service-upgrade-modal" >
     <h3 class="text-center plan-info">{{ Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup>&cent;</sup> per KWh</h3>
     <p class="text-center">AT {{OfferDetails.Plan.Product.Featured_Usage_Level}}</p>

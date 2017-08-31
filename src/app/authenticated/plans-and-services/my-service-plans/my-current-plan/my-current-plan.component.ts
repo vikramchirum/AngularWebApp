@@ -24,6 +24,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
   OffersServiceSubscription: Subscription;
   RenewalServiceSubscription;
   public IsUpForRenewal: boolean;
+  public IsRenewalPending: boolean;
   public All_Offers: AllOffersClass[];
   public FeaturedOffers: AllOffersClass[];
   public RenewalOffers: IOffers = null;
@@ -48,8 +49,8 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
     if (changes['ActiveServiceAccount'] && this.ActiveServiceAccount) {
     this.RenewalServiceSubscription = this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
       RenewalDetails => { this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-      this.RenewalAccount = RenewalDetails;
-        if (this.IsUpForRenewal && !RenewalDetails.Is_Pending_Renewal) {
+      this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
+        if (this.IsUpForRenewal && !this.IsRenewalPending) {
           this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccount.Id)).subscribe(
             all_offers => {
               this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
@@ -57,6 +58,8 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
               this.checkFeaturedUsageLevel(this.RenewalOffers);
               this.IsOffersReady = true;
             });
+        } else if ( this.IsRenewalPending) {
+          this.RenewalAccount = RenewalDetails;
         } });
     }
   }

@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { Subscription } from 'rxjs/Subscription';
@@ -9,6 +8,7 @@ import { result, startsWith } from 'lodash';
 import {IOffers} from '../../core/models/offers/offers.model';
 import {AllOffersClass} from '../../core/models/offers/alloffers.model';
 import {RenewalService} from '../../core/renewal.service';
+import {IRenewalDetails} from '../../core/models/renewals/renewaldetails.model';
 
 @Component({
   selector: 'mygexa-plans-and-services',
@@ -19,6 +19,7 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
 
   private startsWith = startsWith;
   public ActiveServiceAccount: ServiceAccount = null;
+  public RenewalDetails: IRenewalDetails = null;
   public IsUpForRenewal: boolean = null;
   public IsRenewalPending: boolean = null;
   public UpgradeOffers: IOffers[] = [];
@@ -39,8 +40,13 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
         this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
-          RenewalDetails => {  this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-          this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
+          RenewalDetails => { this.RenewalDetails = RenewalDetails;
+          console.log('RenewalDetails', RenewalDetails);
+            console.log('RenewalDetails1', this.RenewalDetails);
+            this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+            this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
+            console.log('Account number', this.ActiveServiceAccount.Id);
+            console.log('Hold over rate', this.ActiveServiceAccount.Current_Offer.IsHoldOverRate);
             console.log('Renewal eligibility', this.IsUpForRenewal);
             console.log('Renewal status', this.IsRenewalPending);
             return this.IsUpForRenewal;

@@ -35,7 +35,6 @@ export class MyServicePlansComponent implements OnInit, OnDestroy {
         this.RenewalServiceAccountSubscription = this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
           RenewalDetails => { this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
           this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
-
           if (this.IsRenewalPending) {
             this.RenewalAccount = RenewalDetails;
           }

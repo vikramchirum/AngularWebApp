@@ -1,4 +1,7 @@
-import {Component, OnInit, ViewChild, OnDestroy, Input, ViewContainerRef} from '@angular/core';
+import {
+  Component, OnInit, ViewChild, OnDestroy, SimpleChanges, OnChanges, Input, ViewContainerRef,
+  AfterViewInit
+} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 
 
@@ -14,14 +17,14 @@ import {RenewalService} from '../../../../../core/renewal.service';
   templateUrl: './change-your-plan-card.component.html',
   styleUrls: ['./change-your-plan-card.component.scss']
 })
-export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
+export class ChangeYourPlanCardComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() Offer: IOffers;
   @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
 
   selectCheckBox = false;
-  IsInRenewalTimeFrame: boolean;
-  activeServiceAccountDetails: ServiceAccount;
+  IsUpForRenewal: boolean;   IsRenewalPending: boolean;
+  ActiveServiceAccountDetails: ServiceAccount;
   serviceAccountSubscription: Subscription;
   RenewalServiceSubscription: Subscription;
   enableSelect = false;
@@ -38,7 +41,21 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
     this.planPopModal.showPlanPopModal();
   }
 
-  ngOnInit() {
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['Offer'] && this.Offer) {
+      this.checkFeaturedUsageLevel(this.Offer);
+      this.serviceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
+        result => {
+          this.ActiveServiceAccountDetails = result;
+          this.RenewalServiceSubscription = this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccountDetails.Id)).subscribe(
+            RenewalDetails => { this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+              this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal; }
+          );
+        });
+    }
+  }
+
+  checkFeaturedUsageLevel( Offer: IOffers ) {
     if (this.Offer.Plan.Product.Featured_Usage_Level != null) {
       switch (this.Offer.Plan.Product.Featured_Usage_Level) {
         case  '500 kWh': {
@@ -60,14 +77,9 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
 
-    this.serviceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
-      result => {
-        this.activeServiceAccountDetails = result;
-        this.RenewalServiceSubscription = this.RenewalService.getRenewalDetails(Number(this.activeServiceAccountDetails.Id)).subscribe(
-          RenewalDetails => this.IsInRenewalTimeFrame = RenewalDetails.Is_Account_Eligible_Renewal
-        );
-      });
+  ngOnInit() {
   }
 
   onSelect(event) {

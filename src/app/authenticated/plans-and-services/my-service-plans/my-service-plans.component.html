@@ -3,13 +3,13 @@
   <mygexa-service-account-selector
     [setActiveServiceAccount]="true"
   ></mygexa-service-account-selector>
-  <section id="renewPlan" [hidden]="!ActiveServiceAccount">
+  <section [hidden]="!ActiveServiceAccount">
     <div class="row">
       <div class="col-md-8">
-
-        <ng-template *ngIf="IsUpForRenewal && !IsRenewalPending && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then ShowRenewal else ShowCurrentPlan"></ng-template>
-        <ng-template *ngIf="ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then ShowCurrentPlan"></ng-template>
-        <ng-template *ngIf="!IsUpForRenewal && IsRenewalPending; then ShowCurrentPlan"></ng-template>
+        <ng-template *ngIf="IsUpForRenewal && !IsRenewalPending && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then ShowRenewal"></ng-template>
+        <ng-template *ngIf="ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !IsRenewalPending; then ShowCurrentPlan"></ng-template>
+        <ng-template *ngIf="!IsUpForRenewal && IsRenewalPending && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then ShowPendingRenewalPlan"></ng-template>
+        <ng-template *ngIf="!IsUpForRenewal && !IsRenewalPending && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then ShowCurrentPlan"></ng-template>
 
         <ng-template #ShowRenewal>
           <h1>Renew your plan</h1>
@@ -30,22 +30,16 @@
             </div>
           </div>
         </ng-template>
-
         <ng-template #ShowPendingRenewalPlan>
           <h1>My Current Plan</h1>
           <p>Account No: {{ RenewalAccount?.Existing_Renewal.Service_Account_Id }}</p>
           <div class="row">
             <div class="col-md-9 col-md-offset-1">
               <mygexa-my-current-plan [ActiveServiceAccount]="ActiveServiceAccount" ></mygexa-my-current-plan>
+              <h1>Pending...</h1>
             </div>
           </div>
         </ng-template>
-
-        <!--<div class="row">-->
-          <!--<div class="col-md-9 col-md-offset-1">-->
-            <!--<mygexa-my-current-plan [ActiveServiceAccount]="ActiveServiceAccount" [RenewalAccount] = "RenewalAccount"></mygexa-my-current-plan>-->
-          <!--</div>-->
-        <!--</div>-->
 
       </div>
       <div class="col-xs-8 col-xs-push-2 col-md-4">
@@ -56,5 +50,4 @@
       </div>
     </div>
   </section>
-
 </div>

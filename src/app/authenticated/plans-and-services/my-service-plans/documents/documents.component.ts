@@ -30,10 +30,13 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
   public FeaturedOffers: AllOffersClass[];
   public RenewalOffers: IOffers;
   IsOffersReady: boolean = null;
-  public IsInRenewalTimeFrame: boolean = null;
-
-  constructor(private serviceAccount_service: ServiceAccountService, private RenewalService: RenewalService, private OfferService: OfferService, private documentsService: DocumentsService) {
-    this.IsInRenewalTimeFrame = null;
+  public IsUpForRenewal: boolean = null;
+  public IsRenewalPending: boolean = null;
+  constructor(private serviceAccount_service: ServiceAccountService,
+              private RenewalService: RenewalService,
+              private OfferService: OfferService,
+              private documentsService: DocumentsService) {
+    this.IsUpForRenewal = this.IsRenewalPending = null;
     this.RenewalOffers = null;
   }
 
@@ -46,8 +49,9 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
 
       if (this.ActiveServiceAccount) {
         this.RenewalServiceSubscription = this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
-          RenewalDetails => { this.IsInRenewalTimeFrame = RenewalDetails.Is_Account_Eligible_Renewal;
-            if (this.IsInRenewalTimeFrame) {
+          RenewalDetails => { this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+          this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
+            if (this.IsUpForRenewal) {
               this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccount.Id)).subscribe(
                 all_offers => {
                   this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
@@ -73,7 +77,7 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy() {
     result(this.RenewalServiceSubscription, 'unsubscribe');
-    if (this.IsInRenewalTimeFrame) {
+    if (this.IsUpForRenewal) {
       result(this.OffersServiceSubscription, 'unsubscribe');
     }
   }

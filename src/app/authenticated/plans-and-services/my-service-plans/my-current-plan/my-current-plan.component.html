@@ -1,8 +1,8 @@
 
-<div *ngIf="!IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !RenewalAccount?.Is_Pending_Renewal; then CurrentPlan"></div>
-<div *ngIf="IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !RenewalAccount?.Is_Pending_Renewal; then RenewalPlan"></div>
-<div *ngIf="!IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && RenewalAccount?.Is_Pending_Renewal; then PendingRenewalPlan"></div>
-<div *ngIf="ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !IsUpForRenewal; then HoldOverPlan"></div>
+<div *ngIf="!IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !IsRenewalPending; then CurrentPlan"></div>
+<div *ngIf="IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !IsRenewalPending; then RenewalPlan"></div>
+<div *ngIf="IsRenewalPending && !IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then PendingRenewalPlan"></div>
+<div *ngIf="ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !IsRenewalPending; then HoldOverPlan"></div>
 
 <ng-template #CurrentPlan>
   <section>
@@ -165,5 +165,6 @@
     </div>
   </section>
 </ng-template>
+
 <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsUpForRenewal"></mygexa-plan-confirmation-popover>
 
