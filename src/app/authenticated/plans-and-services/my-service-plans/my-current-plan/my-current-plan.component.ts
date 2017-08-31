@@ -1,17 +1,14 @@
 import {
-  AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild,
-  ViewContainerRef
+  AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild
 } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 import { get, result, includes } from 'lodash';
-import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { OfferService } from 'app/core/offer.service';
 import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import {PlanConfirmationPopoverComponent} from '../plan-confirmation-popover/plan-confirmation-popover.component';
-import {RenewalService} from '../../../../core/renewal.service';
 import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.model';
 
 @Component({
@@ -20,9 +17,11 @@ import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.m
   styleUrls: ['./my-current-plan.component.scss']
 })
 export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+  @Input() ActiveServiceAccount: ServiceAccount;
+  @Input() RenewalDetails: IRenewalDetails;
+
   IsOffersReady: boolean = null;
   OffersServiceSubscription: Subscription;
-  RenewalServiceSubscription;
   public IsUpForRenewal: boolean;
   public IsRenewalPending: boolean;
   public All_Offers: AllOffersClass[];
@@ -32,11 +31,10 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
   public Price_atFeatured_Usage_Level: number;
   selectCheckBox  = false;
   enableSelect = false;
-  @Input() ActiveServiceAccount: ServiceAccount;
   public RenewalAccount: IRenewalDetails;
   @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
 
-  constructor(private Serviceaccount: ServiceAccountService, private OfferService: OfferService, private RenewalService: RenewalService) {
+  constructor(private OfferService: OfferService) {
     this.IsOffersReady = false;
   }
 
@@ -46,10 +44,9 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
 
   ngOnChanges(changes:  SimpleChanges) {
 
-    if (changes['ActiveServiceAccount'] && this.ActiveServiceAccount) {
-    this.RenewalServiceSubscription = this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
-      RenewalDetails => { this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-      this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
+    if (changes['RenewalDetails'] && this.ActiveServiceAccount && this.RenewalDetails) {
+    this.IsUpForRenewal = this.RenewalDetails.Is_Account_Eligible_Renewal;
+      this.IsRenewalPending = this.RenewalDetails.Is_Pending_Renewal;
         if (this.IsUpForRenewal && !this.IsRenewalPending) {
           this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccount.Id)).subscribe(
             all_offers => {
@@ -59,8 +56,8 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
               this.IsOffersReady = true;
             });
         } else if ( this.IsRenewalPending) {
-          this.RenewalAccount = RenewalDetails;
-        } });
+          this.RenewalAccount = this.RenewalDetails;
+        }
     }
   }
 
@@ -94,7 +91,6 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
   }
 
   ngOnDestroy() {
-    result(this.RenewalServiceSubscription, 'unsubscribe');
     if (this.IsUpForRenewal) {
     result(this.OffersServiceSubscription, 'unsubscribe'); }
   }

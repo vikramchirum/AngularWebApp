@@ -41,8 +41,6 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
         this.ActiveServiceAccount = ActiveServiceAccount;
         this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
           RenewalDetails => { this.RenewalDetails = RenewalDetails;
-          console.log('RenewalDetails', RenewalDetails);
-            console.log('RenewalDetails1', this.RenewalDetails);
             this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
             this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
             console.log('Account number', this.ActiveServiceAccount.Id);

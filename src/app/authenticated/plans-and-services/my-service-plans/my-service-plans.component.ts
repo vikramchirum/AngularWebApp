@@ -16,7 +16,7 @@ import {IRenewalDetails} from '../../../core/models/renewals/renewaldetails.mode
 export class MyServicePlansComponent implements OnInit, OnDestroy {
 
   public ActiveServiceAccount: ServiceAccount = null;
-  public RenewalAccount: IRenewalDetails = null;
+  public RenewalDetails: IRenewalDetails = null;
   ActiveServiceAccountSubscription: Subscription = null;
   RenewalServiceAccountSubscription: Subscription = null;
   @ViewChild(RenewalGaugeComponent) RenewalGaugeComponent;
@@ -33,11 +33,9 @@ export class MyServicePlansComponent implements OnInit, OnDestroy {
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
         this.RenewalServiceAccountSubscription = this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
-          RenewalDetails => { this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-          this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
-          if (this.IsRenewalPending) {
-            this.RenewalAccount = RenewalDetails;
-          }
+          RenewalDetails => { this.RenewalDetails = RenewalDetails;
+            this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+            this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
             // Is_In_Holdover needs to be updated to whatever we specify in the API.
             if (RenewalDetails.Is_Account_Eligible_Renewal === false) {
               this.RenewalGaugeComponent.buildRenewedChart(

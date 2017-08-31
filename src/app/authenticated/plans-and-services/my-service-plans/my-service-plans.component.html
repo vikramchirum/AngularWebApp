@@ -17,7 +17,7 @@
           <p>Your plan is ready to be renewed! Based on your product history, we've found the renewal plan that's best for your home:</p>
           <div class="row">
             <div class="col-md-9 col-md-offset-1">
-              <mygexa-my-current-plan [ActiveServiceAccount]="ActiveServiceAccount" ></mygexa-my-current-plan>
+              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' [RenewalDetails] = 'RenewalDetails' ></mygexa-my-current-plan>
             </div>
           </div>
         </ng-template>
@@ -26,7 +26,7 @@
           <p>Account No: {{ ActiveServiceAccount?.Id }}</p>
           <div class="row">
             <div class="col-md-9 col-md-offset-1">
-              <mygexa-my-current-plan [ActiveServiceAccount]="ActiveServiceAccount" ></mygexa-my-current-plan>
+              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' [RenewalDetails] = 'RenewalDetails' ></mygexa-my-current-plan>
             </div>
           </div>
         </ng-template>
@@ -35,7 +35,7 @@
           <p>Account No: {{ RenewalAccount?.Existing_Renewal.Service_Account_Id }}</p>
           <div class="row">
             <div class="col-md-9 col-md-offset-1">
-              <mygexa-my-current-plan [ActiveServiceAccount]="ActiveServiceAccount" ></mygexa-my-current-plan>
+              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' [RenewalDetails] = 'RenewalDetails' ></mygexa-my-current-plan>
               <h1>Pending...</h1>
             </div>
           </div>
@@ -45,7 +45,8 @@
       <div class="col-xs-8 col-xs-push-2 col-md-4">
         <mygexa-renewal-gauge [hidden]="hideGauge"></mygexa-renewal-gauge>
         <mygexa-documents
-          [ActiveServiceAccount]="ActiveServiceAccount"
+          [ActiveServiceAccount]='ActiveServiceAccount'
+          [RenewalDetails] = 'RenewalDetails'
         ></mygexa-documents>
       </div>
     </div>

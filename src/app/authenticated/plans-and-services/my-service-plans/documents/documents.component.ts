@@ -6,9 +6,7 @@ import { IOffers } from '../../../../core/models/offers/offers.model';
 import { AllOffersClass } from '../../../../core/models/offers/alloffers.model';
 import { OfferService } from '../../../../core/offer.service';
 import { DocumentsService } from '../../../../core/documents.service';
-import {RenewalService} from '../../../../core/renewal.service';
-import {ServiceAccountService} from '../../../../core/serviceaccount.service';
-import {MdTooltipModule} from '@angular/material';
+import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.model';
 
 @Component({
   selector: 'mygexa-documents',
@@ -18,23 +16,20 @@ import {MdTooltipModule} from '@angular/material';
 export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() ActiveServiceAccount: ServiceAccount = null;
-  activeserviceAccountOffersSubscription: Subscription;
+  @Input() RenewalDetails: IRenewalDetails = null;
 
   public eflLink;
   public tosLink;
   public yraacLink;
 
   OffersServiceSubscription: Subscription;
-  RenewalServiceSubscription: Subscription;
   public AllOffers: AllOffersClass[];
   public FeaturedOffers: AllOffersClass[];
   public RenewalOffers: IOffers;
   IsOffersReady: boolean = null;
   public IsUpForRenewal: boolean = null;
   public IsRenewalPending: boolean = null;
-  constructor(private serviceAccount_service: ServiceAccountService,
-              private RenewalService: RenewalService,
-              private OfferService: OfferService,
+  constructor(private OfferService: OfferService,
               private documentsService: DocumentsService) {
     this.IsUpForRenewal = this.IsRenewalPending = null;
     this.RenewalOffers = null;
@@ -45,12 +40,11 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['ActiveServiceAccount']) {
+    if (changes['RenewalDetails'] && this.ActiveServiceAccount && this.RenewalDetails) {
 
       if (this.ActiveServiceAccount) {
-        this.RenewalServiceSubscription = this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
-          RenewalDetails => { this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-          this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
+        this.IsUpForRenewal = this.RenewalDetails.Is_Account_Eligible_Renewal;
+          this.IsRenewalPending = this.RenewalDetails.Is_Pending_Renewal;
             if (this.IsUpForRenewal) {
               this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccount.Id)).subscribe(
                 all_offers => {
@@ -58,8 +52,6 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
                   this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
                 });
             }
-          }
-        );
         // this.IsInRenewalTimeFrame = this.ActiveServiceAccount.IsUpForRenewal;
         let docId = '';
         if (this.ActiveServiceAccount.Current_Offer.IsLegacyOffer) {
@@ -76,7 +68,6 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    result(this.RenewalServiceSubscription, 'unsubscribe');
     if (this.IsUpForRenewal) {
       result(this.OffersServiceSubscription, 'unsubscribe');
     }
