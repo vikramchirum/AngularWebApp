@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col-xs-11"><h4>{{Offer.Plan.Name }}</h4></div><div class="col-xs-1 no-padding"> <i class="fa fa-info-circle" aria-hidden="true" (click)="pop.show()"></i></div>
         </div>
-        <div #pop="bs-popover" [popover]="options" placement="bottom">
+        <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
           <ng-template #options>
             <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
             <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
@@ -75,7 +75,7 @@
     <div class="card-content">
       <div class="card-title">
         <h4>{{Offer.Plan.Name }} <i class="fa fa-info-circle" aria-hidden="true" (click)="pop.show()"></i></h4>
-        <div #pop="bs-popover" [popover]="options" placement="bottom">
+        <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
           <ng-template #options>
             <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
             <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
@@ -154,7 +154,7 @@
     <div class="card-content">
       <div class="card-title">
         <h4>{{Offer.Plan.Name }} <i class="fa fa-info-circle" aria-hidden="true" (click)="pop.show()"></i></h4>
-        <div #pop="bs-popover" [popover]="options" placement="bottom">
+        <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
           <ng-template #options>
             <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
               <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
