@@ -1,0 +1,122 @@
+@import '../../../../basecolors';
+
+
+.control-profile {
+  position: static;
+}
+.panel-default {
+  background: none;
+  border: none;
+}
+.panel-default > .panel-heading {
+  background-color: transparent;
+  border-color: transparent;
+}
+.masonry-brick {
+  margin-bottom: 20px;
+  
+  .img-responsive {
+      border-top: 6px solid $payment-base;
+  }
+  
+  h3 {
+    margin-top: 10px;
+    text-transform: uppercase;
+    text-align: center;
+  }
+}
+
+.col-lg-4 {
+    h4 {
+    margin-top: 10px;
+    text-transform: uppercase;
+    text-align: left;
+  }
+  .panel-heading {
+    padding: 5px;
+  }
+  hr {
+    margin-bottom: 1px;
+  }
+}
+.col-lg-8  {
+  
+  .fa-in-circle {
+    background: #fea220;
+    color: #fff;
+    border-radius: 30px;
+    display: inline-block;
+    padding: 17px 0;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    margin: -30px auto 20px;
+    display: block;
+
+  }
+  
+  > .row {
+    
+    padding-right: 25px;
+  }
+  
+  .row:nth-child(1) .masonry-brick {
+  
+    .img-responsive {
+      border-top: 6px solid $account-base;  
+    }
+    
+    h3 {
+      color: $account-base
+    }
+     .fa-in-circle {
+      
+      background-color: $account-base;
+    }
+    .panel-title > a {
+      color: $account-base;
+    }
+  }
+  
+  
+  
+  .row:nth-child(2) .masonry-brick {
+   
+    .img-responsive {
+      border-top: 6px solid $plans-base;
+    }
+   
+    h3 {
+      color: $plans-base
+      
+    }
+    .fa-in-circle {
+      
+      background-color: $plans-base;
+    }
+      .panel-title > a {
+      color: $plans-base;
+    }
+  }
+
+    .row:nth-child(3) .masonry-brick {
+   
+    .img-responsive {
+      border-top: 6px solid $payment-base;
+    }
+   
+    h3 {
+      color: $payment-base
+      
+    }
+    
+    .fa-in-circle {
+      
+      background-color: $payment-base;
+      }
+    .panel-title > a {
+      color: $payment-base;
+    }
+  }
+  
+}

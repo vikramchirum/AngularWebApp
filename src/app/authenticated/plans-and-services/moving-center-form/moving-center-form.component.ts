@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-
 import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import { clone } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+
 import { checkIfSunday, validateMoveInDate, checkIfNewYear, checkIfChristmasEve, checkIfChristmasDay, checkIfJuly4th, tduCheck } from 'app/validators/moving-form.validator';
 import { SelectPlanModalDialogComponent } from './select-plan-modal-dialog/select-plan-modal-dialog.component';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
@@ -85,9 +85,7 @@ export class MovingCenterFormComponent implements OnInit {
         checkIfChristmasEve,
         checkIfChristmasDay,
         checkIfJuly4th])],
-      'current_bill_address': this.fb.array([]),
-      'newAddressSearchField': [null, Validators.required],
-      'activeAccountAddress':null
+      'current_bill_address': this.fb.array([])
     }, { validator: validateMoveInDate('Current_Service_End_Date', 'New_Service_Start_Date') }),
 
       this.ServicePlanForm = this.fb.group({
@@ -112,33 +110,10 @@ export class MovingCenterFormComponent implements OnInit {
         this.customerDetails = result;
        // console.log('Customer Account**************************', result);
       }
-    );
-
-
-    this.movingAddressForm.controls.newAddressSearchField.valueChanges
-      // request API only after a specific interval of time and avoid too many API calls.
-      // emits a value from the source observable after 200ms
-      .debounceTime(200)
-      .distinctUntilChanged()
-      // Emit values from latest request and discards previous source emission.
-      .switchMap((query) => this.searchNewAddress(query))
-      .subscribe(result => {
-        console.log("Address search Response", result);
-        this.results = result;
-        this.showHideAdressList = true;
-      }),
-      error => {
-        console.log('Address Search API error', error.Message);
-      };
+    );  
   }
 
-  searchNewAddress(queryString: string) {
-    const searchRequest = {} as ISearchAddressRequest;
-    searchRequest.partial = queryString;
-    return this.addressSearchService.searchAddress(searchRequest)
-  }
-
-
+  
   private newServiceStartDate: IMyOptions = {
     // start date options here...
     disableUntil: { year: 0, month: 0, day: 0 },
@@ -153,16 +128,7 @@ export class MovingCenterFormComponent implements OnInit {
     // date selected
   }
 
-  onEndDateChanged(event: IMyDateModel) {
-    // date selected
-    // let d = clone(event.jsdate);
-    // let copy: IMyOptions = this.getCopyOfOptions();
-    // d.setDate(d.getDate() + 30);
-    // copy.disableSince = {
-    //   year: d.getFullYear(),
-    //   month: d.getMonth() + 1,
-    //   day: d.getDate() };
-    // this.newServiceStartDate = copy;
+  onEndDateChanged(event: IMyDateModel) { 
   }
 
   disableUntil() {
@@ -190,19 +156,16 @@ export class MovingCenterFormComponent implements OnInit {
   serviceChanged(event) {
     this.ActiveServiceAccount = event;
   }
-
+  
   getSelectedOffer(event) {
     this.selectedOffer = event;
     //OfferId should only get passed when user wants to change their offer
     this.offerId = this.selectedOffer.Id;
   }
 
-
-  selectNewServiceAddress(value, event) {
-    event.stopPropagation();
-    this.movingAddressForm.controls.newAddressSearchField.setValue(value.newAddressString());
-    this.newServiceAddress = value;
-    this.showHideAdressList = !this.showHideAdressList;
+   //Get Address from the emitter when users selects new address
+  getSelectedAddress(event) {
+    this.newServiceAddress = event;  
   }
 
   addressFormSubmit(addressForm) {
@@ -221,10 +184,10 @@ export class MovingCenterFormComponent implements OnInit {
     this.offerService.getOffers(this.offerRequestParams)
       .subscribe(result => {
         this.availableOffers = result;
-        console.log("this.available offers", this.availableOffers);
+        console.log("this.available offers",  this.availableOffers);
         //prevent user from navigating to plans page if we don't offer service in the moving address
         //prevent user from submitting the form if past due balance over 40
-        if( this.availableOffers.Items.length > 0 && this.customerDetails.Past_Due < 40){
+        if( this.availableOffers.length > 0 && this.customerDetails.Past_Due < 40){
           this.nextClicked = true;
           this.previousClicked = !this.previousClicked;
           this.selectedOffer = null;

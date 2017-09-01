@@ -29,9 +29,11 @@
         <h2>View more renewal plans </h2>
         <a  (click)="showPromoCodeInput($event)"> <p> Have a promo code?</p></a>
         <form #promoCodeForm="ngForm"  *ngIf="havePromoCode">
-          <input type="text" class="form-control" required ngModel name="name"
-                 #name="ngModel"><br>
-          <a class="boxed btn btn-primary" [class.disabled]="!promoCodeForm.form.valid">Submit</a></form></div>
+           <input type="text" class="form-control" id="promoCode"
+               [(ngModel)]="promoCode" name="promoCode"><br>
+          <!-- <input type="text" class="form-control" required ngModel name="name"
+                 #name="ngModel"> -->
+          <a class="boxed btn btn-primary" [class.disabled]="!promoCodeForm.form.valid" (click)="onPromoCodeSubmit()">Submit</a></form></div>
 
     <div class="col-sm-9">
       <div class="row change-plans-grid" *ngIf="AllOffers">

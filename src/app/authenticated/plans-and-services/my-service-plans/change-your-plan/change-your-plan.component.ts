@@ -7,6 +7,7 @@ import { ChangeYourPlanCardComponent } from './change-your-plan-card/change-your
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { OfferService } from 'app/core/offer.service';
 import { AllOffersClass, UpgradeOffersClass} from 'app/core/models/offers/alloffers.model';
+import { AllOffersClass, UpgradeOffersClass } from 'app/core/models/offers/alloffers.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { RenewalStore } from '../../../../core/store/RenewalStore';
@@ -22,6 +23,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   public ActiveServiceAccountDetails: ServiceAccount = null;
   ServiceAccountSubscription: Subscription;
   OffersServiceSubscription: Subscription;
+  RenewalServiceSubscription: Subscription;
 
   public IsUpForRenewal: boolean = null;
 
@@ -35,6 +37,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   clicked: boolean;
   public upgradeOffersArraylength: number = null;
   havePromoCode = false;
+  promoCode = '';
 
   constructor(private serviceAccount_service: ServiceAccountService, private OfferService: OfferService, private renewalStore: RenewalStore) {
     this.clicked = true;
@@ -92,15 +95,29 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.renewalStoreSubscription.unsubscribe();
     this.ServiceAccountSubscription.unsubscribe();
+    this.RenewalServiceSubscription.unsubscribe();
     if (this.IsUpForRenewal) {
       this.OffersServiceSubscription.unsubscribe();
     }
   }
   ChevClicked() {
-    this.clicked = !this.clicked ;
+    this.clicked = !this.clicked;
   }
 
   showPromoCodeInput() {
     this.havePromoCode = !this.havePromoCode;
+  }
+
+  onPromoCodeSubmit() {
+    this.fetchOffersByPromoCode(this.promoCode);
+  }
+
+  fetchOffersByPromoCode(promoCode) {
+    this.OffersServiceSubscription = this.OfferService.getRenewalPlansByPromoCode(promoCode).subscribe(
+      result => {
+        console.log('Renewal offers based on Promo code', result);
+        this.AllOfferss = result;
+      }
+    );
   }
 }
