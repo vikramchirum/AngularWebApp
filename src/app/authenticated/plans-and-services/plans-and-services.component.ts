@@ -1,14 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { Subscription } from 'rxjs/Subscription';
+import { result, startsWith } from 'lodash';
+
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
-import { Subscription } from 'rxjs/Subscription';
 import { OfferService } from 'app/core/offer.service';
-import { result, startsWith } from 'lodash';
-import {IOffers} from '../../core/models/offers/offers.model';
-import {AllOffersClass} from '../../core/models/offers/alloffers.model';
-import {RenewalService} from '../../core/renewal.service';
+import { IOffers } from '../../core/models/offers/offers.model';
+import { AllOffersClass } from '../../core/models/offers/alloffers.model';
+import { RenewalStore } from '../../core/store/RenewalStore';
 
 @Component({
   selector: 'mygexa-plans-and-services',
@@ -17,6 +18,8 @@ import {RenewalService} from '../../core/renewal.service';
 })
 export class PlansAndServicesComponent implements OnInit, OnDestroy {
 
+  private renewalStoreSubscription: Subscription;
+
   private startsWith = startsWith;
   public ActiveServiceAccount: ServiceAccount = null;
   public IsUpForRenewal: boolean = null;
@@ -24,29 +27,31 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
   public AllOffers: AllOffersClass[] = [];
 
   ServiceAccountServiceSubscription: Subscription = null;
-  RenewalServiceSubscription: Subscription = null;
   OfferServiceSubscription: Subscription = null;
   constructor(
     private ServiceAccountService: ServiceAccountService,
     private OfferService: OfferService,
-    private RenewalService: RenewalService,
+    private renewalStore: RenewalStore,
     private Router: Router
   ) { }
 
   ngOnInit() {
+
+    this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(result => {
+      if (result != null) {
+        this.IsUpForRenewal = result.Is_Account_Eligible_Renewal;
+      }
+    });
+
     this.ServiceAccountServiceSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
-        this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
-          RenewalDetails => {  this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-            console.log('Renewal eligibility', this.IsUpForRenewal);
-            return this.IsUpForRenewal;
-          });
+        this.renewalStore.LoadRenewalDetails(+this.ActiveServiceAccount.Id);
       });
   }
 
   ngOnDestroy() {
+    this.renewalStoreSubscription.unsubscribe();
     result(this.ServiceAccountServiceSubscription, 'unsubscribe');
-    result(this.RenewalServiceSubscription, 'unsubscribe');
   }
 }

@@ -5,13 +5,14 @@ import {
 
 import { Subscription } from 'rxjs/Subscription';
 import { get, result, includes } from 'lodash';
+
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { OfferService } from 'app/core/offer.service';
 import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
-import {PlanConfirmationPopoverComponent} from '../plan-confirmation-popover/plan-confirmation-popover.component';
-import {RenewalService} from '../../../../core/renewal.service';
+import { PlanConfirmationPopoverComponent} from '../plan-confirmation-popover/plan-confirmation-popover.component';
+import { RenewalStore } from '../../../../core/store/RenewalStore';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -19,9 +20,11 @@ import {RenewalService} from '../../../../core/renewal.service';
   styleUrls: ['./my-current-plan.component.scss']
 })
 export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+
+  renewalStoreSubscription: Subscription;
+
   IsOffersReady: boolean = null;
   OffersServiceSubscription: Subscription;
-  RenewalServiceSubscription;
   public IsUpForRenewal: boolean;
   public All_Offers: AllOffersClass[];
   public FeaturedOffers: AllOffersClass[];
@@ -33,19 +36,15 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
   @Input() ActiveServiceAccount: ServiceAccount;
   @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
 
-  constructor(private Serviceaccount: ServiceAccountService, private OfferService: OfferService, private RenewalService: RenewalService) {
+  constructor(private Serviceaccount: ServiceAccountService, private OfferService: OfferService, private renewalStore: RenewalStore) {
     this.IsOffersReady = false;
   }
 
   ngOnInit() {
 
-  }
-
-  ngOnChanges(changes:  SimpleChanges) {
-
-    if (changes['ActiveServiceAccount'] && this.ActiveServiceAccount) {
-    this.RenewalServiceSubscription = this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccount.Id)).subscribe(
-      RenewalDetails => { this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+    this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(RenewalDetails => {
+      if (RenewalDetails != null) {
+        this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
         if (this.IsUpForRenewal) {
           this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccount.Id)).subscribe(
             all_offers => {
@@ -54,7 +53,13 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
               this.checkFeaturedUsageLevel(this.RenewalOffers);
               this.IsOffersReady = true;
             });
-        } });
+        }
+      }
+    });
+  }
+
+  ngOnChanges(changes:  SimpleChanges) {
+    if (changes['ActiveServiceAccount'] && this.ActiveServiceAccount) {
     }
   }
 
@@ -88,7 +93,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
   }
 
   ngOnDestroy() {
-    result(this.RenewalServiceSubscription, 'unsubscribe');
+    this.renewalStoreSubscription.unsubscribe();
     if (this.IsUpForRenewal) {
     result(this.OffersServiceSubscription, 'unsubscribe'); }
   }

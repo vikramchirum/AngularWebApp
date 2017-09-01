@@ -22,6 +22,7 @@ import { UsageHistoryService } from './usage-history.service';
 import { NotificationOptionsService } from './notificationoptions.service';
 import { DocumentsService } from './documents.service';
 import { RenewalService } from './renewal.service';
+import { RenewalStore } from './store/RenewalStore';
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import { RenewalService } from './renewal.service';
     UsageHistoryService,
     NotificationOptionsService,
     DocumentsService,
-    RenewalService
+    RenewalService,
+    RenewalStore
   ]
 })
 export class CoreModule { }
