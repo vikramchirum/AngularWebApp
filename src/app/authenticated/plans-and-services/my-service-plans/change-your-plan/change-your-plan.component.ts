@@ -7,7 +7,6 @@ import { ChangeYourPlanCardComponent } from './change-your-plan-card/change-your
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { OfferService } from 'app/core/offer.service';
 import { AllOffersClass, UpgradeOffersClass} from 'app/core/models/offers/alloffers.model';
-import { AllOffersClass, UpgradeOffersClass } from 'app/core/models/offers/alloffers.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { RenewalStore } from '../../../../core/store/RenewalStore';
