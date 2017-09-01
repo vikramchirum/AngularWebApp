@@ -103,8 +103,8 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   fetchOffersByPromoCode(promoCode) {
     this.OffersServiceSubscription = this.OfferService.getRenewalPlansByPromoCode(promoCode).subscribe(
       result => {
-        console.log('Renewal offers', result);
-        //this.All_Offers = result[0].Offers;
+        console.log('Renewal offers based on Promo code', result);
+        this.AllOfferss = result;
       }
     );
   }
