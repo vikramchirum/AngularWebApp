@@ -29,37 +29,40 @@ export class MyServicePlansComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
-
-      RenewalDetails => {
-
-        if (RenewalDetails == null) {
-          return;
-        }
-
-        this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-        // Is_In_Holdover needs to be updated to whatever we specify in the API.
-        if (RenewalDetails.Is_Account_Eligible_Renewal === false) {
-          this.RenewalGaugeComponent.buildRenewedChart(
-            new Date(),
-            this.ActiveServiceAccount.Contract_End_Date ? new Date(this.ActiveServiceAccount.Contract_End_Date) : this.ActiveServiceAccount.Calculated_Contract_End_Date
-          );
-        } else if (this.ActiveServiceAccount.Current_Offer.IsHoldOverRate === true) {
-          this.RenewalGaugeComponent.buildHoldoverChart();
-        } else {
-          this.RenewalGaugeComponent.buildChart(
-            new Date(this.ActiveServiceAccount.Contract_Start_Date),
-            new Date(),
-            this.ActiveServiceAccount.Contract_End_Date ? new Date(this.ActiveServiceAccount.Contract_End_Date) : this.ActiveServiceAccount.Calculated_Contract_End_Date
-          );
-        }
-      }
-
-    );
 
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
+
+
+        this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
+
+          RenewalDetails => {
+
+            if (RenewalDetails == null) {
+              return;
+            }
+
+            this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+            // Is_In_Holdover needs to be updated to whatever we specify in the API.
+            if (RenewalDetails.Is_Account_Eligible_Renewal === false) {
+              this.RenewalGaugeComponent.buildRenewedChart(
+                new Date(),
+                this.ActiveServiceAccount.Contract_End_Date ? new Date(this.ActiveServiceAccount.Contract_End_Date) : this.ActiveServiceAccount.Calculated_Contract_End_Date
+              );
+            } else if (this.ActiveServiceAccount.Current_Offer.IsHoldOverRate === true) {
+              this.RenewalGaugeComponent.buildHoldoverChart();
+            } else {
+              this.RenewalGaugeComponent.buildChart(
+                new Date(this.ActiveServiceAccount.Contract_Start_Date),
+                new Date(),
+                this.ActiveServiceAccount.Contract_End_Date ? new Date(this.ActiveServiceAccount.Contract_End_Date) : this.ActiveServiceAccount.Calculated_Contract_End_Date
+              );
+            }
+          }
+
+        );
+
       }
     );
   }
@@ -75,4 +78,5 @@ export class MyServicePlansComponent implements OnInit, OnDestroy {
       && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate
       && ((this.ActiveServiceAccount.Contract_End_Date ? this.ActiveServiceAccount.Contract_End_Date : this.ActiveServiceAccount.Calculated_Contract_End_Date) < new Date()));
   }
+
 }
