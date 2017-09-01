@@ -42,7 +42,7 @@
         </div>
         <div class="col-sm-10">View your current plan details</div>
         <br>
-        <div #pop="bs-popover" [popover]="options" placement="bottom">
+        <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
           <ng-template #options>
             <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
               <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>

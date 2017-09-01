@@ -23,7 +23,7 @@ export class PaperlessSettingsComponent implements OnInit {
 
   billingOptions = [{ option: 'Email', checked: false }, { option: 'Paper', checked: false }];
   plansOptions = [{ option: 'Email', checked: false }, { option: 'Paper', checked: false }];
-  paperlessSettings: boolean = false;
+  paperlessSettings: boolean;
   goPaperless: boolean = false;
   notificationOptionsForBills = null;
   notificationOptionsForPlans = null;
@@ -91,7 +91,7 @@ export class PaperlessSettingsComponent implements OnInit {
         this.plansOptions[1].checked = true;
       }
     });
-
+    this.togglePaperless(this.billingOptions, this.plansOptions);
   }
   selectedPreference(preference, preferenceOptions) {
     if (preference[0].Status === 'Active') {

@@ -70,7 +70,7 @@ export class RenewalService {
 
   createRenewal(request: ICreateRenewalRequest): Observable<IRenewal> {
     const body = JSON.stringify(request);
-    const relativePath = `/renewals/${request.service_account_id}/create_renewal`;
+    const relativePath = `/renewals/${request.Service_Account_Id}/create_renewal`;
     return this.http.post(relativePath, body)
       .map((response: Response) => { return <IRenewal> response.json(); })
       .catch(error => this.http.handleHttpError(error));

@@ -1,25 +1,29 @@
-import {Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, OnInit, OnDestroy, Input} from '@angular/core';
+
 import { Subscription } from 'rxjs/Subscription';
-import { OfferService } from 'app/core/offer.service';
 import { findKey, filter, find } from 'lodash';
-import {AllOffersClass, UpgradeOffersClass} from 'app/core/models/offers/alloffers.model';
+import { ChangeYourPlanCardComponent } from './change-your-plan-card/change-your-plan-card.component';
+
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { OfferService } from 'app/core/offer.service';
+import { AllOffersClass, UpgradeOffersClass } from 'app/core/models/offers/alloffers.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
-import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.model';
+import { RenewalStore } from '../../../../core/store/RenewalStore';
 
 @Component({
   selector: 'mygexa-change-your-plan',
   templateUrl: './change-your-plan.component.html',
   styleUrls: ['./change-your-plan.component.scss']
 })
-export class ChangeYourPlanComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() ActiveServiceAccount: ServiceAccount;
-  @Input() RenewalDetails: IRenewalDetails;
-  @Input() RenewalOffers: AllOffersClass[];
+export class ChangeYourPlanComponent implements OnInit, OnDestroy {
+
+  renewalStoreSubscription: Subscription;
+  public ActiveServiceAccountDetails: ServiceAccount = null;
+  ServiceAccountSubscription: Subscription;
   OffersServiceSubscription: Subscription;
 
   public IsUpForRenewal: boolean = null;
-  public IsRenewalPending: boolean = null;
 
   public AllOffers: AllOffersClass[];
   public All_Offers: AllOffersClass[];
@@ -31,39 +35,48 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy, OnChanges {
   clicked: boolean;
   public upgradeOffersArraylength: number = null;
   havePromoCode = false;
+  promoCode = '';
 
-  constructor(private OfferService: OfferService) {
+  constructor(private serviceAccount_service: ServiceAccountService, private OfferService: OfferService, private renewalStore: RenewalStore) {
     this.clicked = true;
   }
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['RenewalDetails'] && this.ActiveServiceAccount && this.RenewalDetails) {
-        this.IsUpForRenewal = this.RenewalDetails.Is_Account_Eligible_Renewal;
-        this.IsRenewalPending = this.RenewalDetails.Is_Pending_Renewal;
-        console.log('renewal offers in chnage your plan', this.RenewalOffers);
-        if (this.IsUpForRenewal === true && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate && !this.IsRenewalPending) {
-          this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccount.Id)).subscribe(
+
+  ngOnInit() {
+
+    this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
+      RenewalDetails => {
+
+        if (RenewalDetails == null) {
+          return;
+        }
+
+        this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+        if (this.IsUpForRenewal === true) {
+          this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccountDetails.Id)).subscribe(
             All_Offers => {
               console.log('All offers', All_Offers);
               this.extractOffers(All_Offers);
               return All_Offers;
             }
           );
-        } else {
-          this.OffersServiceSubscription = this.OfferService.getUpgradeOffers(Number(this.ActiveServiceAccount.Id),
-            Number(this.ActiveServiceAccount.Current_Offer.Term),
-            Number(this.ActiveServiceAccount.TDU_DUNS_Number))
+        } else if (this.IsUpForRenewal === false || this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate) {
+          this.OffersServiceSubscription = this.OfferService.getUpgradeOffers(Number(this.ActiveServiceAccountDetails.Id), Number(this.ActiveServiceAccountDetails.Current_Offer.Term), Number(this.ActiveServiceAccountDetails.TDU_DUNS_Number))
             .subscribe(
-              Upgrade_Offers => { this.UpgradeOffers = Upgrade_Offers;
+              Upgrade_Offers => {
+                this.UpgradeOffers = Upgrade_Offers;
                 console.log('All upgrade offers', this.UpgradeOffers);
                 return this.UpgradeOffers;
               }
             );
         }
-    }
-  }
+      }
+    );
 
-  ngOnInit() {
-    console.log('renewal offers in chnage your plan', this.RenewalOffers);
+    this.ServiceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.subscribe(
+      result => {
+        this.ActiveServiceAccountDetails = result;
+        return this.ActiveServiceAccountDetails;
+      });
   }
 
   extractOffers(All_Offers: AllOffersClass[]) {
@@ -78,15 +91,30 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy() {
+    this.renewalStoreSubscription.unsubscribe();
+    this.ServiceAccountSubscription.unsubscribe();
     if (this.IsUpForRenewal) {
       this.OffersServiceSubscription.unsubscribe();
     }
   }
   ChevClicked() {
-    this.clicked = !this.clicked ;
+    this.clicked = !this.clicked;
   }
 
   showPromoCodeInput() {
     this.havePromoCode = !this.havePromoCode;
+  }
+
+  onPromoCodeSubmit() {
+    this.fetchOffersByPromoCode(this.promoCode);
+  }
+
+  fetchOffersByPromoCode(promoCode) {
+    this.OffersServiceSubscription = this.OfferService.getRenewalPlansByPromoCode(promoCode).subscribe(
+      result => {
+        console.log('Renewal offers based on Promo code', result);
+        this.AllOfferss = result;
+      }
+    );
   }
 }
