@@ -6,7 +6,6 @@ import { ChangeYourPlanCardComponent } from './change-your-plan-card/change-your
 
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { OfferService } from 'app/core/offer.service';
-import { AllOffersClass, UpgradeOffersClass} from 'app/core/models/offers/alloffers.model';
 import { AllOffersClass, UpgradeOffersClass } from 'app/core/models/offers/alloffers.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
@@ -23,7 +22,6 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   public ActiveServiceAccountDetails: ServiceAccount = null;
   ServiceAccountSubscription: Subscription;
   OffersServiceSubscription: Subscription;
-  RenewalServiceSubscription: Subscription;
 
   public IsUpForRenewal: boolean = null;
 
@@ -95,7 +93,6 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.renewalStoreSubscription.unsubscribe();
     this.ServiceAccountSubscription.unsubscribe();
-    this.RenewalServiceSubscription.unsubscribe();
     if (this.IsUpForRenewal) {
       this.OffersServiceSubscription.unsubscribe();
     }
