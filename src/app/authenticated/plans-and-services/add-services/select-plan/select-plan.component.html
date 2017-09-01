@@ -2,11 +2,11 @@
   <div class="card-content">
     <div class="card-title">
     <h4>{{featuredOffer.Plan.Name}} <small><i class="fa fa-info-circle" aria-hidden="true" (click)="pop.show()"></i></small></h4>
-    <div #pop="bs-popover" [popover]="options" placement="bottom">
+    <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
           <ng-template #options>
-            <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
+            <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()" >
             <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-            <mygexa-offer-details-popover [OfferDetails] = featuredOffer ></mygexa-offer-details-popover>
+            <mygexa-offer-details-popover [OfferDetails] = featuredOffer></mygexa-offer-details-popover>
           </ng-template>
         </div>
     <h2>{{Price_atFeatured_Usage_Level | DollarToCentsPipe | number : '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small>

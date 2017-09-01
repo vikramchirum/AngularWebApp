@@ -9,7 +9,7 @@
       <md-card class="current-plan-card" *ngIf="ActiveServiceAccount">
         <md-card-title>
           <h2>{{ActiveServiceAccount.Current_Offer.Product_Name}} <small><i class="fa fa-info-circle" (click)="pop.show()" ></i></small></h2>
-          <div #pop="bs-popover" [popover]="options" placement="bottom">
+          <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
             <ng-template #options>
               <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
                 <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
@@ -41,7 +41,7 @@
             <h2>{{RenewalOffers.Plan.Name}}
               <small><i class="fa fa-info-circle" (click)="pop.show()" aria-hidden="true"></i></small>
             </h2>
-            <div #pop="bs-popover" [popover]="options" placement="bottom">
+            <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
               <ng-template #options>
                 <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
                   <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
@@ -59,7 +59,7 @@
             <p class="bg-default">{{RenewalOffers.Promotion?.Name}} </p>
           </div>
         </div>
-        <div #plan_pop="bs-popover" [popover]="showpop" placement="bottom">
+        <div #plan_pop="bs-popover" [popover]="showpop" placement="bottom" outsideClick="true">
           <ng-template #showpop>
             <button type="button" class="close text-right" aria-label="Close" (click)="plan_pop.hide()">
               <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
@@ -121,7 +121,7 @@
       <md-card class="current-plan-card" *ngIf="ActiveServiceAccount.Current_Offer.IsHoldOverRate">
         <md-card-title>
           <h2>{{ActiveServiceAccount.Current_Offer.Product_Name}} <small><i class="fa fa-info-circle" (click)="pop.show()" ></i></small></h2>
-          <div #pop="bs-popover" [popover]="options" placement="bottom">
+          <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
             <ng-template #options>
               <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
                 <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
