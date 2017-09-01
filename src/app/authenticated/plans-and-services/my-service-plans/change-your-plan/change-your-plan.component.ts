@@ -6,7 +6,7 @@ import { ChangeYourPlanCardComponent } from './change-your-plan-card/change-your
 
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { OfferService } from 'app/core/offer.service';
-import { AllOffersClass, UpgradeOffersClass } from 'app/core/models/offers/alloffers.model';
+import { AllOffersClass, UpgradeOffersClass} from 'app/core/models/offers/alloffers.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { RenewalStore } from '../../../../core/store/RenewalStore';
@@ -43,38 +43,42 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
-      RenewalDetails => {
-
-        if (RenewalDetails == null) {
-          return;
-        }
-
-        this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-        if (this.IsUpForRenewal === true) {
-          this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccountDetails.Id)).subscribe(
-            All_Offers => {
-              console.log('All offers', All_Offers);
-              this.extractOffers(All_Offers);
-              return All_Offers;
-            }
-          );
-        } else if (this.IsUpForRenewal === false || this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate) {
-          this.OffersServiceSubscription = this.OfferService.getUpgradeOffers(Number(this.ActiveServiceAccountDetails.Id), Number(this.ActiveServiceAccountDetails.Current_Offer.Term), Number(this.ActiveServiceAccountDetails.TDU_DUNS_Number))
-            .subscribe(
-              Upgrade_Offers => {
-                this.UpgradeOffers = Upgrade_Offers;
-                console.log('All upgrade offers', this.UpgradeOffers);
-                return this.UpgradeOffers;
-              }
-            );
-        }
-      }
-    );
-
     this.ServiceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.subscribe(
       result => {
         this.ActiveServiceAccountDetails = result;
+
+
+        this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
+          RenewalDetails => {
+
+            if (RenewalDetails == null) {
+              return;
+            }
+
+            this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+            if (this.IsUpForRenewal === true) {
+              this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccountDetails.Id)).subscribe(
+                All_Offers => {
+                  console.log('All offers', All_Offers);
+                  this.extractOffers(All_Offers);
+                  return All_Offers;
+                }
+              );
+            } else if (this.IsUpForRenewal === false || this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate) {
+              this.OffersServiceSubscription = this.OfferService.getUpgradeOffers(Number(this.ActiveServiceAccountDetails.Id), Number(this.ActiveServiceAccountDetails.Current_Offer.Term), Number(this.ActiveServiceAccountDetails.TDU_DUNS_Number))
+                .subscribe(
+                  Upgrade_Offers => {
+                    this.UpgradeOffers = Upgrade_Offers;
+                    console.log('All upgrade offers', this.UpgradeOffers);
+                    return this.UpgradeOffers;
+                  }
+                );
+            }
+          }
+        );
+
+
+
         return this.ActiveServiceAccountDetails;
       });
   }

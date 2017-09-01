@@ -39,29 +39,35 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
-      RenewalDetails => {
 
-        if (RenewalDetails == null) {
-          return;
-        }
-
-        this.IsInRenewalTimeFrame = RenewalDetails.Is_Account_Eligible_Renewal;
-        if (this.IsInRenewalTimeFrame) {
-          this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccount.Id)).subscribe(
-            all_offers => {
-              this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
-              this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
-            });
-        }
-      }
-    );
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['ActiveServiceAccount']) {
 
       if (this.ActiveServiceAccount) {
+
+
+        this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
+          RenewalDetails => {
+
+            if (RenewalDetails == null) {
+              return;
+            }
+
+            this.IsInRenewalTimeFrame = RenewalDetails.Is_Account_Eligible_Renewal;
+            if (this.IsInRenewalTimeFrame) {
+              this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccount.Id)).subscribe(
+                all_offers => {
+                  this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
+                  this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+                });
+            }
+          }
+        );
+
+
+
         // this.IsInRenewalTimeFrame = this.ActiveServiceAccount.IsUpForRenewal;
         let docId = '';
         if (this.ActiveServiceAccount.Current_Offer.IsLegacyOffer) {
