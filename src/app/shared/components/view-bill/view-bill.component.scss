@@ -1,12 +1,17 @@
+@import "../../../../basecolors.scss";
+
 
 .view-bill-container {
 
-  td {
-    line-height: 4rem;
+  div {
+    line-height: 5rem;
+        
   }
-  .bill-amount {
-    font-weight: bold;
-  }
+  
+    .view-bill-subrow {
+        border-top: 1px solid #fff;
+      }
+
   .bill-name {
     color: #555555;
   }
@@ -14,19 +19,52 @@
     float: right;
     margin-right: 2rem;
   }
+  
+  .col-sm-11.text-right {
+    text-transform: uppercase;
+  }
 
 }
-
 
 .details, .view-bill-container h4 {
   color:#000000;
   
 }
 
-.table-striped > tbody > tr:nth-child(even) > td, .table-striped > tbody > tr:nth-child(even) > th {
-   background-color:#f9f9f9 !important;
+.details_head {
+  
+  h2, h5 {
+    margin-top: 0
+  }
+  h5 {
+    margin-bottom: 5px;
+  }
+
 }
 
-.table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th {
-  background-color: rgba(216,238,206,0.9);
+.details_body {   
+    background-color: rgba(255,255,255,.5);
+    margin-top: -10px;
+    margin: -10px 1px;
+  
+  .fa-in-circle {
+     background: #2eb134;
+    color: #fff;
+    border-radius: 20px;
+    display: inline-block;
+    padding: 4px 5px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+hr {
+  border-top-color: $plans-base;
+  margin: 10px 0;
+}
+.btn.charge-toggle {
+  
+   padding: 0;
+    border: 0;
+    margin: 0;
 }

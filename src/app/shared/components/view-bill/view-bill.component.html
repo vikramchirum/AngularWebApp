@@ -1,127 +1,113 @@
-<div class="col-md-3">
+<div class="row">
+ <div class="col-xs-9 col-xs-push-2 col-md-3">
   <button class="btn btn-warning btn-block btn-round"><i class="fa fa-fw fa-3x fa-file-pdf-o"></i><br/>
   Current Statement <span class="boxed">Download</span></button>
 </div>
-<div class="col-md-6">
-  <h2>Billing Details</h2>
-  <h4 class="details">{{invoice_date | date }}</h4>
-  <br/>
-  <div *ngIf="bill_object && bill_item_details" class="view-bill-container">
-    <h3>Invoice Number # {{ invoice_num }}</h3>
-    <div>
-      <div *ngIf="bill_item_details_gexa_charges.length > 0; then listCharges else noChargesToList"></div>
-      <ng-template #listCharges>
-        <table border="0" width="100%" class="table-condensed table-striped">
-          <colgroup>
-            <col width="75%" />
-            <col width="20%" />
-            <col width="5%" />
-          </colgroup>
-          <tbody>
-            <tr>
-              <td><button class="charge-toggle btn-link" (click)="chargeToggle(bill_item_details_gexa_charges)"> <i class="fa fa-fw" [ngClass]="chargeOpened(bill_item_details_gexa_charges) ? 'fa-chevron-up' : 'fa-chevron-down'"></i> </button><b> Gexa Charges</b> </td>
-              <td><b>${{ subtotal(bill_item_details_gexa_charges) + subtotal(bill_item_details_other_charges) | FloatToMoneyPipe}}</b></td>
-            </tr>
-            <ng-container *ngIf="chargeOpened(bill_item_details_gexa_charges)">
-            <tr *ngFor="let item of bill_item_details_gexa_charges">
-              <td class="bill-name"><span>{{ item.Descripton }}</span><span class="bill-uasge" *ngIf="item.Quantity">{{ item.Quantity }}@{{item.Multiplier}} </span></td>
-              <td class="bill-amount">${{ item.Amount | FloatToMoneyPipe }}</td>
-              <td></td>
-            </tr>
-            <tr *ngFor="let item of bill_item_details_other_charges">
-              <td class="bill-name"><span>{{ item.Descripton }}</span></td>
-              <td class="bill-amount">${{ item.Amount | FloatToMoneyPipe }}</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><b>Sub Total</b></td>
-              <td><b>${{ subtotal(bill_item_details_gexa_charges) + subtotal(bill_item_details_other_charges) | FloatToMoneyPipe}}</b></td>
-              <td></td>
-            </tr></ng-container>
-          </tbody>
-        </table>
-      </ng-template>
-      <ng-template #noChargesToList>
-        <h2>Gexa Charges <small>(No charges to list.)</small></h2>
-      </ng-template>
+<hr class="visible-xs-block"/>
+<div class="col-md-7 col-md-offset-1">
+  <div class="row details_head">
+    <div class="col-xs-7 col-md-8">
+      <h2>Billing Details</h2>
     </div>
-    <div>
-      <div *ngIf="bill_item_details_TDU_charges.length > 0; then listTDUCharges else noTDUChargesToList"></div>
-      <ng-template #listTDUCharges>
-        <table border="0" width="100%" class="table-condensed table-striped">
-          <colgroup>
-            <col width="75%" />
-            <col width="20%" />
-            <col width="5%" />
-          </colgroup>
-          <tbody >
-             <tr>
-              <td><button class="charge-toggle btn-link" (click)="chargeToggle(bill_item_details_TDU_charges)"> <i class="fa fa-fw" [ngClass]="chargeOpened(bill_item_details_TDU_charges) ? 'fa-chevron-up' : 'fa-chevron-down'"></i> </button> <b>{{tduName}}</b></td>
-              <td><b>${{ subtotal(bill_item_details_TDU_charges) | FloatToMoneyPipe }}</b></td>
-             </tr>
-            <ng-container  *ngIf="chargeOpened(bill_item_details_TDU_charges)">
-            <tr *ngFor="let item of bill_item_details_TDU_charges">
-              <td class="bill-name"><span>{{ item.Descripton }}</span></td>
-              <td class="bill-amount">${{ item.Amount | FloatToMoneyPipe }}</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><b>Sub Total</b></td>
-              <td><b>${{ subtotal(bill_item_details_TDU_charges) | FloatToMoneyPipe }}</b></td>
-              <td></td>
-            </tr></ng-container>
-          </tbody>
-        </table>
-      </ng-template>
-      <ng-template #noTDUChargesToList>
-        <h2>{{tduName}} <small>(No TDU charges to list.)</small></h2>
-      </ng-template>
+    <div class="col-xs-5 col-md-4">
+      <div *ngIf="bill_object && bill_item_details" class="view-bill-container text-right">
+        <h5>Invoice #{{ invoice_num }} </h5>
+        <h5 class="details">{{invoice_date | date }}</h5>
+      </div>
     </div>
-    <div>
-      <div *ngIf="bill_item_details_tax.length > 0; then listTaxCharges else noTaxChargesToList"></div>
-      <ng-template #listTaxCharges>
-         <table  border="0" width="100%" class="table-condensed table-striped">
-          <colgroup>
-            <col width="75%" />
-            <col width="20%" />
-            <col width="5%" />
-          </colgroup>
-          <tbody >
-             <tr>
-              <td><button class="charge-toggle btn-link" (click)="chargeToggle(bill_item_details_tax)"> <i class="fa fa-fw" [ngClass]="chargeOpened(bill_item_details_tax) ? 'fa-chevron-up' : 'fa-chevron-down'"></i> </button>       <b>   Tax Charges </b></td>
-              <td><b>${{ subtotal(bill_item_details_tax) | FloatToMoneyPipe}}</b></td>
-            </tr>
-            <ng-container *ngIf="chargeOpened(bill_item_details_tax)">
-            <tr *ngFor="let item of bill_item_details_tax">
-              <td class="bill-name"><span>{{ item.Descripton }}</span></td>
-              <td class="bill-amount">${{ item.Amount | FloatToMoneyPipe }}</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><b>Sub Total</b></td>
-              <td><b>${{ subtotal(bill_item_details_tax) | FloatToMoneyPipe}}</b></td>
-              <td></td>
-            </tr></ng-container>
-          </tbody>
-        </table>
-      </ng-template>
-      <ng-template #noTaxChargesToList>
-        <h2>Tax Charges <small>(No tax charges to list.)</small></h2>
-      </ng-template>
-    </div>
-    <table border="0" width="100%" class="table-condensed">
-      <colgroup>
-        <col width="75%" />
-        <col width="20%" />
-        <col width="5%" />
-      </colgroup>
-      <tbody>
-        <tr>
-          <td><strong>Total ${{ subtotal(bill_item_details_gexa_charges) + subtotal(bill_item_details_other_charges) + subtotal(bill_item_details_TDU_charges) +  subtotal(bill_item_details_tax) | FloatToMoneyPipe}}</strong></td>
-          <td><strong></strong></td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
   </div>
+  <hr/>
+  <div class="row details_body">
+    <div class="col-md-12">
+      <div *ngIf="bill_object && bill_item_details" class="view-bill-container">
+        <div>
+          <div *ngIf="bill_item_details_gexa_charges.length > 0; then listCharges else noChargesToList"></div>
+          <ng-template #listCharges>
+            <div class="row">
+              <div class="col-xs-8"> <b> Gexa Charges</b> </div>
+              <div class="col-xs-3  text-right"> <b>${{ subtotal(bill_item_details_gexa_charges) + subtotal(bill_item_details_other_charges) | FloatToMoneyPipe}}</b> </div>
+              <div class="col-xs-1">
+                <button class="charge-toggle btn btn-link" (click)="chargeToggle(bill_item_details_gexa_charges)"><i class="fa fa-in-circle fa-fw" [ngClass]="chargeOpened(bill_item_details_gexa_charges) ? 'fa-minus' : 'fa-plus'"></i></button>
+              </div>
+            </div>
+            <ng-container *ngIf="chargeOpened(bill_item_details_gexa_charges)">
+              <div class="row view-bill-subrow" *ngFor="let item of bill_item_details_gexa_charges">
+                <div class="col-xs-8 bill-name"><span>{{ item.Descripton }}</span><span class="bill-uasge" *ngIf="item.Quantity">{{ item.Quantity }}@{{item.Multiplier}} </span></div>
+                <div class="col-xs-3 text-right">${{ item.Amount | FloatToMoneyPipe }}</div>
+              </div>
+              <div class="row view-bill-subrow" *ngFor="let item of bill_item_details_other_charges">
+                <div class="col-xs-8 bill-name"><span>{{ item.Descripton }}</span></div>
+                <div class="col-xs-3 text-right">${{ item.Amount | FloatToMoneyPipe }}</div>
+              </div>
+              <div class="row view-bill-subrow">
+                <div class="col-xs-11  text-right"><small>Sub Total</small>&nbsp;&nbsp; ${{ subtotal(bill_item_details_gexa_charges) + subtotal(bill_item_details_other_charges) | FloatToMoneyPipe}} </div>
+              </div>
+            </ng-container>
+          </ng-template>
+          <ng-template #noChargesToList>
+            <div class="col-xs-12"> <b> Gexa Charges</b><small>(No charges to list.)</small> </div>
+          </ng-template>
+        </div>
+        <div>
+          <div *ngIf="bill_item_details_TDU_charges.length > 0; then listTDUCharges else noTDUChargesToList"></div>
+          <ng-template #listTDUCharges>
+            <div class="row">
+              <div class="col-xs-8"> <b>{{tduName}}</b></div>
+              <div class="col-xs-3 text-right"><b>${{ subtotal(bill_item_details_TDU_charges) | FloatToMoneyPipe }}</b></div>
+              <div class="col-xs-1">
+                <button class="charge-toggle btn btn-link" (click)="chargeToggle(bill_item_details_TDU_charges)"><i class="fa fa-in-circle fa-fw" [ngClass]="chargeOpened(bill_item_details_TDU_charges) ? 'fa-minus' : 'fa-plus'"></i></button>
+              </div>
+            </div>
+            <ng-container  *ngIf="chargeOpened(bill_item_details_TDU_charges)">
+              <div class="row view-bill-subrow" *ngFor="let item of bill_item_details_TDU_charges">
+                <div class="col-xs-8 bill-name"><span>{{ item.Descripton }}</span></div>
+                <div class="col-xs-3 text-right">${{ item.Amount | FloatToMoneyPipe }}</div>
+              </div>
+              <div class="row view-bill-subrow">
+                <div class="col-xs-11 text-right"><small>Sub Total </small>&nbsp;&nbsp; ${{ subtotal(bill_item_details_TDU_charges) | FloatToMoneyPipe }} </div>
+              </div>
+            </ng-container>
+          </ng-template>
+          <ng-template #noTDUChargesToList>
+            <h2>{{tduName}} <small>(No TDU charges to list.)</small></h2>
+          </ng-template>
+        </div>
+          
+          <div *ngIf="bill_item_details_tax.length > 0; then listTaxCharges else noTaxChargesToList"></div>
+          <ng-template #listTaxCharges>
+            <div class="row">
+              <div class="col-xs-8"> <b> Tax Charges </b> </div>
+              <div class="col-xs-3 text-right"> <b>${{ subtotal(bill_item_details_tax) | FloatToMoneyPipe}}</b> </div>
+              <div class="col-xs-1">
+                <button class="charge-toggle btn btn-link" (click)="chargeToggle(bill_item_details_tax)"> <i class="fa fa-in-circle fa-fw" [ngClass]="chargeOpened(bill_item_details_tax) ? 'fa-minus' : 'fa-plus'"></i> </button>
+              </div>
+            </div>
+           
+            <ng-container *ngIf="chargeOpened(bill_item_details_tax)">
+              <div class="row view-bill-subrow" *ngFor="let item of bill_item_details_tax">
+                <div class="col-xs-8 bill-name"><span>{{ item.Descripton }}</span></div>
+                <div class="col-xs-3 bill-amount text-right">${{ item.Amount | FloatToMoneyPipe }}</div>
+              </div>
+              <div class="row view-bill-subrow">
+                <div class="col-xs-11 text-right"><small>Sub Total </small>&nbsp;&nbsp;
+                  ${{ subtotal(bill_item_details_tax) | FloatToMoneyPipe}} </div>
+              </div>
+            </ng-container>
+           
+          </ng-template>
+          <ng-template #noTaxChargesToList>
+            <div class="row">
+              <div class="col-xs-11"> (No tax charges to list.) </div>
+            </div>
+          </ng-template>
+          
+          
+          
+        <div class="row">
+          <div class="col-xs-11 text-right"> <strong>Total&nbsp; ${{ subtotal(bill_item_details_gexa_charges) + subtotal(bill_item_details_other_charges) + subtotal(bill_item_details_TDU_charges) +  subtotal(bill_item_details_tax) | FloatToMoneyPipe}}</strong> </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </div>
