@@ -3,35 +3,53 @@
   <mygexa-service-account-selector
     [setActiveServiceAccount]="true"
   ></mygexa-service-account-selector>
-  <section id="renewPlan" [hidden]="!ActiveServiceAccount">
+  <section [hidden]="!ActiveServiceAccount">
     <div class="row">
       <div class="col-md-8">
+        <ng-template *ngIf="IsUpForRenewal && !IsRenewalPending && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then ShowRenewal"></ng-template>
+        <ng-template *ngIf="ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !IsRenewalPending; then ShowCurrentPlan"></ng-template>
+        <ng-template *ngIf="!IsUpForRenewal && IsRenewalPending && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then ShowPendingRenewalPlan"></ng-template>
+        <ng-template *ngIf="!IsUpForRenewal && !IsRenewalPending && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then ShowCurrentPlan"></ng-template>
 
-        <ng-template *ngIf="IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then ShowRenewal else ShowCurrentPlan"></ng-template>
         <ng-template #ShowRenewal>
           <h1>Renew your plan</h1>
           <p>Account No: {{ ActiveServiceAccount?.Id }}</p>
           <p>Your plan is ready to be renewed! Based on your product history, we've found the renewal plan that's best for your home:</p>
+          <div class="row">
+            <div class="col-md-9 col-md-offset-1">
+              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' ></mygexa-my-current-plan>
+            </div>
+          </div>
         </ng-template>
+
         <ng-template #ShowCurrentPlan>
           <h1>My Current Plan</h1>
           <p>Account No: {{ ActiveServiceAccount?.Id }}</p>
+          <div class="row">
+            <div class="col-md-9 col-md-offset-1">
+              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' ></mygexa-my-current-plan>
+            </div>
+          </div>
         </ng-template>
 
-        <div class="row">
-          <div class="col-md-9 col-md-offset-1">
-            <mygexa-my-current-plan [ActiveServiceAccount]="ActiveServiceAccount"></mygexa-my-current-plan>
+        <ng-template #ShowPendingRenewalPlan>
+          <h1>My Current Plan</h1>
+          <p>Account No: {{ RenewalAccount?.Existing_Renewal.Service_Account_Id }}</p>
+          <div class="row">
+            <div class="col-md-9 col-md-offset-1">
+              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' ></mygexa-my-current-plan>
+              <h1>Pending...</h1>
+            </div>
           </div>
-        </div>
+        </ng-template>
 
       </div>
       <div class="col-xs-8 col-xs-push-2 col-md-4">
         <mygexa-renewal-gauge [hidden]="hideGauge"></mygexa-renewal-gauge>
         <mygexa-documents
-          [ActiveServiceAccount]="ActiveServiceAccount"
+          [ActiveServiceAccount]='ActiveServiceAccount'
         ></mygexa-documents>
       </div>
     </div>
   </section>
-
 </div>

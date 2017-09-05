@@ -3,19 +3,23 @@
  */
 import { Injectable } from '@angular/core';
 import { Response, URLSearchParams } from '@angular/http';
-
+import { clone, find, first, forEach, get, isString, map, pull } from 'lodash';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { HttpClient } from './httpclient';
-
 import { IRenewal } from './models/renewals/renewal.model';
 import { ICreateRenewalRequest } from './models/renewals/createrenewalrequest.model';
 import { ICancelRenewalRequest} from './models/renewals/cancelrenewalrequest.model';
 import { IGetRenewalRequest } from './models/renewals/getrenewalrequest.model';
-import { IRenewalDetails } from './models/renewals/renewaldetails.model';
+import {IRenewalDetails} from './models/renewals/renewaldetails.model';
+import {Observer} from 'rxjs/Observer';
+import {ServiceAccountService} from './serviceaccount.service';
+import {RenewalDetails} from './models/renewals/renewaldetailsclass.model';
 
 @Injectable()
 export class RenewalService {
+
+  public ActiveServiceAccount_RenewalDetailsCache: RenewalDetails = null;
 
   constructor(private http: HttpClient) {
   }
@@ -41,6 +45,20 @@ export class RenewalService {
     return this.http.get(relativePath, params)
       .map((response: Response) => { return <IRenewal> response.json(); })
       .catch(error => this.http.handleHttpError(error));
+  }
+
+  SetRenewalDetails(serviceAccountId: number): RenewalDetails {
+    if (get(this.ActiveServiceAccount_RenewalDetailsCache, 'Service_Account_Id') === serviceAccountId) {
+      return this.ActiveServiceAccount_RenewalDetailsCache;
+    } else {
+      this.getRenewalDetails(serviceAccountId).subscribe(
+        RenewalDetails => { this.ActiveServiceAccount_RenewalDetailsCache = <any>RenewalDetails; },
+        error => this.http.handleHttpError(error),
+        () => {
+          console.log('Renewal Details =', this.ActiveServiceAccount_RenewalDetailsCache);
+        }
+      );
+    }
   }
 
   getRenewalDetails(serviceAccountId: number): Observable<IRenewalDetails>   {

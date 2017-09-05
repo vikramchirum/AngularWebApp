@@ -7,6 +7,7 @@ import { RenewalGaugeComponent } from './renewal-gauge/renewal-gauge.component';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { RenewalStore } from '../../../core/store/RenewalStore';
+import {IRenewalDetails} from '../../../core/models/renewals/renewaldetails.model';
 
 @Component({
   selector: 'mygexa-my-service-plans',
@@ -14,14 +15,13 @@ import { RenewalStore } from '../../../core/store/RenewalStore';
   styleUrls: ['./my-service-plans.component.scss']
 })
 export class MyServicePlansComponent implements OnInit, OnDestroy {
-
+  @ViewChild(RenewalGaugeComponent) RenewalGaugeComponent;
   renewalStoreSubscription: Subscription;
 
   public ActiveServiceAccount: ServiceAccount = null;
   ActiveServiceAccountSubscription: Subscription = null;
-  @ViewChild(RenewalGaugeComponent) RenewalGaugeComponent;
   public IsUpForRenewal: boolean = null;
-
+  public RenewalDetails: IRenewalDetails = null;
   constructor(
     private ServiceAccountService: ServiceAccountService,
     private renewalStore: RenewalStore
@@ -42,7 +42,7 @@ export class MyServicePlansComponent implements OnInit, OnDestroy {
             if (RenewalDetails == null) {
               return;
             }
-
+            this.RenewalDetails = RenewalDetails;
             this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
             // Is_In_Holdover needs to be updated to whatever we specify in the API.
             if (RenewalDetails.Is_Account_Eligible_Renewal === false) {
@@ -78,5 +78,4 @@ export class MyServicePlansComponent implements OnInit, OnDestroy {
       && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate
       && ((this.ActiveServiceAccount.Contract_End_Date ? this.ActiveServiceAccount.Contract_End_Date : this.ActiveServiceAccount.Calculated_Contract_End_Date) < new Date()));
   }
-
 }

@@ -3,6 +3,7 @@
  */
 
 import {IServiceAccountPlanHistoryOfferCharge} from './serviceaccountplanhistoryoffercharge.model';
+import {IPartnerInfo} from '../offers/partnerinfo.model';
 
 export interface IServiceAccountPlanHistoryOffer {
   Rate_Code: string;
@@ -26,6 +27,7 @@ export interface IServiceAccountPlanHistoryOffer {
   Usage_Charges: [IServiceAccountPlanHistoryOfferCharge];
   Start_Date: string;
   End_Date: string;
+  Partner_Info: IPartnerInfo;
   IsHoldOverRate: boolean;
   IsLegacyOffer: boolean;
   IsFixed: boolean;

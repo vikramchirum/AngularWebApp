@@ -10,6 +10,7 @@ import { OfferService } from 'app/core/offer.service';
 import { IOffers } from '../../core/models/offers/offers.model';
 import { AllOffersClass } from '../../core/models/offers/alloffers.model';
 import { RenewalStore } from '../../core/store/RenewalStore';
+import {IRenewalDetails} from '../../core/models/renewals/renewaldetails.model';
 
 @Component({
   selector: 'mygexa-plans-and-services',
@@ -19,9 +20,9 @@ import { RenewalStore } from '../../core/store/RenewalStore';
 export class PlansAndServicesComponent implements OnInit, OnDestroy {
 
   private renewalStoreSubscription: Subscription;
-
   private startsWith = startsWith;
   public ActiveServiceAccount: ServiceAccount = null;
+  public RenewalDetails: IRenewalDetails = null;
   public IsUpForRenewal: boolean = null;
   public UpgradeOffers: IOffers[] = [];
   public AllOffers: AllOffersClass[] = [];
@@ -39,6 +40,7 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
 
     this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(result => {
       if (result != null) {
+        this.RenewalDetails = result;
         this.IsUpForRenewal = result.Is_Account_Eligible_Renewal;
       }
     });
@@ -51,7 +53,7 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.renewalStoreSubscription.unsubscribe();
     result(this.ServiceAccountServiceSubscription, 'unsubscribe');
+    result(this.renewalStoreSubscription, 'unsubscribe');
   }
 }

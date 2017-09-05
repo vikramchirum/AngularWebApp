@@ -3,7 +3,7 @@ import { IRenewal } from './renewal.model';
  * Created by vikram.chirumamilla on 7/10/2017.
  */
 
-export interface IRenewalDetails {
+  export interface IRenewalDetails {
   Service_Account_Id: number;
   Service_Account_Status: string;
   Is_Account_Eligible_Renewal: boolean;

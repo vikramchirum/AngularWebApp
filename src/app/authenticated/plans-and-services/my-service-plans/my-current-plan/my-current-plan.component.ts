@@ -21,11 +21,13 @@ import { RenewalStore } from '../../../../core/store/RenewalStore';
 })
 export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
 
+  @Input() ActiveServiceAccount: ServiceAccount;
+  @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
   renewalStoreSubscription: Subscription;
-
-  IsOffersReady: boolean = null;
   OffersServiceSubscription: Subscription;
+  IsOffersReady: boolean = null;
   public IsUpForRenewal: boolean;
+  public IsRenewalPending: boolean;
   public All_Offers: AllOffersClass[];
   public FeaturedOffers: AllOffersClass[];
   public RenewalOffers: IOffers = null;
@@ -33,8 +35,6 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
   public Price_atFeatured_Usage_Level: number;
   selectCheckBox  = false;
   enableSelect = false;
-  @Input() ActiveServiceAccount: ServiceAccount;
-  @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
 
   constructor(private Serviceaccount: ServiceAccountService, private OfferService: OfferService, private renewalStore: RenewalStore) {
     this.IsOffersReady = false;
@@ -42,14 +42,18 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
 
   ngOnInit() {
 
+    console.log('Active service account', this.ActiveServiceAccount);
+
     this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(RenewalDetails => {
       if (RenewalDetails != null) {
         this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+        this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
         if (this.IsUpForRenewal) {
           this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(RenewalDetails.Service_Account_Id)).subscribe(
             all_offers => {
               this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
               this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+              console.log('Renewal Offers in my current plan', this.RenewalOffers);
               this.checkFeaturedUsageLevel(this.RenewalOffers);
               this.IsOffersReady = true;
             });
