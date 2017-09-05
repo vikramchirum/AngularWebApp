@@ -46,7 +46,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
       if (RenewalDetails != null) {
         this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
         if (this.IsUpForRenewal) {
-          this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(RenewalDetails.Service_Account_Id)).subscribe(
+          this.OffersServiceSubscription = this.OfferService.getRenewalOffers((RenewalDetails.Service_Account_Id)).subscribe(
             all_offers => {
               this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
               this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);

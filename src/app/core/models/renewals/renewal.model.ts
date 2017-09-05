@@ -5,7 +5,7 @@ import {IOffers} from '../offers/offers.model';
 
 export interface IRenewal {
   Id: string;
-  Service_Account_Id: number;
+  Service_Account_Id: string;
   User_Name: string;
   OfferingName: string;
   Offer: IOffers;

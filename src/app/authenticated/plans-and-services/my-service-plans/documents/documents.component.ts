@@ -57,7 +57,7 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
 
             this.IsInRenewalTimeFrame = RenewalDetails.Is_Account_Eligible_Renewal;
             if (this.IsInRenewalTimeFrame) {
-              this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccount.Id)).subscribe(
+              this.OffersServiceSubscription = this.OfferService.getRenewalOffers(this.ActiveServiceAccount.Id).subscribe(
                 all_offers => {
                   this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
                   this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);

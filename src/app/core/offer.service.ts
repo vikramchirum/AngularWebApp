@@ -28,7 +28,7 @@ export class OfferService {
   }
 
 
-  getRenewalOffers(ActiveServiceAccountId: Number): Observable<AllOffersClass[]> {
+  getRenewalOffers(ActiveServiceAccountId: string): Observable<AllOffersClass[]> {
     return this.http.get(`/service_accounts/${ActiveServiceAccountId}/offers`)
       .map(data => data.json())
       .map(data => { map(data, OffersData => new AllOffersClass(OffersData)); console.log('Offers', data); return data; })
