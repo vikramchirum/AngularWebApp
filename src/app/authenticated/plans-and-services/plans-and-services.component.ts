@@ -24,6 +24,7 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
   public ActiveServiceAccount: ServiceAccount = null;
   public RenewalDetails: IRenewalDetails = null;
   public IsUpForRenewal: boolean = null;
+  public IsRenewalPending: boolean = null;
   public UpgradeOffers: IOffers[] = [];
   public AllOffers: AllOffersClass[] = [];
 
@@ -38,18 +39,27 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(result => {
-      if (result != null) {
-        this.RenewalDetails = result;
-        this.IsUpForRenewal = result.Is_Account_Eligible_Renewal;
-      }
-    });
-
     this.ServiceAccountServiceSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
         this.renewalStore.LoadRenewalDetails(+this.ActiveServiceAccount.Id);
       });
+
+    this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(result => {
+      if (result != null) {
+        this.RenewalDetails = result;
+        this.IsUpForRenewal = result.Is_Account_Eligible_Renewal;
+        this.IsRenewalPending = result.Is_Pending_Renewal;
+        if (this.IsUpForRenewal && !this.IsRenewalPending && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate) {
+          this.OfferService.RenewalOffersData(+this.ActiveServiceAccount.Id);
+          console.log('**************************Renewals***************************');
+        } else if (!this.IsUpForRenewal || this.ActiveServiceAccount.Current_Offer.IsHoldOverRate || this.IsRenewalPending) {
+          this.OfferService.UpgradeOffersData(+this.ActiveServiceAccount.Id, +this.ActiveServiceAccount.Current_Offer.Term, +this.ActiveServiceAccount.TDU_DUNS_Number);
+          console.log('**************************Upgrades***************************');
+        }
+      }
+    });
+
   }
 
   ngOnDestroy() {

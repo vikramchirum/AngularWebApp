@@ -25,6 +25,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
 
   public IsUpForRenewal: boolean = null;
   public IsRenewalPending: boolean = null;
+  public AllOffersFromAPI: AllOffersClass[];
   public AllOffers: AllOffersClass[];
   public All_Offers: AllOffersClass[];
   public FeaturedOffers: AllOffersClass[];
@@ -42,12 +43,9 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     this.ServiceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.subscribe(
       result => {
         this.ActiveServiceAccountDetails = result;
-
-
         this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
           RenewalDetails => {
 
@@ -57,52 +55,52 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
         this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
         this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
         if (this.IsUpForRenewal && !this.IsRenewalPending && !this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate) {
-          this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccountDetails.Id)).subscribe(
+          this.OffersServiceSubscription = this.OfferService.ServiceAccount_RenewalOffers.subscribe(
             All_Offers => {
-              console.log('All offers', All_Offers);
-              this.extractOffers(All_Offers);
+               console.log('All offers', All_Offers);
+              if (All_Offers != null) {
+                this.extractOffers(All_Offers);
+              }
               return All_Offers;
             }
           );
         } else if (!this.IsUpForRenewal || this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate || this.IsRenewalPending) {
-          this.OffersServiceSubscription = this.OfferService.getUpgradeOffers(Number(this.ActiveServiceAccountDetails.Id),
-            Number(this.ActiveServiceAccountDetails.Current_Offer.Term),
-            Number(this.ActiveServiceAccountDetails.TDU_DUNS_Number))
-            .subscribe(
-              Upgrade_Offers => {
-                this.UpgradeOffers = Upgrade_Offers;
+          this.OffersServiceSubscription = this.OfferService.ServiceAccount_UpgradeOffers.subscribe(
+            Upgrade_Offers => {
+              this.UpgradeOffers = Upgrade_Offers;
+              console.log('All upgrade offers', this.UpgradeOffers);
+              if (this.UpgradeOffers) {
                 this.upgradeOffersArraylength = Upgrade_Offers.length;
-                console.log('All upgrade offers', this.UpgradeOffers);
-                return this.UpgradeOffers;
               }
-            );
+              return this.UpgradeOffers;
+            }
+          );
         }
       }
     );
-
-
-
         return this.ActiveServiceAccountDetails;
       });
   }
 
   extractOffers(All_Offers: AllOffersClass[]) {
     this.FeaturedOffers = All_Offers.filter(item => item.Type === 'Featured_Offers');
-    console.log('All_Featured_Offers', this.FeaturedOffers);
-    this.BestRenewalOffer = this.FeaturedOffers[0].Offers[0];
-    console.log('Best_Featured_Offer', this.BestRenewalOffer);
-
+    if ( this.FeaturedOffers[0].Offers.length > 0) {
+      console.log('All_Featured_Offers', this.FeaturedOffers);
+      this.BestRenewalOffer = this.FeaturedOffers[0].Offers[0];
+      console.log('Best_Featured_Offer', this.BestRenewalOffer);
+    }
     this.AllOffers = All_Offers.filter(item => item.Type === 'All_Offers');
-    this.AllOfferss = this.AllOffers[0].Offers;
-    console.log('Rest_All_Offers', this.AllOffers);
+    if (this.AllOffers[0].Offers.length > 0) {
+      this.AllOfferss = this.AllOffers[0].Offers;
+      console.log('Rest_All_Offers', this.AllOffers);
+    }
   }
 
   ngOnDestroy() {
     this.renewalStoreSubscription.unsubscribe();
     this.ServiceAccountSubscription.unsubscribe();
-    if (this.IsUpForRenewal) {
-      this.OffersServiceSubscription.unsubscribe();
-    }
+    this.OffersServiceSubscription.unsubscribe();
+
   }
   ChevClicked() {
     this.clicked = !this.clicked;

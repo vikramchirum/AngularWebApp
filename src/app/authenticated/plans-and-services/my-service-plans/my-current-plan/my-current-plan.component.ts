@@ -19,7 +19,7 @@ import { RenewalStore } from '../../../../core/store/RenewalStore';
   templateUrl: './my-current-plan.component.html',
   styleUrls: ['./my-current-plan.component.scss']
 })
-export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+export class MyCurrentPlanComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() ActiveServiceAccount: ServiceAccount;
   @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
@@ -41,21 +41,21 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
   }
 
   ngOnInit() {
-
-    console.log('Active service account', this.ActiveServiceAccount);
-
     this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(RenewalDetails => {
       if (RenewalDetails != null) {
         this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
         this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
         if (this.IsUpForRenewal) {
-          this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(RenewalDetails.Service_Account_Id)).subscribe(
-            all_offers => {
-              this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
-              this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
-              console.log('Renewal Offers in my current plan', this.RenewalOffers);
-              this.checkFeaturedUsageLevel(this.RenewalOffers);
-              this.IsOffersReady = true;
+          this.OffersServiceSubscription = this.OfferService.ServiceAccount_RenewalOffers.subscribe(
+            All_Offers => {
+              if (All_Offers != null) {
+                this.FeaturedOffers = All_Offers.filter(item => item.Type === 'Featured_Offers');
+                this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+                if (this.RenewalOffers) {
+                  this.checkFeaturedUsageLevel(this.RenewalOffers);
+                }
+                this.IsOffersReady = true;
+              }
             });
         }
       }
@@ -66,8 +66,6 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
     if (changes['ActiveServiceAccount'] && this.ActiveServiceAccount) {
     }
   }
-
-  ngAfterViewInit() { }
 
   checkFeaturedUsageLevel(RenewalOffer: IOffers) {
     if (RenewalOffer) {
@@ -100,7 +98,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy,
     this.renewalStoreSubscription.unsubscribe();
     if (this.IsUpForRenewal) {
     result(this.OffersServiceSubscription, 'unsubscribe'); }
-  }
+   }
 
   onSelect(event) {
     event.preventDefault();

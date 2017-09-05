@@ -40,8 +40,6 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
     if (changes['ActiveServiceAccount']) {
 
       if (this.ActiveServiceAccount) {
-
-
         this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
           RenewalDetails => {
 
@@ -52,18 +50,16 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
             this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
             this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
             if (this.IsUpForRenewal) {
-              this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccount.Id)).subscribe(
-                all_offers => {
-                  this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
-                  this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+              this.OffersServiceSubscription = this.OfferService.ServiceAccount_RenewalOffers.subscribe(
+                All_Offers => {
+                  if (All_Offers != null) {
+                    this.FeaturedOffers = All_Offers.filter(item => item.Type === 'Featured_Offers');
+                    this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+                  }
                 });
             }
           }
         );
-
-
-
-        // this.IsInRenewalTimeFrame = this.ActiveServiceAccount.IsUpForRenewal;
         let docId = '';
         if (this.ActiveServiceAccount.Current_Offer.IsLegacyOffer) {
           docId = this.ActiveServiceAccount.Current_Offer.Rate_Code;
