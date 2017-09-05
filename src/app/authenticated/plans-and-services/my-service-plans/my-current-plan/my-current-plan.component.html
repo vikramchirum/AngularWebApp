@@ -1,11 +1,10 @@
 
-<div *ngIf="ActiveServiceAccount && RenewalDetails">
+<div *ngIf="ActiveServiceAccount">
   <div *ngIf="!IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !IsRenewalPending; then CurrentPlan"></div>
   <div *ngIf="IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !IsRenewalPending; then RenewalPlan"></div>
   <div *ngIf="IsRenewalPending && !IsUpForRenewal && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then PendingRenewalPlan"></div>
   <div *ngIf="ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !IsRenewalPending; then HoldOverPlan"></div>
 </div>
-
 <ng-template #CurrentPlan>
   <section>
     <div layout-align="center">

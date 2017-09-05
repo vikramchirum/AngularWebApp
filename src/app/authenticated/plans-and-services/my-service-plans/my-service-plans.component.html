@@ -17,25 +17,27 @@
           <p>Your plan is ready to be renewed! Based on your product history, we've found the renewal plan that's best for your home:</p>
           <div class="row">
             <div class="col-md-9 col-md-offset-1">
-              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' [RenewalDetails] = 'RenewalDetails' ></mygexa-my-current-plan>
+              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' ></mygexa-my-current-plan>
             </div>
           </div>
         </ng-template>
+
         <ng-template #ShowCurrentPlan>
           <h1>My Current Plan</h1>
           <p>Account No: {{ ActiveServiceAccount?.Id }}</p>
           <div class="row">
             <div class="col-md-9 col-md-offset-1">
-              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' [RenewalDetails] = 'RenewalDetails' ></mygexa-my-current-plan>
+              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' ></mygexa-my-current-plan>
             </div>
           </div>
         </ng-template>
+
         <ng-template #ShowPendingRenewalPlan>
           <h1>My Current Plan</h1>
           <p>Account No: {{ RenewalAccount?.Existing_Renewal.Service_Account_Id }}</p>
           <div class="row">
             <div class="col-md-9 col-md-offset-1">
-              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' [RenewalDetails] = 'RenewalDetails' ></mygexa-my-current-plan>
+              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' ></mygexa-my-current-plan>
               <h1>Pending...</h1>
             </div>
           </div>
@@ -46,7 +48,6 @@
         <mygexa-renewal-gauge [hidden]="hideGauge"></mygexa-renewal-gauge>
         <mygexa-documents
           [ActiveServiceAccount]='ActiveServiceAccount'
-          [RenewalDetails] = 'RenewalDetails'
         ></mygexa-documents>
       </div>
     </div>

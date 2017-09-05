@@ -25,13 +25,11 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
 
   selectCheckBox = false;
   IsInRenewalTimeFrame: boolean;   IsRenewalPending: boolean;
-  activeServiceAccountDetails: ServiceAccount;
-  serviceAccountSubscription: Subscription;
   enableSelect = false;
   chev_clicked: boolean;
   public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
-  constructor(private serviceAccountService: ServiceAccountService,
+  constructor(
   private renewalStore: RenewalStore,
   private viewContainerRef: ViewContainerRef) {
     this.chev_clicked = false;
@@ -41,32 +39,13 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
     this.planPopModal.showPlanPopModal();
   }
 
-  // ngOnChanges(changes: SimpleChanges) {
-  //   if (changes['Offer'] && this.Offer) {
-  //     this.checkFeaturedUsageLevel(this.Offer);
-  //     this.serviceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
-  //       result => {
-  //         this.ActiveServiceAccountDetails = result;
-  //         this.RenewalServiceSubscription = this.RenewalService.getRenewalDetails(Number(this.ActiveServiceAccountDetails.Id)).subscribe(
-  //           RenewalDetails => { this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-  //             this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal; }
-  //         );
-  //       });
-  //   }
-  // }
-
-  //checkFeaturedUsageLevel( Offer: IOffers ) {
   ngOnInit() {
-
     this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
       RenewalDetails => {
-
         if (RenewalDetails == null) {
           return;
         }
-
         this.IsInRenewalTimeFrame = RenewalDetails.Is_Account_Eligible_Renewal;
-
       });
 
     if (this.Offer.Plan.Product.Featured_Usage_Level != null) {
@@ -90,12 +69,6 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
         }
       }
     }
-
-    this.serviceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
-      result => {
-        this.activeServiceAccountDetails = result;
-
-      });
   }
 
   onSelect(event) {
@@ -111,7 +84,6 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
     this.enableSelect = false;
   }
   ngOnDestroy() {
-    this.serviceAccountSubscription.unsubscribe();
     this.renewalStoreSubscription.unsubscribe();
   }
   ChevClicked() {

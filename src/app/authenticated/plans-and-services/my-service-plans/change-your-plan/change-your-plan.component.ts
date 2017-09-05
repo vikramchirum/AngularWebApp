@@ -24,11 +24,11 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   OffersServiceSubscription: Subscription;
 
   public IsUpForRenewal: boolean = null;
-
+  public IsRenewalPending: boolean = null;
   public AllOffers: AllOffersClass[];
   public All_Offers: AllOffersClass[];
   public FeaturedOffers: AllOffersClass[];
-  public BestRenewalOffer: IOffers[];
+  public BestRenewalOffer: IOffers;
   public UpgradeOffers: IOffers[];
 
   public AllOfferss: IOffers[];
@@ -51,7 +51,8 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
         }
 
         this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-        if (this.IsUpForRenewal === true) {
+        this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
+        if (this.IsUpForRenewal && !this.IsRenewalPending && !this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate) {
           this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccountDetails.Id)).subscribe(
             All_Offers => {
               console.log('All offers', All_Offers);
@@ -59,11 +60,14 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
               return All_Offers;
             }
           );
-        } else if (this.IsUpForRenewal === false || this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate) {
-          this.OffersServiceSubscription = this.OfferService.getUpgradeOffers(Number(this.ActiveServiceAccountDetails.Id), Number(this.ActiveServiceAccountDetails.Current_Offer.Term), Number(this.ActiveServiceAccountDetails.TDU_DUNS_Number))
+        } else if (!this.IsUpForRenewal || this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate || this.IsRenewalPending) {
+          this.OffersServiceSubscription = this.OfferService.getUpgradeOffers(Number(this.ActiveServiceAccountDetails.Id),
+            Number(this.ActiveServiceAccountDetails.Current_Offer.Term),
+            Number(this.ActiveServiceAccountDetails.TDU_DUNS_Number))
             .subscribe(
               Upgrade_Offers => {
                 this.UpgradeOffers = Upgrade_Offers;
+                this.upgradeOffersArraylength = Upgrade_Offers.length;
                 console.log('All upgrade offers', this.UpgradeOffers);
                 return this.UpgradeOffers;
               }
@@ -82,7 +86,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   extractOffers(All_Offers: AllOffersClass[]) {
     this.FeaturedOffers = All_Offers.filter(item => item.Type === 'Featured_Offers');
     console.log('All_Featured_Offers', this.FeaturedOffers);
-    this.BestRenewalOffer = this.FeaturedOffers[0].Offers;
+    this.BestRenewalOffer = this.FeaturedOffers[0].Offers[0];
     console.log('Best_Featured_Offer', this.BestRenewalOffer);
 
     this.AllOffers = All_Offers.filter(item => item.Type === 'All_Offers');
