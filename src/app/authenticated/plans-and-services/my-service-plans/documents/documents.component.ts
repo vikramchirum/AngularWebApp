@@ -33,27 +33,36 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
-      RenewalDetails => {
-        if (RenewalDetails == null) {
-          return;
-        }
-        this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-        this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
-        if (this.IsUpForRenewal) {
-          this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccount.Id)).subscribe(
-            all_offers => {
-              this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
-              this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
-            });
-        }
-      }
-    );
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['ActiveServiceAccount']) {
+
       if (this.ActiveServiceAccount) {
+
+
+        this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
+          RenewalDetails => {
+
+            if (RenewalDetails == null) {
+              return;
+            }
+
+            this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+            this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
+            if (this.IsUpForRenewal) {
+              this.OffersServiceSubscription = this.OfferService.getRenewalOffers(Number(this.ActiveServiceAccount.Id)).subscribe(
+                all_offers => {
+                  this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
+                  this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+                });
+            }
+          }
+        );
+
+
+
         // this.IsInRenewalTimeFrame = this.ActiveServiceAccount.IsUpForRenewal;
         let docId = '';
         if (this.ActiveServiceAccount.Current_Offer.IsLegacyOffer) {
@@ -61,6 +70,7 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
         } else {
           docId = this.ActiveServiceAccount.Current_Offer.Client_Key;
         }
+
         this.eflLink = this.documentsService.getEFLLink(docId);
         this.tosLink = this.documentsService.getTOSLink(this.ActiveServiceAccount.Current_Offer.IsFixed);
         this.yraacLink = this.documentsService.getYRAACLink();
