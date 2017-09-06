@@ -1,4 +1,7 @@
-import {Component, OnInit, ViewChild, OnDestroy, Input, ViewContainerRef} from '@angular/core';
+import {
+  Component, OnInit, ViewChild, OnDestroy, SimpleChanges, OnChanges, Input, ViewContainerRef,
+  AfterViewInit
+} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 
 import {IOffers} from '../../../../../core/models/offers/offers.model';
@@ -21,14 +24,12 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
 
   selectCheckBox = false;
-  IsInRenewalTimeFrame: boolean;
-  activeServiceAccountDetails: ServiceAccount;
-  serviceAccountSubscription: Subscription;
+  IsInRenewalTimeFrame: boolean;   IsRenewalPending: boolean;
   enableSelect = false;
   chev_clicked: boolean;
   public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
-  constructor(private serviceAccountService: ServiceAccountService,
+  constructor(
   private renewalStore: RenewalStore,
   private viewContainerRef: ViewContainerRef) {
     this.chev_clicked = false;
@@ -39,16 +40,12 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
       RenewalDetails => {
-
         if (RenewalDetails == null) {
           return;
         }
-
         this.IsInRenewalTimeFrame = RenewalDetails.Is_Account_Eligible_Renewal;
-
       });
 
     if (this.Offer.Plan.Product.Featured_Usage_Level != null) {
@@ -72,12 +69,6 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
         }
       }
     }
-
-    this.serviceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
-      result => {
-        this.activeServiceAccountDetails = result;
-
-      });
   }
 
   onSelect(event) {
@@ -93,7 +84,6 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
     this.enableSelect = false;
   }
   ngOnDestroy() {
-    this.serviceAccountSubscription.unsubscribe();
     this.renewalStoreSubscription.unsubscribe();
   }
   ChevClicked() {

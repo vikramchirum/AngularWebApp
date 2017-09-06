@@ -1,47 +1,55 @@
 <div class="container-fluid plans-profile">
   <br/>
-  <mygexa-service-account-selector [setActiveServiceAccount]="true"></mygexa-service-account-selector>
-
-  <ng-container *ngIf="plansServices$ | async; else loading; let plansServicesResult;">
-
+  <mygexa-service-account-selector
+    [setActiveServiceAccount]="true"
+  ></mygexa-service-account-selector>
+  <section [hidden]="!ActiveServiceAccount">
     <div class="row">
-
       <div class="col-md-8">
-
-        <ng-template *ngIf="plansServicesResult[1].Is_Account_Eligible_Renewal && !plansServicesResult[0].Current_Offer.IsHoldOverRate; then ShowRenewal else ShowCurrentPlan"></ng-template>
+        <ng-template *ngIf="IsUpForRenewal && !IsRenewalPending && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then ShowRenewal"></ng-template>
+        <ng-template *ngIf="ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !IsRenewalPending; then ShowCurrentPlan"></ng-template>
+        <ng-template *ngIf="!IsUpForRenewal && IsRenewalPending && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then ShowPendingRenewalPlan"></ng-template>
+        <ng-template *ngIf="!IsUpForRenewal && !IsRenewalPending && !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate; then ShowCurrentPlan"></ng-template>
 
         <ng-template #ShowRenewal>
           <h1>Renew your plan</h1>
-          <p>Account No: {{ plansServicesResult[0].Id }}</p>
+          <p>Account No: {{ ActiveServiceAccount?.Id }}</p>
           <p>Your plan is ready to be renewed! Based on your product history, we've found the renewal plan that's best for your home:</p>
+          <div class="row">
+            <div class="col-md-9 col-md-offset-1">
+              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' ></mygexa-my-current-plan>
+            </div>
+          </div>
         </ng-template>
 
         <ng-template #ShowCurrentPlan>
           <h1>My Current Plan</h1>
-          <p>Account No: {{ plansServicesResult[0].Id }}</p>
+          <p>Account No: {{ ActiveServiceAccount?.Id }}</p>
+          <div class="row">
+            <div class="col-md-9 col-md-offset-1">
+              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' ></mygexa-my-current-plan>
+            </div>
+          </div>
         </ng-template>
 
-        <div class="row">
-          <div class="col-md-9 col-md-offset-1">
-            <mygexa-my-current-plan [ActiveServiceAccount]="plansServicesResult[0]"></mygexa-my-current-plan>
+        <ng-template #ShowPendingRenewalPlan>
+          <h1>My Current Plan</h1>
+          <p>Account No: {{ RenewalAccount?.Existing_Renewal.Service_Account_Id }}</p>
+          <div class="row">
+            <div class="col-md-9 col-md-offset-1">
+              <mygexa-my-current-plan [ActiveServiceAccount]='ActiveServiceAccount' ></mygexa-my-current-plan>
+              <h1>Pending...</h1>
+            </div>
           </div>
-        </div>
-      </div>
+        </ng-template>
 
+      </div>
       <div class="col-xs-8 col-xs-push-2 col-md-4">
-        <mygexa-renewal-gauge [hidden]="hideGauge(plansServicesResult[0])"></mygexa-renewal-gauge>
-        <mygexa-documents [ActiveServiceAccount]="plansServicesResult[0]"></mygexa-documents>
-
-        {{ LoadGauge(plansServicesResult[0], plansServicesResult[1]) }}
-
+        <mygexa-renewal-gauge [hidden]="hideGauge"></mygexa-renewal-gauge>
+        <mygexa-documents
+          [ActiveServiceAccount]='ActiveServiceAccount'
+        ></mygexa-documents>
       </div>
-
     </div>
-
-  </ng-container>
-
-  <div class="row">
-  <ng-template #loading><h4 class="text-muted"><i class="fa fa-spin fa-circle-o-notch"></i> Loading your account...</h4></ng-template>
-  </div>
-
+  </section>
 </div>

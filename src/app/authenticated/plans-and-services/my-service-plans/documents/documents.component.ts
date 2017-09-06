@@ -1,13 +1,11 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { get, result } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
-
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { IOffers } from '../../../../core/models/offers/offers.model';
 import { AllOffersClass } from '../../../../core/models/offers/alloffers.model';
 import { OfferService } from '../../../../core/offer.service';
 import { DocumentsService } from '../../../../core/documents.service';
-import { ServiceAccountService } from '../../../../core/serviceaccount.service';
 import { RenewalStore } from '../../../../core/store/RenewalStore';
 
 @Component({
@@ -16,25 +14,21 @@ import { RenewalStore } from '../../../../core/store/RenewalStore';
   styleUrls: ['./documents.component.scss']
 })
 export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
-
-  renewalStoreSubscription: Subscription;
-
   @Input() ActiveServiceAccount: ServiceAccount = null;
-  activeserviceAccountOffersSubscription: Subscription;
-
+  renewalStoreSubscription: Subscription;
+  OffersServiceSubscription: Subscription;
   public eflLink;
   public tosLink;
   public yraacLink;
-
-  OffersServiceSubscription: Subscription;
   public AllOffers: AllOffersClass[];
   public FeaturedOffers: AllOffersClass[];
   public RenewalOffers: IOffers;
   IsOffersReady: boolean = null;
-  public IsInRenewalTimeFrame: boolean = null;
+  public IsUpForRenewal: boolean = null;
+  public IsRenewalPending: boolean = null;
 
-  constructor(private serviceAccount_service: ServiceAccountService, private renewalStore: RenewalStore, private OfferService: OfferService, private documentsService: DocumentsService) {
-    this.IsInRenewalTimeFrame = null;
+  constructor(private renewalStore: RenewalStore, private OfferService: OfferService, private documentsService: DocumentsService) {
+    this.IsUpForRenewal = this.IsRenewalPending = null;
     this.RenewalOffers = null;
   }
 
@@ -46,8 +40,6 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
     if (changes['ActiveServiceAccount']) {
 
       if (this.ActiveServiceAccount) {
-
-
         this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
           RenewalDetails => {
 
@@ -55,20 +47,19 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
               return;
             }
 
-            this.IsInRenewalTimeFrame = RenewalDetails.Is_Account_Eligible_Renewal;
-            if (this.IsInRenewalTimeFrame) {
-              this.OffersServiceSubscription = this.OfferService.getRenewalOffers(this.ActiveServiceAccount.Id).subscribe(
-                all_offers => {
-                  this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
-                  this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+            this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
+            this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
+            if (this.IsUpForRenewal) {
+              this.OffersServiceSubscription = this.OfferService.ServiceAccount_RenewalOffers.subscribe(
+                All_Offers => {
+                  if (All_Offers != null) {
+                    this.FeaturedOffers = All_Offers.filter(item => item.Type === 'Featured_Offers');
+                    this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+                  }
                 });
             }
           }
         );
-
-
-
-        // this.IsInRenewalTimeFrame = this.ActiveServiceAccount.IsUpForRenewal;
         let docId = '';
         if (this.ActiveServiceAccount.Current_Offer.IsLegacyOffer) {
           docId = this.ActiveServiceAccount.Current_Offer.Rate_Code;
@@ -85,7 +76,7 @@ export class DocumentsComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy() {
     this.renewalStoreSubscription.unsubscribe();
-    if (this.IsInRenewalTimeFrame) {
+    if (this.IsUpForRenewal) {
       result(this.OffersServiceSubscription, 'unsubscribe');
     }
   }
