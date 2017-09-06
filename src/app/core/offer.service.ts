@@ -30,7 +30,7 @@ export class OfferService {
       .catch(error => this.http.handleHttpError(error));
   }
 
-  getRenewalOffers(ActiveServiceAccountId: Number): Observable<AllOffersClass[]> {
+  getRenewalOffers(ActiveServiceAccountId: string): Observable<AllOffersClass[]> {
     return this.http.get(`/service_accounts/${ActiveServiceAccountId}/offers`)
       .map(data => data.json())
       .map(data => { map(data, OffersData => new AllOffersClass(OffersData));
@@ -39,7 +39,7 @@ export class OfferService {
       .catch(error => this.http.handleHttpError(error));
   }
 
-  getUpgradeOffers(ActiveServiceAccountId: Number, ActiveServiceAccount_CuurentOffer_Term: Number, ActiveServiceAccount_TDU_DUNS_Number: Number): Observable<IOffers[]> {
+  getUpgradeOffers(ActiveServiceAccountId: string, ActiveServiceAccount_CuurentOffer_Term: Number, ActiveServiceAccount_TDU_DUNS_Number: string): Observable<IOffers[]> {
     return this.http.get(`/v2/Offers?option.approved=true&option.startDate=${new Date}&option.plan.term_Greater_Than=
     ${ActiveServiceAccount_CuurentOffer_Term}&option.plan.tDU.duns_Number=${ActiveServiceAccount_TDU_DUNS_Number}`)
       .map(data => { data.json(); return data.json(); })
@@ -57,7 +57,7 @@ export class OfferService {
 
   // Caching upgrade offers.
 
-  UpgradeOffersData(ActiveServiceAccountId: Number, Term: Number, TDU_DUNS_Number: Number) {
+  UpgradeOffersData(ActiveServiceAccountId: string, Term: Number, TDU_DUNS_Number: string) {
       this.getUpgradeOffers(ActiveServiceAccountId, Term, TDU_DUNS_Number).subscribe(
         UpgradeOffers => this.LatestUpgradeOffersData.next(UpgradeOffers));
   }
@@ -68,7 +68,7 @@ export class OfferService {
 
   // Caching renewal offers.
 
-  RenewalOffersData(ActiveServiceAccountId: Number) {
+  RenewalOffersData(ActiveServiceAccountId: string) {
     this.getRenewalOffers(ActiveServiceAccountId).subscribe(
       RenewalOffers => {
         this.LatestRenewalOffersData.next(RenewalOffers);
