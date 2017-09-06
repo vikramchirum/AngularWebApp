@@ -22,10 +22,10 @@ export class RenewalStore {
   }
 
   get RenewalDetails() {
-    return this._renewalDetails.asObservable();
+    return this._renewalDetails.asObservable().filter(renewalDetails => renewalDetails != null);
   }
 
-  LoadRenewalDetails(serviceAccountId: number) {
+  LoadRenewalDetails(serviceAccountId: string) {
     this.renewalService.getRenewalDetails(serviceAccountId)
       .subscribe(
         RenewalDetails => {
