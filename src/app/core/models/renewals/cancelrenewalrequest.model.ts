@@ -3,6 +3,6 @@
  */
 
 export interface ICancelRenewalRequest {
-  Service_Account_Id: number;
+  Service_Account_Id: string;
   User_Name: string;
 }
