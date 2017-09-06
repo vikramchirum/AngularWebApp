@@ -15,8 +15,7 @@ import {ReplaySubject} from 'rxjs/ReplaySubject';
 @Injectable()
 export class OfferService {
 
-  private LatestUpgradeOffersData: BehaviorSubject<IOffers[]> = new BehaviorSubject(null);
-  private LatestRenewalOffersData: BehaviorSubject<AllOffersClass[]> = new BehaviorSubject(null);
+
 
   constructor(private http: HttpClient, private serviceAccountService: ServiceAccountService) {
   }
@@ -55,28 +54,6 @@ export class OfferService {
       .catch(error => this.http.handleHttpError(error));
   }
 
-  // Caching upgrade offers.
 
-  UpgradeOffersData(ActiveServiceAccountId: string, Term: Number, TDU_DUNS_Number: string) {
-      this.getUpgradeOffers(ActiveServiceAccountId, Term, TDU_DUNS_Number).subscribe(
-        UpgradeOffers => this.LatestUpgradeOffersData.next(UpgradeOffers));
-  }
-
-  get ServiceAccount_UpgradeOffers() {
-    return this.LatestUpgradeOffersData.asObservable();
-  }
-
-  // Caching renewal offers.
-
-  RenewalOffersData(ActiveServiceAccountId: string) {
-    this.getRenewalOffers(ActiveServiceAccountId).subscribe(
-      RenewalOffers => {
-        this.LatestRenewalOffersData.next(RenewalOffers);
-      });
-  }
-
-  get ServiceAccount_RenewalOffers() {
-    return this.LatestRenewalOffersData.asObservable();
-  }
 
 }

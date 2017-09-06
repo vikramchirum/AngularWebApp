@@ -24,7 +24,6 @@
           <p class="bg-default">TERM: {{ActiveServiceAccount.Current_Offer.Term}} Months</p>
           <p>START: {{ActiveServiceAccount.Contract_Start_Date | date: 'MM/dd/yyyy'}}</p>
           <p  class="bg-default">END: {{ActiveServiceAccount.Calculated_Contract_End_Date | date:'MM/dd/yyyy'}}</p>
-          <!--<p  class="bg-default">END: {{ActiveServiceAccount.Contract_End_Date ? (ActiveServiceAccount.Contract_End_Date | date:'MM/dd/yyyy') : (this.getEndDate(ActiveServiceAccount.Contract_Start_Date, ActiveServiceAccount.Current_Offer.Term) | date: 'MM/dd/yyyy')}}</p>-->
         </md-card-content>
       </md-card>
     </div>
@@ -159,7 +158,6 @@
           </div>
         </md-card-title>
         <md-card-content>
-          <!--<h2>{{ActiveServiceAccount.Current_Offer.RateAt1000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small></h2>-->
           <p class="bg-default">TERM: Month to month</p>
           <p>START: {{ActiveServiceAccount.Current_Offer.Start_Date | date: 'MM/dd/yyyy'}}</p>
         </md-card-content>

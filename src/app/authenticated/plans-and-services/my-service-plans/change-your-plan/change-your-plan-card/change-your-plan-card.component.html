@@ -1,217 +1,155 @@
-<section *ngIf="Offer">
-  <div class="plan-card-container">
-    <div class="card-content">
-      <div class="card-title">
-        <div class="row">
-          <div class="col-xs-11"><h4>{{Offer.Plan.Name }}</h4></div><div class="col-xs-1 no-padding"> <i class="fa fa-info-circle" aria-hidden="true" (click)="pop.show()"></i></div>
-        </div>
-        <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
-          <ng-template #options>
-            <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
-            <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-            <mygexa-offer-details-popover [OfferDetails] = Offer ></mygexa-offer-details-popover>
-          </ng-template>
-        </div>
-        <h2>{{Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
-      </div>
-      <p>at {{Offer?.Plan?.Product?.Featured_Usage_Level}}</p>
-      <p>TERM:{{Offer.Plan.Term}} months</p>
-      <p>{{Offer.Promotion?.Name}}</p>
-    </div>
-    <div *ngIf="selectCheckBox" class="agreement-section">
-      <div class="checkbox">
-        <label>
-        <input type="checkbox" value="" (click) = "toggleButton()">
-        <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-        <p class="text-left">By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
-      </label>
-      </div>
-      <div class="row">
-        <div style="text-align:center">
-          <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)="showConfirmationPop()" >Submit</button>
-          <button class="btn btn-link" (click)="closeCheckBox()" aria-hidden="true">Cancel</button>
-        </div>
-      </div>
-    </div>
-    <br/>
-    <div *ngIf="!selectCheckBox">
-      <div class="row">
-        <div style="text-align:center">
-          <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>
-            Select <i class="fa fa-chevron-right fa-wh" style="color: white" aria-hidden="true"></i></button>
-        </div>
-      </div>
-    </div>
-    <div class="row card-included" >
-      <div class="col-md-12">
-        <h4 class="text-center form-control ">What's included <i class="fa fa-chevron-down" (click)="ChevClicked()" [ngClass]="chev_clicked ?  'fa-chevron-down':  'fa-chevron-up'"></i><br>
-          <div class="card-included pull-left" *ngIf="chev_clicked">
-            <div *ngIf="Offer?.Plan?.Product?.Product_Features != null ; then features else noFeatures"></div>
-            <ng-template #features>
-              <div *ngFor="let feature of Offer?.Plan?.Product?.Product_Features">
-                <div class="row">
-                  <div class="col-sm-2">
-                    <i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>
-                  </div>
-                  <div class="col-sm-10">
-                    {{feature}}
-                  </div>
-                </div>
-                <br>
-              </div>
-            </ng-template>
-            <ng-template #noFeatures>
-            </ng-template>
+
+<ng-template *ngIf="!IsInRenewalTimeFrame; then UpgradeOfferCard"></ng-template>
+<ng-template *ngIf="IsInRenewalTimeFrame; then RenewalOfferCard"></ng-template>
+<ng-template #UpgradeOfferCard>
+  <section *ngIf="UpgradeOffers">
+    <div *ngFor="let Offer of UpgradeOffers">
+      <div class="plan-card-container">
+        <div class="card-content">
+          <div class="card-title">
+            <div class="row">
+              <div class="col-xs-11"><h4>{{Offer.Plan.Name }}</h4></div><div class="col-xs-1 no-padding"> <i class="fa fa-info-circle" aria-hidden="true" (click)="pop.show()"></i></div>
+            </div>
+            <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
+              <ng-template #options>
+                <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
+                  <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <mygexa-offer-details-popover [OfferDetails] = Offer ></mygexa-offer-details-popover>
+              </ng-template>
+            </div>
+            <h2>{{Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
           </div>
-        </h4>
+          <p>at {{Offer?.Plan?.Product?.Featured_Usage_Level}}</p>
+          <p>TERM:{{Offer.Plan.Term}} months</p>
+          <p>{{Offer.Promotion?.Name}}</p>
+        </div>
+        <div *ngIf="selectCheckBox" class="agreement-section">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value="" (click) = "toggleButton()">
+              <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+              <p class="text-left">By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
+            </label>
+          </div>
+          <div class="row">
+            <div style="text-align:center">
+              <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)="showConfirmationPop()" >Submit</button>
+              <button class="btn btn-link" (click)="closeCheckBox()" aria-hidden="true">Cancel</button>
+            </div>
+          </div>
+        </div>
+        <br/>
+        <div *ngIf="!selectCheckBox">
+          <div class="row">
+            <div style="text-align:center">
+              <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>
+                Select <i class="fa fa-chevron-right fa-wh" style="color: white" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="row card-included" >
+          <div class="col-md-12">
+            <h4 class="text-center form-control ">What's included <i class="fa fa-chevron-down" (click)="ChevClicked()" [ngClass]="chev_clicked ?  'fa-chevron-down':  'fa-chevron-up'"></i><br>
+              <div class="card-included pull-left" *ngIf="chev_clicked">
+                <div *ngIf="Offer?.Plan?.Product?.Product_Features != null ; then features else noFeatures"></div>
+                <ng-template #features>
+                  <div *ngFor="let feature of Offer?.Plan?.Product?.Product_Features">
+                    <div class="row">
+                      <div class="col-sm-2">
+                        <i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>
+                      </div>
+                      <div class="col-sm-10">
+                        {{feature}}
+                      </div>
+                    </div>
+                    <br>
+                  </div>
+                </ng-template>
+                <ng-template #noFeatures>
+                </ng-template>
+              </div>
+            </h4>
+          </div>
+        </div>
       </div>
+      <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame"></mygexa-plan-confirmation-popover>
     </div>
-  </div>
-  <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame"></mygexa-plan-confirmation-popover>
-</section>
+  </section>
+</ng-template>
 
-<!--<section id=renewPlan *ngIf="IsInRenewalTimeFrame && !activeServiceAccountDetails.Current_Offer.IsHoldOverRate && Offer">-->
-  <!--<div class="plan-card-container">-->
-    <!--<div class="card-content">-->
-      <!--<div class="card-title">-->
-        <!--<h4>{{Offer.Plan.Name }} <i class="fa fa-info-circle" aria-hidden="true" (click)="pop.show()"></i></h4>-->
-        <!--<div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">-->
-          <!--<ng-template #options>-->
-            <!--<button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">-->
-            <!--<span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>-->
-            <!--<mygexa-offer-details-popover [OfferDetails] = Offer></mygexa-offer-details-popover>-->
-          <!--</ng-template>-->
-        <!--</div>-->
-        <!--<h2>{{Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>-->
-      <!--</div>-->
-      <!--<p>at {{Offer?.Plan?.Product?.Featured_Usage_Level}}</p>-->
-      <!--<p>TERM:{{Offer.Plan.Term}} months</p>-->
-      <!--<p>{{Offer.Promotion?.Name}}</p>-->
-    <!--</div>-->
-    <!--<div *ngIf="selectCheckBox" class="agreement-section">-->
-      <!--<div class="checkbox">-->
-        <!--<label>-->
-          <!--<input type="checkbox" value="" (click) = "toggleButton()">-->
-          <!--<span class="cr"><i class="cr-icon fa fa-check"></i></span>-->
-          <!--<p class="text-left">By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>-->
-        <!--</label>-->
-      <!--</div>-->
-      <!--<div class="row">-->
-        <!--<div style="text-align:center">-->
-          <!--<button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)="showConfirmationPop()">Submit</button>-->
-          <!--<button class="btn btn-link btn-sm" (click)="closeCheckBox()" aria-hidden="true">Cancel</button>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<br/>-->
-    <!--<div *ngIf="!selectCheckBox">-->
-      <!--<div class="row">-->
-        <!--<div style="text-align:center">-->
-          <!--<button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>-->
-            <!--Select <i class="fa fa-chevron-right fa-wh" style="color: white" aria-hidden="true"></i></button>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<div class="row card-included" >-->
-      <!--<div class="col-md-12">-->
-        <!--<h4 class="text-center form-control ">What's included <i class="fa fa-chevron-down" (click)="ChevClicked()" [ngClass]="chev_clicked ?  'fa-chevron-down':  'fa-chevron-up'"></i><br>-->
-          <!--<div class="card-included pull-left" *ngIf="chev_clicked">-->
-            <!--<div *ngIf="Offer?.Plan?.Product?.Product_Features != null ; then features else noFeatures"></div>-->
-            <!--<ng-template #features>-->
-              <!--<div *ngFor="let feature of Offer?.Plan?.Product?.Product_Features">-->
-                <!--<div class="row">-->
-                  <!--<div class="col-sm-2">-->
-                    <!--<i class="fa fa-exclamation-triangle fa-fw fa-in-circle"></i>-->
-                  <!--</div>-->
-                  <!--<div class="col-sm-10">-->
-                    <!--No features available for this plan yet!-->
-                  <!--</div>-->
-                <!--</div>-->
-                <!--<br>-->
-            <!--</ng-template>-->
-          <!--</div>-->
-        <!--</h4>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
-  <!--<mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsUpForRenewal"></mygexa-plan-confirmation-popover>-->
-<!--</section>-->
 
-<!--<section id=HoldOverPlan *ngIf="activeServiceAccountDetails.Current_Offer.IsHoldOverRate && Offer">-->
-  <!--<div class="plan-card-container">-->
-    <!--<div class="card-content">-->
-      <!--<div class="card-title">-->
-        <!--<h4>{{Offer.Plan.Name }} <i class="fa fa-info-circle" aria-hidden="true" (click)="pop.show()"></i></h4>-->
-        <!--<div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">-->
-          <!--<ng-template #options>-->
-            <!--<button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">-->
-              <!--<span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>-->
-            <!--<mygexa-offer-details-popover [OfferDetails] = Offer></mygexa-offer-details-popover>-->
-          <!--</ng-template>-->
-        <!--</div>-->
-        <!--<h2>{{Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>-->
-      <!--</div>-->
-      <!--<p>at {{Offer?.Plan?.Product?.Featured_Usage_Level}}</p>-->
-      <!--<p>TERM:{{Offer.Plan.Term}} months</p>-->
-      <!--<p>{{Offer.Promotion?.Name}}</p>-->
-    <!--</div>-->
-    <!--<div *ngIf="selectCheckBox" class="agreement-section">-->
-      <!--<div class="checkbox">-->
-        <!--<label>-->
-          <!--<input type="checkbox" value="" (click) = "toggleButton()">-->
-          <!--<span class="cr"><i class="cr-icon fa fa-check"></i></span>-->
-          <!--<p class="text-left">By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>-->
-        <!--</label>-->
-      <!--</div>-->
-      <!--<div class="row">-->
-        <!--<div style="text-align:center">-->
-          <!--<button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)="showConfirmationPop()">Submit</button>-->
-          <!--<button class="btn btn-link btn-sm" (click)="closeCheckBox()" aria-hidden="true">Cancel</button>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<br/>-->
-    <!--<div *ngIf="!selectCheckBox">-->
-      <!--<div class="row">-->
-        <!--<div style="text-align:center">-->
-          <!--<button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>-->
-            <!--Select <i class="fa fa-chevron-right fa-wh" style="color: white" aria-hidden="true"></i></button>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<div class="row card-included" >-->
-      <!--<div class="col-md-12">-->
-        <!--<h4 class="text-center form-control ">What's included <i class="fa fa-chevron-down" (click)="ChevClicked()" [ngClass]="chev_clicked ?  'fa-chevron-down':  'fa-chevron-up'"></i><br>-->
-          <!--<div class="card-included pull-left" *ngIf="chev_clicked">-->
-            <!--<div *ngIf="Offer?.Plan?.Product?.Product_Features != null ; then features else noFeatures"></div>-->
-            <!--<ng-template #features>-->
-              <!--<div *ngFor="let feature of Offer?.Plan?.Product?.Product_Features">-->
-                <!--<div class="row">-->
-                  <!--<div class="col-sm-2">-->
-                    <!--<i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>-->
-                  <!--</div>-->
-                  <!--<div class="col-sm-10">-->
-                    <!--{{feature}}-->
-                  <!--</div>-->
-                <!--</div>-->
-                <!--<br>-->
-              <!--</div>-->
-            <!--</ng-template>-->
-            <!--<ng-template #noFeatures>-->
-              <!--&lt;!&ndash;<div class="row">&ndash;&gt;-->
-              <!--&lt;!&ndash;<div class="col-sm-2">&ndash;&gt;-->
-              <!--&lt;!&ndash;<i class="fa fa-exclamation-triangle fa-fw fa-in-circle"></i>&ndash;&gt;-->
-              <!--&lt;!&ndash;</div>&ndash;&gt;-->
-              <!--&lt;!&ndash;<div class="col-sm-10">&ndash;&gt;-->
-              <!--&lt;!&ndash;No features available for this plan yet!!&ndash;&gt;-->
-              <!--&lt;!&ndash;</div>&ndash;&gt;-->
-              <!--&lt;!&ndash;</div>&ndash;&gt;-->
-            <!--</ng-template>-->
-
-          <!--</div>-->
-        <!--</h4>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
-  <!--<mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame"></mygexa-plan-confirmation-popover>-->
-<!--</section>-->
+<ng-template #RenewalOfferCard>
+  <section>
+    <div *ngFor="let Offer of AllOfferss">
+      <div class="plan-card-container">
+        <div class="card-content">
+          <div class="card-title">
+            <div class="row">
+              <div class="col-xs-11"><h4>{{Offer.Plan.Name }}</h4></div><div class="col-xs-1 no-padding"> <i class="fa fa-info-circle" aria-hidden="true" (click)="pop.show()"></i></div>
+            </div>
+            <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
+              <ng-template #options>
+                <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
+                  <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+                <mygexa-offer-details-popover [OfferDetails] = Offer ></mygexa-offer-details-popover>
+              </ng-template>
+            </div>
+            <h2>{{Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
+          </div>
+          <p>at {{Offer?.Plan?.Product?.Featured_Usage_Level}}</p>
+          <p>TERM:{{Offer.Plan.Term}} months</p>
+          <p>{{Offer.Promotion?.Name}}</p>
+        </div>
+        <div *ngIf="selectCheckBox" class="agreement-section">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value="" (click) = "toggleButton()">
+              <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+              <p class="text-left">By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
+            </label>
+          </div>
+          <div class="row">
+            <div style="text-align:center">
+              <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)="showConfirmationPop()" >Submit</button>
+              <button class="btn btn-link" (click)="closeCheckBox()" aria-hidden="true">Cancel</button>
+            </div>
+          </div>
+        </div>
+        <br/>
+        <div *ngIf="!selectCheckBox">
+          <div class="row">
+            <div style="text-align:center">
+              <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>
+                Select <i class="fa fa-chevron-right fa-wh" style="color: white" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="row card-included" >
+          <div class="col-md-12">
+            <h4 class="text-center form-control ">What's included <i class="fa fa-chevron-down" (click)="ChevClicked()" [ngClass]="chev_clicked ?  'fa-chevron-down':  'fa-chevron-up'"></i><br>
+              <div class="card-included pull-left" *ngIf="chev_clicked">
+                <div *ngIf="Offer?.Plan?.Product?.Product_Features != null ; then features else noFeatures"></div>
+                <ng-template #features>
+                  <div *ngFor="let feature of Offer?.Plan?.Product?.Product_Features">
+                    <div class="row">
+                      <div class="col-sm-2">
+                        <i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>
+                      </div>
+                      <div class="col-sm-10">
+                        {{feature}}
+                      </div>
+                    </div>
+                    <br>
+                  </div>
+                </ng-template>
+                <ng-template #noFeatures>
+                </ng-template>
+              </div>
+            </h4>
+          </div>
+        </div>
+      </div>
+      <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame"></mygexa-plan-confirmation-popover>
+    </div>
+  </section>
+</ng-template>

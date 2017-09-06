@@ -1,34 +1,32 @@
 import {
-  AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild,
-  ViewContainerRef
+  Component, OnDestroy, OnInit, SimpleChanges, ViewChild
 } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 import { get, result, includes } from 'lodash';
-
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
-import { OfferService } from 'app/core/offer.service';
 import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { PlanConfirmationPopoverComponent} from '../plan-confirmation-popover/plan-confirmation-popover.component';
 import { RenewalStore } from '../../../../core/store/RenewalStore';
+import {OffersStore} from '../../../../core/store/OffersStore';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'mygexa-my-current-plan',
   templateUrl: './my-current-plan.component.html',
   styleUrls: ['./my-current-plan.component.scss']
 })
-export class MyCurrentPlanComponent implements OnInit, OnDestroy, OnChanges {
+export class MyCurrentPlanComponent implements OnInit, OnDestroy {
 
-  @Input() ActiveServiceAccount: ServiceAccount;
+  ActiveServiceAccount: ServiceAccount;
   @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
-  renewalStoreSubscription: Subscription;
+  plansServicesSubscription: Subscription;
   OffersServiceSubscription: Subscription;
   IsOffersReady: boolean = null;
   public IsUpForRenewal: boolean;
   public IsRenewalPending: boolean;
-  public All_Offers: AllOffersClass[];
   public FeaturedOffers: AllOffersClass[];
   public RenewalOffers: IOffers = null;
   public Featured_Usage_Level: string = null;
@@ -36,17 +34,20 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy, OnChanges {
   selectCheckBox  = false;
   enableSelect = false;
 
-  constructor(private Serviceaccount: ServiceAccountService, private OfferService: OfferService, private renewalStore: RenewalStore) {
+  constructor(private serviceAccountService: ServiceAccountService, private OfferStore: OffersStore, private renewalStore: RenewalStore) {
     this.IsOffersReady = false;
   }
 
   ngOnInit() {
-    this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(RenewalDetails => {
-      if (RenewalDetails != null) {
-        this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-        this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
+    const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
+    const renewalDetails$ = this.renewalStore.RenewalDetails;
+    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1].Service_Account_Id).subscribe(result => {
+      this.ActiveServiceAccount = result[0];
+      if ( result[1] != null) {
+        this.IsUpForRenewal = result[1].Is_Account_Eligible_Renewal;
+        this.IsRenewalPending = result[1].Is_Pending_Renewal;
         if (this.IsUpForRenewal) {
-          this.OffersServiceSubscription = this.OfferService.ServiceAccount_RenewalOffers.subscribe(
+          this.OffersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
             All_Offers => {
               if (All_Offers != null) {
                 this.FeaturedOffers = All_Offers.filter(item => item.Type === 'Featured_Offers');
@@ -61,12 +62,6 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy, OnChanges {
       }
     });
   }
-
-  ngOnChanges(changes:  SimpleChanges) {
-    if (changes['ActiveServiceAccount'] && this.ActiveServiceAccount) {
-    }
-  }
-
   checkFeaturedUsageLevel(RenewalOffer: IOffers) {
     if (RenewalOffer) {
       if (RenewalOffer.Plan.Product.Featured_Usage_Level != null) {
@@ -95,7 +90,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy() {
-    this.renewalStoreSubscription.unsubscribe();
+    this.plansServicesSubscription.unsubscribe();
     if (this.IsUpForRenewal) {
     result(this.OffersServiceSubscription, 'unsubscribe'); }
    }

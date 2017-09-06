@@ -1,15 +1,16 @@
 import {
-  Component, OnInit, ViewChild, OnDestroy, SimpleChanges, OnChanges, Input, ViewContainerRef,
-  AfterViewInit
+  Component, OnInit, ViewChild, OnDestroy, Input, ViewContainerRef
 } from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
-
 import {IOffers} from '../../../../../core/models/offers/offers.model';
 import {ServiceAccountService} from 'app/core/serviceaccount.service';
 import {ServiceAccount} from '../../../../../core/models/serviceaccount/serviceaccount.model';
 import {OfferDetailsPopoverComponent} from '../offer-details-popover/offer-details-popover.component';
 import {PlanConfirmationPopoverComponent} from '../../plan-confirmation-popover/plan-confirmation-popover.component';
 import {RenewalStore} from '../../../../../core/store/RenewalStore';
+import {OffersStore} from '../../../../../core/store/OffersStore';
+import {Observable} from 'rxjs/Observable';
+import {AllOffersClass} from '../../../../../core/models/offers/alloffers.model';
 
 @Component({
   selector: 'mygexa-change-your-plan-card',
@@ -17,21 +18,28 @@ import {RenewalStore} from '../../../../../core/store/RenewalStore';
   styleUrls: ['./change-your-plan-card.component.scss']
 })
 export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
-
-  renewalStoreSubscription: Subscription;
-
-  @Input() Offer: IOffers;
+  // @Input() Offer: IOffers;
   @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
-
+  plansServicesSubscription: Subscription;
+  OffersServiceSubscription: Subscription;
+  public ActiveServiceAccountDetails: ServiceAccount = null;
   selectCheckBox = false;
   IsInRenewalTimeFrame: boolean;   IsRenewalPending: boolean;
   enableSelect = false;
   chev_clicked: boolean;
+  public AllOffers: AllOffersClass[];
+  public All_Offers: AllOffersClass[];
+  public FeaturedOffers: AllOffersClass[];
+  public BestRenewalOffer: IOffers;
+  public UpgradeOffers: IOffers[];
+  public AllOfferss: IOffers[];
   public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
   constructor(
-  private renewalStore: RenewalStore,
-  private viewContainerRef: ViewContainerRef) {
+    private serviceAccount_service: ServiceAccountService,
+    private OfferStore: OffersStore,
+    private renewalStore: RenewalStore,
+    private viewContainerRef: ViewContainerRef) {
     this.chev_clicked = false;
   }
 
@@ -40,34 +48,64 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
-      RenewalDetails => {
-        if (RenewalDetails == null) {
-          return;
-        }
-        this.IsInRenewalTimeFrame = RenewalDetails.Is_Account_Eligible_Renewal;
-      });
-
-    if (this.Offer.Plan.Product.Featured_Usage_Level != null) {
-      switch (this.Offer.Plan.Product.Featured_Usage_Level) {
-        case  '500 kWh': {
-          this.Price_atFeatured_Usage_Level = this.Offer.Price_At_500_kwh;
-          break;
-        }
-        case  '1000 kWh': {
-          this.Price_atFeatured_Usage_Level = this.Offer.Price_At_1000_kwh;
-          break;
-        }
-        case  '2000 kWh': {
-          this.Price_atFeatured_Usage_Level = this.Offer.Price_At_2000_kwh;
-          break;
-        }
-        default: {
-          this.Offer.Plan.Product.Featured_Usage_Level = '2000 kWh';
-          this.Price_atFeatured_Usage_Level = this.Offer.Price_At_2000_kwh;
-          break;
-        }
+    const activeServiceAccount$ = this.serviceAccount_service.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
+    const renewalDetails$ = this.renewalStore.RenewalDetails;
+    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1].Service_Account_Id).subscribe(result => {
+      this.ActiveServiceAccountDetails = result[0];
+      this.IsInRenewalTimeFrame = result[1].Is_Account_Eligible_Renewal; this.IsRenewalPending = result[1].Is_Pending_Renewal;
+      if (this.IsInRenewalTimeFrame && !this.IsRenewalPending && !result[0].Current_Offer.IsHoldOverRate) {
+        this.OffersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
+          All_Offers => {
+            if (All_Offers != null) {
+              this.extractOffers(All_Offers);
+            }
+            return All_Offers;
+          }
+        );
+      } else if (!this.IsInRenewalTimeFrame || result[0].Current_Offer.IsHoldOverRate || this.IsRenewalPending) {
+        this.OffersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
+          Upgrade_Offers => {
+            this.UpgradeOffers = Upgrade_Offers;
+            return this.UpgradeOffers;
+          }
+        );
       }
+    });
+
+    // if (this.Offer.Plan.Product.Featured_Usage_Level != null) {
+    //   switch (this.Offer.Plan.Product.Featured_Usage_Level) {
+    //     case  '500 kWh': {
+    //       this.Price_atFeatured_Usage_Level = this.Offer.Price_At_500_kwh;
+    //       break;
+    //     }
+    //     case  '1000 kWh': {
+    //       this.Price_atFeatured_Usage_Level = this.Offer.Price_At_1000_kwh;
+    //       break;
+    //     }
+    //     case  '2000 kWh': {
+    //       this.Price_atFeatured_Usage_Level = this.Offer.Price_At_2000_kwh;
+    //       break;
+    //     }
+    //     default: {
+    //       this.Offer.Plan.Product.Featured_Usage_Level = '2000 kWh';
+    //       this.Price_atFeatured_Usage_Level = this.Offer.Price_At_2000_kwh;
+    //       break;
+    //     }
+    //   }
+    // }
+  }
+
+  extractOffers(All_Offers: AllOffersClass[]) {
+    this.FeaturedOffers = All_Offers.filter(item => item.Type === 'Featured_Offers');
+    if ( this.FeaturedOffers[0].Offers.length > 0) {
+      console.log('All_Featured_Offers', this.FeaturedOffers);
+      this.BestRenewalOffer = this.FeaturedOffers[0].Offers[0];
+      console.log('Best_Featured_Offer', this.BestRenewalOffer);
+    }
+    this.AllOffers = All_Offers.filter(item => item.Type === 'All_Offers');
+    if (this.AllOffers[0].Offers.length > 0) {
+      this.AllOfferss = this.AllOffers[0].Offers;
+      console.log('Rest_All_Offers', this.AllOffers);
     }
   }
 
@@ -84,7 +122,8 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
     this.enableSelect = false;
   }
   ngOnDestroy() {
-    this.renewalStoreSubscription.unsubscribe();
+    this.plansServicesSubscription.unsubscribe();
+    this.OffersServiceSubscription.unsubscribe();
   }
   ChevClicked() {
     this.chev_clicked = !this.chev_clicked;

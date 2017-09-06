@@ -6,10 +6,10 @@
         <h2> Want to Upgrade your Plan? </h2>
       </div>
       <div class="col-sm-9">
-        <div class="row change-plans-grid" *ngIf="UpgradeOffers">
+        <div class="row change-plans-grid" >
           <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
-          <div class="col-md-4 plan-card" *ngFor="let offer of UpgradeOffers">
-            <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
+          <div class="col-md-4 plan-card" >
+            <mygexa-change-your-plan-card></mygexa-change-your-plan-card>
           </div>
         </div>
         <div *ngIf="upgradeOffersArraylength <= 0" class="row">
@@ -22,7 +22,7 @@
   </div>
 </div>
 
-<div  *ngIf="IsUpForRenewal && !ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate">
+<div  *ngIf="IsUpForRenewal && !ActiveServiceAccountDetails?.Current_Offer?.IsHoldOverRate">
   <div class="row">
     <section id="renewPlan">
       <div class="col-sm-2">
@@ -34,10 +34,10 @@
           <a class="boxed btn btn-primary" [class.disabled]="!promoCodeForm.form.valid" (click)="onPromoCodeSubmit()">Submit</a></form></div>
 
     <div class="col-sm-9">
-      <div class="row change-plans-grid" *ngIf="AllOffers">
+      <div class="row change-plans-grid">
         <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
-        <div class="col-xs-6 col-md-4 plan-card" *ngFor="let offer of AllOfferss">
-          <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
+        <div class="col-xs-6 col-md-4 plan-card">
+          <mygexa-change-your-plan-card></mygexa-change-your-plan-card>
         </div>
       </div>
     </div>
@@ -45,17 +45,17 @@
 </div>
 </div>
 
-<div  *ngIf="ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate">
+<div  *ngIf="ActiveServiceAccountDetails?.Current_Offer?.IsHoldOverRate">
   <div class="row">
     <section>
       <div class="col-sm-2">
         <h2> Want to Upgrade your Plan? </h2>
       </div>
       <div class="col-sm-9">
-        <div class="row change-plans-grid" *ngIf="UpgradeOffers">
+        <div class="row change-plans-grid">
           <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
-          <div class="col-md-4 plan-card" *ngFor="let offer of UpgradeOffers">
-            <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
+          <div class="col-md-4 plan-card">
+            <mygexa-change-your-plan-card></mygexa-change-your-plan-card>
           </div>
         </div>
         <div *ngIf="upgradeOffersArraylength <= 0" class="row">

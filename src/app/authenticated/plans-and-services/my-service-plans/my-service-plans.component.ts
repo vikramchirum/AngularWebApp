@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-
 import { Observable } from 'rxjs/Observable';
-
 import { RenewalGaugeComponent } from './renewal-gauge/renewal-gauge.component';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
