@@ -33,6 +33,7 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   public BestRenewalOffer: IOffers;
   public UpgradeOffers: IOffers[];
   public AllOfferss: IOffers[];
+  public upgradeOffersArraylength: number = null;
   public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
   constructor(
@@ -66,6 +67,9 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
         this.OffersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
           Upgrade_Offers => {
             this.UpgradeOffers = Upgrade_Offers;
+            if (this.UpgradeOffers) {
+              this.upgradeOffersArraylength = Upgrade_Offers.length;
+            }
             return this.UpgradeOffers;
           }
         );
