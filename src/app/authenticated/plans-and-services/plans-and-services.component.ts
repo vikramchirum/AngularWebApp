@@ -42,7 +42,7 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
     this.ServiceAccountServiceSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
-        this.renewalStore.LoadRenewalDetails(+this.ActiveServiceAccount.Id);
+        this.renewalStore.LoadRenewalDetails(this.ActiveServiceAccount.Id);
       });
 
     this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(result => {
