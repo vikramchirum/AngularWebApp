@@ -62,6 +62,7 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
         this.OffersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
           All_Offers => {
             if (All_Offers != null) {
+              // console.log('All offers', All_Offers);
               this.extractOffers(All_Offers);
             }
             return All_Offers;
@@ -71,7 +72,7 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
         this.OffersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
           Upgrade_Offers => {
             this.UpgradeOffers = Upgrade_Offers;
-            console.log('Upgrade Offers', this.UpgradeOffers);
+            // console.log('Upgrade Offers', this.UpgradeOffers);
             if (this.UpgradeOffers) {
               this.upgradeOffersArraylength = Upgrade_Offers.length;
             }
