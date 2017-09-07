@@ -12,6 +12,7 @@ import { PlanConfirmationPopoverComponent} from '../plan-confirmation-popover/pl
 import { RenewalStore } from '../../../../core/store/RenewalStore';
 import {OffersStore} from '../../../../core/store/OffersStore';
 import {Observable} from 'rxjs/Observable';
+import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.model';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -19,9 +20,10 @@ import {Observable} from 'rxjs/Observable';
   styleUrls: ['./my-current-plan.component.scss']
 })
 export class MyCurrentPlanComponent implements OnInit, OnDestroy {
+  @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
 
   ActiveServiceAccount: ServiceAccount;
-  @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
+  public RenewalAccount: IRenewalDetails;
   plansServicesSubscription: Subscription;
   OffersServiceSubscription: Subscription;
   IsOffersReady: boolean = null;
@@ -42,7 +44,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
     this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1].Service_Account_Id).subscribe(result => {
-      this.ActiveServiceAccount = result[0];
+      this.ActiveServiceAccount = result[0]; this.RenewalAccount = result[1];
       if ( result[1] != null) {
         this.IsUpForRenewal = result[1].Is_Account_Eligible_Renewal;
         this.IsRenewalPending = result[1].Is_Pending_Renewal;

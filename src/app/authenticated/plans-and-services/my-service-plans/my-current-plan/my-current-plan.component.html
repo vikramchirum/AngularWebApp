@@ -49,7 +49,15 @@
           <p class="bg-default">TERM: {{RenewalAccount?.Existing_Renewal?.Offer?.Plan?.Term}} Months</p>
           <p>START: {{RenewalAccount?.Existing_Renewal?.Start_Date | date: 'MM/dd/yyyy'}}</p>
           <p  class="bg-default">END: {{RenewalAccount?.Contract_EndDate | date:'MM/dd/yyyy'}}</p>
-          <!--<p  class="bg-default">END: {{ActiveServiceAccount.Contract_End_Date ? (ActiveServiceAccount.Contract_End_Date | date:'MM/dd/yyyy') : (this.getEndDate(ActiveServiceAccount.Contract_Start_Date, ActiveServiceAccount.Current_Offer.Term) | date: 'MM/dd/yyyy')}}</p>-->
+          <b style="color:orange">Pending</b><li (click)="pop.show()">(view current rate)</li>
+          <br>
+          <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
+            <ng-template #options>
+              <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
+                <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+              <mygexa-offer-details-popover [ActiveOfferDetails]="ActiveServiceAccount" [IsCurrentPlanPopOver] = "true"></mygexa-offer-details-popover>
+            </ng-template>
+          </div>
         </md-card-content>
       </md-card>
     </div>
