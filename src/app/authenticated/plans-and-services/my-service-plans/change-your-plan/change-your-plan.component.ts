@@ -9,6 +9,7 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
 import { RenewalStore } from '../../../../core/store/RenewalStore';
 import {OffersStore} from '../../../../core/store/OffersStore';
 import {Observable} from 'rxjs/Observable';
+import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.model';
 
 @Component({
   selector: 'mygexa-change-your-plan',
@@ -20,7 +21,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   public ActiveServiceAccountDetails: ServiceAccount = null;
   OffersServiceSubscription: Subscription;
   plansServicesSubscription: Subscription;
-
+  Renewaldetails: IRenewalDetails = null;
   public IsUpForRenewal: boolean = null;
   public IsRenewalPending: boolean = null;
   public AllOffers: AllOffersClass[];
@@ -43,31 +44,31 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
     const activeServiceAccount$ = this.serviceAccount_service.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
     this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1].Service_Account_Id).subscribe(result => {
-      this.ActiveServiceAccountDetails = result[0];
+      this.ActiveServiceAccountDetails = result[0]; this.Renewaldetails = result[1];
       this.IsUpForRenewal = result[1].Is_Account_Eligible_Renewal;
       this.IsRenewalPending = result[1].Is_Pending_Renewal;
-      if (this.IsUpForRenewal && !this.IsRenewalPending && !this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate) {
-        this.OffersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
-          All_Offers => {
-            // console.log('All offers', All_Offers);
-            if (All_Offers != null) {
-              this.extractOffers(All_Offers);
-            }
-            return All_Offers;
-          }
-        );
-      } else if (!this.IsUpForRenewal || this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate || this.IsRenewalPending) {
-        this.OffersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
-          Upgrade_Offers => {
-            this.UpgradeOffers = Upgrade_Offers;
-            // console.log('All upgrade offers', this.UpgradeOffers);
-            if (this.UpgradeOffers) {
-              this.upgradeOffersArraylength = Upgrade_Offers.length;
-            }
-            return this.UpgradeOffers;
-          }
-        );
-      }
+      // if (this.IsUpForRenewal && !this.IsRenewalPending && !this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate) {
+      //   this.OffersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
+      //     All_Offers => {
+      //       // console.log('All offers', All_Offers);
+      //       if (All_Offers != null) {
+      //         this.extractOffers(All_Offers);
+      //       }
+      //       return All_Offers;
+      //     }
+      //   );
+      // } else if (!this.IsUpForRenewal || this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate || this.IsRenewalPending) {
+      //   this.OffersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
+      //     Upgrade_Offers => {
+      //       this.UpgradeOffers = Upgrade_Offers;
+      //       // console.log('All upgrade offers', this.UpgradeOffers);
+      //       if (this.UpgradeOffers) {
+      //         this.upgradeOffersArraylength = Upgrade_Offers.length;
+      //       }
+      //       return this.UpgradeOffers;
+      //     }
+      //   );
+      // }
     });
     // this.ServiceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.subscribe(
     //   result => {
@@ -107,20 +108,20 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
     //     return this.ActiveServiceAccountDetails;
     //   });
   }
-
-  extractOffers(All_Offers: AllOffersClass[]) {
-    this.FeaturedOffers = All_Offers.filter(item => item.Type === 'Featured_Offers');
-    if ( this.FeaturedOffers[0].Offers.length > 0) {
-      console.log('All_Featured_Offers', this.FeaturedOffers);
-      this.BestRenewalOffer = this.FeaturedOffers[0].Offers[0];
-      console.log('Best_Featured_Offer', this.BestRenewalOffer);
-    }
-    this.AllOffers = All_Offers.filter(item => item.Type === 'All_Offers');
-    if (this.AllOffers[0].Offers.length > 0) {
-      this.AllOfferss = this.AllOffers[0].Offers;
-      console.log('Rest_All_Offers', this.AllOffers);
-    }
-  }
+  //
+  // extractOffers(All_Offers: AllOffersClass[]) {
+  //   this.FeaturedOffers = All_Offers.filter(item => item.Type === 'Featured_Offers');
+  //   if ( this.FeaturedOffers[0].Offers.length > 0) {
+  //     console.log('All_Featured_Offers', this.FeaturedOffers);
+  //     this.BestRenewalOffer = this.FeaturedOffers[0].Offers[0];
+  //     console.log('Best_Featured_Offer', this.BestRenewalOffer);
+  //   }
+  //   this.AllOffers = All_Offers.filter(item => item.Type === 'All_Offers');
+  //   if (this.AllOffers[0].Offers.length > 0) {
+  //     this.AllOfferss = this.AllOffers[0].Offers;
+  //     console.log('Rest_All_Offers', this.AllOffers);
+  //   }
+  // }
 
   ngOnDestroy() {
     this.plansServicesSubscription.unsubscribe();

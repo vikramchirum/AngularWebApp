@@ -1,9 +1,10 @@
-
-<ng-template *ngIf="!IsInRenewalTimeFrame; then UpgradeOfferCard"></ng-template>
-<ng-template *ngIf="IsInRenewalTimeFrame; then RenewalOfferCard"></ng-template>
+<div *ngIf="ActiveServiceAccountDetails && this.Renewaldetails; then ShowOffers else ShowNothing"></div>
+<ng-template #ShowNothing></ng-template>
+<ng-template #ShowOffers *ngIf="IsInRenewalTimeFrame && !ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate && !IsRenewalPending; then RenewalOfferCard else UpgradeOfferCard"></ng-template>
 <ng-template #UpgradeOfferCard>
-  <section *ngIf="UpgradeOffers">
-    <div class="col-md-6 plan-card" *ngFor="let Offer of UpgradeOffers">
+  <section *ngIf="upgradeOffersArraylength > 0">
+    <div class="col-md-4 plan-card" *ngFor="let Offer of UpgradeOffers">
+      {{checkFeaturedUsageLevel(Offer.Plan.Product.Featured_Usage_Level, Offer)}}
       <div class="plan-card-container">
         <div class="card-content">
           <div class="card-title">
@@ -17,7 +18,10 @@
                 <mygexa-offer-details-popover [OfferDetails] = Offer ></mygexa-offer-details-popover>
               </ng-template>
             </div>
-            <h2>{{Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
+            <div></div>
+            <h2>
+              {{ Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}
+              <sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
           </div>
           <p>at {{Offer?.Plan?.Product?.Featured_Usage_Level}}</p>
           <p>TERM:{{Offer.Plan.Term}} months</p>
@@ -75,19 +79,18 @@
       <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame"></mygexa-plan-confirmation-popover>
     </div>
   </section>
-  <section *ngIf="!UpgradeOffers" >
+  <section *ngIf="upgradeOffersArraylength <= 0" >
     <div class="row">
       <div class="col-sm-24">
-        <h2> No available offers for this service account. </h2>
+        <h2> No available offers for this service account.</h2>
       </div>
     </div>
   </section>
 </ng-template>
-
-
 <ng-template #RenewalOfferCard>
-  <section *ngIf="AllOfferss">
-    <div class="col-md-6 plan-card" *ngFor="let Offer of AllOfferss">
+  <section *ngIf="renewalOffersArraylength > 0">
+    <div class="col-md-4 plan-card" *ngFor="let Offer of AllOfferss">
+      {{checkFeaturedUsageLevel(Offer.Plan.Product.Featured_Usage_Level, Offer)}}
       <div class="plan-card-container">
         <div class="card-content">
           <div class="card-title">
@@ -159,10 +162,10 @@
       <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame"></mygexa-plan-confirmation-popover>
     </div>
   </section>
-  <section *ngIf="!AllOfferss" >
+  <section *ngIf="AllOfferss && renewalOffersArraylength <= 0" >
     <div class="row">
       <div class="col-sm-24">
-        <h2> No available offers for this service account. </h2>
+        <h2> No available offers for this service account.</h2>
       </div>
     </div>
   </section>
