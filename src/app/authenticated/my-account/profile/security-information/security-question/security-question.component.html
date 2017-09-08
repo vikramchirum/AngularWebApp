@@ -35,11 +35,10 @@
             <div class="has-error" *ngIf="securityQuestionForm.controls['question1'].hasError('required') && submitAttempt">
               <span class="help-block">Required</span>
             </div>
-            <div class="has-error" *ngIf="errorMessage != null && submitAttempt">
+            <div class="has-error" *ngIf="errorMessage != null && errorOccured && submitAttempt">
               <span class="help-block">{{errorMessage}}</span>
             </div>
           </div>
-          {{hi + errorMessage}}
           <div class="text-right">
             <button class="btn btn-primary" [disabled]="" type="submit">Continue</button>
             <button class="btn btn-default" type="button" (click)= resetForm()>Cancel</button>

@@ -17,6 +17,7 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
   username: string = null;
   securityQuestionForm: FormGroup = null;
   submitAttempt: boolean = null;
+  errorOccured: boolean = null;
   errorMessage: string = null;
   UserServiceSubscription: Subscription = null;
 
@@ -60,9 +61,11 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
     if (isValid) {
       this.UserService.updateSecurityAnswer(Sec_Answer).subscribe(
         res => {
-          if (res === 'true') {
+          console.log( 'response', res);
+          if (res === true) {
             this.resetForm();
           } else {
+            this.errorOccured = true;
             this.errorMessage = res;
           }
         },
@@ -71,6 +74,7 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
     }
   }
   resetForm() {
+    this.errorOccured = null;
     this.errorMessage = null;
    this.submitAttempt = false;
    this.securityQuestionForm = this.securityQuestionFormInit();
