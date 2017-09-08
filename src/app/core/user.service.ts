@@ -48,6 +48,9 @@ export class UserService implements CanActivate {
   private registerUrl = '/user/register';
   private updateEmail = '/user/updateEmailAddress';
   private updateClaims = '/user/updateClaims';
+  private updateSecAnswer = '/user/updateSecurityAnswer';
+  private updateSecQuestion = '/user/updateSecurityQuestion';
+
 
   get user_token(): string {
 
@@ -292,19 +295,32 @@ export class UserService implements CanActivate {
     return null;
   }
 
-  updateSecurityQuestion(Email_Address: string) {
-    // Using http client
-    // const realtivePath = `/user/updateEmailAddress/`;
-    // this._http.put(realtivePath, Email_Address).map((res: Response) => {
-    // }).catch(error => this.HttpClient.handleHttpError(error));
+// Update security question and answer with token.
+  updateSecurityQuestion(Ques_Id: number, Sec_Answer: string) {
 
     const token = localStorage.getItem('gexa_auth_token');
     const body = {
       Token: token,
-      Email_Address: Email_Address
+      Question_Id: Ques_Id,
+      Sec_Answer: Sec_Answer
     };
     if (token && token.length) {
-      return this.httpClient.put(this.updateEmail, body)
+      return this.httpClient.put(this.updateSecQuestion, body)
+        .map(res => res.json())
+        .catch(error => this.httpClient.handleHttpError(error));
+    }
+    return null;
+  }
+
+// Update security answer after user logged in.
+  updateSecurityAnswer(Sec_Answer: string) {
+    const token = localStorage.getItem('gexa_auth_token');
+    const body = {
+      Token: token,
+      Sec_Answer: Sec_Answer
+    };
+    if (token && token.length) {
+      return this.httpClient.put(this.updateSecAnswer, body)
         .map(res => res.json())
         .catch(error => this.httpClient.handleHttpError(error));
     }
