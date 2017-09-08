@@ -38,7 +38,7 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   public renewalOffersArraylength: number = null;
   public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
-  selectedIndex: number;
+  selectedIndex: number; length: number;
   constructor(
     private serviceAccount_service: ServiceAccountService,
     private OfferStore: OffersStore,
@@ -81,6 +81,10 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
       }
     });
 
+  }
+
+  featuredOfferFeatures(offer: IOffers) {
+    this.length = offer.Plan.Product.Product_Features ? offer.Plan.Product.Product_Features.length : 0;
   }
 
   checkFeaturedUsageLevel(RenewalOffer_FeaturedUsageLevel: string, RenewalOffer: IOffers) {
