@@ -17,7 +17,7 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
   username: string = null;
   securityQuestionForm: FormGroup = null;
   submitAttempt: boolean = null;
-
+  secQuesUpdated: boolean = null;
   UserServiceSubscription: Subscription = null;
 
   constructor(
@@ -27,9 +27,6 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
     this.securityQuestionForm = FormBuilder.group(
       {
         question1: [null, Validators.required]
-      },
-      {
-        /* Validate security questions here. */
       }
     );
   }
@@ -56,7 +53,14 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
       }
     );
   }
-  updateSecQuesResponse(response: string) {
+  updateSecQuesResponse(Sec_Answer: string) {
+    this.UserService.updateSecurityAnswer(Sec_Answer).subscribe(
+      res => {
+        this.secQuesUpdated = res;
+        console.log('security question updated', this.secQuesUpdated);
+      },
+      error => { console.log('Error', error); }
+    );
 
   }
 

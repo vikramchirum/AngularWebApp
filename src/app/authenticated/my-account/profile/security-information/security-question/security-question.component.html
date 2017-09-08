@@ -11,41 +11,54 @@
 <br/>
 
 <div [hidden]="!editing">
-  <div class="row bg-info">
-    <div class="col-xs-12">
-      <hr/>
-    </div>
-    <div class="col-md-4">
-      <label class="form-control-label">Security Question</label>
-    </div>
-    <div class="col-md-6">
-      <form
-        id="changeForm"
-        novalidate
-        [formGroup]="securityQuestionForm"
-      >
-        <div class="form-group" [ngClass]="{'has-error':!securityQuestionForm.controls['question1'].valid && submitAttempt}">
-          <p>Answer Questions to Continue</p>
-          <label class="control-label">{{securityQuestion}}</label>
-          <input
-            type="text"
-            name="question1"
-            class="form-control"
-            [formControl]="securityQuestionForm.controls['question1']" placeholder=""
-          />
-          <div class="has-error" *ngIf="securityQuestionForm.controls['question1'].hasError('required') && submitAttempt">
-            <span class="help-block">Required</span>
+  {{secQuesUpdated}}
+
+    <div class="row bg-info">
+      <div class="col-xs-12">
+        <hr/>
+      </div>
+      <div class="col-md-4">
+        <label class="form-control-label">Security Question</label>
+      </div>
+      <div class="col-md-6">
+        <form
+          id="changeForm"
+          novalidate
+          [formGroup]="securityQuestionForm"
+        >
+          <div class="form-group" [ngClass]="{'has-error':!securityQuestionForm.controls['question1'].valid && submitAttempt}">
+            <p>Answer Questions to Continue</p>
+            <label class="control-label">{{securityQuestion}}</label>
+            <input
+              type="text"
+              name="question1"
+              class="form-control"
+              [formControl]="securityQuestionForm.controls['question1']" placeholder=""
+            />
+            <div class="has-error" *ngIf="securityQuestionForm.controls['question1'].hasError('required') && submitAttempt">
+              <span class="help-block">Required</span>
+            </div>
           </div>
-        </div>
 
-        <div class="text-right">
-          <button class="btn btn-primary" [disabled]="" (click)="updateSecQuesResponse(securityQuestionForm.controls['question1'].value)">Continue</button>
-          <button class="btn btn-default" type="button" (click)="editing = false">Cancel</button>
-        </div>
-
-      </form>
-      <hr/>
+          <div class="text-right">
+            <button class="btn btn-primary" [disabled]="" (click)="updateSecQuesResponse(securityQuestionForm.controls['question1'].value)">Continue</button>
+            <button class="btn btn-default" type="button" (click)="editing = false">Cancel</button>
+          </div>
+          {{secQuesUpdated}}
+          <div *ngIf="secQuesUpdated === true">
+            <div class="has-success">
+              <label class="control-label">Security question has been updated.</label>
+            </div>
+          </div>
+          <div *ngIf="secQuesUpdated === false">
+            <div class="has-error">
+              <label class="control-label">Security question hasn't been updated.</label>
+            </div>
+          </div>
+        </form>
+        <hr/>
+      </div>
     </div>
-  </div>
-  <br/>
+    <br/>
+
 </div>
