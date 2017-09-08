@@ -9,10 +9,7 @@
   </div>
 </div>
 <br/>
-
 <div [hidden]="!editing">
-  {{secQuesUpdated}}
-
     <div class="row bg-info">
       <div class="col-xs-12">
         <hr/>
@@ -23,7 +20,7 @@
       <div class="col-md-6">
         <form
           id="changeForm"
-          novalidate
+          (ngSubmit) = "updateSecQuesResponse(securityQuestionForm.controls['question1'].value, securityQuestionForm.valid)"
           [formGroup]="securityQuestionForm"
         >
           <div class="form-group" [ngClass]="{'has-error':!securityQuestionForm.controls['question1'].valid && submitAttempt}">
@@ -38,22 +35,14 @@
             <div class="has-error" *ngIf="securityQuestionForm.controls['question1'].hasError('required') && submitAttempt">
               <span class="help-block">Required</span>
             </div>
+            <div class="has-error" *ngIf="errorMessage != null && submitAttempt">
+              <span class="help-block">{{errorMessage}}</span>
+            </div>
           </div>
-
+          {{hi + errorMessage}}
           <div class="text-right">
-            <button class="btn btn-primary" [disabled]="" (click)="updateSecQuesResponse(securityQuestionForm.controls['question1'].value)">Continue</button>
-            <button class="btn btn-default" type="button" (click)="editing = false">Cancel</button>
-          </div>
-          {{secQuesUpdated}}
-          <div *ngIf="secQuesUpdated === true">
-            <div class="has-success">
-              <label class="control-label">Security question has been updated.</label>
-            </div>
-          </div>
-          <div *ngIf="secQuesUpdated === false">
-            <div class="has-error">
-              <label class="control-label">Security question hasn't been updated.</label>
-            </div>
+            <button class="btn btn-primary" [disabled]="" type="submit">Continue</button>
+            <button class="btn btn-default" type="button" (click)= resetForm()>Cancel</button>
           </div>
         </form>
         <hr/>
