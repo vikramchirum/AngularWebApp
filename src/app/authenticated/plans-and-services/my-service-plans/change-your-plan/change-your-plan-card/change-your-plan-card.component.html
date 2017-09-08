@@ -3,8 +3,9 @@
 <ng-template #ShowOffers *ngIf="IsInRenewalTimeFrame && !ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate && !IsRenewalPending; then RenewalOfferCard else UpgradeOfferCard"></ng-template>
 <ng-template #UpgradeOfferCard>
   <section *ngIf="upgradeOffersArraylength > 0">
-    <div class="col-md-4 plan-card" *ngFor="let Offer of UpgradeOffers">
+    <div class="col-md-4 plan-card" *ngFor="let Offer of UpgradeOffers; let i= index;">
       {{checkFeaturedUsageLevel(Offer.Plan.Product.Featured_Usage_Level, Offer)}}
+      <!--{{setDefaultValues(i)}}-->
       <div class="plan-card-container">
         <div class="card-content">
           <div class="card-title">
@@ -27,34 +28,34 @@
           <p>TERM:{{Offer.Plan.Term}} months</p>
           <p>{{Offer.Promotion?.Name}}</p>
         </div>
-        <div *ngIf="selectCheckBox" class="agreement-section">
+        <div *ngIf="selectCheckBox[i]" class="agreement-section">
           <div class="checkbox">
             <label>
-              <input type="checkbox" value="" (click) = "toggleButton()">
+              <input type="checkbox" value="" (click) = "toggleButton(i)">
               <span class="cr"><i class="cr-icon fa fa-check"></i></span>
               <p class="text-left">By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
             </label>
           </div>
           <div class="row">
             <div style="text-align:center">
-              <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)="showConfirmationPop()" >Submit</button>
-              <button class="btn btn-link" (click)="closeCheckBox()" aria-hidden="true">Cancel</button>
+              <button class="btn btn-primary" [disabled]="selectCheckBox[i] && !enableSelect[i]" (click)="showConfirmationPop()" >Submit</button>
+              <button class="btn btn-link" (click)="closeCheckBox(i)" aria-hidden="true">Cancel</button>
             </div>
           </div>
         </div>
         <br/>
-        <div *ngIf="!selectCheckBox">
+        <div *ngIf="!selectCheckBox[i]">
           <div class="row">
             <div style="text-align:center">
-              <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)='onSelect($event)'>
+              <button class="btn btn-primary" [disabled]="selectCheckBox[i] && !enableSelect[i]" (click)='onSelect($event, i)'>
                 Select <i class="fa fa-chevron-right fa-wh" style="color: white" aria-hidden="true"></i></button>
             </div>
           </div>
         </div>
         <div class="row card-included" >
           <div class="col-md-12">
-            <h4 class="text-center form-control ">What's included <i class="fa fa-chevron-down" (click)="ChevClicked()" [ngClass]="chev_clicked ?  'fa-chevron-down':  'fa-chevron-up'"></i><br>
-              <div class="card-included pull-left" *ngIf="chev_clicked">
+            <h4 class="text-center form-control ">What's included <i class="fa fa-chevron-down" (click)="ChevClicked(i)" [ngClass]="chev_clicked[i]  ?  'fa-chevron-down':  'fa-chevron-up'"></i><br>
+              <div class="card-included pull-left" *ngIf="chev_clicked[i]">
                 <div *ngIf="Offer?.Plan?.Product?.Product_Features != null ; then features else noFeatures"></div>
                 <ng-template #features>
                   <div *ngFor="let feature of Offer?.Plan?.Product?.Product_Features">

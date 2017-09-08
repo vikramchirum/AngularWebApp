@@ -125,7 +125,6 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.plansServicesSubscription.unsubscribe();
-    this.OffersServiceSubscription.unsubscribe();
 
   }
   ChevClicked() {

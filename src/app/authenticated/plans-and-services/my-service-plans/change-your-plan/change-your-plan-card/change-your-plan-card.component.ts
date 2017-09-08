@@ -25,10 +25,9 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   OffersServiceSubscription: Subscription;
   public ActiveServiceAccountDetails: ServiceAccount = null;
   Renewaldetails: IRenewalDetails = null;
-  selectCheckBox = false;
+  selectCheckBox: boolean[] = [];   enableSelect: boolean[] = [];   chev_clicked: boolean[] = [];
+
   IsInRenewalTimeFrame: boolean;   IsRenewalPending: boolean;
-  enableSelect = false;
-  chev_clicked: boolean;
   public AllOffers: AllOffersClass[];
   public All_Offers: AllOffersClass[];
   public FeaturedOffers: AllOffersClass[];
@@ -39,12 +38,12 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   public renewalOffersArraylength: number = null;
   public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
+  selectedIndex: number;
   constructor(
     private serviceAccount_service: ServiceAccountService,
     private OfferStore: OffersStore,
     private renewalStore: RenewalStore,
     private viewContainerRef: ViewContainerRef) {
-    this.chev_clicked = false;
   }
 
   showConfirmationPop() {
@@ -72,7 +71,7 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
         this.OffersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
           Upgrade_Offers => {
             this.UpgradeOffers = Upgrade_Offers;
-            // console.log('Upgrade Offers', this.UpgradeOffers);
+             console.log('Upgrade Offers', this.UpgradeOffers);
             if (this.UpgradeOffers) {
               this.upgradeOffersArraylength = Upgrade_Offers.length;
             }
@@ -83,6 +82,7 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
     });
 
   }
+
   checkFeaturedUsageLevel(RenewalOffer_FeaturedUsageLevel: string, RenewalOffer: IOffers) {
       if (RenewalOffer_FeaturedUsageLevel != null) {
         switch (RenewalOffer_FeaturedUsageLevel) {
@@ -121,23 +121,32 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSelect(event) {
-    event.preventDefault();
-    this.selectCheckBox = true;
+  setDefaultValues(index: number) {
+    this.selectCheckBox[index] = false;
+    this.enableSelect[index] = false;
   }
 
-  toggleButton() {
-    this.enableSelect = !this.enableSelect;
+  onSelect(event, index: number) {
+    event.preventDefault();
+    this.selectCheckBox[index] = true;
   }
-  closeCheckBox() {
-    this.selectCheckBox = false;
-    this.enableSelect = false;
+
+  toggleButton(index: number) {
+    this.enableSelect[index] = !this.enableSelect[index];
   }
+
+  closeCheckBox(index: number) {
+    this.selectCheckBox[index] = false;
+    this.enableSelect[index] = false;
+  }
+
   ngOnDestroy() {
     this.plansServicesSubscription.unsubscribe();
     this.OffersServiceSubscription.unsubscribe();
   }
-  ChevClicked() {
-    this.chev_clicked = !this.chev_clicked;
+  ChevClicked(index: number) {
+    this.selectedIndex = index;
+    console.log('Index', this.selectedIndex);
+    this.chev_clicked[index] = !this.chev_clicked[index];
   }
 }
