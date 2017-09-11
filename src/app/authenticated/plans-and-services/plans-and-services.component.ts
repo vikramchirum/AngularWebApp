@@ -8,6 +8,7 @@ import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { OfferService } from 'app/core/offer.service';
 import { RenewalStore } from '../../core/store/RenewalStore';
+import {OffersStore} from '../../core/store/OffersStore';
 
 @Component({
   selector: 'mygexa-plans-and-services',
@@ -26,7 +27,7 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
 
   constructor(
     private ServiceAccountService: ServiceAccountService,
-    private OfferService: OfferService,
+    private OfferStore: OffersStore,
     private renewalStore: RenewalStore,
     private Router: Router
   ) { }
@@ -44,10 +45,10 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
       this.IsRenewalPending = renewalDetails.Is_Pending_Renewal;
       if (this.IsUpForRenewal && !this.IsRenewalPending && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate) {
         // this is just for renewals
-        this.OfferService.RenewalOffersData(this.ActiveServiceAccount.Id);
+        this.OfferStore.LoadRenewalOffersData(this.ActiveServiceAccount.Id);
       } else if (!this.IsUpForRenewal || this.ActiveServiceAccount.Current_Offer.IsHoldOverRate || this.IsRenewalPending) {
         // everything else is an upgrade
-        this.OfferService.UpgradeOffersData(this.ActiveServiceAccount.Id, +this.ActiveServiceAccount.Current_Offer.Term, this.ActiveServiceAccount.TDU_DUNS_Number);
+        this.OfferStore.LoadUpgradeOffersData(this.ActiveServiceAccount.Id, +this.ActiveServiceAccount.Current_Offer.Term, this.ActiveServiceAccount.TDU_DUNS_Number);
       }
     });
   }
