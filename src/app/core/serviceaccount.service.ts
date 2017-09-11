@@ -80,11 +80,11 @@ export class ServiceAccountService {
   set CustomerAccountId(CustomerAccountId: string) {
     if (this._CustomerAccountId !== CustomerAccountId) {
       this._CustomerAccountId = CustomerAccountId;
-      this.UpdateServiceAccounts();
+      this.serviceAccountsCacheable();
     }
   }
 
-  UpdateServiceAccounts(): Observable<Response> {
+  UpdateServiceAccounts(): Observable<Response> {console.log("Update service Accounts");
 
     // If we're already requesting then return the original request observable.
     if (this.requestObservable) { return this.requestObservable; }
@@ -103,7 +103,6 @@ export class ServiceAccountService {
       ServiceAccounts => this.ServiceAccountsCache = <any>ServiceAccounts,
       error => this.HttpClient.handleHttpError(error),
       () => {
-        console.log('ServiceAccounts =', this.ServiceAccountsCache);
         // We're no longer requesting.
         this.requestObservable = null;
         // Emit our new data to all of our observers.
@@ -111,6 +110,13 @@ export class ServiceAccountService {
       }
     );
     return this.requestObservable;
+  }
+
+  serviceAccountsCacheable(): Observable<any> {
+    if (this.ServiceAccountsCache) {
+      return Observable.of(this.ServiceAccountsCache).delay(0);
+    }
+    return this.UpdateServiceAccounts();
   }
 
   SetActiveServiceAccount(ServiceAccount: ServiceAccount | string): ServiceAccount {
