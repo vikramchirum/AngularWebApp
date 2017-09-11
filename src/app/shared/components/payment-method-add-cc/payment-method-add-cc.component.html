@@ -87,7 +87,7 @@
             class="form-control "
             id="payment-normal-cc-number"
             formControlName="cc_number"
-            maxlength="19"
+            maxlength="16"
           />
           <small class="text-danger" *ngIf="formGroup.controls?.cc_number.pristine"><i class="fa fa-fw fa-asterisk"></i> required</small> <small class="text-danger" *ngIf="formGroup.controls?.cc_number.errors && !formGroup.controls?.cc_number.pristine"><i class="fa fa-fw fa-asterisk"></i> requires a valid credit card number</small> <small class="text-success" *ngIf="formGroup.controls?.cc_number.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
       </div>
