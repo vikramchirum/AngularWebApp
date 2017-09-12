@@ -1,19 +1,19 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
-import { isFunction } from 'lodash';
-import { RenewalStore } from '../../../../core/store/RenewalStore';
-import { ServiceAccountService } from '../../../../core/serviceaccount.service';
-import { ServiceAccount } from '../../../../core/models/serviceaccount/serviceaccount.model';
-import { IRenewalDetails } from '../../../../core/models/renewals/renewaldetails.model';
-import { Subscription } from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
+import {isFunction} from 'lodash';
+import {RenewalStore} from '../../../../core/store/RenewalStore';
+import {ServiceAccountService} from '../../../../core/serviceaccount.service';
+import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceaccount.model';
+import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.model';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'mygexa-renewal-gauge',
   templateUrl: './renewal-gauge.component.html',
   styleUrls: ['./renewal-gauge.component.scss']
 })
-export class RenewalGaugeComponent  implements OnInit, OnDestroy {
+export class RenewalGaugeComponent implements OnInit, OnDestroy {
 
   @ViewChild('gaugeText') gaugeText;
   plansServicesSubscription: Subscription;
@@ -55,7 +55,7 @@ export class RenewalGaugeComponent  implements OnInit, OnDestroy {
   ngOnInit() {
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
-    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinct(x => x[1].Service_Account_Id).subscribe(result => {
+    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1].Service_Account_Id).subscribe(result => {
 
       this.LoadGauge(result[0], result[1]);
     });
@@ -280,14 +280,16 @@ export class RenewalGaugeComponent  implements OnInit, OnDestroy {
   LoadGauge(activeServiceAccount: ServiceAccount, renewal_details: IRenewalDetails) {
 
     // Is_In_Holdover needs to be updated to whatever we specify in the API.
-    if (renewal_details.Is_Account_Eligible_Renewal === false) {
+    if (renewal_details.Existing_Renewal && renewal_details.Existing_Renewal.Is_Pending == true) {
       this.buildRenewedChart(
         new Date(),
         activeServiceAccount.Contract_End_Date ? new Date(activeServiceAccount.Contract_End_Date) : activeServiceAccount.Calculated_Contract_End_Date
       );
-    } else if (activeServiceAccount.Current_Offer.IsHoldOverRate === true) {
+    }
+    else if (activeServiceAccount.Current_Offer.IsHoldOverRate === true) {
       this.buildHoldoverChart();
-    } else {
+    }
+    else {
       this.buildChart(
         new Date(activeServiceAccount.Contract_Start_Date),
         new Date(),
