@@ -1,5 +1,10 @@
 @import '../../../../../../basecolors';
 
+.popover {
+  max-width: 350px;
+  width: 350px;
+}
+
 .popover  > .arrow:after {
     border-bottom-color: $payment-base;
 }
