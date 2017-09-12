@@ -14,6 +14,7 @@ import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceacco
 export class PlanConfirmationPopoverComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('planPopModal') public planPopModal: ModalDirective;
   @Input() IsInRenewalTimeFrame: boolean;
+  @Input() IsOnHoldOver: boolean;
   CustomerAccountServiceSubscription: Subscription = null;
   activeServiceAccountDetails: ServiceAccount;
   customerDetails: CustomerAccount = null;

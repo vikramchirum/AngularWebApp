@@ -27,7 +27,7 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   Renewaldetails: IRenewalDetails = null;
   selectCheckBox: boolean[] = [];   enableSelect: boolean[] = [];   chev_clicked: boolean[] = [];
 
-  IsInRenewalTimeFrame: boolean;   IsRenewalPending: boolean;
+  IsInRenewalTimeFrame: boolean;   IsRenewalPending: boolean; IsOnHoldOver: boolean;
   public AllOffers: AllOffersClass[];
   public All_Offers: AllOffersClass[];
   public FeaturedOffers: AllOffersClass[];
@@ -55,6 +55,7 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
     const renewalDetails$ = this.renewalStore.RenewalDetails;
     this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1].Service_Account_Id).subscribe(result => {
       this.ActiveServiceAccountDetails = result[0]; this.Renewaldetails = result[1];
+      this.IsOnHoldOver = this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate;
       console.log('Renewal details', this.Renewaldetails);
       this.IsInRenewalTimeFrame = result[1].Is_Account_Eligible_Renewal; this.IsRenewalPending = result[1].Is_Pending_Renewal;
       if (this.IsInRenewalTimeFrame && !this.IsRenewalPending && !result[0].Current_Offer.IsHoldOverRate) {

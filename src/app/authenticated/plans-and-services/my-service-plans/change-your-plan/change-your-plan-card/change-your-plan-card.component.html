@@ -85,7 +85,7 @@
           </div>
         </div>
       </div>
-      <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame"></mygexa-plan-confirmation-popover>
+      <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame" [IsOnHoldOver] = "IsOnHoldOver"></mygexa-plan-confirmation-popover>
     </div>
   </section>
   <section *ngIf="upgradeOffersArraylength <= 0" >
@@ -175,7 +175,7 @@
           </div>
         </div>
       </div>
-      <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame"></mygexa-plan-confirmation-popover>
+      <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame" [IsOnHoldOver] = "IsOnHoldOver"></mygexa-plan-confirmation-popover>
     </div>
   </section>
   <section *ngIf="AllOfferss && renewalOffersArraylength <= 0" >
