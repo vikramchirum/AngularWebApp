@@ -14,21 +14,20 @@ export class ChangeUserNameComponent {
 
   changeUserNameForm: FormGroup = null;
   submitAttempt: boolean = null;
-
    constructor(
-     FormBuilder: FormBuilder
+     private FormBuilder: FormBuilder
    ) {
-     this.changeUserNameForm = FormBuilder.group(
-       {
-         userName: [null, Validators.required],
-         confirmUserName: [null, Validators.required]
-       },
-       {
-         validator: equalityCheck('userName', 'confirmUserName')
-       }
-     );
+     this.changeUserNameForm = this.changeUserNameFormInit();
    }
 
+  changeUserNameFormInit(): FormGroup {
+     return this.FormBuilder.group({
+       userName: [null, Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(100)])],
+       confirmUserName: [null, Validators.required]},
+       {
+         validator: equalityCheck('userName', 'confirmUserName')
+       });
+  }
    submitForm() {
      this.submitAttempt = true;
      console.log('value', this.changeUserNameForm.value);

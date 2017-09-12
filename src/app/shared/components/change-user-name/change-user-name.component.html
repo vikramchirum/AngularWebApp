@@ -20,10 +20,14 @@
           name="userName"
           class="form-control"
           [formControl]="changeUserNameForm.controls['userName']"
-          placeholder="Enter new User Name"
+          placeholder="Enter new Username"
         />
+
         <div class="has-error" *ngIf="changeUserNameForm.controls['userName'].hasError('required') && submitAttempt">
           <span class="help-block">Required</span>
+        </div>
+        <div class="has-error" *ngIf="changeUserNameForm.controls['userName'].touched && changeUserNameForm.controls['userName'].hasError('minlength')">
+          <span class="help-block">Username must be at least 8 characters long.</span>
         </div>
       </div>
 
@@ -34,13 +38,13 @@
           class="form-control"
           validateEqual="userName"
           [formControl]="changeUserNameForm.controls['confirmUserName']"
-          placeholder="Confirm User Name"
+          placeholder="Confirm Username"
         />
         <div class="has-error" *ngIf="changeUserNameForm.controls['confirmUserName'].hasError('required') && submitAttempt">
           <span class="help-block">Required</span>
         </div>
         <div class="has-error" *ngIf="!changeUserNameForm.controls['confirmUserName'].hasError('required') && submitAttempt && !(changeUserNameForm.controls['confirmUserName'].value == changeUserNameForm.controls['userName'].value)">
-          <span class="help-block">User Name mismatch</span>
+          <span class="help-block">Username mismatch</span>
         </div>
       </div>
 
