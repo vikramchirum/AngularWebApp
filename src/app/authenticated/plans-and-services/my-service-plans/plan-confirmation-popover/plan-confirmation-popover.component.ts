@@ -36,7 +36,7 @@ export class PlanConfirmationPopoverComponent implements OnInit, OnDestroy, OnCh
     } else {
       this.serviceAccountService.OnUpgradeOrRenew('Upgrade');
     }
-    location.reload();
+    // location.reload();
   }
 
   public showPlanPopModal(): void {
