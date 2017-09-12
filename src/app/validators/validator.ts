@@ -93,7 +93,8 @@ export function validateEmail(c: FormControl) {
 
 
 export function validatePassword(c: FormControl) {
-  const PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,10}$/;
+  // const PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,10}$/;
+  const PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
   return PASSWORD_REGEXP.test(c.value) ? null : {
     validatePassword: {
       valid: false

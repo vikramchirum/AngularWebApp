@@ -69,7 +69,7 @@ export class LoginRegisterModalComponent implements OnInit {
       Service_Account_Id: ['', Validators.required],
       Zip_Code: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(5), validateInteger])],
       User_name: ['', Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(100)])],
-      Password: ['', Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(10), validatePassword])],
+      Password: ['', Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(100), validatePassword])],
       ConfirmPassword: ['', Validators.required],
       Email_Address: ['', Validators.compose([Validators.required, validateEmail])],
       Security_Question_Id: ['', Validators.required],
