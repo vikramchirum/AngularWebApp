@@ -98,9 +98,7 @@
           <ng-template #showpop>
             <button type="button" class="close text-right" aria-label="Close" (click)="plan_pop.hide()">
               <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-            <mygexa-plan-confirmation-popover></mygexa-plan-confirmation-popover>
           </ng-template>
-
         </div>
         <div *ngIf="selectCheckBox" class="agreement-section">
           <hr>
@@ -173,6 +171,6 @@
     </div>
   </section>
 </ng-template>
+<mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsUpForRenewal" [IsOnHoldOver]="IsOnHoldOver"></mygexa-plan-confirmation-popover>
 
-<mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsUpForRenewal"></mygexa-plan-confirmation-popover>
 

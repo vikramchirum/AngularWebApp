@@ -74,24 +74,25 @@ export class PaperlessSettingsComponent implements OnInit {
       Type: NotificationType.Contract_Expiration
     }
     this.notificationService.searchNotificationOption(this.searchNotificationOptionRequestForBill).subscribe(result => {
-      // console.log('Notification Result for Bill', result);
+     // console.log('Notification Result for Bill', result);
       this.notificationOptionsForBills = result;
       if (this.notificationOptionsForBills && this.notificationOptionsForBills.length > 0) {
         this.selectedPreference(this.notificationOptionsForBills, this.billingOptions);
       } else {
         this.billingOptions[1].checked = true;
       }
+      this.togglePaperless(this.billingOptions, this.plansOptions);
     });
     this.notificationService.searchNotificationOption(this.searchNotificationOptionRequestForPlans).subscribe(result => {
-      // console.log('Notification Result for plans', result);
+      //console.log('Notification Result for plans', result);
       this.notificationOptionsForPlans = result;
       if (this.notificationOptionsForPlans && this.notificationOptionsForPlans.length > 0) {
         this.selectedPreference(this.notificationOptionsForPlans, this.plansOptions);
       } else {
         this.plansOptions[1].checked = true;
       }
-    });
-    this.togglePaperless(this.billingOptions, this.plansOptions);
+      this.togglePaperless(this.billingOptions, this.plansOptions);
+    });   
   }
   selectedPreference(preference, preferenceOptions) {
     if (preference[0].Status === 'Active') {
@@ -108,7 +109,6 @@ export class PaperlessSettingsComponent implements OnInit {
 
   togglePaperless(billingOptions, plansOptions) {
     let flag = 1;
-
     billingOptions.forEach(x => {
       if (x.checked) {
         if (x.option === 'Paper') {

@@ -34,6 +34,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   IsOffersReady: boolean = null;
   public IsUpForRenewal: boolean;
   public IsRenewalPending: boolean;
+  public IsOnHoldOver: boolean;
   public FeaturedOffers: AllOffersClass[];
   public RenewalOffers: IOffers = null;
   public Featured_Usage_Level: string = null;
@@ -55,6 +56,9 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
     this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1].Service_Account_Id).subscribe(result => {
+      this.ActiveServiceAccount = result[0]; this.RenewalAccount = result[1];
+      this.IsOnHoldOver = this.ActiveServiceAccount.Current_Offer.IsHoldOverRate;
+      if ( result[1] != null) {
 
       this.ActiveServiceAccount = result[0];
       this.RenewalAccount = result[1];

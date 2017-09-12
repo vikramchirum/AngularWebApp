@@ -14,6 +14,7 @@ import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceacco
 export class PlanConfirmationPopoverComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('planPopModal') public planPopModal: ModalDirective;
   @Input() IsInRenewalTimeFrame: boolean;
+  @Input() IsOnHoldOver: boolean;
   CustomerAccountServiceSubscription: Subscription = null;
   activeServiceAccountDetails: ServiceAccount;
   customerDetails: CustomerAccount = null;
@@ -36,7 +37,7 @@ export class PlanConfirmationPopoverComponent implements OnInit, OnDestroy, OnCh
     } else {
       this.serviceAccountService.OnUpgradeOrRenew('Upgrade');
     }
-    location.reload();
+    // location.reload();
   }
 
   public showPlanPopModal(): void {
