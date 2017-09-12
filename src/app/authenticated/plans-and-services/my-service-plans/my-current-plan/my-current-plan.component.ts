@@ -56,28 +56,30 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
     this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1].Service_Account_Id).subscribe(result => {
-      this.ActiveServiceAccount = result[0]; this.RenewalAccount = result[1];
-      this.IsOnHoldOver = this.ActiveServiceAccount.Current_Offer.IsHoldOverRate;
-      if ( result[1] != null) {
-
       this.ActiveServiceAccount = result[0];
       this.RenewalAccount = result[1];
+      this.IsOnHoldOver = this.ActiveServiceAccount.Current_Offer.IsHoldOverRate;
       if (result[1] != null) {
 
-        this.IsUpForRenewal = result[1].Is_Account_Eligible_Renewal;
-        this.IsRenewalPending = result[1].Is_Pending_Renewal;
-        if (this.IsUpForRenewal) {
-          this.OffersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
-            All_Offers => {
-              if (All_Offers != null) {
-                this.FeaturedOffers = All_Offers.filter(item => item.Type === 'Featured_Offers');
-                this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
-                if (this.RenewalOffers) {
-                  this.checkFeaturedUsageLevel(this.RenewalOffers);
+        this.ActiveServiceAccount = result[0];
+        this.RenewalAccount = result[1];
+        if (result[1] != null) {
+
+          this.IsUpForRenewal = result[1].Is_Account_Eligible_Renewal;
+          this.IsRenewalPending = result[1].Is_Pending_Renewal;
+          if (this.IsUpForRenewal) {
+            this.OffersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
+              All_Offers => {
+                if (All_Offers != null) {
+                  this.FeaturedOffers = All_Offers.filter(item => item.Type === 'Featured_Offers');
+                  this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+                  if (this.RenewalOffers) {
+                    this.checkFeaturedUsageLevel(this.RenewalOffers);
+                  }
+                  this.IsOffersReady = true;
                 }
-                this.IsOffersReady = true;
-              }
-            });
+              });
+          }
         }
       }
     });
