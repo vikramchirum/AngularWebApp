@@ -4,7 +4,7 @@
 
 import { IReferee } from './referee.model';
 
-export class IReferral {
+export interface IReferral {
   Service_Account_Id: string;
   Customer_Account_Id: string;
   RefereeList: IReferee[];

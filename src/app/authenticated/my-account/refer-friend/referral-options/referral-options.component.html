@@ -12,28 +12,28 @@
       <div class="col-md-10 col-md-offset-2">
        <div class="control">
         <div class="friends">
-          <div formArrayName="friends">
-            <div *ngFor="let friend of friendsForm.controls.friends.controls; let i = index">
+          <div formArrayName="FriendsList">
+            <div *ngFor="let friend of friendsForm.controls.FriendsList.controls; let i = index">
               <div class="row" [formGroupName]="i">
-                <div [formGroupName]="'name'">
+                <div>
                   <div class="col-xs-6 col-sm-4">
                     <div *ngIf="i === 0" >
-                      <input type="text" class="form-control" placeholder="First Name" formControlName="first"/>
+                      <input type="text" class="form-control" placeholder="First Name" formControlName="FirstName"/>
                     </div>
                     <div *ngIf="i !== 0" class="input-group" >
                        <div class="input-group-btn">
                         <button class="btn btn-default" type="button" (click)="removeFriend(i)"><i class="fa fa-times"></i></button>
                       </div>
-                      <input type="text" class="form-control" placeholder="First Name" formControlName="first"/>
+                      <input type="text" class="form-control" placeholder="First Name" formControlName="FirstName"/>
                     </div>
                   </div>
                   <div class="col-xs-6 col-sm-4">
-                      <input type="text" class="form-control" placeholder="Last Name" formControlName="last"/>
+                      <input type="text" class="form-control" placeholder="Last Name" formControlName="LastName"/>
                   </div>
                 </div>
                 <div class="col-xs-12 col-sm-4">
                     <br class="visible-xs">
-                    <input type="email" class="form-control" [ngClass]="{ 'ng-invalid': !friend.controls['email'].hasError('validateEmail') }" placeholder="Email Address" formControlName="email"/>
+                    <input type="email" class="form-control" [ngClass]="{ 'ng-invalid': !friend.controls['EmailAddress'].hasError('validateEmail') }" placeholder="Email Address" formControlName="EmailAddress"/>
                 </div>
               </div>
               <hr/>
@@ -66,7 +66,7 @@
     <div class="col-md-10 col-md-offset-2">
       <p>Copy the below link & share with your friends and family:</p>
       <div class="input-group has-success">
-        <input #referralLink type="text" class="form-control bg-info" readonly value="https://zkjdgfuk/RefereeEnrollment.aspx?Referralid=123456"/>
+        <input #referralLink type="text" class="form-control bg-info" readonly value="{{ gexaShareUrl }}"/>
         <span class="input-group-btn">
           <button class="btn btn-primary" type="button" (click)="getReferralLink()"><i class="fa fa-fw fa-link"></i></button>
         </span>

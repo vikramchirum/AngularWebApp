@@ -23,6 +23,9 @@ import { NotificationOptionsService } from './notificationoptions.service';
 import { DocumentsService } from './documents.service';
 import { RenewalService } from './renewal.service';
 import { RenewalStore } from './store/RenewalStore';
+import { ReferralService } from './referral.service';
+import { ReferralStore } from './store/referralstore';
+import { MessageCenterService } from './messagecenter.service';
 
 @NgModule({
   imports: [
@@ -46,7 +49,10 @@ import { RenewalStore } from './store/RenewalStore';
     NotificationOptionsService,
     DocumentsService,
     RenewalService,
-    RenewalStore
+    RenewalStore,
+    ReferralService,
+    ReferralStore,
+    MessageCenterService
   ]
 })
 export class CoreModule { }

@@ -7,6 +7,7 @@ export const environment = {
   Api_Url: 'http://azureapidev/api',
   Api_Token: '2f74b90f975e4dc4a93283c6075ebf67',
   Forte_Api_Key: 'GwnI15Vj36',
+  DollarAmountFormatter: '1.2-2',
   Documents_Url: 'https://docsqa.gexaenergy.com',
-  DollarAmountFormatter: '1.2-2'
+  GexaShare_Url: 'http://qa2.gexaenergy.com/oef/refereeenrollment.aspx?referralid='
 };
