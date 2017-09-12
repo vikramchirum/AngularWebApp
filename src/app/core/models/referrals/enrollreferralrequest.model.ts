@@ -2,7 +2,7 @@
  * Created by vikram.chirumamilla on 7/10/2017.
  */
 
-export interface ICancelRenewalRequest {
+export interface IEnrollReferralRequest {
   Service_Account_Id: string;
-  User_Name: string;
+  Customer_Account_Id: string;
 }

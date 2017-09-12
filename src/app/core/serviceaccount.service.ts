@@ -33,7 +33,7 @@ export class ServiceAccountService {
     return localStorage.getItem('gexa_active_Service_account_id');
   }
 
-  constructor(private HttpClient: HttpClient, private UserService: UserService, private RenewalService: RenewalService) {
+  constructor(private HttpClient: HttpClient, private UserService: UserService) {
 
     // Make Observables (Active Service Account and Service Accounts) for others to listen to.
     // 1. Collect, or 'push', new observers to the observable's collection.
@@ -80,11 +80,11 @@ export class ServiceAccountService {
   set CustomerAccountId(CustomerAccountId: string) {
     if (this._CustomerAccountId !== CustomerAccountId) {
       this._CustomerAccountId = CustomerAccountId;
-      this.UpdateServiceAccounts();
+      this.serviceAccountsCacheable();
     }
   }
 
-  UpdateServiceAccounts(): Observable<Response> {
+  UpdateServiceAccounts(): Observable<Response> {console.log("Update service Accounts");
 
     // If we're already requesting then return the original request observable.
     if (this.requestObservable) { return this.requestObservable; }
@@ -103,7 +103,6 @@ export class ServiceAccountService {
       ServiceAccounts => this.ServiceAccountsCache = <any>ServiceAccounts,
       error => this.HttpClient.handleHttpError(error),
       () => {
-        console.log('ServiceAccounts =', this.ServiceAccountsCache);
         // We're no longer requesting.
         this.requestObservable = null;
         // Emit our new data to all of our observers.
@@ -111,6 +110,13 @@ export class ServiceAccountService {
       }
     );
     return this.requestObservable;
+  }
+
+  serviceAccountsCacheable(): Observable<any> {
+    if (this.ServiceAccountsCache) {
+      return Observable.of(this.ServiceAccountsCache).delay(0);
+    }
+    return this.UpdateServiceAccounts();
   }
 
   SetActiveServiceAccount(ServiceAccount: ServiceAccount | string): ServiceAccount {

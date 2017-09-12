@@ -20,7 +20,7 @@ export class RenewalService {
   constructor(private http: HttpClient) {
   }
 
-  getRenewal(serviceAccountId: number): Observable<IRenewal>   {
+  getRenewal(serviceAccountId: string): Observable<IRenewal>   {
     const relativePath = `/renewals/${serviceAccountId}`;
     return this.http.get(relativePath)
       .map((response: Response) => { return <IRenewal> response.json(); })
@@ -43,7 +43,7 @@ export class RenewalService {
       .catch(error => this.http.handleHttpError(error));
   }
 
-  getRenewalDetails(serviceAccountId: number): Observable<IRenewalDetails>   {
+  getRenewalDetails(serviceAccountId: string): Observable<IRenewalDetails>   {
     const relativePath = `/renewals/${serviceAccountId}/details`;
     return this.http.get(relativePath)
       .map((response: Response) => { return <IRenewalDetails> response.json(); })

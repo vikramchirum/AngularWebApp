@@ -3,6 +3,7 @@
  */
 
 import {OfferCharge} from './offercharge';
+import {IPartnerInfo} from './partnerinfo.model';
 
 export interface Offer {
   Rate_Code: string;
@@ -28,4 +29,8 @@ export interface Offer {
   Usage_Charges: [OfferCharge];
   Start_Date: string;
   End_Date: string;
+  Partner_Info: IPartnerInfo;
+  IsHoldOverRate: boolean;
+  IsLegacyOffer: boolean;
+  IsFixed: boolean;
 }

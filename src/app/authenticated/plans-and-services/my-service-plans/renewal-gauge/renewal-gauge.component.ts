@@ -1,16 +1,22 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
-import { isFunction } from 'lodash';
+import {Observable} from 'rxjs/Observable';
+import {isFunction} from 'lodash';
+import {RenewalStore} from '../../../../core/store/RenewalStore';
+import {ServiceAccountService} from '../../../../core/serviceaccount.service';
+import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceaccount.model';
+import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.model';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'mygexa-renewal-gauge',
   templateUrl: './renewal-gauge.component.html',
   styleUrls: ['./renewal-gauge.component.scss']
 })
-export class RenewalGaugeComponent {
+export class RenewalGaugeComponent implements OnInit, OnDestroy {
 
   @ViewChild('gaugeText') gaugeText;
+  plansServicesSubscription: Subscription;
 
   public doughnutChartOptions: any = Observable.of({});
   public doughnutChartDataSet: Observable<any[]> = Observable.of([0, 0, 0, 0]);
@@ -19,7 +25,7 @@ export class RenewalGaugeComponent {
   public chartTimestamp: Date = null;
   public chartType: string = null;
 
-  constructor() {
+  constructor(private serviceAccountService: ServiceAccountService, private renewalStore: RenewalStore) {
     this.doughnutChartOptions = Observable.of({
       cutoutPercentage: 80,
       tooltips: {
@@ -43,6 +49,15 @@ export class RenewalGaugeComponent {
           }
         }
       }
+    });
+  }
+
+  ngOnInit() {
+    const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
+    const renewalDetails$ = this.renewalStore.RenewalDetails;
+    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1].Service_Account_Id).subscribe(result => {
+
+      this.LoadGauge(result[0], result[1]);
     });
   }
 
@@ -260,7 +275,30 @@ export class RenewalGaugeComponent {
         console.error(e);
       }
     });
-
   }
 
+  LoadGauge(activeServiceAccount: ServiceAccount, renewal_details: IRenewalDetails) {
+
+    // Is_In_Holdover needs to be updated to whatever we specify in the API.
+    if (renewal_details.Existing_Renewal && renewal_details.Existing_Renewal.Is_Pending == true) {
+      this.buildRenewedChart(
+        new Date(),
+        activeServiceAccount.Contract_End_Date ? new Date(activeServiceAccount.Contract_End_Date) : activeServiceAccount.Calculated_Contract_End_Date
+      );
+    }
+    else if (activeServiceAccount.Current_Offer.IsHoldOverRate === true) {
+      this.buildHoldoverChart();
+    }
+    else {
+      this.buildChart(
+        new Date(activeServiceAccount.Contract_Start_Date),
+        new Date(),
+        activeServiceAccount.Contract_End_Date ? new Date(activeServiceAccount.Contract_End_Date) : activeServiceAccount.Calculated_Contract_End_Date
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    this.plansServicesSubscription.unsubscribe();
+  }
 }

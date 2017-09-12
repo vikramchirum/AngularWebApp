@@ -4,7 +4,7 @@ import { IRenewal } from './renewal.model';
  */
 
 export interface IRenewalDetails {
-  Service_Account_Id: number;
+  Service_Account_Id: string;
   Service_Account_Status: string;
   Is_Account_Eligible_Renewal: boolean;
   Is_Pending_Renewal: boolean;
