@@ -28,7 +28,7 @@
           <small class="text-danger" *ngIf="addServiceForm.controls?.Service_Start_Date.errors?.checkIfNewYear">New Year day is not a valid start date</small>
           <small class="text-danger" *ngIf="addServiceForm.controls?.Service_Start_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid start date</small>
           <small class="text-danger" *ngIf="addServiceForm.controls?.Service_Start_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid start date</small>
-          
+          <small class="text-danger" *ngIf="!selectedServiceAddress && addServiceForm.controls?.Service_Start_Date.touched">Please Enter New Service Address</small>
       </div>
       <small class="start-date-tooltip"><i aria-hidden="true" class="fa fa-info-circle" tooltip="If you require service before 3 business days then call 855-639-8118."></i></small>
     </div>

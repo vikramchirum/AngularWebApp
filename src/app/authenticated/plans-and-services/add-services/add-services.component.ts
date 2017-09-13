@@ -22,8 +22,6 @@ export class AddServicesComponent implements OnInit {
   availableOffers: IOffers[] = null;
   featuredOffers = null;
 
-
-
   private selDate: IMyDate = { year: 0, month: 0, day: 0 };
 
   constructor(private fb: FormBuilder,
@@ -118,20 +116,21 @@ export class AddServicesComponent implements OnInit {
   //Fetch Offers when users selects new address
   getSelectedAddress(event) {
     this.selectedServiceAddress = event;
-    this.getFeaturedOffers();
+    this.getFeaturedOffers(this.addServiceForm.value.Service_Start_Date.jsdate);
   }
 
 
   onStartDateChanged(event: IMyDateModel) {
     // date selected
-    this.getFeaturedOffers();
+    if(this.selectedServiceAddress){
+      this.getFeaturedOffers(event.jsdate);    
+    }   
   }
 
   //Fetch Offers by passing start date and TDU_DUNS number of selected addresss
-  getFeaturedOffers() {
-    // console.log(event);   
+  getFeaturedOffers(ServiceStartDate) {  
     this.offerRequestParams = {
-      startDate: this.addServiceForm.controls['Service_Start_Date'].value.jsdate,
+      startDate: ServiceStartDate.toISOString(),
       dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS
     }
     // send start date and TDU_DUNS_Number to get offers available.
