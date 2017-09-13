@@ -29,6 +29,26 @@
           <p>{{Offer.Promotion?.Name}}</p>
         </div>
         <div *ngIf="selectCheckBox[i]" class="agreement-section">
+          <div *ngIf="Offer?.Has_Partner">
+            <div class="row">
+              <div class="col-xs-2">
+                <label>Name</label>
+              </div>
+              <div class="col-xs-10">
+                <input type="text" class="form-control" placeholder="Name on Account">
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-xs-2">
+                <label>Enter</label>
+              </div>
+              <div class="col-xs-10">
+                <input type="text" class="form-control" placeholder="Your Rewards Number">
+              </div>
+            </div>
+            <br>
+          </div>
           <div class="checkbox">
             <label>
               <input type="checkbox" value="" (click) = "toggleButton(i)">
@@ -120,6 +140,26 @@
           <p>{{Offer.Promotion?.Name}}</p>
         </div>
         <div *ngIf="selectCheckBox[i]" class="agreement-section">
+          <div *ngIf="Offer?.Has_Partner">
+            <div class="row">
+              <div class="col-xs-2">
+                <label>Name</label>
+              </div>
+              <div class="col-xs-10">
+                <input type="text" class="form-control" placeholder="Name on Account">
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-xs-2">
+                <label>Enter</label>
+              </div>
+              <div class="col-xs-10">
+                <input type="text" class="form-control" placeholder="Your Rewards Number">
+              </div>
+            </div>
+            <br>
+          </div>
           <div class="checkbox">
             <label>
               <input type="checkbox" value="" (click) = "toggleButton(i)">
