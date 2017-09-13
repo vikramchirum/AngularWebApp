@@ -17,6 +17,7 @@ export interface IOffers {
   Price_At_2000_kwh: number;
   Actual_Pricing: IPricingDefinition;
   Credit_Check_Required: boolean;
+  Has_Partner: boolean;
   Id: string;
   Creation_Time: string;
   Date_Created: string;

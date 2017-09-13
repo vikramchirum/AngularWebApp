@@ -11,7 +11,8 @@
     <ng-container *ngIf="budgetBillingInfo.Indicator; else VerifySignUpBudgetBilling">
 
       <ng-container *ngIf="(!isCancelled && !isCancelError);">
-        <div class="text-center">
+
+        <div class="text-center" *ngIf="!(budgetBillingInfo.Pending_Cancel_Count > 0)">
           <h1>{{ signedUpToBudgetBillingRecently ? 'Thanks! ' : '' }}Your Budget Billing is Active</h1>
           <h1 class="active-budget">{{ budgetBillingInfo.Amount }} Per Month</h1>
           <h4>Start Date {{ budgetBillingInfo.Create_Date | date:'d MMM y' }}</h4>
@@ -30,7 +31,9 @@
 
       <ng-container *ngIf="isCancelled">
         <h4>
-          Thank you for enrolling in Gexa Energy’s Budget Billing Program. A confirmation letter containing the details of your enrollment on budget billing will be mailed to you.
+
+          Your budget billing has been cancelled.
+
         </h4>
       </ng-container>
       <ng-container *ngIf="isCancelError">
@@ -43,7 +46,7 @@
 
     <ng-template #VerifySignUpBudgetBilling>
 
-     
+
       <ng-container *ngIf="budgetBillingEstimate$ | async; else loading let budgetBillingEstimate; ">
 
         <ng-container *ngIf="!getBudgetBillingEligibility(budgetBillingEstimate); else SignUpBudgetBilling">
@@ -87,8 +90,8 @@
           <ng-container *ngIf="!signingUpToBudgetBilling; else SigningUpToBudgetBilling;">
             <div class="row text-center">
               <div class="col-md-4 col-md-push-8">
-                <a><img class="payment-options-budget-billing-how-it-works"
-                        src="/assets/payments/payment-options-budget-billing-how-it-works.jpg"/></a>
+                <!--<a><img class="payment-options-budget-billing-how-it-works"
+                        src="/assets/payments/payment-options-budget-billing-how-it-works.jpg"/></a>-->
               </div>
               <div class="col-md-8 col-md-pull-4">
 
@@ -130,7 +133,7 @@
                 Thank you for enrolling in Gexa Energy’s Budget Billing Program. A confirmation letter containing the details of your enrollment on budget billing will be mailed to you.
               </h4>
             </ng-container>
-            <ng-container *ngIf="isEnrollError">
+              <ng-container *ngIf="isEnrollError">
               <h4>
                 There is an error in enrolling for budget billing. Please try later.
               </h4>

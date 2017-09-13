@@ -50,7 +50,7 @@ export class UserService implements CanActivate {
   private updateClaims = '/user/updateClaims';
   private updateSecAnswer = '/user/updateSecurityAnswer';
   private updateSecQuestion = '/user/updateSecurityQuestion';
-
+  private updateUsername = '/user/updateUsername';
 
   get user_token(): string {
 
@@ -295,6 +295,24 @@ export class UserService implements CanActivate {
     return null;
   }
 
+  // update username with token
+  updateUserName(Username: string) {
+    const token = localStorage.getItem('gexa_auth_token');
+    const body = {
+      creds: {
+        Username: Username,
+        Password: 'string'
+      },
+      Token: token
+    };
+    if (token && token.length) {
+      return this.httpClient.put(this.updateUsername, body)
+        .map(res => res.json())
+        .catch(error => this.httpClient.handleHttpError(error));
+    }
+    return null;
+  }
+
 // Update security question and answer with token.
   updateSecurityQuestion(Ques_Id: number, Sec_Answer: string) {
 
@@ -336,6 +354,18 @@ export class UserService implements CanActivate {
     }
   }
 
+  public updateUserInMongo(user: IUser) {
+    if (user) {
+      const body = user;
+      this.httpClient.put('/user/updateUserInMongo', body)
+        .map(res => res.json())
+        .catch(error => this.httpClient.handleHttpError(error))
+        .subscribe(res => {
+        //  console.log('Updated user result', res);
+        this.ApplyUserData(res); });
+    }
+  }
+
   public ApplyUserData(user: IUser): IUser {
 
     this.UserCache = user || null;
@@ -364,7 +394,6 @@ export class UserService implements CanActivate {
 
     // Return the new user's data.
     return this.UserCache;
-
   }
 
   public updateClaim(tok: string, zip: string, value: string) {

@@ -34,7 +34,7 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   public Invoices: IInvoice[];
 
   private ActiveServiceAccountSubscription: Subscription = null;
-  private serviceAccountId: number;
+  private serviceAccountId: string;
 
   @ViewChild('viewMyBillModal') viewMyBillModal: ViewMyBillModalComponent;
 
@@ -60,7 +60,7 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.ActiveServiceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
-        this.serviceAccountId = +(result.Id);
+        this.serviceAccountId = result.Id;
         const invoiceSearchRequest = {} as IInvoiceSearchRequest;
         invoiceSearchRequest.Service_Account_Id = this.serviceAccountId;
         this.invoiceService.getInvoicesCacheable(invoiceSearchRequest).subscribe(bills => {

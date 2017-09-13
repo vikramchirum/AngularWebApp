@@ -90,7 +90,7 @@ export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
 
         this.Invoices = null;
         const invoiceSearchRequest = {} as IInvoiceSearchRequest;
-        invoiceSearchRequest.Service_Account_Id = Number(ActiveServiceAccount.Id);
+        invoiceSearchRequest.Service_Account_Id = ActiveServiceAccount.Id;
         this.InvoiceService.getInvoicesCacheable(invoiceSearchRequest).subscribe(
           Invoices => {
             this.Invoices = clone(Invoices);

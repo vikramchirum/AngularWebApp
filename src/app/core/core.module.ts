@@ -25,6 +25,9 @@ import { RenewalService } from './renewal.service';
 import { RenewalStore } from './store/RenewalStore';
 import {OffersStore} from './store/OffersStore';
 import {CustomerAccountStore} from './store/CustomerAccountStore';
+import { MessageCenterService } from './messagecenter.service';
+import { ReferralStore } from './store/referralstore';
+import { ReferralService } from './referral.service';
 
 @NgModule({
   imports: [
@@ -50,7 +53,10 @@ import {CustomerAccountStore} from './store/CustomerAccountStore';
     RenewalService,
     RenewalStore,
     OffersStore,
-    CustomerAccountStore
+    CustomerAccountStore,
+    ReferralStore,
+    ReferralService,
+    MessageCenterService
   ]
 })
 export class CoreModule { }

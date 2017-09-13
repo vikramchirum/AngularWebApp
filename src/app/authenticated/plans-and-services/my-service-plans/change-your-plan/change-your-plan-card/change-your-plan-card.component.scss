@@ -1,19 +1,27 @@
 @import '../../../../../../basecolors';
 
 .plan-card {
-      border-right:1px solid #fff;
+  margin-bottom: 20px;
 
 }
+
 
 .plan-card-container{
     border: none;
     border-radius: 0;
     padding: 10px 0;
     margin-bottom: 5px;
+    background-color: rgba(255,255,255,0.1);
+  
+  &:hover {
+        background-color: rgba(255,255,255,0.3);
+        transition: 1s ease all;
+  }
 
     .card-included {
       margin-right: 2px;
       padding: 8px;
+      
 
       h4{
         font-size: 14px !important;
@@ -29,6 +37,8 @@
       h4 {
         color:  rgba(46,177,52,1.0);
         margin-top: 1px;
+        margin-bottom: 0;
+        height: 20px;
       }
 
       .fa {
@@ -119,6 +129,10 @@
   left: 20%;
   //color:#fff;
 }
+  .fa-check {
+    color: $payment-base;
+    
+  }
 
 .checkbox label input[type="checkbox"] {
   display: none;
@@ -139,6 +153,15 @@
 .checkbox label input[type="checkbox"]:disabled + .cr{
   opacity: .5;
 }
+  
+.card-included.popover {
+    position: absolute;
+    background-color: #fff;
+    display: block;
+    width: 100%;
+    left: 8px;
+    top: 40px;
+    }
 
 
 }
@@ -174,6 +197,9 @@
     .fa{
           color:#000 !important;
     }
+}
+.popover {
+  width: 350px;
 }
 
 

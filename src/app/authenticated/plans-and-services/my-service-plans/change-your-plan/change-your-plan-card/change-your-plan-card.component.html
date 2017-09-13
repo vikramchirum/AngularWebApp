@@ -8,7 +8,7 @@
       <!--{{setDefaultValues(i)}}-->
       <div class="plan-card-container">
         <div class="card-content">
-          <div class="card-title">
+          <div class="card-title container-fluid">
             <div class="row">
               <div class="col-xs-11"><h4>{{Offer.Plan.Name }}</h4></div><div class="col-xs-1 no-padding"> <i class="fa fa-info-circle" aria-hidden="true" (click)="pop.show()"></i></div>
             </div>
@@ -29,6 +29,26 @@
           <p>{{Offer.Promotion?.Name}}</p>
         </div>
         <div *ngIf="selectCheckBox[i]" class="agreement-section">
+          <div *ngIf="Offer?.Has_Partner">
+            <div class="row">
+              <div class="col-xs-2">
+                <label>Name</label>
+              </div>
+              <div class="col-xs-10">
+                <input type="text" class="form-control" placeholder="Name on Account">
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-xs-2">
+                <label>Enter</label>
+              </div>
+              <div class="col-xs-10">
+                <input type="text" class="form-control" placeholder="Your Rewards Number">
+              </div>
+            </div>
+            <br>
+          </div>
           <div class="checkbox">
             <label>
               <input type="checkbox" value="" (click) = "toggleButton(i)">
@@ -55,7 +75,7 @@
         <div class="row card-included" >
           <div class="col-md-12">
             <h4 class="text-center form-control ">What's included <i class="fa fa-chevron-down" (click)="ChevClicked(i)" [ngClass]="chev_clicked[i]  ?  'fa-chevron-down':  'fa-chevron-up'"></i><br>
-              <div class="card-included pull-left" *ngIf="chev_clicked[i]">
+              <div class="card-included popover pull-left" *ngIf="chev_clicked[i]">
                 {{featuredOfferFeatures(Offer)}}
                 <div *ngIf="Offer?.Plan?.Product?.Product_Features != null || length <= 0 ; then features else noFeatures"></div>
                 <ng-template #features>
@@ -85,7 +105,7 @@
           </div>
         </div>
       </div>
-      <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame"></mygexa-plan-confirmation-popover>
+      <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame" [IsOnHoldOver] = "IsOnHoldOver"></mygexa-plan-confirmation-popover>
     </div>
   </section>
   <section *ngIf="upgradeOffersArraylength <= 0" >
@@ -102,7 +122,7 @@
       {{checkFeaturedUsageLevel(Offer.Plan.Product.Featured_Usage_Level, Offer)}}
       <div class="plan-card-container">
         <div class="card-content">
-          <div class="card-title">
+          <div class="card-title container-fluid">
             <div class="row">
               <div class="col-xs-11"><h4>{{Offer.Plan.Name }}</h4></div><div class="col-xs-1 no-padding"> <i class="fa fa-info-circle" aria-hidden="true" (click)="pop.show()"></i></div>
             </div>
@@ -120,6 +140,26 @@
           <p>{{Offer.Promotion?.Name}}</p>
         </div>
         <div *ngIf="selectCheckBox[i]" class="agreement-section">
+          <div *ngIf="Offer?.Has_Partner">
+            <div class="row">
+              <div class="col-xs-2">
+                <label>Name</label>
+              </div>
+              <div class="col-xs-10">
+                <input type="text" class="form-control" placeholder="Name on Account">
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-xs-2">
+                <label>Enter</label>
+              </div>
+              <div class="col-xs-10">
+                <input type="text" class="form-control" placeholder="Your Rewards Number">
+              </div>
+            </div>
+            <br>
+          </div>
           <div class="checkbox">
             <label>
               <input type="checkbox" value="" (click) = "toggleButton(i)">
@@ -146,7 +186,7 @@
         <div class="row card-included" >
           <div class="col-md-12">
             <h4 class="text-center form-control ">What's included <i class="fa fa-chevron-down" (click)="ChevClicked(i)" [ngClass]="chev_clicked[i] ?  'fa-chevron-down':  'fa-chevron-up'"></i><br>
-              <div class="card-included pull-left" *ngIf="chev_clicked[i]">
+              <div class="card-included popover pull-left" *ngIf="chev_clicked[i]">
                 <div *ngIf="Offer?.Plan?.Product?.Product_Features != null ; then features else noFeatures"></div>
                 <ng-template #features>
                   <div *ngFor="let feature of Offer?.Plan?.Product?.Product_Features">
@@ -175,7 +215,7 @@
           </div>
         </div>
       </div>
-      <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame"></mygexa-plan-confirmation-popover>
+      <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame" [IsOnHoldOver] = "IsOnHoldOver"></mygexa-plan-confirmation-popover>
     </div>
   </section>
   <section *ngIf="AllOfferss && renewalOffersArraylength <= 0" >

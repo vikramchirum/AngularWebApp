@@ -3,6 +3,6 @@
  */
 
 export interface IInvoiceSearchRequest {
-  Service_Account_Id: number;
+  Service_Account_Id: string;
   Invoice_Id: number;
 }

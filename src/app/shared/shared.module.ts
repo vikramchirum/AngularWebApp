@@ -22,6 +22,7 @@ import { PaymethodAddEcheckComponent } from './components/payment-method-add-ech
 import { ViewBillComponent } from './components/view-bill/view-bill.component';
 import { DollarToCentsPipe } from './pipes/DollarToCents.pipe';
 import { AddressSearchComponent } from './components/address-search/address-search.component';
+import { PhoneDirective } from './directives/phone.directive';
 
 @NgModule({
   imports: [
@@ -49,7 +50,8 @@ import { AddressSearchComponent } from './components/address-search/address-sear
     PaymethodAddEcheckComponent,
     ViewBillComponent,
     DollarToCentsPipe,
-    AddressSearchComponent
+    AddressSearchComponent,
+    PhoneDirective
   ],
   exports: [
     ChangeUserNameComponent,
@@ -69,7 +71,8 @@ import { AddressSearchComponent } from './components/address-search/address-sear
     PaymethodAddEcheckComponent,
     ViewBillComponent,
     DollarToCentsPipe,
-    AddressSearchComponent
+    AddressSearchComponent,
+    PhoneDirective
   ]
 })
 export class SharedModule { }

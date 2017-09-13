@@ -60,8 +60,6 @@
                     && formSubmitted"> Username is required. </span>
                       <span *ngIf="registerForm.controls['User_name'].hasError('minlength')
                     && registerForm.controls['User_name'].touched">Username must be at least 8 characters long. </span>
-                      <span *ngIf="registerForm.controls['User_name'].hasError('maxlength')
-                    && registerForm.controls['User_name'].touched">Username must be at least 8 characters long.</span>
                     </div>
                   </div>
                 </div>
@@ -80,14 +78,13 @@
                   <div class="has-error" *ngIf="registerForm.controls['Password'].hasError('required') && formSubmitted ||  registerForm.controls['Password'].hasError('validatePassword') && registerForm.controls['Password'].touched || registerForm.controls['Password'].hasError('minlength')
                     && registerForm.controls['Password'].touched || registerForm.controls['Password'].hasError('maxlength')
                     && registerForm.controls['Password'].touched">
-                    <div class="help-block">
+                  <div class="help-block">
                         <span *ngIf="registerForm.controls['Password'].hasError('required')
-                    && formSubmitted"> Password is required. </span><span  *ngIf="registerForm.controls['Password'].hasError('validatePassword') && registerForm.controls['Password'].touched">Password must have at least one uppercase letter, one lowercase letter, one number and one special character. </span>
-                      <span *ngIf="registerForm.controls['Password'].hasError('minlength')
-                    && registerForm.controls['Password'].touched">Password be at least 6 characters long. </span><span *ngIf="registerForm.controls['Password'].hasError('maxlength')
-                    && registerForm.controls['Password'].touched">Password cannot exceed 10 characters. </span>
-                    </div>
+                    && formSubmitted"> Password is required. </span><span  *ngIf="registerForm.controls['Password'].hasError('validatePassword') && registerForm.controls['Password'].touched">Password must have at least one uppercase letter, one lowercase letter, one number. </span>
+                    <span *ngIf="registerForm.controls['Password'].hasError('minlength')
+                    && registerForm.controls['Password'].touched">Password be at least 8 characters long. </span>
                   </div>
+                </div>
 
                 </div>
 
