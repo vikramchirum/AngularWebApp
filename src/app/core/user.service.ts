@@ -50,7 +50,7 @@ export class UserService implements CanActivate {
   private updateClaims = '/user/updateClaims';
   private updateSecAnswer = '/user/updateSecurityAnswer';
   private updateSecQuestion = '/user/updateSecurityQuestion';
-
+  private updateUsername = '/user/updateUsername';
 
   get user_token(): string {
 
@@ -289,6 +289,24 @@ export class UserService implements CanActivate {
     };
     if (token && token.length) {
       return this.httpClient.put(this.updateEmail, body)
+        .map(res => res.json())
+        .catch(error => this.httpClient.handleHttpError(error));
+    }
+    return null;
+  }
+
+  // update username with token
+  updateUserName(Username: string) {
+    const token = localStorage.getItem('gexa_auth_token');
+    const body = {
+      creds: {
+        Username: Username,
+        Password: 'string'
+      },
+      Token: token
+    };
+    if (token && token.length) {
+      return this.httpClient.put(this.updateUsername, body)
         .map(res => res.json())
         .catch(error => this.httpClient.handleHttpError(error));
     }

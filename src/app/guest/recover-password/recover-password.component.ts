@@ -5,7 +5,7 @@ import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@ang
 import {Http} from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { equalCheck } from 'app/validators/validator';
+import { equalCheck, validatePassword } from 'app/validators/validator';
 
 @Component({
   selector: 'mygexa-recover-password',
@@ -29,7 +29,7 @@ export class RecoverPasswordComponent implements OnInit {
     return this.fb.group({
       'User_Name': [''],
       'SecQues_Answer': [''],
-      'New_Password': ['', Validators.required],
+      'New_Password': ['',  Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(100), validatePassword])],
       'Confirm_New_Password': ['', Validators.required]
     }, {
       validator: equalCheck('New_Password', 'Confirm_New_Password')
