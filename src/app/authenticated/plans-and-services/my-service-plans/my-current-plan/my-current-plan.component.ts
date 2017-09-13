@@ -60,11 +60,9 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
       this.RenewalAccount = result[1];
       this.IsOnHoldOver = this.ActiveServiceAccount.Current_Offer.IsHoldOverRate;
       if (result[1] != null) {
-
         this.ActiveServiceAccount = result[0];
         this.RenewalAccount = result[1];
         if (result[1] != null) {
-
           this.IsUpForRenewal = result[1].Is_Account_Eligible_Renewal;
           this.IsRenewalPending = result[1].Is_Pending_Renewal;
           if (this.IsUpForRenewal) {
@@ -79,6 +77,8 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
                   this.IsOffersReady = true;
                 }
               });
+          } else if(this.IsRenewalPending) {
+
           }
         }
       }

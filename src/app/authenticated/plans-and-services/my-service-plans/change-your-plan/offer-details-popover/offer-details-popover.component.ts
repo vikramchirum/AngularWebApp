@@ -33,8 +33,6 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
 
     if (changes['ActiveOfferDetails']) {
-
-
       let docId = '';
       if (this.ActiveOfferDetails.Current_Offer.IsLegacyOffer) {
         docId = this.ActiveOfferDetails.Current_Offer.Rate_Code;
@@ -80,11 +78,8 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
 
 
       if (this.RenewalAccountDetails) {
-
         console.log('More');
         console.log(this.RenewalAccountDetails.Existing_Renewal.Offer.Client_Key);
-
-
         let docId = '';
         if (this.RenewalAccountDetails.Existing_Renewal.Offer.IsLegacyOffer) {
           docId = this.RenewalAccountDetails.Existing_Renewal.Offer.Rate_Code;

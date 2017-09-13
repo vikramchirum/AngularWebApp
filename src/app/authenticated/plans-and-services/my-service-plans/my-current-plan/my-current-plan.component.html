@@ -34,8 +34,8 @@
     <div layout-align="center">
       <md-card class="current-plan-card" *ngIf="RenewalAccount">
         <md-card-title>
-          <h2>{{RenewalAccount?.Existing_Renewal?.Offer?.Plan?.Name}} <small><i class="fa fa-info-circle" (click)="pop.show()" ></i></small></h2>
-          <div #pop="bs-popover" [popover]="options" placement="bottom">
+          <h2>{{RenewalAccount?.Existing_Renewal?.Offer?.Product_Name}} <small><i class="fa fa-info-circle" (click)="pop.show()" ></i></small></h2>
+          <div #pop="bs-popover" [popover]="options" placement="top">
             <ng-template #options>
               <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
                 <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
@@ -44,11 +44,11 @@
           </div>
         </md-card-title>
         <md-card-content>
-          <h2>{{RenewalAccount?.Existing_Renewal?.Offer?.Price_At_2000_kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small></h2>
-          <p class="bg-default">TERM: {{RenewalAccount?.Existing_Renewal?.Offer?.Plan?.Term}} Months</p>
+          <h2>{{RenewalAccount?.Existing_Renewal?.Offer?.RateAt2000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small></h2>
+          <p class="bg-default">TERM: {{RenewalAccount?.Existing_Renewal?.Offer?.Term}} Months</p>
           <p>START: {{RenewalAccount?.Existing_Renewal?.Start_Date | date: 'MM/dd/yyyy'}}</p>
-          <p  class="bg-default">END: {{RenewalAccount?.Contract_EndDate | date:'MM/dd/yyyy'}}</p>
-          <b style="color:orange">Pending</b><li (click)="pop.show()">(view current rate)</li>
+          <p  class="bg-default">END: {{RenewalAccount?.Existing_Renewal?.Offer?.End_Date | date:'MM/dd/yyyy'}}</p>
+          <p><b style="color:orange">Pending...   </b><a (click)="pop.show()">(view current rate)</a></p>
           <br>
           <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
             <ng-template #options>
