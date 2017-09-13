@@ -354,6 +354,18 @@ export class UserService implements CanActivate {
     }
   }
 
+  public updateUserInMongo(user: IUser) {
+    if (user) {
+      const body = user;
+      this.httpClient.put('/user/updateUserInMongo', body)
+        .map(res => res.json())
+        .catch(error => this.httpClient.handleHttpError(error))
+        .subscribe(res => {
+        //  console.log('Updated user result', res);
+        this.ApplyUserData(res); });
+    }
+  }
+
   public ApplyUserData(user: IUser): IUser {
 
     this.UserCache = user || null;
@@ -382,7 +394,6 @@ export class UserService implements CanActivate {
 
     // Return the new user's data.
     return this.UserCache;
-
   }
 
   public updateClaim(tok: string, zip: string, value: string) {

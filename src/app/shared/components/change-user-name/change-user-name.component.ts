@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { equalityCheck } from 'app/validators/validator';
 import {UserService} from '../../../core/user.service';
+import {IUser} from '../../../core/models/user/User.model';
 
 @Component({
   selector: 'mygexa-change-user-name',
@@ -17,6 +18,7 @@ export class ChangeUserNameComponent {
   errorMessage: string = null;
   changeUserNameForm: FormGroup = null;
   submitAttempt: boolean = null;
+  updateUser: IUser;
    constructor(
      private FormBuilder: FormBuilder,
      private UserService: UserService
@@ -38,7 +40,13 @@ export class ChangeUserNameComponent {
      console.log('valid', this.changeUserNameForm.valid);
      if (this.changeUserNameForm.valid) {
        this.UserService.updateUserName(this.changeUserNameForm.get('userName').value).subscribe(
-         res => { if (res === true) { this.IsUpdateSuccessful = res; } else {
+         res => {  // console.log('Reset successful');
+           if (res) {
+           // console.log('Reset initiated');
+            this.updateUser = this.UserService.UserCache;
+            this.updateUser.Profile.Username = this.changeUserNameForm.get('userName').value;
+            this.UserService.updateUserInMongo(this.updateUser);
+           this.IsUpdateSuccessful = res; this.resetForm(); } else {
            this.errorMessage = res; this.IsError = true;
          }}
        );
@@ -46,6 +54,8 @@ export class ChangeUserNameComponent {
    }
 
   resetForm() {
+    // console.log('Reset form');
+    this.emitCancel();
     this.IsError = null;
     this.errorMessage = null;
     this.submitAttempt = false;
