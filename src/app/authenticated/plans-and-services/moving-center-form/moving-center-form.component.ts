@@ -177,7 +177,7 @@ export class MovingCenterFormComponent implements OnInit {
     //start date - when the customer wants to turn on their service.
     // dunsNumber - TDU_DNS number from New Address Search API
     this.offerRequestParams = {
-      startDate: addressForm.New_Service_Start_Date.jsdate,
+      startDate: addressForm.New_Service_Start_Date.jsdate.toISOString(),
       dunsNumber: this.newServiceAddress.Meter_Info.TDU_DUNS
     }
     // send start date and TDU_DUNS_Number to get offers available.

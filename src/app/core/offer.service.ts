@@ -39,7 +39,7 @@ export class OfferService {
   }
 
   getUpgradeOffers(ActiveServiceAccountId: string, ActiveServiceAccount_CuurentOffer_Term: Number, ActiveServiceAccount_TDU_DUNS_Number: string): Observable<IOffers[]> {
-    return this.http.get(`/v2/Offers?option.approved=true&option.startDate=${new Date}&option.plan.term_Greater_Than=
+    return this.http.get(`/v2/Offers?option.approved=true&option.startDate=${new Date().toISOString()}&option.plan.term_Greater_Than=
     ${ActiveServiceAccount_CuurentOffer_Term}&option.plan.tDU.duns_Number=${ActiveServiceAccount_TDU_DUNS_Number}`)
       .map(data => { data.json(); return data.json(); })
       .map(data => <IOffers[]>data['Items'])
