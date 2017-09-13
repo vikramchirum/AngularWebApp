@@ -82,8 +82,7 @@
                         <span *ngIf="registerForm.controls['Password'].hasError('required')
                     && formSubmitted"> Password is required. </span><span  *ngIf="registerForm.controls['Password'].hasError('validatePassword') && registerForm.controls['Password'].touched">Password must have at least one uppercase letter, one lowercase letter, one number. </span>
                     <span *ngIf="registerForm.controls['Password'].hasError('minlength')
-                    && registerForm.controls['Password'].touched">Password be at least 6 characters long. </span><span *ngIf="registerForm.controls['Password'].hasError('maxlength')
-                    && registerForm.controls['Password'].touched">Password cannot exceed 10 characters. </span>
+                    && registerForm.controls['Password'].touched">Password be at least 8 characters long. </span>
                   </div>
                 </div>
 

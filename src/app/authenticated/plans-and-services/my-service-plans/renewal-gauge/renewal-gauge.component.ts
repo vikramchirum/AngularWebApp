@@ -33,18 +33,18 @@ export class RenewalGaugeComponent implements OnInit, OnDestroy {
           label: (tooltipItem) => {
 
             if (this.chartType === 'holdover') {
-              return 'Green Holdover Bar';
+              return 'Plan Time Remaining';
             }
 
             if (this.chartType === 'renewal') {
-              return 'Green Renewal Bar';
+              return 'Plan Time Remaining';
             }
 
             return [
-              ' Blue Standard Bar',
-              ' Green Standard Bar',
-              ' Yellow Standard Bar',
-              ' Red Standard Bar'
+              ' Plan Time Used',
+              ' Plan Time Remaining',
+              ' 30 Days Remaining',
+              ' 15 Days Remaining'
             ][tooltipItem.index];
           }
         }

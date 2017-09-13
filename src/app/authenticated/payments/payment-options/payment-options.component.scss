@@ -1,8 +1,5 @@
 /* will refactor this into sass vars for menu color rules */
-$account-base:              rgba(6,81,128,1.0) !default;
-$plans-base:                rgba(254,162,32,1.0)  !default;
-$payment-base:              rgba(46,177,52,1.0)  !default;
-$control-base:              rgba(27,141,205,1.0)  !default;
+@import '../../../../basecolors';
 
 .payment-options {
 
@@ -14,7 +11,7 @@ $control-base:              rgba(27,141,205,1.0)  !default;
     padding: 30px;
     display: block;
     border: 1px solid transparent;
-    opacity: .5;
+    opacity: .8;
 
     .fa {
       color: $plans-base;

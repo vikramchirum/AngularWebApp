@@ -104,7 +104,9 @@ export function validateEmail(c: FormControl) {
 
 export function validatePassword(c: FormControl) {
   // const PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,10}$/;
-  const PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+  // const PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+  // At least one digit, one upper case, one lower case. (Special characters optional and are pre- defined as below.
+  const PASSWORD_REGEXP = /^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(^[a-zA-Z0-9@\$=!:.#%&*~^()_]+$)/;
   return PASSWORD_REGEXP.test(c.value) ? null : {
     validatePassword: {
       valid: false

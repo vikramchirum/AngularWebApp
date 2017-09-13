@@ -2,7 +2,6 @@
 
   <div [ngClass]="{'hidden-xs': Router.url !== '/payments/payment-options'}">
     <h2>Payment Options</h2>
-    <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
 
     <br/>
     <div class="row payment-options">
@@ -29,7 +28,7 @@
         <a class="payment-option"
            [ngClass]="{ 'payment-option-active': Router.url === '/payments/payment-options/payment-extension' }"
            [routerLink]="Router.url === '/payments/payment-options/payment-extension' ? '/payments/payment-options' : '/payments/payment-options/payment-extension'">
-          <h4 class="payment-option-caption">Can pay right now?We got you covered.</h4>
+          <h4 class="payment-option-caption">Can pay right now? <br/> We've got you covered.</h4>
           <div class="payment-option-icon"><i class="fa fa-4x fa-handshake-o"></i></div>
           <h4 class="payment-option-name">Payment Extension</h4>
         </a>
