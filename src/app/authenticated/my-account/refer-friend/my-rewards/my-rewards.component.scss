@@ -1,3 +1,6 @@
+@import '../../../../../basecolors';
+
+
 .account-profile{
   .account-info {
     p {
@@ -16,10 +19,11 @@
 label{
     display: inline-block;
     text-align: center;
-    border: 10px solid rgba(46,177,52,1.0);
-    padding: 50px;
+    border: 10px solid $account-base;
     border-radius: 280px;
     min-width: 140px;
+    min-height: 140px;
+    padding-top: 20%;
 }
 
 .addressPanel{
