@@ -12,6 +12,8 @@ export class PhonePipe implements PipeTransform {
     var area, number;
 
     switch(viewVal.length) {
+      case 0:
+       return  '';     
       case 1:
       case 2:
       case 3:
