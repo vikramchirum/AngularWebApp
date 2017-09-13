@@ -10,8 +10,6 @@
 }
 
 .plan-card-container{
-  border: 2px solid black;
-  border-radius: 20px;
   padding: 20px;
   .card-content{
     position: relative;
@@ -169,13 +167,15 @@
 
    .agreement-section {
      
-      position: absolute;
-      top: 45px;
-      background-color: rgba(255,255,255,1);
-      padding: 20px;
-      border-radius: 5px;
-      left: 0;
-      z-index: 1;
+        position: absolute;
+        top: 134px;
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        left: 10%;
+        z-index: 1;
+        box-shadow: 1px 1px 3px #ccc;
+        width: 80%;
 
      
        label {
