@@ -65,14 +65,14 @@ export class PaperlessSettingsComponent implements OnInit {
         Account_Number: custId
       },
       Type: NotificationType.Bill
-    }
+    };
     this.searchNotificationOptionRequestForPlans = {
       Account_Info: {
         Account_Type: AccountType.GEMS_Residential_Customer_Account,
         Account_Number: custId
       },
       Type: NotificationType.Contract_Expiration
-    }
+    };
     this.notificationService.searchNotificationOption(this.searchNotificationOptionRequestForBill).subscribe(result => {
      // console.log('Notification Result for Bill', result);
       this.notificationOptionsForBills = result;
@@ -84,7 +84,7 @@ export class PaperlessSettingsComponent implements OnInit {
       this.togglePaperless(this.billingOptions, this.plansOptions);
     });
     this.notificationService.searchNotificationOption(this.searchNotificationOptionRequestForPlans).subscribe(result => {
-      //console.log('Notification Result for plans', result);
+      // console.log('Notification Result for plans', result);
       this.notificationOptionsForPlans = result;
       if (this.notificationOptionsForPlans && this.notificationOptionsForPlans.length > 0) {
         this.selectedPreference(this.notificationOptionsForPlans, this.plansOptions);
@@ -92,7 +92,7 @@ export class PaperlessSettingsComponent implements OnInit {
         this.plansOptions[1].checked = true;
       }
       this.togglePaperless(this.billingOptions, this.plansOptions);
-    });   
+    });
   }
   selectedPreference(preference, preferenceOptions) {
     if (preference[0].Status === 'Active') {
@@ -197,7 +197,7 @@ export class PaperlessSettingsComponent implements OnInit {
     if (selectedOptions[0].checked && !selectedOptions[1].checked) {
       paperless = true;
     }
-    //If user selects paper only, change status to Canceled(setting record as inactive)
+    // If user selects paper only, change status to Canceled(setting record as inactive)
     if (!selectedOptions[0].checked && selectedOptions[1].checked) {
       status = NotificationStatus.Canceled;
     } else {

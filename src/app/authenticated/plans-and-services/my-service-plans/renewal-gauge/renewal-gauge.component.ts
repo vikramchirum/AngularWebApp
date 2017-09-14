@@ -280,16 +280,14 @@ export class RenewalGaugeComponent implements OnInit, OnDestroy {
   LoadGauge(activeServiceAccount: ServiceAccount, renewal_details: IRenewalDetails) {
 
     // Is_In_Holdover needs to be updated to whatever we specify in the API.
-    if (renewal_details.Existing_Renewal && renewal_details.Existing_Renewal.Is_Pending == true) {
+    if (renewal_details.Existing_Renewal && renewal_details.Existing_Renewal.Is_Pending === true) {
       this.buildRenewedChart(
         new Date(),
         activeServiceAccount.Contract_End_Date ? new Date(activeServiceAccount.Contract_End_Date) : activeServiceAccount.Calculated_Contract_End_Date
       );
-    }
-    else if (activeServiceAccount.Current_Offer.IsHoldOverRate === true) {
+    } else if (activeServiceAccount.Current_Offer.IsHoldOverRate === true) {
       this.buildHoldoverChart();
-    }
-    else {
+    } else {
       this.buildChart(
         new Date(activeServiceAccount.Contract_Start_Date),
         new Date(),

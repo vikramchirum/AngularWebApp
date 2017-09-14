@@ -77,8 +77,6 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
                   this.IsOffersReady = true;
                 }
               });
-          } else if(this.IsRenewalPending) {
-
           }
         }
       }

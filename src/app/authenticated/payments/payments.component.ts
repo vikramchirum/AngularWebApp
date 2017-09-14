@@ -32,7 +32,7 @@ export class PaymentsComponent implements AfterViewInit, OnDestroy {
           resp => {
             this.invoice_service.getInvoice(resp, result.Id)
               .filter(() => !this.ActiveServiceAccountSubscription.closed)
-              .subscribe(res => this.viewBill.PopulateItemizedBill(res))
+              .subscribe(res => this.viewBill.PopulateItemizedBill(res));
           }
         )
 

@@ -104,7 +104,9 @@ export class CustomerAccountService {
     const relativePath = `/customer_accounts/`;
     return this.HttpClient.put(relativePath, body)
       .map(res => res.json())
-      .map(res => {new CustomerAccount(res); console.log('Updated Customer account', res); return res; })
+      .map(res => {new CustomerAccount(res);
+      // console.log('Updated Customer account', res);
+      return res; })
       .catch(error => this.HttpClient.handleHttpError(error));
   }
 

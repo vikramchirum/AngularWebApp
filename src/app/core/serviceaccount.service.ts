@@ -84,7 +84,7 @@ export class ServiceAccountService {
     }
   }
 
-  UpdateServiceAccounts(): Observable<Response> {console.log("Update service Accounts");
+  UpdateServiceAccounts(): Observable<Response> {console.log('Update service Accounts');
 
     // If we're already requesting then return the original request observable.
     if (this.requestObservable) { return this.requestObservable; }

@@ -21,7 +21,7 @@ export class CustomerAccountStore {
     const observable = this.CustomerAccountService.UpdateCustomerDetails(CustomerDetails);
     observable.subscribe(
       UpdatedCustomerAccountDetails => {
-        console.log('Customer details updated', UpdatedCustomerAccountDetails);
+       // console.log('Customer details updated', UpdatedCustomerAccountDetails);
         // this.LoadCustomerDetails(UpdatedCustomerAccountDetails.Id);
          this.LatestCustomerDetails.next(UpdatedCustomerAccountDetails);
       });
