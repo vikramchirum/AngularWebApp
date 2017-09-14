@@ -55,7 +55,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
 
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
-    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1].Service_Account_Id).subscribe(result => {
+    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1]).subscribe(result => {
       this.ActiveServiceAccount = result[0];
       this.RenewalAccount = result[1];
       this.IsOnHoldOver = this.ActiveServiceAccount.Current_Offer.IsHoldOverRate;
@@ -109,14 +109,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
         }
       }
     }
-
   }
-
-  ngOnDestroy() {
-    this.plansServicesSubscription.unsubscribe();
-    if (this.IsUpForRenewal) {
-    result(this.OffersServiceSubscription, 'unsubscribe'); }
-   }
 
   onSelect(event) {
     event.preventDefault();
@@ -130,9 +123,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     this.selectCheckBox = false;
     this.enableSelect = false;
   }
-  showConfirmationPop() {
-
-    // call the renewal service
+  createRenewal() {
     const request = {} as ICreateRenewalRequest;
     request.Service_Account_Id = this.ActiveServiceAccount.Id;
     request.Offering_Name = this.RenewalOffers.Rate_Code;
@@ -143,6 +134,11 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
         this.planPopModal.showPlanPopModal();
       }
     });
-    this.planPopModal.showPlanPopModal();
+  }
+
+  ngOnDestroy() {
+    this.plansServicesSubscription.unsubscribe();
+    if (this.IsUpForRenewal) {
+      result(this.OffersServiceSubscription, 'unsubscribe'); }
   }
 }

@@ -1,17 +1,27 @@
 import {
-  Component, OnInit, ViewChild, OnDestroy, Input, ViewContainerRef
+  Component, OnInit, ViewChild, OnDestroy, ViewContainerRef
 } from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
-import {IOffers} from '../../../../../core/models/offers/offers.model';
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
-import {ServiceAccount} from '../../../../../core/models/serviceaccount/serviceaccount.model';
+
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+
+import { UserService } from 'app/core/user.service';
+import { IUser } from 'app/core/models/user/User.model';
+
 import {OfferDetailsPopoverComponent} from '../offer-details-popover/offer-details-popover.component';
-import {PlanConfirmationPopoverComponent} from '../../plan-confirmation-popover/plan-confirmation-popover.component';
-import {RenewalStore} from '../../../../../core/store/RenewalStore';
-import {OffersStore} from '../../../../../core/store/OffersStore';
-import {Observable} from 'rxjs/Observable';
-import {AllOffersClass} from '../../../../../core/models/offers/alloffers.model';
-import {IRenewalDetails} from '../../../../../core/models/renewals/renewaldetails.model';
+import { PlanConfirmationPopoverComponent } from '../../plan-confirmation-popover/plan-confirmation-popover.component';
+
+import { IOffers } from 'app/core/models/offers/offers.model';
+import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
+
+import { RenewalStore } from 'app/core/store/RenewalStore';
+import { OffersStore } from 'app/core/store/OffersStore';
+
+import { IRenewalDetails } from 'app/core/models/renewals/renewaldetails.model';
+import { ICreateRenewalRequest } from 'app/core/models/renewals/createrenewalrequest.model';
 
 @Component({
   selector: 'mygexa-change-your-plan-card',
@@ -19,13 +29,20 @@ import {IRenewalDetails} from '../../../../../core/models/renewals/renewaldetail
   styleUrls: ['./change-your-plan-card.component.scss']
 })
 export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
-  // @Input() Offer: IOffers;
+
   @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
+
   plansServicesSubscription: Subscription;
   OffersServiceSubscription: Subscription;
-  public ActiveServiceAccountDetails: ServiceAccount = null;
+  userServiceSubscription: Subscription;
+
+  user: IUser;
+  ActiveServiceAccountDetails: ServiceAccount = null;
   Renewaldetails: IRenewalDetails = null;
-  selectCheckBox: boolean[] = [];   enableSelect: boolean[] = [];   chev_clicked: boolean[] = [];
+
+  selectCheckBox: boolean[] = [];
+  enableSelect: boolean[] = [];
+  chev_clicked: boolean[] = [];
 
   IsInRenewalTimeFrame: boolean;   IsRenewalPending: boolean; IsOnHoldOver: boolean;
   public AllOffers: AllOffersClass[];
@@ -39,25 +56,33 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
   selectedIndex: number; length: number;
+
   constructor(
+    private userService: UserService,
     private serviceAccount_service: ServiceAccountService,
     private OfferStore: OffersStore,
     private renewalStore: RenewalStore,
     private viewContainerRef: ViewContainerRef) {
   }
 
-  showConfirmationPop() {
-    this.planPopModal.showPlanPopModal();
-  }
-
   ngOnInit() {
+
+   this.userServiceSubscription =  this.userService.UserObservable.subscribe(res => {
+      this.user = res;
+    });
+
     const activeServiceAccount$ = this.serviceAccount_service.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
-    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1].Service_Account_Id).subscribe(result => {
-      this.ActiveServiceAccountDetails = result[0]; this.Renewaldetails = result[1];
+
+    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1]).subscribe(result => {
+
+      this.ActiveServiceAccountDetails = result[0];
+      this.Renewaldetails = result[1];
+
       this.IsOnHoldOver = this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate;
       console.log('Renewal details', this.Renewaldetails);
       this.IsInRenewalTimeFrame = result[1].Is_Account_Eligible_Renewal; this.IsRenewalPending = result[1].Is_Pending_Renewal;
+
       if (this.IsInRenewalTimeFrame && !this.IsRenewalPending && !result[0].Current_Offer.IsHoldOverRate) {
         this.OffersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
           All_Offers => {
@@ -81,7 +106,6 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
         );
       }
     });
-
   }
 
   featuredOfferFeatures(offer: IOffers) {
@@ -145,13 +169,33 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
     this.enableSelect[index] = false;
   }
 
-  ngOnDestroy() {
-    this.plansServicesSubscription.unsubscribe();
-    this.OffersServiceSubscription.unsubscribe();
-  }
+
   ChevClicked(index: number) {
     this.selectedIndex = index;
     console.log('Index', this.selectedIndex);
     this.chev_clicked[index] = !this.chev_clicked[index];
+  }
+
+  createRenewal(index: number, offer: IOffers){
+    const request = {} as ICreateRenewalRequest;
+    request.Service_Account_Id = this.ActiveServiceAccountDetails.Id;
+    request.Offering_Name = offer.Rate_Code;
+    request.User_Name = this.user.Profile.Username;
+    this.renewalStore.createRenewal(request).subscribe(result => {
+      if (result) {
+        console.log('Renewal Created');
+        this.showConfirmationPop();
+      }
+    });
+  }
+
+  showConfirmationPop() {
+    this.planPopModal.showPlanPopModal();
+  }
+
+  ngOnDestroy() {
+    this.userServiceSubscription.unsubscribe();
+    this.plansServicesSubscription.unsubscribe();
+    this.OffersServiceSubscription.unsubscribe();
   }
 }
