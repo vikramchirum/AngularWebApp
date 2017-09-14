@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { CustomerAccountService } from 'app/core/CustomerAccount.service';
 import { UserService } from 'app/core/user.service';
 import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
+import {CustomerAccountStore} from '../../../../core/store/CustomerAccountStore';
 
 @Component({
   selector: 'mygexa-personal-information',
@@ -23,13 +24,20 @@ export class PersonalInformationComponent implements OnInit, OnDestroy {
 
   constructor(
     private CustomerAccountService: CustomerAccountService,
+    private CustomerAccountStore: CustomerAccountStore,
     private UserService: UserService
   ) { }
 
   ngOnInit() {
-    this.CustomerAccountServiceSubscription = this.CustomerAccountService.CustomerAccountObservable.subscribe(
-      result => { this.customerDetails = result; }
+    this.CustomerAccountServiceSubscription = this.CustomerAccountStore.CustomerDetails.subscribe(
+      CustomerDetails => {
+        this.customerDetails = CustomerDetails;
+        console.log('Customer details in personal info', this.customerDetails);
+      }
     );
+    // this.CustomerAccountServiceSubscription = this.CustomerAccountService.CustomerAccountObservable.subscribe(
+    //   result => { this.customerDetails = result; }
+    // );
     this.UserServiceSubscription = this.UserService.UserObservable.subscribe(
       result => {
         this.accountNumber = result.Account_permissions.filter(x => x.AccountType === 'Customer_Account_Id')[0].AccountNumber;
@@ -40,6 +48,7 @@ export class PersonalInformationComponent implements OnInit, OnDestroy {
   toggleEmailEdit($event) {
     result($event, 'preventDefault');
     this.emailEditing = !this.emailEditing;
+    console.log('hi');
   }
 
   togglePhoneEdit($event) {

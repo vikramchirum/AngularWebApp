@@ -29,7 +29,7 @@ export class AddServicesComponent implements OnInit {
 
     this.disableUntil();
     let defaultDate = this.getBusinessDays();
-    //To set default date
+    // To set default date
     this.selDate = {
       year: defaultDate.getFullYear(),
       month: defaultDate.getMonth() + 1,
@@ -40,7 +40,7 @@ export class AddServicesComponent implements OnInit {
 
   ngOnInit() {
     this.addServiceForm = this.fb.group({
-      Service_Start_Date:  [{date:this.selDate}, Validators.compose([
+      Service_Start_Date:  [{date: this.selDate}, Validators.compose([
         Validators.required,
         checkIfNewYear,
         checkIfChristmasEve,
@@ -51,11 +51,11 @@ export class AddServicesComponent implements OnInit {
 
   }
 
-  //to fetch default date(3 business days from today) excluding weekends and holidays
+  // to fetch default date(3 business days from today) excluding weekends and holidays
   getBusinessDays() {
     let calculator = {
       workDaysAdded: 0,
-      gexaHolidays: ['01-01', '07-04', '12-24', '12-25'],//['month-date']
+      gexaHolidays: ['01-01', '07-04', '12-24', '12-25'], // ['month-date']
       startDate: null,
       curDate: null,
 
@@ -85,17 +85,17 @@ export class AddServicesComponent implements OnInit {
         }
         return this.curDate;
       }
-    }
+    };
     return calculator.getNewWorkDay(3);
   }
 
 
 
   private ServiceStartDate: IMyOptions = {
-    // start date options here... 
+    // start date options here...
     disableUntil: { year: 0, month: 0, day: 0 }
   }
-  // Calling this function set disableUntil value 
+  // Calling this function set disableUntil value
   disableUntil() {
     let d = this.getBusinessDays();
     d.setDate(d.getDate() - 1);
@@ -113,7 +113,7 @@ export class AddServicesComponent implements OnInit {
     return JSON.parse(JSON.stringify(this.ServiceStartDate));
   }
 
-  //Fetch Offers when users selects new address
+  // Fetch Offers when users selects new address
   getSelectedAddress(event) {
     this.selectedServiceAddress = event;
     this.getFeaturedOffers(this.addServiceForm.value.Service_Start_Date.jsdate);
@@ -122,29 +122,29 @@ export class AddServicesComponent implements OnInit {
 
   onStartDateChanged(event: IMyDateModel) {
     // date selected
-    if(this.selectedServiceAddress){
-      this.getFeaturedOffers(event.jsdate);    
-    }   
+    if (this.selectedServiceAddress) {
+      this.getFeaturedOffers(event.jsdate);
+    }
   }
 
-  //Fetch Offers by passing start date and TDU_DUNS number of selected addresss
-  getFeaturedOffers(ServiceStartDate) {  
+  // Fetch Offers by passing start date and TDU_DUNS number of selected addresss
+  getFeaturedOffers(ServiceStartDate) {
     this.offerRequestParams = {
       startDate: ServiceStartDate.toISOString(),
       dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS
-    }
+    };
     // send start date and TDU_DUNS_Number to get offers available.
     this.offerService.getOffers(this.offerRequestParams)
       .subscribe(result => {
         this.availableOffers = result;
-        console.log("Available Offers", this.availableOffers);
-        //filter featured offers based on Featured Channel property
+        console.log('Available Offers', this.availableOffers);
+        // filter featured offers based on Featured Channel property
         this.featuredOffers = this.availableOffers.filter(x => {
           if (x.Plan.Featured_Channels.length > 0) {
             return this.availableOffers;
           }
-        })
-        console.log('Featured Offers', this.featuredOffers)
+        });
+        console.log('Featured Offers', this.featuredOffers);
 
       });
   }

@@ -51,7 +51,7 @@ export class UserService implements CanActivate {
   private updateSecAnswer = '/user/updateSecurityAnswer';
   private updateSecQuestion = '/user/updateSecurityQuestion';
   private updateUsername = '/user/updateUsername';
-
+  private updatePassword = '/user/updatePassword';
   get user_token(): string {
 
     // See if we already have it cached and return it.
@@ -307,6 +307,24 @@ export class UserService implements CanActivate {
     };
     if (token && token.length) {
       return this.httpClient.put(this.updateUsername, body)
+        .map(res => res.json())
+        .catch(error => this.httpClient.handleHttpError(error));
+    }
+    return null;
+  }
+
+  // update password with token
+  updateUserPassword(Password: string) {
+    const token = localStorage.getItem('gexa_auth_token');
+    const body = {
+      creds: {
+        Username: 'string',
+        Password: Password
+      },
+      Token: token
+    };
+    if (token && token.length) {
+      return this.httpClient.put(this.updatePassword, body)
         .map(res => res.json())
         .catch(error => this.httpClient.handleHttpError(error));
     }

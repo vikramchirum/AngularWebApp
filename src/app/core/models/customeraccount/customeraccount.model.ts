@@ -25,7 +25,7 @@ export class CustomerAccount {
   Pledge_On_Entity: boolean;
   Primary_Phone: ICustomerAccountPrimaryPhone;
   Contacts: [ ICustomerAccountContacts ];
-
+  EnrolledInShareAndSave: boolean;
   constructor(opts: any) {
     assign(this, opts);
   }

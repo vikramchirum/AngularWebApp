@@ -1,4 +1,4 @@
-import { Directive, HostListener, OnInit , Output, EventEmitter} from "@angular/core";
+import { Directive, HostListener, OnInit , Output, EventEmitter} from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { PhonePipe } from '../pipes/phone.pipe';
 
@@ -18,18 +18,17 @@ import { PhonePipe } from '../pipes/phone.pipe';
   },
   providers: [ PhonePipe]
 })
-export class PhoneDirective {
-  
+export class PhoneDirective implements OnInit {
   constructor (
     private phonePipe: PhonePipe,
     private control: NgControl) {
-    this.control = control;    
+    this.control = control;
   }
 
-  @Output() rawChange:EventEmitter<string> = new EventEmitter<string>();
+  @Output() rawChange: EventEmitter<string> = new EventEmitter<string>();
 
-  ngOnInit () {    
-    let formatted = this.phonePipe.transform(this.control['model']); 
+  ngOnInit () {
+    let formatted = this.phonePipe.transform(this.control['model']);
     setTimeout(() => this.control.valueAccessor.writeValue(formatted), 0);
   }
 
@@ -45,7 +44,7 @@ export class PhoneDirective {
     let raw = val.replace(/\W/g, '');
     let formatted = this.phonePipe.transform(raw);
      this.control.valueAccessor.writeValue(formatted);
-    //this.control.viewToModelUpdate(raw);        
+    // this.control.viewToModelUpdate(raw);
     this.rawChange.emit(formatted);
   }
 

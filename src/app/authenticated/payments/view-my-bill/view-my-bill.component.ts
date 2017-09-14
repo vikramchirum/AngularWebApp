@@ -37,8 +37,8 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
-        //this.latest_invoice_id = result.Latest_Invoice_Id;
-        //Need to get latest invoice
+        // this.latest_invoice_id = result.Latest_Invoice_Id;
+        // Need to get latest invoice
 
         this.service_account_id = result.Id;
         this.invoice_service.getLatestInvoice(this.service_account_id).subscribe(
@@ -48,7 +48,7 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
             console.log('After setting invoice id');
             this.invoice_service.getInvoice(this.latest_invoice_id, this.service_account_id)
               .subscribe(
-                response => {console.log('Return from get invoice call');this.req_bill = response; },
+                response => {console.log('Return from get invoice call'); this.req_bill = response; },
                 error => this.error = error.Message
               );
           });

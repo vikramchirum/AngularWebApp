@@ -285,11 +285,9 @@ export class RenewalGaugeComponent implements OnInit, OnDestroy {
         new Date(),
         activeServiceAccount.Contract_End_Date ? new Date(activeServiceAccount.Contract_End_Date) : activeServiceAccount.Calculated_Contract_End_Date
       );
-    }
-    else if (activeServiceAccount.Current_Offer.IsHoldOverRate === true) {
+    } else if (activeServiceAccount.Current_Offer.IsHoldOverRate === true) {
       this.buildHoldoverChart();
-    }
-    else {
+    } else {
       this.buildChart(
         new Date(activeServiceAccount.Contract_Start_Date),
         new Date(),

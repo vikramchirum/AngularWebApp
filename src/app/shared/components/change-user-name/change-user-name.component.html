@@ -52,7 +52,10 @@
         <button class="btn btn-primary" type="submit" [disabled]="">Save</button>
         <button class="btn btn-default" type="button" (click)="emitCancel()">Cancel</button>
       </div>
-
+      <ng-container *ngIf="IsError">
+        <br/>
+        <div class="alert alert-danger">Error: + {{errorMessage}}!</div>
+      </ng-container>
     </form>
     <hr/>
   </div>
