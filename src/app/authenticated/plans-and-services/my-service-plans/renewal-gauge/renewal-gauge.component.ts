@@ -55,7 +55,7 @@ export class RenewalGaugeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
-    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1].Service_Account_Id).subscribe(result => {
+    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1]).subscribe(result => {
 
       this.LoadGauge(result[0], result[1]);
     });
@@ -280,7 +280,7 @@ export class RenewalGaugeComponent implements OnInit, OnDestroy {
   LoadGauge(activeServiceAccount: ServiceAccount, renewal_details: IRenewalDetails) {
 
     // Is_In_Holdover needs to be updated to whatever we specify in the API.
-    if (renewal_details.Existing_Renewal && renewal_details.Existing_Renewal.Is_Pending == true) {
+    if (renewal_details.Existing_Renewal && renewal_details.Existing_Renewal.Is_Pending === true) {
       this.buildRenewedChart(
         new Date(),
         activeServiceAccount.Contract_End_Date ? new Date(activeServiceAccount.Contract_End_Date) : activeServiceAccount.Calculated_Contract_End_Date

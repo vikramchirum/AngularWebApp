@@ -43,7 +43,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const activeServiceAccount$ = this.serviceAccount_service.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
-    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1].Service_Account_Id).subscribe(result => {
+    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1]).subscribe(result => {
       this.ActiveServiceAccountDetails = result[0]; this.Renewaldetails = result[1];
       this.IsUpForRenewal = result[1].Is_Account_Eligible_Renewal;
       this.IsRenewalPending = result[1].Is_Pending_Renewal;
