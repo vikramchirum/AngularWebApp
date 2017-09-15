@@ -93,7 +93,8 @@ export class AddServicesComponent implements OnInit {
 
   private ServiceStartDate: IMyOptions = {
     // start date options here...
-    disableUntil: { year: 0, month: 0, day: 0 }
+    disableUntil: { year: 0, month: 0, day: 0 },
+    dateFormat: 'mm-dd-yyyy'
   }
   // Calling this function set disableUntil value
   disableUntil() {

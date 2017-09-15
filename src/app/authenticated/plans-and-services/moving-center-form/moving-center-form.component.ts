@@ -114,11 +114,13 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   private newServiceStartDate: IMyOptions = {
     // start date options here...
     disableUntil: { year: 0, month: 0, day: 0 },
+    dateFormat: 'mm-dd-yyyy'
   };
 
 
   private currentServiceEndDate: IMyOptions = {
     // other end date options here...
+    dateFormat: 'mm-dd-yyyy'
   };
 
   onStartDateChanged(event: IMyDateModel) {
