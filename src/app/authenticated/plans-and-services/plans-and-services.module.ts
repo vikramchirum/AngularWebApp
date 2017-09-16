@@ -26,6 +26,7 @@ import { MovingCenterFormComponent } from './moving-center-form/moving-center-fo
 import { OfferDetailsPopoverComponent } from './my-service-plans/change-your-plan/offer-details-popover/offer-details-popover.component';
 import { TooltipModule } from 'ngx-bootstrap';
 import { PlanConfirmationPopoverComponent } from './my-service-plans/plan-confirmation-popover/plan-confirmation-popover.component';
+import { ConfirmationModalComponent } from  './my-service-plans/plans-modal/confirmation-modal.component';
 
 @NgModule({
   imports: [
@@ -60,7 +61,11 @@ import { PlanConfirmationPopoverComponent } from './my-service-plans/plan-confir
       MovingCenterFormComponent,
       OfferDetailsPopoverComponent,
       RenewalGaugeComponent,
-      PlanConfirmationPopoverComponent
-      ]
+      PlanConfirmationPopoverComponent,
+      ConfirmationModalComponent
+      ],
+  exports: [
+    ConfirmationModalComponent
+  ]
 })
 export class PlansAndServicesModule { }

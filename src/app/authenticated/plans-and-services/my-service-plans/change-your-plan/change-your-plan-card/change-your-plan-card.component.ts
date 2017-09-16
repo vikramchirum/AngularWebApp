@@ -1,5 +1,5 @@
 import {
-  Component, OnInit, ViewChild, OnDestroy, ViewContainerRef
+  Component, OnInit, ViewChild, OnDestroy, ViewContainerRef, AfterViewInit
 } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
@@ -22,14 +22,16 @@ import { OffersStore } from 'app/core/store/OffersStore';
 
 import { IRenewalDetails } from 'app/core/models/renewals/renewaldetails.model';
 import { ICreateRenewalRequest } from 'app/core/models/renewals/createrenewalrequest.model';
+import { ConfirmationModalComponent } from '../../plans-modal/confirmation-modal.component';
 
 @Component({
   selector: 'mygexa-change-your-plan-card',
   templateUrl: './change-your-plan-card.component.html',
   styleUrls: ['./change-your-plan-card.component.scss']
 })
-export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
+export class ChangeYourPlanCardComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  @ViewChild('planConfirmationModal') planConfirmationModal: ConfirmationModalComponent;
   @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
 
   plansServicesSubscription: Subscription;
@@ -63,11 +65,19 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
     private OfferStore: OffersStore,
     private renewalStore: RenewalStore,
     private viewContainerRef: ViewContainerRef) {
+
+    alert('pig');
+
   }
+
+
 
   ngOnInit() {
 
-   this.userServiceSubscription =  this.userService.UserObservable.subscribe(res => {
+
+
+
+    this.userServiceSubscription =  this.userService.UserObservable.subscribe(res => {
       this.user = res;
     });
 
@@ -106,6 +116,16 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
         );
       }
     });
+
+
+
+
+  }
+
+  ngAfterViewInit(){
+
+    alert('refresh');
+
   }
 
   featuredOfferFeatures(offer: IOffers) {
@@ -177,6 +197,11 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
   }
 
   createRenewal(index: number, offer: IOffers){
+
+    this.planConfirmationModal.show();
+    this.planPopModal.showPlanPopModal();
+
+    /*
     const request = {} as ICreateRenewalRequest;
     request.Service_Account_Id = this.ActiveServiceAccountDetails.Id;
     request.Offering_Name = offer.Rate_Code;
@@ -184,9 +209,9 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
     this.renewalStore.createRenewal(request).subscribe(result => {
       if (result) {
         console.log('Renewal Created');
-        this.showConfirmationPop();
+        this.planConfirmationModal.show();
       }
-    });
+    }); */
   }
 
   showConfirmationPop() {

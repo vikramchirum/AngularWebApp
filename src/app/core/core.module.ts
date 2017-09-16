@@ -23,11 +23,12 @@ import { NotificationOptionsService } from './notificationoptions.service';
 import { DocumentsService } from './documents.service';
 import { RenewalService } from './renewal.service';
 import { RenewalStore } from './store/RenewalStore';
-import {OffersStore} from './store/OffersStore';
-import {CustomerAccountStore} from './store/CustomerAccountStore';
+import { OffersStore } from './store/OffersStore';
+import { CustomerAccountStore } from './store/CustomerAccountStore';
 import { MessageCenterService } from './messagecenter.service';
 import { ReferralStore } from './store/referralstore';
 import { ReferralService } from './referral.service';
+import { ModalStore } from './store/modalstore';
 
 @NgModule({
   imports: [
@@ -56,7 +57,8 @@ import { ReferralService } from './referral.service';
     CustomerAccountStore,
     ReferralStore,
     ReferralService,
-    MessageCenterService
+    MessageCenterService,
+    ModalStore
   ]
 })
 export class CoreModule { }
