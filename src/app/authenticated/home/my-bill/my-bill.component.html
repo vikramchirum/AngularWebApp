@@ -1,12 +1,12 @@
 <div *ngIf="activeServiceAccount" class="my-bill-grid thumbnail">
-  <div class="alert pull-right bg-danger">Due Date: {{ activeServiceAccount.Due_Date | date:'MM/dd/yyyy' }}</div>
+  <div class="alert pull-right bg-danger">Due Date: {{ latestInvoice?.Due_Date | date:'MM/dd/yyyy' }}</div>
   <h1>My Bill</h1>
 
   <table class="table table-condensed table-striped" border="0" width="100%">
     <tbody>
     <tr>
       <td><h5>Amount Due:</h5></td>
-      <td><h4>${{ activeServiceAccount.Due_Amount | number : dollarAmountFormatter }}</h4></td>
+      <td><h4>${{ latestInvoice?.Amount_Due | number : dollarAmountFormatter }}</h4></td>
     </tr>
     <tr>
       <td><h5>Current Bill</h5></td>
