@@ -5,15 +5,12 @@
     <div class="modal-dialog modal-md">
       <div class="modal-content">
 
-        <div class="modal-body">
           <div class="plan-confirmation-header">
-            <h4 class="modal-title pull-left"></h4>
-            <button type="button" class="close" aria-label="Close" (click)="hidePlanPopModal()" style="padding:15px 100px 10px 0px;">
+            <button type="button" class="close pull-right" aria-label="Close" style="padding-right: 20px"  (click)="hidePlanConfirmationModal()">
               <span class="close-btn" aria-hidden="true">
               <i class="fa fa-remove"></i></span>
             </button>
           </div><br>
-        </div>
 
         <div class="modal-body">
 
@@ -32,13 +29,6 @@
                 <h5 class="bill-name"> A confirmation will be sent to your email address with your plan documents. Your new plan will start when your current plan ends.</h5>
               </div>
             </ng-template>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="text-center">
-                  <button class="btn btn-primary" (click)="renewedNewplan()">Got it</button>
-                </div>
-              </div>
-            </div>
           </div>
 
         </div>
@@ -47,7 +37,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="text-center">
-                <button class="btn btn-primary" (click)="renewedNewplan()">Got it</button>
+                <button class="btn btn-primary" (click)="hidePlanConfirmationModal()">Got it</button>
               </div>
             </div>
           </div>

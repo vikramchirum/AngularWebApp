@@ -3,7 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalModule, PopoverModule  } from 'ngx-bootstrap';
 import { MdCardModule, MaterialModule } from '@angular/material';
-import {ToolTipModule} from 'angular2-tooltip';
+import { ToolTipModule } from 'angular2-tooltip';
 import { DatePickerModule } from 'ng2-datepicker';
 import { MyDatePickerModule } from 'mydatepicker';
 import { SharedModule } from 'app/shared/shared.module';
@@ -26,7 +26,7 @@ import { MovingCenterFormComponent } from './moving-center-form/moving-center-fo
 import { OfferDetailsPopoverComponent } from './my-service-plans/change-your-plan/offer-details-popover/offer-details-popover.component';
 import { TooltipModule } from 'ngx-bootstrap';
 import { PlanConfirmationPopoverComponent } from './my-service-plans/plan-confirmation-popover/plan-confirmation-popover.component';
-import { ConfirmationModalComponent } from  './my-service-plans/plans-modal/confirmation-modal.component';
+import { PlanConfirmationModalComponent } from './my-service-plans/plan-confirmation-modal/plan-confirmation-modal.component';
 
 @NgModule({
   imports: [
@@ -62,10 +62,10 @@ import { ConfirmationModalComponent } from  './my-service-plans/plans-modal/conf
       OfferDetailsPopoverComponent,
       RenewalGaugeComponent,
       PlanConfirmationPopoverComponent,
-      ConfirmationModalComponent
+      PlanConfirmationModalComponent
       ],
   exports: [
-    ConfirmationModalComponent
+    PlanConfirmationModalComponent
   ]
 })
 export class PlansAndServicesModule { }

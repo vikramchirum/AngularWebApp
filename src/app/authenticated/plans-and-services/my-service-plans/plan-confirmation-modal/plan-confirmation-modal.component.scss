@@ -11,14 +11,26 @@
   .plan-confirmation-header {
     padding-top: 20px;
     border-bottom: 0px white;
-    .modal-title {
-      padding: 2px 0px 5px 75px;
+  }
+  .plan-confirmation-header {
+    padding-top: 20px;
+    border-bottom: 0px white;
+  }
+
+  .modal-body {
+    padding-top:20px;
+    border-bottom: 0px white;
+    .modal-title{
+      padding:2px 0px 5px 75px ;
       font-weight: bold;
       background-color: green;
-      color: white;
+      color:white;
     }
   }
-  h1,h2,h3,h4,h5 {
+      h1,h2,h3,h4,h5 {
     font-weight:bold;
   }
 }
+
+
+

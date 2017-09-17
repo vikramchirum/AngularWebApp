@@ -1,239 +1,165 @@
-<div *ngIf="ActiveServiceAccountDetails && this.Renewaldetails; then ShowOffers else ShowNothing"></div>
-<ng-template #ShowNothing></ng-template>
-<ng-template #ShowOffers *ngIf="IsInRenewalTimeFrame && !ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate && !IsRenewalPending; then RenewalOfferCard else UpgradeOfferCard"></ng-template>
-<ng-template #UpgradeOfferCard>
-  <section *ngIf="upgradeOffersArraylength > 0">
-    <div class="col-md-4 plan-card" *ngFor="let Offer of UpgradeOffers; let i= index;">
-      {{checkFeaturedUsageLevel(Offer.Plan.Product.Featured_Usage_Level, Offer)}}
-      <!--{{setDefaultValues(i)}}-->
-      <div class="plan-card-container">
-        <div class="card-content">
-          <div class="card-title container-fluid">
-            <div class="row">
-              <div class="col-xs-11"><h4>{{Offer.Plan.Name }}</h4></div><div class="col-xs-1 no-padding"> <i class="fa fa-info-circle" aria-hidden="true" (click)="pop.show()"></i></div>
-            </div>
-            <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
-              <ng-template #options>
-                <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
-                  <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-                <mygexa-offer-details-popover [OfferDetails] = Offer ></mygexa-offer-details-popover>
-              </ng-template>
-            </div>
-            <div></div>
-            <h2>
-              {{ Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}
-              <sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
+<div *ngIf="activeServiceAccountDetails; then showOffers else showLoading"></div>
+<ng-template #showOffers>
+  {{checkFeaturedUsageLevel(offer)}}
+  <div class="plan-card-container">
+    <div class="card-content">
+      <div class="card-title container-fluid">
+        <div class="row">
+          <div class="col-xs-11">
+            <h4>{{offer.Plan.Name }}</h4>
           </div>
-          <p>at {{Offer?.Plan?.Product?.Featured_Usage_Level}}</p>
-          <p>TERM:{{Offer.Plan.Term}} months</p>
-          <p>{{Offer.Promotion?.Name}}</p>
+          <div class="col-xs-1 no-padding">
+            <i class="fa fa-info-circle" aria-hidden="true" (click)="openOfferDetailsPopOver()"></i>
+          </div>
         </div>
-        <div *ngIf="selectCheckBox[i]" class="agreement-section">
-          <div *ngIf="Offer?.Has_Partner">
-            <div class="row">
-              <div class="col-xs-2">
-                <label>Name</label>
-              </div>
-              <div class="col-xs-10">
-                <input type="text" class="form-control" placeholder="Name on Account">
-              </div>
-            </div>
-            <br>
+        <div #pop="bs-popover" [popover]="options" placement="bottom"  outsideClick="true">
+          <ng-template #options>
+            <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
+              <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+            <mygexa-offer-details-popover [OfferDetails]=offer></mygexa-offer-details-popover>
+          </ng-template>
+        </div>
+        <h2>{{priceAtFeaturedUsageLevel | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub
+          class="sub-text">per kwh</sub></h2>
+      </div>
+      <p>at {{offer.Plan.Product.Featured_Usage_Level}}</p>
+      <p>TERM:{{offer.Plan.Term}} months</p>
+      <p>{{offer.Promotion?.Name}}</p>
+    </div>
+    <div *ngIf="isOfferSelected" class="agreement-section">
+      <form novalidate (ngSubmit)="selectOffer()" [formGroup]="renewalUpgradeFormGroup" class="form-horizontal">
+        <div *ngIf="offer.Has_Partner">
+          <div [ngClass]="{'has-error': (renewalUpgradeFormGroup.get('accountName').touched ||
+            renewalUpgradeFormGroup.get('accountName').dirty) &&
+            !renewalUpgradeFormGroup.get('accountName').valid}">
             <div class="row">
               <div class="col-xs-2">
-                <label>Enter</label>
+                <label for="accountNameId" >Name</label>
               </div>
               <div class="col-xs-10">
-                <input type="text" class="form-control" placeholder="Your Rewards Number">
+                <input type="text"
+                       class="form-control form-control-wireframe"
+                       id="accountNameId"
+                       placeholder="Name on Account (required)"
+                       formControlName="accountName"
+                       required
+                       autocomplete="off">
+                <ng-container *ngIf="(renewalUpgradeFormGroup.get('accountName').touched ||
+                     renewalUpgradeFormGroup.get('accountName').dirty) &&
+                     renewalUpgradeFormGroup.get('accountName').errors">
+                     <span class="help-block">
+                        <small class="text-danger">
+                           <i class="fa fa-fw fa-asterisk"></i>
+                           <ng-container
+                             *ngIf="renewalUpgradeFormGroup.get('accountName').errors.required">Account Name is required.</ng-container>
+                        </small>
+                     </span>
+                </ng-container>
               </div>
             </div>
-            <br>
           </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value="" (click) = "toggleButton(i)">
-              <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-              <p class="text-left">By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
-            </label>
-          </div>
-          <div class="row">
-            <div style="text-align:center">
-              <button class="btn btn-primary" [disabled]="selectCheckBox[i] && !enableSelect[i]" (click)="showConfirmationPop()" >Submit</button>
-              <button class="btn btn-link" (click)="closeCheckBox(i)" aria-hidden="true">Cancel</button>
+          <br>
+
+          <div [ngClass]="{'has-error': (renewalUpgradeFormGroup.get('rewardsNumber').touched ||
+            renewalUpgradeFormGroup.get('rewardsNumber').dirty) &&
+            !renewalUpgradeFormGroup.get('rewardsNumber').valid}">
+            <div class="row">
+              <div class="col-xs-2">
+                <label for="rewardsNumberId">Enter</label>
+              </div>
+              <div class="col-xs-10">
+                <input
+                  type="text"
+                  class="form-control form-control-wireframe"
+                  id="rewardsNumberId"
+                  placeholder="Rewards Number (required)"
+                  formControlName="rewardsNumber"
+                  required
+                  autocomplete="off">
+                <ng-container *ngIf="(renewalUpgradeFormGroup.get('rewardsNumber').touched ||
+                     renewalUpgradeFormGroup.get('rewardsNumber').dirty) &&
+                     renewalUpgradeFormGroup.get('rewardsNumber').errors">
+                     <span class="help-block">
+                        <small class="text-danger">
+                           <i class="fa fa-fw fa-asterisk"></i>
+                           <ng-container
+                             *ngIf="renewalUpgradeFormGroup.get('rewardsNumber').errors.required">Rewards Number is required.</ng-container>
+                        </small>
+                     </span>
+                </ng-container>
+
+              </div>
             </div>
           </div>
+          <br>
         </div>
-        <br/>
-        <div *ngIf="!selectCheckBox[i]">
-          <div class="row">
-            <div style="text-align:center">
-              <button class="btn btn-primary" [disabled]="selectCheckBox[i] && !enableSelect[i]" (click)='onSelect($event, i)'>
-                Select <i class="fa fa-chevron-right fa-wh" style="color: white" aria-hidden="true"></i></button>
-            </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" [checked]="isOfferAgreed" (click)="toggleButton()">
+            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+            <p class="text-left">By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
+          </label>
+        </div>
+        <div class="row">
+          <div style="text-align:center">
+            <button class="btn btn-primary" [disabled]='isCreateOfferEnabled()' type="submit">Submit</button>
+            <button class="btn btn-link" (click)="onCloseSelectOffer($event)" aria-hidden="true">Cancel</button>
           </div>
         </div>
-        <div class="row card-included" >
-          <div class="col-md-12">
-            <h4 class="text-center form-control ">What's included <i class="fa fa-chevron-down" (click)="ChevClicked(i)" [ngClass]="chev_clicked[i]  ?  'fa-chevron-down':  'fa-chevron-up'"></i><br>
-              <div class="card-included popover pull-left" *ngIf="chev_clicked[i]">
-                {{featuredOfferFeatures(Offer)}}
-                <div *ngIf="Offer?.Plan?.Product?.Product_Features != null || length <= 0 ; then features else noFeatures"></div>
-                <ng-template #features>
-                  <div *ngFor="let feature of Offer?.Plan?.Product?.Product_Features">
-                    <div class="row">
-                      <div class="col-sm-2">
-                        <i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>
-                      </div>
-                      <div class="col-sm-10">
-                        {{feature}}
-                      </div>
-                    </div>
-                    <br>
-                  </div>
-                </ng-template>
-                <ng-template #noFeatures>
+      </form>
+    </div>
+    <br/>
+    <div class="row">
+      <div style="text-align:center">
+        <button class="btn btn-primary" (click)='onSelectOffer($event)'>
+          Select
+          <i class="fa fa-chevron-right fa-wh" style="color: white" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div class="row card-included">
+      <div class="col-md-12">
+        <h4 class="text-center form-control ">
+          What's included <i class="fa fa-chevron-down"
+                             (click)="onProductFeaturesSelected()"
+                             [ngClass]="productFeaturesSelected ? 'fa-chevron-down' : 'fa-chevron-up'"></i><br>
+          <div class="card-included popover pull-left" *ngIf="productFeaturesSelected">
+            <div
+              *ngIf="(offer.Plan.Product.Product_Features && offer.Plan.Product.Product_Features.length > 0); then features else noFeatures"></div>
+            <ng-template #features>
+              <div *ngFor="let feature of offer.Plan.Product.Product_Features">
+                <div class="row">
                   <div class="col-sm-2">
-                    <i class="fa fa-exclamation-triangle fa-fw fa-in-circle"></i>
+                    <i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>
                   </div>
                   <div class="col-sm-10">
-                    No features available for this plan yet!
+                    {{feature}}
                   </div>
-                  <br>
-                </ng-template>
+                </div>
+                <br>
               </div>
-            </h4>
+            </ng-template>
+            <ng-template #noFeatures>
+              <div class="col-sm-2">
+                <i class="fa fa-exclamation-triangle fa-fw fa-in-circle"></i>
+              </div>
+              <div class="col-sm-10">
+                No features available for this plan yet!
+              </div>
+              <br>
+            </ng-template>
           </div>
-        </div>
-      </div>
-      <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame" [IsOnHoldOver] = "IsOnHoldOver"></mygexa-plan-confirmation-popover>
-    </div>
-  </section>
-  <section *ngIf="upgradeOffersArraylength <= 0" >
-    <div class="row">
-      <div class="col-sm-24">
-        <h2> No available offers for this service account.</h2>
+        </h4>
       </div>
     </div>
-  </section>
+  </div>
 </ng-template>
-
-
-<ng-template #RenewalOfferCard>
-  <section *ngIf="renewalOffersArraylength > 0">
-    <div class="col-md-4 plan-card" *ngFor="let Offer of AllOfferss; let i= index;">
-
-
-
-      {{checkFeaturedUsageLevel(Offer.Plan.Product.Featured_Usage_Level, Offer)}}
-      <div class="plan-card-container">
-        <div class="card-content">
-          <div class="card-title container-fluid">
-            <div class="row">
-              <div class="col-xs-11"><h4>{{Offer.Plan.Name }}</h4></div><div class="col-xs-1 no-padding"> <i class="fa fa-info-circle" aria-hidden="true" (click)="pop.show()"></i></div>
-            </div>
-            <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
-              <ng-template #options>
-                <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
-                  <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-                <mygexa-offer-details-popover [OfferDetails] = Offer ></mygexa-offer-details-popover>
-              </ng-template>
-            </div>
-            <h2>{{Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><sub class="sub-text">per kwh</sub></h2>
-          </div>
-          <p>at {{Offer?.Plan?.Product?.Featured_Usage_Level}}</p>
-          <p>TERM:{{Offer.Plan.Term}} months</p>
-          <p>{{Offer.Promotion?.Name}}</p>
-        </div>
-        <div *ngIf="selectCheckBox[i]" class="agreement-section">
-          <div *ngIf="Offer?.Has_Partner">
-            <div class="row">
-              <div class="col-xs-2">
-                <label>Name</label>
-              </div>
-              <div class="col-xs-10">
-                <input type="text" class="form-control" placeholder="Name on Account">
-              </div>
-            </div>
-            <br>
-            <div class="row">
-              <div class="col-xs-2">
-                <label>Enter</label>
-              </div>
-              <div class="col-xs-10">
-                <input type="text" class="form-control" placeholder="Your Rewards Number">
-              </div>
-            </div>
-            <br>
-          </div>
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value="" (click) = "toggleButton(i)">
-              <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-              <p class="text-left">By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
-            </label>
-          </div>
-          <div class="row">
-            <div style="text-align:center">
-              <button class="btn btn-primary" [disabled]="selectCheckBox[i] && !enableSelect[i]" (click)="createRenewal(i, Offer)" >Submit</button>
-              <button class="btn btn-link" (click)="closeCheckBox(i)" aria-hidden="true">Cancel</button>
-            </div>
-          </div>
-        </div>
-        <br/>
-        <div *ngIf="!selectCheckBox[i]">
-          <div class="row">
-            <div style="text-align:center">
-              <button class="btn btn-primary" [disabled]="selectCheckBox[i] && !enableSelect[i]" (click)='onSelect($event, i)'>
-                Select <i class="fa fa-chevron-right fa-wh" style="color: white" aria-hidden="true"></i></button>
-            </div>
-          </div>
-        </div>
-        <div class="row card-included" >
-          <div class="col-md-12">
-            <h4 class="text-center form-control ">What's included <i class="fa fa-chevron-down" (click)="ChevClicked(i)" [ngClass]="chev_clicked[i] ?  'fa-chevron-down':  'fa-chevron-up'"></i><br>
-              <div class="card-included popover pull-left" *ngIf="chev_clicked[i]">
-                <div *ngIf="Offer?.Plan?.Product?.Product_Features != null ; then features else noFeatures"></div>
-                <ng-template #features>
-                  <div *ngFor="let feature of Offer?.Plan?.Product?.Product_Features">
-                    <div class="row">
-                      <div class="col-sm-2">
-                        <i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>
-                      </div>
-                      <div class="col-sm-10">
-                        {{feature}}
-                      </div>
-                    </div>
-                    <br>
-                  </div>
-                </ng-template>
-                <ng-template #noFeatures>
-                  <div class="col-sm-2">
-                    <i class="fa fa-exclamation-triangle fa-fw fa-in-circle"></i>
-                  </div>
-                  <div class="col-sm-10">
-                    No features available for this plan yet!
-                  </div>
-                  <br>
-                </ng-template>
-              </div>
-            </h4>
-          </div>
-        </div>
-      </div>
-      <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame] ="IsInRenewalTimeFrame" [IsOnHoldOver] = "IsOnHoldOver"></mygexa-plan-confirmation-popover>
-    </div>
-  </section>
-  <section *ngIf="AllOfferss && renewalOffersArraylength <= 0" >
-    <div class="row">
-      <div class="col-sm-24">
-        <h2> No available offers for this service account.</h2>
-      </div>
-    </div>
-  </section>
+<ng-template #showLoading>
+  <div class="text-center">
+    <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
+    <h2>
+      <small class="text-muted">Loading offer for your home...</small>
+    </h2>
+  </div>
 </ng-template>
-
-
-<br>
-<mygexa-confirmation-modal #planConfirmationModal></mygexa-confirmation-modal  >
-
 

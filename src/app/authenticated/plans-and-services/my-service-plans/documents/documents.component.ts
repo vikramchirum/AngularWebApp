@@ -6,8 +6,8 @@ import { IOffers } from '../../../../core/models/offers/offers.model';
 import { AllOffersClass } from '../../../../core/models/offers/alloffers.model';
 import { OfferService } from '../../../../core/offer.service';
 import { DocumentsService } from '../../../../core/documents.service';
-import { RenewalStore } from '../../../../core/store/RenewalStore';
-import {OffersStore} from '../../../../core/store/OffersStore';
+import { RenewalStore } from '../../../../core/store/renewalstore';
+import {OffersStore} from '../../../../core/store/offersstore';
 import {ServiceAccountService} from '../../../../core/serviceaccount.service';
 import {Observable} from 'rxjs/Observable';
 

@@ -1,15 +1,25 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
+
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
+
 import { findKey, filter, find } from 'lodash';
+
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import { IUser } from 'app/core/models/user/User.model';
+
+import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
+import { IOffers } from 'app/core/models/offers/offers.model';
+import { IRenewalDetails } from '../../../../core/models/renewals/renewaldetails.model';
+
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { OfferService } from 'app/core/offer.service';
-import { AllOffersClass} from 'app/core/models/offers/alloffers.model';
-import { IOffers } from 'app/core/models/offers/offers.model';
-import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
-import { RenewalStore } from '../../../../core/store/RenewalStore';
-import {OffersStore} from '../../../../core/store/OffersStore';
-import {Observable} from 'rxjs/Observable';
-import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.model';
+
+import { OffersStore} from 'app/core/store/offersstore';
+import { RenewalStore } from 'app/core/store/renewalstore';
+import { ModalStore } from 'app/core/store/modalstore';
+
+import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-confirmation-modal.component';
 
 @Component({
   selector: 'mygexa-change-your-plan',
@@ -18,117 +28,50 @@ import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.m
 })
 export class ChangeYourPlanComponent implements OnInit, OnDestroy {
 
-  public ActiveServiceAccountDetails: ServiceAccount = null;
-  OffersServiceSubscription: Subscription;
-  plansServicesSubscription: Subscription;
-  Renewaldetails: IRenewalDetails = null;
-  public IsUpForRenewal: boolean = null;
-  public IsRenewalPending: boolean = null;
-  public AllOffers: AllOffersClass[];
-  public All_Offers: AllOffersClass[];
-  public FeaturedOffers: AllOffersClass[];
-  public BestRenewalOffer: IOffers;
-  public UpgradeOffers: IOffers[];
+  @ViewChild('planConfirmationModal') planConfirmationModal: PlanConfirmationModalComponent;
 
-  public AllOfferss: IOffers[];
-  clicked: boolean;
-  public upgradeOffersArraylength: number = null;
+  renewalDetails: IRenewalDetails = null;
+  activeServiceAccountDetails: ServiceAccount = null;
+  user: IUser;
+
+  isAccountEligibleRenewal: boolean;
+  isRenewalPending: boolean;
+  isOnHoldOver: boolean;
+
+  featuredOffers: AllOffersClass[];
+  allOffers: AllOffersClass[];
+
+  bestRenewalOffer: IOffers;
+  renewalOffers: IOffers[];
+  upgradeOffers: IOffers[];
+
+  renewalOffersCount: number;
+  upgradeOffersCount: number;
+
+  offersServiceSubscription: Subscription;
+  plansServicesSubscription: Subscription;
+
   havePromoCode = false;
   promoCode = '';
 
-  constructor(private serviceAccount_service: ServiceAccountService, private OfferStore: OffersStore, private OfferService: OfferService, private renewalStore: RenewalStore) {
-    this.clicked = true;
+  constructor(private serviceAccount_service: ServiceAccountService, private OfferStore: OffersStore, private offerService: OfferService, private renewalStore: RenewalStore
+    , private modalStore: ModalStore, private viewContainerRef: ViewContainerRef) {
   }
 
   ngOnInit() {
+
     const activeServiceAccount$ = this.serviceAccount_service.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
+
     this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1]).subscribe(result => {
-      this.ActiveServiceAccountDetails = result[0]; this.Renewaldetails = result[1];
-      this.IsUpForRenewal = result[1].Is_Account_Eligible_Renewal;
-      this.IsRenewalPending = result[1].Is_Pending_Renewal;
-      // if (this.IsUpForRenewal && !this.IsRenewalPending && !this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate) {
-      //   this.OffersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
-      //     All_Offers => {
-      //       // console.log('All offers', All_Offers);
-      //       if (All_Offers != null) {
-      //         this.extractOffers(All_Offers);
-      //       }
-      //       return All_Offers;
-      //     }
-      //   );
-      // } else if (!this.IsUpForRenewal || this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate || this.IsRenewalPending) {
-      //   this.OffersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
-      //     Upgrade_Offers => {
-      //       this.UpgradeOffers = Upgrade_Offers;
-      //       // console.log('All upgrade offers', this.UpgradeOffers);
-      //       if (this.UpgradeOffers) {
-      //         this.upgradeOffersArraylength = Upgrade_Offers.length;
-      //       }
-      //       return this.UpgradeOffers;
-      //     }
-      //   );
-      // }
+      this.activeServiceAccountDetails = result[0];
+      this.renewalDetails = result[1];
+      this.populateOffers();
     });
-    // this.ServiceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.subscribe(
-    //   result => {
-    //     this.ActiveServiceAccountDetails = result;
-    //     this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(
-    //       RenewalDetails => {
-    //
-    //         if (RenewalDetails == null) {
-    //           return;
-    //         }
-    //     this.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-    //     this.IsRenewalPending = RenewalDetails.Is_Pending_Renewal;
-    //     if (this.IsUpForRenewal && !this.IsRenewalPending && !this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate) {
-    //       this.OffersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
-    //         All_Offers => {
-    //            // console.log('All offers', All_Offers);
-    //           if (All_Offers != null) {
-    //             this.extractOffers(All_Offers);
-    //           }
-    //           return All_Offers;
-    //         }
-    //       );
-    //     } else if (!this.IsUpForRenewal || this.ActiveServiceAccountDetails.Current_Offer.IsHoldOverRate || this.IsRenewalPending) {
-    //       this.OffersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
-    //         Upgrade_Offers => {
-    //           this.UpgradeOffers = Upgrade_Offers;
-    //           // console.log('All upgrade offers', this.UpgradeOffers);
-    //           if (this.UpgradeOffers) {
-    //             this.upgradeOffersArraylength = Upgrade_Offers.length;
-    //           }
-    //           return this.UpgradeOffers;
-    //         }
-    //       );
-    //     }
-    //   }
-    // );
-    //     return this.ActiveServiceAccountDetails;
-    //   });
-  }
-  //
-  // extractOffers(All_Offers: AllOffersClass[]) {
-  //   this.FeaturedOffers = All_Offers.filter(item => item.Type === 'Featured_Offers');
-  //   if ( this.FeaturedOffers[0].Offers.length > 0) {
-  //     console.log('All_Featured_Offers', this.FeaturedOffers);
-  //     this.BestRenewalOffer = this.FeaturedOffers[0].Offers[0];
-  //     console.log('Best_Featured_Offer', this.BestRenewalOffer);
-  //   }
-  //   this.AllOffers = All_Offers.filter(item => item.Type === 'All_Offers');
-  //   if (this.AllOffers[0].Offers.length > 0) {
-  //     this.AllOfferss = this.AllOffers[0].Offers;
-  //     console.log('Rest_All_Offers', this.AllOffers);
-  //   }
-  // }
 
-  ngOnDestroy() {
-    this.plansServicesSubscription.unsubscribe();
-
-  }
-  ChevClicked() {
-    this.clicked = !this.clicked;
+    this.modalStore.PlanConfirmationModal.subscribe(result => {
+      this.planConfirmationModal.showPlanConfirmationModal(result);
+    });
   }
 
   showPromoCodeInput() {
@@ -140,11 +83,57 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   }
 
   fetchOffersByPromoCode(promoCode) {
-    this.OffersServiceSubscription = this.OfferService.getRenewalPlansByPromoCode(promoCode).subscribe(
+    this.offersServiceSubscription = this.offerService.getRenewalPlansByPromoCode(promoCode).subscribe(
       result => {
-        console.log('Renewal offers based on Promo code', result);
-        this.AllOfferss = result;
+        this.renewalOffers = result;
+        if (this.renewalOffers) {
+          this.renewalOffersCount = this.renewalOffers.length;
+        }
       }
     );
+  }
+
+  private populateOffers(): void {
+
+    this.isOnHoldOver = this.activeServiceAccountDetails.Current_Offer.IsHoldOverRate;
+    this.isAccountEligibleRenewal = this.renewalDetails.Is_Account_Eligible_Renewal;
+    this.isRenewalPending = this.renewalDetails.Is_Pending_Renewal;
+
+    if (this.isRenewalPending || this.isOnHoldOver) {
+      this.offersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
+        upgradeOffers => {
+          this.upgradeOffers = upgradeOffers;
+          if (this.upgradeOffers) {
+            this.upgradeOffersCount = upgradeOffers.length;
+          }
+        }
+      );
+    } else if (this.isAccountEligibleRenewal) {
+      this.offersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
+        allOffers => {
+          if (allOffers) {
+            this.extractOffers(allOffers);
+          }
+        }
+      );
+    }
+  }
+
+  private extractOffers(allOffers: AllOffersClass[]): void {
+    this.featuredOffers = allOffers.filter(item => item.Type === 'Featured_Offers');
+    if (this.featuredOffers.length > 0 && this.featuredOffers[0].Offers.length > 0) {
+      this.bestRenewalOffer = this.featuredOffers[0].Offers[0];
+    }
+    this.allOffers = allOffers.filter(item => item.Type === 'All_Offers');
+    if (this.allOffers.length > 0 && this.allOffers[0].Offers.length > 0) {
+      this.renewalOffers = this.allOffers[0].Offers;
+      if (this.renewalOffers) {
+        this.renewalOffersCount = this.renewalOffers.length;
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.plansServicesSubscription.unsubscribe();
   }
 }

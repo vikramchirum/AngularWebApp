@@ -37,7 +37,7 @@ export class RenewalStore {
     const observable = this.renewalService.createRenewal(request).share();
     observable.subscribe(
       Renewal => {
-        console.log('Renewal Successfully Created ' + Renewal.Id);
+        console.log('Renewal Successfully Created with renewal Id' + Renewal.Id);
         this.LoadRenewalDetails(request.Service_Account_Id);
       }
     );

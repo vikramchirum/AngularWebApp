@@ -10,16 +10,26 @@ import { BehaviorSubject } from 'rxjs/Rx';
 @Injectable()
 export class ModalStore {
 
-  private _renewalConfirmationModal: BehaviorSubject<any> = new BehaviorSubject(null);
+  private _planConfirmationModal: BehaviorSubject<any> = new BehaviorSubject(null);
+
+  private _handleOfferPopOversModal: BehaviorSubject<any> = new BehaviorSubject(null);
 
   constructor() {
   }
 
-  get RenewalConfirmationModal() {
-    return this._renewalConfirmationModal.asObservable().filter(x => x != null);
+  get PlanConfirmationModal() {
+    return this._planConfirmationModal.asObservable().filter(x => x != null);
   }
 
-  showRenewalConfirmationModal(input: any) {
-    this._renewalConfirmationModal.next(input);
+  get HandleOfferPopOversModal() {
+    return this._handleOfferPopOversModal.asObservable().filter(x => x != null);
+  }
+
+  handleOfferPopOversModal(input: string) {
+    this._handleOfferPopOversModal.next(input);
+  }
+
+  showPlanConfirmationModal(input: any) {
+    this._planConfirmationModal.next(input);
   }
 }

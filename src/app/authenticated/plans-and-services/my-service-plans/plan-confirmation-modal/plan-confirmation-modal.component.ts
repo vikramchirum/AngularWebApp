@@ -14,7 +14,7 @@ import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount
 })
 export class PlanConfirmationModalComponent implements OnInit {
 
-  @ViewChild('planconfirmationModal') public planConfirmationModal: ModalDirective;
+  @ViewChild('planConfirmationModal') public planConfirmationModal: ModalDirective;
 
   isRenewalPlan: boolean;
   customerDetails: CustomerAccount = null;
