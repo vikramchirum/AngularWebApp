@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ViewContainerRef, AfterViewInit } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -26,7 +26,7 @@ import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-
   templateUrl: './change-your-plan.component.html',
   styleUrls: ['./change-your-plan.component.scss']
 })
-export class ChangeYourPlanComponent implements OnInit, OnDestroy {
+export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('planConfirmationModal') planConfirmationModal: PlanConfirmationModalComponent;
 
@@ -68,8 +68,10 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
       this.renewalDetails = result[1];
       this.populateOffers();
     });
+  }
 
-    this.modalStore.PlanConfirmationModal.subscribe(result => {
+  ngAfterViewInit() {
+    this.modalStore.PlanConfirmationModal.distinctUntilChanged(null, x => x).subscribe(result => {
       this.planConfirmationModal.showPlanConfirmationModal(result);
     });
   }
