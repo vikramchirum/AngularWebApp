@@ -66,7 +66,9 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
    this.handleOfferPopOversModalSubscription =  this.modalStore.HandleOfferPopOversModal.subscribe(rateCode => {
       if (this.offer) {
         if (this.offer.Rate_Code !== rateCode) {
-          this.pop.hide();
+          if (this.pop) {
+            this.pop.hide();
+          }
           this.isOfferSelected = false;
         }
       }
@@ -165,12 +167,15 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
       request.Partner_Name_On_Account = this.renewalUpgradeFormGroup.get('accountName').value;
       request.Partner_Account_Number = this.renewalUpgradeFormGroup.get('rewardsNumber').value;
     }
+
+    this.modalStore.showPlanConfirmationModal({
+      isRenewalPlan: this.isRenewal,
+      customerDetails: this.customerDetails
+    });
+
     this.renewalStore.createRenewal(request).subscribe(result => {
       if (result) {
-        this.modalStore.showPlanConfirmationModal({
-          isRenewalPlan: this.isRenewal,
-          customerDetails: this.customerDetails
-        });
+        console.log('done');
       }
     });
   }
