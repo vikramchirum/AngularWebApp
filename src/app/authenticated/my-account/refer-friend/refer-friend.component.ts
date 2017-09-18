@@ -60,14 +60,13 @@ export class ReferFriendComponent implements OnInit, OnDestroy {
   }
 
   onEnroll() {
-
     const request = {} as   IEnrollReferralRequest;
     request.Customer_Account_Id = this.serviceAccount.Customer_Account_Id;
     request.Service_Account_Id = this.serviceAccount.Id;
 
     this.referralStore.enrollReferral(request).subscribe(result => {
       if (result) {
-        console.log('Customer enrolled in referral.');
+        console.log('Customer is enrolled in referral.');
       }
     });
   }

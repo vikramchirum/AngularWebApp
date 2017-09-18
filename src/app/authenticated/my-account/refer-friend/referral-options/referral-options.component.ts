@@ -3,10 +3,12 @@ import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
 
 import { environment } from 'environments/environment';
 import { validateEmail } from 'app/validators/validator';
-import { ReferralService } from '../../../../core/referral.service';
-import { CustomerAccount } from '../../../../core/models/customeraccount/customeraccount.model';
+
+import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
+import { IInviteRefereeRequest } from 'app/core/models/referrals/inviterefereesrequest.model';
+
 import { CustomerAccountService } from 'app/core/CustomerAccount.service';
-import { IInviteRefereeRequest } from '../../../../core/models/referrals/inviterefereesrequest.model';
+import { ReferralStore } from 'app/core/store/referralstore';
 
 @Component({
   selector: 'mygexa-referral-options',
@@ -20,7 +22,7 @@ export class ReferralOptionsComponent implements OnInit {
   friendsForm: FormGroup;
   customerAccount: CustomerAccount;
 
-  constructor(private FormBuilder: FormBuilder, private customerAccountService: CustomerAccountService, private referralService: ReferralService) {
+  constructor(private FormBuilder: FormBuilder, private customerAccountService: CustomerAccountService, private referralStore: ReferralStore) {
   }
 
   ngOnInit() {
@@ -62,8 +64,10 @@ export class ReferralOptionsComponent implements OnInit {
     inviteRefereeRequest.Customer_Account_Id = this.customerAccount.Id;
     inviteRefereeRequest.FriendsList = friendsForm.get('FriendsList').value;
 
-    this.referralService.inviteReferees(inviteRefereeRequest).subscribe(result => {
-      console.log('Referees Invited');
+    this.referralStore.inviteReferees(inviteRefereeRequest).subscribe(result => {
+      if (result) {
+        console.log('Referees Invited');
+      }
     });
   }
 
