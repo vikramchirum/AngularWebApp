@@ -9,6 +9,7 @@ import { BehaviorSubject } from 'rxjs/Rx';
 import { ReferralService } from '../referral.service';
 import { IReferral } from '../models/referrals/referral.model';
 import { IEnrollReferralRequest } from '../models/referrals/enrollreferralrequest.model';
+import { IInviteRefereeRequest } from '../models/referrals/inviterefereesrequest.model';
 
 @Injectable()
 export class ReferralStore {
@@ -23,6 +24,7 @@ export class ReferralStore {
   }
 
   loadReferral(customerAccountId: string) {
+    // customerAccountId = '218514';
     this.referralService.getReferral(customerAccountId)
       .subscribe(
         referral => {
@@ -31,13 +33,22 @@ export class ReferralStore {
   }
 
   enrollReferral(request: IEnrollReferralRequest): Observable<boolean> {
-    const observable = this.referralService.enrollReferral(request);
+    const observable = this.referralService.enrollReferral(request).share();
     observable.subscribe(
       referral => {
         console.log('Referral Successfully Created');
-        this.loadReferral(request.Service_Account_Id);
-      }
-    );
+        this.loadReferral(referral.Customer_Account_Id);
+      });
+
+    return Observable.of(true);
+  }
+
+  inviteReferees(request: IInviteRefereeRequest): Observable<true> {
+    const observable = this.referralService.inviteReferees(request).share();
+    observable.subscribe(result => {
+      console.log('Referrals Successfully Invited');
+      this.loadReferral(request.Customer_Account_Id);
+    });
     return Observable.of(true);
   }
 }

@@ -22,12 +22,15 @@ import { UsageHistoryService } from './usage-history.service';
 import { NotificationOptionsService } from './notificationoptions.service';
 import { DocumentsService } from './documents.service';
 import { RenewalService } from './renewal.service';
-import { RenewalStore } from './store/RenewalStore';
-import {OffersStore} from './store/OffersStore';
-import {CustomerAccountStore} from './store/CustomerAccountStore';
+import { RenewalStore } from './store/renewalstore';
+import { OffersStore } from './store/offersstore';
+import { CustomerAccountStore } from './store/CustomerAccountStore';
 import { MessageCenterService } from './messagecenter.service';
 import { ReferralStore } from './store/referralstore';
 import { ReferralService } from './referral.service';
+import { ModalStore } from './store/modalstore';
+import { UpgradeService } from './upgrade.service';
+import { UpgradeStore } from './store/upgradestore';
 
 @NgModule({
   imports: [
@@ -52,11 +55,15 @@ import { ReferralService } from './referral.service';
     DocumentsService,
     RenewalService,
     RenewalStore,
+    UpgradeService,
+    UpgradeStore,
     OffersStore,
     CustomerAccountStore,
     ReferralStore,
     ReferralService,
-    MessageCenterService
+    MessageCenterService,
+    ModalStore,
+    UpgradeService
   ]
 })
 export class CoreModule { }

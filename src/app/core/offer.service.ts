@@ -6,10 +6,7 @@ import { clone, forEach, pull, map } from 'lodash';
 import { HttpClient } from './httpclient';
 import { AllOffersClass, UpgradeOffersClass } from './models/offers/alloffers.model';
 import { ServiceAccountService } from './serviceaccount.service';
-import { ServiceAccount } from './models/serviceaccount/serviceaccount.model';
 import { IOffers } from './models/offers/offers.model';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
 
 
 @Injectable()
@@ -38,7 +35,7 @@ export class OfferService {
       .catch(error => this.http.handleHttpError(error));
   }
 
-  getUpgradeOffers(ActiveServiceAccountId: string, ActiveServiceAccount_CuurentOffer_Term: Number, ActiveServiceAccount_TDU_DUNS_Number: string): Observable<IOffers[]> {
+  getUpgradeOffers(ActiveServiceAccount_CuurentOffer_Term: number, ActiveServiceAccount_TDU_DUNS_Number: string): Observable<IOffers[]> {
     return this.http.get(`/v2/Offers?option.approved=true&option.startDate=${new Date().toISOString()}&option.plan.term_Greater_Than=
     ${ActiveServiceAccount_CuurentOffer_Term}&option.plan.tDU.duns_Number=${ActiveServiceAccount_TDU_DUNS_Number}`)
       .map(data => { data.json(); return data.json(); })
@@ -53,7 +50,4 @@ export class OfferService {
       .map(data => <IOffers[]>data['Items'])
       .catch(error => this.http.handleHttpError(error));
   }
-
-
-
 }

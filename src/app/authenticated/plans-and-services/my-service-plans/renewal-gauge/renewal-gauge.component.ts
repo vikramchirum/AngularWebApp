@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {Observable} from 'rxjs/Observable';
 import {isFunction} from 'lodash';
-import {RenewalStore} from '../../../../core/store/RenewalStore';
+import {RenewalStore} from '../../../../core/store/renewalstore';
 import {ServiceAccountService} from '../../../../core/serviceaccount.service';
 import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceaccount.model';
 import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.model';

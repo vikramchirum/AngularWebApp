@@ -2,9 +2,7 @@
 
 .plan-card {
   margin-bottom: 20px;
-
 }
-
 
 .plan-card-container{
     border: none;
@@ -12,7 +10,7 @@
     padding: 10px 0;
     margin-bottom: 5px;
     background-color: rgba(255,255,255,0.1);
-  
+
   &:hover {
         background-color: rgba(255,255,255,0.3);
         transition: 1s ease all;
@@ -21,7 +19,7 @@
     .card-included {
       margin-right: 2px;
       padding: 8px;
-      
+
 
       h4{
         font-size: 14px !important;
@@ -82,7 +80,7 @@
         }
 
    .agreement-section {
-     
+
       position: absolute;
       top: 45px;
       background-color: rgba(255,255,255,1);
@@ -91,7 +89,7 @@
       left: 0;
       z-index: 1;
 
-     
+
        label {
            p {
                font-size:0.9em;
@@ -131,7 +129,7 @@
 }
   .fa-check {
     color: $payment-base;
-    
+
   }
 
 .checkbox label input[type="checkbox"] {
@@ -153,7 +151,7 @@
 .checkbox label input[type="checkbox"]:disabled + .cr{
   opacity: .5;
 }
-  
+
 .card-included.popover {
     position: absolute;
     background-color: #fff;

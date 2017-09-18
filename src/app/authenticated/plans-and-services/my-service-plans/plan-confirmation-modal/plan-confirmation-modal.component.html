@@ -1,0 +1,52 @@
+<section class="plan-confirmation-modal">
+  <div [config]="{ backdrop: 'static', keyboard: false }"
+       bsModal #planConfirmationModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+
+          <div class="plan-confirmation-header">
+            <button type="button" class="close pull-right" aria-label="Close" style="padding-right: 20px"  (click)="hidePlanConfirmationModal()">
+              <span class="close-btn" aria-hidden="true">
+              <i class="fa fa-remove"></i></span>
+            </button>
+          </div><br>
+
+        <div class="modal-body">
+
+          <h2 class="modal-title"><b>Thanks, <span class="hidden-xs">{{customerDetails?.First_Name.charAt(0).toUpperCase() +  customerDetails?.First_Name.slice(1).toLowerCase() + '!'}}</span></b></h2>
+          <div class="modal-body container-fluid">
+            <ng-template *ngIf="isRenewalPlan; then RenewalSection else UpgradeSection"></ng-template>
+            <ng-template #UpgradeSection>
+              <div class="row">
+                <h4 class="text-center plan-info">Your plan upgrade is all set.</h4>
+                <h5 class="bill-name"> A confirmation will be sent to your email address with your plan documents. Your new plan will start when your current plan ends.</h5>
+              </div>
+            </ng-template>
+            <ng-template #RenewalSection>
+              <div class="row">
+                <h4 class="text-center plan-info">Your plan renewal is all set.</h4>
+                <h5 class="bill-name"> A confirmation will be sent to your email address with your plan documents. Your new plan will start when your current plan ends.</h5>
+              </div>
+            </ng-template>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="text-center">
+                <button class="btn btn-primary" (click)="hidePlanConfirmationModal()">Got it</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+

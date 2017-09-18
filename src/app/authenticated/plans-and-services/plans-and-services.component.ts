@@ -6,9 +6,8 @@ import { startsWith } from 'lodash';
 
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
-import { OfferService } from 'app/core/offer.service';
-import { RenewalStore } from '../../core/store/RenewalStore';
-import {OffersStore} from '../../core/store/OffersStore';
+import { RenewalStore } from '../../core/store/renewalstore';
+import { OffersStore } from '../../core/store/offersstore';
 
 @Component({
   selector: 'mygexa-plans-and-services',
@@ -30,7 +29,8 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
     private OfferStore: OffersStore,
     private renewalStore: RenewalStore,
     private Router: Router
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
 
@@ -48,7 +48,7 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
         this.OfferStore.LoadRenewalOffersData(this.ActiveServiceAccount.Id);
       } else if (!this.IsUpForRenewal || this.ActiveServiceAccount.Current_Offer.IsHoldOverRate || this.IsRenewalPending) {
         // everything else is an upgrade
-        this.OfferStore.LoadUpgradeOffersData(this.ActiveServiceAccount.Id, +this.ActiveServiceAccount.Current_Offer.Term, this.ActiveServiceAccount.TDU_DUNS_Number);
+        this.OfferStore.LoadUpgradeOffersData(this.ActiveServiceAccount.Current_Offer.Term, this.ActiveServiceAccount.TDU_DUNS_Number);
       }
     });
   }

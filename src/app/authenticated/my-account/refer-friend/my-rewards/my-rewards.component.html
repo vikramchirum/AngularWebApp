@@ -1,59 +1,57 @@
-<br/>
-<br/>
- 
-
- <section class="details">
-  <div class="row">
-    <div class="col-md-4 col-xs-6">
-      <label>3</label>
-      <h5>Total Current Referrals</h5>
-    </div>
-    <div class="col-md-4 col-xs-6">
-      <label>$10.23</label>
-      <h5>Total Share & Save <br/>Bill Credits This Month</h5>
-    </div>
-    <div class="col-md-4 col-xs-6">
-      <label>$300.00</label>
-      <h5>Total Savings to Date</h5>
-    </div>
-  </div>
-  <br>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="alert alert-success text-center">
-        <b>Your Referred Customers </b>
+<div *ngIf="!isLoading; then referrals else showLoadingScreen"></div>
+<ng-template #referrals>
+  <br/>
+  <br/>
+  <section class="details">
+    <div class="row">
+      <div class="col-md-4 col-xs-6">
+        <label>{{referral.RefereeList ? referral.RefereeList.length : 0 }}</label>
+        <h5>Total Current Referrals</h5>
+      </div>
+      <div class="col-md-4 col-xs-6">
+        <label>$10.23</label>
+        <h5>Total Share & Save <br/>Bill Credits This Month</h5>
+      </div>
+      <div class="col-md-4 col-xs-6">
+        <label>${{totalSavingsToDate | number : dollarAmountFormatter}}</label>
+        <h5>Total Savings to Date</h5>
       </div>
     </div>
-  </div>
     <br>
-  <div class="row">
-    <div class="col-md-6">
-        <b>John Doe </b>
-    </div>
-     <div class="col-md-6">
-        <b>JohnDoe@gmail.com </b>
-    </div>
-  </div>
-  <hr/>
     <div class="row">
-    <div class="col-md-6">
-        <b>Jane Doe </b>
+      <div class="col-md-12">
+        <div class="alert alert-success text-center">
+          <b>Your Referred Customers </b>
+        </div>
+      </div>
     </div>
-     <div class="col-md-6">
-        <b>JaneDoe@gmail.com </b>
-    </div>
+    <br>
+    <ng-container *ngIf="referral.RefereeList; else norefees">
+      <div *ngFor="let referee of referral.RefereeList; let i = index">
+        <div class="row">
+          <div class="col-md-6">
+            <b>{{referee.FirstName}} {{referee.LastName}}</b>
+          </div>
+          <div class="col-md-6">
+            <b>PhylloDoe@gmail.com </b>
+          </div>
+        </div>
+        <hr/>
+      </div>
+    </ng-container>
+
+    <ng-template #norefees><div>No Referred Customers</div></ng-template>
+
+    <br>
+    <br>
+    <br>
+  </section>
+</ng-template>
+<ng-template #showLoadingScreen>
+  <div class="text-center">
+    <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
+    <h2>
+      <small class="text-muted">Loading your Rewards...</small>
+    </h2>
   </div>
-  <hr/>
-    <div class="row">
-    <div class="col-md-6">
-        <b>Phyllo Doe </b>
-    </div>
-     <div class="col-md-6">
-        <b>PhylloDoe@gmail.com </b>
-    </div>
-  </div>
-  <hr/>
-  <br>
-  <br>
-  <br>
-</section>
+</ng-template>

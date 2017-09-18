@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { RenewalGaugeComponent } from './renewal-gauge/renewal-gauge.component';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
-import { RenewalStore } from '../../../core/store/RenewalStore';
+import { RenewalStore } from '../../../core/store/renewalstore';
 import { IRenewalDetails } from '../../../core/models/renewals/renewaldetails.model';
 
 @Component({

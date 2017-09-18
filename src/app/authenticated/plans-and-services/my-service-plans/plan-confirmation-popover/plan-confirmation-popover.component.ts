@@ -32,12 +32,6 @@ export class PlanConfirmationPopoverComponent implements OnInit, OnDestroy, OnCh
 
   renewedNewplan() {
     this.hidePlanPopModal();
-    if (this.IsInRenewalTimeFrame) {
-      this.serviceAccountService.OnUpgradeOrRenew('Renewal');
-    } else {
-      this.serviceAccountService.OnUpgradeOrRenew('Upgrade');
-    }
-    // location.reload();
   }
 
   public showPlanPopModal(): void {
