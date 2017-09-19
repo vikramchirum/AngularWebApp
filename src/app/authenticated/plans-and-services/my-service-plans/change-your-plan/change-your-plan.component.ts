@@ -1,32 +1,32 @@
-import {Component, OnInit, OnDestroy, ViewChild, ViewContainerRef, Input} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ViewContainerRef, AfterViewInit } from '@angular/core';
 
-import {Subscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
-import {findKey, filter, find} from 'lodash';
+import { findKey, filter, find } from 'lodash';
 
-import {ServiceAccount} from 'app/core/models/serviceaccount/serviceaccount.model';
-import {IUser} from 'app/core/models/user/User.model';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import { IUser } from 'app/core/models/user/User.model';
 
-import {AllOffersClass} from 'app/core/models/offers/alloffers.model';
-import {IOffers} from 'app/core/models/offers/offers.model';
-import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.model';
+import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
+import { IOffers } from 'app/core/models/offers/offers.model';
+import { IRenewalDetails } from '../../../../core/models/renewals/renewaldetails.model';
 
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
-import {OfferService} from 'app/core/offer.service';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { OfferService } from 'app/core/offer.service';
 
-import {OffersStore} from 'app/core/store/offersstore';
-import {RenewalStore} from 'app/core/store/renewalstore';
-import {ModalStore} from 'app/core/store/modalstore';
+import { OffersStore} from 'app/core/store/offersstore';
+import { RenewalStore } from 'app/core/store/renewalstore';
+import { ModalStore } from 'app/core/store/modalstore';
 
-import {PlanConfirmationModalComponent} from '../plan-confirmation-modal/plan-confirmation-modal.component';
+import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-confirmation-modal.component';
 
 @Component({
   selector: 'mygexa-change-your-plan',
   templateUrl: './change-your-plan.component.html',
   styleUrls: ['./change-your-plan.component.scss']
 })
-export class ChangeYourPlanComponent implements OnInit, OnDestroy {
+export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('planConfirmationModal') planConfirmationModal: PlanConfirmationModalComponent;
   @Input() pCode: string;
@@ -70,8 +70,10 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
       this.renewalDetails = result[1];
       this.populateOffers();
     });
+  }
 
-    this.modalStore.PlanConfirmationModal.subscribe(result => {
+  ngAfterViewInit() {
+    this.modalStore.PlanConfirmationModal.distinctUntilChanged(null, x => x).subscribe(result => {
       this.planConfirmationModal.showPlanConfirmationModal(result);
     });
   }
@@ -116,7 +118,6 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
     } else {
       this.offersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
         upgradeOffers => {
-          console.log('Upgrade ofers in chnage your plan', upgradeOffers);
           this.upgradeOffers = upgradeOffers;
           if (this.upgradeOffers) {
             this.upgradeOffersCount = upgradeOffers.length;

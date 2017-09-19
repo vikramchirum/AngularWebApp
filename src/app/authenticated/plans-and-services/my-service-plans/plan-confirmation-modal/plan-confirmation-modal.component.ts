@@ -30,6 +30,10 @@ export class PlanConfirmationModalComponent implements OnInit {
   }
 
   public showPlanConfirmationModal(confirmationObject: any): void {
+
+    if (!confirmationObject) {
+      return;
+    }
     this.isRenewalPlan = confirmationObject.isRenewalPlan;
     this.customerDetails = confirmationObject.customerDetails;
     this.planConfirmationModal.show();

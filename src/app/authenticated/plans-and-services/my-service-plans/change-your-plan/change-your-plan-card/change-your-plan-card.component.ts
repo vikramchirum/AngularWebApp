@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, ViewContainerRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewContainerRef, ViewChild, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators} from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -24,7 +24,7 @@ import { ModalStore } from 'app/core/store/modalstore';
   templateUrl: './change-your-plan-card.component.html',
   styleUrls: ['./change-your-plan-card.component.scss']
 })
-export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
+export class ChangeYourPlanCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('pop') public pop: ModalDirective;
   @Input('offer') offer: IOffers;
@@ -63,17 +63,6 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
       rewardsNumber: ['', Validators.required]
     });
 
-   this.handleOfferPopOversModalSubscription =  this.modalStore.HandleOfferPopOversModal.subscribe(rateCode => {
-      if (this.offer) {
-        if (this.offer.Rate_Code !== rateCode) {
-          if (this.pop) {
-            this.pop.hide();
-          }
-          this.isOfferSelected = false;
-        }
-      }
-    });
-
     this.customerAccountServiceSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(result => {
       this.customerDetails = result;
     });
@@ -86,6 +75,19 @@ export class ChangeYourPlanCardComponent implements OnInit, OnDestroy {
       .subscribe(result => {
         this.activeServiceAccountDetails = result;
       });
+  }
+
+  ngAfterViewInit() {
+    this.handleOfferPopOversModalSubscription = this.modalStore.HandleOfferPopOversModal.subscribe(rateCode => {
+      if (this.offer) {
+        if (this.offer.Rate_Code !== rateCode) {
+          if (this.pop) {
+            this.pop.hide();
+          }
+          this.isOfferSelected = false;
+        }
+      }
+    });
   }
 
   checkFeaturedUsageLevel(offer: IOffers) {
