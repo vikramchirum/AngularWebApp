@@ -10,7 +10,9 @@ import { UsageSummaryComponent } from './usage-summary/usage-summary.component';
 import { ReferFriendProgramComponent } from './refer-friend-program/refer-friend-program.component';
 import { AutoPaySignupComponent } from './auto-pay-signup/auto-pay-signup.component';
 import { HomeCarouselComponent } from './home-carousel/home-carousel.component';
-import {MyBillComponent} from './my-bill/my-bill.component';
+import { MyBillComponent } from './my-bill/my-bill.component';
+import { BudgetBillingSignupComponent } from './budget-billing-signup/budget-billing-signup.component';
+import { PaperlessBillingSignupComponent } from './paperless-billing-signup/paperless-billing-signup.component';
 
 @NgModule({
   imports: [
@@ -26,6 +28,8 @@ import {MyBillComponent} from './my-bill/my-bill.component';
     ReferFriendProgramComponent,
     AutoPaySignupComponent,
     MyBillComponent,
-    HomeCarouselComponent]
+    HomeCarouselComponent,
+    BudgetBillingSignupComponent,
+    PaperlessBillingSignupComponent]
 })
 export class HomeModule { }
