@@ -2,7 +2,7 @@
 
 <ng-template #offers>
 
-  <ng-template #showRenewalOrUpgrade *ngIf="isRenewalPending || isOnHoldOver; then upgradeSection else renewalSection">
+  <ng-template #showRenewalOrUpgrade *ngIf="showRenewals; then renewalSection else upgradeSection">
   </ng-template>
 
   <ng-template #renewalSection>
@@ -42,7 +42,7 @@
         <div class="row change-plans-grid">
           <section *ngIf="upgradeOffersCount > 0">
             <div class="col-md-4 plan-card" *ngFor="let offer of upgradeOffers; let i= index;">
-              <mygexa-change-your-plan-card [offer]=offer [isRenewal] = true></mygexa-change-your-plan-card>
+              <mygexa-change-your-plan-card [offer]=offer [isRenewal] = false></mygexa-change-your-plan-card>
             </div>
           </section>
 

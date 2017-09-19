@@ -1,25 +1,25 @@
 import {Component, OnInit, OnDestroy, ViewChild, ViewContainerRef, Input} from '@angular/core';
 
-import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+import {Subscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 
-import { findKey, filter, find } from 'lodash';
+import {findKey, filter, find} from 'lodash';
 
-import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
-import { IUser } from 'app/core/models/user/User.model';
+import {ServiceAccount} from 'app/core/models/serviceaccount/serviceaccount.model';
+import {IUser} from 'app/core/models/user/User.model';
 
-import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
-import { IOffers } from 'app/core/models/offers/offers.model';
-import { IRenewalDetails } from '../../../../core/models/renewals/renewaldetails.model';
+import {AllOffersClass} from 'app/core/models/offers/alloffers.model';
+import {IOffers} from 'app/core/models/offers/offers.model';
+import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.model';
 
-import { ServiceAccountService } from 'app/core/serviceaccount.service';
-import { OfferService } from 'app/core/offer.service';
+import {ServiceAccountService} from 'app/core/serviceaccount.service';
+import {OfferService} from 'app/core/offer.service';
 
-import { OffersStore} from 'app/core/store/offersstore';
-import { RenewalStore } from 'app/core/store/renewalstore';
-import { ModalStore } from 'app/core/store/modalstore';
+import {OffersStore} from 'app/core/store/offersstore';
+import {RenewalStore} from 'app/core/store/renewalstore';
+import {ModalStore} from 'app/core/store/modalstore';
 
-import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-confirmation-modal.component';
+import {PlanConfirmationModalComponent} from '../plan-confirmation-modal/plan-confirmation-modal.component';
 
 @Component({
   selector: 'mygexa-change-your-plan',
@@ -29,7 +29,7 @@ import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-
 export class ChangeYourPlanComponent implements OnInit, OnDestroy {
 
   @ViewChild('planConfirmationModal') planConfirmationModal: PlanConfirmationModalComponent;
-   @Input() pCode: string;
+  @Input() pCode: string;
 
   renewalDetails: IRenewalDetails = null;
   activeServiceAccountDetails: ServiceAccount = null;
@@ -38,6 +38,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
   isAccountEligibleRenewal: boolean;
   isRenewalPending: boolean;
   isOnHoldOver: boolean;
+  showRenewals: boolean;
 
   featuredOffers: AllOffersClass[];
   allOffers: AllOffersClass[];
@@ -67,7 +68,6 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
     this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1]).subscribe(result => {
       this.activeServiceAccountDetails = result[0];
       this.renewalDetails = result[1];
-
       this.populateOffers();
     });
 
@@ -100,17 +100,8 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
     this.isOnHoldOver = this.activeServiceAccountDetails.Current_Offer.IsHoldOverRate;
     this.isAccountEligibleRenewal = this.renewalDetails.Is_Account_Eligible_Renewal;
     this.isRenewalPending = this.renewalDetails.Is_Pending_Renewal;
-
-    if (this.isRenewalPending || this.isOnHoldOver) {
-      this.offersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
-        upgradeOffers => {
-          this.upgradeOffers = upgradeOffers;
-          if (this.upgradeOffers) {
-            this.upgradeOffersCount = upgradeOffers.length;
-          }
-        }
-      );
-    } else if (this.isAccountEligibleRenewal) {
+    this.showRenewals = this.isAccountEligibleRenewal && !this.isRenewalPending && !this.isOnHoldOver;
+    if (this.showRenewals) {
       this.offersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
         allOffers => {
           if (allOffers) {
@@ -119,8 +110,19 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
         }
       );
       if (this.pCode != null) {
+        this.promoCode = this.pCode;
         this.showPromoCodeInput();
       }
+    } else {
+      this.offersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
+        upgradeOffers => {
+          console.log('Upgrade ofers in chnage your plan', upgradeOffers);
+          this.upgradeOffers = upgradeOffers;
+          if (this.upgradeOffers) {
+            this.upgradeOffersCount = upgradeOffers.length;
+          }
+        }
+      );
     }
   }
 
