@@ -36,7 +36,7 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
       });
       this.promoCode =
         this.GexaLyricOffer ?
-          (this.GexaLyricOffer.Promotion ? (this.GexaLyricOffer.Promotion.Code ? this.GexaLyricOffer.Promotion.Code : 'Hello' ) : 'Hello') : 'Hello';
+          (this.GexaLyricOffer.Promotion ? (this.GexaLyricOffer.Promotion.Code ? this.GexaLyricOffer.Promotion.Code : 'Lyric' ) : 'Lyric') : 'Lyric';
   }
   ngOnDestroy() {
     this.serviceAccountServiceSubscription.unsubscribe();
