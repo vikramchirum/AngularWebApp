@@ -32,9 +32,32 @@
 
     <div class="row">
       <div class="col-md-6">
-        <h3>You are Moving To</h3>      
-         <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)"></mygexa-address-search>
-     </div>
+        <h3>You are Moving To</h3>
+        <!--<input type="text" class="form-control" placeholder="Enter New Address" />-->
+        <section class="filter-wrapper">
+          <div class="keyword-wrapper">
+            <input type="text" formControlName="newAddressSearchField" class="form-control" id="keyword" placeholder="Enter New Address"
+               autocomplete="off"  />
+          </div>
+          <ul class="filter-select" *ngIf="results && showHideAdressList">
+            <li *ngFor="let result of results" class="filter-select-list">
+              <p (click)="selectNewServiceAddress(result, $event)" class="artist-name">{{result.newAddressString()}}
+              </p>
+            </li>
+          </ul>
+        </section>
+        <small class="text-danger" *ngIf="movingAddressForm.get('newAddressSearchField').touched && movingAddressForm.controls?.newAddressSearchField.errors?.required">Please Enter Address</small>
+        <!--<input formControlName="queryField"
+         [typeahead]="dataSource"
+         typeaheadOptionsLimit="7"
+         typeaheadMinLength="0"
+         placeholder="Enter New Address"
+         typeaheadOptionField="Address.City"
+         class="form-control"
+         [typeaheadWaitMs]="600"
+        >-->
+
+      </div>
 
       <!-- select date when customer wants their service turned on at the new home  -->
       <div class="col-md-6">
@@ -59,20 +82,20 @@
 
     <!--If we don't offer service in the moving address, we should show the message-->
     <ng-container *ngIf="availableOffers">
-    <div *ngIf="availableOffers.length === 0" class="alert alert-info fade in alert-dismissable">
+    <div *ngIf="availableOffers.Items.length === 0" class="alert alert-info fade in alert-dismissable">
       <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
       <strong>We're Sorry!</strong> We cannot register your move online, please call 1-888 888 8888 for assistance.
     </div>
 
      <!-- If user has past due balance, show hte message -->
-      <small class="text-danger" *ngIf="pastDueErrorMessage && availableOffers.length > 0"><p>{{pastDueErrorMessage}} <b>$ {{customerDetails.Past_Due | number : dollarAmountFormatter}}</b> </p> </small> 
+      <small class="text-danger" *ngIf="pastDueErrorMessage && availableOffers.Items.length > 0"><p>{{pastDueErrorMessage}} <b>$ {{customerDetails.Past_Due | number : dollarAmountFormatter}}</b> </p> </small> 
   </ng-container>
 
    
     <br/>
 
     <div class="text-right">
-      <button class="btn btn-lg btn-default" [disabled]="!movingAddressForm.valid" (click)="addressFormSubmit(movingAddressForm.value)">Next</button>
+      <button class="btn btn-primary" [disabled]="!movingAddressForm.valid" (click)="addressFormSubmit(movingAddressForm.value)">Next</button>
     </div>
   </form>
 
@@ -82,44 +105,41 @@
     <h2>Moving Center</h2>
     <p>A few more items and we can finalize your order</p>
     <br/>
+    <div  class=" row service-plan">
+      <div class="col-sm-6">
     <h3>Your Service Plan</h3>
-    <table class="service-plan">
-      <tbody>
-        <tr>
-          <td>
-            <p> Would you like to keep your existing service plan<i class="fa fa-chevron-right" aria-hidden="true"></i></p>
+
+                        <p> Would you like to keep your existing service plan?</p>
             <div class="form-group radio">
-              <label class="radio-inline"><input type="radio" formControlName="service_plan" value="Current Plan" (click)="getCurrentPlan()" >Keep Current Plan</label>
+              <label class="radio-inline"><input type="radio" formControlName="service_plan" value="Current Plan" (click)="getCurrentPlan()" checked="checked" >Keep Current Plan</label>
               <label class="radio-inline"><input type="radio" formControlName="service_plan" value="New Plan" (click)="openSelectPlanModal()">Select New Plan</label></div>
             <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Moving address is not in same TDU. Please select New Plan </small>
             <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.required">Please select plan</small>
             <mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>
-          </td>
-          <td>
+          </div>
+      <div class="col-sm-6">
 
 
-            <div class="current-plan-card" *ngIf="selectedOffer">
-              <div class="card-content">
-                <p>{{selectedOffer.Plan.Name}}</p>
-                <p>{{selectedOffer.Price_At_1000_kwh | number : '1.1-1'}}¢ pkw/hr</p>
-                <p>Expires {{selectedOffer.End_Date | date:'d/M/yy'}}</p>
+            <div class="current-plan-card mat-card" *ngIf="selectedOffer">
+              <h2 class="mat-card-title ">{{selectedOffer.Plan.Name}}</h2>
+              <div class="mat-card-content">
+                <h2>{{selectedOffer.Price_At_1000_kwh | number : '1.1-1'}}<sup>&cent;</sup><small>pkw/hr</small></h2>
+                <p  class="bg-default">Expires {{selectedOffer.End_Date | date:'d/M/yy'}}</p>
               </div>
             </div>
 
 
 
-            <div *ngIf="ActiveServiceAccount" [hidden]="selectedOffer" class="current-plan-card">
-              <div class="card-content">
-                <p>{{ActiveServiceAccount.Current_Offer.Product_Name}}</p>
-                <p>{{ActiveServiceAccount.Current_Offer.RateAt1000kwh | number : '1.1-1'}}¢ pkw/hr</p>
-                <p>Expires {{ActiveServiceAccount.Current_Offer.End_Date | date:'d/M/yy'}}</p>
+            <div *ngIf="ActiveServiceAccount" [hidden]="selectedOffer" class="current-plan-card mat-card">
+                <h2 class="mat-card-title ">{{ActiveServiceAccount.Current_Offer.Product_Name}}</h2>
+              <div class="mat-card-content">
+                <h2>{{ActiveServiceAccount.Current_Offer.RateAt1000kwh | number : '1.1-1'}}<sup>&cent;</sup><small>pkw/hr</small></h2>
+                <p class="bg-default">Expires {{ActiveServiceAccount.Current_Offer.End_Date | date:'d/M/yy'}}</p>
               </div>
             </div>
 
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+    </div>
 
 
     <div class="form-group radio">
@@ -131,6 +151,7 @@
       <input type="radio" formControlName="service_address" value="New Address" >Send to New Address
     </label>
     </div>
+    
     <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_address.errors">Please select final service address</small>
 
     <br/><br/>
@@ -142,8 +163,8 @@
 
     <div class="row">
       <div class="text-right">
-        <button class="btn btn-lg btn-default" (click)="previousButtonClicked()">Previous</button>
-        <button class="btn btn-lg btn-default" [disabled]="!ServicePlanForm.valid" (click)="onSubmitMove(movingAddressForm.value, ServicePlanForm.value)">Submit Move</button>
+        <button class="btn btn-link" (click)="previousButtonClicked()">Previous</button>
+        <button class="btn btn-primary" [disabled]="!ServicePlanForm.valid" (click)="onSubmitMove(movingAddressForm.value, ServicePlanForm.value)">Submit Move</button>
       </div>
     </div>
   </form>
