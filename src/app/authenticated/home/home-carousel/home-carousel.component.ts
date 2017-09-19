@@ -27,7 +27,6 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
         this.offersServiceSubscription = this.OfferStore.GexaLyricOffer.subscribe(
           GexaLyricOffer => {
             this.GexaLyricOffer = GexaLyricOffer[0];
-            console.log('Gexa Lyric Offer', this.GexaLyricOffer);
             if (this.ActiveServiceAccount.Current_Offer.Rate_Code === this.GexaLyricOffer.Rate_Code) {
               this.IsOnGexaLyric = true;
             }
