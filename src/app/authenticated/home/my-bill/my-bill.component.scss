@@ -4,4 +4,13 @@
   table {
     margin-bottom: 15px;
   }
+  .disconnected {
+    color: red !important;
+  }
+  .exceededDueDate {
+    color: orange !important;
+  }
+  .paymentMade {
+    color: #5cb85c !important;
+  }
 }

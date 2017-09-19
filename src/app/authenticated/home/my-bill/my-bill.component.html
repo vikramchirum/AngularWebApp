@@ -1,6 +1,6 @@
 <div *ngIf="activeServiceAccount" class="my-bill-grid thumbnail">
-  <div class="alert pull-right bg-danger">Due Date: {{ latestInvoice?.Due_Date | date:'MM/dd/yyyy' }}</div>
-  <h1>My Bill</h1>
+  <div class="alert pull-right bg-danger" *ngIf="!noCurrentDue">Due Date: {{ latestInvoice?.Due_Date | date:'MM/dd/yyyy' }}</div>
+  <h1 [ngClass]="{'paymentMade': noCurrentDue, 'exceededDueDate': exceededDueDate}">My Bill</h1>
 
   <table class="table table-condensed table-striped" border="0" width="100%">
     <tbody>
@@ -18,6 +18,6 @@
     </tr>
     </tbody>
   </table>
-  <button class="btn btn-small btn-link pull-right" routerLink="/payments/view-my-bill" type="button">View Bill</button>
-  <button class="btn btn-block btn-success btn-lg" routerLink="/payments/make-payment" type="button">Make a Payment</button>
+  <button class="btn btn-small btn-link pull-right" [ngClass]="{'paymentMade': noCurrentDue, 'exceededDueDate': exceededDueDate}" routerLink="/payments/view-my-bill" type="button">View Bill</button>
+  <button class="btn btn-block btn-success btn-lg" [ngClass]="{'btn-success': noCurrentDue, 'exceededDueDate': exceededDueDate}" routerLink="/payments/make-payment" type="button">Make a Payment</button>
 </div>
