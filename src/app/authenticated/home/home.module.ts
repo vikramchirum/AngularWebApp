@@ -13,6 +13,7 @@ import { HomeCarouselComponent } from './home-carousel/home-carousel.component';
 import { MyBillComponent } from './my-bill/my-bill.component';
 import { BudgetBillingSignupComponent } from './budget-billing-signup/budget-billing-signup.component';
 import { PaperlessBillingSignupComponent } from './paperless-billing-signup/paperless-billing-signup.component';
+import { EnergySavingTipsComponent } from './energy-saving-tips/energy-saving-tips.component';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { PaperlessBillingSignupComponent } from './paperless-billing-signup/pape
     MyBillComponent,
     HomeCarouselComponent,
     BudgetBillingSignupComponent,
-    PaperlessBillingSignupComponent]
+    PaperlessBillingSignupComponent,
+    EnergySavingTipsComponent]
 })
 export class HomeModule { }
