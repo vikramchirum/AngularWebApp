@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ViewContainerRef, Input} from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -29,6 +29,7 @@ import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-
 export class ChangeYourPlanComponent implements OnInit, OnDestroy {
 
   @ViewChild('planConfirmationModal') planConfirmationModal: PlanConfirmationModalComponent;
+   @Input() pCode: string;
 
   renewalDetails: IRenewalDetails = null;
   activeServiceAccountDetails: ServiceAccount = null;
@@ -66,6 +67,7 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
     this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1]).subscribe(result => {
       this.activeServiceAccountDetails = result[0];
       this.renewalDetails = result[1];
+
       this.populateOffers();
     });
 
@@ -116,6 +118,9 @@ export class ChangeYourPlanComponent implements OnInit, OnDestroy {
           }
         }
       );
+      if (this.pCode != null) {
+        this.showPromoCodeInput();
+      }
     }
   }
 

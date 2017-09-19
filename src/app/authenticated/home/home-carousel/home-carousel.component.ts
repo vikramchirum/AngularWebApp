@@ -7,9 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeCarouselComponent implements OnInit {
 
+  public promoCode: string = null;
   constructor() { }
-
   ngOnInit() {
+     this.promoCode = 'Hello';
   }
 
 }
