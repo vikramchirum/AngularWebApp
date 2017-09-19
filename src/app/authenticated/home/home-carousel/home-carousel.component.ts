@@ -17,6 +17,7 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
   ActiveServiceAccount: ServiceAccount = null;
   GexaLyricOffer: IOffers;
   IsOnGexaLyric: boolean = null;
+  IsPaperless: boolean = null;
   constructor( private ServiceAccountService: ServiceAccountService,
                private OfferStore: OffersStore) { }
   ngOnInit() {
@@ -28,7 +29,7 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
           GexaLyricOffer => {
             this.GexaLyricOffer = GexaLyricOffer[0];
             if (this.ActiveServiceAccount.Current_Offer.Rate_Code === this.GexaLyricOffer.Rate_Code) {
-              this.IsOnGexaLyric = true;
+              this.IsOnGexaLyric = true; this.IsPaperless = this.ActiveServiceAccount.Paperless_Billing;
             }
           }
         );
