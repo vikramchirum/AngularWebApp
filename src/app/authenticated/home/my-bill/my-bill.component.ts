@@ -48,6 +48,6 @@ export class MyBillComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.activeServiceAccountSubscription.unsubscribe();
+    // this.activeServiceAccountSubscription.unsubscribe();
   }
 }
