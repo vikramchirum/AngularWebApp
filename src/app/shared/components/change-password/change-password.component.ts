@@ -26,7 +26,7 @@ export class ChangePasswordComponent {
   changePasswordFormInit(): FormGroup {
     return this.FormBuilder.group(
       {
-        currentPassword: [null, Validators.required],
+        // currentPassword: [null, Validators.required],
         password: ['', Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(100), validatePassword])],
         confirmPassword: [null, Validators.required]
       },
