@@ -43,9 +43,10 @@ export class OfferService {
       .catch(error => this.http.handleHttpError(error));
   }
 
-  getRenewalPlansByPromoCode(promoCode: string): Observable<IOffers[]> {
+  getRenewalPlansByPromoCode(promoCode: string, ActiveServiceAccount_TDU_DUNS_Number: string): Observable<IOffers[]> {
     return this.http
-      .get(`/v2/Offers?option.promotion.code=${promoCode}`)
+      .get(`/v2/Offers?option.promotion.code=${promoCode}&option.approved=true&option.startDate=
+    ${new Date().toISOString()}&option.plan.tDU.duns_Number=${ActiveServiceAccount_TDU_DUNS_Number}`)
       .map(data => { data.json(); return data.json(); })
       .map(data => <IOffers[]>data['Items'])
       .catch(error => this.http.handleHttpError(error));

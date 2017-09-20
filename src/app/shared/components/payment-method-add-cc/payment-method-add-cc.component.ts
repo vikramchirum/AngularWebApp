@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { CustomValidators } from 'ng2-validation';
-import {validateCardName, validCreditCard} from 'app/validators/validator';
+import {validateCardName, validCreditCard, validateName} from 'app/validators/validator';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -63,7 +63,7 @@ export class PaymethodAddCcComponent implements OnInit, OnDestroy {
   formGroupInit(): FormGroup {
     const thisMonth = (this.now.getMonth() + 1);
     return this.FormBuilder.group({
-      cc_name: ['', Validators.compose([Validators.required, validateCardName])],
+      cc_name: ['', Validators.compose([Validators.required, validateCardName, validateName])],
       cc_number: ['', validCreditCard],
       cc_month: [`${thisMonth < 10 ? '0' : ''}${thisMonth}`, Validators.required],
       cc_year: [this.years[0], Validators.required],

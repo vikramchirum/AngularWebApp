@@ -82,6 +82,7 @@
             id="payment-normal-cc-name-on-card"
             formControlName="cc_name"
             maxlength="32"
+            validation="alpha_dash_spaces|pattern=/(\w+)\s(\w+)/:alt=Provide your full name|required"
           />
           <small class="text-danger" *ngIf="formGroup.controls?.cc_name.pristine"><i class="fa fa-fw fa-asterisk"></i> required</small>
           <small class="text-danger" *ngIf="formGroup.controls?.cc_name.errors && !formGroup.controls?.cc_name.pristine">
