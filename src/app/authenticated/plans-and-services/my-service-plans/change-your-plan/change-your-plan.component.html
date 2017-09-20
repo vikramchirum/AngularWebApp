@@ -10,7 +10,7 @@
       <div class="col-sm-2">
         <h2> View more renewal plans </h2>
         <a  (click)="showPromoCodeInput($event)"> <p> Have a promo code?</p></a>
-        <form #promoCodeForm="ngForm"  *ngIf="havePromoCode">
+        <form #promoCodeForm="ngForm" class="promocode"  *ngIf="havePromoCode">
           <div class="input-group">
             <input type="text" class="form-control" id="promoCode" required
                    [(ngModel)]="promoCode" name="promoCode"><br>
