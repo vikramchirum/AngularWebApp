@@ -27,6 +27,7 @@ import { OfferDetailsPopoverComponent } from './my-service-plans/change-your-pla
 import { TooltipModule } from 'ngx-bootstrap';
 import { PlanConfirmationPopoverComponent } from './my-service-plans/plan-confirmation-popover/plan-confirmation-popover.component';
 import { PlanConfirmationModalComponent } from './my-service-plans/plan-confirmation-modal/plan-confirmation-modal.component';
+import { PlansAgreementModalComponent } from './plans-agreement-modal/plans-agreement-modal.component';
 
 @NgModule({
   imports: [
@@ -62,7 +63,8 @@ import { PlanConfirmationModalComponent } from './my-service-plans/plan-confirma
       OfferDetailsPopoverComponent,
       RenewalGaugeComponent,
       PlanConfirmationPopoverComponent,
-      PlanConfirmationModalComponent
+      PlanConfirmationModalComponent,
+      PlansAgreementModalComponent
       ],
   exports: [
     PlanConfirmationModalComponent
