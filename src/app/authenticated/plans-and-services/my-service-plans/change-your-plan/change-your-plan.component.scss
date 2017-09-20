@@ -13,3 +13,15 @@ section {
     vertical-align: middle;
   }
 }
+.btn-default:hover, .btn-default:active, .btn-default:focus{
+  background-color:white;
+  .close-btn {
+    font-size: 14px;
+    color:black;
+  }
+}
+
+.close-btn {
+  font-size: 14px;
+  color:#cccccc;
+}
