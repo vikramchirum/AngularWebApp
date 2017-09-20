@@ -7,6 +7,14 @@
 .panel-default {
   background: none;
   border: none;
+  
+  h5 a {
+    color: $account-base;
+    
+    &:hover {
+      border-bottom: 1px solid $account-base;;
+    }
+  }
 }
 .panel-default > .panel-heading {
   background-color: transparent;
@@ -75,6 +83,10 @@
     }
     .panel-title > a {
       color: $account-base;
+      
+       &:hover {
+      border-bottom: 1px solid $account-base;;
+    }
     }
   }
   
@@ -96,6 +108,10 @@
     }
       .panel-title > a {
       color: $plans-base;
+        
+         &:hover {
+      border-bottom: 1px solid $plans-base;;
+    }
     }
   }
 
@@ -116,6 +132,10 @@
       }
     .panel-title > a {
       color: $payment-base;
+      
+      &:hover {
+      border-bottom: 1px solid $payment-base;;
+      }
     }
   }
   
