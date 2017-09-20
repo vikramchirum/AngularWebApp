@@ -33,4 +33,8 @@ export class SelectPlanModalDialogComponent implements OnInit {
    this.selectedPlan.emit(offers);
    this.selectPlanModal.hide();
   }
+   
+  selectPlanCancel() {
+   this.selectPlanModal.hide();
+  } 
 }
