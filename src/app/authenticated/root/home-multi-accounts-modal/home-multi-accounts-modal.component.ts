@@ -31,6 +31,8 @@ export class HomeMultiAccountsModalComponent {
 
   setActBillAcct(id: any): void {
     this.active_service_account_id = id;
+    this.ServiceAccountService.SetActiveServiceAccount(this.active_service_account_id);
+    this.hideServiceUpgradeModal();
   }
 
   onContinue(): void {
