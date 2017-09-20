@@ -53,7 +53,7 @@ export class OfferService {
 
   getLyricOfferDetails(ActiveServiceAccount_TDU_DUNS_Number: string) {
     return this.http.get(`/v2/Offers?option.approved=true&option.startDate=
-    ${new Date().toISOString()}&option.plan.product.name=Gexa%20Preferred%20Lyric&option.plan.tDU.duns_Number=${ActiveServiceAccount_TDU_DUNS_Number}`)
+    ${new Date().toISOString()}&option.promotion.code=LYRIC&option.plan.tDU.duns_Number=${ActiveServiceAccount_TDU_DUNS_Number}`)
       .map(data => { data.json(); console.log('GexaLyricOffer', data.json()); return data.json(); })
       .map(data => <IOffers[]>data['Items'])
       .catch(error => this.http.handleHttpError(error));

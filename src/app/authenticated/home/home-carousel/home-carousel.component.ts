@@ -15,7 +15,7 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
   offersServiceSubscription: Subscription = null;
   public promoCode: string = null;
   ActiveServiceAccount: ServiceAccount = null;
-  GexaLyricOffer: IOffers;
+  GexaCarouselOffer: IOffers;
   IsOnGexaLyric: boolean = null;
   IsPaperless: boolean = null;
   constructor( private ServiceAccountService: ServiceAccountService,
@@ -26,17 +26,17 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
         this.ActiveServiceAccount = ActiveServiceAccount;
         this.OfferStore.LoadLyricOfferDetails(this.ActiveServiceAccount.TDU_DUNS_Number);
         this.offersServiceSubscription = this.OfferStore.GexaLyricOffer.subscribe(
-          GexaLyricOffer => {
-            this.GexaLyricOffer = GexaLyricOffer[0];
-            if (this.ActiveServiceAccount.Current_Offer.Rate_Code === this.GexaLyricOffer.Rate_Code) {
+          GexaOffer => {
+            this.GexaCarouselOffer = GexaOffer[0];
+            this.promoCode =
+              GexaOffer[0] ?
+                (GexaOffer[0].Promotion ? (GexaOffer[0].Promotion.Code ? GexaOffer[0].Promotion.Code : null ) : null) : null;
+            if (this.ActiveServiceAccount.Current_Offer.Rate_Code === this.GexaCarouselOffer.Rate_Code) {
               this.IsOnGexaLyric = true; this.IsPaperless = this.ActiveServiceAccount.Paperless_Billing;
             }
           }
         );
       });
-      this.promoCode =
-        this.GexaLyricOffer ?
-          (this.GexaLyricOffer.Promotion ? (this.GexaLyricOffer.Promotion.Code ? this.GexaLyricOffer.Promotion.Code : 'Lyric' ) : 'Lyric') : 'Lyric';
   }
   ngOnDestroy() {
     this.serviceAccountServiceSubscription.unsubscribe();

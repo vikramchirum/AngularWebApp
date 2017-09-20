@@ -79,7 +79,11 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   showPromoCodeInput() {
-    this.havePromoCode = !this.havePromoCode;
+    if (this.promoCode) {
+      this.havePromoCode = true;
+    } else {
+      this.havePromoCode = !this.havePromoCode;
+    }
   }
 
   onPromoCodeSubmit() {
