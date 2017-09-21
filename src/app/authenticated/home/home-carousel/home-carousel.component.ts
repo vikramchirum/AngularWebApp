@@ -31,7 +31,7 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
             this.promoCode =
               GexaOffer[0] ?
                 (GexaOffer[0].Promotion ? (GexaOffer[0].Promotion.Code ? GexaOffer[0].Promotion.Code : null ) : null) : null;
-            if (this.ActiveServiceAccount.Current_Offer.Rate_Code === this.GexaCarouselOffer.Rate_Code) {
+            if (GexaOffer[0] && this.ActiveServiceAccount.Current_Offer.Rate_Code === GexaOffer[0].Rate_Code) {
               this.IsOnGexaLyric = true; this.IsPaperless = this.ActiveServiceAccount.Paperless_Billing;
             }
           }

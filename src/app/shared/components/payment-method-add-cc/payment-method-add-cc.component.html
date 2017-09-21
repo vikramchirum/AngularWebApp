@@ -81,12 +81,14 @@
             class="form-control "
             id="payment-normal-cc-name-on-card"
             formControlName="cc_name"
-            maxlength="32"
-            validation="alpha_dash_spaces|pattern=/(\w+)\s(\w+)/:alt=Provide your full name|required"
-          />
-          <small class="text-danger" *ngIf="formGroup.controls?.cc_name.pristine"><i class="fa fa-fw fa-asterisk"></i> required (pattern eg: John Doe)</small>
+            maxlength="32"  (change)="checkName($event.target.value)"
+          />req: {{formGroup.controls?.cc_name.hasError('required')}}
+            valNam: {{formGroup.controls?.cc_name.hasError('validateName')}}
+            valCard: {{formGroup.controls?.cc_name.hasError('validateCardName')}}
+            val: {{formGroup.controls?.cc_name.valid}}
+          <small class="text-danger" *ngIf="formGroup.controls?.cc_name.pristine"><i class="fa fa-fw fa-asterisk"></i> required </small>
           <small class="text-danger" *ngIf="formGroup.controls?.cc_name.errors && !formGroup.controls?.cc_name.pristine">
-            <i class="fa fa-fw fa-asterisk"></i> requires a valid credit card name</small>
+            <i class="fa fa-fw fa-asterisk"></i> requires a valid credit card name (pattern eg: John Doe)</small>
           <small class="text-success" *ngIf="formGroup.controls?.cc_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
           <!--<small class="text-danger" *ngIf="formGroup.controls?.cc_name.errors"><i class="fa fa-fw fa-asterisk"></i> required</small> <small class="text-success" *ngIf="formGroup.controls?.cc_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>-->
       </div>

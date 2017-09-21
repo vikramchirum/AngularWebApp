@@ -4,6 +4,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CustomValidators } from 'ng2-validation';
 import {validateCardName, validCreditCard, validateName} from 'app/validators/validator';
 import { Subscription } from 'rxjs/Subscription';
+import { forEach, every } from 'lodash';
+
 
 @Component({
   selector: 'mygexa-payment-method-add-cc',
@@ -54,6 +56,24 @@ export class PaymethodAddCcComponent implements OnInit, OnDestroy {
         this.changed.emit(data.toLowerCase());
       }
     });
+  }
+
+  checkName(inputValue: string): boolean {
+    let inputArray: string[];
+    inputArray = inputValue.split(' ');
+    if (inputArray.length > 1) {
+      inputArray.forEach(function(entry) {
+        if (parseInt(entry, 10)) {
+          // console.log('went through', parseInt(entry, 10));
+        } else {
+          // console.log('failed', parseInt(entry, 10));
+          return false;
+        }
+      });
+      return true;
+    } else {
+      return false;
+    }
   }
 
   ngOnDestroy() {

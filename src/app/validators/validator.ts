@@ -75,7 +75,8 @@ export function minimumMoneyAmount(amount: number) {
 
 
 export function validateCardName(c: FormControl) {
-  const CARDNAME_REGEXP = /^(?![0-9]*$)[a-zA-Z0-9 ' ']+$/;
+  // const CARDNAME_REGEXP = /^(?![0-9]*$)[a-zA-Z0-9 ' ']+$/;
+  const CARDNAME_REGEXP = /^(?![0-9]*$)[a-zA-Z0-9' ']+$/;
   return CARDNAME_REGEXP.test(c.value) ? null : {
     validateCardName: {
       valid: false
@@ -84,7 +85,7 @@ export function validateCardName(c: FormControl) {
 }
 
 export function validateName(c: FormControl) {
-  const CARDNAME_REGEXP = /^\w+(\s\w+)*$/;
+  const CARDNAME_REGEXP = /^(.*?[a-zA-Z0-9]){2,}$/;
   return CARDNAME_REGEXP.test(c.value) ? null : {
     validateName: {
       valid: false
