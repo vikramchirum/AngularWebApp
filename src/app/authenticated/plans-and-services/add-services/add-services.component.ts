@@ -152,6 +152,9 @@ export class AddServicesComponent implements OnInit {
   getSelectedAddress(event) {
     this.selectedServiceAddress = event;
     this.showPlansFlag = false;
+    this.enrollErrorMsg="";
+    this.tokenMsg="";
+    this.isTokenError = false;
     this.getFeaturedOffers(this.addServiceForm.value.Service_Start_Date.jsdate);
     this.checkCustomerToken();
   }

@@ -69,14 +69,16 @@
           <h2> No available offers for this service account. </h2>
       </div>
       <div *ngIf="!isTokenError && !showPlansFlag && this.featuredOffers && this.featuredOffers.length > 0">
+        <div *ngIf="tokenRes && tokenRes.Enrollment_Deposit_Amount > 0">
         <h2>Deposit Required</h2>
         <div class="alert alert-info clearfix">
           <div class="row">
             <div class="col-md-12">
-              A deposit of $xxx.xx is required. An email will be sent to you with payment instructions. Press View Plans to continue
+              A deposit of {{tokenRes.Enrollment_Deposit_Amount | currency}} is required. An email will be sent to you with payment instructions. Press View Plans to continue
             </div>
           </div>
         </div>
+      </div>
       </div>
       <div *ngIf="isTokenError && !showPlansFlag && this.featuredOffers && this.featuredOffers.length > 0">
           <div class="alert alert-info clearfix">
@@ -108,7 +110,7 @@
         </div>
       </div>
       <br/> -->
-      <div class="row" *ngIf="this.featuredOffers && this.featuredOffers.length > 0">
+      <div class="row" *ngIf="this.featuredOffers && this.featuredOffers.length > 0 && !showPlansFlag">
         <div class="col-md-12 col-xs-12 text-right">
           <button class="btn btn-primary btn-lg" (click)="showPlans()">View Plans</button>
         </div>

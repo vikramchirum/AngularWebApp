@@ -51,6 +51,7 @@ export class SelectPlanComponent implements OnInit {
     //console.log(this.featuredOffer);
     this.selectedOffer.emit(this.featuredOffer);
     this.selectCheckBox = false;
+    this.enableSelect = false;
     //this.planPopModal.showPlanPopModal();
   }
 
