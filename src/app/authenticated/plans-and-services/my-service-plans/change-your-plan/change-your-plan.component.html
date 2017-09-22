@@ -2,7 +2,7 @@
 
 <ng-template #offers>
 
-  <ng-template #showRenewalOrUpgrade *ngIf="isRenewalPending || isOnHoldOver; then upgradeSection else renewalSection">
+  <ng-template #showRenewalOrUpgrade *ngIf="showRenewals; then renewalSection else upgradeSection">
   </ng-template>
 
   <ng-template #renewalSection>
@@ -10,9 +10,16 @@
       <div class="col-sm-2">
         <h2> View more renewal plans </h2>
         <a  (click)="showPromoCodeInput($event)"> <p> Have a promo code?</p></a>
-        <form #promoCodeForm="ngForm"  *ngIf="havePromoCode">
-          <input type="text" class="form-control" id="promoCode" required
-                 [(ngModel)]="promoCode" name="promoCode"><br>
+        <form #promoCodeForm="ngForm" class="promocode"  *ngIf="havePromoCode">
+          <div class="input-group">
+            <input type="text" class="form-control" id="promoCode" required
+                   [(ngModel)]="promoCode" name="promoCode"><br>
+            <span class="input-group-btn">
+                <button class="btn btn-default" style="border-left: none;" type="reset" (click)="resetOffers()">
+                    <span class="close-btn"  aria-hidden="true"><i class="fa fa-times fa-x"></i></span>
+                </button>
+            </span>
+          </div><br>
           <a class="boxed btn btn-primary" [class.disabled]="!promoCodeForm.form.valid" (click)="onPromoCodeSubmit()">Submit</a></form></div>
       <div class="col-sm-9">
         <div class="row change-plans-grid">
@@ -42,7 +49,7 @@
         <div class="row change-plans-grid">
           <section *ngIf="upgradeOffersCount > 0">
             <div class="col-md-4 plan-card" *ngFor="let offer of upgradeOffers; let i= index;">
-              <mygexa-change-your-plan-card [offer]=offer [isRenewal] = true></mygexa-change-your-plan-card>
+              <mygexa-change-your-plan-card [offer]=offer [isRenewal] = false></mygexa-change-your-plan-card>
             </div>
           </section>
 

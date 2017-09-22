@@ -75,12 +75,59 @@ export function minimumMoneyAmount(amount: number) {
 
 
 export function validateCardName(c: FormControl) {
+  // const CARDNAME_REGEXP = /^(?![0-9]*$)[a-zA-Z0-9 ' ']+$/;
   const CARDNAME_REGEXP = /^(?![0-9]*$)[a-zA-Z0-9' ']+$/;
   return CARDNAME_REGEXP.test(c.value) ? null : {
     validateCardName: {
       valid: false
     }
   };
+}
+
+// export function validateName(c: FormControl) {
+//   const CARDNAME_REGEXP = /^(.*?[a-zA-Z0-9]){2,}$/;
+//   return CARDNAME_REGEXP.test(c.value) ? null : {
+//     validateName: {
+//       valid: false
+//     }
+//   };
+// }
+
+export function validateName(c: FormControl) {
+
+  let inputArray: string[];
+  // inputArray = (c.value.trim()).replace(/\s+/g, '').split(' ');
+  // inputArray = c.value.split(' ');
+  inputArray = (c.value.trim()).split(' ');
+  // debugger;
+  if (inputArray.length > 1) {
+    return {
+      validateName: {
+        valid: true
+      }
+    };
+    // const testNum = (c.value.trim()).replace(/\s+/g, '');
+    // if (parseInt(testNum, 10)) {
+    //   // parse success and hence name it is a number
+    //   return {
+    //     validateName: {
+    //       valid: false
+    //     }
+    //   };
+    // } else {
+    //   return {
+    //     validateName: {
+    //       valid: true
+    //     }
+    //   };
+    // }
+  } else {
+    return {
+      validateName: {
+        valid: true
+      }
+    };
+  }
 }
 
 export function validateInteger(c: FormControl) {

@@ -20,6 +20,8 @@ import { IInvoice } from 'app/core/models/invoices/invoice.model';
 export class MyBillComponent implements OnInit, OnDestroy {
 
   dollarAmountFormatter: string;
+  noCurrentDue: boolean = null;
+  exceededDueDate: boolean = null;
   activeServiceAccount: ServiceAccount;
   latestInvoice: IInvoice;
   private activeServiceAccountSubscription: Subscription = null;
@@ -29,16 +31,21 @@ export class MyBillComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dollarAmountFormatter = environment.DollarAmountFormatter;
-
-
     this.activeServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       activeServiceAccount => {
         this.activeServiceAccount = activeServiceAccount;
+        this.noCurrentDue = this.activeServiceAccount.Current_Due > 0 ? false : true;
+        console.log('Current due date', this.noCurrentDue);
+
+        // this.exceededDueDate =  (new Date(this.activeServiceAccount.Due_Date) > new Date()) ? true : false;
         this.invoiceService.getLatestInvoice(this.activeServiceAccount.Id).subscribe(
           latestInvoiceId => {
             this.invoiceService.getInvoice(latestInvoiceId, this.activeServiceAccount.Id)
               .filter(() => !this.activeServiceAccountSubscription.closed)
-              .subscribe(latestInvoice => this.latestInvoice = latestInvoice);
+              .subscribe(latestInvoice => { this.latestInvoice = latestInvoice;
+              this.exceededDueDate = this.activeServiceAccount.Past_Due > 0 ? true : false;
+              console.log('Exceeded due date', this.exceededDueDate);
+              });
           }
         );
       }
@@ -46,6 +53,6 @@ export class MyBillComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.activeServiceAccountSubscription.unsubscribe();
+    // this.activeServiceAccountSubscription.unsubscribe();
   }
 }

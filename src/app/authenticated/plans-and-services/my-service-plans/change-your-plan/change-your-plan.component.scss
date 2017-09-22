@@ -13,3 +13,26 @@ section {
     vertical-align: middle;
   }
 }
+.promocode {
+  .form-control:focus {
+    border-color:#cccccc;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-right: transparent;
+  }
+  .btn-default:hover, .btn-default:active, .btn-default:focus{
+    outline: none !important;
+    background-color:white;
+    border-color:#cccccc;
+    .close-btn {
+      font-size: 14px;
+      color:black;
+    }
+  }
+
+  .close-btn {
+    font-size: 14px;
+    color:#cccccc;
+  }
+
+}

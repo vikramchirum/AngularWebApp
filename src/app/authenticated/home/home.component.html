@@ -22,7 +22,22 @@
         </div>
         <!--Signup for Auto Pay -->
         <div class="col-md-4">
-        <mygexa-auto-pay-signup></mygexa-auto-pay-signup>
+          <ng-template *ngIf="ShowAutoBillPay; then AutoBillPay"></ng-template>
+          <ng-template *ngIf="ShowPaperlessBilling; then PaperlessBilling"></ng-template>
+          <ng-template *ngIf="ShowBudgetBilling; then BudgetBilling"></ng-template>
+          <ng-template *ngIf="ShowEnergySavingTips; then EnergySavingTips"></ng-template>
+          <ng-template #AutoBillPay>
+            <mygexa-auto-pay-signup></mygexa-auto-pay-signup>
+          </ng-template>
+          <ng-template #PaperlessBilling>
+            <mygexa-paperless-billing-signup></mygexa-paperless-billing-signup>
+          </ng-template>
+          <ng-template #BudgetBilling>
+            <mygexa-budget-billing-signup></mygexa-budget-billing-signup>
+          </ng-template>
+          <ng-template #EnergySavingTips>
+            <mygexa-energy-saving-tips></mygexa-energy-saving-tips>
+          </ng-template>
         </div>
         <!--Refer a friend Program -->
         <div class="col-md-4">

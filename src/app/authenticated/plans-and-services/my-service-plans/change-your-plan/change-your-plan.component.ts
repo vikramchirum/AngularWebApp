@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewChild, ViewContainerRef, AfterViewInit } from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ViewContainerRef, Input, AfterViewInit } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -29,6 +29,7 @@ import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-
 export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('planConfirmationModal') planConfirmationModal: PlanConfirmationModalComponent;
+  @Input() pCode: string;
 
   renewalDetails: IRenewalDetails = null;
   activeServiceAccountDetails: ServiceAccount = null;
@@ -37,6 +38,8 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy
   isAccountEligibleRenewal: boolean;
   isRenewalPending: boolean;
   isOnHoldOver: boolean;
+  showRenewals: boolean;
+  resetOffer: boolean = null;
 
   featuredOffers: AllOffersClass[];
   allOffers: AllOffersClass[];
@@ -77,7 +80,11 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   showPromoCodeInput() {
-    this.havePromoCode = !this.havePromoCode;
+    if (this.promoCode) {
+      this.havePromoCode = true;
+    } else {
+      this.havePromoCode = !this.havePromoCode;
+    }
   }
 
   onPromoCodeSubmit() {
@@ -85,7 +92,7 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   fetchOffersByPromoCode(promoCode) {
-    this.offersServiceSubscription = this.offerService.getRenewalPlansByPromoCode(promoCode).subscribe(
+    this.offersServiceSubscription = this.offerService.getRenewalPlansByPromoCode(promoCode, this.activeServiceAccountDetails.TDU_DUNS_Number).subscribe(
       result => {
         this.renewalOffers = result;
         if (this.renewalOffers) {
@@ -94,27 +101,35 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy
       }
     );
   }
-
+  resetOffers() {
+    this.resetOffer = true;
+    this.populateOffers();
+  }
   private populateOffers(): void {
-
     this.isOnHoldOver = this.activeServiceAccountDetails.Current_Offer.IsHoldOverRate;
     this.isAccountEligibleRenewal = this.renewalDetails.Is_Account_Eligible_Renewal;
     this.isRenewalPending = this.renewalDetails.Is_Pending_Renewal;
-
-    if (this.isRenewalPending || this.isOnHoldOver) {
+    this.showRenewals = this.isAccountEligibleRenewal && !this.isRenewalPending && !this.isOnHoldOver;
+    if (this.showRenewals) {
+      if (this.pCode != null && !this.resetOffer) {
+        this.promoCode = this.pCode;
+        this.showPromoCodeInput();
+        this.onPromoCodeSubmit();
+      } else {
+        this.offersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
+          allOffers => {
+            if (allOffers) {
+              this.extractOffers(allOffers);
+            }
+          }
+        );
+      }
+    } else {
       this.offersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
         upgradeOffers => {
           this.upgradeOffers = upgradeOffers;
           if (this.upgradeOffers) {
             this.upgradeOffersCount = upgradeOffers.length;
-          }
-        }
-      );
-    } else if (this.isAccountEligibleRenewal) {
-      this.offersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
-        allOffers => {
-          if (allOffers) {
-            this.extractOffers(allOffers);
           }
         }
       );

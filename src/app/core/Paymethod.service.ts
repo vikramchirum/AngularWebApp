@@ -240,7 +240,7 @@ export class PaymethodService {
               FirstName: this.CustomerAccount.First_Name,
               LastName: this.CustomerAccount.Last_Name
             },
-            PaymethodName: 'My Paymethod Name',
+            PaymethodName: get(CardBrands, ForteResult.card_type, 'Unknown') + '{' + ForteResult.last_4 + '}',
             PaymethodType: PaymethodType,
             AccountHolder: Paymethod.account_holder.toUpperCase(),
             AccountNumber: ForteResult.last_4
