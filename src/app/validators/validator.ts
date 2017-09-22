@@ -94,28 +94,37 @@ export function validateCardName(c: FormControl) {
 // }
 
 export function validateName(c: FormControl) {
+
   let inputArray: string[];
-  inputArray = c.value.split(' ');
+  // inputArray = (c.value.trim()).replace(/\s+/g, '').split(' ');
+  // inputArray = c.value.split(' ');
+  inputArray = (c.value.trim()).split(' ');
+  // debugger;
   if (inputArray.length > 1) {
-    const testNum = (c.value.trim()).replace(/\s+/g, '');
-    if (parseInt(testNum, 10)) {
-      // parse success and hence name it is a number
-      return {
-        validateName: {
-          valid: false
-        }
-      };
-    } else {
-      return {
-        validateName: {
-          valid: true
-        }
-      };
-    }
+    return {
+      validateName: {
+        valid: true
+      }
+    };
+    // const testNum = (c.value.trim()).replace(/\s+/g, '');
+    // if (parseInt(testNum, 10)) {
+    //   // parse success and hence name it is a number
+    //   return {
+    //     validateName: {
+    //       valid: false
+    //     }
+    //   };
+    // } else {
+    //   return {
+    //     validateName: {
+    //       valid: true
+    //     }
+    //   };
+    // }
   } else {
     return {
       validateName: {
-        valid: false
+        valid: true
       }
     };
   }

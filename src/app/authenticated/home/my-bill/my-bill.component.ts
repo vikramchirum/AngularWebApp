@@ -40,10 +40,11 @@ export class MyBillComponent implements OnInit, OnDestroy {
           latestInvoiceId => {
             this.invoiceService.getInvoice(latestInvoiceId, this.activeServiceAccount.Id)
               .filter(() => !this.activeServiceAccountSubscription.closed)
-              .subscribe(latestInvoice => this.latestInvoice = latestInvoice);
+              .subscribe(latestInvoice => { this.latestInvoice = latestInvoice;
+              this.exceededDueDate = latestInvoice.Amount_Due ? true : false;
+              });
           }
         );
-        this.exceededDueDate = this.latestInvoice.Due_Date ? true : false;
       }
     );
   }

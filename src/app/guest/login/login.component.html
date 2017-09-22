@@ -65,7 +65,8 @@
                   #em="ngModel"
                 />
             <small [hidden]="em.valid || em.pristine || processing" class="text-danger">Password is required</small> </div>
-          <div class="text-danger" *ngIf="invalidCreds">Either username or password is wrong</div>
+          <div class="text-danger" *ngIf="invalidCreds && !error">Either username or password is wrong </div>
+          <div class="text-danger" *ngIf="error">{{error}}</div>
           <br>
           <div class="row">
             <div class="col-md-6">

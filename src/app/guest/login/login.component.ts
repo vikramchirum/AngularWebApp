@@ -58,7 +58,9 @@ export class LoginComponent implements OnInit {
           this.Router.navigate([this.UserService.UserState || '/']); }
       },
       error => {
-        this.error = error.Message;
+        console.log('Error', error);
+        this.error = String(error);
+        console.log('Error', this.error);
         this.processing = false;
         this.invalidCreds = true;
       }
