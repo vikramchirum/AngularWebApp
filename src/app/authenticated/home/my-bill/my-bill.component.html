@@ -5,20 +5,19 @@
   <table class="table table-condensed table-striped" border="0" width="100%">
     <tbody>
     <tr>
-      <td><h5>Current Amount Due:</h5></td>
+      <td><h5>Current Amount Due</h5></td>
+      <td><h4>${{ activeServiceAccount?.Current_Due + activeServiceAccount?.Past_Due | number : dollarAmountFormatter }}</h4></td>
     </tr>
-    <td><h4>${{ activeServiceAccount.Current_Due + activeServiceAccount.Past_Due | number : dollarAmountFormatter }}</h4></td>
-
     <tr>
       <td><h5>Most Recent Bill</h5></td>
       <td><h4>${{ latestInvoice?.Amount_Due | number : dollarAmountFormatter }}</h4></td>
     </tr>
     <tr>
       <td><h5>Past Due </h5></td>
-      <td><h4>${{ activeServiceAccount.Past_Due | number : dollarAmountFormatter }}</h4></td>
+      <td><h4>${{ activeServiceAccount?.Past_Due | number : dollarAmountFormatter }}</h4></td>
     </tr>
     </tbody>
   </table>
-  <button class="btn btn-small btn-link pull-right" [ngClass]="{'paymentMade': noCurrentDue, 'exceededDueDate': exceededDueDate}" routerLink="/payments/view-my-bill" type="button">View Bill</button>
-  <button class="btn btn-block btn-success btn-lg" [ngClass]="{'paymentMade': noCurrentDue, 'exceededDueDatebtn': exceededDueDate}" routerLink="/payments/make-payment" type="button">Make a Payment</button>
+  <button class="btn btn-small btn-link pull-right" [ngClass]="{'btn-success': noCurrentDue && !exceededDueDate, 'exceededDueDate': exceededDueDate && !noCurrentDue}" routerLink="/payments/view-my-bill" type="button">View Bill</button>
+  <button class="btn btn-block btn-success btn-lg" [ngClass]="{'btn-success': noCurrentDue && !exceededDueDate, 'exceededDueDatebtn': exceededDueDate && !noCurrentDue}" routerLink="/payments/make-payment" type="button">Make a Payment</button>
 </div>

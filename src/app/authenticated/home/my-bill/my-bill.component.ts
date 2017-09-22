@@ -35,13 +35,16 @@ export class MyBillComponent implements OnInit, OnDestroy {
       activeServiceAccount => {
         this.activeServiceAccount = activeServiceAccount;
         this.noCurrentDue = this.activeServiceAccount.Current_Due > 0 ? false : true;
+        console.log('Current due date', this.noCurrentDue);
+
         // this.exceededDueDate =  (new Date(this.activeServiceAccount.Due_Date) > new Date()) ? true : false;
         this.invoiceService.getLatestInvoice(this.activeServiceAccount.Id).subscribe(
           latestInvoiceId => {
             this.invoiceService.getInvoice(latestInvoiceId, this.activeServiceAccount.Id)
               .filter(() => !this.activeServiceAccountSubscription.closed)
               .subscribe(latestInvoice => { this.latestInvoice = latestInvoice;
-              this.exceededDueDate = latestInvoice.Amount_Due ? true : false;
+              this.exceededDueDate = this.activeServiceAccount.Past_Due > 0 ? true : false;
+              console.log('Exceeded due date', this.exceededDueDate);
               });
           }
         );
