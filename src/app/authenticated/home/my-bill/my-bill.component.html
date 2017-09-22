@@ -5,12 +5,13 @@
   <table class="table table-condensed table-striped" border="0" width="100%">
     <tbody>
     <tr>
-      <td><h5>Amount Due:</h5></td>
-      <td><h4>${{ latestInvoice?.Amount_Due | number : dollarAmountFormatter }}</h4></td>
+      <td><h5>Current Amount Due:</h5></td>
     </tr>
+    <td><h4>${{ activeServiceAccount.Current_Due + activeServiceAccount.Past_Due | number : dollarAmountFormatter }}</h4></td>
+
     <tr>
-      <td><h5>Current Bill</h5></td>
-      <td><h4>${{ activeServiceAccount.Current_Due | number : dollarAmountFormatter }}</h4></td>
+      <td><h5>Most Recent Bill</h5></td>
+      <td><h4>${{ latestInvoice?.Amount_Due | number : dollarAmountFormatter }}</h4></td>
     </tr>
     <tr>
       <td><h5>Past Due</h5></td>

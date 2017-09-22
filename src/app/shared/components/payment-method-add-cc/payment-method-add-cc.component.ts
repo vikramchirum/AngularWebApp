@@ -62,15 +62,13 @@ export class PaymethodAddCcComponent implements OnInit, OnDestroy {
     let inputArray: string[];
     inputArray = inputValue.split(' ');
     if (inputArray.length > 1) {
-      inputArray.forEach(function(entry) {
-        if (parseInt(entry, 10)) {
-          // console.log('went through', parseInt(entry, 10));
-        } else {
-          // console.log('failed', parseInt(entry, 10));
+      const testNum = (inputValue.trim()).replace(/\s+/g, '');
+        if (parseInt(testNum, 10)) {
+          // parse success and hence name it is a number
           return false;
+        } else {
+          return true;
         }
-      });
-      return true;
     } else {
       return false;
     }
@@ -83,7 +81,7 @@ export class PaymethodAddCcComponent implements OnInit, OnDestroy {
   formGroupInit(): FormGroup {
     const thisMonth = (this.now.getMonth() + 1);
     return this.FormBuilder.group({
-      cc_name: ['', Validators.compose([Validators.required, validateCardName, validateName])],
+      cc_name: ['', Validators.compose([Validators.required, validateName])],
       cc_number: ['', validCreditCard],
       cc_month: [`${thisMonth < 10 ? '0' : ''}${thisMonth}`, Validators.required],
       cc_year: [this.years[0], Validators.required],
