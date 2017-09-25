@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 
 
 import { PlanConfirmationPopoverComponent } from 'app/authenticated/plans-and-services/my-service-plans/plan-confirmation-popover/plan-confirmation-popover.component';
@@ -13,6 +13,9 @@ export class SelectPlanComponent implements OnInit {
 
   @Input() featuredOffer;
   @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
+
+  @Output() selectedOffer: EventEmitter<any> = new EventEmitter<any>();
+
 
   selectCheckBox = false;
   public Price_atFeatured_Usage_Level: number;
@@ -45,7 +48,11 @@ export class SelectPlanComponent implements OnInit {
   }
 
   showConfirmationPop() {
-    this.planPopModal.showPlanPopModal();
+    //console.log(this.featuredOffer);
+    this.selectedOffer.emit(this.featuredOffer);
+    this.selectCheckBox = false;
+    this.enableSelect = false;
+    //this.planPopModal.showPlanPopModal();
   }
 
   onSelect(event) {

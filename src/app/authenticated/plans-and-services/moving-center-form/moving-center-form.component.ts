@@ -176,7 +176,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     // dunsNumber - TDU_DNS number from New Address Search API
     this.offerRequestParams = {
       startDate: addressForm.New_Service_Start_Date.jsdate.toISOString(),
-      dunsNumber: this.newServiceAddress.Meter_Info.TDU_DUNS
+      dunsNumber: this.newServiceAddress.Meter_Info.TDU_DUNS,
+      approved: true,
+      page_size: 100
     };
     // send start date and TDU_DUNS_Number to get offers available.
     this.offerService.getOffers(this.offerRequestParams)
