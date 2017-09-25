@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import {FormGroup, FormBuilder, Validators, FormControl} from '@angular/forms';
 
 import { validatePhone, equalCheck } from 'app/validators/validator';
 
@@ -14,14 +14,19 @@ export class ChangePhoneNumberComponent {
 
   changePhoneNumberForm: FormGroup = null;
   submitAttempt: boolean = null;
-
+  IsMobileSelected: boolean = null;
+  AllowSave: boolean = null;
+  checkboxChecked: boolean = null;
   constructor(
     FormBuilder: FormBuilder
   ) {
     this.changePhoneNumberForm = FormBuilder.group(
       {
         phone: [null, Validators.compose([Validators.required, validatePhone])],
-        confirmPhone: [null, Validators.compose([Validators.required, validatePhone])]
+        confirmPhone: [null, Validators.compose([Validators.required, validatePhone])],
+        mobileRadio: [null],
+        landlineRadio: [null],
+        mobileCheckbox: [null]
       },
       {
         validator: equalCheck('phone', 'confirmPhone')
@@ -35,6 +40,27 @@ export class ChangePhoneNumberComponent {
     console.log('valid', this.changePhoneNumberForm.valid);
     if (this.changePhoneNumberForm.valid) {
       /** send form data to api to update in database */
+    }
+  }
+
+  radioButtonSelected(c: string) {
+    // const c = this.changePhoneNumberForm.get('mobileRadio').value;
+    if (c === 'mobile') {
+      this.IsMobileSelected = true;
+      this.AllowSave = this.checkboxChecked ? false : true;
+    } else {
+      this.IsMobileSelected = false;
+      this.AllowSave = false;
+    }
+  }
+
+  mobileCheckBoxChecked(event) {
+    if (event.target.checked && this.IsMobileSelected) {
+      this.checkboxChecked = true;
+      this.AllowSave =  false;
+    } else {
+      this.checkboxChecked = false;
+      this.AllowSave =  true;
     }
   }
 
