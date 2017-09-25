@@ -48,7 +48,7 @@ export class AddServicesComponent implements OnInit {
 
   private selDate: IMyDate = { year: 0, month: 0, day: 0 };
 
-
+  private enrolled: boolean = false;
   private showPlansFlag: boolean = false;
 
   constructor(private fb: FormBuilder,
@@ -171,7 +171,9 @@ export class AddServicesComponent implements OnInit {
   getFeaturedOffers(ServiceStartDate) {
     this.offerRequestParams = {
       startDate: ServiceStartDate.toISOString(),
-      dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS
+      dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS,
+      approved: true,
+      page_size: 100
     };
     // send start date and TDU_DUNS_Number to get offers available.
     this.offerService.getOffers(this.offerRequestParams)
@@ -201,6 +203,7 @@ export class AddServicesComponent implements OnInit {
       .subscribe(result => {
         console.log("final: ",result);
         this.enrollErrorMsg = "Success";
+        this.enrolled = true;
       },
     error => {
       this.enrollErrorMsg = error;
@@ -260,7 +263,7 @@ export class AddServicesComponent implements OnInit {
       return false;
     }
     this.enrollmentRequest = {
-      Email_Address: "sirisha.gunupati@gexaenergy.com",
+      Email_Address: "James.Smith@gexaenergy.com",
       Offer_Id: this.selectedOfferId,
       UAN: this.selectedServiceAddress.Meter_Info.UAN,
       Customer_Check_Token: this.tokenMsg,
@@ -269,7 +272,7 @@ export class AddServicesComponent implements OnInit {
       Selected_Start_Date: new Date(this.addServiceForm.controls['Service_Start_Date'].value.formatted).toISOString(),
       Language_Preference: this.customerDetails.Language,
       Contact_Info: {
-        Email_Address: "sirisha.gunupati@gexaenergy.com",
+        Email_Address: "James.Smith@gexaenergy.com",
         Primary_Phone_Number: this.customerDetails.Primary_Phone
       },
       Billing_Address: this.selectedServiceAddress.Address
