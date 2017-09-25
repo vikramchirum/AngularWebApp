@@ -73,8 +73,14 @@
         <button class="btn btn-primary" type="submit" [disabled]="">Save</button>
         <button class="btn btn-default" type="button" (click)="emitCancel()">Cancel</button>
       </div>
-
+      <!--<div #phone_pop="bs-popover" [popover]="showpop" placement="bottom" outsideClick="true">-->
+        <!--<ng-template #showpop>-->
+          <!--<button type="button" class="close text-right" aria-label="Close" (click)="phone_pop.hide()">-->
+            <!--<span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>-->
+        <!--</ng-template>-->
+      <!--</div>-->
     </form>
     <hr/>
   </div>
 </div>
+<mygexa-phone-number-confirmation-modal #phonePopModal></mygexa-phone-number-confirmation-modal>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { validatePhone, equalCheck } from 'app/validators/validator';
 import { CustomerAccountService } from '../../../core/CustomerAccount.service';
@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { CustomerAccount } from '../../../core/models/customeraccount/customeraccount.model';
 import { IUser } from '../../../core/models/user/User.model';
 import { UserService } from '../../../core/user.service';
+import { PhoneNumberConfirmationModalComponent } from '../phone-number-confirmation-modal/phone-number-confirmation-modal.component';
 
 @Component({
   selector: 'mygexa-change-phone-number',
@@ -14,7 +15,7 @@ import { UserService } from '../../../core/user.service';
   styleUrls: ['./change-phone-number.component.scss']
 })
 export class ChangePhoneNumberComponent implements OnInit {
-
+  @ViewChild('phonePopModal') public phonePopModal: PhoneNumberConfirmationModalComponent;
   @Output() onCancel: EventEmitter<any> = new EventEmitter();
 
   changePhoneNumberForm: FormGroup = null;
@@ -71,19 +72,20 @@ export class ChangePhoneNumberComponent implements OnInit {
       const phonenumber = number.slice(3);
 
       // Format existing user object
-      this.Exiting_CustomerDetails.Primary_Phone.Area_Code = area_code;
-      this.Exiting_CustomerDetails.Primary_Phone.Number = phonenumber;
-      this.Exiting_CustomerDetails.Primary_Phone.Type = this.IsMobileSelected ? 'Mobile' : 'Landline';
-      this.Exiting_CustomerDetails.Primary_Phone.Agree_To_Marketing = this.checkboxChecked ? 'true' : 'false';
-
-      // Update user details in weasi
-      this.CustomerAccountStore.UpdateCustomerDetails(this.Exiting_CustomerDetails);
-      this.updateUser = this.UserService.UserCache;
-
-      // Refresh User in Mongo
-      this.UserService.updateUserInMongo(this.updateUser);
-      this.resetForm();
-      this.Exiting_CustomerDetails.Primary_Phone.Type = this.changePhoneNumberForm.get('phone').value;
+      // this.Exiting_CustomerDetails.Primary_Phone.Area_Code = area_code;
+      // this.Exiting_CustomerDetails.Primary_Phone.Number = phonenumber;
+      // this.Exiting_CustomerDetails.Primary_Phone.Type = this.IsMobileSelected ? 'Mobile' : 'Landline';
+      // this.Exiting_CustomerDetails.Primary_Phone.Agree_To_Marketing = this.checkboxChecked ? 'true' : 'false';
+      //
+      // // Update user details in weasi
+      // this.CustomerAccountStore.UpdateCustomerDetails(this.Exiting_CustomerDetails);
+      // this.updateUser = this.UserService.UserCache;
+      //
+      // // Refresh User in Mongo
+      // this.UserService.updateUserInMongo(this.updateUser);
+      // this.resetForm();
+      // this.Exiting_CustomerDetails.Primary_Phone.Type = this.changePhoneNumberForm.get('phone').value;
+      this.phonePopModal.showPhoneConfirmationModal();
     }
   }
 
