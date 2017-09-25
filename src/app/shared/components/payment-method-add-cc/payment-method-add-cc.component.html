@@ -83,12 +83,9 @@
             formControlName="cc_name"
             maxlength="32"
           />
-
-            valNam: {{formGroup.controls?.cc_name.errors?.validateCardName}}
-            val: {{formGroup.controls?.cc_name.valid}}
-        <small class="text-danger" *ngIf="formGroup.get('cc_name').touched  && formGroup.controls?.cc_name.errors?.required">required</small>
+        <small class="text-danger" *ngIf="formGroup.controls?.cc_name.errors?.required"> <i class="fa fa-fw fa-asterisk"></i> required</small>
         <!--<small class="text-danger" *ngIf="formGroup.controls?.cc_name.pristine"><i class="fa fa-fw fa-asterisk"></i> required </small>-->
-          <small class="text-danger" *ngIf="formGroup.controls?.cc_name.errors?.validateCardName">
+          <small class="text-danger" *ngIf="formGroup.get('cc_name').touched  && ( formGroup.controls?.cc_name.errors?.validateName || formGroup.controls?.cc_name.errors?.validateCardName || formGroup.controls?.cc_name.errors?.validateNameOnCard )">
             <i class="fa fa-fw fa-asterisk"></i> requires a valid card name (pattern eg: John Doe)</small>
           <small class="text-success" *ngIf="formGroup.controls?.cc_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
           <!--<small class="text-danger" *ngIf="formGroup.controls?.cc_name.errors"><i class="fa fa-fw fa-asterisk"></i> required</small> <small class="text-success" *ngIf="formGroup.controls?.cc_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>-->
@@ -129,7 +126,7 @@
           </select>
         </div>
       </div>
-      <div class="col-xs-3 col-xs-offset-9 col-sm-4 col-sm-offset-8 col-md-3 col-md-offset-0 col-lg-1">
+      <div class="col-xs-4 col-xs-offset-9 col-sm-4 col-sm-offset-8 col-md-3 col-md-offset-0 col-lg-1">
         <div class="form-group">
           <label for="payment-normal-cc-ccv">CCV</label>
           <input
@@ -139,7 +136,8 @@
             formControlName="cc_ccv"
             maxlength="3"
           />
-          <small class="text-danger" *ngIf="formGroup.controls?.cc_ccv.errors"><i class="fa fa-fw fa-asterisk"></i> required</small> <small class="text-success" *ngIf="formGroup.controls?.cc_ccv.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
+          <small class="text-danger" *ngIf="formGroup.controls?.cc_ccv.errors"><i class="fa fa-fw fa-asterisk"></i>required</small>
+          <small class="text-success" *ngIf="formGroup.controls?.cc_ccv.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
       </div>
     </div>
   </ng-template>
