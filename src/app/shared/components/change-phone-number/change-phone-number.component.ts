@@ -72,20 +72,19 @@ export class ChangePhoneNumberComponent implements OnInit {
       const phonenumber = number.slice(3);
 
       // Format existing user object
-      // this.Exiting_CustomerDetails.Primary_Phone.Area_Code = area_code;
-      // this.Exiting_CustomerDetails.Primary_Phone.Number = phonenumber;
-      // this.Exiting_CustomerDetails.Primary_Phone.Type = this.IsMobileSelected ? 'Mobile' : 'Landline';
-      // this.Exiting_CustomerDetails.Primary_Phone.Agree_To_Marketing = this.checkboxChecked ? 'true' : 'false';
-      //
-      // // Update user details in weasi
-      // this.CustomerAccountStore.UpdateCustomerDetails(this.Exiting_CustomerDetails);
-      // this.updateUser = this.UserService.UserCache;
-      //
-      // // Refresh User in Mongo
-      // this.UserService.updateUserInMongo(this.updateUser);
-      // this.resetForm();
-      // this.Exiting_CustomerDetails.Primary_Phone.Type = this.changePhoneNumberForm.get('phone').value;
-      this.phonePopModal.showPhoneConfirmationModal();
+      this.Exiting_CustomerDetails.Primary_Phone.Area_Code = area_code;
+      this.Exiting_CustomerDetails.Primary_Phone.Number = phonenumber;
+      this.Exiting_CustomerDetails.Primary_Phone.Type = this.IsMobileSelected ? 'Mobile' : 'Landline';
+      this.Exiting_CustomerDetails.Primary_Phone.Agree_To_Marketing = this.checkboxChecked ? 'true' : 'false';
+
+      // Update user details in weasi
+      this.CustomerAccountStore.UpdateCustomerDetails(this.Exiting_CustomerDetails);
+      this.updateUser = this.UserService.UserCache;
+
+      // Refresh User in Mongo
+      this.UserService.updateUserInMongo(this.updateUser);
+      this.resetForm();
+      this.Exiting_CustomerDetails.Primary_Phone.Type = this.changePhoneNumberForm.get('phone').value;
     }
   }
 
@@ -103,6 +102,7 @@ export class ChangePhoneNumberComponent implements OnInit {
   mobileCheckBoxChecked(event) {
     if (event.target.checked && this.IsMobileSelected) {
       this.checkboxChecked = true;
+      this.phonePopModal.showPhoneConfirmationModal();
       // this.AllowSave =  false;
     } else {
       this.checkboxChecked = false;
