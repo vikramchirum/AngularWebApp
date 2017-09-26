@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild,  Output, EventEmitter} from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
 
 @Component({
@@ -8,7 +8,8 @@ import { ModalDirective } from 'ngx-bootstrap';
 })
 export class PhoneNumberConfirmationModalComponent implements OnInit {
   @ViewChild('phonePopModal') public phonePopModal: ModalDirective;
-
+  @Output() action: EventEmitter<any> = new EventEmitter<any>();
+  savechanges: boolean = null;
   constructor() { }
 
   ngOnInit() {
@@ -21,7 +22,8 @@ export class PhoneNumberConfirmationModalComponent implements OnInit {
     this.phonePopModal.hide();
   }
   saveChanges() {
-
+    this.savechanges = true;
+    this.action.emit(this.savechanges);
   }
 
 }

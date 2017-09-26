@@ -21,6 +21,7 @@ export class ChangePhoneNumberComponent implements OnInit {
   changePhoneNumberForm: FormGroup = null;
   submitAttempt: boolean = null;
   IsMobileSelected: boolean = null;
+  IsLandlineSelected: boolean = null;
   AllowSave: boolean = null;
   checkboxChecked: boolean = null;
   errorMessage: string = null;
@@ -61,12 +62,21 @@ export class ChangePhoneNumberComponent implements OnInit {
 
   submitForm() {
     this.submitAttempt = true;
-    console.log('value', this.changePhoneNumberForm.value);
-    console.log('valid', this.changePhoneNumberForm.valid);
+    // console.log('value', this.changePhoneNumberForm.value);
+    // console.log('valid', this.changePhoneNumberForm.valid);
     if (this.changePhoneNumberForm.valid) {
       /** send form data to api to update in database */
-      const number = this.changePhoneNumberForm.get('phone').value;
+      if (this.IsMobileSelected && (this.checkboxChecked === null || this.checkboxChecked === false )) {
+        this.phonePopModal.showPhoneConfirmationModal(); } else if (this.IsLandlineSelected) {
+        this.updatePhoneNumber();
+      } else {
+        this.updatePhoneNumber();
+      }
+    }
+  }
 
+  updatePhoneNumber() {
+      const number = this.changePhoneNumberForm.get('phone').value;
       // Format primary phone object for put
       const area_code = number.substring(0, 3);
       const phonenumber = number.slice(3);
@@ -85,6 +95,13 @@ export class ChangePhoneNumberComponent implements OnInit {
       this.UserService.updateUserInMongo(this.updateUser);
       this.resetForm();
       this.Exiting_CustomerDetails.Primary_Phone.Type = this.changePhoneNumberForm.get('phone').value;
+  }
+
+  onNotify(event) {
+    this.AllowSave = event;
+    if (this.AllowSave) {
+      this.phonePopModal.hidePhoneConfirmationModal();
+      this.updatePhoneNumber();
     }
   }
 
@@ -92,17 +109,16 @@ export class ChangePhoneNumberComponent implements OnInit {
     // const c = this.changePhoneNumberForm.get('mobileRadio').value;
     if (c === 'mobile') {
       this.IsMobileSelected = true;
-      // this.AllowSave = this.checkboxChecked ? false : true;
-    } else {
+      this.IsLandlineSelected = false;
+    } else if (c === 'landline') {
       this.IsMobileSelected = false;
-      // this.AllowSave = false;
+      this.IsLandlineSelected = true;
     }
   }
 
   mobileCheckBoxChecked(event) {
     if (event.target.checked && this.IsMobileSelected) {
       this.checkboxChecked = true;
-      this.phonePopModal.showPhoneConfirmationModal();
       // this.AllowSave =  false;
     } else {
       this.checkboxChecked = false;
