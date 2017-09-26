@@ -24,6 +24,7 @@ export class ChangePhoneNumberComponent implements OnInit {
   IsLandlineSelected: boolean = null;
   AllowSave: boolean = null;
   checkboxChecked: boolean = null;
+  IsNoSelected: boolean = null;
   errorMessage: string = null;
   IsError: boolean = null;
   updateUser: IUser = null;
@@ -69,8 +70,10 @@ export class ChangePhoneNumberComponent implements OnInit {
       if (this.IsMobileSelected && (this.checkboxChecked === null || this.checkboxChecked === false )) {
         this.phonePopModal.showPhoneConfirmationModal(); } else if (this.IsLandlineSelected) {
         this.updatePhoneNumber();
-      } else {
+      } else if (this.IsMobileSelected && this.checkboxChecked === true ) {
         this.updatePhoneNumber();
+      } else {
+        this.IsNoSelected = true;
       }
     }
   }
@@ -129,7 +132,7 @@ export class ChangePhoneNumberComponent implements OnInit {
   resetForm() {
     // console.log('Reset form');
     this.emitCancel();
-    this.IsError = null;
+    this.IsError = this.checkboxChecked = this.IsMobileSelected = this.IsLandlineSelected = this.IsNoSelected = null;
     this.errorMessage = null;
     this.submitAttempt = false;
     this.changePhoneNumberForm = this.changePhoneNumberFormInit();

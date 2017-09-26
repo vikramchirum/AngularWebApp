@@ -31,13 +31,16 @@
       </div>
       <div class="form-group">
         <label class="radio-inline">
-          <input type="radio" name="radioGroup" value="mobile"  data-toggle="toggle"  [formControl]="changePhoneNumberForm.controls['mobileRadio']"
+          <input type="radio" name="radioGroup" value="mobile"  [formControl]="changePhoneNumberForm.controls['mobileRadio']"
                  (change)="radioButtonSelected(changePhoneNumberForm.controls['mobileRadio'].value)"> Mobile
         </label>
         <label class="radio-inline">
-          <input type="radio" name="radioGroup" value="landline"  data-toggle="toggle"  [formControl]="changePhoneNumberForm.controls['landlineRadio']"
+          <input type="radio" name="radioGroup" value="landline" [formControl]="changePhoneNumberForm.controls['landlineRadio']"
                  (change)="radioButtonSelected(changePhoneNumberForm.controls['landlineRadio'].value)">Landline
         </label>
+      </div>
+      <div class="has-error" *ngIf="IsNoSelected">
+        <span class="help-block">Type is required.</span>
       </div>
       <div class="form-group" [ngClass]="{'has-error':!changePhoneNumberForm.controls['confirmPhone'].valid && submitAttempt}">
         <input
