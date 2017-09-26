@@ -31,7 +31,7 @@ import { ReferralService } from './referral.service';
 import { ModalStore } from './store/modalstore';
 import { UpgradeService } from './upgrade.service';
 import { UpgradeStore } from './store/upgradestore';
-
+import { EnrollService } from './enroll.service';
 @NgModule({
   imports: [
     CommonModule,
@@ -63,7 +63,8 @@ import { UpgradeStore } from './store/upgradestore';
     ReferralService,
     MessageCenterService,
     ModalStore,
-    UpgradeService
+    UpgradeService,
+    EnrollService
   ]
 })
 export class CoreModule { }

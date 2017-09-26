@@ -5,7 +5,7 @@
 export const CardBrands = {
   amex: 'American Express',
   'diners-club': 'Diners Club',
-  discover: 'Discover',
+  disc: 'Discover',
   jcb: 'JCB',
   mastercard: 'Mastercard',
   paypal: 'PayPal',

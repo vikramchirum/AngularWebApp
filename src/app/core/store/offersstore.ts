@@ -10,6 +10,7 @@ export class OffersStore {
 
   private _latestUpgradeOffersData: BehaviorSubject<IOffers[]> = new BehaviorSubject(null);
   private _latestRenewalOffersData: BehaviorSubject<AllOffersClass[]> = new BehaviorSubject(null);
+  private _gexaLyricOffersData: BehaviorSubject<IOffers[]> = new BehaviorSubject(null);
 
   constructor(private offersService: OfferService) {
   }
@@ -22,6 +23,10 @@ export class OffersStore {
     return this._latestRenewalOffersData.asObservable().filter(offers => offers != null);
   }
 
+  get GexaLyricOffer() {
+    return this._gexaLyricOffersData.asObservable().filter(offers => offers != null);
+  }
+
   LoadUpgradeOffersData(Term: number, TDU_DUNS_Number: string) {
     this.offersService.getUpgradeOffers(Term, TDU_DUNS_Number).subscribe(
       UpgradeOffers => this._latestUpgradeOffersData.next(UpgradeOffers));
@@ -32,5 +37,12 @@ export class OffersStore {
       RenewalOffers => {
         this._latestRenewalOffersData.next(RenewalOffers);
       });
+  }
+  LoadLyricOfferDetails(TDU_DUNS_Number: string) {
+    this.offersService.getLyricOfferDetails(TDU_DUNS_Number).subscribe(
+      GexaLyricOffer => {
+        this._gexaLyricOffersData.next(GexaLyricOffer);
+      }
+    );
   }
 }

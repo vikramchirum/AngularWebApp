@@ -1,6 +1,6 @@
 <section>
   <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-8 clearfix">
       <h1>My Current Bill</h1>
       <p *ngIf="service_account_id">Account No: {{service_account_id}} </p>
       <div class="col-md-8 col-md-offset-2"> <br/>
@@ -32,6 +32,7 @@
           <a class="btn btn-success pull-right" routerLink="/payments/make-payment">Make a Payment</a> </div>
       </div>
     </div>
+    <br class="visible-xs"/>
     <div class="col-lg-4">
       <div class="alert alert-info" *ngIf="payments">Thank you for your payment of ${{LatestBillAmount}} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </div>
       <div class="view-my-bill-billing-payment-preferences">

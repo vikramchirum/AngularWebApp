@@ -83,9 +83,13 @@
             formControlName="cc_name"
             maxlength="32"
           />
-          <small class="text-danger" *ngIf="formGroup.controls?.cc_name.pristine"><i class="fa fa-fw fa-asterisk"></i> required</small>
-          <small class="text-danger" *ngIf="formGroup.controls?.cc_name.errors && !formGroup.controls?.cc_name.pristine">
-            <i class="fa fa-fw fa-asterisk"></i> requires a valid credit card name</small>
+
+            valNam: {{formGroup.controls?.cc_name.errors?.validateCardName}}
+            val: {{formGroup.controls?.cc_name.valid}}
+        <small class="text-danger" *ngIf="formGroup.get('cc_name').touched  && formGroup.controls?.cc_name.errors?.required">required</small>
+        <!--<small class="text-danger" *ngIf="formGroup.controls?.cc_name.pristine"><i class="fa fa-fw fa-asterisk"></i> required </small>-->
+          <small class="text-danger" *ngIf="formGroup.controls?.cc_name.errors?.validateCardName">
+            <i class="fa fa-fw fa-asterisk"></i> requires a valid card name (pattern eg: John Doe)</small>
           <small class="text-success" *ngIf="formGroup.controls?.cc_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
           <!--<small class="text-danger" *ngIf="formGroup.controls?.cc_name.errors"><i class="fa fa-fw fa-asterisk"></i> required</small> <small class="text-success" *ngIf="formGroup.controls?.cc_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>-->
       </div>

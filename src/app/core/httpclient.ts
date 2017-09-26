@@ -105,9 +105,11 @@ export class HttpClient extends Http {
     if ((error.status === 401 || error.status === 403)) {
       console.log('The token has expired or the user is not authorised. Please log back again.');
       this.logout(true);
-    } else if (error.status === 400) {
+    } else if (error.status === 400 || error.status === 503) {
+      console.log(DisplayErrMsg);
       return Observable.throw(DisplayErrMsg);
     } else {
+      console.log(errMsg);
       return Observable.throw(errMsg);
     }
   }
