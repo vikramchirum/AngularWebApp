@@ -32,6 +32,8 @@ import { ModalStore } from './store/modalstore';
 import { UpgradeService } from './upgrade.service';
 import { UpgradeStore } from './store/upgradestore';
 import { EnrollService } from './enroll.service';
+import { UtilityService } from './utility.service';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -64,7 +66,8 @@ import { EnrollService } from './enroll.service';
     MessageCenterService,
     ModalStore,
     UpgradeService,
-    EnrollService
+    EnrollService,
+    UtilityService
   ]
 })
 export class CoreModule { }
