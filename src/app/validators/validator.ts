@@ -84,50 +84,21 @@ export function validateCardName(c: FormControl) {
   };
 }
 
-// export function validateName(c: FormControl) {
-//   const CARDNAME_REGEXP = /^(.*?[a-zA-Z0-9]){2,}$/;
-//   return CARDNAME_REGEXP.test(c.value) ? null : {
-//     validateName: {
-//       valid: false
-//     }
-//   };
-// }
-
 export function validateName(c: FormControl) {
-
   let inputArray: string[];
-  // inputArray = (c.value.trim()).replace(/\s+/g, '').split(' ');
-  // inputArray = c.value.split(' ');
+  let inputArrayLength: number;
   inputArray = (c.value.trim()).split(' ');
-  // debugger;
-  if (inputArray.length > 1) {
-    return {
+  inputArrayLength = inputArray.length;
+    return inputArrayLength > 1 ? null : {
       validateName: {
-        valid: true
+        valid: false
       }
     };
-    // const testNum = (c.value.trim()).replace(/\s+/g, '');
-    // if (parseInt(testNum, 10)) {
-    //   // parse success and hence name it is a number
-    //   return {
-    //     validateName: {
-    //       valid: false
-    //     }
-    //   };
-    // } else {
-    //   return {
-    //     validateName: {
-    //       valid: true
-    //     }
-    //   };
-    // }
-  } else {
-    return {
-      validateName: {
-        valid: true
-      }
-    };
-  }
+}
+
+export function validateNameOnCard(c: FormControl) {
+  const value = (c.value.trim()).replace(/\s+/g, '');
+  return parseInt(value, 10) ? { validateNameOnCard : { valid: false } } : null;
 }
 
 export function validateInteger(c: FormControl) {

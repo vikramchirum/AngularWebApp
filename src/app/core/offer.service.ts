@@ -37,7 +37,7 @@ export class OfferService {
 
   getUpgradeOffers(ActiveServiceAccount_CuurentOffer_Term: number, ActiveServiceAccount_TDU_DUNS_Number: string): Observable<IOffers[]> {
     return this.http.get(`/v2/Offers?option.approved=true&option.startDate=${new Date().toISOString()}&option.plan.term_Greater_Than=
-    ${ActiveServiceAccount_CuurentOffer_Term}&option.plan.tDU.duns_Number=${ActiveServiceAccount_TDU_DUNS_Number}`)
+    ${ActiveServiceAccount_CuurentOffer_Term}&option.plan.tDU.duns_Number=${ActiveServiceAccount_TDU_DUNS_Number}&option.pageSize=40`)
       .map(data => { data.json(); return data.json(); })
       .map(data => <IOffers[]>data['Items'])
       .catch(error => this.http.handleHttpError(error));
