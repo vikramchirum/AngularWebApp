@@ -31,20 +31,21 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   public RenewalAccount: IRenewalDetails;
   plansServicesSubscription: Subscription;
   OffersServiceSubscription: Subscription;
-  IsOffersReady: boolean = null;
-  public IsUpForRenewal: boolean;
-  public IsRenewalPending: boolean;
-  public IsOnHoldOver: boolean;
+  isOffersReady: boolean = null;
+  public isUpForRenewal: boolean;
+  public isRenewalPending: boolean;
+  public isOnHoldOver: boolean;
   public FeaturedOffers: AllOffersClass[];
   public RenewalOffers: IOffers = null;
   public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
   selectCheckBox  = false;
   enableSelect = false;
+  currentView: string = null;
 
   constructor(private userService: UserService, private serviceAccountService: ServiceAccountService
     , private OfferStore: OffersStore, private renewalStore: RenewalStore) {
-    this.IsOffersReady = false;
+    this.isOffersReady = false;
   }
 
   ngOnInit() {
@@ -58,14 +59,15 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1]).subscribe(result => {
       this.ActiveServiceAccount = result[0];
       this.RenewalAccount = result[1];
-      this.IsOnHoldOver = this.ActiveServiceAccount.Current_Offer.IsHoldOverRate;
+      this.isOnHoldOver = this.ActiveServiceAccount.Current_Offer.IsHoldOverRate;
       if (result[1] != null) {
         this.ActiveServiceAccount = result[0];
         this.RenewalAccount = result[1];
         if (result[1] != null) {
-          this.IsUpForRenewal = result[1].Is_Account_Eligible_Renewal;
-          this.IsRenewalPending = result[1].Is_Pending_Renewal;
-          if (this.IsUpForRenewal) {
+          this.isUpForRenewal = result[1].Is_Account_Eligible_Renewal;
+          this.isRenewalPending = result[1].Is_Pending_Renewal;
+          this.setFlags();
+          if (this.isUpForRenewal) {
             this.OffersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
               All_Offers => {
                 if (All_Offers != null) {
@@ -74,7 +76,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
                   if (this.RenewalOffers) {
                     this.checkFeaturedUsageLevel(this.RenewalOffers);
                   }
-                  this.IsOffersReady = true;
+                  this.isOffersReady = true;
                 }
               });
           }
@@ -83,6 +85,19 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     });
   }
 
+  setFlags() {
+    if (this.ActiveServiceAccount) {
+      if (this.isRenewalPending) {
+        this.currentView = 'PendingRenewalPlan';
+      } else if (this.isUpForRenewal && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate ) {
+        this.currentView = 'RenewalPlan';
+      } else if (this.ActiveServiceAccount.Current_Offer.IsHoldOverRate) {
+        this.currentView = 'HoldOverPlan';
+      } else if (!this.isUpForRenewal && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate ) {
+        this.currentView = 'CurrentPlan';
+      }
+    }
+  }
   checkFeaturedUsageLevel(RenewalOffer: IOffers) {
     if (RenewalOffer) {
       if (RenewalOffer.Plan.Product.Featured_Usage_Level != null) {
@@ -136,7 +151,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.plansServicesSubscription.unsubscribe();
-    if (this.IsUpForRenewal) {
+    if (this.isUpForRenewal) {
       result(this.OffersServiceSubscription, 'unsubscribe'); }
   }
 }
