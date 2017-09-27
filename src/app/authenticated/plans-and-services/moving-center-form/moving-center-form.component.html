@@ -2,7 +2,7 @@
   <form [hidden]="nextClicked || submitted" [formGroup]="movingAddressForm" novalidate class="moving-address-form">
     <h2>Moving Center</h2>
     <p>Let's start with finding out where you are moving to, so we know which options are available to you</p>
-    <div class="row"> 
+    <div class="row">
       <!--Present Service Account Address -->
       <div class="col-md-6">
         <div class="form-group" >
@@ -11,7 +11,7 @@
     [setActiveServiceAccount]="true" (changedServiceAccount)="serviceChanged($event)"></mygexa-service-account-selector>
           <small class="text-danger" *ngIf="ActiveServiceAccount && ActiveServiceAccount?.Status !== 'Active'">This account has been disconnected and the move out can not be continued</small> </div>
       </div>
-      
+
       <!-- select date when customer wants their service turned off at the old home  -->
       <div class="col-md-6">
         <div class="form-group">
@@ -26,7 +26,7 @@
         <h3>You are Moving To</h3>
         <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)"></mygexa-address-search>
       </div>
-      
+
       <!-- select date when customer wants their service turned on at the new home  -->
       <div class="col-md-6">
         <div class="form-group">
@@ -40,15 +40,24 @@
       </div>
     </div>
     <br/>
-    
+
     <!--If we don't offer service in the moving address, we should show the message-->
     <ng-container *ngIf="availableOffers">
       <div *ngIf="availableOffers.length === 0" class="alert alert-info fade in alert-dismissable"> <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a> <strong>We're Sorry!</strong> We cannot register your move online, please call 1-888 888 8888 for assistance. </div>
-      
-      <!-- If user has past due balance, show hte message --> 
+
+      <!-- If user has past due balance, show hte message -->
       <small class="text-danger" *ngIf="pastDueErrorMessage && availableOffers.length > 0">
-      <p>{{pastDueErrorMessage}} <b>$ {{customerDetails.Past_Due | number : dollarAmountFormatter}}</b> </p>
-      </small> </ng-container>
+      <p>{{pastDueErrorMessage}} <b>$ {{customerDetails?.Past_Due | number : dollarAmountFormatter}}</b> </p>
+      </small>
+      <br>
+      <div class="row" *ngIf="pastDueErrorMessage && availableOffers.length > 0">
+        <div class="col-md-6">
+          <div class="text-right">
+            <button class="btn btn-primary btn-success" routerLink="/payments/make-payment" type="button">Make a Payment</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
     <br/>
     <div class="text-right">
       <button class="btn btn-primary" [disabled]="!movingAddressForm.valid" (click)="addressFormSubmit(movingAddressForm.value)">Next</button>
@@ -117,7 +126,7 @@
           <div class="col-sm-12">
         <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_address.errors">Please select final service address</small>
           </div>
-          
+
       </div>
     </div>
     </div>
@@ -136,7 +145,7 @@
       </div>
     </div>
   </form>
-  
+
   <!--Moving Form Confirmation Screen -->
   <div [hidden]="!submitted" class="moving-confirmation"> <br/>
     <div class="alert alert-info fade in alert-dismissable"> <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a> <strong>Thanks!</strong> Your Move Center Order has been placed </div>
