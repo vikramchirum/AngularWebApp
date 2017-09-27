@@ -25,6 +25,7 @@ export class MyBillComponent implements OnInit, OnDestroy {
   activeServiceAccount: ServiceAccount;
   latestInvoice: IInvoice;
   private activeServiceAccountSubscription: Subscription = null;
+  private invoiceServiceSubscription: Subscription = null;
 
   constructor(private ServiceAccountService: ServiceAccountService, private invoiceService: InvoiceService) {
   }
@@ -38,14 +39,12 @@ export class MyBillComponent implements OnInit, OnDestroy {
         console.log('Current due date', this.noCurrentDue);
 
         // this.exceededDueDate =  (new Date(this.activeServiceAccount.Due_Date) > new Date()) ? true : false;
-        this.invoiceService.getLatestInvoice(this.activeServiceAccount.Id).subscribe(
-          latestInvoiceId => {
-            this.invoiceService.getInvoice(latestInvoiceId, this.activeServiceAccount.Id)
-              .filter(() => !this.activeServiceAccountSubscription.closed)
-              .subscribe(latestInvoice => { this.latestInvoice = latestInvoice;
-              this.exceededDueDate = this.activeServiceAccount.Past_Due > 0 ? true : false;
-              console.log('Exceeded due date', this.exceededDueDate);
-              });
+        this.invoiceServiceSubscription = this.invoiceService.getLatestInvoice(this.activeServiceAccount.Id).subscribe(
+          latestInvoice => {
+            this.latestInvoice = latestInvoice;
+            console.log('Latest invoice', this.latestInvoice);
+            this.exceededDueDate = this.activeServiceAccount.Past_Due > 0 ? true : false;
+            console.log('Exceeded due date', this.exceededDueDate);
           }
         );
       }
@@ -53,6 +52,9 @@ export class MyBillComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // this.activeServiceAccountSubscription.unsubscribe();
+    if (this.invoiceServiceSubscription) {
+      this.invoiceServiceSubscription.unsubscribe();
+    }
+    this.activeServiceAccountSubscription.unsubscribe();
   }
 }
