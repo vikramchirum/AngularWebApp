@@ -23,14 +23,16 @@ import { ViewBillComponent } from './components/view-bill/view-bill.component';
 import { DollarToCentsPipe } from './pipes/DollarToCents.pipe';
 import { AddressSearchComponent } from './components/address-search/address-search.component';
 import { PhoneDirective } from './directives/phone.directive';
-
+import {PhoneNumberConfirmationModalComponent} from './components/phone-number-confirmation-modal/phone-number-confirmation-modal.component';
+import { ModalModule } from 'ngx-bootstrap';
 @NgModule({
   imports: [
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
     RouterModule,
-    CustomFormsModule
+    CustomFormsModule,
+    ModalModule.forRoot(),
   ],
   declarations: [
     ChangeUserNameComponent,
@@ -51,7 +53,8 @@ import { PhoneDirective } from './directives/phone.directive';
     ViewBillComponent,
     DollarToCentsPipe,
     AddressSearchComponent,
-    PhoneDirective
+    PhoneDirective,
+    PhoneNumberConfirmationModalComponent
   ],
   exports: [
     ChangeUserNameComponent,

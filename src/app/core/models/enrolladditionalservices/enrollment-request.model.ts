@@ -1,5 +1,6 @@
 import { IPhoneNumber } from '../address/phonenumber.model';
 import { IAddress } from '../address/address.model';
+import { ICustomerAccountPrimaryPhone } from '../customeraccount/customeraccountprimaryphone.model';
 
 export class EnrollmentRequest {
     Email_Address?: string;
@@ -21,18 +22,18 @@ export class EnrollmentRequest {
     Partner_Account_Number?: string;
     Partner_Name_On_Account?: string;
     Date_Sent?: string;
-    Channel_Id?: string
+    Channel_Id?: string;
 }
 export interface ContactInfo {
     Email_Address?: string;
-    Primary_Phone_Number?: IPhoneNumber;
-    Secondary_Phone_Number?: IPhoneNumber;
+    Primary_Phone_Number?: ICustomerAccountPrimaryPhone;
+    Secondary_Phone_Number?: ICustomerAccountPrimaryPhone;
 }
 
 export interface DepositRecord {
-    Transaction_Id: string,
-    Amount: number,
-    First_Name: string,
-    Last_Name: string,
-    Paid_On: string
+    Transaction_Id: string;
+    Amount: number;
+    First_Name: string;
+    Last_Name: string;
+    Paid_On: string;
 }
