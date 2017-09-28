@@ -180,6 +180,8 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       page_size: 100,
       channelId: this.channelId ? this.channelId : ''
     };
+    console.log('Offer params', this.offerRequestParams);
+
     // send start date and TDU_DUNS_Number to get offers available.
     this.offerService.getOffers(this.offerRequestParams)
       .subscribe(result => {

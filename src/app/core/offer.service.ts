@@ -20,8 +20,7 @@ export class OfferService {
   getOffers(offer): Observable<IOffers[]> {
     console.log('Offer params', offer);
     return this.http
-      .get(`/v2/Offers?option.startDate=${offer.startDate}&option.plan.tDU.duns_Number=${offer.dunsNumber}
-      &option.approved=${offer.approved}&option.pageSize=${offer.page_size}&option.channel_Id=${offer.channelId}`)
+      .get(`/v2/Offers?option.startDate=${offer.startDate}&option.plan.tDU.duns_Number=${offer.dunsNumber}&option.approved=${offer.approved}&option.pageSize=${offer.page_size}&option.channel_Id=${offer.channelId}`)
       .map(data => { data.json(); return data.json(); })
       .map(data => <IOffers[]>data['Items'])
       .catch(error => this.http.handleHttpError(error));
