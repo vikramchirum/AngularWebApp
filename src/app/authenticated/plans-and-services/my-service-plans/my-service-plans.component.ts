@@ -7,7 +7,7 @@ import { IRenewalDetails } from 'app/core/models/renewals/renewaldetails.model';
 
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { RenewalStore } from 'app/core/store/renewalstore';
-import {ModalStore } from 'app/core/store/modalstore';
+import { ModalStore } from 'app/core/store/modalstore';
 
 @Component({
   selector: 'mygexa-my-service-plans',

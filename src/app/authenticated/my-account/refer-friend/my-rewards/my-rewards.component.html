@@ -9,10 +9,6 @@
         <h5>Total Current Referrals</h5>
       </div>
       <div class="col-md-4 col-xs-6">
-        <label>$10.23</label>
-        <h5>Total Share & Save <br/>Bill Credits This Month</h5>
-      </div>
-      <div class="col-md-4 col-xs-6">
         <label>${{totalSavingsToDate | number : dollarAmountFormatter}}</label>
         <h5>Total Savings to Date</h5>
       </div>
@@ -26,18 +22,37 @@
       </div>
     </div>
     <br>
+
     <ng-container *ngIf="referral.RefereeList; else norefees">
+
+        <div class="row">
+          <div class="col-md-4">
+            <b>Referee Name</b>
+          </div>
+          <div class="col-md-4">
+            <b>Months Credited</b>
+          </div>
+          <div class="col-md-4">
+            <b>Total Amount Credited</b>
+          </div>
+        </div>
+        <hr/>
+
       <div *ngFor="let referee of referral.RefereeList; let i = index">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <b>{{referee.FirstName}} {{referee.LastName}}</b>
           </div>
-          <div class="col-md-6">
-            <b>PhylloDoe@gmail.com </b>
+          <div class="col-md-4">
+            <b>{{referee.MonthsCredited}}</b>
+          </div>
+          <div class="col-md-4">
+            <b>{{referee.Total_Amount_Credited}}</b>
           </div>
         </div>
         <hr/>
       </div>
+
     </ng-container>
 
     <ng-template #norefees><div>No Referred Customers</div></ng-template>
@@ -47,6 +62,8 @@
     <br>
   </section>
 </ng-template>
+
+
 <ng-template #showLoadingScreen>
   <div class="text-center">
     <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
