@@ -59,4 +59,5 @@ export class OfferService {
       .map(data => <IOffers[]>data['Items'])
       .catch(error => this.http.handleHttpError(error));
   }
+
 }
