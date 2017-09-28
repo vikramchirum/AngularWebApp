@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, Input, AfterViewInit } from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, Input, AfterViewInit, SimpleChanges, OnChanges} from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -25,7 +25,7 @@ import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-
   templateUrl: './change-your-plan.component.html',
   styleUrls: ['./change-your-plan.component.scss']
 })
-export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
   @ViewChild('planConfirmationModal') planConfirmationModal: PlanConfirmationModalComponent;
   @Input() promoCode: string;
@@ -39,7 +39,6 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy
 
   hasPromoCode = false;
   showRenewals: boolean;
-  resetOffer: boolean = null;
 
   featuredOffers: AllOffersClass[];
   allOffers: AllOffersClass[];
@@ -56,6 +55,15 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
+    this.modalStore.PlanConfirmationModal.distinctUntilChanged(null, x => x).subscribe(result => {
+      this.planConfirmationModal.showPlanConfirmationModal(result);
+    });
+  }
+
+  private initialize() {
 
     const activeServiceAccount$ = this.serviceAccount_service.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
@@ -68,16 +76,10 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
-  ngAfterViewInit() {
-    this.modalStore.PlanConfirmationModal.distinctUntilChanged(null, x => x).subscribe(result => {
-      this.planConfirmationModal.showPlanConfirmationModal(result);
-    });
-  }
-
   private populateOffers(): void {
-    this.showRenewals = this.renewalDetails.Is_Account_Eligible_Renewal && ! this.activeServiceAccountDetails.Current_Offer.IsHoldOverRate;
+    this.showRenewals = this.renewalDetails.Is_Account_Eligible_Renewal && !this.activeServiceAccountDetails.Current_Offer.IsHoldOverRate;
     if (this.showRenewals) {
-      if (!this.utilityService.isNullOrWhitespace(this.promoCode) && !this.resetOffer) {
+      if (!this.utilityService.isNullOrWhitespace(this.promoCode)) {
         this.showPromoCodeInput(null);
         this.onPromoCodeSubmit(null);
       } else {
@@ -90,8 +92,8 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy
             }
           }
         );
-      } } else {
-
+      }
+    } else {
       this.isLoadingUpgrades = true;
       this.offersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
         upgradeOffers => {
@@ -99,7 +101,8 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy
           this.upgradeOffers = upgradeOffers;
         }
       );
-    }}
+    }
+  }
 
   private extractOffers(allOffers: AllOffersClass[]): void {
     this.featuredOffers = allOffers.filter(item => item.Type === 'Featured_Offers');
@@ -142,6 +145,7 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy
     if (this.utilityService.isNullOrWhitespace((this.promoCode))) {
       return;
     }
+
     this.isLoadingRenewals = true;
     this.offersServiceSubscription = this.offerService.getRenewalPlansByPromoCode(promoCode, this.activeServiceAccountDetails.TDU_DUNS_Number).subscribe(
       result => {
@@ -151,15 +155,28 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnDestroy
     );
   }
 
-  resetOffers() {
-    this.resetOffer = true;
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['promoCode']) {
+      this.initialize();
+    }
+  }
+
+  resetOffers($event: Event) {
+
+    if ($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+    }
+    this.promoCode = null;
     this.populateOffers();
   }
 
   ngOnDestroy() {
+
     if (this.offersServiceSubscription) {
       this.offersServiceSubscription.unsubscribe();
     }
+
     this.plansServicesSubscription.unsubscribe();
   }
 }

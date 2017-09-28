@@ -1,8 +1,7 @@
-<div *ngIf="isLoading; then offers else showLoadingScreen"></div>
+<ng-container *ngIf="!isLoading; then offers else showLoadingScreen"></ng-container>
 <ng-template #offers>
-  <ng-template #showRenewalOrUpgrade *ngIf="showRenewals; then renewalSection else upgradeSection">
-  </ng-template>
-  <ng-container #renewalSection>
+  <ng-container #showRenewalOrUpgrade *ngIf="showRenewals; then renewalSection else upgradeSection"></ng-container>
+  <ng-template #renewalSection>
     <div class="row">
       <div class="col-sm-2">
         <h2> View more renewal plans </h2>
@@ -14,7 +13,7 @@
             <input type="text" class="form-control" id="promoCode" required [(ngModel)]="promoCode" name="promoCode">
             <br>
             <span class="input-group-btn">
-                  <button class="btn btn-default" style="border-left: none;" type="reset" (click)="resetOffers()">
+                  <button class="btn btn-default" [class.disabled]="!promoCodeForm.form.valid" style="border-left: none;" (click)="promoCodeForm.form.valid && resetOffers($event)">
                   <span class="close-btn"  aria-hidden="true"><i class="fa fa-times fa-x"></i></span>
                   </button>
                   </span>
@@ -50,8 +49,8 @@
         </ng-template>
       </div>
     </div>
-  </ng-container>
-  <ng-container #upgradeSection>
+  </ng-template>
+  <ng-template #upgradeSection>
     <div class="row">
       <div class="col-sm-2">
         <h2> Want to Upgrade your Plan? </h2>
@@ -83,7 +82,7 @@
         </ng-template>
       </div>
     </div>
-  </ng-container>
+  </ng-template>
 </ng-template>
 <ng-template #showLoadingScreen>
   <div class="text-center">
