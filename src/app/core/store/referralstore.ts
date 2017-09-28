@@ -43,6 +43,17 @@ export class ReferralStore {
     return Observable.of(true);
   }
 
+  changeRewardPreferences(request: IEnrollReferralRequest): Observable<boolean> {
+    const observable = this.referralService.changeRewardPreferences(request).share();
+    observable.subscribe(
+      referral => {
+        console.log('Reward preference Successfully Changed');
+        this.loadReferral(referral.Customer_Account_Id);
+      });
+
+    return Observable.of(true);
+  }
+
   inviteReferees(request: IInviteRefereeRequest): Observable<true> {
     const observable = this.referralService.inviteReferees(request).share();
     observable.subscribe(result => {

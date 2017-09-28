@@ -3,13 +3,15 @@ import { Route, RouterModule } from '@angular/router';
 import { ReferFriendComponent } from './refer-friend.component';
 import { ReferralOptionsComponent } from './referral-options/referral-options.component';
 import { MyRewardsComponent } from './my-rewards/my-rewards.component';
+import { MyRewardPreferencesComponent } from './my-reward-preferences/my-reward-preferences.component';
 
 const routes: Route[] = [
   {
     path: '', component: ReferFriendComponent,
     children: [
       { path: 'my-rewards', component: MyRewardsComponent },
-      { path: 'referral-options', component: ReferralOptionsComponent }
+      { path: 'referral-options', component: ReferralOptionsComponent },
+      { path: 'my-reward-preferences', component: MyRewardPreferencesComponent }
     ]
   }
 ];

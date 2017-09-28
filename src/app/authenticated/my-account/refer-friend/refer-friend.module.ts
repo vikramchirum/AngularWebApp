@@ -8,6 +8,7 @@ import { ReferralOptionsComponent } from './referral-options/referral-options.co
 import { MyRewardsComponent } from './my-rewards/my-rewards.component';
 import { ReferFriendComponent } from './refer-friend.component';
 import { SharedModule } from 'app/shared/shared.module';
+import { MyRewardPreferencesComponent } from './my-reward-preferences/my-reward-preferences.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,8 @@ import { SharedModule } from 'app/shared/shared.module';
   declarations: [
     ReferFriendComponent,
     ReferralOptionsComponent,
-    MyRewardsComponent
+    MyRewardsComponent,
+    MyRewardPreferencesComponent
   ],
   exports: [
     RouterModule
