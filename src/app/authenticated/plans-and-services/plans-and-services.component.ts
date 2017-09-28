@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subscription } from 'rxjs/Subscription';
 import { startsWith } from 'lodash';
@@ -8,7 +8,8 @@ import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { RenewalStore } from '../../core/store/renewalstore';
 import { OffersStore } from '../../core/store/offersstore';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
+import { ChannelStore } from '../../core/store/channelstore';
 
 @Component({
   selector: 'mygexa-plans-and-services',
@@ -31,7 +32,8 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
     private OfferStore: OffersStore,
     private renewalStore: RenewalStore,
     private Router: Router,
-    private Route: ActivatedRoute
+    private Route: ActivatedRoute,
+    private channelStore: ChannelStore
   ) {
   }
 
@@ -55,6 +57,8 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
         this.OfferStore.LoadUpgradeOffersData(this.ActiveServiceAccount.Current_Offer.Term, this.ActiveServiceAccount.TDU_DUNS_Number);
       }
     });
+
+    this.channelStore.LoadChannelId();
   }
 
   ngOnDestroy() {

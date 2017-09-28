@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { IMyDpOptions, IMyDate, IMyOptions, IMyDateModel } from 'mydatepicker';
 import { Subscription } from 'rxjs/Subscription';
@@ -16,13 +16,14 @@ import { EnrollmentRequest } from 'app/core/models/enrolladditionalservices/enro
 import { CustomerAccountService } from 'app/core/CustomerAccount.service';
 import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
 import { ModalStore } from 'app/core/store/modalstore';
+import { ChannelStore } from '../../../core/store/channelstore';
 
 @Component({
   selector: 'mygexa-add-services',
   templateUrl: './add-services.component.html',
   styleUrls: ['./add-services.component.scss']
 })
-export class AddServicesComponent implements OnInit {
+export class AddServicesComponent implements OnInit, OnDestroy {
 
   addServiceForm: FormGroup;
   offerRequestParams: OfferRequest = null;
@@ -30,13 +31,15 @@ export class AddServicesComponent implements OnInit {
   availableOffers: IOffers[] = null;
   featuredOffers = null;
   private customerAccountId: string;
-  
-  private tokenRes:CustomerCheckToken;
+  private channelId: string;
+  private tokenRes: CustomerCheckToken;
   private tokenMsg: string;
   private isTokenError = false;
 
   private enrollmentRequest: EnrollmentRequest = null;
   private CustomerAccountSubscription: Subscription = null;
+  private channelStoreSubscription: Subscription = null;
+
   private selectedOffers: string[];
 
   private customerDetails: CustomerAccount = null;
@@ -53,7 +56,7 @@ export class AddServicesComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private offerService: OfferService, private UserService: UserService, private enrollService: EnrollService, private customerAccountService: CustomerAccountService,
-    private modalStore: ModalStore) {
+    private modalStore: ModalStore, private channelStore: ChannelStore) {
 
 
     this.disableUntil();
@@ -70,6 +73,7 @@ export class AddServicesComponent implements OnInit {
       CustomerAccountId => this.customerAccountId = CustomerAccountId
     );
 
+    this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId =>  { this.channelId = ChannelId; });
   }
 
   ngOnInit() {
@@ -152,8 +156,8 @@ export class AddServicesComponent implements OnInit {
   getSelectedAddress(event) {
     this.selectedServiceAddress = event;
     this.showPlansFlag = false;
-    this.enrollErrorMsg="";
-    this.tokenMsg="";
+    this.enrollErrorMsg = '';
+    this.tokenMsg = '';
     this.isTokenError = false;
     this.getFeaturedOffers(this.addServiceForm.value.Service_Start_Date.jsdate);
     this.checkCustomerToken();
@@ -173,7 +177,8 @@ export class AddServicesComponent implements OnInit {
       startDate: ServiceStartDate.toISOString(),
       dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS,
       approved: true,
-      page_size: 100
+      page_size: 100,
+      channelId: this.channelId ? this.channelId : ''
     };
     // send start date and TDU_DUNS_Number to get offers available.
     this.offerService.getOffers(this.offerRequestParams)
@@ -198,11 +203,11 @@ export class AddServicesComponent implements OnInit {
 
   onNotify(event) {
     this.selectedOfferId = event.Id;
-    if(this.formEnrollmentRequest()) {
+    if (this.formEnrollmentRequest()) {
       this.enrollService.createEnrollment(this.enrollmentRequest)
       .subscribe(result => {
-        console.log("final: ",result);
-        this.enrollErrorMsg = "Success";
+        console.log('final: ', result);
+        this.enrollErrorMsg = 'Success';
         this.enrolled = true;
       },
     error => {
@@ -220,50 +225,48 @@ export class AddServicesComponent implements OnInit {
       result => {
         this.customerDetails = result;
       }
-    ); 
-        
-    if(!(this.customerDetails && this.customerDetails.Id)) {
-      this.enrollErrorMsg = "Customer Details are missing. Please try again";
+    );
+
+    if (!(this.customerDetails && this.customerDetails.Id)) {
+      this.enrollErrorMsg = 'Customer Details are missing. Please try again';
       return;
     }
-    
+
     this.enrollService.getCustomerCheckToken(this.customerDetails.Id)
     .subscribe(result => {
       this.tokenRes = <CustomerCheckToken>result;
       this.tokenMsg = this.tokenRes.Customer_Check_Token;
-      if(this.tokenRes.Enrollment_Deposit_Amount > 0) {
-        this.Waiver = "Pay_Later";
-      }
-      else {
-        this.Waiver = "No_Waiver";
+      if (this.tokenRes.Enrollment_Deposit_Amount > 0) {
+        this.Waiver = 'Pay_Later';
+      } else {
+        this.Waiver = 'No_Waiver';
       }
       this.isTokenError = false;
     },
     error => {
       this.tokenMsg = error;
       this.isTokenError = true;
-      //console.log("Error1", error);
+      // console.log("Error1", error);
     });
   }
 
   formEnrollmentRequest() {
-    if(!(this.selectedServiceAddress)) {
-      this.enrollErrorMsg = "Please select Service Address to Continue";
+    if (!(this.selectedServiceAddress)) {
+      this.enrollErrorMsg = 'Please select Service Address to Continue';
+      return false;
+    } else if (!(this.addServiceForm.controls['Service_Start_Date'].value)) {
+      this.enrollErrorMsg = 'Please select Service Start date to Continue';
       return false;
     }
-    else if(!(this.addServiceForm.controls['Service_Start_Date'].value)) {
-      this.enrollErrorMsg = "Please select Service Start date to Continue";
+    if (!(this.serviceType)) {
+      this.enrollErrorMsg = 'Please select Service Type to Continue';
       return false;
     }
-    if(!(this.serviceType)) {
-      this.enrollErrorMsg = "Please select Service Type to Continue";
-      return false;
-    }  
-    if(this.isTokenError) {
+    if (this.isTokenError) {
       return false;
     }
     this.enrollmentRequest = {
-      Email_Address: "James.Smith@gexaenergy.com",
+      Email_Address: 'James.Smith@gexaenergy.com',
       Offer_Id: this.selectedOfferId,
       UAN: this.selectedServiceAddress.Meter_Info.UAN,
       Customer_Check_Token: this.tokenMsg,
@@ -272,12 +275,18 @@ export class AddServicesComponent implements OnInit {
       Selected_Start_Date: new Date(this.addServiceForm.controls['Service_Start_Date'].value.formatted).toISOString(),
       Language_Preference: this.customerDetails.Language,
       Contact_Info: {
-        Email_Address: "James.Smith@gexaenergy.com",
+        Email_Address: 'James.Smith@gexaenergy.com',
         Primary_Phone_Number: this.customerDetails.Primary_Phone
       },
       Billing_Address: this.selectedServiceAddress.Address
-    }
-    console.log("this.enrollmentRequest",this.enrollmentRequest);
+    };
+    console.log('this.enrollmentRequest', this.enrollmentRequest);
     return true;
+  }
+
+  ngOnDestroy() {
+    if (this.channelStoreSubscription) {
+      this.channelStoreSubscription.unsubscribe();
+    }
   }
 }
