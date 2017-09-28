@@ -43,11 +43,8 @@
 <ng-container *ngIf="ActiveServiceAccount">
 
   <div class="container-fluid callout-container plans" *ngIf="startsWith(Router.url, '/plans-and-services/my-services-plans')">
-    <div class="container" *ngIf="promoCode">
-      <mygexa-change-your-plan [pCode] = promoCode></mygexa-change-your-plan>
-    </div>
-    <div class="container" *ngIf="!promoCode">
-      <mygexa-change-your-plan ></mygexa-change-your-plan>
+    <div class="container">
+      <mygexa-change-your-plan [promoCode] = promoCode></mygexa-change-your-plan>
     </div>
   </div>
 
