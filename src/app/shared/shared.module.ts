@@ -25,6 +25,7 @@ import { AddressSearchComponent } from './components/address-search/address-sear
 import { PhoneDirective } from './directives/phone.directive';
 import {PhoneNumberConfirmationModalComponent} from './components/phone-number-confirmation-modal/phone-number-confirmation-modal.component';
 import { ModalModule } from 'ngx-bootstrap';
+import { PlanCardComponent } from './components/plan-card/plan-card.component';
 @NgModule({
   imports: [
     FormsModule,
@@ -54,7 +55,8 @@ import { ModalModule } from 'ngx-bootstrap';
     DollarToCentsPipe,
     AddressSearchComponent,
     PhoneDirective,
-    PhoneNumberConfirmationModalComponent
+    PhoneNumberConfirmationModalComponent,
+    PlanCardComponent
   ],
   exports: [
     ChangeUserNameComponent,
