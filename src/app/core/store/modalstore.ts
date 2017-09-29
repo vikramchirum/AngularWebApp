@@ -10,15 +10,9 @@ import { BehaviorSubject } from 'rxjs/Rx';
 @Injectable()
 export class ModalStore {
 
-  private _planConfirmationModal: BehaviorSubject<any> = new BehaviorSubject(null);
-
   private _handleOfferPopOversModal: BehaviorSubject<any> = new BehaviorSubject(null);
 
   constructor() {
-  }
-
-  get PlanConfirmationModal() {
-    return this._planConfirmationModal.asObservable().filter(x => x != null);
   }
 
   get HandleOfferPopOversModal() {
@@ -27,9 +21,5 @@ export class ModalStore {
 
   handleOfferPopOversModal(input: string) {
     this._handleOfferPopOversModal.next(input);
-  }
-
-  showPlanConfirmationModal(input: any) {
-    this._planConfirmationModal.next(input);
   }
 }

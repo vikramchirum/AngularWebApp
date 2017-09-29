@@ -17,13 +17,11 @@ import { MyCurrentPlanComponent } from './my-service-plans/my-current-plan/my-cu
 import { DocumentsComponent } from './my-service-plans/documents/documents.component';
 import { RenewalGaugeComponent } from './my-service-plans/renewal-gauge/renewal-gauge.component';
 import { ChangeYourPlanComponent } from './my-service-plans/change-your-plan/change-your-plan.component';
-import { ChangeYourPlanCardComponent } from './my-service-plans/change-your-plan/change-your-plan-card/change-your-plan-card.component';
 import { SelectPlanComponent } from './add-services/select-plan/select-plan.component';
 import { CreditCheckComponent } from './add-services/credit-check/credit-check.component';
 import { MovingComponent} from './moving/moving.component';
 import { SelectPlanModalDialogComponent } from './moving-center-form/select-plan-modal-dialog/select-plan-modal-dialog.component';
 import { MovingCenterFormComponent } from './moving-center-form/moving-center-form.component';
-import { OfferDetailsPopoverComponent } from './my-service-plans/change-your-plan/offer-details-popover/offer-details-popover.component';
 import { TooltipModule } from 'ngx-bootstrap';
 import { PlanConfirmationPopoverComponent } from './my-service-plans/plan-confirmation-popover/plan-confirmation-popover.component';
 import { PlanConfirmationModalComponent } from './my-service-plans/plan-confirmation-modal/plan-confirmation-modal.component';
@@ -54,13 +52,11 @@ import { PlansAgreementModalComponent } from './plans-agreement-modal/plans-agre
       MyCurrentPlanComponent,
       DocumentsComponent,
       ChangeYourPlanComponent,
-      ChangeYourPlanCardComponent,
       SelectPlanComponent,
       CreditCheckComponent,
       MovingComponent,
       SelectPlanModalDialogComponent,
       MovingCenterFormComponent,
-      OfferDetailsPopoverComponent,
       RenewalGaugeComponent,
       PlanConfirmationPopoverComponent,
       PlanConfirmationModalComponent,
