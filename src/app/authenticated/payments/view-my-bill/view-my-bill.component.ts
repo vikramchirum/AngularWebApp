@@ -41,7 +41,7 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
         // Need to get latest invoice
 
         this.service_account_id = result.Id;
-        this.invoice_service.getLatestInvoice(this.service_account_id).subscribe(
+        this.invoice_service.getLatestInvoiceId(this.service_account_id).subscribe(
           res => {
             console.log('Return from invoice call');
             this.latest_invoice_id = res;

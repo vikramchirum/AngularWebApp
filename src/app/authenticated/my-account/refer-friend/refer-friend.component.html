@@ -37,6 +37,7 @@
           <div class="btn-group">
             <button type="button" [routerLinkActive]="['active']" class="btn btn-default" routerLink="referral-options">Refer a Friend</button>
             <button type="button" [routerLinkActive]="['active']" class="btn btn-default" routerLink="my-rewards">My Rewards</button>
+            <button *ngIf="(serviceAccountsCount > 1)" type="button" [routerLinkActive]="['active']" class="btn btn-default" routerLink="my-reward-preferences">Reward Preferences</button>
           </div>
         </div>
       </div>

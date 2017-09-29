@@ -33,6 +33,9 @@ import { UpgradeService } from './upgrade.service';
 import { UpgradeStore } from './store/upgradestore';
 import { EnrollService } from './enroll.service';
 import { UtilityService } from './utility.service';
+import { ChannelService } from './channelservice.service';
+import { ChannelStore } from './store/channelstore';
+
 
 @NgModule({
   imports: [
@@ -67,7 +70,9 @@ import { UtilityService } from './utility.service';
     ModalStore,
     UpgradeService,
     EnrollService,
-    UtilityService
+    UtilityService,
+    ChannelService,
+    ChannelStore
   ]
 })
 export class CoreModule { }

@@ -17,6 +17,7 @@ import { ISearchAddressRequest } from 'app/core/models/serviceaddress/searchaddr
 import { ServiceAddress } from 'app/core/models/serviceaddress/serviceaddress.model';
 import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
 import { OfferRequest } from 'app/core/models/offers/offerrequest.model';
+import { ChannelStore } from '../../../core/store/channelstore';
 
 @Component({
   selector: 'mygexa-moving-center-form',
@@ -39,11 +40,13 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   offerId: string;
   showHideAdressList: boolean = true;
   pastDueErrorMessage: string;
-
+  private channelId: string;
   public transferRequest: TransferRequest = null;
 
   private ActiveServiceAccountSubscription: Subscription = null;
   private CustomerAccountSubscription: Subscription = null;
+  private channelStoreSubscription: Subscription = null;
+
   private ActiveServiceAccount = null;
   private TDU_DUNS_Number: string = null;
   customerDetails: CustomerAccount = null;
@@ -60,9 +63,11 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     private customerAccountService: CustomerAccountService,
     private transferService: TransferService,
     private offerService: OfferService,
-    private addressSearchService: AddressSearchService) {
+    private addressSearchService: AddressSearchService,
+    private channelStore: ChannelStore) {
     // start date and end date must be future date.
     this.disableUntil();
+    this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId =>  { this.channelId = ChannelId; });
   }
 
 
@@ -107,7 +112,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.CustomerAccountSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(
       result => {
         this.customerDetails = result;
-       // console.log('Customer Account**************************', result);
+        // console.log('Customer Account**************************', result);
+        if (this.customerDetails.Past_Due > 49) {
+          this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
+        }
       }
     );
   }
@@ -178,8 +186,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       startDate: addressForm.New_Service_Start_Date.jsdate.toISOString(),
       dunsNumber: this.newServiceAddress.Meter_Info.TDU_DUNS,
       approved: true,
-      page_size: 100
+      page_size: 100,
+      channelId: this.channelId ? this.channelId : ''
     };
+    console.log('Offer params', this.offerRequestParams);
     // send start date and TDU_DUNS_Number to get offers available.
     this.offerService.getOffers(this.offerRequestParams)
       .subscribe(result => {
@@ -261,6 +271,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   ngOnDestroy() {
     this.ActiveServiceAccountSubscription.unsubscribe();
     this.CustomerAccountSubscription.unsubscribe();
+    if (this.channelStoreSubscription) {
+      this.channelStoreSubscription.unsubscribe();
+    }
   }
 
 

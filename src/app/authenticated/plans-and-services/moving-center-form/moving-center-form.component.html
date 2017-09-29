@@ -46,11 +46,24 @@
       <div *ngIf="availableOffers.length === 0" class="alert alert-info fade in alert-dismissable"> <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a> <strong>We're Sorry!</strong> We cannot register your move online, please call 1-888 888 8888 for assistance. </div>
 
       <!-- If user has past due balance, show hte message -->
-      <small class="text-danger" *ngIf="pastDueErrorMessage && availableOffers.length > 0">
-      <p>{{pastDueErrorMessage}} <b>$ {{customerDetails?.Past_Due | number : dollarAmountFormatter}}</b> </p>
+      <!--<small class="text-danger" *ngIf="pastDueErrorMessage && availableOffers.length > 0">-->
+      <!--<p>{{pastDueErrorMessage}} <b>$ {{customerDetails?.Past_Due | number : dollarAmountFormatter}}</b> </p>-->
+      <!--</small>-->
+      <!--<br>-->
+      <!--<div class="row" *ngIf="pastDueErrorMessage && availableOffers.length > 0">-->
+        <!--<div class="col-md-6">-->
+          <!--<div class="text-right">-->
+            <!--<button class="btn btn-primary btn-success" routerLink="/payments/make-payment" type="button">Make a Payment</button>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    </ng-container>
+    <ng-container *ngIf="pastDueErrorMessage">
+      <small class="text-danger" *ngIf="pastDueErrorMessage">
+        <p>{{pastDueErrorMessage}} <b>$ {{customerDetails?.Past_Due | number : dollarAmountFormatter}}</b> </p>
       </small>
       <br>
-      <div class="row" *ngIf="pastDueErrorMessage && availableOffers.length > 0">
+      <div class="row" *ngIf="pastDueErrorMessage">
         <div class="col-md-6">
           <div class="text-right">
             <button class="btn btn-primary btn-success" routerLink="/payments/make-payment" type="button">Make a Payment</button>
