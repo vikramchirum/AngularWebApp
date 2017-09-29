@@ -28,7 +28,7 @@ export class PaymentsComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       result =>
-        this.invoice_service.getLatestInvoice(result.Id).subscribe(
+        this.invoice_service.getLatestInvoiceId(result.Id).subscribe(
           resp => {
             this.invoice_service.getInvoice(resp, result.Id)
               .filter(() => !this.ActiveServiceAccountSubscription.closed)

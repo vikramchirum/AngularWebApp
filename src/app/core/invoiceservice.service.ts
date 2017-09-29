@@ -58,8 +58,14 @@ export class InvoiceService {
       .catch(err => this.HttpClient.handleHttpError(err));
   }
 
-  getLatestInvoice(serviceAccountId: string): Observable<number> {
+  getLatestInvoiceId(serviceAccountId: string): Observable<number> {
     return this.HttpClient.get(`/service_accounts/${serviceAccountId}/latest_invoice_id`)
+      .map(res => res.json())
+      .catch(err => this.HttpClient.handleHttpError(err));
+  }
+
+  getLatestInvoice(serviceAccountId: string): Observable<IInvoice> {
+    return this.HttpClient.get(`/service_accounts/${serviceAccountId}/latest_invoice`)
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err));
   }

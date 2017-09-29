@@ -3,6 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 
 import { debounce, result } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
+import { ChannelStore } from './core/store/channelstore';
 
 @Component({
   selector: 'mygexa-app',
@@ -18,7 +19,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private Router: Router,
-    private ChangeDetectorRef: ChangeDetectorRef
+    private ChangeDetectorRef: ChangeDetectorRef,
+    private channelStore: ChannelStore
   ) {
   }
 
@@ -44,6 +46,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.determineFooterPosition(win);
     // Check ever-so-often.
     this.intervalCheck = setInterval(() => this.determineFooterPosition(win), 1000);
+    this.channelStore.LoadChannelId();
   }
 
   ngOnDestroy() {

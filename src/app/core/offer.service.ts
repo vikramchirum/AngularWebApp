@@ -20,7 +20,7 @@ export class OfferService {
   getOffers(offer): Observable<IOffers[]> {
     console.log('Offer params', offer);
     return this.http
-      .get(`/v2/Offers?option.startDate=${offer.startDate}&option.plan.tDU.duns_Number=${offer.dunsNumber}&option.approved=${offer.approved}&option.pageSize=${offer.page_size}`)
+      .get(`/v2/Offers?option.startDate=${offer.startDate}&option.plan.tDU.duns_Number=${offer.dunsNumber}&option.approved=${offer.approved}&option.pageSize=${offer.page_size}&option.channel_Id=${offer.channelId}`)
       .map(data => { data.json(); return data.json(); })
       .map(data => <IOffers[]>data['Items'])
       .catch(error => this.http.handleHttpError(error));
@@ -56,6 +56,13 @@ export class OfferService {
     return this.http.get(`/v2/Offers?option.approved=true&option.startDate=
     ${new Date().toISOString()}&option.promotion.code=LYRIC&option.plan.tDU.duns_Number=${ActiveServiceAccount_TDU_DUNS_Number}`)
       .map(data => { data.json(); console.log('GexaLyricOffer', data.json()); return data.json(); })
+      .map(data => <IOffers[]>data['Items'])
+      .catch(error => this.http.handleHttpError(error));
+  }
+
+  getOffersByChannel(Channel_Id: string): Observable<IOffers[]> {
+    return this.http.get(`/v2/Offers?ov2/Offers?option.channel_Id=${Channel_Id}`)
+      .map(data => { data.json(); console.log('Channel offers', data.json()); return data.json(); })
       .map(data => <IOffers[]>data['Items'])
       .catch(error => this.http.handleHttpError(error));
   }
