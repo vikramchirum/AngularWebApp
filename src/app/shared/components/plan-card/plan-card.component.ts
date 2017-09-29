@@ -8,24 +8,17 @@ import { ModalDirective } from 'ngx-bootstrap';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { IUser } from 'app/core/models/user/User.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
-import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
 import { OfferSelectionType } from 'app/core/models/enums/offerselectiontype';
-
-import {IOfferSelectionPayLoad} from '../../models/offerselectionpayload';
+import { IOfferSelectionPayLoad } from '../../models/offerselectionpayload';
 
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
-import { CustomerAccountService } from 'app/core/CustomerAccount.service';
 import { UserService } from 'app/core/user.service';
-import { RenewalStore } from 'app/core/store/renewalstore';
-import { UpgradeStore } from 'app/core/store/upgradestore';
 import { ModalStore } from 'app/core/store/modalstore';
-
 
 @Component({
   selector: 'mygexa-plan-card',
   templateUrl: './plan-card.component.html',
   styleUrls: ['./plan-card.component.scss'],
-  providers: [ModalStore]
 })
 export class PlanCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -46,7 +39,6 @@ export class PlanCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   userServiceSubscription: Subscription;
   activeServiceAccountSubscription: Subscription;
-  customerAccountServiceSubscription: Subscription;
   handleOfferPopOversModalSubscription: Subscription;
 
   constructor(private userService: UserService,
@@ -75,6 +67,7 @@ export class PlanCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.handleOfferPopOversModalSubscription = this.modalStore.HandleOfferPopOversModal.subscribe(rateCode => {
+
       if (this.offer) {
         if (this.offer.Rate_Code !== rateCode) {
           if (this.pop) {
@@ -165,7 +158,6 @@ export class PlanCardComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this.userServiceSubscription.unsubscribe();
     this.activeServiceAccountSubscription.unsubscribe();
-    this.customerAccountServiceSubscription.unsubscribe();
     this.handleOfferPopOversModalSubscription.unsubscribe();
   }
 }

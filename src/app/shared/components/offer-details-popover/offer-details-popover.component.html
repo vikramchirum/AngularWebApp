@@ -1,13 +1,13 @@
 <section *ngIf="ActiveOfferDetails">
   <div class="row col-md-12" *ngIf="IsCurrentPlanPopOver">
 
-      <h4><b>{{ActiveOfferDetails?.Current_Offer.Product_Name}}</b></h4>
-      <hr>
+    <h4><b>{{ActiveOfferDetails?.Current_Offer.Product_Name}}</b></h4>
+    <hr>
   </div>
   <div class="service-upgrade-modal" >
-   <!-- need this for modal, not popover
-    <div class="plan-header"><h3 class="plan-title ">{{ActiveOfferDetails.Current_Offer.Product_Name}}</h3></div>
-    -->
+    <!-- need this for modal, not popover
+     <div class="plan-header"><h3 class="plan-title ">{{ActiveOfferDetails.Current_Offer.Product_Name}}</h3></div>
+     -->
     <h3 class="text-center plan-info">{{ActiveOfferDetails.Current_Offer.RateAt2000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup>&cent;</sup> per KWh</h3>
     <p class="text-center">AT 2000kwh</p>
     <hr>
@@ -332,8 +332,8 @@
             <td class="bill-amount">${{OfferDetails.Plan.TDU.Delivery_Charge | number: '1.1-2' }}</td>
           </tr>
           <tr>
-          <td class="bill-name">TDU meter charges <small>(per month)</small></td>
-          <td class="bill-amount">${{OfferDetails.Plan.TDU.Meter_Charge | number: '1.1-4' }}</td>
+            <td class="bill-name">TDU meter charges <small>(per month)</small></td>
+            <td class="bill-amount">${{OfferDetails.Plan.TDU.Meter_Charge | number: '1.1-4' }}</td>
           </tr>
           </tbody>
         </table>
