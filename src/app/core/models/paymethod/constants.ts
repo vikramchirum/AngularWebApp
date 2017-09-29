@@ -7,7 +7,7 @@ export const CardBrands = {
   'diners-club': 'Diners Club',
   disc: 'Discover',
   jcb: 'JCB',
-  mastercard: 'Mastercard',
+  mast: 'Mastercard',
   paypal: 'PayPal',
   stripe: 'Stripe',
   visa: 'Visa'

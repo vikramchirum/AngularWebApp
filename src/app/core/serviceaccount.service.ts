@@ -57,6 +57,7 @@ export class ServiceAccountService {
 
     // Respond to the first (initializing) call.
     this.ServiceAccountsObservable.first().delay(0).subscribe((result) => {
+      console.log('Service accounts', result);
       this.initialized = true;
       if (this.ActiveServiceAccountId) {
         this.SetActiveServiceAccount(this.ActiveServiceAccountId);
@@ -151,10 +152,11 @@ export class ServiceAccountService {
 
   SetFlags(ServiceAccount: ServiceAccount): ServiceAccount {
     const currentDate = new Date();
+    const term = ServiceAccount.Current_Offer ? Number(ServiceAccount.Current_Offer.Term) : 0;
     // End dates should not be null - for dev purposes, handle null dates:
     const endDate = ServiceAccount.Contract_End_Date === null
       // If no end date, take the current offer's term and add it.
-      ? new Date(new Date(ServiceAccount.Contract_Start_Date).setMonth(new Date(ServiceAccount.Contract_Start_Date).getMonth() + Number(ServiceAccount.Current_Offer.Term)))
+      ? new Date(new Date(ServiceAccount.Contract_Start_Date).setMonth(new Date(ServiceAccount.Contract_Start_Date).getMonth() + term))
       // Otherwise, use the provided date.
       : new Date(ServiceAccount.Contract_End_Date);
     // // Set calculated end date
