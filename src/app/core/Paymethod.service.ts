@@ -241,7 +241,7 @@ export class PaymethodService {
               FirstName: this.CustomerAccount.First_Name,
               LastName: this.CustomerAccount.Last_Name
             },
-            PaymethodName: get(CardBrands, ForteResult.card_type, 'Unknown') + '{' + ForteResult.last_4 + '}',
+            // PaymethodName: get(CardBrands, ForteResult.card_type, 'Unknown') + '{' + ForteResult.last_4 + '}',
             PaymethodType: PaymethodType,
             AccountHolder: Paymethod.account_holder.toUpperCase(),
             AccountNumber: ForteResult.last_4,
@@ -250,9 +250,12 @@ export class PaymethodService {
 
           if (Paymethod.CreditCard) {
             set(body, 'CreditCardType', replace(get(CardBrands, ForteResult.card_type, 'Unknown'), ' ', ''));
+            set(body, 'PaymethodName', get(CardBrands, ForteResult.card_type, 'Unknown') + '{ ' + ForteResult.last_4 + ' }');
           } else {
             set(body, 'RoutingNumber', Paymethod.Echeck.routing_number);
+            set(body, 'PaymethodName', 'eCheck { ' + Paymethod.Echeck.routing_number + ' }');
           }
+
 
           this.HttpClient.post('/Paymethods', JSON.stringify(body))
             .map(res => res.json())

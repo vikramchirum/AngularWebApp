@@ -17,7 +17,7 @@ export class PaymentsService {
     );
   }
 
-  MakePayment(    amount: number, serviceAccount: ServiceAccount, Paymethod: IPaymethod) {
+  MakePayment(amount: number, serviceAccount: ServiceAccount, Paymethod: IPaymethod) {
 
     const body = {
       AuthorizationAmount: amount,

@@ -224,6 +224,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
           };
         this.PaymethodService.GetForteOneTimeToken(<IPaymethodRequest>onetimePaymethod).subscribe(
           ForteData => resolve(assign({
+              UserName: this.UserService.UserCache.Profile.Username,
               Token: ForteData.onetime_token,
               Paymethod_Customer: {
                 Id: `${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`,
