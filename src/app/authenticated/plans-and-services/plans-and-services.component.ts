@@ -14,7 +14,8 @@ import { ChannelStore } from '../../core/store/channelstore';
 @Component({
   selector: 'mygexa-plans-and-services',
   templateUrl: './plans-and-services.component.html',
-  styleUrls: ['./plans-and-services.component.scss']
+  styleUrls: ['./plans-and-services.component.scss'],
+  providers: [RenewalStore]
 })
 export class PlansAndServicesComponent implements OnInit, OnDestroy {
 

@@ -26,6 +26,7 @@ export class ReferFriendComponent implements OnInit, OnDestroy {
   customerAccount: CustomerAccount;
   serviceAccount: ServiceAccount;
   referral: IReferral;
+  serviceAccountsCount;
 
   flipButton: boolean = null;
   enrolled: boolean = null;
@@ -43,6 +44,10 @@ export class ReferFriendComponent implements OnInit, OnDestroy {
     this.customerServiceAccountSubscription = Observable.combineLatest(customerAccount$, activeServiceAccount$).distinctUntilChanged(null, x => x[1]).subscribe(result => {
       this.customerAccount = result[0];
       this.serviceAccount = result[1];
+    });
+
+    this.serviceAccountService.ServiceAccountsObservable.subscribe(serviceAccounts => {
+      this.serviceAccountsCount = serviceAccounts.length;
     });
 
     this.referralSubscription = referral$.subscribe(result => {
