@@ -112,7 +112,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.CustomerAccountSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(
       result => {
         this.customerDetails = result;
-       // console.log('Customer Account**************************', result);
+        // console.log('Customer Account**************************', result);
+        if (this.customerDetails.Past_Due > 49) {
+          this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
+        }
       }
     );
   }
