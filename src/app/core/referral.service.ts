@@ -1,6 +1,7 @@
 /**
  * Created by vikram.chirumamilla on 9/6/2017.
  */
+
 import { Injectable } from '@angular/core';
 import { Response, URLSearchParams } from '@angular/http';
 
@@ -30,6 +31,15 @@ export class ReferralService {
   enrollReferral(request: IEnrollReferralRequest): Observable<IReferral> {
     const relativePath = `/referrals/`;
     return this.http.post(relativePath, request)
+      .map((response: Response) => {
+        return <IReferral> response.json();
+      })
+      .catch(error => this.http.handleHttpError(error));
+  }
+
+  changeRewardPreferences(request: IEnrollReferralRequest): Observable<IReferral> {
+    const relativePath = `/referrals/`;
+    return this.http.put(relativePath, request)
       .map((response: Response) => {
         return <IReferral> response.json();
       })
