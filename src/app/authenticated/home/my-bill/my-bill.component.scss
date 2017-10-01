@@ -1,8 +1,24 @@
 @import '../../../../styles.scss';
+@import '../../../../basecolors.scss';
 
 .my-bill-grid {
   table {
     margin-bottom: 15px;
+  }
+  tr.bg-success > td {
+    border-top: 1px solid $payment-base;
+    border-bottom: 1px solid $payment-base;
+    
+    h4 {
+    color: $payment-base;
+      }
+  }
+  .text-left {
+    text-align: left;
+  }
+  .text-center
+  {
+    text-align: center;
   }
   .disconnected {
     color: red !important;
