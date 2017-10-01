@@ -18,11 +18,17 @@
 label{
     display: inline-block;
     text-align: center;
-    border: 10px solid $account-base;
+    border: 1px solid $account-base;
     border-radius: 280px;
     min-width: 140px;
     min-height: 140px;
-    padding-top: 20%;
+    padding-top: 12%;
+    background-color: rgba($account-base, .9);
+    box-shadow: 4px 4px 8px #ccc;
+    color: #fff;
+    font-weight: 100; 
+    font-size:38px;
+  
 }
 
 .addressPanel{

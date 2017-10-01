@@ -4,26 +4,27 @@
   <br/>
   <section class="details">
     <div class="row">
-      <div class="col-md-4 col-xs-6">
+      <div class="col-md-5 col-xs-5 col-xs-offset-1 ">
         <label>{{referral.RefereeList ? referral.RefereeList.length : 0 }}</label>
         <h5>Total Current Referrals</h5>
       </div>
-      <div class="col-md-4 col-xs-6">
-        <label>${{totalSavingsToDate | number : dollarAmountFormatter}}</label>
+      <div class="col-md-5 col-xs-6">
+        <label><sup>$</sup>{{totalSavingsToDate | number : dollarAmountFormatter}}</label>
         <h5>Total Savings to Date</h5>
       </div>
     </div>
     <br>
-    <div class="row">
+ 
+
+    <ng-container *ngIf="referral.RefereeList; else norefees">
+           <div class="row">
       <div class="col-md-12">
-        <div class="alert alert-success text-center">
+        <div class="alert  text-center">
           <b>Your Referred Customers </b>
         </div>
       </div>
     </div>
     <br>
-
-    <ng-container *ngIf="referral.RefereeList; else norefees">
 
         <div class="row">
           <div class="col-md-4">
@@ -55,7 +56,15 @@
 
     </ng-container>
 
-    <ng-template #norefees><div>No Referred Customers</div></ng-template>
+    <ng-template #norefees>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="alert  text-center">
+          <b>No Referred Customers</b>
+        </div>
+      </div>
+    </div>
+    </ng-template>
 
     <br>
     <br>
