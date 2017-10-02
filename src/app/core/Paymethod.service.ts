@@ -234,23 +234,28 @@ export class PaymethodService {
           if (isError(ForteResult)) { return observer.error(ForteResult); }
 
           const body = {
+            UserName: this.UserService.UserCache.Profile.Username,
             Token: ForteResult.onetime_token,
             Paymethod_Customer: {
               Id: `${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`,
               FirstName: this.CustomerAccount.First_Name,
               LastName: this.CustomerAccount.Last_Name
             },
-            PaymethodName: get(CardBrands, ForteResult.card_type, 'Unknown') + '{' + ForteResult.last_4 + '}',
+            // PaymethodName: get(CardBrands, ForteResult.card_type, 'Unknown') + '{' + ForteResult.last_4 + '}',
             PaymethodType: PaymethodType,
             AccountHolder: Paymethod.account_holder.toUpperCase(),
-            AccountNumber: ForteResult.last_4
+            AccountNumber: ForteResult.last_4,
+
           };
 
           if (Paymethod.CreditCard) {
             set(body, 'CreditCardType', replace(get(CardBrands, ForteResult.card_type, 'Unknown'), ' ', ''));
+            set(body, 'PaymethodName', get(CardBrands, ForteResult.card_type, 'Unknown') + '{ ' + ForteResult.last_4 + ' }');
           } else {
             set(body, 'RoutingNumber', Paymethod.Echeck.routing_number);
+            set(body, 'PaymethodName', 'eCheck { ' + Paymethod.Echeck.routing_number + ' }');
           }
+
 
           this.HttpClient.post('/Paymethods', JSON.stringify(body))
             .map(res => res.json())

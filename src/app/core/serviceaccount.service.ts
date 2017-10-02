@@ -57,6 +57,7 @@ export class ServiceAccountService {
 
     // Respond to the first (initializing) call.
     this.ServiceAccountsObservable.first().delay(0).subscribe((result) => {
+      console.log('Service accounts', result);
       this.initialized = true;
       if (this.ActiveServiceAccountId) {
         this.SetActiveServiceAccount(this.ActiveServiceAccountId);
@@ -151,22 +152,17 @@ export class ServiceAccountService {
 
   SetFlags(ServiceAccount: ServiceAccount): ServiceAccount {
     const currentDate = new Date();
-    // End dates should not be null - for dev purposes, handle null dates:
-    const endDate = ServiceAccount.Contract_End_Date === null
-      // If no end date, take the current offer's term and add it.
-      ? new Date(new Date(ServiceAccount.Contract_Start_Date).setMonth(new Date(ServiceAccount.Contract_Start_Date).getMonth() + Number(ServiceAccount.Current_Offer.Term)))
-      // Otherwise, use the provided date.
-      : new Date(ServiceAccount.Contract_End_Date);
-    // // Set calculated end date
-     ServiceAccount.Calculated_Contract_End_Date = endDate;
-     // Determine if the service account is eligible for renewal
-     //  this.RenewalService.getRenewalDetails(Number(ServiceAccount.Id)).subscribe(
-     //    RenewalDetails => {  ServiceAccount.IsUpForRenewal = RenewalDetails.Is_Account_Eligible_Renewal;
-     //      console.log ('Renewal Flag after',  ServiceAccount.IsUpForRenewal);
-     //      console.log('ServiceAccount_Renewaldetails =', RenewalDetails ); },
-     //    error => this.HttpClient.handleHttpError(error),
-     //    () => {}
-     //  );
+    if (ServiceAccount) {
+      const term = ServiceAccount.Current_Offer ? Number(ServiceAccount.Current_Offer.Term) : 0;
+      // End dates should not be null - for dev purposes, handle null dates:
+      const endDate = ServiceAccount.Contract_End_Date === null
+        // If no end date, take the current offer's term and add it.
+        ? new Date(new Date(ServiceAccount.Contract_Start_Date).setMonth(new Date(ServiceAccount.Contract_Start_Date).getMonth() + term))
+        // Otherwise, use the provided date.
+        : new Date(ServiceAccount.Contract_End_Date);
+      // // Set calculated end date
+      ServiceAccount.Calculated_Contract_End_Date = endDate;
+    }
     return  ServiceAccount;
   }
 
