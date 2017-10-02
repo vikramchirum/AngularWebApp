@@ -82,29 +82,30 @@
     <br/>
     <div  class=" row service-plan">
       <div class="col-sm-6">
-        <h3>Your Service Plan</h3>
-        <p> Would you like to keep your existing service plan?</p>
-        <div class="row">
-           <div class="container-fluid">
-            <div class="form-group radio clearfix">
-              <label class="radio-inline col-sm-6">
-                <input type="radio" formControlName="service_plan" value="Current Plan" (click)="getCurrentPlan()" checked="checked" >
-                Keep Current Plan</label>
-              <label class="radio-inline col-sm-5">
-                <input type="radio" formControlName="service_plan" value="New Plan" (click)="openSelectPlanModal()">
-                Select New Plan</label>
-            </div>
-          </div>
-        </div>
-          <div class="row">
-            <div class="container-fluid">
-          <div class="col-sm-12">
-            <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Moving address is not in same TDU. Please select New Plan </small>
-            <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.required">Please select plan</small>
-          </div>
-            </div>
-          </div>
-          <mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>
+        <h3>1. Your Service Plan</h3>
+        <p> Review your Service Plan options</p>
+        <!--<p> Would you like to keep your existing service plan?</p>-->
+        <!--<div class="row">-->
+           <!--<div class="container-fluid">-->
+            <!--<div class="form-group radio clearfix">-->
+              <!--<label class="radio-inline col-sm-6">-->
+                <!--<input type="radio" formControlName="service_plan" value="Current Plan" (click)="getCurrentPlan()" checked="checked" >-->
+                <!--Keep Current Plan</label>-->
+              <!--<label class="radio-inline col-sm-5">-->
+                <!--<input type="radio" formControlName="service_plan" value="New Plan" (click)="openSelectPlanModal()">-->
+                <!--Select New Plan</label>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+          <!--<div class="row">-->
+            <!--<div class="container-fluid">-->
+          <!--<div class="col-sm-12">-->
+            <!--<small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Moving address is not in same TDU. Please select New Plan </small>-->
+            <!--<small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.required">Please select plan</small>-->
+          <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>-->
         </div>
       <div class="col-sm-6">
         <div class="current-plan-card mat-card" *ngIf="selectedOffer">
@@ -121,19 +122,43 @@
             <p class="bg-default">Expires {{ActiveServiceAccount.Current_Offer.End_Date | date:'d/M/yy'}}</p>
           </div>
         </div>
+        <br>
+        <div class="btn-toolbar">
+          <button class="btn btn-secondary btn-default"  (click)="getCurrentPlan()">KEEP CURRENT PLAN</button>
+          <button class="btn btn-primary btn-default" style="float:right;" (click)="openSelectPlanModal()">CHANGE PLAN</button>
+          <mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>
+        </div>
+        <!--<div class="row">-->
+          <!--<div class="container-fluid">-->
+            <!--<div class="col-sm-12">-->
+              <!--<small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Moving address-->
+                <!--is not in same TDU. Please select New Plan-->
+              <!--</small>-->
+              <!--<small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.required">Please select-->
+                <!--plan-->
+              <!--</small>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
       </div>
     </div>
     <div class="row">
       <div class="col-sm-6">
         <div class="form-group radio clearfix">
-          <h3>Your Final Bill</h3>
-                  <p>Where would you like your final bill sent?</p>
-          <label class="radio-inline  col-sm-6">
-            <input type="radio" formControlName="service_address" value="Current Address">
-            Your Current Address </label>
-          <label class="radio-inline  col-sm-5">
-            <input type="radio" formControlName="service_address" value="New Address" >
-            Your New Address </label>
+          <h3>2. Final Bill Destination</h3>
+          <p>Where would you like your final bill sent?</p>
+          <br>
+          <div class="btn-toolbar">
+            <button class="btn btn-secondary btn-default" (click)="getCurrentPlan()">CURRENT ADDRESS</button>
+            <button class="btn btn-primary btn-default" style="float:right;" (click)="openSelectPlanModal()">NEW ADDRESS</button>
+            <mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>
+          </div>
+          <!--<label class="radio-inline  col-sm-6">-->
+            <!--<input type="radio" formControlName="service_address" value="Current Address">-->
+            <!--Your Current Address </label>-->
+          <!--<label class="radio-inline  col-sm-5">-->
+            <!--<input type="radio" formControlName="service_address" value="New Address" >-->
+            <!--Your New Address </label>-->
         </div>
         <div class="">
           <div class="col-sm-12">

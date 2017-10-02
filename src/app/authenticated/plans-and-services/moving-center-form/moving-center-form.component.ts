@@ -95,7 +95,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
       this.ServicePlanForm = this.fb.group({
         'service_address': [null, Validators.required],
-        'service_plan': [null, Validators.required],
+        // 'service_plan': [null, Validators.required],
         'agree_to_terms': [false, [Validators.pattern('true')]],
         'final_service_address': this.fb.array([])
       });
@@ -176,7 +176,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
   addressFormSubmit(addressForm) {
 
-    if (this.customerDetails.Past_Due > 40) {
+    if (this.customerDetails && this.customerDetails.Past_Due > 40) {
      this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
     }
 
