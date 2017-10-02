@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { PopoverDirective } from 'ngx-bootstrap';
 
-import { IOffers} from '../../../../../core/models/offers/offers.model';
-import { ServiceAccount } from '../../../../../core/models/serviceaccount/serviceaccount.model';
-import { DocumentsService } from '../../../../../core/documents.service';
-import {IRenewalDetails} from '../../../../../core/models/renewals/renewaldetails.model';
+import { IOffers} from 'app/core/models/offers/offers.model';
+import { ServiceAccount} from 'app/core/models/serviceaccount/serviceaccount.model';
+import { IRenewalDetails} from 'app/core/models/renewals/renewaldetails.model';
+import { DocumentsService} from 'app/core/documents.service';
 
 @Component({
   selector: 'mygexa-offer-details-popover',
@@ -12,17 +12,18 @@ import {IRenewalDetails} from '../../../../../core/models/renewals/renewaldetail
   styleUrls: ['./offer-details-popover.component.scss']
 })
 export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
- @ViewChild('pop') public pop: PopoverDirective;
- @Input() OfferDetails: IOffers;
- @Input() ActiveOfferDetails: ServiceAccount;
- @Input() IsCurrentPlanPopOver: boolean;
- @Input() RenewalAccountDetails: IRenewalDetails;
 
- public Featured_Usage_Level: string = null;
+  @ViewChild('pop') public pop: PopoverDirective;
+  @Input() OfferDetails: IOffers;
+  @Input() ActiveOfferDetails: ServiceAccount;
+  @Input() IsCurrentPlanPopOver: boolean;
+  @Input() RenewalAccountDetails: IRenewalDetails;
+
+  public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
   public eflLink;
- public tosLink;
- public yraacLink;
+  public tosLink;
+  public yraacLink;
 
   constructor(private documentsService: DocumentsService) {
   }
@@ -75,7 +76,6 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
       this.yraacLink = this.documentsService.getYRAACLink();
 
     } else if (changes['RenewalAccountDetails']) {
-
 
       if (this.RenewalAccountDetails) {
         console.log('More');

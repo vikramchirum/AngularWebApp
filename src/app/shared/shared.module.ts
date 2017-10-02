@@ -3,6 +3,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
+import { ModalModule, PopoverModule  } from 'ngx-bootstrap';
+
 import { CustomFormsModule } from 'ng2-validation';
 import { ChangeUserNameComponent } from './components/change-user-name/change-user-name.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
@@ -12,9 +14,11 @@ import { ChangeAddressComponent } from './components/change-address/change-addre
 import { ServiceAccountSelectorComponent } from './components/service-account-selector/service-account-selector.component';
 import { PaymethodSelectorComponent } from './components/payment-method-selector/payment-method-selector.component';
 import { CreditCardComponent } from './components/credit-card/credit-card.component';
+
 import { PhonePipe } from './pipes/phone.pipe';
 import { NumberToMoneyPipe } from './pipes/NumberToMoney.pipe';
 import { FloatToMoneyPipe } from './pipes/FloatToMoney.pipe';
+
 import { LeftNavPanelComponent } from './components/left-nav-panel/left-nav-panel.component';
 import { ChangePhoneNumberComponent } from './components/change-phone-number/change-phone-number.component';
 import { PaymethodAddCcComponent } from './components/payment-method-add-cc/payment-method-add-cc.component';
@@ -23,8 +27,10 @@ import { ViewBillComponent } from './components/view-bill/view-bill.component';
 import { DollarToCentsPipe } from './pipes/DollarToCents.pipe';
 import { AddressSearchComponent } from './components/address-search/address-search.component';
 import { PhoneDirective } from './directives/phone.directive';
-import {PhoneNumberConfirmationModalComponent} from './components/phone-number-confirmation-modal/phone-number-confirmation-modal.component';
-import { ModalModule } from 'ngx-bootstrap';
+import { PhoneNumberConfirmationModalComponent } from './components/phone-number-confirmation-modal/phone-number-confirmation-modal.component';
+import { PlanCardComponent } from './components/plan-card/plan-card.component';
+import { OfferDetailsPopoverComponent } from './components/offer-details-popover/offer-details-popover.component';
+
 @NgModule({
   imports: [
     FormsModule,
@@ -33,6 +39,7 @@ import { ModalModule } from 'ngx-bootstrap';
     RouterModule,
     CustomFormsModule,
     ModalModule.forRoot(),
+    PopoverModule.forRoot()
   ],
   declarations: [
     ChangeUserNameComponent,
@@ -54,7 +61,9 @@ import { ModalModule } from 'ngx-bootstrap';
     DollarToCentsPipe,
     AddressSearchComponent,
     PhoneDirective,
-    PhoneNumberConfirmationModalComponent
+    PhoneNumberConfirmationModalComponent,
+    PlanCardComponent,
+    OfferDetailsPopoverComponent
   ],
   exports: [
     ChangeUserNameComponent,
@@ -75,7 +84,9 @@ import { ModalModule } from 'ngx-bootstrap';
     ViewBillComponent,
     DollarToCentsPipe,
     AddressSearchComponent,
-    PhoneDirective
+    PhoneDirective,
+    PlanCardComponent,
+    OfferDetailsPopoverComponent
   ]
 })
 export class SharedModule { }
