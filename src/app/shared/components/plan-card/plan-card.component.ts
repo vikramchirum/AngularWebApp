@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, Input, ViewContainerRef, ViewChild, AfterViewInit } from '@angular/core';
+
+import { Component, OnInit, Input, ViewContainerRef, ViewChild, AfterViewInit, Output, EventEmitter, OnDestroy} from '@angular/core';
 import { FormGroup, FormBuilder, Validators} from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -7,32 +8,27 @@ import { ModalDirective } from 'ngx-bootstrap';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { IUser } from 'app/core/models/user/User.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
-import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
-
-import { ICreateRenewalRequest } from 'app/core/models/renewals/createrenewalrequest.model';
-import { ICreateUpgradeRequest } from 'app/core/models/upgrades/createupgraderequest.model';
+import { OfferSelectionType } from 'app/core/models/enums/offerselectiontype';
+import { IOfferSelectionPayLoad } from '../../models/offerselectionpayload';
 
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
-import { CustomerAccountService } from 'app/core/CustomerAccount.service';
 import { UserService } from 'app/core/user.service';
-import { RenewalStore } from 'app/core/store/renewalstore';
-import { UpgradeStore } from 'app/core/store/upgradestore';
 import { ModalStore } from 'app/core/store/modalstore';
 
 @Component({
-  selector: 'mygexa-change-your-plan-card',
-  templateUrl: './change-your-plan-card.component.html',
-  styleUrls: ['./change-your-plan-card.component.scss']
+  selector: 'mygexa-plan-card',
+  templateUrl: './plan-card.component.html',
+  styleUrls: ['./plan-card.component.scss'],
 })
-export class ChangeYourPlanCardComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PlanCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('pop') public pop: ModalDirective;
   @Input('offer') offer: IOffers;
-  @Input('isRenewal') isRenewal: boolean;
+  @Input('offerSelectionType') offerSelectionType: OfferSelectionType;
+  @Output() public onOfferSelectedEvent: EventEmitter<IOfferSelectionPayLoad> = new EventEmitter();
 
   renewalUpgradeFormGroup: FormGroup;
 
-  customerDetails: CustomerAccount;
   activeServiceAccountDetails: ServiceAccount = null;
   user: IUser;
 
@@ -43,14 +39,10 @@ export class ChangeYourPlanCardComponent implements OnInit, AfterViewInit, OnDes
 
   userServiceSubscription: Subscription;
   activeServiceAccountSubscription: Subscription;
-  customerAccountServiceSubscription: Subscription;
   handleOfferPopOversModalSubscription: Subscription;
 
   constructor(private userService: UserService,
               private serviceAccount_service: ServiceAccountService,
-              private customerAccountService: CustomerAccountService,
-              private renewalStore: RenewalStore,
-              private upgradeStore: UpgradeStore,
               private modalStore: ModalStore,
               private formBuilder: FormBuilder,
               private viewContainerRef: ViewContainerRef) {
@@ -61,10 +53,6 @@ export class ChangeYourPlanCardComponent implements OnInit, AfterViewInit, OnDes
     this.renewalUpgradeFormGroup = this.formBuilder.group({
       accountName: ['', Validators.required],
       rewardsNumber: ['', Validators.required]
-    });
-
-    this.customerAccountServiceSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(result => {
-      this.customerDetails = result;
     });
 
     this.userServiceSubscription = this.userService.UserObservable.subscribe(result => {
@@ -79,6 +67,7 @@ export class ChangeYourPlanCardComponent implements OnInit, AfterViewInit, OnDes
 
   ngAfterViewInit() {
     this.handleOfferPopOversModalSubscription = this.modalStore.HandleOfferPopOversModal.subscribe(rateCode => {
+
       if (this.offer) {
         if (this.offer.Rate_Code !== rateCode) {
           if (this.pop) {
@@ -120,6 +109,7 @@ export class ChangeYourPlanCardComponent implements OnInit, AfterViewInit, OnDes
 
   onSelectOffer(event) {
     event.preventDefault();
+    event.stopPropagation();
     this.isOfferSelected = true;
     this.modalStore.handleOfferPopOversModal(this.offer.Rate_Code);
   }
@@ -130,15 +120,21 @@ export class ChangeYourPlanCardComponent implements OnInit, AfterViewInit, OnDes
 
   onCloseSelectOffer(event) {
     event.preventDefault();
+    event.stopPropagation();
     this.isOfferSelected = false;
   }
 
   selectOffer() {
-    if (this.isRenewal) {
-      this.createRenewal();
-    } else {
-      this.createUpgrade();
+    const offerSelectionPayLoad = {} as IOfferSelectionPayLoad;
+    offerSelectionPayLoad.Service_Account_Id = this.activeServiceAccountDetails.Id;
+    offerSelectionPayLoad.Offering_Name = this.offer.Rate_Code;
+    offerSelectionPayLoad.User_Name = this.user.Profile.Username;
+    if (this.offer.Has_Partner) {
+      offerSelectionPayLoad.Partner_Account_Number = this.renewalUpgradeFormGroup.get('accountName').value;
+      offerSelectionPayLoad.Partner_Name_On_Account = this.renewalUpgradeFormGroup.get('rewardsNumber').value;
     }
+    offerSelectionPayLoad.OfferSelectionType = this.offerSelectionType;
+    this.onOfferSelectedEvent.emit(offerSelectionPayLoad);
   }
 
   openOfferDetailsPopOver() {
@@ -159,52 +155,9 @@ export class ChangeYourPlanCardComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
-  private createRenewal() {
-
-    const request = {} as ICreateRenewalRequest;
-    request.Service_Account_Id = this.activeServiceAccountDetails.Id;
-    request.Offering_Name = this.offer.Rate_Code;
-    request.User_Name = this.user.Profile.Username;
-    if (this.offer.Has_Partner) {
-      request.Partner_Name_On_Account = this.renewalUpgradeFormGroup.get('accountName').value;
-      request.Partner_Account_Number = this.renewalUpgradeFormGroup.get('rewardsNumber').value;
-    }
-
-    this.modalStore.showPlanConfirmationModal({
-      isRenewalPlan: this.isRenewal,
-      customerDetails: this.customerDetails
-    });
-
-    this.renewalStore.createRenewal(request).subscribe(result => {
-      if (result) {
-        console.log('done');
-      }
-    });
-  }
-
-  private createUpgrade() {
-    const request = {} as ICreateUpgradeRequest;
-    request.Service_Account_Id = this.activeServiceAccountDetails.Id;
-    request.Offering_Name = this.offer.Rate_Code;
-    request.User_Name = this.user.Profile.Username;
-    if (this.offer.Has_Partner) {
-      request.Partner_Name_On_Account = this.renewalUpgradeFormGroup.get('accountName').value;
-      request.Partner_Account_Number = this.renewalUpgradeFormGroup.get('rewardsNumber').value;
-    }
-    this.upgradeStore.createUpgrade(request).subscribe(result => {
-      if (result) {
-        this.modalStore.showPlanConfirmationModal({
-          isRenewalPlan: this.isRenewal,
-          customerDetails: this.customerDetails
-        });
-      }
-    });
-  }
-
   ngOnDestroy() {
     this.userServiceSubscription.unsubscribe();
     this.activeServiceAccountSubscription.unsubscribe();
-    this.customerAccountServiceSubscription.unsubscribe();
     this.handleOfferPopOversModalSubscription.unsubscribe();
   }
 }

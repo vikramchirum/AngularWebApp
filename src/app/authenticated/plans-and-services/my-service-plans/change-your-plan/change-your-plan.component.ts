@@ -6,9 +6,11 @@ import { Observable } from 'rxjs/Observable';
 import { findKey, filter, find } from 'lodash';
 
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import { CustomerAccount} from '../../../../core/models/customeraccount/customeraccount.model';
 import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 import { IRenewalDetails } from 'app/core/models/renewals/renewaldetails.model';
+import { OfferSelectionType } from 'app/core/models/enums/offerselectiontype';
 
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { OfferService } from 'app/core/offer.service';
@@ -16,9 +18,14 @@ import { UtilityService } from 'app/core/utility.service';
 
 import { OffersStore} from 'app/core/store/offersstore';
 import { RenewalStore } from 'app/core/store/renewalstore';
+import { UpgradeStore } from 'app/core/store/upgradestore';
 import { ModalStore } from 'app/core/store/modalstore';
 
 import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-confirmation-modal.component';
+import { IOfferSelectionPayLoad } from 'app/shared/models/offerselectionpayload';
+import { ICreateRenewalRequest } from 'app/core/models/renewals/createrenewalrequest.model';
+import { ICreateUpgradeRequest } from 'app/core/models/upgrades/createupgraderequest.model';
+import { CustomerAccountService } from  'app/core/CustomerAccount.service';
 
 @Component({
   selector: 'mygexa-change-your-plan',
@@ -34,11 +41,14 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
   isLoadingUpgrades = false;
   isLoadingRenewals = false;
 
+  customerDetails: CustomerAccount;
+  activeServiceAccountDetails: ServiceAccount;
   renewalDetails: IRenewalDetails = null;
-  activeServiceAccountDetails: ServiceAccount = null;
 
   hasPromoCode = false;
   showRenewals: boolean;
+
+  offerSelectionType = OfferSelectionType;
 
   featuredOffers: AllOffersClass[];
   allOffers: AllOffersClass[];
@@ -49,18 +59,22 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
 
   offersServiceSubscription: Subscription;
   plansServicesSubscription: Subscription;
+  customerAccountServiceSubscription: Subscription;
 
-  constructor(private serviceAccount_service: ServiceAccountService, private OfferStore: OffersStore, private offerService: OfferService, private renewalStore: RenewalStore
-    , private modalStore: ModalStore, private utilityService: UtilityService) {
+  constructor(private serviceAccount_service: ServiceAccountService, private customerAccountService: CustomerAccountService, private OfferStore: OffersStore
+    , private offerService: OfferService, private renewalStore: RenewalStore, private upgradeStore: UpgradeStore, private modalStore: ModalStore
+    ,  private utilityService: UtilityService) {
   }
 
   ngOnInit() {
+
+    this.customerAccountServiceSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(result => {
+      this.customerDetails = result;
+    });
+
   }
 
   ngAfterViewInit() {
-    this.modalStore.PlanConfirmationModal.distinctUntilChanged(null, x => x).subscribe(result => {
-      this.planConfirmationModal.showPlanConfirmationModal(result);
-    });
   }
 
   private initialize() {
@@ -171,12 +185,76 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
     this.populateOffers();
   }
 
-  ngOnDestroy() {
+  onOfferSelected($event: IOfferSelectionPayLoad) {
+    const payload = $event;
+    switch (payload.OfferSelectionType) {
+      case OfferSelectionType.Renewal: {
+        this.createRenewal(payload);
+        break;
+      }
+      case OfferSelectionType.Upgrade: {
+        this.createUpgrade(payload);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }
 
+  private createRenewal(offerSelectionPayLoad: IOfferSelectionPayLoad) {
+
+    const request = {} as ICreateRenewalRequest;
+    request.Service_Account_Id = offerSelectionPayLoad.Service_Account_Id;
+    request.Offering_Name = offerSelectionPayLoad.Offering_Name;
+    request.User_Name = offerSelectionPayLoad.User_Name;
+
+    if (offerSelectionPayLoad.Has_Partner) {
+      request.Partner_Name_On_Account = offerSelectionPayLoad.Partner_Name_On_Account;
+      request.Partner_Account_Number = offerSelectionPayLoad.Partner_Account_Number;
+    }
+
+    this.planConfirmationModal.showPlanConfirmationModal({
+      isRenewalPlan: true,
+      customerDetails: this.customerDetails
+    });
+
+    this.renewalStore.createRenewal(request).subscribe(result => {
+      if (result) {
+        console.log('done');
+      }
+    });
+  }
+
+  private createUpgrade(offerSelectionPayLoad: IOfferSelectionPayLoad) {
+
+    const request = {} as ICreateUpgradeRequest;
+    request.Service_Account_Id = offerSelectionPayLoad.Service_Account_Id;
+    request.Offering_Name = offerSelectionPayLoad.Offering_Name;
+    request.User_Name = offerSelectionPayLoad.User_Name;
+
+    if (offerSelectionPayLoad.Has_Partner) {
+      request.Partner_Name_On_Account = offerSelectionPayLoad.Partner_Name_On_Account;
+      request.Partner_Account_Number = offerSelectionPayLoad.Partner_Account_Number;
+    }
+
+    this.planConfirmationModal.showPlanConfirmationModal({
+      isRenewalPlan: false,
+      customerDetails: this.customerDetails
+    });
+
+    this.upgradeStore.createUpgrade(request).subscribe(result => {
+      if (result) {
+        console.log('done');
+      }
+    });
+  }
+
+  ngOnDestroy() {
     if (this.offersServiceSubscription) {
       this.offersServiceSubscription.unsubscribe();
     }
-
+    this.customerAccountServiceSubscription.unsubscribe();
     this.plansServicesSubscription.unsubscribe();
   }
 }

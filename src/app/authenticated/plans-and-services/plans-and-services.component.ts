@@ -2,20 +2,22 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
+
 import { startsWith } from 'lodash';
 
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { RenewalStore } from '../../core/store/renewalstore';
 import { OffersStore } from '../../core/store/offersstore';
-import { Observable } from 'rxjs/Observable';
 import { ChannelStore } from '../../core/store/channelstore';
+import { ModalStore } from '../../core/store/modalstore';
 
 @Component({
   selector: 'mygexa-plans-and-services',
   templateUrl: './plans-and-services.component.html',
   styleUrls: ['./plans-and-services.component.scss'],
-  providers: [RenewalStore]
+  providers: [RenewalStore, ModalStore]
 })
 export class PlansAndServicesComponent implements OnInit, OnDestroy {
 
