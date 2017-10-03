@@ -196,6 +196,10 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
         this.createUpgrade(payload);
         break;
       }
+      case OfferSelectionType.Moving: {
+        this.movingOffer(payload);
+        break;
+      }
       default: {
         break;
       }
@@ -248,6 +252,10 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
         console.log('done');
       }
     });
+  }
+
+  private movingOffer(offerSelectionPayload: IOfferSelectionPayLoad) {
+    console.log('payload', offerSelectionPayload);
   }
 
   ngOnDestroy() {

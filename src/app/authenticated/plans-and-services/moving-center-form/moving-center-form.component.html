@@ -80,7 +80,7 @@
     <h2>Moving Center</h2>
     <p>A few more items and we can finalize your order</p>
     <br/>
-    <div  class=" row service-plan">
+    <div class="row service-plan">
       <div class="col-sm-6">
         <h3>1. Your Service Plan</h3>
         <p> Review your Service Plan options</p>
@@ -125,34 +125,67 @@
         <br>
         <div class="btn-toolbar">
           <button class="btn btn-secondary btn-default"  (click)="getCurrentPlan()">KEEP CURRENT PLAN</button>
-          <button class="btn btn-primary btn-default" style="float:right;" (click)="openSelectPlanModal()">CHANGE PLAN</button>
-          <mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>
+          <button class="btn btn-primary btn-default" style="float:right;" (click)="showPlans()">CHANGE PLAN</button>
         </div>
-        <!--<div class="row">-->
-          <!--<div class="container-fluid">-->
-            <!--<div class="col-sm-12">-->
-              <!--<small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Moving address-->
-                <!--is not in same TDU. Please select New Plan-->
-              <!--</small>-->
+        <div class="row">
+          <div class="container-fluid">
+            <div class="col-sm-12">
+              <small class="text-danger" *ngIf="notSameTDU"> Moving address
+                is not in same TDU. Please select New Plan
+              </small>
               <!--<small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.required">Please select-->
                 <!--plan-->
               <!--</small>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="row service-plan">
+      <div class="col-sm-12" *ngIf="showNewPlans">
+        <ng-container *ngIf="!isLoading; else showLoadingOffers">
+          <div class="row change-plans-grid">
+            <ng-container *ngIf="(availableOffers && (availableOffers.length > 0)); else noOffers">
+              <div class="col-md-4 plan-card" *ngFor="let offer of availableOffers; let i= index;">
+                <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving" (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-plan-card>
+              </div>
+            </ng-container>
+            <ng-template #noOffers>
+              <div class="row">
+                <div class="col-sm-24">
+                  <h2>No offers available for this service account.</h2>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </ng-container>
+        <ng-template #showLoadingOffers>
+          <div class="text-center">
+            <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
+            <h2>
+              <small class="text-muted">Loading more offers...</small>
+            </h2>
+          </div>
+        </ng-template>
+        <!--<mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>-->
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-6"></div>
+      <div class="col-sm-6" *ngIf="showNewPlans">
+      <p>View More Plans  <i class="fa fa-chevron-down">
+                                 <!--[ngClass]="productFeaturesSelected ? 'fa-chevron-down' : 'fa-chevron-up'"-->
+      </i></p></div><br>
+    </div>
+   <hr>
+    <div class="row">
+      <div class="col-sm-12">
         <div class="form-group radio clearfix">
           <h3>2. Final Bill Destination</h3>
           <p>Where would you like your final bill sent?</p>
           <br>
-          <div class="btn-toolbar">
-            <button class="btn btn-secondary btn-default" (click)="getCurrentPlan()">CURRENT ADDRESS</button>
-            <button class="btn btn-primary btn-default" style="float:right;" (click)="openSelectPlanModal()">NEW ADDRESS</button>
-            <mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>
-          </div>
+
           <!--<label class="radio-inline  col-sm-6">-->
             <!--<input type="radio" formControlName="service_address" value="Current Address">-->
             <!--Your Current Address </label>-->
@@ -167,18 +200,25 @@
 
       </div>
     </div>
+      <br><br>
+      <div class="col-sm-6">
+        <div class="btn-toolbar">
+          <button class="btn btn-secondary btn-default" (click)="getCurrentPlan()">CURRENT ADDRESS</button>
+          <button class="btn btn-primary btn-default" style="float:right;" (click)="openSelectPlanModal()">NEW ADDRESS</button>
+        </div>
+      </div>
     </div>
       <br/>
     <br/>
-    <input type="checkbox" formControlName="agree_to_terms" value="check" id="agree" />
-    I Agree to the Terms and Conditions,
-    click <a>here</a><br>
-    <small class="text-danger" *ngIf="(ServicePlanForm.get('agree_to_terms').touched ||
-                                                         ServicePlanForm.get('agree_to_terms').dirty) &&
-                                                         ServicePlanForm.get('agree_to_terms').errors && ServicePlanForm.get('agree_to_terms').errors.pattern"> Please Agree to Terms and Conditions </small>
+    <!--<input type="checkbox" formControlName="agree_to_terms" value="check" id="agree" />-->
+    <!--I Agree to the Terms and Conditions,-->
+    <!--click <a>here</a><br>-->
+    <!--<small class="text-danger" *ngIf="(ServicePlanForm.get('agree_to_terms').touched ||-->
+                                                         <!--ServicePlanForm.get('agree_to_terms').dirty) &&-->
+                                                         <!--ServicePlanForm.get('agree_to_terms').errors && ServicePlanForm.get('agree_to_terms').errors.pattern"> Please Agree to Terms and Conditions </small>-->
     <div class="row">
-      <div class="text-right">
-        <button class="btn btn-link" (click)="previousButtonClicked()">Previous</button>
+      <div class="text-center">
+        <!--<button class="btn btn-link" (click)="previousButtonClicked()">Previous</button>-->
         <button class="btn btn-primary" [disabled]="!ServicePlanForm.valid" (click)="onSubmitMove(movingAddressForm.value, ServicePlanForm.value)">Submit Move</button>
       </div>
     </div>

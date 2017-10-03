@@ -18,6 +18,7 @@ import { ServiceAddress } from 'app/core/models/serviceaddress/serviceaddress.mo
 import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
 import { OfferRequest } from 'app/core/models/offers/offerrequest.model';
 import { ChannelStore } from '../../../core/store/channelstore';
+import { OfferSelectionType } from '../../../core/models/enums/offerselectiontype';
 
 @Component({
   selector: 'mygexa-moving-center-form',
@@ -36,12 +37,13 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   Final_Bill_To_Old_Service_Address: boolean;
   Keep_Current_Offer: boolean;
   selectedOffer = null;
-  availableOffers = null;
+  availableOffers = null; isLoading: boolean = null; showNewPlans: boolean = null;
   offerId: string;
   showHideAdressList: boolean = true;
   pastDueErrorMessage: string;
   private channelId: string;
   public transferRequest: TransferRequest = null;
+  offerSelectionType = OfferSelectionType;
 
   private ActiveServiceAccountSubscription: Subscription = null;
   private CustomerAccountSubscription: Subscription = null;
@@ -53,7 +55,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   offerRequestParams: OfferRequest = null;
   results: ServiceAddress[] = null;
   newServiceAddress: ServiceAddress = null;
-
+  notSameTDU: boolean = null;
   @ViewChild('selectPlanModal') selectPlanModal: SelectPlanModalDialogComponent;
 
 
@@ -191,9 +193,11 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     };
     console.log('Offer params', this.offerRequestParams);
     // send start date and TDU_DUNS_Number to get offers available.
+    this.isLoading = true;
     this.offerService.getOffers(this.offerRequestParams)
       .subscribe(result => {
         this.availableOffers = result;
+        this.isLoading = false;
         console.log('this.available offers',  this.availableOffers);
         // prevent user from navigating to plans page if we don't offer service in the moving address
         // prevent user from submitting the form if past due balance over 40
@@ -206,8 +210,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   // New Service Plans Modal
-  openSelectPlanModal() {
-    this.selectPlanModal.show();
+  showPlans() {
+    this.showNewPlans = true;
+    // this.selectPlanModal.show();
   }
 
 
@@ -217,7 +222,11 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.offerId = undefined;
 
     // On selecting current plan, check if the address is in same TDU or different TDU
-    this.ServicePlanForm.get('service_plan').setValidators([Validators.required, tduCheck(this.ActiveServiceAccount.TDU_DUNS_Number, this.newServiceAddress.Meter_Info.TDU_DUNS)]);
+    if (this.ActiveServiceAccount.TDU_DUNS_Number !== this.newServiceAddress.Meter_Info.TDU_DUNS ) {
+      this.notSameTDU = true;
+    } else { this.notSameTDU = false; }
+    // this.ServicePlanForm.get('service_plan').
+    // setValidators([Validators.required, tduCheck(this.ActiveServiceAccount.TDU_DUNS_Number, this.newServiceAddress.Meter_Info.TDU_DUNS)]);
 
   }
 
