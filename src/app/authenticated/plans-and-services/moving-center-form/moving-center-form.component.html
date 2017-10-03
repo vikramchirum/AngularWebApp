@@ -85,40 +85,30 @@
         <h3>1. Your Service Plan</h3>
         <p> Review your Service Plan options</p>
         <!--<p> Would you like to keep your existing service plan?</p>-->
-        <!--<div class="row">-->
-           <!--<div class="container-fluid">-->
-            <!--<div class="form-group radio clearfix">-->
-              <!--<label class="radio-inline col-sm-6">-->
-                <!--<input type="radio" formControlName="service_plan" value="Current Plan" (click)="getCurrentPlan()" checked="checked" >-->
-                <!--Keep Current Plan</label>-->
-              <!--<label class="radio-inline col-sm-5">-->
-                <!--<input type="radio" formControlName="service_plan" value="New Plan" (click)="openSelectPlanModal()">-->
-                <!--Select New Plan</label>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-          <!--<div class="row">-->
-            <!--<div class="container-fluid">-->
-          <!--<div class="col-sm-12">-->
-            <!--<small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Moving address is not in same TDU. Please select New Plan </small>-->
-            <!--<small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.required">Please select plan</small>-->
-          <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
+        <div class="row hidden">
+            <div class="hidden">
+              <label class="radio-inline col-sm-6">
+                <input type="radio" formControlName="service_plan" value="Current Plan" checked="checked" >
+                Keep Current Plan</label>
+              <label class="radio-inline col-sm-5">
+                <input type="radio" formControlName="service_plan" value="New Plan">
+                Select New Plan</label>
+            </div>
+        </div>
           <!--<mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>-->
         </div>
       <div class="col-sm-6">
         <div class="current-plan-card mat-card" *ngIf="selectedOffer">
-          <h2 class="mat-card-title ">{{selectedOffer.Plan.Name}}</h2>
+          <h2 class="mat-card-title ">{{selectedOffer?.Offer?.Plan?.Name}}</h2>
           <div class="mat-card-content">
-            <h2>{{selectedOffer.Price_At_1000_kwh | number : '1.1-1'}}<sup>&cent;</sup><small>pkw/hr</small></h2>
-            <p  class="bg-default">Expires {{selectedOffer.End_Date | date:'d/M/yy'}}</p>
+            <h2>{{selectedOffer?.Offer?.Price_At_2000_kwh | DollarToCentsPipe | number : '1.1-1'}}<sup>&cent;</sup><small>pkw/hr</small></h2>
+            <p  class="bg-default">Expires {{selectedOffer?.Offer?.End_Date| date:'d/M/yy'}}</p>
           </div>
         </div>
         <div *ngIf="ActiveServiceAccount" [hidden]="selectedOffer" class="current-plan-card mat-card">
           <h2 class="mat-card-title ">{{ActiveServiceAccount.Current_Offer.Product_Name}}</h2>
           <div class="mat-card-content">
-            <h2>{{ActiveServiceAccount.Current_Offer.RateAt1000kwh | number : '1.1-1'}}<sup>&cent;</sup><small>pkw/hr</small></h2>
+            <h2>{{ActiveServiceAccount.Current_Offer.RateAt2000kwh | DollarToCentsPipe | number : '1.1-1'}}<sup>&cent;</sup><small>pkw/hr</small></h2>
             <p class="bg-default">Expires {{ActiveServiceAccount.Current_Offer.End_Date | date:'d/M/yy'}}</p>
           </div>
         </div>
@@ -130,12 +120,8 @@
         <div class="row">
           <div class="container-fluid">
             <div class="col-sm-12">
-              <small class="text-danger" *ngIf="notSameTDU"> Moving address
-                is not in same TDU. Please select New Plan
-              </small>
-              <!--<small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.required">Please select-->
-                <!--plan-->
-              <!--</small>-->
+              <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck"> Moving address is not in same TDU. Please select New Plan </small>
+              <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.required">Please select plan</small>
             </div>
           </div>
         </div>
@@ -148,7 +134,7 @@
           <div class="row change-plans-grid">
             <ng-container *ngIf="(availableOffers && (availableOffers.length > 0)); else noOffers">
               <div class="col-md-4 plan-card" *ngFor="let offer of availableOffers; let i= index;">
-                <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving" (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-plan-card>
+                <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving" (onOfferSelectedEvent)="getSelectedOffer($event)"></mygexa-plan-card>
               </div>
             </ng-container>
             <ng-template #noOffers>
@@ -173,38 +159,37 @@
     </div>
     <div class="row">
       <div class="col-sm-6"></div>
-      <div class="col-sm-6" *ngIf="showNewPlans">
-      <p>View More Plans  <i class="fa fa-chevron-down">
+      <div class="col-sm-6" *ngIf="showNewPlans" >
+      <p class="p-plans">View More Plans  <i class="fa fa-chevron-down">
                                  <!--[ngClass]="productFeaturesSelected ? 'fa-chevron-down' : 'fa-chevron-up'"-->
       </i></p></div><br>
     </div>
    <hr>
     <div class="row">
-      <div class="col-sm-12">
-        <div class="form-group radio clearfix">
+      <div class="col-sm-6">
+        <div class="form-group">
           <h3>2. Final Bill Destination</h3>
           <p>Where would you like your final bill sent?</p>
           <br>
-
-          <!--<label class="radio-inline  col-sm-6">-->
-            <!--<input type="radio" formControlName="service_address" value="Current Address">-->
-            <!--Your Current Address </label>-->
-          <!--<label class="radio-inline  col-sm-5">-->
-            <!--<input type="radio" formControlName="service_address" value="New Address" >-->
-            <!--Your New Address </label>-->
+          <div class="hidden">
+            <label class="radio-inline  col-sm-6">
+              <input type="radio" formControlName="service_address" value="Current Address">
+              Your Current Address </label>
+            <label class="radio-inline  col-sm-5">
+              <input type="radio" formControlName="service_address" value="New Address" >
+              Your New Address </label>
+          </div>
+        </div>
+    </div>
+      <div class="col-sm-6">
+        <div class="btn-toolbar">
+          <button class="btn btn-secondary btn-default" (click)="useCurrentAddress()">CURRENT ADDRESS</button>
+          <button class="btn btn-primary btn-default" style="float:right;" (click)="useNewAddress()">NEW ADDRESS</button>
         </div>
         <div class="">
           <div class="col-sm-12">
-        <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_address.errors">Please select final service address</small>
+            <small class="text-danger" *ngIf="ServicePlanForm.controls?.service_address.errors">Please select final service address</small>
           </div>
-
-      </div>
-    </div>
-      <br><br>
-      <div class="col-sm-6">
-        <div class="btn-toolbar">
-          <button class="btn btn-secondary btn-default" (click)="getCurrentPlan()">CURRENT ADDRESS</button>
-          <button class="btn btn-primary btn-default" style="float:right;" (click)="openSelectPlanModal()">NEW ADDRESS</button>
         </div>
       </div>
     </div>
