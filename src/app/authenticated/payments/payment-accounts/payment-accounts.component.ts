@@ -10,11 +10,6 @@ import { PaymethodService } from 'app/core/Paymethod.service';
 import { Paymethod } from 'app/core/models/paymethod/Paymethod.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
-interface IPaymentMessage {
-  classes: string[];
-  innerHTML: string;
-}
-
 @Component({
   selector: 'mygexa-payment-accounts',
   templateUrl: './payment-accounts.component.html',
@@ -214,7 +209,9 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
   addingCreditCardToggle(open: boolean): void {
     this.addingCreditCard = open !== false;
-    if (this.addingCreditCard) { this.addingCreditCardFormValid = false; }
+    if (this.addingCreditCard) {
+      this.addingCreditCardFormValid = false;
+    }
   }
 
   addingCreditCardFormChanged($event: string): void {
