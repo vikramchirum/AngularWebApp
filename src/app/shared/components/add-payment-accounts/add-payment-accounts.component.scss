@@ -1,0 +1,21 @@
+@import "../../../../../styles/bootstrap/stylesheets/bootstrap/_variables";
+
+h4.new-header {
+  font-weight: bold;
+  padding: 1rem 0;
+}
+button.new-button {
+  outline: none !important;
+  padding: 10px;
+
+  i.fa {
+    margin-right: 6px;
+  }
+}
+button.new-button:hover {
+  text-decoration: underline;
+}
+
+img.payments-accounts-e-check-numbers {
+  padding: 4rem 0;
+}

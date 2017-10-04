@@ -5,40 +5,11 @@
 <ng-template #LoadedPaymethods>
   <ng-template *ngIf="Paymethods.length < 1; then NoPaymethodsToList else ListPaymethods"></ng-template>
   <ng-template #NoPaymethodsToList>
-    <!-- Add new Credit Card Section Starts -->
+    <!-- Add new Payment Account Section Starts -->
     <div *ngIf="PaymentMessage" [ngClass]="PaymentMessage.classes" [innerHTML]="PaymentMessage.innerHTML"></div>
-    <ng-container *ngIf="!PaymentMessage">
-    <h4 class="new-header">NEW PAYMENT ACCOUNT</h4>
-    <div class="row">
-      <div class="col-md-12">
-        <button
-          class="btn btn-link new-button"
-          [disabled]="addingCreditCard"
-          (click)="addingCreditCardToggle()"
-        ><i class="fa fa-fw fa-plus-circle"></i>ADD NEW CREDIT CARD</button>
-        <ng-container *ngIf="addingCreditCard">
-          <mygexa-payment-method-add-cc
-            (changed)="addingCreditCardFormChanged($event)"
-          ></mygexa-payment-method-add-cc>
-          <br/>
-          <div class="text-right">
-            <button
-              type="button"
-              class="btn btn-primary"
-              [disabled]="!addingCreditCardFormValid"
-              (click)="addingCreditCardSubmit()"
-            >Add Now</button>
-            <button
-              type="button"
-              class="btn btn-link"
-              (click)="addingCreditCardToggle(false)"
-            >Cancel</button>
-          </div>
-          <hr/>
-        </ng-container>
-      </div>
+    <div *ngIf="!(PaymentMessage && PaymentMessage.isCompleted)" [hidden]="PaymentMessage!==null">
+      <mygexa-add-payment-accounts (onAddPaymentAccountSubmittedEvent)="handleAddPaymentAccountSubmittedEvent($event)"></mygexa-add-payment-accounts>
     </div>
-    </ng-container>
   </ng-template>
   <ng-template #ListPaymethods>
     <ng-template *ngIf="!!disableIfOnlyOne && Paymethods.length === 1; then DisabledWithOnlyOnePaymethod else ShowingAllPaymethods"></ng-template>

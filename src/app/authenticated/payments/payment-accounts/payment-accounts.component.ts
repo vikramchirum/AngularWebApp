@@ -1,10 +1,8 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 import { forEach, get, isNumber, map, now, random } from 'lodash';
 import { AutoPaymentConfigService } from 'app/core/auto-payment-config.service';
-import { PaymethodAddCcComponent } from 'app/shared/components/payment-method-add-cc/payment-method-add-cc.component';
-import { PaymethodAddEcheckComponent } from 'app/shared/components/payment-method-add-echeck/payment-method-add-echeck.component';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { PaymethodService } from 'app/core/Paymethod.service';
 import { Paymethod } from 'app/core/models/paymethod/Paymethod.model';
@@ -17,19 +15,12 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
 })
 export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
-  @ViewChild(PaymethodAddCcComponent)
-  private addCreditCardComponent: PaymethodAddCcComponent;
-  @ViewChild(PaymethodAddEcheckComponent)
-  private addEcheckComponent: PaymethodAddEcheckComponent;
-
-  addingEcheck: boolean = null;
-  addingEcheckFormValid: boolean = null;
-  addingCreditCard: boolean = null;
-  addingCreditCardFormValid: boolean = null;
   ActiveServiceAccount: ServiceAccount = null;
-  ActiveServiceAccountSubscription: Subscription = null;
   ServiceAccounts: ServiceAccount[] = null;
+
+  ActiveServiceAccountSubscription: Subscription = null;
   ServiceAccountsSubscription: Subscription = null;
+
   PaymentEdittingIsUsedForAutoPaymentTimestamp: number = null;
   PaymentMessage: IPaymentMessage = null;
   PaymentAbpSelecting: Paymethod = null;
@@ -90,7 +81,10 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
       ServiceAccounts => this.ServiceAccounts = ServiceAccounts
     );
     this.PaymethodSubscription = this.PaymethodService.PaymethodsObservable.subscribe(
-      Paymethods => this.Paymethods = Paymethods
+      Paymethods => {
+        this.PaymentMessage = null;
+        this.Paymethods = Paymethods;
+      }
     );
   }
 
@@ -128,7 +122,8 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     this.PaymethodService.RemovePaymethod(PaymethodToDelete).subscribe(
       result => this.PaymentMessage = {
         classes: ['alert', 'alert-success'],
-        innerHTML: `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted!`
+        innerHTML: `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted!`,
+        isCompleted: true
       },
       error => console.log('handle error => ', error),
       () => this.removePaymethodEditAutoPayCancel()
@@ -156,7 +151,8 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
           innerHTML: [
             `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted`,
             ` and <b>Auto Pay</b> has been stopped!`
-          ].join('')
+          ].join(''),
+          isCompleted: true
         },
         error => console.log('handle error => ', error),
         () => this.removePaymethodEditAutoPayCancel()
@@ -195,7 +191,8 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
         innerHTML: [
           `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted and `,
           `<b>Auto Bill Pay</b> is using your payment account ending in <b>${ PaymethodToUse.getLast() }</b>!`
-        ].join('')
+        ].join(''),
+        isCompleted: true
       },
       error => console.log('handle error => ', error),
       () => this.removePaymethodEditAutoPayCancel()
@@ -207,64 +204,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     this.PaymentEditting = this.PaymentAbpSelecting = null;
   }
 
-  addingCreditCardToggle(open: boolean): void {
-    this.addingCreditCard = open !== false;
-    if (this.addingCreditCard) {
-      this.addingCreditCardFormValid = false;
-    }
+  handleAddPaymentAccountSubmittedEvent(event: IPaymentMessage) {
+    this.PaymentMessage = event;
   }
-
-  addingCreditCardFormChanged($event: string): void {
-    this.addingCreditCardFormValid = $event === 'valid';
-  }
-
-  addingCreditCardSubmit() {
-    this.addingCreditCard = false;
-    this.PaymentMessage = {
-      classes: ['alert', 'alert-info'],
-      innerHTML: `<i class="fa fa-fw fa-spinner fa-spin"></i> <b>Please wait</b> we're adding your new payment method now.`
-    };
-    this.PaymethodService.AddPaymethodCreditCardFromComponent(this.addCreditCardComponent).subscribe(
-      result => {
-        const accountNumber = get(result, 'CreditCard.AccountNumber');
-        if (accountNumber) {
-          this.PaymentMessage = {
-            classes: ['alert', 'alert-success'],
-            innerHTML: `<b>Ok!</b> your credit account, ending in <b>${ accountNumber }</b> has been added as a payment method!`
-          };
-        }
-        this.PaymethodService.UpdatePaymethods();
-      }
-    );
-  }
-
-  addingEcheckToggle(open: boolean): void {
-    this.addingEcheck = open !== false;
-    if (this.addingEcheck) { this.addingEcheckFormValid = false; }
-  }
-
-  addingEcheckFormChanged($event: string): void {
-    this.addingEcheckFormValid = $event === 'valid';
-  }
-
-  addingEcheckSubmit() {
-    this.addingEcheck = false;
-    this.PaymentMessage = {
-      classes: ['alert', 'alert-info'],
-      innerHTML: `<i class="fa fa-fw fa-spinner fa-spin"></i> <b>Please wait</b> we're adding your new payment method now.`
-    };
-    this.PaymethodService.AddPaymethodEcheckFromComponent(this.addEcheckComponent).subscribe(
-      result => {
-        const accountNumber = get(result, 'BankAccount.AccountNumber');
-        if (accountNumber) {
-          this.PaymentMessage = {
-            classes: ['alert', 'alert-success'],
-            innerHTML: `<b>Ok!</b> your bank account, ending in <b>${ accountNumber }</b> has been added as a payment method!`
-          };
-        }
-        this.PaymethodService.UpdatePaymethods();
-      }
-    );
-  }
-
 }
