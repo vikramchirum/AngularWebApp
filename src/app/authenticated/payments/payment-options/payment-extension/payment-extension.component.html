@@ -10,12 +10,12 @@
     <div class="col-sm-12">
       <ng-template *ngIf="pastDueAmount; then HavePastDueAmount else LoadingPastDueAmount;"></ng-template>
       <ng-template #LoadingPastDueAmount>
-        <div class="text-center">
-          <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
-          <h2>
-            <small class="text-muted">Loading...</small>
-          </h2>
-        </div>
+        <!--<div class="text-center">-->
+          <!--<h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>-->
+          <!--<h2>-->
+            <!--<small class="text-muted">Loading...</small>-->
+          <!--</h2>-->
+        <!--</div>-->
       </ng-template>
       <ng-template #HavePastDueAmount>
         <ng-template *ngIf="pastDueAmount; then PastDueAmount else NoPastDueAmount;"></ng-template>

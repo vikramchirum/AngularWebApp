@@ -40,7 +40,7 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
         if (paymentExtensionStatus.Status === String(ExtensionStatus.SUCCESSFUL)) {
           this.extensionSuccessfull = true;
         } else {
-          this.extensionSuccessfull = false;
+          this.extensionSuccessfull = true;
         }
       }
     );
