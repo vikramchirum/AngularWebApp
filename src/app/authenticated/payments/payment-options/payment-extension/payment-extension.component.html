@@ -8,57 +8,64 @@
   <hr/>
   <div class="row">
     <div class="col-sm-12">
-      <ng-template *ngIf="pastDueAmount; then PastDueAmount else NoPastDueAmount;"></ng-template>
-      <ng-template #NoPastDueAmount>
-        <div class="alert alert-info"><b>No Worries!</b> You have no past due amount. Payment Extension is not required at this time.</div>
+      <ng-template *ngIf="pastDueAmount; then HavePastDueAmount else LoadingPastDueAmount;"></ng-template>
+      <ng-template #LoadingPastDueAmount>
+        <div class="text-center">
+          <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
+          <h2>
+            <small class="text-muted">Loading...</small>
+          </h2>
+        </div>
       </ng-template>
-      <ng-template #PastDueAmount>
-        <ng-template *ngIf="requestedExtension; then ExtensionRequested else ExtensionNotRequested;"></ng-template>
-        <ng-template #ExtensionNotRequested>
-          <div class="alert alert-warning">
-            <div class="row">
-              <div class="col-sm-12">
-                <p class="pull-left">You have a past-due balance of <b>$ {{pastDueAmount | number : dollarAmountFormatter}}</b><br>
-                  Would you like to request an extension?</p>
-                <div style="float: right;">
-                  <button class="btn btn-primary center pull-right" (click)="requestExtension()"><i class="fa fa-handshake-o"></i> Request Extension</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div style="float: right;">
-              <button class="btn btn-secondary btn-default center pull-right" style="border: hidden;" routerLink="/payments/payment-options">Cancel</button>
-            </div>
-          </div>
-        </ng-template>
-        <ng-template #ExtensionRequested>
-          <ng-template
-            *ngIf="paymentExtension; then ExtensionDetailsAvailable else ProcessingExtensionDetails;"></ng-template>
-          <ng-template #ProcessingExtensionDetails>
+      <ng-template #HavePastDueAmount>
+        <ng-template *ngIf="pastDueAmount; then PastDueAmount else NoPastDueAmount;"></ng-template>
+        <ng-template #PastDueAmount>
+          <ng-template *ngIf="requestedExtension; then ExtensionRequested else ExtensionNotRequested;"></ng-template>
+          <ng-template #ExtensionNotRequested>
             <div class="alert alert-warning">
               <div class="row">
                 <div class="col-sm-12">
-                  <p class="pull-left">You have a past-due balance of <b>$ {{pastDueAmount | number :
-                    dollarAmountFormatter}}</b><br>
+                  <p class="pull-left">You have a past-due balance of <b>$ {{pastDueAmount | number : dollarAmountFormatter}}</b><br>
                     Would you like to request an extension?</p>
                   <div style="float: right;">
-                    <button class="btn btn-secondary btn-default center pull-right" (click)="requestExtension()"><i
-                      class="fa fa-circle-o-notch fa-spin"></i> Processing Request
-                    </button>
+                    <button class="btn btn-primary center pull-right" (click)="requestExtension()"><i class="fa fa-handshake-o"></i> Request Extension</button>
                   </div>
                 </div>
               </div>
             </div>
             <div>
               <div style="float: right;">
-                <button class="btn btn-secondary center pull-right" style="border: hidden;" (click)="cancelExtension()">
-                  Cancel
-                </button>
+                <button class="btn btn-secondary btn-default center pull-right" style="border: hidden;" routerLink="/payments/payment-options">Cancel</button>
               </div>
             </div>
           </ng-template>
-          <ng-template #ExtensionDetailsAvailable>
+          <ng-template #ExtensionRequested>
+            <ng-template
+              *ngIf="paymentExtension; then ExtensionDetailsAvailable else ProcessingExtensionDetails;"></ng-template>
+            <ng-template #ProcessingExtensionDetails>
+              <div class="alert alert-warning">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <p class="pull-left">You have a past-due balance of <b>$ {{pastDueAmount | number :
+                      dollarAmountFormatter}}</b><br>
+                      Would you like to request an extension?</p>
+                    <div style="float: right;">
+                      <button class="btn btn-secondary btn-default center pull-right" (click)="requestExtension()"><i
+                        class="fa fa-circle-o-notch fa-spin"></i> Processing Request
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div style="float: right;">
+                  <button class="btn btn-secondary center pull-right" style="border: hidden;" (click)="cancelExtension()">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template #ExtensionDetailsAvailable>
               <ng-template
                 *ngIf="extensionSuccessfull; then RequestedExtensionSuccessfull else NotRequestedExtensionFailure"></ng-template>
               <ng-template #RequestedExtensionSuccessfull>
@@ -90,8 +97,13 @@
                   </div>
                 </div>
               </ng-template>
+            </ng-template>
           </ng-template>
         </ng-template>
+        <ng-template #NoPastDueAmount>
+          <div class="alert alert-info"><b>No Worries!</b> You have no past due amount. Payment Extension is not required at this time.</div>
+        </ng-template>
+
       </ng-template>
     </div>
   </div>
