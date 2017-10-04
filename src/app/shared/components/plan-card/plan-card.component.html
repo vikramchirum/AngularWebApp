@@ -1,7 +1,7 @@
 <div *ngIf="activeServiceAccountDetails; then showOffers else showLoading"></div>
 <ng-template #showOffers>
   {{checkFeaturedUsageLevel(offer)}}
-  <div class="plan-card-container">
+  <div class="plan-card-container" [ngClass]=" { 'back-color': isMoving } ">
     <div class="card-content">
       <div class="card-title container-fluid">
         <div class="row">

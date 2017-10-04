@@ -53,6 +53,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   private ActiveServiceAccountSubscription: Subscription = null;
   private CustomerAccountSubscription: Subscription = null;
   private channelStoreSubscription: Subscription = null;
+  private offerSubscription: Subscription = null;
 
   private ActiveServiceAccount: ServiceAccount = null;
   private TDU_DUNS_Number: string = null;
@@ -195,12 +196,12 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       dunsNumber: this.newServiceAddress.Meter_Info.TDU_DUNS,
       approved: true,
       page_size: 100,
-      channelId: this.channelId ? this.channelId : ''
+      channelId: this.channelId
     };
     console.log('Offer params', this.offerRequestParams);
     // send start date and TDU_DUNS_Number to get offers available.
     this.isLoading = true;
-    this.offerService.getOffers(this.offerRequestParams)
+    this.offerSubscription = this.offerService.getOffers(this.offerRequestParams)
       .subscribe(result => {
         this.availableOffers = result;
         this.isLoading = false;
@@ -312,6 +313,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.CustomerAccountSubscription.unsubscribe();
     if (this.channelStoreSubscription) {
       this.channelStoreSubscription.unsubscribe();
+    }
+    if (this.offerSubscription) {
+      this.offerSubscription.unsubscribe();
     }
   }
 
