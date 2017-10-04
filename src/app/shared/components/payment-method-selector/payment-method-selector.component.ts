@@ -1,9 +1,9 @@
-
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+
+import { Subscription } from 'rxjs/Subscription';
 
 import { PaymethodService } from 'app/core/Paymethod.service';
 import { Paymethod } from 'app/core/models/paymethod/Paymethod.model';
-import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'mygexa-payment-method-selector',
@@ -23,13 +23,13 @@ export class PaymethodSelectorComponent implements OnInit, OnDestroy {
   @Output() canceledSelect: EventEmitter<any> =  new EventEmitter<any>();
   @Output() changedPaymethod: EventEmitter<any> =  new EventEmitter<any>();
 
+  PaymentMessage: IPaymentMessage = null;
   PaymethodSelected: Paymethod = null;
   private PaymethodSubscription: Subscription = null;
   private _Paymethods: Paymethod[] = null;
 
-  constructor(
-    private PaymethodService: PaymethodService
-  ) { }
+  constructor(private PaymethodService: PaymethodService) {
+  }
 
   get Paymethods(): Paymethod[] { return this._Paymethods; }
   set Paymethods(Paymethods: Paymethod[]) {
@@ -43,13 +43,15 @@ export class PaymethodSelectorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.PaymethodSubscription = this.PaymethodService.PaymethodsObservable.subscribe(
-      Paymethods => this.Paymethods = Paymethods
-    );
+    this.initialize();
   }
 
-  ngOnDestroy() {
-    this.PaymethodSubscription.unsubscribe();
+  private initialize() {
+    this.PaymethodSubscription = this.PaymethodService.PaymethodsObservable.subscribe(
+      Paymethods => {
+        this.Paymethods = Paymethods;
+      }
+    );
   }
 
   submitPaymethod(): void {
@@ -59,5 +61,12 @@ export class PaymethodSelectorComponent implements OnInit, OnDestroy {
   cancelSelect(): void {
     this.canceledSelect.emit();
   }
+
+  handleAddPaymentAccountSubmittedEvent(event: IPaymentMessage) {
+  this.PaymentMessage = event;
 }
 
+  ngOnDestroy() {
+    this.PaymethodSubscription.unsubscribe();
+  }
+}

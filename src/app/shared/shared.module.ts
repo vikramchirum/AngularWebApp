@@ -30,6 +30,7 @@ import { PhoneDirective } from './directives/phone.directive';
 import { PhoneNumberConfirmationModalComponent } from './components/phone-number-confirmation-modal/phone-number-confirmation-modal.component';
 import { PlanCardComponent } from './components/plan-card/plan-card.component';
 import { OfferDetailsPopoverComponent } from './components/offer-details-popover/offer-details-popover.component';
+import { AddPaymentAccountsComponent } from './components/add-payment-accounts/add-payment-accounts.component';
 
 @NgModule({
   imports: [
@@ -63,7 +64,8 @@ import { OfferDetailsPopoverComponent } from './components/offer-details-popover
     PhoneDirective,
     PhoneNumberConfirmationModalComponent,
     PlanCardComponent,
-    OfferDetailsPopoverComponent
+    OfferDetailsPopoverComponent,
+    AddPaymentAccountsComponent
   ],
   exports: [
     ChangeUserNameComponent,
@@ -86,7 +88,8 @@ import { OfferDetailsPopoverComponent } from './components/offer-details-popover
     AddressSearchComponent,
     PhoneDirective,
     PlanCardComponent,
-    OfferDetailsPopoverComponent
+    OfferDetailsPopoverComponent,
+    AddPaymentAccountsComponent
   ]
 })
 export class SharedModule { }
