@@ -224,7 +224,6 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
           };
         this.PaymethodService.GetForteOneTimeToken(<IPaymethodRequest>onetimePaymethod).subscribe(
           ForteData => resolve(assign({
-              UserName: this.UserService.UserCache.Profile.Username,
               Token: ForteData.onetime_token,
               Paymethod_Customer: {
                 Id: `${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`,
@@ -266,7 +265,10 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
         const AuthorizationAmount = Number(payment_now[0] === '$' ? payment_now.substring(1) : payment_now);
 
+        const UserName = String(this.UserService.UserCache.Profile.Username);
+
         this.PaymentsService.MakePayment(
+          UserName,
           AuthorizationAmount,
           this.ActiveServiceAccount,
           PaymethodToCharge
@@ -287,7 +289,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             PaymentStatus: 'Processing',
             PaymentMethod: PaymethodToCharge.CreditCard ? 'Credit Card' : 'eCheck',
             PaymentAccount: PaymethodToCharge.CreditCard ? PaymethodToCharge.CreditCard.AccountNumber : PaymethodToCharge.BankAccount.AccountNumber
-          })
+      })
         );
 
       });

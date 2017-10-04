@@ -274,9 +274,9 @@ export class PaymethodService {
   }
 
   RemovePaymethod(Paymethod: Paymethod): Observable<any> {
-    const body = {
-      PaymethodId: Paymethod.PayMethodId,
-      UserName: this.UserService.UserCache.Profile.Username
+      const body = {
+        PaymethodId: Paymethod.PayMethodId,
+        UserName: this.UserService.UserCache.Profile.Username
     };
     return Observable.create((observer: Observer<any>) => {
       // Call out to the API to set the isActive to "false".
@@ -297,4 +297,5 @@ export class PaymethodService {
         });
     });
   }
+
 }
