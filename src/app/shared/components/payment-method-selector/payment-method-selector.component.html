@@ -5,7 +5,11 @@
 <ng-template #LoadedPaymethods>
   <ng-template *ngIf="Paymethods.length < 1; then NoPaymethodsToList else ListPaymethods"></ng-template>
   <ng-template #NoPaymethodsToList>
-    <small class="text-muted"><i class="fa fa-fw fa-info-circle"></i> You have no saved payment methods to list.</small>
+    <!-- Add new Payment Account Section Starts -->
+    <div *ngIf="PaymentMessage" [ngClass]="PaymentMessage.classes" [innerHTML]="PaymentMessage.innerHTML"></div>
+    <div *ngIf="!(PaymentMessage && PaymentMessage.isCompleted)" [hidden]="PaymentMessage!==null">
+      <mygexa-add-payment-accounts (onAddPaymentAccountSubmittedEvent)="handleAddPaymentAccountSubmittedEvent($event)"></mygexa-add-payment-accounts>
+    </div>
   </ng-template>
   <ng-template #ListPaymethods>
     <ng-template *ngIf="!!disableIfOnlyOne && Paymethods.length === 1; then DisabledWithOnlyOnePaymethod else ShowingAllPaymethods"></ng-template>
@@ -52,7 +56,7 @@
                 </div>
               </div>
             </td>
-            
+
           </tr>
           </tbody>
         </table>
