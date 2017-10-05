@@ -77,6 +77,13 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
   ngAfterViewInit() {
   }
 
+  getRespectiveAsterik(offer_legal_Text: string): string {
+    let result: string[];
+    result = offer_legal_Text.split(' ', 2);
+    const symbol =  result[0];
+    return symbol;
+  }
+
   private initialize() {
 
     const activeServiceAccount$ = this.serviceAccount_service.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
@@ -113,6 +120,7 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
         upgradeOffers => {
           this.isLoadingUpgrades = false;
           this.upgradeOffers = upgradeOffers;
+          console.log('Upgrade offers', this.upgradeOffers);
         }
       );
     }
@@ -126,6 +134,7 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
     this.allOffers = allOffers.filter(item => item.Type === 'All_Offers');
     if (this.allOffers.length > 0 && this.allOffers[0].Offers.length > 0) {
       this.renewalOffers = this.allOffers[0].Offers;
+      console.log('Renewal offers', this.renewalOffers);
     }
   }
 

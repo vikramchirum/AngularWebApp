@@ -24,7 +24,7 @@
       </div>
       <p>at {{offer.Plan.Product.Featured_Usage_Level}}</p>
       <p>TERM:{{offer.Plan.Term}} months</p>
-      <p *ngFor="let feature of offer.Feature_List">{{'*' + feature}}</p>
+      <p *ngFor="let feature of offer.Feature_List">{{feature}}</p>
       <!--<p>{{offer.Promotion?.Name}}</p>-->
     </div>
     <div *ngIf="isOfferSelected" class="agreement-section">

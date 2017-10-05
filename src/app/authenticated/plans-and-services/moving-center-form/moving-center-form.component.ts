@@ -172,6 +172,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.ActiveServiceAccount = event;
   }
   getSelectedOffer(event) {
+    this.showNewPlans = false; // hide all offers
     this.selectedOffer = event;
     console.log('Offer selected', this.selectedOffer);
     // OfferId should only get passed when user wants to change their offer

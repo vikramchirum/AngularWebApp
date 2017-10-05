@@ -214,8 +214,15 @@
   </form>
 
   <!--Moving Form Confirmation Screen -->
-  <div [hidden]="!submitted" class="moving-confirmation"> <br/>
-    <div class="alert alert-info fade in alert-dismissable"> <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a> <strong>Thanks!</strong> Your Move Center Order has been placed </div>
-    <p>Check <a routerLink="/plans-and-services/order-status">Order Status</a> to follow progress on this order.</p>
+  <div  [hidden]="!submitted" class="moving-confirmation"> <br/>
+    <div>
+      <h1 style="color: #fea220">Success!</h1>
+      <p>Your order has been submitted. A confirmation email will be sent to the email address we have on your account.</p>
+      <p>Thank you for choosing Gexa Energy!</p>
+    </div>
+    <!--<div class="alert alert-info fade in alert-dismissable"> <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a> <strong>Thanks!</strong> Your Move Center Order has been placed </div>-->
+    <!--<p>Check <a routerLink="/plans-and-services/order-status">Order Status</a> to follow progress on this order.</p>-->
   </div>
 </div>
+
+

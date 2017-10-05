@@ -104,7 +104,7 @@
     <div *ngFor="let offer of upgradeOffers; let i= index;">
       <div *ngFor="let text of offer.Legal_Text_List">
         <div *ngIf="text">
-          {{'*' + text}}
+          {{getRespectiveAsterik(text)}}{{text}}
         </div>
       </div>
     </div>
