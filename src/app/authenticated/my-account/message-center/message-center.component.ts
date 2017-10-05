@@ -3,6 +3,8 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { UserService } from 'app/core/user.service';
 import { CustomerAccountService } from 'app/core/CustomerAccount.service';
+import { ServiceAccountService} from 'app/core/serviceaccount.service';
+
 import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
 
 @Component({
@@ -12,13 +14,16 @@ import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount
 })
 export class MessageCenterComponent implements OnInit, OnDestroy {
 
+  serviceAccountsSubscription: Subscription;
   userservicesubscription: Subscription;
   customerServiceSubscription: Subscription;
+
   customerDetails: CustomerAccount = null;
   emailAddress: string;
   phoneNumber: string;
+  serviceAccountsCount;
 
-  constructor(private customerAccountService: CustomerAccountService, private userService: UserService) {
+  constructor(private serviceAccountService: ServiceAccountService, private customerAccountService: CustomerAccountService, private userService: UserService) {
   }
 
   ngOnInit() {
@@ -36,10 +41,15 @@ export class MessageCenterComponent implements OnInit, OnDestroy {
     this.userservicesubscription = this.userService.UserObservable.subscribe(
       result => this.emailAddress = result.Profile.Email_Address
     );
+
+    this.serviceAccountsSubscription = this.serviceAccountService.ServiceAccountsObservable.subscribe(serviceAccounts => {
+      this.serviceAccountsCount = serviceAccounts.length;
+    });
   }
 
   ngOnDestroy() {
     this.customerServiceSubscription.unsubscribe();
     this.userservicesubscription.unsubscribe();
+    this.serviceAccountsSubscription.unsubscribe();
   }
 }
