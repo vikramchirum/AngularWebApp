@@ -21,14 +21,21 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
   pastDueAmount: number = null;
   requestedExtension: boolean = null;
   extensionSuccessfull: boolean = null;
+  pastDueSet: boolean = null;
   constructor(private activeServiceAccount: ServiceAccountService,
               private paymentExtensionService: PaymentExtensionService
-  ) {}
+  ) {
+    this.pastDueSet = false;
+  }
 
   ngOnInit() {
+    this.setPastDue();
+  }
+
+  setPastDue() {
     this.serviceAccountDetailsSubscription  = this.activeServiceAccount.ActiveServiceAccountObservable.subscribe(
-      ActiveServiceAccountDetails => { this.serviceAccountDetails = ActiveServiceAccountDetails;
-      this.pastDueAmount = ActiveServiceAccountDetails.Past_Due;  console.log('paste due', this.pastDueAmount); }
+      ActiveServiceAccountDetails => {  this.cancelExtension(); this.serviceAccountDetails = ActiveServiceAccountDetails;
+        this.pastDueAmount = ActiveServiceAccountDetails.Past_Due; this.pastDueSet = true; console.log('paste due', this.pastDueAmount); }
     );
   }
 
@@ -39,17 +46,21 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
         this.paymentExtension = paymentExtensionStatus;
         if (paymentExtensionStatus.Status === String(ExtensionStatus.SUCCESSFUL)) {
           this.extensionSuccessfull = true;
+        } else if (paymentExtensionStatus.Status === String(ExtensionStatus.NO_PASS_DUE_FOUND)) {
+          this.cancelExtension();
         } else {
-          this.extensionSuccessfull = true;
+          this.extensionSuccessfull = false;
         }
       }
     );
   }
   cancelExtension() {
     console.log('hi cancelled');
-    this.requestedExtension = false;
+    this.requestedExtension = null;
     this.paymentExtension = null;
-    this.extensionSuccessfull = false;
+    this.extensionSuccessfull = null;
+    this.pastDueAmount = null;
+    // this.pastDueSet = null;
   }
 
   ngOnDestroy() {
