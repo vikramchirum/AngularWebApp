@@ -19,7 +19,7 @@
              </div>
               <div class="col-sm-8">
               <h2 class="active-budget">${{ budgetBillingInfo.Amount }} Per Month</h2>
-              <p>Start Date {{ budgetBillingInfo.Create_Date | date:'d MMM y' }}</p>
+              <p>Start Date: {{ budgetBillingInfo.Create_Date | date:'d MMM y' }}</p>
            
             <ng-container *ngIf="(budgetBillingInfo.Pending_Cancel_Count > 0)">
               <br/><div class="alert alert-info">Cancel Budget Billing Request is already Pending</div>
