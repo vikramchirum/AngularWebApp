@@ -70,4 +70,6 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
     }
   }
 
+  // TODo: Add date and check if user is already on payment extension.
+
 }
