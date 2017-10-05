@@ -3,13 +3,13 @@
   [formGroup]="budgetBillingFormGroup"
   (ngSubmit)="save()"
   novalidate>
-
+<div class="row">
   <div class="form-group" [ngClass]="{'has-error': (budgetBillingFormGroup.get('amount').touched ||
                                                                   budgetBillingFormGroup.get('amount').dirty) &&
                                                                   !budgetBillingFormGroup.get('amount').valid}">
 
-    <label for="budgetBillingAmountId" class="col-md-4 col-lg-2 control-label">Budget Payment Amount</label>
-    <div class="col-md-8 col-lg-6">
+    <label for="budgetBillingAmountId" class="col-sm-4  control-label">Budget Payment Amount</label>
+    <div class="col-sm-6">
       <input
         type="number"
         class="form-control form-control-wireframe"
@@ -18,11 +18,12 @@
         formControlName="amount"
         autocomplete="off"
         maxlength="19"/>
+    </div>
 
-      <small class="text-success" *ngIf="budgetBillingFormGroup.controls?.amount.valid"><i
+     
+      <div class="text-success col-sm-2" *ngIf="budgetBillingFormGroup.controls?.amount.valid"><i
         class="fa fa-fw fa-check"></i> Ok
-      </small>
-
+      </div>
       <ng-container *ngIf="(budgetBillingFormGroup.get('amount').touched ||
                                                          budgetBillingFormGroup.get('amount').dirty) &&
                                                          budgetBillingFormGroup.get('amount').errors">
@@ -39,13 +40,13 @@
   <div class="form-group" [ngClass]="{'has-error': (budgetBillingFormGroup.get('agree').touched ||
                                                                   budgetBillingFormGroup.get('agree').dirty) &&
                                                                   !budgetBillingFormGroup.get('agree').valid}">
-    <div class="col-md-offset-4 col-md-8 col-lg-offset-2 col-lg-10">
+    <div class="col-sm-offset-4 col-md-8">
       <div class="checkbox">
         <label>
           <input
             type="checkbox"
             id="agreeId"
-            formControlName="agree"> I Agree to Terms and Conditions
+            formControlName="agree"> I Agree to <a href="/assets/payments/BB.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i> Terms and Conditions.</a>
         </label>
 
         <ng-container *ngIf="(budgetBillingFormGroup.get('agree').touched ||
@@ -53,7 +54,7 @@
                                                          budgetBillingFormGroup.get('agree').errors">
           <span class="help-block">
           <ng-container
-            *ngIf="budgetBillingFormGroup.get('agree').errors.pattern">Please agree to Terms and Conditions.</ng-container>
+                        *ngIf="budgetBillingFormGroup.get('agree').errors.pattern">Please agree to <a href="/assets/payments/BB.pdf" target="_blank"><i class="fa fa-file-pdf-o"></i> Terms and Conditions.</a></ng-container>
             </span>
         </ng-container>
       </div>
@@ -61,11 +62,12 @@
   </div>
 
   <div class="form-group">
-    <div class="col-md-offset-4 col-md-8 col-lg-offset-2 col-lg-10">
+    <div class="col-sm-offset-4 col-sm-8">
       <button type="submit" class="btn btn-primary" [disabled]="!budgetBillingFormGroup.valid">Start Now</button>
-      <button type="button" class="btn btn-link " (click)="cancel()">Back
+      <button type="button" class="btn btn-link " (click)="cancel()">Cancel
       </button>
     </div>
   </div>
-
+<br/>
+<br/>
 </form>

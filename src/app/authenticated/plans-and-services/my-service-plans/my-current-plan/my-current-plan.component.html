@@ -1,4 +1,4 @@
-<div *ngIf="ActiveServiceAccount">
+e<div *ngIf="ActiveServiceAccount">
   <div [ngSwitch]="currentView">
     <div  *ngSwitchCase="'PendingRenewalPlan'">
       <section>
@@ -40,7 +40,7 @@
         <ng-template #ShowRenewalOffer>
           <div class="current-plan-card plan-card-container mat-card">
             <div class="card-content">
-              <div class="alert alert-warning">Best for your home</div>
+              <div class="alert alert-warning"> Recommended for your home</div>
               <div class="mat-card-title">
                 <h2>{{RenewalOffers.Plan.Name}}
                   <small><i class="fa fa-info-circle" (click)="pop.show()" aria-hidden="true"></i></small>

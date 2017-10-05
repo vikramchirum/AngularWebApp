@@ -1,150 +1,118 @@
 <section class="section-container-highlight">
-      <div class="row">
-      <div class="col-sm-12">
-        <h3>Budget Billing Details</h3>
-      </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <h3>Budget Billing Details</h3>
     </div>
-    <hr/>
-    <div class="row">
-      <div class="col-sm-12">
-  <ng-container *ngIf="budgetBillingInfo$ | async; else loading; let budgetBillingInfo;">
-    <ng-container *ngIf="budgetBillingInfo.Indicator; else VerifySignUpBudgetBilling">
-
-      <ng-container *ngIf="(!isCancelled && !isCancelError);">
-
-        <div class="text-center" *ngIf="!(budgetBillingInfo.Pending_Cancel_Count > 0)">
-          <h1>{{ signedUpToBudgetBillingRecently ? 'Thanks! ' : '' }}Your Budget Billing is Active</h1>
-          <h1 class="active-budget">{{ budgetBillingInfo.Amount }} Per Month</h1>
-          <h4>Start Date {{ budgetBillingInfo.Create_Date | date:'d MMM y' }}</h4>
-        </div>
-
-        <ng-container *ngIf="(budgetBillingInfo.Pending_Cancel_Count > 0)">
-          <h4>Cancel Budget Billing Request is already Pending</h4>
-        </ng-container>
-
-        <div class="row active-options">
-          <div class="col-md-4">
-            <button class="btn btn-lg btn-block btn-primary" [disabled]="(budgetBillingInfo.Pending_Cancel_Count > 0)" (click)="budgetBillingCancel()">Cancel Budget Billing</button>
-          </div>
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="isCancelled">
-        <h4>
-
-          Your budget billing has been cancelled.
-
-        </h4>
-      </ng-container>
-      <ng-container *ngIf="isCancelError">
-        <h4>
-          There is an error in cancelling budget billing. Please try later.
-        </h4>
-      </ng-container>
-
-    </ng-container>
-
-    <ng-template #VerifySignUpBudgetBilling>
-
-
-      <ng-container *ngIf="budgetBillingEstimate$ | async; else loading let budgetBillingEstimate; ">
-
-        <ng-container *ngIf="!getBudgetBillingEligibility(budgetBillingEstimate); else SignUpBudgetBilling">
-
-          <ng-container *ngIf="budgetBillingEstimate.Check_Past_Due && (budgetBillingEstimate.Amount > 0)">
-
-            Unfortunately we are unable to process your request to enroll in Budget Billing because you have a past due
-            amount of <b>$ {{ budgetBillingEstimate.Past_Due | number : dollarAmountFormatter }} </b>
-            We have several options by which you can pay your bill: A payment can be made online by selecting <b>Make a
-            Payment</b>.
-            You may also visit any MoneyGram location where a processing fee will be applied.
-            Once your balance has been paid in full, you may enroll in Budget Billing.
-
-          </ng-container>
-
-          <ng-container *ngIf="(budgetBillingEstimate.Variance > 0) && (budgetBillingEstimate.Amount > 0)">
-
-            Unfortunately we are unable to process your request to enroll in Budget Billing until you have paid your
-            variance bill amount of
-            <b>$ {{ budgetBillingEstimate.Variance | number : dollarAmountFormatter }} </b>.
-            We have several options by which you can pay your bill: A payment can be made online by selecting <b>Make a
-            Payment</b>.
-            You may also visit any MoneyGram location where a processing fee will be applied.
-            Once your balance has been paid in full, you may enroll in Budget Billing.
-
-          </ng-container>
-
-          <ng-container *ngIf="(!budgetBillingEstimate.IsVarianceBillGenerated > 0) && (budgetBillingEstimate.Amount > 0)">
-            Unfortunately we are unable to process your request to enroll in Budget Billing until your variance bill is
-            generated.
-          </ng-container>
-
-          <ng-container *ngIf="budgetBillingEstimate.Amount <= 0">
-            Please contact Customer Services at 1-866-961-9399 to set-up your budget billing needs...
-          </ng-container>
-
-        </ng-container>
-
-        <ng-template #SignUpBudgetBilling>
-
-          <ng-container *ngIf="!signingUpToBudgetBilling; else SigningUpToBudgetBilling;">
-            <div class="row text-center">
-              <div class="col-md-4 col-md-push-8">
-                <!--<a><img class="payment-options-budget-billing-how-it-works"
-                        src="/assets/payments/payment-options-budget-billing-how-it-works.jpg"/></a>-->
+  </div>
+  <hr/>
+  <div class="row">
+    <div class="col-sm-12">
+      <ng-container *ngIf="budgetBillingInfo$ | async; else loading; let budgetBillingInfo;">
+        <ng-container *ngIf="budgetBillingInfo.Indicator; else VerifySignUpBudgetBilling">
+          <ng-container *ngIf="(!isCancelled && !isCancelError);">
+           <div class="row">
+             <div class="col-sm-4">
+            <div class="text-center" *ngIf="!(budgetBillingInfo.Pending_Cancel_Count > 0)">
+              <p>{{ signedUpToBudgetBillingRecently ? 'Thanks! ' : '' }}Your Budget Billing is <b>Active</b>
+              </p>
+               </div>
+             </div>
+              <div class="col-sm-8">
+              <h2 class="active-budget">{{ budgetBillingInfo.Amount }} Per Month</h2>
+              <p>Start Date {{ budgetBillingInfo.Create_Date | date:'d MMM y' }}</p>
+           
+            <ng-container *ngIf="(budgetBillingInfo.Pending_Cancel_Count > 0)">
+              <br/><div class="alert alert-info">Cancel Budget Billing Request is already Pending</div>
+            </ng-container>
+            <div class="row active-options">
+              <div class="col-md-4">
+                <button class="btn btn-primary" [disabled]="(budgetBillingInfo.Pending_Cancel_Count > 0)" (click)="budgetBillingCancel()">Cancel Budget Billing</button>
               </div>
-              <div class="col-md-8 col-md-pull-4">
-
-                <h4>
-
+                </div>
+            </div>
+              
+            </div>
+            <br/>
+          </ng-container>
+          <ng-container *ngIf="isCancelled"> <br/>
+            <div class="alert alert-danger"> Your budget billing has been cancelled. </div>
+          </ng-container>
+          <ng-container *ngIf="isCancelError"> <br/>
+            <div class="alert alert-danger"> There is an error in cancelling budget billing. Please try later. </div>
+          </ng-container>
+        </ng-container>
+        <ng-template #VerifySignUpBudgetBilling>
+          <ng-container *ngIf="budgetBillingEstimate$ | async; else loading let budgetBillingEstimate; ">
+            <ng-container *ngIf="!getBudgetBillingEligibility(budgetBillingEstimate); else SignUpBudgetBilling">
+              <ng-container *ngIf="budgetBillingEstimate.Check_Past_Due && (budgetBillingEstimate.Amount > 0)">
+                <div class="alert alert-waring"> Unfortunately we are unable to process your request to enroll in Budget Billing because you have a past due
+                  amount of <b>$ {{ budgetBillingEstimate.Past_Due | number : dollarAmountFormatter }} </b> </div>
+                <br/>
+                We have several options by which you can pay your bill: A payment can be made online by selecting <b>Make a
+                Payment</b>.
+                You may also visit any MoneyGram location where a processing fee will be applied.
+                Once your balance has been paid in full, you may enroll in Budget Billing. <br/>
+              </ng-container>
+              <ng-container *ngIf="(budgetBillingEstimate.Variance > 0) && (budgetBillingEstimate.Amount > 0)">
+                <div class="alert alert-waring"> Unfortunately we are unable to process your request to enroll in Budget Billing until you have paid your
+                  variance bill amount of <b>$ {{ budgetBillingEstimate.Variance | number : dollarAmountFormatter }} </b>. </div>
+                <br/>
+                We have several options by which you can pay your bill: A payment can be made online by selecting <b>Make a
+                Payment</b>.
+                You may also visit any MoneyGram location where a processing fee will be applied.
+                Once your balance has been paid in full, you may enroll in Budget Billing. <br/>
+              </ng-container>
+              <ng-container *ngIf="(!budgetBillingEstimate.IsVarianceBillGenerated > 0) && (budgetBillingEstimate.Amount > 0)"> <br/>
+                <div class="alert alert-waring"> Unfortunately we are unable to process your request to enroll in Budget Billing until your variance bill is
+                  generated. </div>
+                <br/>
+              </ng-container>
+              <ng-container *ngIf="budgetBillingEstimate.Amount <= 0"> Please contact Customer Services at 1-866-961-9399 to set-up your budget billing needs... </ng-container>
+            </ng-container>
+            <ng-template #SignUpBudgetBilling>
+              <ng-container *ngIf="!signingUpToBudgetBilling; else SigningUpToBudgetBilling;">
+                <div class="row">
                   <ng-container
                     *ngIf="budgetBillingEstimate.IsBudgetBillingDefaultAmount; else BudgetBillingAmountInfo;">
-                    Our records indicate that we do not have sufficient usage history at this location.
-                    Therefore your budget billing amount will be set up in the amount of ${{
-                    budgetBillingEstimate.Amount | number : dollarAmountFormatter }}
-                    As we receive additional usage for your location, the budget billing amount of ${{
-                    budgetBillingEstimate.Amount | number : dollarAmountFormatter }}
-                    will be adjusted to better reflect your consumption.
+                    <div class="col-sm-6"><br/> Our records indicate that we do not have sufficient usage history at this location.
+                      Therefore your budget billing amount will be set up in the amount of ${{
+                      budgetBillingEstimate.Amount | number : dollarAmountFormatter }}
+                      As we receive additional usage for your location, the budget billing amount of ${{
+                      budgetBillingEstimate.Amount | number : dollarAmountFormatter }}
+                      will be adjusted to better reflect your consumption.<br/> </div>
                   </ng-container>
-
                   <ng-template #BudgetBillingAmountInfo>
-                    Based on your average monthly usage of <b> {{ budgetBillingEstimate.AverageKWH }} </b> kWh, your
-                    Budget Billing amount will be <b> ${{ budgetBillingEstimate.Amount | number : dollarAmountFormatter }} </b> for
-                    the
-                    initial 12 months.
+                    <div class="col-sm-6 text-center budget-summary"> Based on your average monthly usage of <b> {{ budgetBillingEstimate.AverageKWH }} </b> kWh, your
+                      Budget Billing amount will be <b> ${{ budgetBillingEstimate.Amount | number : dollarAmountFormatter }} </b> for
+                      the initial 12 months. </div>
                   </ng-template>
-                </h4>
-
-                <h1>Start Up Budget Billing<br/>
-                  <small>for as little as</small>
-                </h1>
-                <h1 class="start-at">${{ budgetBillingEstimate.Amount | number : dollarAmountFormatter }} Per Month *</h1>
-                <button class="btn btn-lg btn-primary" (click)="signingUpToBudgetBilling = true">Sign Up Now!</button>
-              </div>
-            </div>
-          </ng-container>
-
-          <ng-template #SigningUpToBudgetBilling>
-            <mygexa-budget-billing-selector *ngIf="(!isEnrolled && !isEnrollError);"
+                  <div class="col-sm-6">
+                    <h2 class="start-at">${{ budgetBillingEstimate.Amount | number : dollarAmountFormatter }} Per Month</h2>
+                    <button class="btn btn-primary" (click)="signingUpToBudgetBilling = true">Sign Up Now!</button>
+                  </div>
+                  <br/>
+                  &nbsp; <br/>
+                  &nbsp; </div>
+              </ng-container>
+              <ng-template #SigningUpToBudgetBilling>
+                <mygexa-budget-billing-selector *ngIf="(!isEnrolled && !isEnrollError);"
               (onBudgetBillingEvent)="handleBudgetBillingEvent($event)"
               [budgetBillingEstimate]="budgetBillingEstimate"></mygexa-budget-billing-selector>
-            <ng-container *ngIf="isEnrolled">
-              <h4>
-                Thank you for enrolling in Gexa Energy’s Budget Billing Program. A confirmation letter containing the details of your enrollment on budget billing will be mailed to you.
-              </h4>
-            </ng-container>
-              <ng-container *ngIf="isEnrollError">
-              <h4>
-                There is an error in enrolling for budget billing. Please try later.
-              </h4>
-            </ng-container>
-          </ng-template>
+                <ng-container *ngIf="isEnrolled"> <br/>
+                  <div class="alert aert-info"> Thank you for enrolling in Gexa Energy’s Budget Billing Program. A confirmation letter containing the details of your enrollment on budget billing will be mailed to you. </div>
+                  <br/>
+                </ng-container>
+                <ng-container *ngIf="isEnrollError"> <br/>
+                  <div class="alert alert-danger"> There is an error in enrolling for budget billing. Please try later. </div>
+                  <br/>
+                </ng-container>
+              </ng-template>
+            </ng-template>
+          </ng-container>
         </ng-template>
       </ng-container>
-    </ng-template>
-  </ng-container>
-  <ng-template #loading>loading...</ng-template>
-      </div>
+      <ng-template #loading>loading...</ng-template>
+    </div>
   </div>
 </section>
 <br>
