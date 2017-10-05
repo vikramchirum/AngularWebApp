@@ -22,10 +22,11 @@ import { UpgradeStore } from 'app/core/store/upgradestore';
 import { ModalStore } from 'app/core/store/modalstore';
 
 import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-confirmation-modal.component';
+import { ErrorModalComponent } from 'app/shared/components/error-modal/error-modal.component';
 import { IOfferSelectionPayLoad } from 'app/shared/models/offerselectionpayload';
 import { ICreateRenewalRequest } from 'app/core/models/renewals/createrenewalrequest.model';
 import { ICreateUpgradeRequest } from 'app/core/models/upgrades/createupgraderequest.model';
-import { CustomerAccountService } from  'app/core/CustomerAccount.service';
+import { CustomerAccountService } from 'app/core/CustomerAccount.service';
 
 @Component({
   selector: 'mygexa-change-your-plan',
@@ -34,6 +35,7 @@ import { CustomerAccountService } from  'app/core/CustomerAccount.service';
 })
 export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
+  @ViewChild('errorModal') errorModal: ErrorModalComponent;
   @ViewChild('planConfirmationModal') planConfirmationModal: PlanConfirmationModalComponent;
   @Input() promoCode: string;
 
@@ -218,15 +220,16 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
       request.Partner_Account_Number = offerSelectionPayLoad.Partner_Account_Number;
     }
 
-    this.planConfirmationModal.showPlanConfirmationModal({
-      isRenewalPlan: true,
-      customerDetails: this.customerDetails
-    });
-
     this.renewalStore.createRenewal(request).subscribe(result => {
       if (result) {
         console.log('done');
+        this.planConfirmationModal.showPlanConfirmationModal({
+          isRenewalPlan: true,
+          customerDetails: this.customerDetails
+        });
       }
+    }, err => {
+      this.errorModal.showErrorModal(err);
     });
   }
 
@@ -242,15 +245,16 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
       request.Partner_Account_Number = offerSelectionPayLoad.Partner_Account_Number;
     }
 
-    this.planConfirmationModal.showPlanConfirmationModal({
-      isRenewalPlan: false,
-      customerDetails: this.customerDetails
-    });
-
     this.upgradeStore.createUpgrade(request).subscribe(result => {
       if (result) {
         console.log('done');
+        this.planConfirmationModal.showPlanConfirmationModal({
+          isRenewalPlan: false,
+          customerDetails: this.customerDetails
+        });
       }
+    }, err => {
+      this.errorModal.showErrorModal(err);
     });
   }
 

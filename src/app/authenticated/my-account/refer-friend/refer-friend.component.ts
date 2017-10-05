@@ -22,6 +22,7 @@ export class ReferFriendComponent implements OnInit, OnDestroy {
 
   referralSubscription: Subscription;
   customerServiceAccountSubscription: Subscription;
+  serviceAccountsSubscription: Subscription;
 
   customerAccount: CustomerAccount;
   serviceAccount: ServiceAccount;
@@ -46,13 +47,13 @@ export class ReferFriendComponent implements OnInit, OnDestroy {
       this.serviceAccount = result[1];
     });
 
-    this.serviceAccountService.ServiceAccountsObservable.subscribe(serviceAccounts => {
+    this.serviceAccountsSubscription = this.serviceAccountService.ServiceAccountsObservable.subscribe(serviceAccounts => {
       this.serviceAccountsCount = serviceAccounts.length;
     });
 
     this.referralSubscription = referral$.subscribe(result => {
-      this.isLoading = false;
       this.referral = result;
+      this.isLoading = false;
       if (this.referral) {
         this.enrolled = true;
         console.log('the account is enrolled in referral.');
@@ -79,5 +80,6 @@ export class ReferFriendComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.referralSubscription.unsubscribe();
     this.customerServiceAccountSubscription.unsubscribe();
+    this.serviceAccountsSubscription.unsubscribe();
   }
 }

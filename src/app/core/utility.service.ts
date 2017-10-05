@@ -15,6 +15,12 @@ export class UtilityService {
     if (typeof input === 'undefined' || input === null || input === 'null') {
       return true;
     }
+
     return input.replace(/\s/g, '').length < 1;
+  }
+
+  addMonths(date: Date, months: number): Date {
+    date.setMonth(date.getMonth() + months);
+    return date;
   }
 }

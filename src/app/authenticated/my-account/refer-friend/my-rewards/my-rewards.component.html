@@ -5,7 +5,7 @@
   <section class="details">
     <div class="row">
       <div class="col-md-5 col-xs-5 col-xs-offset-1 ">
-        <label>{{referral.RefereeList ? referral.RefereeList.length : 0 }}</label>
+        <label>{{ (referral && referral.RefereeList) ? referral.RefereeList.length : 0 }}</label>
         <h5>Total Current Referrals</h5>
       </div>
       <div class="col-md-5 col-xs-6">
@@ -14,30 +14,29 @@
       </div>
     </div>
     <br>
- 
 
-    <ng-container *ngIf="referral.RefereeList; else norefees">
-           <div class="row">
-      <div class="col-md-12">
-        <div class="alert  text-center">
-          <b>Your Referred Customers </b>
+    <ng-container *ngIf="(referral && referral.RefereeList); else norefees">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="alert  text-center">
+            <b>Your Referred Customers </b>
+          </div>
         </div>
       </div>
-    </div>
-    <br>
+      <br>
 
-        <div class="row">
-          <div class="col-md-4">
-            <b>Referee Name</b>
-          </div>
-          <div class="col-md-4">
-            <b>Months Credited</b>
-          </div>
-          <div class="col-md-4">
-            <b>Total Amount Credited</b>
-          </div>
+      <div class="row">
+        <div class="col-md-4">
+          <b>Referee Name</b>
         </div>
-        <hr/>
+        <div class="col-md-4">
+          <b>Months Credited</b>
+        </div>
+        <div class="col-md-4">
+          <b>Total Amount Credited</b>
+        </div>
+      </div>
+      <hr/>
 
       <div *ngFor="let referee of referral.RefereeList; let i = index">
         <div class="row">
@@ -57,13 +56,13 @@
     </ng-container>
 
     <ng-template #norefees>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="alert  text-center">
-          <b>No Referred Customers</b>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="alert  text-center">
+            <b>No Referred Customers</b>
+          </div>
         </div>
       </div>
-    </div>
     </ng-template>
 
     <br>
