@@ -14,6 +14,7 @@ import { IOfferSelectionPayLoad } from '../../models/offerselectionpayload';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { UserService } from 'app/core/user.service';
 import { ModalStore } from 'app/core/store/modalstore';
+import {Offer} from "../../../core/models/offers/offer.model";
 
 @Component({
   selector: 'mygexa-plan-card',
@@ -26,7 +27,7 @@ export class PlanCardComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input('offer') offer: IOffers;
   @Input('offerSelectionType') offerSelectionType: OfferSelectionType;
   @Output() public onOfferSelectedEvent: EventEmitter<IOfferSelectionPayLoad> = new EventEmitter();
-
+  isMoving: boolean = null;
   renewalUpgradeFormGroup: FormGroup;
 
   activeServiceAccountDetails: ServiceAccount = null;
@@ -46,9 +47,13 @@ export class PlanCardComponent implements OnInit, AfterViewInit, OnDestroy {
               private modalStore: ModalStore,
               private formBuilder: FormBuilder,
               private viewContainerRef: ViewContainerRef) {
+    this.isMoving = false;
   }
 
   ngOnInit() {
+    if (this.offerSelectionType === OfferSelectionType.Moving) {
+      this.isMoving = true;
+    }
 
     this.renewalUpgradeFormGroup = this.formBuilder.group({
       accountName: ['', Validators.required],
@@ -128,6 +133,8 @@ export class PlanCardComponent implements OnInit, AfterViewInit, OnDestroy {
     const offerSelectionPayLoad = {} as IOfferSelectionPayLoad;
     offerSelectionPayLoad.Service_Account_Id = this.activeServiceAccountDetails.Id;
     offerSelectionPayLoad.Offering_Name = this.offer.Rate_Code;
+    offerSelectionPayLoad.Id = this.offer.Id;
+    offerSelectionPayLoad.Offer = this.offer;
     offerSelectionPayLoad.User_Name = this.user.Profile.Username;
     if (this.offer.Has_Partner) {
       offerSelectionPayLoad.Partner_Account_Number = this.renewalUpgradeFormGroup.get('accountName').value;

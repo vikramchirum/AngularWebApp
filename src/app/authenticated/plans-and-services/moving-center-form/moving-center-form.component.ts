@@ -18,6 +18,10 @@ import { ServiceAddress } from 'app/core/models/serviceaddress/serviceaddress.mo
 import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
 import { OfferRequest } from 'app/core/models/offers/offerrequest.model';
 import { ChannelStore } from '../../../core/store/channelstore';
+import { OfferSelectionType } from '../../../core/models/enums/offerselectiontype';
+import { IOffers } from '../../../core/models/offers/offers.model';
+import { ServiceAccount } from '../../../core/models/serviceaccount/serviceaccount.model';
+import { IOfferSelectionPayLoad } from '../../../shared/models/offerselectionpayload';
 
 @Component({
   selector: 'mygexa-moving-center-form',
@@ -35,25 +39,29 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   submitted: boolean = false;
   Final_Bill_To_Old_Service_Address: boolean;
   Keep_Current_Offer: boolean;
-  selectedOffer = null;
-  availableOffers = null;
+  // selectedOffer: IOffers = null;
+  selectedOffer: IOfferSelectionPayLoad = null;
+  availableOffers = null; isLoading: boolean = null; showNewPlans: boolean = null;
   offerId: string;
   showHideAdressList: boolean = true;
   pastDueErrorMessage: string;
   private channelId: string;
   public transferRequest: TransferRequest = null;
+  offerSelectionType = OfferSelectionType;
+  finalBillAddress: string = null;
 
   private ActiveServiceAccountSubscription: Subscription = null;
   private CustomerAccountSubscription: Subscription = null;
   private channelStoreSubscription: Subscription = null;
+  private offerSubscription: Subscription = null;
 
-  private ActiveServiceAccount = null;
+  private ActiveServiceAccount: ServiceAccount = null;
   private TDU_DUNS_Number: string = null;
   customerDetails: CustomerAccount = null;
   offerRequestParams: OfferRequest = null;
   results: ServiceAddress[] = null;
   newServiceAddress: ServiceAddress = null;
-
+  notSameTDU: boolean = null;
   @ViewChild('selectPlanModal') selectPlanModal: SelectPlanModalDialogComponent;
 
 
@@ -95,8 +103,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
       this.ServicePlanForm = this.fb.group({
         'service_address': [null, Validators.required],
-        'service_plan': [null, Validators.required],
-        'agree_to_terms': [false, [Validators.pattern('true')]],
+         'service_plan': [null, Validators.required],
+        // 'agree_to_terms': [false, [Validators.pattern('true')]],
         'final_service_address': this.fb.array([])
       });
   }
@@ -165,6 +173,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   }
   getSelectedOffer(event) {
     this.selectedOffer = event;
+    console.log('Offer selected', this.selectedOffer);
     // OfferId should only get passed when user wants to change their offer
     this.offerId = this.selectedOffer.Id;
   }
@@ -176,7 +185,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
   addressFormSubmit(addressForm) {
 
-    if (this.customerDetails.Past_Due > 40) {
+    if (this.customerDetails && this.customerDetails.Past_Due > 40) {
      this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
     }
 
@@ -187,13 +196,15 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       dunsNumber: this.newServiceAddress.Meter_Info.TDU_DUNS,
       approved: true,
       page_size: 100,
-      channelId: this.channelId ? this.channelId : ''
+      channelId: this.channelId
     };
     console.log('Offer params', this.offerRequestParams);
     // send start date and TDU_DUNS_Number to get offers available.
-    this.offerService.getOffers(this.offerRequestParams)
+    this.isLoading = true;
+    this.offerSubscription = this.offerService.getOffers(this.offerRequestParams)
       .subscribe(result => {
         this.availableOffers = result;
+        this.isLoading = false;
         console.log('this.available offers',  this.availableOffers);
         // prevent user from navigating to plans page if we don't offer service in the moving address
         // prevent user from submitting the form if past due balance over 40
@@ -206,23 +217,42 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   // New Service Plans Modal
-  openSelectPlanModal() {
-    this.selectPlanModal.show();
+  showPlans() {
+    this.ServicePlanForm.controls['service_plan'].setValue('New Plan');
+    this.showNewPlans = true;
+    // this.selectPlanModal.show();
   }
 
-
   getCurrentPlan() {
+    this.ServicePlanForm.controls['service_plan'].setValue('Current Plan');
+    this.showNewPlans = false;
     this.selectedOffer = null;
     // should not pass offerId if the user selects existing Plan.
     this.offerId = undefined;
 
     // On selecting current plan, check if the address is in same TDU or different TDU
-    this.ServicePlanForm.get('service_plan').setValidators([Validators.required, tduCheck(this.ActiveServiceAccount.TDU_DUNS_Number, this.newServiceAddress.Meter_Info.TDU_DUNS)]);
+    // if (this.ActiveServiceAccount.TDU_DUNS_Number !== this.newServiceAddress.Meter_Info.TDU_DUNS ) {
+    //   this.notSameTDU = true;
+    // } else { this.notSameTDU = false; }
+    this.ServicePlanForm.get('service_plan').
+    setValidators([Validators.required, tduCheck(this.ActiveServiceAccount.TDU_DUNS_Number, this.newServiceAddress.Meter_Info.TDU_DUNS)]);
 
   }
 
+  useCurrentAddress() {
+    this.ServicePlanForm.controls['service_address'].setValue('Current Address');
+    this.finalBillAddress = 'Current Address';
+  }
+  useNewAddress() {
+    this.ServicePlanForm.controls['service_address'].setValue('New Address');
+    this.finalBillAddress = 'New Address';
+  }
 
   onSubmitMove(addressForm, billSelector) {
+    let Partner_Account_Number = null;     let Partner_Name_On_Account = null;
+
+    console.log('addressForm', addressForm);
+    console.log('billSelector', billSelector);
 
     addressForm.current_bill_address = this.ActiveServiceAccount.Mailing_Address;
     // Address where the customer wants to send their final bill
@@ -239,6 +269,14 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       this.Keep_Current_Offer = true;
     }
 
+    if (this.Keep_Current_Offer && this.ActiveServiceAccount.Current_Offer.Partner_Info) {
+      Partner_Account_Number = this.ActiveServiceAccount.Current_Offer.Partner_Info.Code;
+      Partner_Name_On_Account = this.ActiveServiceAccount.Current_Offer.Partner_Info.Partner.Name;
+    } else {
+      Partner_Account_Number = null;
+      Partner_Name_On_Account = null;
+    }
+
     // Request Parms to post data to Transfer service API
     this.transferRequest = {
       // The email must match an email that is attached to a channel.  It is hardcoded now
@@ -248,7 +286,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       Final_Bill_To_Old_Service_Address: this.Final_Bill_To_Old_Service_Address,
       Final_Bill_Address: billSelector.final_service_address,
       UAN: this.newServiceAddress.Meter_Info.UAN,
-      Service_Address: this.newServiceAddress.Address,
+      Billing_Address: this.newServiceAddress.Address,
       TDSP_Instructions: '',
       New_Service_Start_Date: addressForm.New_Service_Start_Date.jsdate,
       Keep_Current_Offer: this.Keep_Current_Offer,
@@ -259,7 +297,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       },
       Language_Preference: this.customerDetails.Language,
       Promotion_Code_Used: '',
-      Date_Sent: new Date().toISOString()
+      Date_Sent: new Date().toISOString(),
+      Partner_Account_Number: Partner_Account_Number,
+      Partner_Name_On_Account: Partner_Name_On_Account
     };
     this.transferService.submitMove(this.transferRequest).subscribe(
       () => this.submitted = true),
@@ -273,6 +313,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.CustomerAccountSubscription.unsubscribe();
     if (this.channelStoreSubscription) {
       this.channelStoreSubscription.unsubscribe();
+    }
+    if (this.offerSubscription) {
+      this.offerSubscription.unsubscribe();
     }
   }
 
