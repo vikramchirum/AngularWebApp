@@ -14,7 +14,6 @@ import { IOfferSelectionPayLoad } from '../../models/offerselectionpayload';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { UserService } from 'app/core/user.service';
 import { ModalStore } from 'app/core/store/modalstore';
-import {Offer} from "../../../core/models/offers/offer.model";
 
 @Component({
   selector: 'mygexa-plan-card',
@@ -37,7 +36,6 @@ export class PlanCardComponent implements OnInit, AfterViewInit, OnDestroy {
   isOfferSelected = false;
   isOfferAgreed = false;
   productFeaturesSelected = false;
-
   userServiceSubscription: Subscription;
   activeServiceAccountSubscription: Subscription;
   handleOfferPopOversModalSubscription: Subscription;
@@ -72,7 +70,6 @@ export class PlanCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.handleOfferPopOversModalSubscription = this.modalStore.HandleOfferPopOversModal.subscribe(rateCode => {
-
       if (this.offer) {
         if (this.offer.Rate_Code !== rateCode) {
           if (this.pop) {

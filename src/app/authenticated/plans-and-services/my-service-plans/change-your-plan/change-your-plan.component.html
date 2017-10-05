@@ -1,6 +1,7 @@
 <ng-container *ngIf="!isLoading; then offers else showLoadingScreen"></ng-container>
 <ng-template #offers>
   <ng-container #showRenewalOrUpgrade *ngIf="showRenewals; then renewalSection else upgradeSection"></ng-container>
+  <ng-container #showRenewalOrUpgradeLegalSection *ngIf="showRenewals; then renewalLegalSection else upgradeLegalSection"></ng-container>
   <ng-template #renewalSection>
     <div class="row">
       <div class="col-sm-2">
@@ -89,6 +90,25 @@
       </div>
     </div>
   </ng-template>
+  <br>
+  <ng-template #renewalLegalSection>
+    <div *ngFor="let offer of renewalOffers; let i= index;">
+      <div *ngFor="let text of offer.Legal_Text_List">
+        <div *ngIf="text">
+          {{'*' + text}}
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #upgradeLegalSection>
+    <div *ngFor="let offer of upgradeOffers; let i= index;">
+      <div *ngFor="let text of offer.Legal_Text_List">
+        <div *ngIf="text">
+          {{'*' + text}}
+        </div>
+      </div>
+    </div>
+  </ng-template>
 </ng-template>
 <ng-template #showLoadingScreen>
   <div class="text-center">
@@ -100,3 +120,15 @@
 </ng-template>
 <br>
 <mygexa-plan-confirmation-modal #planConfirmationModal></mygexa-plan-confirmation-modal>
+<!--<div id="ShowLegalText">-->
+  <!--<div *ngIf="showRenewals">-->
+    <!--<div *ngFor="let offer of renewalOffers; let i= index;">-->
+      <!--{{offer.Legal_Text_List}}-->
+    <!--</div>-->
+  <!--</div>-->
+  <!--<div *ngIf="showRenewals">-->
+    <!--<div *ngFor="let offer of renewalOffers; let i= index;">-->
+      <!--{{offer.Legal_Text_List}}-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
