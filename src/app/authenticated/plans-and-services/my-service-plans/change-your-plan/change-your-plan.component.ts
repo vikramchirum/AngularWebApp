@@ -77,12 +77,12 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
   ngAfterViewInit() {
   }
 
-  getRespectiveAsterik(offer_legal_Text: string): string {
-    let result: string[];
-    result = offer_legal_Text.split(' ', 2);
-    const symbol =  result[0];
-    return symbol;
-  }
+  // getRespectiveAsterik(offer_legal_Text: string): string {
+  //   let result: string[];
+  //   result = offer_legal_Text.split(' ', 2);
+  //   const symbol =  result[0];
+  //   return symbol;
+  // }
 
   private initialize() {
 

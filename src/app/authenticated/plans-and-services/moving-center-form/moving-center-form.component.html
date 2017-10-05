@@ -134,7 +134,7 @@
             <ng-container *ngIf="!isLoading; else showLoadingOffers">
               <div class="row change-plans-grid">
                 <ng-container *ngIf="(availableOffers && (availableOffers.length > 0)); else noOffers">
-                  <div class="col-md-4 plan-card" *ngFor="let offer of availableOffers; let i= index;">
+                  <div class="col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:0:3; let i= index;">
                     <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
                                       (onOfferSelectedEvent)="getSelectedOffer($event)"></mygexa-plan-card>
                   </div>
@@ -161,11 +161,48 @@
         </div>
     </div>
     <div class="row">
-      <div class="col-sm-6"></div>
+      <div class="col-sm-6">
+      </div>
       <div class="col-sm-6" *ngIf="showNewPlans" >
-      <p class="p-plans">View More Plans  <i class="fa fa-chevron-down">
-                                 <!--[ngClass]="productFeaturesSelected ? 'fa-chevron-down' : 'fa-chevron-up'"-->
-      </i></p></div><br>
+        <p class="p-plans">View More Plans  <i class="fa"
+                                               (click)="morePlansClicked()"
+                                               [ngClass]="showMorePlans ? 'fa-chevron-down' : 'fa-chevron-up'">
+        </i></p>
+      </div><br>
+    </div>
+    <div class="row" *ngIf="showNewPlans && showMorePlans">
+        <div class="container-fluid plans" *ngIf="showMorePlans">
+          <div class="row service-plan">
+            <div class="col-sm-12" *ngIf="showNewPlans">
+              <ng-container *ngIf="!isLoading; else showLoadingOffers">
+                <div class="row change-plans-grid">
+                  <ng-container *ngIf="(availableOffers && (availableOffers.length > 0)); else noOffers">
+                    <div class="col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:3:(availableOffers.length - 3); let i= index;">
+                      <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
+                                        (onOfferSelectedEvent)="getSelectedOffer($event)"></mygexa-plan-card>
+                    </div>
+                  </ng-container>
+                  <ng-template #noOffers>
+                    <div class="row">
+                      <div class="col-sm-24">
+                        <h2>No offers available for this service account.</h2>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+              </ng-container>
+              <ng-template #showLoadingOffers>
+                <div class="text-center">
+                  <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
+                  <h2>
+                    <small class="text-muted">Loading more offers...</small>
+                  </h2>
+                </div>
+              </ng-template>
+              <!--<mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>-->
+            </div>
+          </div>
+        </div>
     </div>
    <hr>
     <div class="row">

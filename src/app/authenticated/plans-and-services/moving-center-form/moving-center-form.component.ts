@@ -62,6 +62,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   results: ServiceAddress[] = null;
   newServiceAddress: ServiceAddress = null;
   notSameTDU: boolean = null;
+  showMorePlans: boolean = null;
+
   @ViewChild('selectPlanModal') selectPlanModal: SelectPlanModalDialogComponent;
 
 
@@ -222,6 +224,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.ServicePlanForm.controls['service_plan'].setValue('New Plan');
     this.showNewPlans = true;
     // this.selectPlanModal.show();
+  }
+  morePlansClicked() {
+    this.showMorePlans = !this.showMorePlans;
   }
 
   getCurrentPlan() {
