@@ -32,8 +32,9 @@ import { IAvailableDate } from '../../../core/models/availabledate/availabledate
   providers: [TransferService, OfferService]
 })
 export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestroy {
-
+  enableDates: boolean = null;
   availableDates: IAvailableDate;
+  trimmedAvailableDates: Date[];
   nextClicked: boolean = false;
   previousClicked: boolean = true;
   movingCenterForm: FormGroup;
@@ -190,14 +191,26 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
    // Get Address from the emitter when users selects new address
   getSelectedAddress(event) {
     this.newServiceAddress = event;
+
     if (this.newServiceAddress.Meter_Info.UAN !== null) {
       this.availableDateServiceSubscription = this.availableDateService.getAvailableDate(this.newServiceAddress.Meter_Info.UAN).subscribe(
         availableDates => { this.availableDates = availableDates;
-        console.log('Available dates', availableDates);
+         this.trimmedAvailableDates = this.trimDates(this.availableDates.Available_Move_In_Dates);
+         this.enableDates = true;
+          console.log('Available dates', availableDates);
+          console.log('dates array', this.trimmedAvailableDates );
         }
       );
     }
     // console.log('event',  this.newServiceAddress);
+  }
+
+  trimDates(datesArray: string[]): Date[] {
+    let array = [];
+    datesArray.forEach(item => { array.push(item.substring(0, 10)); } );
+    // console.log('dates array', array);
+    array.forEach( item => new Date(item));
+    return array;
   }
 
   addressFormSubmit(addressForm) {
