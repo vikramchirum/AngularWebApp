@@ -24,8 +24,13 @@ export class ReferralStore {
 
   get Referral() {
     return this._referral.asObservable().filter(referral => {
-       const result = referral !== null && !this.utilityService.isNullOrWhitespace(referral.Customer_Account_Id);
-       return result;
+
+      if (referral == null) {
+        return true;
+      }
+
+      const result = referral !== null && !this.utilityService.isNullOrWhitespace(referral.Customer_Account_Id);
+      return result;
     });
   }
 
