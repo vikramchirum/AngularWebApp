@@ -3,7 +3,7 @@ import {Component, OnInit, OnDestroy, ViewChild, Input, AfterViewInit, SimpleCha
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
-import { findKey, filter, find } from 'lodash';
+import { findKey, filter, find, uniq } from 'lodash';
 
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { CustomerAccount} from '../../../../core/models/customeraccount/customeraccount.model';
@@ -56,6 +56,10 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
   bestRenewalOffer: IOffers;
   renewalOffers: IOffers[];
   upgradeOffers: IOffers[];
+
+  renewalOffersLegalTextArray: string[] = [];
+  upgradeOffersLegalTextArray: string[] = [];
+
 
   offersServiceSubscription: Subscription;
   plansServicesSubscription: Subscription;
@@ -120,6 +124,8 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
         upgradeOffers => {
           this.isLoadingUpgrades = false;
           this.upgradeOffers = upgradeOffers;
+          this.upgradeOffersLegalTextArray = this.getUniqueLegalText(this.upgradeOffers);
+          console.log('Upgrade offers legal text', this.upgradeOffersLegalTextArray);
           console.log('Upgrade offers', this.upgradeOffers);
         }
       );
@@ -134,8 +140,29 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
     this.allOffers = allOffers.filter(item => item.Type === 'All_Offers');
     if (this.allOffers.length > 0 && this.allOffers[0].Offers.length > 0) {
       this.renewalOffers = this.allOffers[0].Offers;
+      this.renewalOffersLegalTextArray = this.getUniqueLegalText(this.renewalOffers);
+      console.log('Renewal offers legal text', this.renewalOffersLegalTextArray);
       console.log('Renewal offers', this.renewalOffers);
     }
+  }
+
+  getUniqueLegalText(offersArray: IOffers[]): string[] {
+    let other = []; // your other array...
+    let result: string[];
+    offersArray.map(item => {
+      return {
+        Legal_Text_List: item.Legal_Text_List
+      };
+    }).forEach(item => item.Legal_Text_List.length > 0 ? other.push(item) : '');
+    // console.log('array', other);
+    var vals = [];
+    for ( var item of other){
+      for ( var ite of item.Legal_Text_List) {
+        vals.push(ite);
+      }
+    }
+    result = uniq(vals);
+     return result;
   }
 
   showPromoCodeInput($event: Event) {

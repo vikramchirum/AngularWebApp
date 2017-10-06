@@ -92,21 +92,23 @@
   </ng-template>
   <br>
   <ng-template #renewalLegalSection>
-    <div *ngFor="let offer of renewalOffers; let i= index;">
-      <div *ngFor="let text of offer.Legal_Text_List">
+    <div *ngIf="renewalOffersLegalTextArray">
+      <div *ngFor="let text of renewalOffersLegalTextArray">
         <div *ngIf="text">
           <small>{{text}}</small>
         </div>
+        <br> <br>
       </div>
     </div>
+
   </ng-template>
   <ng-template #upgradeLegalSection>
-    <div *ngFor="let offer of upgradeOffers; let i= index;">
-      <div *ngFor="let text of offer.Legal_Text_List">
+    <div *ngIf="upgradeOffersLegalTextArray">
+      <div *ngFor="let text of upgradeOffersLegalTextArray">
         <div *ngIf="text">
-          <!--{{getRespectiveAsterik(text)}}-->
           <small>{{text}}</small>
         </div>
+        <br> <br>
       </div>
     </div>
   </ng-template>
