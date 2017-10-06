@@ -22,6 +22,8 @@ import { OfferSelectionType } from '../../../core/models/enums/offerselectiontyp
 import { IOffers } from '../../../core/models/offers/offers.model';
 import { ServiceAccount } from '../../../core/models/serviceaccount/serviceaccount.model';
 import { IOfferSelectionPayLoad } from '../../../shared/models/offerselectionpayload';
+import { AvailableDateService } from '../../../core/availabledate.service';
+import { IAvailableDate } from '../../../core/models/availabledate/availabledate.model';
 
 @Component({
   selector: 'mygexa-moving-center-form',
@@ -31,6 +33,7 @@ import { IOfferSelectionPayLoad } from '../../../shared/models/offerselectionpay
 })
 export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  availableDates: IAvailableDate;
   nextClicked: boolean = false;
   previousClicked: boolean = true;
   movingCenterForm: FormGroup;
@@ -54,6 +57,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   private CustomerAccountSubscription: Subscription = null;
   private channelStoreSubscription: Subscription = null;
   private offerSubscription: Subscription = null;
+  private availableDateServiceSubscription: Subscription = null;
 
   private ActiveServiceAccount: ServiceAccount = null;
   private TDU_DUNS_Number: string = null;
@@ -72,7 +76,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     private transferService: TransferService,
     private offerService: OfferService,
     private addressSearchService: AddressSearchService,
-    private channelStore: ChannelStore) {
+    private channelStore: ChannelStore,
+    private availableDateService: AvailableDateService
+  ) {
     // start date and end date must be future date.
     this.disableUntil();
     this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId =>  { this.channelId = ChannelId; });
@@ -181,6 +187,14 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
    // Get Address from the emitter when users selects new address
   getSelectedAddress(event) {
     this.newServiceAddress = event;
+    if (this.newServiceAddress.Meter_Info.UAN !== null) {
+      this.availableDateServiceSubscription = this.availableDateService.getAvailableDate(this.newServiceAddress.Meter_Info.UAN).subscribe(
+        availableDates => { this.availableDates = availableDates;
+        console.log('Available dates', availableDates);
+        }
+      );
+    }
+    // console.log('event',  this.newServiceAddress);
   }
 
   addressFormSubmit(addressForm) {
@@ -316,6 +330,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     }
     if (this.offerSubscription) {
       this.offerSubscription.unsubscribe();
+    }
+    if (this.availableDateServiceSubscription) {
+      this.availableDateServiceSubscription.unsubscribe();
     }
   }
 

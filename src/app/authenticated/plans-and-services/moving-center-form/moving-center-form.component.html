@@ -16,7 +16,7 @@
       <div class="col-md-6">
         <div class="form-group">
           <h3>Shut Off Date</h3>
-          <my-date-picker name="Current_Service_End_Date" [options]="currentServiceEndDate" formControlName="Current_Service_End_Date"
+          <my-date-picker class="noSymbol" [disabled]="newServiceAddress === null" name="Current_Service_End_Date" [options]="currentServiceEndDate" formControlName="Current_Service_End_Date"
             (dateChanged)="onEndDateChanged($event)"></my-date-picker>
           <small class="text-danger" *ngIf="movingAddressForm.get('Current_Service_End_Date').touched  && movingAddressForm.controls?.Current_Service_End_Date.errors?.required">You must enter stop date</small> <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday">You cannot pick a sunday for a stop date</small> <small class="text-danger" *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfNewYear">New Year day is not a valid stop date</small> <small class="text-danger" *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid stop date</small> <small class="text-danger" *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid stop date</small> </div>
       </div>
@@ -31,7 +31,7 @@
       <div class="col-md-6">
         <div class="form-group">
           <h3>Turn On Date</h3>
-          <my-date-picker name="New_Service_Start_Date" [options]="newServiceStartDate" formControlName="New_Service_Start_Date" (dateChanged)="onStartDateChanged($event)"></my-date-picker>
+          <my-date-picker name="New_Service_Start_Date" [disabled]="newServiceAddress === null" [options]="newServiceStartDate" formControlName="New_Service_Start_Date" (dateChanged)="onStartDateChanged($event)"></my-date-picker>
           <small class="text-danger" *ngIf="(movingAddressForm.get('New_Service_Start_Date').touched && movingAddressForm.get('Current_Service_End_Date').invalid)">Please enter service turn off date</small> <small class="text-danger" *ngIf="(movingAddressForm.get('New_Service_Start_Date').touched || movingAddressForm.get('New_Service_Start_Date').dirty) && movingAddressForm.get('Current_Service_End_Date').valid && movingAddressForm.controls?.New_Service_Start_Date.errors?.required">You must enter start date</small> <small class="text-danger" *ngIf="movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday">You cannot pick a sunday for a start date</small> <small class="text-danger" *ngIf="!movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday && movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfNewYear">New Year day is not a valid start date</small> <small class="text-danger" *ngIf="!movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday && movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid start date</small> <small class="text-danger" *ngIf="!movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday && movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid start date</small> <small class="text-danger" *ngIf="!movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfSunday &&
           !movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfNewYear &&
           !movingAddressForm.controls?.New_Service_Start_Date.errors?.checkIfChristmasEve &&
@@ -43,7 +43,9 @@
 
     <!--If we don't offer service in the moving address, we should show the message-->
     <ng-container *ngIf="availableOffers">
-      <div *ngIf="availableOffers.length === 0" class="alert alert-info fade in alert-dismissable"> <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a> <strong>We're Sorry!</strong> We cannot register your move online, please call 1-888 888 8888 for assistance. </div>
+      <div *ngIf="availableOffers.length === 0" class="alert alert-info fade in alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+        <strong>We're Sorry!</strong> We cannot register your move online, please call 1-888 888 8888 for assistance. </div>
 
       <!-- If user has past due balance, show hte message -->
       <!--<small class="text-danger" *ngIf="pastDueErrorMessage && availableOffers.length > 0">-->
