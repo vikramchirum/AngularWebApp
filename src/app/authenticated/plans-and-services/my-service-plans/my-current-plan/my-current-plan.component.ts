@@ -1,22 +1,23 @@
-import {
-  Component, OnDestroy, OnInit, SimpleChanges, ViewChild
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { get, result, includes } from 'lodash';
+
+import { UserService } from 'app/core/user.service';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { UtilityService } from 'app/core/utility.service';
+import { RenewalStore } from 'app/core/store/renewalstore';
+import { OffersStore } from 'app/core/store/offersstore';
+
+import { IUser } from 'app/core/models/user/User.model';
 import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
-import { PlanConfirmationPopoverComponent} from '../plan-confirmation-popover/plan-confirmation-popover.component';
-import { RenewalStore } from '../../../../core/store/renewalstore';
-import {OffersStore} from '../../../../core/store/offersstore';
-import {Observable} from 'rxjs/Observable';
-import {IRenewalDetails} from '../../../../core/models/renewals/renewaldetails.model';
-import {ICreateRenewalRequest} from '../../../../core/models/renewals/createrenewalrequest.model';
+import { IRenewalDetails } from 'app/core/models/renewals/renewaldetails.model';
+import { ICreateRenewalRequest } from 'app/core/models/renewals/createrenewalrequest.model';
 
-import {UserService} from '../../../../core/user.service';
-import {IUser} from '../../../../core/models/user/User.model';
+import { PlanConfirmationPopoverComponent } from '../plan-confirmation-popover/plan-confirmation-popover.component';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -39,23 +40,24 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   public RenewalOffers: IOffers = null;
   public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
-  selectCheckBox  = false;
+  selectCheckBox = false;
   enableSelect = false;
   currentView: string = null;
 
   constructor(private userService: UserService, private serviceAccountService: ServiceAccountService
-    , private OfferStore: OffersStore, private renewalStore: RenewalStore) {
+    , private OfferStore: OffersStore, private renewalStore: RenewalStore, private utilityService: UtilityService) {
     this.isOffersReady = false;
   }
 
   ngOnInit() {
 
-    this.userService.UserObservable.subscribe(res => {
-      this.user = res;
+    this.userService.UserObservable.subscribe(user => {
+      this.user = user;
     });
 
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
+
     this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1]).subscribe(result => {
       this.ActiveServiceAccount = result[0];
       this.RenewalAccount = result[1];
@@ -89,15 +91,17 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     if (this.ActiveServiceAccount) {
       if (this.isRenewalPending) {
         this.currentView = 'PendingRenewalPlan';
-      } else if (this.isUpForRenewal && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate ) {
+        this.RenewalAccount.Existing_Renewal.End_Date = this.utilityService.addMonths(new Date(this.RenewalAccount.Existing_Renewal.Start_Date), this.RenewalAccount.Existing_Renewal.Offer.Term);
+      } else if (this.isUpForRenewal && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate) {
         this.currentView = 'RenewalPlan';
       } else if (this.ActiveServiceAccount.Current_Offer.IsHoldOverRate) {
         this.currentView = 'HoldOverPlan';
-      } else if (!this.isUpForRenewal && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate ) {
+      } else if (!this.isUpForRenewal && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate) {
         this.currentView = 'CurrentPlan';
       }
     }
   }
+
   checkFeaturedUsageLevel(RenewalOffer: IOffers) {
     if (RenewalOffer) {
       if (RenewalOffer.Plan.Product.Featured_Usage_Level != null) {
@@ -132,10 +136,12 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   toggleButton() {
     this.enableSelect = !this.enableSelect;
   }
+
   closeCheckBox() {
     this.selectCheckBox = false;
     this.enableSelect = false;
   }
+
   createRenewal() {
     const request = {} as ICreateRenewalRequest;
     request.Service_Account_Id = this.ActiveServiceAccount.Id;
@@ -152,6 +158,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.plansServicesSubscription.unsubscribe();
     if (this.isUpForRenewal) {
-      result(this.OffersServiceSubscription, 'unsubscribe'); }
+      this.OffersServiceSubscription.unsubscribe();
+    }
   }
 }

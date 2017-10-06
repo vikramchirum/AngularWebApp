@@ -1,6 +1,6 @@
 <div *ngIf="ActiveServiceAccount">
   <div [ngSwitch]="currentView">
-    <div  *ngSwitchCase="'PendingRenewalPlan'">
+    <div *ngSwitchCase="'PendingRenewalPlan'">
       <section>
         <div layout-align="center">
           <md-card class="current-plan-card" *ngIf="RenewalAccount">
@@ -18,7 +18,7 @@
               <h2>{{RenewalAccount?.Existing_Renewal?.Offer?.RateAt2000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup class="sup-text">&cent;</sup><small>per kwh</small></h2>
               <p class="bg-default">TERM: {{RenewalAccount?.Existing_Renewal?.Offer?.Term}} Months</p>
               <p>START: {{RenewalAccount?.Existing_Renewal?.Start_Date | date: 'MM/dd/yyyy'}}</p>
-              <p  class="bg-default">END: {{RenewalAccount?.Existing_Renewal?.Offer?.End_Date | date:'MM/dd/yyyy'}}</p>
+              <p class="bg-default">END: {{RenewalAccount.Existing_Renewal.End_Date | date:'MM/dd/yyyy'}}</p>
               <p><b style="color:orange">Pending...   </b><a (click)="pop.show()">(view current rate)</a></p>
               <br>
               <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
@@ -40,7 +40,7 @@
         <ng-template #ShowRenewalOffer>
           <div class="current-plan-card plan-card-container mat-card">
             <div class="card-content">
-              <div class="alert alert-warning">Best for your home</div>
+              <div class="alert alert-warning"> Recommended for your home</div>
               <div class="mat-card-title">
                 <h2>{{RenewalOffers.Plan.Name}}
                   <small><i class="fa fa-info-circle" (click)="pop.show()" aria-hidden="true"></i></small>

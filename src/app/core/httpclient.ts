@@ -9,6 +9,8 @@ import { Observable } from 'rxjs/Rx';
 import { get, isPlainObject } from 'lodash';
 import { environment } from 'environments/environment';
 
+import { IErrorResponse } from './models/error/errorresponse';
+
 @Injectable()
 export class HttpClient extends Http {
 
@@ -90,9 +92,10 @@ export class HttpClient extends Http {
   }
 
   handleHttpError(error: Response | any) {
-    console.log('Error', error);
     // In a real world app, you might use a remote logging infrastructure
-    let errMsg: string; let DisplayErrMsg: string;
+    console.log('Error', error);
+    let errMsg: string;
+    let DisplayErrMsg: string;
     if (error instanceof Response) {
       const body = error.json() || '';
       DisplayErrMsg = body.Message;
@@ -101,11 +104,19 @@ export class HttpClient extends Http {
     } else {
       errMsg = error.message ? error.message : error.toString();
     }
+
+    const errorResponse = {} as IErrorResponse;
+    errorResponse.StatusCode = +error.status;
+    errorResponse.Message = DisplayErrMsg;
+
     console.error(errMsg);
     if ((error.status === 401 || error.status === 403)) {
       console.log('The token has expired or the user is not authorised. Please log back again.');
       this.logout(true);
-    } else if (error.status === 400 || error.status === 503) {
+    } else if (error.status === 400 || error.status === 500) {
+      console.log(DisplayErrMsg);
+      return Observable.throw(errorResponse);
+    } else if (error.status === 503) {
       console.log(DisplayErrMsg);
       return Observable.throw(DisplayErrMsg);
     } else {
@@ -113,7 +124,6 @@ export class HttpClient extends Http {
       return Observable.throw(errMsg);
     }
   }
-
 
   logout(maintainRouteState?: boolean) {
     this.clearLocalStorage();

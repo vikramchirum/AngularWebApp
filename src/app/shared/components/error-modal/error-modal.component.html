@@ -1,0 +1,41 @@
+<section class="error-modal">
+  <div [config]="{ backdrop: 'static', keyboard: false }"
+       bsModal #errorModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+
+        <div class="error-header">
+          <button type="button" class="close pull-right" aria-label="Close" style="padding-right: 20px"  (click)="hideErrorModal()">
+              <span class="close-btn" aria-hidden="true">
+              <i class="fa fa-remove"></i></span>
+          </button>
+        </div><br>
+
+        <div class="modal-body">
+
+          <h2 class="modal-title"><b><span class="hidden-xs">Error!!!</span></b></h2>
+          <div class="modal-body container-fluid">
+              <div class="row">
+                <h4 class="text-center error-info">{{ errorResponse?.Message }}</h4>
+              </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="text-center">
+                <button class="btn btn-primary" (click)="hideErrorModal()">Okay</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+

@@ -12,5 +12,6 @@ export interface IRenewal {
   Start_Date: Date;
   Execution_Date: Date;
   Is_Pending: boolean;
+  End_Date: Date;
 }
 

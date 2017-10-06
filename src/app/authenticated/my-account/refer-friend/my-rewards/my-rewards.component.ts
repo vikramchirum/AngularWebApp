@@ -47,11 +47,13 @@ export class MyRewardsComponent implements OnInit, OnDestroy {
     });
 
     this.referralSubscription = referral$.subscribe(result => {
-      this.isLoading = false;
       this.referral = result;
-      this.totalSavingsToDate = (sumBy(this.referral.RefereeList, function (r) {
-        return r.Total_Amount_Credited;
-      }));
+      this.isLoading = false;
+      if (this.referral) {
+        this.totalSavingsToDate = (sumBy(this.referral.RefereeList, function (r) {
+          return r.Total_Amount_Credited;
+        }));
+      }
     });
   }
 

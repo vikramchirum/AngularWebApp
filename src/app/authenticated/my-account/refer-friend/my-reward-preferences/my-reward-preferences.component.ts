@@ -47,9 +47,12 @@ export class MyRewardPreferencesComponent implements OnInit, OnDestroy {
     this.referralSubscription = Observable.combineLatest(serviceAccounts$, referral$).subscribe(result => {
       this.serviceAccounts = result[0];
       this.referral = result[1];
-      this.selectedServiceAccount = this.serviceAccounts.filter(x => {
-        return x.Id === this.referral.Service_Account_Id;
-      })[0];
+
+      if (this.referral) {
+        this.selectedServiceAccount = this.serviceAccounts.filter(x => {
+          return x.Id === this.referral.Service_Account_Id;
+        })[0];
+      }
     });
   }
 
