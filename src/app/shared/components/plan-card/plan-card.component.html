@@ -24,6 +24,7 @@
       </div>
       <p>at {{offer.Plan.Product.Featured_Usage_Level}}</p>
       <p>TERM:{{offer.Plan.Term}} months</p>
+      <!--<p *ngFor="let feature of offer.Feature_List">{{feature}}</p>-->
       <p>{{offer.Promotion?.Name}}</p>
     </div>
     <div *ngIf="isOfferSelected" class="agreement-section">
@@ -126,9 +127,9 @@
                              [ngClass]="productFeaturesSelected ? 'fa-chevron-down' : 'fa-chevron-up'"></i><br>
           <div class="card-included popover pull-left" *ngIf="productFeaturesSelected">
             <div
-              *ngIf="(offer.Plan.Product.Product_Features && offer.Plan.Product.Product_Features.length > 0); then features else noFeatures"></div>
+              *ngIf="(offer.Feature_List && offer.Feature_List.length > 0); then features else noFeatures"></div>
             <ng-template #features>
-              <div *ngFor="let feature of offer.Plan.Product.Product_Features">
+              <div *ngFor="let feature of offer.Feature_List">
                 <div class="row">
                   <div class="col-sm-2">
                     <i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>
@@ -154,6 +155,7 @@
       </div>
     </div>
   </div>
+
 </ng-template>
 <ng-template #showLoading>
   <div class="text-center">

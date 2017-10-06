@@ -62,6 +62,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   results: ServiceAddress[] = null;
   newServiceAddress: ServiceAddress = null;
   notSameTDU: boolean = null;
+  showMorePlans: boolean = null;
+
   @ViewChild('selectPlanModal') selectPlanModal: SelectPlanModalDialogComponent;
 
 
@@ -172,6 +174,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.ActiveServiceAccount = event;
   }
   getSelectedOffer(event) {
+    this.showNewPlans = false; // hide all offers
     this.selectedOffer = event;
     console.log('Offer selected', this.selectedOffer);
     // OfferId should only get passed when user wants to change their offer
@@ -221,6 +224,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.ServicePlanForm.controls['service_plan'].setValue('New Plan');
     this.showNewPlans = true;
     // this.selectPlanModal.show();
+  }
+  morePlansClicked() {
+    this.showMorePlans = !this.showMorePlans;
   }
 
   getCurrentPlan() {
