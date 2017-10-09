@@ -53,10 +53,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   public transferRequest: TransferRequest = null;
   offerSelectionType = OfferSelectionType;
   finalBillAddress: string = null;
-
-  disableDates: any[] = [];
   convertedDates: Array<IMyDate> = null;
-
   private ActiveServiceAccountSubscription: Subscription = null;
   private CustomerAccountSubscription: Subscription = null;
   private channelStoreSubscription: Subscription = null;
@@ -87,7 +84,6 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   ) {
     // start date and end date must be future date.
     this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId =>  { this.channelId = ChannelId; });
-    this.disableDates = [{year: 2017, month: 11, day: 1}, {year: 2017, month: 12, day: 1}];
   }
 
 
@@ -166,7 +162,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
   disableUntil() {
     let currentDate = new Date(this.trimmedAvailableDates[0]);
-    console.log('hi date', currentDate.getUTCDate() - 1);
+    // console.log('hi date', currentDate.getUTCDate() - 1);
     let copy = this.getCopyOfOptions();
     copy.disableUntil = {
       year: currentDate.getUTCFullYear(),
@@ -181,7 +177,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   disableSince() {
     let currentDate = new Date(this.trimmedAvailableDates[1]);
     // currentDate.setDate(currentDate.getDate() - 1 );
-    console.log('hi date1', currentDate.getUTCDate() + 1);
+    // console.log('hi date1', currentDate.getUTCDate() + 1);
     let copy = this.getCopyOfOptions();
     copy.disableSince = {
       year: currentDate.getUTCFullYear(),
