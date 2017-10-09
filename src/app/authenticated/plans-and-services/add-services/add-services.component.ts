@@ -17,6 +17,9 @@ import { CustomerAccountService } from 'app/core/CustomerAccount.service';
 import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
 import { ModalStore } from 'app/core/store/modalstore';
 import { ChannelStore } from '../../../core/store/channelstore';
+import { OfferSelectionType } from '../../../core/models/enums/offerselectiontype';
+import { IOfferSelectionPayLoad } from '../../../shared/models/offerselectionpayload';
+import { environment } from '../../../../environments/environment.prod';
 
 @Component({
   selector: 'mygexa-add-services',
@@ -47,12 +50,11 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   private serviceType: string;
   private selectedOfferId: string;
   private enrollErrorMsg: string;
-
-
   private selDate: IMyDate = { year: 0, month: 0, day: 0 };
-
   private enrolled: boolean = false;
   private showPlansFlag: boolean = false;
+  offerSelectionType = OfferSelectionType;
+  selectedOffer: IOfferSelectionPayLoad;
 
   constructor(private fb: FormBuilder,
     private offerService: OfferService, private UserService: UserService, private enrollService: EnrollService, private customerAccountService: CustomerAccountService,
@@ -204,6 +206,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
 
 
   onNotify(event) {
+    this.selectedOffer = event;
     this.selectedOfferId = event.Id;
     if (this.formEnrollmentRequest()) {
       this.enrollService.createEnrollment(this.enrollmentRequest)
@@ -268,7 +271,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       return false;
     }
     this.enrollmentRequest = {
-      Email_Address: 'James.Smith@gexaenergy.com',
+      Email_Address: environment.Client_Email_Addresses,
       Offer_Id: this.selectedOfferId,
       UAN: this.selectedServiceAddress.Meter_Info.UAN,
       Customer_Check_Token: this.tokenMsg,
@@ -277,12 +280,16 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       Selected_Start_Date: new Date(this.addServiceForm.controls['Service_Start_Date'].value.formatted).toISOString(),
       Language_Preference: this.customerDetails.Language,
       Contact_Info: {
-        Email_Address: 'James.Smith@gexaenergy.com',
+        Email_Address: environment.Client_Email_Addresses,
         Primary_Phone_Number: this.customerDetails.Primary_Phone
       },
       Billing_Address: this.selectedServiceAddress.Address
     };
-    console.log('this.enrollmentRequest', this.enrollmentRequest);
+    if(this.selectedOffer.Offer.Has_Partner) {
+      this.enrollmentRequest.Partner_Account_Number = this.selectedOffer.Partner_Account_Number;
+      this.enrollmentRequest.Partner_Name_On_Account = this.selectedOffer.Partner_Name_On_Account;
+    }
+    //console.log('this.enrollmentRequest', this.enrollmentRequest);
     return true;
   }
 
