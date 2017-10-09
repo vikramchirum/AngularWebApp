@@ -61,7 +61,9 @@
         <h2>Select a Plan</h2>
         <div class="row" class="featured-offers">
           <div class="col-md-4" *ngFor="let featuredOffer of this.featuredOffers">
-            <mygexa-select-plan (selectedOffer)="onNotify($event)" [featuredOffer]="featuredOffer"></mygexa-select-plan>
+            <!-- <mygexa-select-plan (selectedOffer)="onNotify($event)" [featuredOffer]="featuredOffer"></mygexa-select-plan> -->
+            <mygexa-plan-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
+            (onOfferSelectedEvent)="onNotify($event)"></mygexa-plan-card>
           </div>
         </div>
       </div>
@@ -112,7 +114,9 @@
       <br/> -->
       <div class="row" *ngIf="this.featuredOffers && this.featuredOffers.length > 0 && !showPlansFlag">
         <div class="col-md-12 col-xs-12 text-right">
-          <button class="btn btn-primary btn-lg" (click)="showPlans()">View Plans</button>
+          <button class="btn btn-primary btn-lg" (click)="showPlans()">View Plans
+            <i class="fa fa-chevron-right fa-wh" style="color: white" aria-hidden="true"></i>
+          </button>
         </div>
       </div>
     </div>
