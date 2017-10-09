@@ -214,6 +214,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   disableFields($event) {
     // console.log('h', $event);
     this.enableDates = false;
+    let copy = this.getCopyOfOptions();
+    copy.disableUntil =  { year: 0, month: 0, day: 0 };
+    copy.disableSince =  { year: 0, month: 0, day: 0 };
+    this.newServiceStartDate = copy;
     this.movingAddressForm.controls['New_Service_Start_Date'].setValue('');
   }
    // Get Address from the emitter when users selects new address

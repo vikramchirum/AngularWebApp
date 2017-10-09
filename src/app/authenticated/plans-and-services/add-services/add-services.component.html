@@ -14,7 +14,7 @@
           Enter New Service Address
         </h3>
         <!-- <input type="text" class="form-control" placeholder="Enter New Address"> -->
-        <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)"></mygexa-address-search>
+        <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)" (onServiceAddressChanged) = "disableFields($event)"></mygexa-address-search>
       </div>
     </div>
 
@@ -22,9 +22,9 @@
     <div class="row">
       <h3 class="start-service-text">When would you like start service?</h3>
       <div class="col-md-6">
-        <my-date-picker name="Service_Start_Date" [selDate]="selDate" [options]="ServiceStartDate" formControlName="Service_Start_Date"
-          (dateChanged)="onStartDateChanged($event)"></my-date-picker>    
-          <small class="text-danger" *ngIf="addServiceForm.controls?.Service_Start_Date.errors?.checkIfJuly4th">Select business day</small>  
+        <my-date-picker name="Service_Start_Date" [selDate]="selDate" [options]="ServiceStartDate" formControlName="Service_Start_Date" [disabled]="!enableDates"
+          (dateChanged)="onStartDateChanged($event)"></my-date-picker>
+          <small class="text-danger" *ngIf="addServiceForm.controls?.Service_Start_Date.errors?.checkIfJuly4th">Select business day</small>
           <small class="text-danger" *ngIf="addServiceForm.controls?.Service_Start_Date.errors?.checkIfNewYear">New Year day is not a valid start date</small>
           <small class="text-danger" *ngIf="addServiceForm.controls?.Service_Start_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid start date</small>
           <small class="text-danger" *ngIf="addServiceForm.controls?.Service_Start_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid start date</small>
@@ -40,14 +40,14 @@
           <div class="col-xs-6 col-md-5">
             <div class="form-control">
               <label class="radio-inline">
-                <input type="radio" formControlName="serviceType" [(ngModel)]="serviceType" value="MoveIn">I'm Moving
+                <input type="radio" formControlName="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" value="MoveIn">I'm Moving
               </label>
             </div>
           </div>
           <div class="col-xs-6 col-md-5 col-md-offset-1">
             <div class="form-control">
               <label class="radio-inline">
-                <input type="radio" formControlName="serviceType" [(ngModel)]="serviceType" value="Switch">I'm Switching
+                <input type="radio" formControlName="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" value="Switch">I'm Switching
               </label>
             </div>
           </div>
@@ -67,7 +67,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="this.featuredOffers && this.featuredOffers.length <= 0" >      
+      <div *ngIf="this.featuredOffers && this.featuredOffers.length <= 0" >
           <h2> No available offers for this service account. </h2>
       </div>
       <div *ngIf="!isTokenError && !showPlansFlag && this.featuredOffers && this.featuredOffers.length > 0">
@@ -124,7 +124,7 @@
 
  <!--Enrollment Services Confirmation Screen -->
  <div [hidden]="!enrolled" class="col-md-8">
-    <h2>Success!</h2> 
+    <h2>Success!</h2>
     <br/>
     <div>Your order has been submitted. A confirmation email will be sent to the email address we have on your account.
       <br/><br/>Thank you for choosing Gexa Energy!
