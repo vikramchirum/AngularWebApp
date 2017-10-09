@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild, ViewContainerRef, OnDestroy, AfterViewInit} from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { IMyOptions, IMyDateModel } from 'mydatepicker';
+import { IMyOptions, IMyDateModel, IMyDate } from 'mydatepicker';
 import { clone } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
@@ -54,6 +54,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   offerSelectionType = OfferSelectionType;
   finalBillAddress: string = null;
 
+  disableDates: any[] = [];
+  convertedDates: Array<IMyDate> = null;
+
   private ActiveServiceAccountSubscription: Subscription = null;
   private CustomerAccountSubscription: Subscription = null;
   private channelStoreSubscription: Subscription = null;
@@ -83,8 +86,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     private availableDateService: AvailableDateService
   ) {
     // start date and end date must be future date.
-    this.disableUntil();
     this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId =>  { this.channelId = ChannelId; });
+    this.disableDates = [{year: 2017, month: 11, day: 1}, {year: 2017, month: 12, day: 1}];
   }
 
 
@@ -93,7 +96,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   ngOnInit() {
 
     this.movingAddressForm = this.fb.group({
-      'Current_Service_End_Date': [null, Validators.compose([
+      'Current_Service_End_Date': [ null, Validators.compose([
         Validators.required,
         checkIfSunday,
         checkIfNewYear,
@@ -138,13 +141,19 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   }
   private newServiceStartDate: IMyOptions = {
     // start date options here...
+    enableDays: [],
+     disableDays: [],
+    // highlightDates: [{year: 2017, month: 11, day: 1}, {year: 2017, month: 11, day: 2}, {year: 2017, month: 12, day: 1}],
     disableUntil: { year: 0, month: 0, day: 0 },
+    disableSince: { year: 0, month: 0, day: 0 },
     dateFormat: 'mm-dd-yyyy'
   };
 
 
   private currentServiceEndDate: IMyOptions = {
-    // other end date options here...
+    // other end date options here...;
+    enableDays: [],
+    disableDays: [],
     dateFormat: 'mm-dd-yyyy'
   };
 
@@ -156,16 +165,34 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   disableUntil() {
-    let currentDate = new Date();
+    let currentDate = new Date(this.trimmedAvailableDates[0]);
+    console.log('hi date', currentDate.getUTCDate() - 1);
     let copy = this.getCopyOfOptions();
     copy.disableUntil = {
-      year: currentDate.getFullYear(),
-      month: currentDate.getMonth() + 1,
-      day: currentDate.getDate()
+      year: currentDate.getUTCFullYear(),
+      month: currentDate.getUTCMonth() + 1,
+      day: currentDate.getUTCDate() - 1
     };
     this.newServiceStartDate = copy;
     this.currentServiceEndDate = copy;
   }
+
+
+  disableSince() {
+    let currentDate = new Date(this.trimmedAvailableDates[1]);
+    // currentDate.setDate(currentDate.getDate() - 1 );
+    console.log('hi date1', currentDate.getUTCDate() + 1);
+    let copy = this.getCopyOfOptions();
+    copy.disableSince = {
+      year: currentDate.getUTCFullYear(),
+      month: currentDate.getUTCMonth() + 1,
+      day: currentDate.getUTCDate() + 1
+    };
+    this.newServiceStartDate = copy;
+    this.currentServiceEndDate = copy;
+  }
+
+
 
   getCopyOfOptions(): IMyOptions {
     return JSON.parse(JSON.stringify(this.newServiceStartDate));
@@ -188,33 +215,70 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.offerId = this.selectedOffer.Id;
   }
 
+  disableFields($event) {
+    // console.log('h', $event);
+    this.enableDates = false;
+    this.movingAddressForm.controls['New_Service_Start_Date'].setValue('');
+  }
    // Get Address from the emitter when users selects new address
   getSelectedAddress(event) {
     this.newServiceAddress = event;
-
+    // if ( this.newServiceAddress === null) {
+    //   this.enableDates = false;
+    // }
     if (this.newServiceAddress.Meter_Info.UAN !== null) {
       this.availableDateServiceSubscription = this.availableDateService.getAvailableDate(this.newServiceAddress.Meter_Info.UAN).subscribe(
         availableDates => { this.availableDates = availableDates;
          this.trimmedAvailableDates = this.trimDates(this.availableDates.Available_Move_In_Dates);
+          this.disableUntil(); this.disableSince();
+         // this.convertedDates = this.parseDates(this.trimmedAvailableDates);
          this.enableDates = true;
+         // this.enableAllDays(this.enableDates);
           console.log('Available dates', availableDates);
           console.log('dates array', this.trimmedAvailableDates );
+          // console.log('converted dates array', this.convertedDates );
         }
       );
+    } else {
+      this.enableDates = false;
     }
     // console.log('event',  this.newServiceAddress);
   }
 
   trimDates(datesArray: string[]): Date[] {
     let array = [];
-    datesArray.forEach(item => { array.push(item.substring(0, 10)); } );
+    let firstDay = datesArray[0];
+    let lastDay = datesArray[datesArray.length - 1];
+    array.push(firstDay.substring(0, 10));
+    array.push(lastDay.substring(0, 10));
     // console.log('dates array', array);
     array.forEach( item => new Date(item));
+    // datesArray.forEach(item => { array.push(item.substring(0, 10)); } );
+    // // console.log('dates array', array);
+    // array.forEach( item => new Date(item));
     return array;
   }
 
-  addressFormSubmit(addressForm) {
+  parseDates(dates: Date[]): Array<IMyDate> {
+    let dateArray: Array<IMyDate> = [];
+     dates.forEach( item => { dateArray.push({year:  new Date(item).getUTCFullYear(), month:  new Date(item).getUTCMonth() + 1, day:  new Date(item).getUTCDate()}); });
+     // console.log('dates', dateArray);
+    return dateArray;
+  }
 
+  enableAllDays(checked: boolean): void {
+    let copy = this.getCopyOfOptions();
+    copy.enableDays = checked ? this.convertedDates : [];
+    this.newServiceStartDate = copy;
+  }
+
+  disableAllDays(checked: boolean): void {
+    let copy = this.getCopyOfOptions();
+    copy.disableDays = checked ? this.convertedDates : [];
+    this.newServiceStartDate = copy;
+  }
+
+  addressFormSubmit(addressForm) {
     if (this.customerDetails && this.customerDetails.Past_Due > 40) {
      this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
     }

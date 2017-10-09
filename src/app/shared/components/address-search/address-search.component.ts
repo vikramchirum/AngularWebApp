@@ -30,8 +30,10 @@ export class AddressSearchComponent implements OnInit {
   newAddressList: Observable<ServiceAddress[]>;
   private searchTerms = new Subject<string>();
   showAddressList: boolean = true;
+  isValidAddress: boolean = null;
 
   @Output() public onSelectedServiceAddress = new EventEmitter();
+  @Output() public onServiceAddressChanged = new EventEmitter();
 
   constructor(
     private  addressSearchService: AddressSearchService,
@@ -41,6 +43,10 @@ export class AddressSearchComponent implements OnInit {
   search(term: string): void {
     this.showAddressList = true;
     this.searchTerms.next(term);
+    if ( !term ) {
+      this.isValidAddress = false;
+      this.onServiceAddressChanged.emit(this.isValidAddress);
+    }
   }
 
   ngOnInit(): void {
@@ -74,6 +80,4 @@ export class AddressSearchComponent implements OnInit {
     this.showAddressList = !this.showAddressList;
 
   }
-
-
 }
