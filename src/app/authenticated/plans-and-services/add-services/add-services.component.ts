@@ -19,7 +19,7 @@ import { ModalStore } from 'app/core/store/modalstore';
 import { ChannelStore } from '../../../core/store/channelstore';
 import { OfferSelectionType } from '../../../core/models/enums/offerselectiontype';
 import { IOfferSelectionPayLoad } from '../../../shared/models/offerselectionpayload';
-import { environment } from '../../../../environments/environment.prod';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'mygexa-add-services',
