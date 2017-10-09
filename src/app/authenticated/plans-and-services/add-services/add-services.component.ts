@@ -16,10 +16,10 @@ import { EnrollmentRequest } from 'app/core/models/enrolladditionalservices/enro
 import { CustomerAccountService } from 'app/core/CustomerAccount.service';
 import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
 import { ModalStore } from 'app/core/store/modalstore';
-import { ChannelStore } from '../../../core/store/channelstore';
-import { OfferSelectionType } from '../../../core/models/enums/offerselectiontype';
-import { IOfferSelectionPayLoad } from '../../../shared/models/offerselectionpayload';
-import { environment } from '../../../../environments/environment';
+import { ChannelStore } from 'app/core/store/channelstore';
+import { OfferSelectionType } from 'app/core/models/enums/offerselectiontype';
+import { IOfferSelectionPayLoad } from 'app/shared/models/offerselectionpayload';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'mygexa-add-services',
