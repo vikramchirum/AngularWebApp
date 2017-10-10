@@ -35,14 +35,16 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   OffersServiceSubscription: Subscription;
   isOffersReady: boolean = null;
   public isUpForRenewal: boolean;
+  isOfferAgreed = false;
+  isOfferSelected = false;
   public isRenewalPending: boolean;
   public isOnHoldOver: boolean;
   public FeaturedOffers: AllOffersClass[];
   public RenewalOffers: IOffers = null;
   public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
-  selectCheckBox = false;
-  enableSelect = false;
+  // selectCheckBox = false;
+  // enableSelect = false;
   currentView: string = null;
   renewalUpgradeFormGroup: FormGroup;
 
@@ -136,18 +138,28 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSelect(event) {
+  onSelectOffer(event) {
     event.preventDefault();
-    this.selectCheckBox = true;
+    event.stopPropagation();
+    this.isOfferSelected = true;
+    // this.selectCheckBox = true;
   }
 
   toggleButton() {
-    this.enableSelect = !this.enableSelect;
+    // this.enableSelect = !this.enableSelect;
+    this.isOfferAgreed = !this.isOfferAgreed;
   }
-
-  closeCheckBox() {
-    this.selectCheckBox = false;
-    this.enableSelect = false;
+  //
+  // closeCheckBox() {
+  //   this.selectCheckBox = false;
+  //   this.enableSelect = false;
+  // }
+  onCloseSelectOffer(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isOfferSelected = false;
+    // this.selectCheckBox = false;
+    // this.enableSelect = false;
   }
 
   createRenewal() {
@@ -159,12 +171,26 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
       request.Partner_Account_Number = this.renewalUpgradeFormGroup.get('accountName').value;
       request.Partner_Name_On_Account = this.renewalUpgradeFormGroup.get('rewardsNumber').value;
     }
+    // console.log('request', request);
     this.renewalStore.createRenewal(request).subscribe(result => {
       if (result) {
         console.log('Renewal Created');
         this.planPopModal.showPlanPopModal();
       }
     });
+  }
+
+  isCreateOfferEnabled() {
+    if (this.RenewalOffers.Has_Partner) {
+      if (!this.isOfferAgreed) {
+        return true;
+      }
+      if (!this.renewalUpgradeFormGroup.valid) {
+        return true;
+      }
+    } else if (!this.isOfferAgreed) {
+      return true;
+    }
   }
 
   ngOnDestroy() {
