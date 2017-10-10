@@ -1,8 +1,8 @@
 import { Component, OnInit, EventEmitter, Input, Output, OnDestroy} from '@angular/core';
-import { Router }            from '@angular/router';
+import { Router } from '@angular/router';
 
-import { Observable }        from 'rxjs/Observable';
-import { Subject }           from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 // Observable class extensions
 import 'rxjs/add/observable/of';
@@ -26,12 +26,14 @@ import { ServiceAddress } from 'app/core/models/serviceaddress/serviceaddress.mo
 })
 export class AddressSearchComponent implements OnInit {
 
-  private selectedAddress:string = '';
+  private selectedAddress: string = '';
   newAddressList: Observable<ServiceAddress[]>;
   private searchTerms = new Subject<string>();
-  showAddressList:boolean = true;
+  showAddressList: boolean = true;
+  isValidAddress: boolean = null;
 
   @Output() public onSelectedServiceAddress = new EventEmitter();
+  @Output() public onServiceAddressChanged = new EventEmitter();
 
   constructor(
     private  addressSearchService: AddressSearchService,
@@ -39,8 +41,12 @@ export class AddressSearchComponent implements OnInit {
 
   // Push a search term into the observable stream.
   search(term: string): void {
-    this.showAddressList=true;
+    this.showAddressList = true;
     this.searchTerms.next(term);
+    if ( !term ) {
+      this.isValidAddress = false;
+      this.onServiceAddressChanged.emit(this.isValidAddress);
+    }
   }
 
   ngOnInit(): void {
@@ -58,22 +64,20 @@ export class AddressSearchComponent implements OnInit {
         return Observable.of<ServiceAddress[]>([]);
       });
   }
-  
-    
+
+
   searchNewAddress(queryString: string) {
     const searchRequest = {} as ISearchAddressRequest;
     searchRequest.partial = queryString;
-    return this.addressSearchService.searchAddress(searchRequest)
+    return this.addressSearchService.searchAddress(searchRequest);
   }
 
    selectNewServiceAddress(value, event) {
     event.stopPropagation();
     this.selectedAddress = value.newAddressString();
-    console.log("New service address", value)
+    console.log('New service address', value);
     this.onSelectedServiceAddress.emit(value);
     this.showAddressList = !this.showAddressList;
-  
-  }
-  
 
+  }
 }

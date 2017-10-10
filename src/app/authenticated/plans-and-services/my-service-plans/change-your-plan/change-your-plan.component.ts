@@ -152,20 +152,23 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
     // console.log('array', offersArray);
     let other = []; // your other array...
     let result: string[];
-    offersArray.map(item => {
-      return {
-        Legal_Text_List: item.Legal_Text_List
-      };
-    }).forEach(item => item.Legal_Text_List.length > 0 ? other.push(item) : '');
-     // console.log('array', other);
-    var vals = [];
-    for ( var item of other){
-      for ( var ite of item.Legal_Text_List) {
-        vals.push(ite);
+    if (offersArray.length > 0 ) {
+      offersArray.map(item => {
+        return {
+          Legal_Text_List: item.Legal_Text_List
+        };
+      }).forEach(item => item.Legal_Text_List.length > 0 ? other.push(item) : '');
+      // console.log('array', other);
+      var vals = [];
+      for ( var item of other){
+        for ( var ite of item.Legal_Text_List) {
+          vals.push(ite);
+        }
       }
+      result = uniq(vals);
+      return result;
     }
-    result = uniq(vals);
-     return result;
+    return null;
   }
 
   showPromoCodeInput($event: Event) {

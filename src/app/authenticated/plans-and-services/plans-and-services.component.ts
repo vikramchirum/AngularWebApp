@@ -57,7 +57,7 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
         this.OfferStore.LoadRenewalOffersData(this.ActiveServiceAccount.Id);
       } else if (!this.IsUpForRenewal || this.ActiveServiceAccount.Current_Offer.IsHoldOverRate || this.IsRenewalPending) {
         // everything else is an upgrade
-        this.OfferStore.LoadUpgradeOffersData(this.ActiveServiceAccount.Current_Offer.Term, this.ActiveServiceAccount.TDU_DUNS_Number);
+        this.OfferStore.LoadUpgradeOffersData(this.ActiveServiceAccount.Id);
       }
     });
 

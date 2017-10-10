@@ -17,7 +17,6 @@ import { MyCurrentPlanComponent } from './my-service-plans/my-current-plan/my-cu
 import { DocumentsComponent } from './my-service-plans/documents/documents.component';
 import { RenewalGaugeComponent } from './my-service-plans/renewal-gauge/renewal-gauge.component';
 import { ChangeYourPlanComponent } from './my-service-plans/change-your-plan/change-your-plan.component';
-import { SelectPlanComponent } from './add-services/select-plan/select-plan.component';
 import { CreditCheckComponent } from './add-services/credit-check/credit-check.component';
 import { MovingComponent} from './moving/moving.component';
 import { SelectPlanModalDialogComponent } from './moving-center-form/select-plan-modal-dialog/select-plan-modal-dialog.component';
@@ -52,7 +51,6 @@ import { PlansAgreementModalComponent } from './plans-agreement-modal/plans-agre
       MyCurrentPlanComponent,
       DocumentsComponent,
       ChangeYourPlanComponent,
-      SelectPlanComponent,
       CreditCheckComponent,
       MovingComponent,
       SelectPlanModalDialogComponent,
