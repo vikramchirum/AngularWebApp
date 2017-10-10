@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild, ViewContainerRef, OnDestroy, AfterViewInit} from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { IMyOptions, IMyDateModel, IMyDate } from 'mydatepicker';
-import { clone } from 'lodash';
+import { clone, sortBy } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 
@@ -35,6 +35,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   enableDates: boolean = null;
   availableDates: IAvailableDate;
   trimmedAvailableDates: Date[];
+  missingDates: Array<IMyDate> = null;
   nextClicked: boolean = false;
   previousClicked: boolean = true;
   movingCenterForm: FormGroup;
@@ -137,9 +138,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   }
   private newServiceStartDate: IMyOptions = {
     // start date options here...
-    enableDays: [],
-     disableDays: [],
-    // highlightDates: [{year: 2017, month: 11, day: 1}, {year: 2017, month: 11, day: 2}, {year: 2017, month: 12, day: 1}],
+    disableDays: [],
     disableUntil: { year: 0, month: 0, day: 0 },
     disableSince: { year: 0, month: 0, day: 0 },
     dateFormat: 'mm-dd-yyyy'
@@ -173,7 +172,6 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.currentServiceEndDate = copy;
   }
 
-
   disableSince() {
     let currentDate = new Date(this.trimmedAvailableDates[1]);
     // currentDate.setDate(currentDate.getDate() - 1 );
@@ -188,7 +186,11 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.currentServiceEndDate = copy;
   }
 
-
+  disableDays() {
+    let copy = this.getCopyOfOptions();
+    copy.disableDays = this.missingDates;
+    this.newServiceStartDate = copy;
+  }
 
   getCopyOfOptions(): IMyOptions {
     return JSON.parse(JSON.stringify(this.newServiceStartDate));
@@ -217,6 +219,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     let copy = this.getCopyOfOptions();
     copy.disableUntil =  { year: 0, month: 0, day: 0 };
     copy.disableSince =  { year: 0, month: 0, day: 0 };
+    copy.disableDays = [];
     this.newServiceStartDate = copy;
     this.movingAddressForm.controls['New_Service_Start_Date'].setValue('');
   }
@@ -231,6 +234,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
         availableDates => { this.availableDates = availableDates;
          this.trimmedAvailableDates = this.trimDates(this.availableDates.Available_Move_In_Dates);
           this.disableUntil(); this.disableSince();
+          this.missingDates = this.getMissingDates(this.availableDates.Available_Move_In_Dates);
+         this.disableDays();
          // this.convertedDates = this.parseDates(this.trimmedAvailableDates);
          this.enableDates = true;
          // this.enableAllDays(this.enableDates);
@@ -253,10 +258,48 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     array.push(lastDay.substring(0, 10));
     // console.log('dates array', array);
     array.forEach( item => new Date(item));
-    // datesArray.forEach(item => { array.push(item.substring(0, 10)); } );
-    // // console.log('dates array', array);
+
+    var date_sort_asc = function (date1, date2) {
+      if (date1 > date2) return 1;
+      if (date1 < date2) return -1;
+      return 0;
+    };
+    array.sort(date_sort_asc);
     // array.forEach( item => new Date(item));
     return array;
+  }
+
+  getMissingDates(datesArray: string[]): Array<IMyDate> {
+    let sortedArray = []
+    let missingDatesArray: Array<IMyDate> = [];
+    var date_sort_asc = function (date1, date2) {
+      if (date1 > date2) return 1;
+      if (date1 < date2) return -1;
+      return 0;
+    };
+    // Trim all dates
+    datesArray.forEach(item => { sortedArray.push(item.substring(0, 10)); } );
+    // Sort all dates
+    sortedArray.sort(date_sort_asc);
+    // Get missing dates
+    let lastDay1 = new Date(sortedArray[sortedArray.length - 1]);
+    lastDay1.setDate(lastDay1.getDate() + 1);
+    sortedArray.forEach( function(item, index) {
+      let currentDate = new Date(item);
+      // console.log('Current: ' + currentDate);
+      let nextDate = new Date(sortedArray[index + 1]);
+      // console.log('Next: ' + nextDate);
+      currentDate.setDate(currentDate.getDate() + 1);
+      // console.log('Current + 1: ' + currentDate);
+      if ((currentDate.toDateString()  === nextDate.toDateString()) ) {
+      } else {
+        if (!(currentDate.toDateString() === lastDay1.toDateString())) {
+          missingDatesArray.push( {year:  new Date(currentDate).getUTCFullYear(), month:  new Date(currentDate).getUTCMonth() + 1, day:  new Date(currentDate).getUTCDate()});
+        }
+      }
+    });
+    console.log('Missing dates', missingDatesArray);
+    return missingDatesArray;
   }
 
   parseDates(dates: Date[]): Array<IMyDate> {
