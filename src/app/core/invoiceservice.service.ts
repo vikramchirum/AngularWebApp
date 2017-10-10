@@ -69,4 +69,9 @@ export class InvoiceService {
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err));
   }
+
+  getInvoicePDF(invoiceId: number | string): Observable<any> {
+    return this.HttpClient.downloadFile(`/documents/invoice/generate/${invoiceId}`)
+      .catch(err => this.HttpClient.handleHttpError(err));
+  }
 }

@@ -23,4 +23,15 @@ export class UtilityService {
     date.setMonth(date.getMonth() + months);
     return date;
   }
+
+  downloadFile(data: Response) {
+    const blob = new Blob([data.blob()], {type: 'application/pdf'});
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveOrOpenBlob(blob, 'invoice');
+    } else {
+      const objectUrl = URL.createObjectURL(blob);
+      window.open(objectUrl);
+    }
+  }
+
 }

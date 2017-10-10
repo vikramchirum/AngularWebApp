@@ -2,13 +2,16 @@ import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular
 import { CurrencyPipe, DatePipe } from '@angular/common';
 
 import { Subscription } from 'rxjs/Subscription';
-import { environment } from 'environments/environment';
-import { IInvoice } from 'app/core/models/invoices/invoice.model';
-import { ColumnHeader } from 'app/core/models/columnheader.model';
+
 import { InvoiceService } from 'app/core/invoiceservice.service';
-import { ViewMyBillModalComponent } from '../view-my-bill-modal/view-my-bill-modal.component';
+import { UtilityService } from 'app/core/utility.service';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
+
+import { ColumnHeader } from 'app/core/models/columnheader.model';
 import { IInvoiceSearchRequest } from 'app/core/models/invoices/invoicesearchrequest.model';
+import { IInvoice } from 'app/core/models/invoices/invoice.model';
+
+import { ViewMyBillModalComponent } from '../view-my-bill-modal/view-my-bill-modal.component';
 
 @Component({
   selector: 'mygexa-payment-history-bills',
@@ -26,7 +29,6 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
     { title: 'Total',           name: 'Amount_Due',      sort: '',     type: 'dollar' }
   ];
   public rows: any[] = [];
-  public invoicesUrl;
 
   public currentPage = 1;
   public itemsPerPage = 10;
@@ -42,7 +44,8 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
     private datePipe: DatePipe,
     private currencyPipe: CurrencyPipe,
     private invoiceService: InvoiceService,
-    private serviceAccountService: ServiceAccountService
+    private serviceAccountService: ServiceAccountService,
+    private utilityService: UtilityService
   ) { }
 
   public showViewMyBillModal(row: IInvoice) {
@@ -50,7 +53,6 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.invoicesUrl = environment.Documents_Url.concat('/invoice/generate/');
     this.config = {
       paging: true,
       sorting: {columnHeaders: this.columnHeaders},
@@ -70,6 +72,24 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     );
   }
+
+  public downloadInvoice($event, row: any) {
+
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    const invoiceId = this.getInvoiceId(row);
+    this.invoiceService.getInvoicePDF(invoiceId).subscribe(
+      data => this.utilityService.downloadFile(data)
+    );
+  }
+
+  /*
+  downloadFile1(data: Response) {
+    const blob = new Blob([data.blob()], {type: 'application/pdf'});
+    const url = window.URL.createObjectURL(blob);
+    window.open(url);
+  }*/
 
   public getData(row: any, columnHeader: ColumnHeader): any {
     if (!row) {

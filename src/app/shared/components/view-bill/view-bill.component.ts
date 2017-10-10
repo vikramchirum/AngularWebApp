@@ -9,6 +9,7 @@ import { IInvoice } from 'app/core/models/invoices/invoice.model';
 
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { InvoiceService } from 'app/core/invoiceservice.service';
+import { UtilityService } from 'app/core/utility.service';
 
 @Component({
   selector: 'mygexa-view-bill',
@@ -38,7 +39,7 @@ export class ViewBillComponent implements OnInit {
   private ActiveServiceAccountSubscription: Subscription = null;
   private tduName: string;
 
-  constructor(private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService) {
+  constructor(private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService, private utilityService: UtilityService) {
   }
 
   ngOnInit() {
@@ -109,5 +110,16 @@ export class ViewBillComponent implements OnInit {
     } else {
       this.openCharges.splice(indexOf, 1);
     }
+  }
+
+  public downloadInvoice($event) {
+
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    const invoiceId = this.bill_object.Invoice_Id;
+    this.invoiceService.getInvoicePDF(invoiceId).subscribe(
+      data => this.utilityService.downloadFile(data)
+    );
   }
 }
