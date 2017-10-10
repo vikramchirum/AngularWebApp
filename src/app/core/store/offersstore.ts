@@ -32,8 +32,8 @@ export class OffersStore {
     return this._latestFeaturedOffersData.asObservable().filter(offers => offers != null);
   }
 
-  LoadUpgradeOffersData(Term: number, TDU_DUNS_Number: string) {
-    this.offersService.getUpgradeOffers(Term, TDU_DUNS_Number).subscribe(
+  LoadUpgradeOffersData(ActiveServiceAccountId: string) {
+    this.offersService.getUpgradeOffers(ActiveServiceAccountId).subscribe(
       UpgradeOffers => this._latestUpgradeOffersData.next(UpgradeOffers));
   }
 
