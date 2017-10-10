@@ -256,16 +256,13 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     let lastDay = datesArray[datesArray.length - 1];
     array.push(firstDay.substring(0, 10));
     array.push(lastDay.substring(0, 10));
-    // console.log('dates array', array);
     array.forEach( item => new Date(item));
-
     var date_sort_asc = function (date1, date2) {
-      if (date1 > date2) return 1;
-      if (date1 < date2) return -1;
+      if (date1 > date2) { return 1; }
+      if (date1 < date2) { return -1; }
       return 0;
     };
     array.sort(date_sort_asc);
-    // array.forEach( item => new Date(item));
     return array;
   }
 

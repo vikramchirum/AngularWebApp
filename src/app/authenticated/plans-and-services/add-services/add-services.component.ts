@@ -30,8 +30,10 @@ import { IAvailableDate } from '../../../core/models/availabledate/availabledate
 })
 export class AddServicesComponent implements OnInit, OnDestroy {
   availableDates: IAvailableDate;
-  trimmedAvailableMovingDates: Date[];
-  trimmedAvailableSwitchDates: Date[];
+  trimmedAvailableMovingDates: Date[] = [];
+  trimmedAvailableSwitchDates: Date[] = [];
+  missingMovingDates: Array<IMyDate> = null;
+  missingSwitchDates: Array<IMyDate> = null;
   addServiceForm: FormGroup;
   offerRequestParams: OfferRequest = null;
   selectedServiceAddress: ServiceAddress = null;
@@ -138,6 +140,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
 
   private ServiceStartDate: IMyOptions = {
     // start date options here...
+    disableDays: [],
     disableUntil: { year: 0, month: 0, day: 0 },
     disableSince: { year: 0, month: 0, day: 0 },
     dateFormat: 'mm-dd-yyyy'
@@ -205,6 +208,18 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     }
   }
 
+  disableDays() {
+    let val = this.addServiceForm.controls['serviceType'].value;
+    let copy = this.getCopyOfOptions();
+    if (val === 'MoveIn' && this.trimmedAvailableMovingDates) {
+      copy.disableDays = this.missingMovingDates;
+      this.ServiceStartDate = copy;
+    } else if (val === 'Switch' && this.trimmedAvailableSwitchDates) {
+      copy.disableDays = this.missingSwitchDates;
+      this.ServiceStartDate = copy;
+    }
+  }
+
   // Returns copy of myOptions
   getCopyOfOptions(): IMyOptions {
     return JSON.parse(JSON.stringify(this.ServiceStartDate));
@@ -216,6 +231,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     let copy = this.getCopyOfOptions();
     copy.disableUntil =  { year: 0, month: 0, day: 0 };
     copy.disableSince =  { year: 0, month: 0, day: 0 };
+    copy.disableDays = [];
     this.ServiceStartDate = copy;
     this.addServiceForm.controls['Service_Start_Date'].setValue('');
   }
@@ -232,8 +248,9 @@ export class AddServicesComponent implements OnInit, OnDestroy {
             this.trimmedAvailableMovingDates = this.trimDates(this.availableDates.Available_Move_In_Dates);
             this.trimmedAvailableSwitchDates = this.trimDates(this.availableDates.Available_Self_Selected_Switch_Dates);
             this.disableUntil(); this.disableSince();
-            // this.convertedDates = this.parseDates(this.trimmedAvailableDates);
-            // this.enableAllDays(this.enableDates);
+            this.missingMovingDates = this.getMissingDates(this.availableDates.Available_Move_In_Dates);
+            this.missingSwitchDates = this.getMissingDates(this.availableDates.Available_Self_Selected_Switch_Dates);
+            this.disableDays();
             console.log('Available dates', availableDates);
             console.log('Available move in dates', this.trimmedAvailableMovingDates );
             console.log('Available switch dates', this.trimmedAvailableSwitchDates );
@@ -260,8 +277,48 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     array.push(firstDay.substring(0, 10));
     array.push(lastDay.substring(0, 10));
     array.forEach( item => new Date(item));
+    var date_sort_asc = function (date1, date2) {
+      if (date1 > date2) { return 1; }
+      if (date1 < date2) { return -1; }
+      return 0;
+    };
+    array.sort(date_sort_asc);
     return array;
   }
+
+  getMissingDates(datesArray: string[]): Array<IMyDate> {
+    let sortedArray = []
+    let missingDatesArray: Array<IMyDate> = [];
+    var date_sort_asc = function (date1, date2) {
+      if (date1 > date2) return 1;
+      if (date1 < date2) return -1;
+      return 0;
+    };
+    // Trim all dates
+    datesArray.forEach(item => { sortedArray.push(item.substring(0, 10)); } );
+    // Sort all dates
+    sortedArray.sort(date_sort_asc);
+    // Get missing dates
+    let lastDay1 = new Date(sortedArray[sortedArray.length - 1]);
+    lastDay1.setDate(lastDay1.getDate() + 1);
+    sortedArray.forEach( function(item, index) {
+      let currentDate = new Date(item);
+      // console.log('Current: ' + currentDate);
+      let nextDate = new Date(sortedArray[index + 1]);
+      // console.log('Next: ' + nextDate);
+      currentDate.setDate(currentDate.getDate() + 1);
+      // console.log('Current + 1: ' + currentDate);
+      if ((currentDate.toDateString()  === nextDate.toDateString()) ) {
+      } else {
+        if (!(currentDate.toDateString() === lastDay1.toDateString())) {
+          missingDatesArray.push( {year:  new Date(currentDate).getUTCFullYear(), month:  new Date(currentDate).getUTCMonth() + 1, day:  new Date(currentDate).getUTCDate()});
+        }
+      }
+    });
+    console.log('Missing dates', missingDatesArray);
+    return missingDatesArray;
+  }
+
 
   onChangeServiceType() {
     let val = this.addServiceForm.controls['serviceType'].value;
@@ -269,10 +326,11 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     if (val === 'MoveIn' && this.trimmedAvailableMovingDates) {
       this.enableDates = true;
       this.disableUntil(); this.disableSince();
-
+      this.disableDays();
     } else if (val === 'Switch' && this.trimmedAvailableSwitchDates) {
       this.enableDates = true;
       this.disableUntil(); this.disableSince();
+      this.disableDays();
     } else {
       this.enableDates = false;
     }
