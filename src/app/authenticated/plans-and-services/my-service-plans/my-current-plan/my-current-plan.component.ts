@@ -19,6 +19,7 @@ import { ICreateRenewalRequest } from 'app/core/models/renewals/createrenewalreq
 
 import { PlanConfirmationPopoverComponent } from '../plan-confirmation-popover/plan-confirmation-popover.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ErrorModalComponent } from '../../../../shared/components/error-modal/error-modal.component';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -27,6 +28,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
+  @ViewChild('errorModal') errorModal: ErrorModalComponent;
 
   user: IUser;
   ActiveServiceAccount: ServiceAccount;
@@ -177,6 +179,8 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
         console.log('Renewal Created');
         this.planPopModal.showPlanPopModal();
       }
+    }, err => {
+      this.errorModal.showErrorModal(err);
     });
   }
 
