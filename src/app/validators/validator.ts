@@ -14,20 +14,19 @@ import { CustomValidators } from 'ng2-validation';
 export function validCreditCard(control: FormControl): any {
 
   const value: string = control.value;
-
   if (
     // Test for an empty string.
-  !value
-  // Test using the third-party validator.
-  || CustomValidators.creditCard(control) !== null
-  // Test if there are non-credit card characters (other than 0-9, spaces, and dashes)
-  || /([^0-9 -])/g.test(value)
-  ) {
-    return {invalidCreditCard: true};
-  }
-
-  return null;
-
+    value
+    //Test if the card type is Mastercard or not
+    && (/^5[1-5][0-9]{14}$/g.test(value)
+    //Test if the card type is Visa or not
+    || /^4[0-9]{12}(?:[0-9]{3})?$/g.test(value)
+    //Test if the card type is Discover or not
+    || /^6(?:011|5[0-9]{2})[0-9]{12}$/g.test(value)
+    )) {
+      return null;     
+    }
+  return {invalidCreditCard: true};
 }
 
 export function validMoneyAmount(control: FormControl): any {
