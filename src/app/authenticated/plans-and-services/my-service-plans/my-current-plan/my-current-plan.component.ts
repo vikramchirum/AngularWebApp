@@ -18,6 +18,7 @@ import { IRenewalDetails } from 'app/core/models/renewals/renewaldetails.model';
 import { ICreateRenewalRequest } from 'app/core/models/renewals/createrenewalrequest.model';
 
 import { PlanConfirmationPopoverComponent } from '../plan-confirmation-popover/plan-confirmation-popover.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -43,9 +44,11 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   selectCheckBox = false;
   enableSelect = false;
   currentView: string = null;
+  renewalUpgradeFormGroup: FormGroup;
 
   constructor(private userService: UserService, private serviceAccountService: ServiceAccountService
-    , private OfferStore: OffersStore, private renewalStore: RenewalStore, private utilityService: UtilityService) {
+    , private OfferStore: OffersStore, private renewalStore: RenewalStore, private utilityService: UtilityService,
+              private formBuilder: FormBuilder) {
     this.isOffersReady = false;
   }
 
@@ -53,6 +56,11 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
 
     this.userService.UserObservable.subscribe(user => {
       this.user = user;
+    });
+
+    this.renewalUpgradeFormGroup = this.formBuilder.group({
+      accountName: ['', Validators.required],
+      rewardsNumber: ['', Validators.required]
     });
 
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
@@ -147,6 +155,10 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     request.Service_Account_Id = this.ActiveServiceAccount.Id;
     request.Offering_Name = this.RenewalOffers.Rate_Code;
     request.User_Name = this.user.Profile.Username;
+    if (this.RenewalOffers.Has_Partner) {
+      request.Partner_Account_Number = this.renewalUpgradeFormGroup.get('accountName').value;
+      request.Partner_Name_On_Account = this.renewalUpgradeFormGroup.get('rewardsNumber').value;
+    }
     this.renewalStore.createRenewal(request).subscribe(result => {
       if (result) {
         console.log('Renewal Created');
