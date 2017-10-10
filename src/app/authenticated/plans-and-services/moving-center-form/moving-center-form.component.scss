@@ -89,7 +89,6 @@
 }
 
 
-
 .change-plans-grid {
   display: -webkit-box;
   display: -webkit-flex;
@@ -110,6 +109,10 @@
     margin-top:-15px;
     margin-right:-10px;
 }
+}
+
+.noSymbol{
+  cursor: pointer !important;
 }
 
 .p-plans {

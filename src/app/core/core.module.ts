@@ -36,6 +36,7 @@ import { UtilityService } from './utility.service';
 import { ChannelService } from './channelservice.service';
 import { ChannelStore } from './store/channelstore';
 import { PaymentExtensionService } from './payment-extension.service';
+import { AvailableDateService } from './availabledate.service';
 
 
 @NgModule({
@@ -74,7 +75,8 @@ import { PaymentExtensionService } from './payment-extension.service';
     UtilityService,
     ChannelService,
     ChannelStore,
-    PaymentExtensionService
+    PaymentExtensionService,
+    AvailableDateService
   ]
 })
 export class CoreModule { }
