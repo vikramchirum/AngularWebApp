@@ -254,7 +254,7 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
 
     const request = {} as ICreateRenewalRequest;
     request.Service_Account_Id = offerSelectionPayLoad.Service_Account_Id;
-    request.Offering_Name = offerSelectionPayLoad.Offering_Name;
+    request.Offering_Id = offerSelectionPayLoad.Offer.Id;
     request.User_Name = offerSelectionPayLoad.User_Name;
 
     if (offerSelectionPayLoad.Has_Partner) {
@@ -279,7 +279,7 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
 
     const request = {} as ICreateUpgradeRequest;
     request.Service_Account_Id = offerSelectionPayLoad.Service_Account_Id;
-    request.Offering_Name = offerSelectionPayLoad.Offering_Name;
+    request.Offering_Id = offerSelectionPayLoad.Offer.Id;
     request.User_Name = offerSelectionPayLoad.User_Name;
 
     if (offerSelectionPayLoad.Has_Partner) {
