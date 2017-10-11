@@ -19,8 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private Router: Router,
-    private ChangeDetectorRef: ChangeDetectorRef,
-    private channelStore: ChannelStore
+    private ChangeDetectorRef: ChangeDetectorRef
   ) {
   }
 
@@ -46,7 +45,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.determineFooterPosition(win);
     // Check ever-so-often.
     this.intervalCheck = setInterval(() => this.determineFooterPosition(win), 1000);
-    this.channelStore.LoadChannelId();
   }
 
   ngOnDestroy() {

@@ -61,7 +61,7 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.channelStore.LoadChannelId();
+    // this.channelStore.LoadChannelId();
   }
 
   ngOnDestroy() {

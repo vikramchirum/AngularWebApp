@@ -9,6 +9,7 @@ import { LoginRegisterModalComponent } from './login-register-modal/login-regist
 import { LoginAddClaimsModalComponent } from './login-add-claims-modal/login-add-claims-modal.component';
 import { IUser } from '../../core/models/user/User.model';
 import { IRegUser } from '../../core/models/register/register-user.model';
+import { ChannelStore } from '../../core/store/channelstore';
 
 @Component({
   templateUrl: './login.component.html',
@@ -33,7 +34,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private UserService: UserService,
     private Router: Router,
-    private FormBuilder: FormBuilder
+    private FormBuilder: FormBuilder,
+    private channelStore: ChannelStore
   ) {
     this.processing = false;
     this.registerForm = this.registerFormInit();
@@ -56,6 +58,7 @@ export class LoginComponent implements OnInit {
           this.loginAddClaimModal.showLoginAddClaimModal();
         } else {
           this.Router.navigate([this.UserService.UserState || '/']); }
+        this.channelStore.LoadChannelId();
       },
       error => {
         // console.log('Error message', error.Message);
