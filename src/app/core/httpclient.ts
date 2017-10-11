@@ -3,7 +3,10 @@
  */
 
 import { Injectable } from '@angular/core';
-import { ConnectionBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers, XHRBackend, URLSearchParams } from '@angular/http';
+import {
+  ConnectionBackend, RequestOptions, Request, RequestOptionsArgs, Response, Http, Headers, XHRBackend,
+  URLSearchParams, ResponseContentType
+} from '@angular/http';
 
 import { Observable } from 'rxjs/Rx';
 import { get, isPlainObject } from 'lodash';
@@ -43,6 +46,13 @@ export class HttpClient extends Http {
     return super.get(url, this.getRequestOptionArgs(options));
   }
 
+  public downloadFile(url: string, options?: RequestOptionsArgs): Observable<Response> {
+    url = this.getAbsoluteUrl(url);
+    const blobOptions = this.getRequestOptionArgs(options, true);
+    blobOptions.responseType = ResponseContentType.Blob;
+    return super.get(url, blobOptions);
+  }
+
   public post(url: string, body: any, options?: RequestOptionsArgs): Observable<Response> {
     url = this.getAbsoluteUrl(url);
     return super.post(url, body, this.getRequestOptionArgs(options));
@@ -73,7 +83,7 @@ export class HttpClient extends Http {
     return  environment.Api_Url + relativePath;
   }
 
-  private getRequestOptionArgs(options?: RequestOptionsArgs): RequestOptionsArgs {
+  private getRequestOptionArgs(options?: RequestOptionsArgs, isblob = false): RequestOptionsArgs {
 
     if (options == null) {
       options = new RequestOptions();
@@ -83,9 +93,12 @@ export class HttpClient extends Http {
       options.headers = new Headers();
     }
 
-    if (!options.headers.has('Content-Type')) {
-      options.headers.append('Content-Type', 'application/json');
+    if (!isblob) {
+      if (!options.headers.has('Content-Type')) {
+        options.headers.append('Content-Type', 'application/json');
+      }
     }
+
     options.headers.append('Ocp-Apim-Subscription-Key', environment.Api_Token);
     options.headers.append('API_TOKEN', localStorage.getItem('gexa_auth_token'));
     return options;

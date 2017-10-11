@@ -23,8 +23,8 @@
         </button>
       </td>
       <td class="text-center">
-        <button class="btn btn-link">
-          <a class="fa fa-fw fa-file-pdf-o" href="{{invoicesUrl}}{{getInvoiceId(row)}}" target="_blank"></a>
+        <button class="btn btn-link" (click)="downloadInvoice($event, row)" >
+          <a class="fa fa-fw fa-file-pdf-o"></a>
         </button>
       </td>
     </tr>
