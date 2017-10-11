@@ -167,7 +167,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   createRenewal() {
     const request = {} as ICreateRenewalRequest;
     request.Service_Account_Id = this.ActiveServiceAccount.Id;
-    request.Offering_Name = this.RenewalOffers.Rate_Code;
+    request.Offering_Id = this.RenewalOffers.Id;
     request.User_Name = this.user.Profile.Username;
     if (this.RenewalOffers.Has_Partner) {
       request.Partner_Account_Number = this.renewalUpgradeFormGroup.get('accountName').value;

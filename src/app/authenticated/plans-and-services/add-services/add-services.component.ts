@@ -375,9 +375,9 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   }
 
 
-  onNotify(event) {
+  onNotify(event: IOfferSelectionPayLoad) {
     this.selectedOffer = event;
-    this.selectedOfferId = event.Id;
+    this.selectedOfferId = event.Offer.Id;
     if (this.formEnrollmentRequest()) {
       this.enrollService.createEnrollment(this.enrollmentRequest)
       .subscribe(result => {

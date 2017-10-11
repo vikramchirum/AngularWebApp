@@ -129,8 +129,6 @@ export class PlanCardComponent implements OnInit, AfterViewInit, OnDestroy {
   selectOffer() {
     const offerSelectionPayLoad = {} as IOfferSelectionPayLoad;
     offerSelectionPayLoad.Service_Account_Id = this.activeServiceAccountDetails.Id;
-    offerSelectionPayLoad.Offering_Name = this.offer.Rate_Code;
-    offerSelectionPayLoad.Id = this.offer.Id;
     offerSelectionPayLoad.Offer = this.offer;
     offerSelectionPayLoad.User_Name = this.user.Profile.Username;
     if (this.offer.Has_Partner) {
