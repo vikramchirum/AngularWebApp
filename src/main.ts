@@ -6,8 +6,8 @@ import { environment } from './environments/environment';
 
 if (environment.Production) {
   enableProdMode();
-  window.console.log = function () {
-  };
+  // window.console.log = function () {
+  // };
 } else {
   console.log('environment', environment);
 }

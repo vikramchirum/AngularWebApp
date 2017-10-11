@@ -147,9 +147,6 @@ export class PlanCardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isCreateOfferEnabled() {
-    if (this.isMoving) {
-
-    }
     if (this.offer.Has_Partner) {
       if (!this.isOfferAgreed) {
         return true;

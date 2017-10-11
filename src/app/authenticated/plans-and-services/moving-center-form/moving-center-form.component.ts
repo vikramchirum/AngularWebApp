@@ -22,6 +22,7 @@ import { OfferSelectionType } from '../../../core/models/enums/offerselectiontyp
 import { IOffers } from '../../../core/models/offers/offers.model';
 import { ServiceAccount } from '../../../core/models/serviceaccount/serviceaccount.model';
 import { IOfferSelectionPayLoad } from '../../../shared/models/offerselectionpayload';
+import { ErrorModalComponent } from '../../../shared/components/error-modal/error-modal.component';
 import { AvailableDateService } from '../../../core/availabledate.service';
 import { IAvailableDate } from '../../../core/models/availabledate/availabledate.model';
 
@@ -71,6 +72,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   showMorePlans: boolean = null;
 
   @ViewChild('selectPlanModal') selectPlanModal: SelectPlanModalDialogComponent;
+  @ViewChild('errorModal') errorModal: ErrorModalComponent;
 
 
   constructor(private fb: FormBuilder,
@@ -439,10 +441,11 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       Partner_Name_On_Account: Partner_Name_On_Account
     };
     this.transferService.submitMove(this.transferRequest).subscribe(
-      () => this.submitted = true),
-      error => {
-        console.log('Transfer Request API error', error.Message);
-      };
+      () => this.submitted = true,
+      err => {
+        Observable.throw(err);
+        this.errorModal.showErrorModal(err);
+      });
   }
 
   ngOnDestroy() {
