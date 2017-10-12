@@ -1,30 +1,27 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
-
-import {CustomerAccountService} from 'app/core/CustomerAccount.service';
-
-
-import {InvoiceService} from 'app/core/invoiceservice.service';
-import {PaymentsHistoryService} from 'app/core/payments-history.service';
-import {PaymentsService} from 'app/core/payments.service';
-import {PaymethodAddCcComponent} from 'app/shared/components/payment-method-add-cc/payment-method-add-cc.component';
-import {PaymethodAddEcheckComponent} from 'app/shared/components/payment-method-add-echeck/payment-method-add-echeck.component';
-import {PaymethodService} from 'app/core/Paymethod.service';
-import {UserService} from 'app/core/user.service';
-import {FloatToMoney} from 'app/shared/pipes/FloatToMoney.pipe';
-import {validMoneyAmount} from 'app/validators/validator';
-import {Subscription} from 'rxjs/Subscription';
-import {assign, endsWith, get, replace, result} from 'lodash';
-import {CustomerAccount} from '../../../core/models/customeraccount/customeraccount.model';
-import {Paymethod} from '../../../core/models/paymethod/Paymethod.model';
-import {IPaymethodRequest} from '../../../core/models/paymethod/paymethodrequest.model';
-import {IPaymethodRequestEcheck} from '../../../core/models/paymethod/paymethodrequestecheck.model';
-import {IPaymethodRequestCreditCard} from '../../../core/models/paymethod/paymethodrequestcreditcard.model';
-import {CardBrands} from '../../../core/models/paymethod/constants';
-import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
-import {IInvoice} from '../../../core/models/invoices/invoice.model';
+import { Component , OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { FormBuilder , FormGroup, Validators} from '@angular/forms';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { CustomerAccountService } from 'app/core/CustomerAccount.service';
+import { InvoiceService } from 'app/core/invoiceservice.service';
+import { PaymentsHistoryService } from 'app/core/payments-history.service';
+import { PaymentsService } from 'app/core/payments.service';
+import { PaymethodAddCcComponent } from 'app/shared/components/payment-method-add-cc/payment-method-add-cc.component';
+import { PaymethodAddEcheckComponent } from 'app/shared/components/payment-method-add-echeck/payment-method-add-echeck.component';
+import { PaymethodService } from 'app/core/Paymethod.service';
+import { UserService } from 'app/core/user.service';
+import { FloatToMoney } from 'app/shared/pipes/FloatToMoney.pipe';
+import { validMoneyAmount } from 'app/validators/validator';
+import { Subscription } from 'rxjs/Subscription';
+import { assign , endsWith, get, replace, result} from 'lodash';
+import { CustomerAccount } from '../../../core/models/customeraccount/customeraccount.model';
+import { Paymethod } from '../../../core/models/paymethod/Paymethod.model';
+import { IPaymethodRequest } from '../../../core/models/paymethod/paymethodrequest.model';
+import { IPaymethodRequestEcheck } from '../../../core/models/paymethod/paymethodrequestecheck.model';
+import { IPaymethodRequestCreditCard } from '../../../core/models/paymethod/paymethodrequestcreditcard.model';
+import { CardBrands } from '../../../core/models/paymethod/constants';
+import { ServiceAccount } from '../../../core/models/serviceaccount/serviceaccount.model';
+import { IInvoice } from '../../../core/models/invoices/invoice.model';
+import { PaymentsHistoryStore } from '../../../core/store/paymentsstore';
 
 @Component({
   selector: 'mygexa-make-payment',
@@ -107,6 +104,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
   constructor(private CustomerAccountService: CustomerAccountService,
               private PaymentsHistoryService: PaymentsHistoryService,
+              private PaymentsHistoryStore: PaymentsHistoryStore,
               private PaymentsService: PaymentsService,
               private PaymethodService: PaymethodService,
               private FormBuilder: FormBuilder,
@@ -277,6 +275,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             this.paymentSubmittedWithoutError = true;
             console.log('The paymethod was charged!', res);
             this.paymentLoadingMessage = null;
+            this.PaymentsHistoryStore.LoadPaymentsHistory(this.ActiveServiceAccount);
           },
           error => {
             this.paymentSubmittedWithoutError = false;
