@@ -14,7 +14,7 @@
     </div>
      <div class="col-sm-9 payment-profile">
       <mygexa-status-bar></mygexa-status-bar>
-      <mygexa-service-account-selector [setActiveServiceAccount]="true" ></mygexa-service-account-selector>
+      <mygexa-service-account-selector [setActiveServiceAccount]="true" [hidden]="startsWith(Router.url, '/payments/payment-accounts')" ></mygexa-service-account-selector>
       <router-outlet></router-outlet>
     </div>
   </div>
