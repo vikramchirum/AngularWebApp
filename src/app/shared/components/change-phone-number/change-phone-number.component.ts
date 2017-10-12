@@ -79,8 +79,10 @@ export class ChangePhoneNumberComponent implements OnInit {
   }
 
   updatePhoneNumber() {
-      const number = this.changePhoneNumberForm.get('phone').value;
+    let phonenum: string;
+    phonenum = this.changePhoneNumberForm.get('phone').value;
       // Format primary phone object for put
+      const number = phonenum.replace( /\D+/g, '');
       const area_code = number.substring(0, 3);
       const phonenumber = number.slice(3);
 
