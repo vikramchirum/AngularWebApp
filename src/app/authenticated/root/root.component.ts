@@ -9,12 +9,17 @@ import { result, startsWith } from 'lodash';
 import {CustomerAccountService} from '../../core/CustomerAccount.service';
 import {Subscription} from 'rxjs/Subscription';
 import {CustomerAccount} from '../../core/models/customeraccount/customeraccount.model';
+import { NotificationOptionsStore } from '../../core/store/notificationoptionsstore';
+import { AccountType } from '../../core/models/enums/accounttype';
+import { NotificationType } from '../../core/models/enums/notificationtype';
 
 @Component({
   selector: 'mygexa-root',
   templateUrl: './root.component.html',
   styleUrls: ['./root.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  providers: [NotificationOptionsStore]
+
 })
 export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -27,14 +32,16 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
   customerDetails: CustomerAccount = null;
   CustomerAccountServiceSubscription: Subscription = null;
   UserServiceSubscription: Subscription = null;
+  SearchNotificationOptions = null;
   @ViewChild('homeMultiAccountsModal') homeMultiAccountsModal: HomeMultiAccountsModalComponent;
 
   constructor(
     private UserService: UserService,
     private Router: Router,
     private ServiceAccountService: ServiceAccountService,
-    private CustomerAccountService: CustomerAccountService
-  ) { }
+    private CustomerAccountService: CustomerAccountService,
+    private NotificationOptionsStore: NotificationOptionsStore
+  ) {}
 
   showHomeMultiAccountsModal() {
     this.homeMultiAccountsModal.show();
@@ -64,7 +71,16 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
                   this.username = result.Profile.Username; }
     );
     this.CustomerAccountServiceSubscription = this.CustomerAccountService.CustomerAccountObservable.subscribe(
-      result => { this.customerDetails = result; }
+      result => { this.customerDetails = result;
+        this.SearchNotificationOptions = {
+          Account_Info: {
+            Account_Type: AccountType.GEMS_Residential_Customer_Account,
+            Account_Number: result.Id,
+          },
+          Type: NotificationType.Bill
+        };
+        this.NotificationOptionsStore.LoadNotificationOptions(this.SearchNotificationOptions);
+      }
     );
   }
 
