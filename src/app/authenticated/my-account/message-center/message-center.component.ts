@@ -32,7 +32,7 @@ export class MessageCenterComponent implements OnInit, OnDestroy {
       result => {
         this.customerDetails = result;
         if (this.customerDetails.Primary_Phone && this.customerDetails.Primary_Phone.Area_Code && this.customerDetails.Primary_Phone.Number) {
-          this.phoneNumber = this.customerDetails.Primary_Phone.Area_Code.concat(this.customerDetails.Primary_Phone.Number);
+           this.phoneNumber = this.customerDetails.Primary_Phone.Area_Code.concat( this.customerDetails.Primary_Phone.Number);
         } else {
           this.phoneNumber = this.customerDetails.Primary_Phone.Number;
         }

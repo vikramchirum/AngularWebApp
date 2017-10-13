@@ -2,14 +2,14 @@ import {Component, OnInit, ViewEncapsulation, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { get } from 'lodash';
-
 import { UserService } from 'app/core/user.service';
 import { ISecurityQuestions } from './register';
 import { equalCheck, validateEmail, validateInteger } from 'app/validators/validator';
-import {LoginRegisterModalComponent} from './login-register-modal/login-register-modal.component';
-import {LoginAddClaimsModalComponent} from './login-add-claims-modal/login-add-claims-modal.component';
-import {IUser} from '../../core/models/user/User.model';
-import {IRegUser} from '../../core/models/register/register-user.model';
+import { LoginRegisterModalComponent } from './login-register-modal/login-register-modal.component';
+import { LoginAddClaimsModalComponent } from './login-add-claims-modal/login-add-claims-modal.component';
+import { IUser } from '../../core/models/user/User.model';
+import { IRegUser } from '../../core/models/register/register-user.model';
+import { ChannelStore } from '../../core/store/channelstore';
 
 @Component({
   templateUrl: './login.component.html',
@@ -29,19 +29,21 @@ export class LoginComponent implements OnInit {
   user_name: string = null;
   error: string = null;
   password: string = null;
-  secQuesArray: ISecurityQuestions[] = [];
   userObj: IUser;
 
   constructor(
     private UserService: UserService,
     private Router: Router,
-    private FormBuilder: FormBuilder
+    private FormBuilder: FormBuilder,
+    private channelStore: ChannelStore
   ) {
     this.processing = false;
     this.registerForm = this.registerFormInit();
     this.invalidCreds = false;
   }
   showRegisterModal() {
+    // Call to get security questions fro registration.
+    this.loginRegisterModal.getSecurityQuestions();
     this.loginRegisterModal.showLoginRegisterModal();
   }
   login() {
@@ -56,6 +58,7 @@ export class LoginComponent implements OnInit {
           this.loginAddClaimModal.showLoginAddClaimModal();
         } else {
           this.Router.navigate([this.UserService.UserState || '/']); }
+        this.channelStore.LoadChannelId();
       },
       error => {
         // console.log('Error message', error.Message);
@@ -104,11 +107,5 @@ export class LoginComponent implements OnInit {
 
     // Mute the video if the "muted" video tag does not (a supposed FireFox bug.)
     document.getElementById('login-video-player')['muted'] = 'muted';
-
-    this.UserService.getSecurityQuestions()
-      .subscribe(
-        response => this.secQuesArray = response,
-        error => this.error = <any>error
-      );
   }
 }

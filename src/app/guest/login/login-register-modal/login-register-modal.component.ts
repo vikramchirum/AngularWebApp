@@ -33,12 +33,15 @@ export class LoginRegisterModalComponent implements OnInit {
     this.registerForm = this.registerFormInit();
   }
 
-  ngOnInit() {
+  public getSecurityQuestions() {
     this.UserService.getSecurityQuestions()
       .subscribe(
         response => this.secQuesArray = response,
         error => this.error = <any>error
       );
+  }
+
+  ngOnInit() {
   }
 
   save(model: IRegUser, isValid: boolean) {

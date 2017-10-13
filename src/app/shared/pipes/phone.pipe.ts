@@ -25,13 +25,15 @@ export class PhonePipe implements PipeTransform {
     }
     if (number) {
       if (number.length > 3) {
-        number = number.slice(0, 3) + '-' +  number.slice(3, 7);
+        number = number.slice(0, 3) + '-' + number.slice(3, 7);
       }  else {
         number = number;
       }
-      return ('(' + area + ')' + number).trim().slice(0, 13);
+      return ( area + '-' + number).trim().slice(0, 13);
+      // return ('(' + area + ')' + number).trim().slice(0, 13);
     }  else {
-      return '(' + area;
+      return area + ' - ';
+      // return '(' + area;
     }
   }
   }

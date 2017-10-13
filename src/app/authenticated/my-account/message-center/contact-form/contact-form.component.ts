@@ -33,7 +33,6 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     this.customerServiceSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(
       result => {
         this.customerDetails = result;
@@ -44,7 +43,6 @@ export class ContactFormComponent implements OnInit, OnDestroy {
         }
         this.name = this.customerDetails.First_Name + ' ' + this.customerDetails.Last_Name;
       });
-
     this.ActiveServiceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.serviceAccount = result;

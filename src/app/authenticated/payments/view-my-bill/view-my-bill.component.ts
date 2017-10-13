@@ -1,11 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {orderBy, sortBy, reverse} from 'lodash';
-import {InvoiceService} from 'app/core/invoiceservice.service';
-import {IInvoice} from 'app/core/models/invoices/invoice.model';
-import {ServiceAccountService} from 'app/core/serviceaccount.service';
-import {Subscription} from 'rxjs/Subscription';
-import {PaymentsHistoryService} from '../../../core/payments-history.service';
-import {PaymentsHistory} from '../../../core/models/payments/payments-history.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { orderBy, sortBy, reverse } from 'lodash';
+import { InvoiceService } from 'app/core/invoiceservice.service';
+import { IInvoice } from 'app/core/models/invoices/invoice.model';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { Subscription } from 'rxjs/Subscription';
+import { PaymentsHistoryService } from '../../../core/payments-history.service';
+import { PaymentsHistory } from '../../../core/models/payments/payments-history.model';
+import { PaymentsHistoryStore } from '../../../core/store/paymentsstore';
 
 @Component({
   selector: 'mygexa-view-my-bill',
@@ -31,7 +32,9 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
 
   constructor(private invoice_service: InvoiceService,
               private ServiceAccountService: ServiceAccountService,
-              private PaymentsHistoryService: PaymentsHistoryService) {
+              private PaymentsHistoryService: PaymentsHistoryService,
+              private PaymentsHistoryStore: PaymentsHistoryStore
+  ) {
   }
 
   ngOnInit() {
@@ -52,7 +55,8 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
                 error => this.error = error.Message
               );
           });
-        this.PaymentsHistoryService.GetPaymentsHistoryCacheable(result).subscribe(
+        // this.PaymentsHistoryService.GetPaymentsHistoryCacheable(result).subscribe(
+        this.PaymentsHistoryStore.PaymentHistory.subscribe(
           PaymentsHistoryItems => {
             // No need to sort as the data we get is sorted from API
             // this.payments = reverse(sortBy(PaymentsHistoryItems, 'PaymentDate' ));
