@@ -12,6 +12,7 @@ import {CustomerAccount} from '../../core/models/customeraccount/customeraccount
 import { NotificationOptionsStore } from '../../core/store/notificationoptionsstore';
 import { AccountType } from '../../core/models/enums/accounttype';
 import { NotificationType } from '../../core/models/enums/notificationtype';
+import { InvoiceStore } from '../../core/store/invoicestore';
 
 @Component({
   selector: 'mygexa-root',
@@ -40,7 +41,8 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
     private Router: Router,
     private ServiceAccountService: ServiceAccountService,
     private CustomerAccountService: CustomerAccountService,
-    private NotificationOptionsStore: NotificationOptionsStore
+    private NotificationOptionsStore: NotificationOptionsStore,
+    private InvoiceStore: InvoiceStore
   ) {}
 
   showHomeMultiAccountsModal() {

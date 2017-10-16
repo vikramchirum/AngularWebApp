@@ -11,25 +11,20 @@ export class OffersStore {
   private _latestUpgradeOffersData: BehaviorSubject<IOffers[]> = new BehaviorSubject(null);
   private _latestRenewalOffersData: BehaviorSubject<AllOffersClass[]> = new BehaviorSubject(null);
   private _gexaLyricOffersData: BehaviorSubject<IOffers[]> = new BehaviorSubject(null);
-  private _latestFeaturedOffersData: BehaviorSubject<IOffers[]> = new BehaviorSubject(null);
 
   constructor(private offersService: OfferService) {
   }
 
   get ServiceAccount_UpgradeOffers() {
-    return this._latestUpgradeOffersData.asObservable().filter(offers => offers != null);
+    return this._latestUpgradeOffersData.asObservable();
   }
 
   get ServiceAccount_RenewalOffers() {
-    return this._latestRenewalOffersData.asObservable().filter(offers => offers != null);
+    return this._latestRenewalOffersData.asObservable();
   }
 
   get GexaLyricOffer() {
-    return this._gexaLyricOffersData.asObservable().filter(offers => offers != null);
-  }
-
-  get Featured_Offers() {
-    return this._latestFeaturedOffersData.asObservable().filter(offers => offers != null);
+    return this._gexaLyricOffersData.asObservable();
   }
 
   LoadUpgradeOffersData(ActiveServiceAccountId: string) {
@@ -49,11 +44,5 @@ export class OffersStore {
         this._gexaLyricOffersData.next(GexaLyricOffer);
       }
     );
-  }
-  LoadFeaturedOffersData(Channel_Id: string) {
-    this.offersService.getOffersByChannel(Channel_Id).subscribe(
-      FeaturedOffers => {
-        this._latestFeaturedOffersData.next(FeaturedOffers);
-      });
   }
 }

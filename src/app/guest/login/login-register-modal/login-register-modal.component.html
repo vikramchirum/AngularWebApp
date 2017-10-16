@@ -6,8 +6,6 @@
       <div class="modal-content ">
         <div class="modal-header">
           <button type="button" class="close" aria-label="Close" (click)="reset()" style="padding:15px 100px 10px 0px;"> <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-          <!--<button type="button" class="close fa fa-times fa-2x" style="padding:15px 100px 10px 0px"-->
-          <!--data-dismiss="modal" (click)="reset()"></button>-->
           <h2 class="modal-title"><b>Register <span class="hidden-xs">for MyGexa</span></b></h2>
         </div>
         <div class="modal-body container-fluid">
@@ -71,10 +69,6 @@
                                  placeholder="Create A Password"
                                  [formControl]="registerForm.controls['Password']">
 
-                  <!--<div class="help-block" ><span *ngIf="registerForm.controls['Password'].hasError('required')-->
-                    <!--&& formSubmitted"> Password is required. </span>Passwords must be at least 6 characters, one non letter or digit character, one uppercase ('A'-'Z').</div>-->
-                  <!--<div class="has-error" *ngIf="registerForm.controls['Password'].hasError('required') && registerForm.controls['Password'].hasError('validatePassword')-->
-                    <!--&& formSubmitted"> <span class="help-block">Password is required.</span> </div>-->
                   <div class="has-error" *ngIf="registerForm.controls['Password'].hasError('required') && formSubmitted ||  registerForm.controls['Password'].hasError('validatePassword') && registerForm.controls['Password'].touched || registerForm.controls['Password'].hasError('minlength')
                     && registerForm.controls['Password'].touched || registerForm.controls['Password'].hasError('maxlength')
                     && registerForm.controls['Password'].touched">

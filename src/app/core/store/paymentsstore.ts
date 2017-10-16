@@ -14,7 +14,7 @@ export class PaymentsHistoryStore {
   }
 
   get PaymentHistory() {
-    return this._paymentHistory.asObservable().filter(PaymentHistory => PaymentHistory != null);
+    return this._paymentHistory.asObservable();
   }
 
   LoadPaymentsHistory(serviceAccount: ServiceAccount) {

@@ -6,15 +6,15 @@ import { OffersStore } from '../../core/store/offersstore';
 import { NotificationOptionsStore } from '../../core/store/notificationoptionsstore';
 import { NotificationStatus } from '../../core/models/enums/notificationstatus';
 import { INotificationOption } from '../../core/models/notificationoptions/notificationoption.model';
+import { InvoiceStore } from '../../core/store/invoicestore';
 
 @Component({
   selector: 'mygexa-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
+export class HomeComponent implements OnInit, OnDestroy {
   serviceAccountServiceSubscription: Subscription = null;
-
   ActiveServiceAccount: ServiceAccount = null;
   Is_Auto_Bill_Pay: boolean = null;
   Paperless_Billing: boolean = null;
@@ -28,13 +28,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor( private ServiceAccountService: ServiceAccountService,
                private OfferStore: OffersStore,
-               private NotificationOptionsStore: NotificationOptionsStore
+               private NotificationOptionsStore: NotificationOptionsStore,
+               private InvoiceStore: InvoiceStore
   ) { }
 
   ngOnInit() {
     this.serviceAccountServiceSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
+        this.InvoiceStore.LoadLatestInvoiceDetails(ActiveServiceAccount.Id);
         this.Is_Auto_Bill_Pay = this.ActiveServiceAccount.Is_Auto_Bill_Pay;
         this.Budget_Billing = this.ActiveServiceAccount.Budget_Billing;
         this.NotificationOptionsStore.Notification_Options.subscribe(
@@ -44,21 +46,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
               if (String(this.NotificationOptions.Status) === NotificationStatus[NotificationStatus.Active]) {
                 this.Paperless_Billing = Boolean(this.NotificationOptions.Paperless);
                 this.showHideTile();
-                  console.log('Is_Auto_Bill_Pay', this.Is_Auto_Bill_Pay);
-                  console.log('Budget_Billing', this.Budget_Billing);
-                  console.log('Paperless_Billing', this.Paperless_Billing);
-                  console.log('ShowAutoBillPay', this.ShowAutoBillPay);
-                  console.log('ShowPaperlessBilling', this.ShowPaperlessBilling);
-                  console.log('ShowBudgetBilling', this.ShowBudgetBilling);
-                  console.log('ShowEnergySavingTips', this.ShowEnergySavingTips);
               }
             }
           }
         );
         this.OfferStore.LoadLyricOfferDetails(this.ActiveServiceAccount.TDU_DUNS_Number);
-        console.log('Is_Auto_Bill_Pay1', this.Is_Auto_Bill_Pay);
-        console.log('Budget_Billing1', this.Budget_Billing);
-        console.log('Paperless_Billing1', this.Paperless_Billing);
       });
   }
 
@@ -69,11 +61,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.ShowBudgetBilling = (this.Is_Auto_Bill_Pay && this.Paperless_Billing && !this.Budget_Billing) ? true : false;
       this.ShowEnergySavingTips = (this.Is_Auto_Bill_Pay  && this.Paperless_Billing && this.Budget_Billing) ? true : false;
     }
-  }
-
-  ngAfterViewInit() {
-
-
   }
 
   ngOnDestroy() {

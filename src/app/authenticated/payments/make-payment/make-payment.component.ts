@@ -22,6 +22,7 @@ import { CardBrands } from '../../../core/models/paymethod/constants';
 import { ServiceAccount } from '../../../core/models/serviceaccount/serviceaccount.model';
 import { IInvoice } from '../../../core/models/invoices/invoice.model';
 import { PaymentsHistoryStore } from '../../../core/store/paymentsstore';
+import { InvoiceStore } from '../../../core/store/invoicestore';
 
 @Component({
   selector: 'mygexa-make-payment',
@@ -93,11 +94,12 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   set ActiveServiceAccount(ActiveServiceAccount: ServiceAccount) {
     this._ActiveServiceAccount = ActiveServiceAccount;
     if (ActiveServiceAccount) {
-      this.InvoiceService.getLatestInvoiceId(ActiveServiceAccount.Id).subscribe(
-        resp => {
-          this.InvoiceService.getInvoice(resp, ActiveServiceAccount.Id).subscribe(
-            LatestInvoice => this.LatestInvoice = LatestInvoice
-          );
+      this.InvoiceStore.LatestInvoiceDetails.subscribe(
+        latestInvoice => {
+          if (!latestInvoice) {
+            return;
+          }
+          this.LatestInvoice = latestInvoice;
         });
     }
   }
@@ -110,6 +112,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
               private FormBuilder: FormBuilder,
               private ServiceAccountService: ServiceAccountService,
               private InvoiceService: InvoiceService,
+              private InvoiceStore: InvoiceStore,
               private UserService: UserService) {
     this.formGroup = FormBuilder.group({
       payment_now: ['', Validators.compose([Validators.required, validMoneyAmount])],

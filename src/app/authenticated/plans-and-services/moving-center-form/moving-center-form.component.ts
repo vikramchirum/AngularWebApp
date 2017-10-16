@@ -86,14 +86,13 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     private availableDateService: AvailableDateService
   ) {
     // start date and end date must be future date.
-    this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId =>  { this.channelId = ChannelId; });
   }
 
 
 
 
   ngOnInit() {
-
+    this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId =>  { this.channelId = ChannelId; });
     this.movingAddressForm = this.fb.group({
       'Current_Service_End_Date': [ null, Validators.compose([
         Validators.required,

@@ -12,7 +12,7 @@ private _notificationOptions: BehaviorSubject<INotificationOption[]> = new Behav
   constructor(private notificationOptionsService: NotificationOptionsService) {}
 
   get Notification_Options() {
-    return this._notificationOptions.asObservable().filter(Options => Options != null);
+    return this._notificationOptions.asObservable();
   }
 
   LoadNotificationOptions(searchOption: ISearchNotificationOptionRequest) {

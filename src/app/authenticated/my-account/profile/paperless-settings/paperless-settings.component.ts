@@ -83,7 +83,6 @@ export class PaperlessSettingsComponent implements OnInit {
       Type: NotificationType.Contract_Expiration
     };
     this.notificationService.searchNotificationOption(this.searchNotificationOptionRequestForBill).subscribe(result => {
-     // console.log('Notification Result for Bill', result);
       this.notificationOptionsForBills = result;
       if (this.notificationOptionsForBills && this.notificationOptionsForBills.length > 0) {
         this.selectedPreference(this.notificationOptionsForBills, this.billingOptions);
@@ -93,7 +92,6 @@ export class PaperlessSettingsComponent implements OnInit {
       this.togglePaperless(this.billingOptions, this.plansOptions);
     });
     this.notificationService.searchNotificationOption(this.searchNotificationOptionRequestForPlans).subscribe(result => {
-      // console.log('Notification Result for plans', result);
       this.notificationOptionsForPlans = result;
       if (this.notificationOptionsForPlans && this.notificationOptionsForPlans.length > 0) {
         this.selectedPreference(this.notificationOptionsForPlans, this.plansOptions);
@@ -191,7 +189,6 @@ export class PaperlessSettingsComponent implements OnInit {
       Phone_Number: this.customerDetails.Primary_Phone,
       Status: NotificationStatus.Active
     };
-    // console.log('Notification Request',notificationRequest);
     this.notificationService.createNotificationOption(notificationRequest).subscribe(
       () => {
         console.log();
@@ -226,7 +223,6 @@ export class PaperlessSettingsComponent implements OnInit {
       Account_Info: notificationResponse[0].Account_Info,
       Id: notificationResponse[0].Id
     };
-    // console.log('Update Notification Request', this.updateNotification)
     this.notificationService.updateNotificationOption(this.updateNotification).subscribe(
       () => {
         console.log();

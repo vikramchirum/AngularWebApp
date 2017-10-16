@@ -39,6 +39,7 @@ import { PaymentExtensionService } from './payment-extension.service';
 import { AvailableDateService } from './availabledate.service';
 import { PaymentsHistoryStore } from './store/paymentsstore';
 import { NotificationOptionsStore } from './store/notificationoptionsstore';
+import { InvoiceStore } from './store/invoicestore';
 
 
 @NgModule({
@@ -80,7 +81,8 @@ import { NotificationOptionsStore } from './store/notificationoptionsstore';
     PaymentExtensionService,
     AvailableDateService,
     PaymentsHistoryStore,
-    NotificationOptionsStore
+    NotificationOptionsStore,
+    InvoiceStore
   ]
 })
 export class CoreModule { }
