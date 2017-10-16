@@ -11,6 +11,8 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
 
 import { IInvoice } from 'app/core/models/invoices/invoice.model';
 import { InvoiceStore } from '../../../core/store/invoicestore';
+import { PaymentsHistoryStore } from '../../../core/store/paymentsstore';
+import { PaymentsHistory } from '../../../core/models/payments/payments-history.model';
 
 @Component({
   selector: 'mygexa-my-bill',
@@ -19,17 +21,24 @@ import { InvoiceStore } from '../../../core/store/invoicestore';
 })
 export class MyBillComponent implements OnInit, OnDestroy {
 
-  dollarAmountFormatter: string;
-  totalDue: number;
+   dollarAmountFormatter: string;
+   totalDue: number;
    noCurrentDue: boolean = null;
    exceededDueDate: boolean = null;
-    activeServiceAccount: ServiceAccount;
+   activeServiceAccount: ServiceAccount;
    latestInvoice: IInvoice;
+   autoPay: boolean;
+  public Payments: PaymentsHistory[] = null;
+  LatestBillAmount: number;
+  LatestBillPaymentDate: Date;
+
   private activeServiceAccountSubscription: Subscription = null;
   private latestInvoiceDetailsSubscription: Subscription = null;
+  private paymentHistorySubscription: Subscription = null;
 
   constructor(private ServiceAccountService: ServiceAccountService,
-              private InvoiceStore: InvoiceStore
+              private InvoiceStore: InvoiceStore,
+              private PaymentHistoryStore: PaymentsHistoryStore
   ) {
   }
 
@@ -40,12 +49,25 @@ export class MyBillComponent implements OnInit, OnDestroy {
         this.activeServiceAccount = activeServiceAccount;
         if ( activeServiceAccount) {
           this.totalDue = activeServiceAccount.Current_Due + activeServiceAccount.Past_Due;
+          this.autoPay = activeServiceAccount.Is_Auto_Bill_Pay;
         }
         this.noCurrentDue = this.activeServiceAccount.Current_Due > 0 ? true : false;
         console.log('Current due date', this.noCurrentDue);
         this.exceededDueDate = this.activeServiceAccount.Past_Due > 0 ? true : false;
         console.log('Exceeded due date', this.exceededDueDate);
         this.exceededDueDate =  (new Date(this.activeServiceAccount.Due_Date) > new Date()) ? true : false;
+        if (!this.autoPay) {
+          this.paymentHistorySubscription = this.PaymentHistoryStore.PaymentHistory.subscribe(
+            PaymentsHistoryItems => {
+              if (PaymentsHistoryItems) {
+                this.Payments = PaymentsHistoryItems;
+                if (this.Payments[0].PaymentStatus === 'In Progress') {
+                  this.LatestBillAmount = this.Payments[0].PaymentAmount;
+                  this.LatestBillPaymentDate = this.Payments[0].PaymentDate;
+                }
+              }
+            });
+        }
         this.latestInvoiceDetailsSubscription = this.InvoiceStore.LatestInvoiceDetails.subscribe(
           latestInvoice => {
             if (!latestInvoice) {

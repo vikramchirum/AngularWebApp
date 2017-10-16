@@ -22,5 +22,34 @@
     </tbody>
   </table>
   <button class="btn btn-small btn-link pull-right" [ngClass]="{'btn-success': ((noCurrentDue && !exceededDueDate) || (!noCurrentDue && !exceededDueDate )), 'exceededDueDate': exceededDueDate && !noCurrentDue}" routerLink="/payments/view-my-bill" type="button">View Bill</button>
-  <button class="btn btn-block btn-success btn-lg" [ngClass]="{'btn-success': ((noCurrentDue && !exceededDueDate) || (!noCurrentDue && !exceededDueDate )), 'exceededDueDatebtn': exceededDueDate && !noCurrentDue}" routerLink="/payments/make-payment" type="button">Make a Payment</button>
+  <!--<button class="btn btn-block btn-success btn-lg" [ngClass]="{'btn-success': ((noCurrentDue && !exceededDueDate) || (!noCurrentDue && !exceededDueDate )), 'exceededDueDatebtn': exceededDueDate && !noCurrentDue}" routerLink="/payments/make-payment" type="button">Make a Payment</button>-->
+
+  <div class="input-group">
+    <div class="input-group-btn">
+      <button *ngIf="autoPay" type="button" class="btn btn-success btn-round-lg btn-lg custom" data-label-placement>
+        <span class="fa fa-clock-o"></span>
+        <span class="small">AUTO PAY IS SCHEDULED</span>
+      </button>
+      <button *ngIf="!autoPay" type="button" class="btn btn-success btn-lg custom" data-label-placement>
+        <span class="small">PAYMENT PENDING</span>
+      </button>
+      <button type="button" class="btn btn-success dropdown-toggle btn-lg active" [ngClass]="{'btn-round-sides': autoPay }" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu pull-right col-sm-8" style=" text-align: center;" role="menu">
+        <li class="small center" *ngIf="autoPay">
+          Auto pay is scheduled for 12/12/2017
+        </li>
+        <li class="small center" *ngIf="!autoPay">
+          Your payment of ${{LatestBillAmount}} is pending
+        </li>
+        <hr>
+        <li>
+          <a routerLink="/payments/make-payment" class="btn btn-link btn-small btn-success" >
+            Make a payment
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
