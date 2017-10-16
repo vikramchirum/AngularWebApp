@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { PaymentsHistoryService } from '../../../core/payments-history.service';
 import { PaymentsHistory } from '../../../core/models/payments/payments-history.model';
 import { PaymentsHistoryStore } from '../../../core/store/paymentsstore';
+import { InvoiceStore } from '../../../core/store/invoicestore';
 
 @Component({
   selector: 'mygexa-view-my-bill',
@@ -31,6 +32,7 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
   private ActiveServiceAccountSubscription: Subscription = null;
 
   constructor(private invoice_service: InvoiceService,
+              private InvoiceStore: InvoiceStore,
               private ServiceAccountService: ServiceAccountService,
               private PaymentsHistoryService: PaymentsHistoryService,
               private PaymentsHistoryStore: PaymentsHistoryStore
@@ -44,27 +46,24 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
         // Need to get latest invoice
 
         this.service_account_id = result.Id;
-        this.invoice_service.getLatestInvoiceId(this.service_account_id).subscribe(
-          res => {
+        this.InvoiceStore.LatestInvoiceDetails.subscribe(
+          latestInvoice => {
+            if (!latestInvoice ) {
+              return;
+            }
             console.log('Return from invoice call');
-            this.latest_invoice_id = res;
+            this.latest_invoice_id = latestInvoice.Invoice_Id;
             console.log('After setting invoice id');
-            this.invoice_service.getInvoice(this.latest_invoice_id, this.service_account_id)
-              .subscribe(
-                response => {console.log('Return from get invoice call'); this.req_bill = response; },
-                error => this.error = error.Message
-              );
+            this.req_bill = latestInvoice;
           });
         // this.PaymentsHistoryService.GetPaymentsHistoryCacheable(result).subscribe(
         this.PaymentsHistoryStore.PaymentHistory.subscribe(
           PaymentsHistoryItems => {
-            // No need to sort as the data we get is sorted from API
-            // this.payments = reverse(sortBy(PaymentsHistoryItems, 'PaymentDate' ));
-            this.payments = PaymentsHistoryItems;
-            this.LatestBillAmount = this.payments[0].PaymentAmount;
-            this.LatestBillPaymentDate = this.payments[0].PaymentDate;
-            console.log('Payments', PaymentsHistoryItems.length, PaymentsHistoryItems);
-            // console.log('Payments in view my bill component', PaymentsHistoryItems.length,  this.payments);
+            if (PaymentsHistoryItems) {
+              this.payments = PaymentsHistoryItems;
+              this.LatestBillAmount = this.payments[0].PaymentAmount;
+              this.LatestBillPaymentDate = this.payments[0].PaymentDate;
+            }
           }
         );
       }

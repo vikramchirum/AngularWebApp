@@ -36,7 +36,6 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
     private renewalStore: RenewalStore,
     private Router: Router,
     private Route: ActivatedRoute,
-    private channelStore: ChannelStore
   ) {
   }
 
@@ -60,8 +59,6 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
         this.OfferStore.LoadUpgradeOffersData(this.ActiveServiceAccount.Id);
       }
     });
-
-    // this.channelStore.LoadChannelId();
   }
 
   ngOnDestroy() {

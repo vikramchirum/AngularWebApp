@@ -83,11 +83,11 @@ export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
         // this.PaymentsHistoryService.GetPaymentsHistoryCacheable(ActiveServiceAccount).subscribe
         this.PaymentsHistoryStore.PaymentHistory.subscribe(
           PaymentsHistoryItems => {
-            this.Payments = clone(PaymentsHistoryItems);
-            let total = 0;
-            forEach(PaymentsHistoryItems, payment => total += payment.PaymentAmount);
-            console.log('Payments Total:', total);
-            console.log('Payments', PaymentsHistoryItems.length, PaymentsHistoryItems);
+            if (PaymentsHistoryItems) {
+              this.Payments = clone(PaymentsHistoryItems);
+              let total = 0;
+              forEach(PaymentsHistoryItems, payment => total += payment.PaymentAmount);
+            }
           }
         );
 

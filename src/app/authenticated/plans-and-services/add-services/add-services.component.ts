@@ -67,25 +67,15 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     private offerService: OfferService, private UserService: UserService, private enrollService: EnrollService, private customerAccountService: CustomerAccountService,
     private modalStore: ModalStore, private channelStore: ChannelStore,     private availableDateService: AvailableDateService
   ) {
+  }
 
-
-    let defaultDate = this.getBusinessDays();
-    // To set default date
-    // this.selDate = {
-    //   year: defaultDate.getFullYear(),
-    //   month: defaultDate.getMonth() + 1,
-    //   day: defaultDate.getDate()
-    // };
+  ngOnInit() {
 
     // Keep our customer account id up-to-date.
     this.UserService.UserCustomerAccountObservable.subscribe(
       CustomerAccountId => this.customerAccountId = CustomerAccountId
     );
-
     this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId =>  { this.channelId = ChannelId; });
-  }
-
-  ngOnInit() {
     this.addServiceForm = this.fb.group({
       Service_Start_Date:  [null, Validators.compose([
         Validators.required,
@@ -98,65 +88,13 @@ export class AddServicesComponent implements OnInit, OnDestroy {
 
   }
 
-  // to fetch default date(3 business days from today) excluding weekends and holidays
-  getBusinessDays() {
-    let calculator = {
-      workDaysAdded: 0,
-      gexaHolidays: ['01-01', '07-04', '12-24', '12-25'], // ['month-date']
-      startDate: null,
-      curDate: null,
-
-      addWorkDay: function () {
-        this.curDate.setDate(this.curDate.getDate() + 1);
-        if (this.gexaHolidays.indexOf(this.formatDate(this.curDate)) === -1 && this.curDate.getDay() !== 0 && this.curDate.getDay() !== 6) {
-          this.workDaysAdded++;
-        }
-      },
-
-      formatDate: function (date) {
-        var day = date.getDate(),
-          month = date.getMonth() + 1;
-
-        month = month > 9 ? month : '0' + month;
-        day = day > 9 ? day : '0' + day;
-        return month + '-' + day;
-      },
-
-      getNewWorkDay: function (daysToAdd) {
-        this.startDate = new Date();
-        this.curDate = new Date();
-        this.workDaysAdded = 0;
-
-        while (this.workDaysAdded < daysToAdd) {
-          this.addWorkDay();
-        }
-        return this.curDate;
-      }
-    };
-    return calculator.getNewWorkDay(3);
-  }
-
-
-
   private ServiceStartDate: IMyOptions = {
     // start date options here...
     disableDays: [],
     disableUntil: { year: 0, month: 0, day: 0 },
     disableSince: { year: 0, month: 0, day: 0 },
     dateFormat: 'mm-dd-yyyy'
-  }
-  // Calling this function set disableUntil value
-  // disableUntil() {
-  //   let d = this.getBusinessDays();
-  //   d.setDate(d.getDate() - 1);
-  //   let copy = this.getCopyOfOptions();
-  //   copy.disableUntil = {
-  //     year: d.getFullYear(),
-  //     month: d.getMonth() + 1,
-  //     day: d.getDate()
-  //   };
-  //   this.ServiceStartDate = copy;
-  // }
+  };
 
   disableUntil() {
     let val = this.addServiceForm.controls['serviceType'].value;
@@ -251,10 +189,6 @@ export class AddServicesComponent implements OnInit, OnDestroy {
             this.missingMovingDates = this.getMissingDates(this.availableDates.Available_Move_In_Dates);
             this.missingSwitchDates = this.getMissingDates(this.availableDates.Available_Self_Selected_Switch_Dates);
             this.disableDays();
-            console.log('Available dates', availableDates);
-            console.log('Available move in dates', this.trimmedAvailableMovingDates );
-            console.log('Available switch dates', this.trimmedAvailableSwitchDates );
-            // console.log('converted dates array', this.convertedDates );
             this.onChangeServiceType();
           }
         }

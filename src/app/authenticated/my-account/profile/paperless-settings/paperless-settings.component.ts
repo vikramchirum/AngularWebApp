@@ -13,6 +13,7 @@ import { INotificationOption } from 'app/core/models/notificationoptions/notific
 import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
 import { ContactMethod } from 'app/core/models/enums/contactmethod';
 import { UserService } from 'app/core/user.service';
+import { NotificationOptionsStore } from '../../../../core/store/notificationoptionsstore';
 
 @Component({
   selector: 'mygexa-paperless-settings',
@@ -27,7 +28,7 @@ export class PaperlessSettingsComponent implements OnInit {
   goPaperless: boolean = false;
   notificationOptionsForBills = null;
   notificationOptionsForPlans = null;
-
+  public SearchNotificationOptions = null;
   searchNotificationOptionRequestForBill = null;
   searchNotificationOptionRequestForPlans = null;
   CustomerAccountServiceSubscription: Subscription = null;
@@ -39,7 +40,8 @@ export class PaperlessSettingsComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private notificationService: NotificationOptionsService,
     private CustomerAccountService: CustomerAccountService,
-    private UserService: UserService
+    private UserService: UserService,
+    private NotificationOptionsStore: NotificationOptionsStore
   ) { }
 
   ngOnInit() {
@@ -55,6 +57,13 @@ export class PaperlessSettingsComponent implements OnInit {
       }
     );
     this.notificationType = NotificationType;
+    this.SearchNotificationOptions = {
+      Account_Info: {
+        Account_Type: AccountType.GEMS_Residential_Customer_Account,
+        Account_Number: this.customerDetails.Id,
+      },
+      Type: NotificationType.Bill
+    };
   }
 
   // fetch notification options for bills and Plans based on Notification Type(Bill, Contract_Expiration)
@@ -74,7 +83,6 @@ export class PaperlessSettingsComponent implements OnInit {
       Type: NotificationType.Contract_Expiration
     };
     this.notificationService.searchNotificationOption(this.searchNotificationOptionRequestForBill).subscribe(result => {
-     // console.log('Notification Result for Bill', result);
       this.notificationOptionsForBills = result;
       if (this.notificationOptionsForBills && this.notificationOptionsForBills.length > 0) {
         this.selectedPreference(this.notificationOptionsForBills, this.billingOptions);
@@ -84,7 +92,6 @@ export class PaperlessSettingsComponent implements OnInit {
       this.togglePaperless(this.billingOptions, this.plansOptions);
     });
     this.notificationService.searchNotificationOption(this.searchNotificationOptionRequestForPlans).subscribe(result => {
-      // console.log('Notification Result for plans', result);
       this.notificationOptionsForPlans = result;
       if (this.notificationOptionsForPlans && this.notificationOptionsForPlans.length > 0) {
         this.selectedPreference(this.notificationOptionsForPlans, this.plansOptions);
@@ -182,9 +189,11 @@ export class PaperlessSettingsComponent implements OnInit {
       Phone_Number: this.customerDetails.Primary_Phone,
       Status: NotificationStatus.Active
     };
-    // console.log('Notification Request',notificationRequest);
     this.notificationService.createNotificationOption(notificationRequest).subscribe(
-      () => console.log(),
+      () => {
+        console.log();
+        this.NotificationOptionsStore.LoadNotificationOptions(this.SearchNotificationOptions);
+      },
       error => {
         console.log('create notification API error', error.Message);
       });
@@ -214,9 +223,11 @@ export class PaperlessSettingsComponent implements OnInit {
       Account_Info: notificationResponse[0].Account_Info,
       Id: notificationResponse[0].Id
     };
-    // console.log('Update Notification Request', this.updateNotification)
     this.notificationService.updateNotificationOption(this.updateNotification).subscribe(
-      () => console.log(),
+      () => {
+        console.log();
+        this.NotificationOptionsStore.LoadNotificationOptions(this.SearchNotificationOptions);
+      },
       error => {
         console.log('update notification API error', error.Message);
       });

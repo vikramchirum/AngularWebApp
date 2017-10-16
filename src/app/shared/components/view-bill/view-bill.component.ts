@@ -39,7 +39,10 @@ export class ViewBillComponent implements OnInit {
   private ActiveServiceAccountSubscription: Subscription = null;
   private tduName: string;
 
-  constructor(private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService, private utilityService: UtilityService) {
+  constructor(private invoiceService: InvoiceService,
+              private serviceAccountService: ServiceAccountService,
+              private utilityService: UtilityService,
+  ) {
   }
 
   ngOnInit() {
@@ -59,10 +62,12 @@ export class ViewBillComponent implements OnInit {
   public PopulateItemizedBill(bill_object: IInvoice) {
     const invoice_id = +(bill_object.Invoice_Id);
     this.invoicesUrl = environment.Documents_Url.concat(`/invoice/generate/${invoice_id}`);
-
-    this.invoiceService.getItemizedInvoiceDetails(invoice_id, this.serviceAccountId)
+      this.invoiceService.getItemizedInvoiceDetails(invoice_id, this.serviceAccountId)
       .subscribe(
         bill_item_details => {
+          if (!bill_item_details) {
+            return;
+          }
           console.log('bill item details', bill_item_details);
           this.openCharges = [];
           this.bill_object = bill_object;
