@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { equalCheck, validateEmail, validateInteger } from 'app/validators/validator';
-import {HttpClient} from '../../../core/httpclient';
-import {Router} from '@angular/router';
-import {UserService} from '../../../core/user.service';
-import {IUser} from '../../../core/models/user/User.model';
-import {IClaim} from '../../../core/models/user/User-claim.model';
+import { HttpClient } from '../../../core/httpclient';
+import { Router } from '@angular/router';
+import { UserService } from '../../../core/user.service';
+import { IUser } from '../../../core/models/user/User.model';
+import { IClaim } from '../../../core/models/user/User-claim.model';
 
 @Component({
   selector: 'mygexa-login-add-claims-modal',

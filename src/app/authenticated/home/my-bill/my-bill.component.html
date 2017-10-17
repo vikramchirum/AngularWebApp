@@ -2,19 +2,22 @@
   <div class="alert pull-right bg-danger" *ngIf="totalDue">Due Date: {{ latestInvoice?.Due_Date | date:'MM/dd/yyyy' }}</div>
   <h1 [ngClass]="{'paymentMade': noCurrentDue, 'exceededDueDate': exceededDueDate}">My Bill</h1>
 
-  <table class="table table-condensed table-striped" border="0" width="100%">
+  <table class="table " border="0" width="100%">
     <tbody>
-    <tr>
-      <td><h5>Total Amount Due</h5></td>
+    <tr class="bg-success">
+      <td><h4>Total Amount Due</h4></td>
       <td><h4>${{ totalDue | number : dollarAmountFormatter }}</h4></td>
     </tr>
-    <tr>
-      <td><h5>Current Amount Due</h5></td>
-      <td><h4>${{ activeServiceAccount?.Current_Due  | number : dollarAmountFormatter }}</h4></td>
+    <tr class="bg-spacer">
+      <td><small>&nbsp;</small></td>
+    </tr>
+    <tr >
+      <td>Current Amount Due</td>
+      <td>${{ activeServiceAccount?.Current_Due  | number : dollarAmountFormatter }}</td>
     </tr>
     <tr>
-      <td><h5>Past Due</h5></td>
-      <td><h4>${{ activeServiceAccount?.Past_Due | number : dollarAmountFormatter }}</h4></td>
+      <td>Past Due</td>
+      <td>${{ activeServiceAccount?.Past_Due | number : dollarAmountFormatter }}</td>
     </tr>
     </tbody>
   </table>

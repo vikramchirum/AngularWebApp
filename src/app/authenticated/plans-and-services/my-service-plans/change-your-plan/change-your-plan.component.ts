@@ -33,7 +33,7 @@ import { CustomerAccountService } from 'app/core/CustomerAccount.service';
   templateUrl: './change-your-plan.component.html',
   styleUrls: ['./change-your-plan.component.scss']
 })
-export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class ChangeYourPlanComponent implements OnInit, OnChanges, OnDestroy {
 
   @ViewChild('errorModal') errorModal: ErrorModalComponent;
   @ViewChild('planConfirmationModal') planConfirmationModal: PlanConfirmationModalComponent;
@@ -80,16 +80,6 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
 
   }
 
-  ngAfterViewInit() {
-  }
-
-  // getRespectiveAsterik(offer_legal_Text: string): string {
-  //   let result: string[];
-  //   result = offer_legal_Text.split(' ', 2);
-  //   const symbol =  result[0];
-  //   return symbol;
-  // }
-
   private initialize() {
 
     const activeServiceAccount$ = this.serviceAccount_service.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
@@ -117,7 +107,6 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
             if (allOffers) {
               this.extractOffers(allOffers);
               this.renewalOffersLegalTextArray = this.getUniqueLegalText(this.renewalOffers);
-              console.log('Renewal offers legal text', this.renewalOffersLegalTextArray);
             }
           }
         );
@@ -126,11 +115,12 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
       this.isLoadingUpgrades = true;
       this.offersServiceSubscription = this.OfferStore.ServiceAccount_UpgradeOffers.subscribe(
         upgradeOffers => {
+          if (!upgradeOffers) {
+            return;
+          }
           this.isLoadingUpgrades = false;
           this.upgradeOffers = upgradeOffers;
           this.upgradeOffersLegalTextArray = this.getUniqueLegalText(this.upgradeOffers);
-          // console.log('Upgrade offers legal text', this.upgradeOffersLegalTextArray);
-          console.log('Upgrade offers', this.upgradeOffers);
         }
       );
     }
@@ -144,12 +134,10 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
     this.allOffers = allOffers.filter(item => item.Type === 'All_Offers');
     if (this.allOffers.length > 0 && this.allOffers[0].Offers.length > 0) {
       this.renewalOffers = this.allOffers[0].Offers;
-      console.log('Renewal offers', this.renewalOffers);
     }
   }
 
   getUniqueLegalText(offersArray: IOffers[]): string[] {
-    // console.log('array', offersArray);
     let other = []; // your other array...
     let result: string[];
     if (offersArray.length > 0 ) {
@@ -158,7 +146,6 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
           Legal_Text_List: item.Legal_Text_List
         };
       }).forEach(item => item.Legal_Text_List.length > 0 ? other.push(item) : '');
-      // console.log('array', other);
       var vals = [];
       for ( var item of other){
         for ( var ite of item.Legal_Text_List) {
@@ -208,7 +195,6 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
         this.isLoadingRenewals = false;
         this.renewalOffers = result;
         this.renewalOffersLegalTextArray = this.getUniqueLegalText(this.renewalOffers);
-        // console.log('Renewal offers legal text', this.renewalOffersLegalTextArray);
       }
     );
   }
@@ -264,7 +250,6 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
 
     this.renewalStore.createRenewal(request).subscribe(result => {
       if (result) {
-        console.log('done');
         this.planConfirmationModal.showPlanConfirmationModal({
           isRenewalPlan: true,
           customerDetails: this.customerDetails
@@ -276,7 +261,6 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
   }
 
   private createUpgrade(offerSelectionPayLoad: IOfferSelectionPayLoad) {
-
     const request = {} as ICreateUpgradeRequest;
     request.Service_Account_Id = offerSelectionPayLoad.Service_Account_Id;
     request.Offering_Id = offerSelectionPayLoad.Offer.Id;
@@ -289,7 +273,6 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
 
     this.upgradeStore.createUpgrade(request).subscribe(result => {
       if (result) {
-        console.log('done');
         this.planConfirmationModal.showPlanConfirmationModal({
           isRenewalPlan: false,
           customerDetails: this.customerDetails
@@ -301,7 +284,6 @@ export class ChangeYourPlanComponent implements OnInit, AfterViewInit, OnChanges
   }
 
   private movingOffer(offerSelectionPayload: IOfferSelectionPayLoad) {
-    console.log('payload', offerSelectionPayload);
   }
 
   ngOnDestroy() {

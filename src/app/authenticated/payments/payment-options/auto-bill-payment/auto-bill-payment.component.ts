@@ -90,6 +90,7 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
         this.ActiveServiceAccount.Is_Auto_Bill_Pay = true;
         this.autoBillPaymethod = selectedPaymethod;
         setTimeout(() => this.enrollingToAutoBillPay = false, random(500, 1500));
+        this.ServiceAccountService.UpdateServiceAccounts(true);
       },
       err => console.log('err', err)
     );

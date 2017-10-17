@@ -35,14 +35,6 @@ export class HomeMultiAccountsModalComponent {
     this.hideServiceUpgradeModal();
   }
 
-  onContinue(): void {
-
-    this.ServiceAccountService.SetActiveServiceAccount(this.active_service_account_id);
-
-    this.hideServiceUpgradeModal();
-
-  }
-
 }
 
 

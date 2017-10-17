@@ -35,9 +35,6 @@ export class PersonalInformationComponent implements OnInit, OnDestroy {
         console.log('Customer details in personal info', this.customerDetails);
       }
     );
-    // this.CustomerAccountServiceSubscription = this.CustomerAccountService.CustomerAccountObservable.subscribe(
-    //   result => { this.customerDetails = result; }
-    // );
     this.UserServiceSubscription = this.UserService.UserObservable.subscribe(
       result => {
         this.accountNumber = result.Account_permissions.filter(x => x.AccountType === 'Customer_Account_Id')[0].AccountNumber;

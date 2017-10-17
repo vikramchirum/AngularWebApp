@@ -38,6 +38,9 @@ import { ChannelStore } from './store/channelstore';
 import { PaymentExtensionService } from './payment-extension.service';
 import { AvailableDateService } from './availabledate.service';
 import { CalendarService } from "./calendar.service";
+import { PaymentsHistoryStore } from './store/paymentsstore';
+import { NotificationOptionsStore } from './store/notificationoptionsstore';
+import { InvoiceStore } from './store/invoicestore';
 
 
 @NgModule({
@@ -77,6 +80,10 @@ import { CalendarService } from "./calendar.service";
     ChannelService,
     ChannelStore,
     PaymentExtensionService,
+    AvailableDateService,
+    PaymentsHistoryStore,
+    NotificationOptionsStore,
+    InvoiceStore,
     AvailableDateService,
     CalendarService
   ]

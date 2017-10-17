@@ -53,8 +53,10 @@ export class PaymentsComponent implements OnInit, OnDestroy, AfterViewInit {
         // this.PaymentsHistoryService.GetPaymentsHistoryCacheable(activeServiceAccount).subscribe(
         this.paymentsHistoryStore.PaymentHistory.subscribe(
           PaymentsHistoryItems => {
-            this.Payments = PaymentsHistoryItems;
-            this.onChangeTable(this.config);
+            if (PaymentsHistoryItems) {
+              this.Payments = PaymentsHistoryItems;
+              this.onChangeTable(this.config);
+            }
           });
       }
     );
