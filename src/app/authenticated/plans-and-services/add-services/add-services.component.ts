@@ -1,14 +1,12 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { IMyDpOptions, IMyDate, IMyOptions, IMyDateModel } from 'mydatepicker';
+import { IMyDpOptions, IMyDate, IMyOptions, IMyDateModel, IMyMarkedDate, IMyMarkedDates } from 'mydatepicker';
 import { Subscription } from 'rxjs/Subscription';
 
 import { OfferRequest } from 'app/core/models/offers/offerrequest.model';
 import { OfferService } from 'app/core/offer.service';
 import { ServiceAddress } from 'app/core/models/serviceaddress/serviceaddress.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
-
-import { checkIfSunday, checkIfNewYear, checkIfChristmasEve, checkIfChristmasDay, checkIfJuly4th } from 'app/validators/moving-form.validator';
 import { UserService } from 'app/core/user.service';
 import { EnrollService } from 'app/core/enroll.service';
 import { CustomerCheckToken } from 'app/core/models/customercheckstoken/customer-checks.model';
@@ -20,25 +18,27 @@ import { ChannelStore } from 'app/core/store/channelstore';
 import { OfferSelectionType } from 'app/core/models/enums/offerselectiontype';
 import { IOfferSelectionPayLoad } from 'app/shared/models/offerselectionpayload';
 import { environment } from 'environments/environment';
-import { AvailableDateService } from '../../../core/availabledate.service';
-import { IAvailableDate } from '../../../core/models/availabledate/availabledate.model';
+import { AvailableDateService } from 'app/core/availabledate.service';
+import { ITduAvailabilityResult } from 'app/core/models/availabledate/tduAvailabilityResult.model';
+import { ServiceType } from "app/core/models/enums/serviceType";
+import { TduAction } from "../../../core/models/enums/tduAction";
+import { forEach } from "@angular/router/src/utils/collection";
+import { CalendarService } from "../../../core/calendar.service";
 
-@Component({
+@Component( {
   selector: 'mygexa-add-services',
   templateUrl: './add-services.component.html',
-  styleUrls: ['./add-services.component.scss']
-})
+  styleUrls: [ './add-services.component.scss' ]
+} )
 export class AddServicesComponent implements OnInit, OnDestroy {
-  availableDates: IAvailableDate;
-  trimmedAvailableMovingDates: Date[] = [];
-  trimmedAvailableSwitchDates: Date[] = [];
-  missingMovingDates: Array<IMyDate> = null;
-  missingSwitchDates: Array<IMyDate> = null;
+  tduAvailabilityResult: ITduAvailabilityResult;
   addServiceForm: FormGroup;
   offerRequestParams: OfferRequest = null;
   selectedServiceAddress: ServiceAddress = null;
   availableOffers: IOffers[] = null;
   featuredOffers = null;
+  serviceTypeSource = ServiceType;
+
   private customerAccountId: string;
   private channelId: string;
   private tokenRes: CustomerCheckToken;
@@ -54,37 +54,32 @@ export class AddServicesComponent implements OnInit, OnDestroy {
 
   private customerDetails: CustomerAccount = null;
   private Waiver: string;
-  private serviceType: string;
+  private serviceType?: ServiceType;
+  private selectedStartDate: Date;
   private selectedOfferId: string;
   private enrollErrorMsg: string;
-  // private selDate: IMyDate = { year: 0, month: 0, day: 0 };
   private enrolled: boolean = false;
   private showPlansFlag: boolean = false;
   offerSelectionType = OfferSelectionType;
   selectedOffer: IOfferSelectionPayLoad;
+  pricingMessage: string;
 
-  constructor(private fb: FormBuilder,
-    private offerService: OfferService, private UserService: UserService, private enrollService: EnrollService, private customerAccountService: CustomerAccountService,
-    private modalStore: ModalStore, private channelStore: ChannelStore,     private availableDateService: AvailableDateService
-  ) {
-  }
+  constructor( private fb: FormBuilder,
+               private offerService: OfferService, private UserService: UserService, private enrollService: EnrollService, private customerAccountService: CustomerAccountService,
+               private modalStore: ModalStore, private channelStore: ChannelStore, private availableDateService: AvailableDateService, private calendarService: CalendarService ) {
 
-  ngOnInit() {
 
     // Keep our customer account id up-to-date.
     this.UserService.UserCustomerAccountObservable.subscribe(
       CustomerAccountId => this.customerAccountId = CustomerAccountId
     );
-    this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId =>  { this.channelId = ChannelId; });
-    this.addServiceForm = this.fb.group({
-      Service_Start_Date:  [null, Validators.compose([
-        Validators.required,
-        checkIfNewYear,
-        checkIfChristmasEve,
-        checkIfChristmasDay,
-        checkIfJuly4th])],
-      serviceType: ''
-    });
+
+    this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId => {
+      this.channelId = ChannelId;
+    } );
+  }
+
+  ngOnInit() {
 
   }
 
@@ -96,101 +91,44 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     dateFormat: 'mm-dd-yyyy'
   };
 
-  disableUntil() {
-    let val = this.addServiceForm.controls['serviceType'].value;
-    let copy = this.getCopyOfOptions();
-    let currentDate;
-    if (val === 'MoveIn' && this.trimmedAvailableMovingDates) {
-      currentDate = new Date(this.trimmedAvailableMovingDates[0]);
-      console.log('date', currentDate);
+  populateCalendar() {
+    if ( this.serviceType && this.tduAvailabilityResult ) {
+      //Clear the selected date
+      this.selectedStartDate = null;
+      //Filter the dates
+      var calendarData = this.calendarService.getCalendarData( this.tduAvailabilityResult, this.serviceType );
 
-      copy.disableUntil = {
-        year: currentDate.getUTCFullYear(),
-        month: currentDate.getUTCMonth() + 1,
-        day: currentDate.getUTCDate() - 1
+      //Set calendar options
+      console.log( calendarData );
+      this.ServiceStartDate = {
+        disableUntil: calendarData.startDate,
+        disableSince: calendarData.endDate,
+        disableDays: calendarData.unavailableDates,
+        markDates: [ { dates: calendarData.alertDates, color: 'Red' } ]
       };
-      this.ServiceStartDate = copy;
-    } else if (val === 'Switch' && this.trimmedAvailableSwitchDates) {
-      currentDate = new Date(this.trimmedAvailableSwitchDates[0]);
-      console.log('date', currentDate);
 
-      copy.disableUntil = {
-        year: currentDate.getUTCFullYear(),
-        month: currentDate.getUTCMonth() + 1,
-        day: currentDate.getUTCDate() - 1
-      };
-      this.ServiceStartDate = copy;
+      this.pricingMessage = calendarData.pricingMessage;
     }
   }
 
-  disableSince() {
-    let val = this.addServiceForm.controls['serviceType'].value;
-    let copy = this.getCopyOfOptions();
-    let currentDate;
-    if (val === 'MoveIn' && this.trimmedAvailableMovingDates) {
-      currentDate = new Date(this.trimmedAvailableMovingDates[1]);
-      copy.disableSince = {
-        year: currentDate.getUTCFullYear(),
-        month: currentDate.getUTCMonth() + 1,
-        day: currentDate.getUTCDate() + 1
-      };
-      this.ServiceStartDate = copy;
-    } else if (val === 'Switch' && this.trimmedAvailableSwitchDates) {
-      currentDate = new Date(this.trimmedAvailableSwitchDates[1]);
-      copy.disableSince = {
-        year: currentDate.getUTCFullYear(),
-        month: currentDate.getUTCMonth() + 1,
-        day: currentDate.getUTCDate() + 1
-      };
-      this.ServiceStartDate = copy;
-    }
-  }
-
-  disableDays() {
-    let val = this.addServiceForm.controls['serviceType'].value;
-    let copy = this.getCopyOfOptions();
-    if (val === 'MoveIn' && this.trimmedAvailableMovingDates) {
-      copy.disableDays = this.missingMovingDates;
-      this.ServiceStartDate = copy;
-    } else if (val === 'Switch' && this.trimmedAvailableSwitchDates) {
-      copy.disableDays = this.missingSwitchDates;
-      this.ServiceStartDate = copy;
-    }
-  }
-
-  // Returns copy of myOptions
-  getCopyOfOptions(): IMyOptions {
-    return JSON.parse(JSON.stringify(this.ServiceStartDate));
-  }
-
-  disableFields($event) {
+  disableFields( $event ) {
     // console.log('h', $event);
     this.enableDates = false;
-    let copy = this.getCopyOfOptions();
-    copy.disableUntil =  { year: 0, month: 0, day: 0 };
-    copy.disableSince =  { year: 0, month: 0, day: 0 };
-    copy.disableDays = [];
-    this.ServiceStartDate = copy;
-    this.addServiceForm.controls['Service_Start_Date'].setValue('');
+    this.ServiceStartDate.disableUntil = { year: 0, month: 0, day: 0 };
+    this.ServiceStartDate.disableSince = { year: 0, month: 0, day: 0 };
+    this.ServiceStartDate.disableDays = [];
+    this.ServiceStartDate = null;
   }
 
   // Fetch Offers when users selects new address
-  getSelectedAddress(event) {
-    this.selectedServiceAddress = event;
+  getSelectedAddress( serviceLocation ) {
+    this.selectedServiceAddress = serviceLocation;
     // Get Available dates
-    if (this.selectedServiceAddress.Meter_Info.UAN !== null) {
-      this.availableDateServiceSubscription = this.availableDateService.getAvailableDate(this.selectedServiceAddress.Meter_Info.UAN).subscribe(
-        availableDates => { this.availableDates = availableDates;
-          console.log('Available dates', availableDates);
-          if (availableDates) {
-            this.trimmedAvailableMovingDates = this.trimDates(this.availableDates.Available_Move_In_Dates);
-            this.trimmedAvailableSwitchDates = this.trimDates(this.availableDates.Available_Self_Selected_Switch_Dates);
-            this.disableUntil(); this.disableSince();
-            this.missingMovingDates = this.getMissingDates(this.availableDates.Available_Move_In_Dates);
-            this.missingSwitchDates = this.getMissingDates(this.availableDates.Available_Self_Selected_Switch_Dates);
-            this.disableDays();
-            this.onChangeServiceType();
-          }
+    if ( this.selectedServiceAddress.Meter_Info.UAN !== null ) {
+      this.availableDateServiceSubscription = this.availableDateService.getAvailableDate( this.selectedServiceAddress.Meter_Info.UAN ).subscribe(
+        availableDates => {
+          this.tduAvailabilityResult = availableDates;
+          this.populateCalendar();
         }
       );
     }
@@ -198,130 +136,74 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     this.enrollErrorMsg = '';
     this.tokenMsg = '';
     this.isTokenError = false;
-    if (this.addServiceForm.controls['serviceType'].value) {
-      this.getFeaturedOffers(this.addServiceForm.value.Service_Start_Date.jsdate);
+    if ( this.serviceType ) {
+      this.getFeaturedOffers( this.addServiceForm.value.Service_Start_Date.jsdate );
     }
     this.checkCustomerToken();
   }
 
-  trimDates(datesArray: string[]): Date[] {
-    let array = [];
-    let firstDay = datesArray[0];
-    let lastDay = datesArray[datesArray.length - 1];
-    array.push(firstDay.substring(0, 10));
-    array.push(lastDay.substring(0, 10));
-    array.forEach( item => new Date(item));
-    var date_sort_asc = function (date1, date2) {
-      if (date1 > date2) { return 1; }
-      if (date1 < date2) { return -1; }
-      return 0;
-    };
-    array.sort(date_sort_asc);
-    return array;
-  }
-
-  getMissingDates(datesArray: string[]): Array<IMyDate> {
-    let sortedArray = []
-    let missingDatesArray: Array<IMyDate> = [];
-    var date_sort_asc = function (date1, date2) {
-      if (date1 > date2) return 1;
-      if (date1 < date2) return -1;
-      return 0;
-    };
-    // Trim all dates
-    datesArray.forEach(item => { sortedArray.push(item.substring(0, 10)); } );
-    // Sort all dates
-    sortedArray.sort(date_sort_asc);
-    // Get missing dates
-    let lastDay1 = new Date(sortedArray[sortedArray.length - 1]);
-    lastDay1.setDate(lastDay1.getDate() + 1);
-    sortedArray.forEach( function(item, index) {
-      let currentDate = new Date(item);
-      // console.log('Current: ' + currentDate);
-      let nextDate = new Date(sortedArray[index + 1]);
-      // console.log('Next: ' + nextDate);
-      currentDate.setDate(currentDate.getDate() + 1);
-      // console.log('Current + 1: ' + currentDate);
-      if ((currentDate.toDateString()  === nextDate.toDateString()) ) {
-      } else {
-        if (!(currentDate.toDateString() === lastDay1.toDateString())) {
-          missingDatesArray.push( {year:  new Date(currentDate).getUTCFullYear(), month:  new Date(currentDate).getUTCMonth() + 1, day:  new Date(currentDate).getUTCDate()});
-        }
-      }
-    });
-    console.log('Missing dates', missingDatesArray);
-    return missingDatesArray;
-  }
-
-
   onChangeServiceType() {
-    let val = this.addServiceForm.controls['serviceType'].value;
-    console.log('value', val);
-    if (val === 'MoveIn' && this.trimmedAvailableMovingDates) {
+    if ( this.serviceType ) {
       this.enableDates = true;
-      this.disableUntil(); this.disableSince();
-      this.disableDays();
-    } else if (val === 'Switch' && this.trimmedAvailableSwitchDates) {
-      this.enableDates = true;
-      this.disableUntil(); this.disableSince();
-      this.disableDays();
-    } else {
+      this.populateCalendar();
+    }
+    else {
       this.enableDates = false;
     }
   }
 
-  onStartDateChanged(event: IMyDateModel) {
+  onStartDateChanged( event: IMyDateModel ) {
     // date selected
-    if (this.selectedServiceAddress) {
-      this.getFeaturedOffers(event.jsdate);
+    if ( this.selectedServiceAddress ) {
+      this.getFeaturedOffers( event.jsdate );
     }
   }
 
   // Fetch Offers by passing start date and TDU_DUNS number of selected addresss
-  getFeaturedOffers(ServiceStartDate) {
-      this.offerRequestParams = {
-        startDate: ServiceStartDate.toISOString(),
-        dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS,
-        approved: true,
-        page_size: 100,
-        channelId: this.channelId ? this.channelId : ''
-      };
-      console.log('Offer params', this.offerRequestParams);
+  getFeaturedOffers( ServiceStartDate ) {
+    this.offerRequestParams = {
+      startDate: ServiceStartDate.toISOString(),
+      dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS,
+      approved: true,
+      page_size: 100,
+      channelId: this.channelId ? this.channelId : ''
+    };
+    console.log( 'Offer params', this.offerRequestParams );
 
-      // send start date and TDU_DUNS_Number to get offers available.
-      this.offerService.getOffers(this.offerRequestParams)
-        .subscribe(result => {
-          this.availableOffers = result;
-          console.log('Available Offers', this.availableOffers);
-          // filter featured offers based on Featured Channel property
-          this.featuredOffers = this.availableOffers.filter(x => {
-            if (x.Plan.Featured_Channels.length > 0) {
-              return this.availableOffers;
-            }
-          });
-          console.log('Featured Offers', this.featuredOffers);
+    // send start date and TDU_DUNS_Number to get offers available.
+    this.offerService.getOffers( this.offerRequestParams )
+      .subscribe( result => {
+        this.availableOffers = result;
+        console.log( 'Available Offers', this.availableOffers );
+        // filter featured offers based on Featured Channel property
+        this.featuredOffers = this.availableOffers.filter( x => {
+          if ( x.Plan.Featured_Channels.length > 0 ) {
+            return this.availableOffers;
+          }
+        } );
+        console.log( 'Featured Offers', this.featuredOffers );
 
-        });
+      } );
   }
 
   scrollTop() {
-    window.scrollTo(0, 0);
+    window.scrollTo( 0, 0 );
   }
 
 
-  onNotify(event: IOfferSelectionPayLoad) {
+  onNotify( event: IOfferSelectionPayLoad ) {
     this.selectedOffer = event;
     this.selectedOfferId = event.Offer.Id;
-    if (this.formEnrollmentRequest()) {
-      this.enrollService.createEnrollment(this.enrollmentRequest)
-      .subscribe(result => {
-        console.log('final: ', result);
-        this.enrollErrorMsg = 'Success';
-        this.enrolled = true;
-      },
-    error => {
-      this.enrollErrorMsg = error;
-    });
+    if ( this.formEnrollmentRequest() ) {
+      this.enrollService.createEnrollment( this.enrollmentRequest )
+        .subscribe( result => {
+            console.log( 'final: ', result );
+            this.enrollErrorMsg = 'Success';
+            this.enrolled = true;
+          },
+          error => {
+            this.enrollErrorMsg = error;
+          } );
     }
   }
 
@@ -336,42 +218,42 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       }
     );
 
-    if (!(this.customerDetails && this.customerDetails.Id)) {
+    if ( !(this.customerDetails && this.customerDetails.Id) ) {
       this.enrollErrorMsg = 'Customer Details are missing. Please try again';
       return;
     }
 
-    this.enrollService.getCustomerCheckToken(this.customerDetails.Id)
-    .subscribe(result => {
-      this.tokenRes = <CustomerCheckToken>result;
-      this.tokenMsg = this.tokenRes.Customer_Check_Token;
-      if (this.tokenRes.Enrollment_Deposit_Amount > 0) {
-        this.Waiver = 'Pay_Later';
-      } else {
-        this.Waiver = 'No_Waiver';
-      }
-      this.isTokenError = false;
-    },
-    error => {
-      this.tokenMsg = error;
-      this.isTokenError = true;
-      // console.log("Error1", error);
-    });
+    this.enrollService.getCustomerCheckToken( this.customerDetails.Id )
+      .subscribe( result => {
+          this.tokenRes = <CustomerCheckToken>result;
+          this.tokenMsg = this.tokenRes.Customer_Check_Token;
+          if ( this.tokenRes.Enrollment_Deposit_Amount > 0 ) {
+            this.Waiver = 'Pay_Later';
+          } else {
+            this.Waiver = 'No_Waiver';
+          }
+          this.isTokenError = false;
+        },
+        error => {
+          this.tokenMsg = error;
+          this.isTokenError = true;
+          // console.log("Error1", error);
+        } );
   }
 
   formEnrollmentRequest() {
-    if (!(this.selectedServiceAddress)) {
+    if ( !(this.selectedServiceAddress) ) {
       this.enrollErrorMsg = 'Please select Service Address to Continue';
       return false;
-    } else if (!(this.addServiceForm.controls['Service_Start_Date'].value)) {
+    } else if ( !(this.addServiceForm.controls[ 'Service_Start_Date' ].value) ) {
       this.enrollErrorMsg = 'Please select Service Start date to Continue';
       return false;
     }
-    if (!(this.serviceType)) {
+    if ( !(this.serviceType) ) {
       this.enrollErrorMsg = 'Please select Service Type to Continue';
       return false;
     }
-    if (this.isTokenError) {
+    if ( this.isTokenError ) {
       return false;
     }
     this.enrollmentRequest = {
@@ -381,7 +263,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       Customer_Check_Token: this.tokenMsg,
       Waiver: this.Waiver,
       Service_Type: this.serviceType,
-      Selected_Start_Date: new Date(this.addServiceForm.controls['Service_Start_Date'].value.formatted).toISOString(),
+      Selected_Start_Date: this.selectedStartDate,
       Language_Preference: this.customerDetails.Language,
       Contact_Info: {
         Email_Address: environment.Client_Email_Addresses,
@@ -389,7 +271,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       },
       Billing_Address: this.selectedServiceAddress.Address
     };
-    if (this.selectedOffer.Offer.Has_Partner) {
+    if ( this.selectedOffer.Offer.Has_Partner ) {
       this.enrollmentRequest.Partner_Account_Number = this.selectedOffer.Partner_Account_Number;
       this.enrollmentRequest.Partner_Name_On_Account = this.selectedOffer.Partner_Name_On_Account;
     }
@@ -398,10 +280,10 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.channelStoreSubscription) {
+    if ( this.channelStoreSubscription ) {
       this.channelStoreSubscription.unsubscribe();
     }
-    if (this.availableDateServiceSubscription) {
+    if ( this.availableDateServiceSubscription ) {
       this.availableDateServiceSubscription.unsubscribe();
     }
   }
