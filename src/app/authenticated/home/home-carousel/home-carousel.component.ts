@@ -40,7 +40,9 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
     this.serviceAccountServiceSubscription.unsubscribe();
-    this.offersServiceSubscription.unsubscribe();
+    if (this.offersServiceSubscription) {
+      this.offersServiceSubscription.unsubscribe();
+    }
   }
 
 }

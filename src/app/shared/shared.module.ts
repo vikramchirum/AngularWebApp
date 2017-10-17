@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { ModalModule, PopoverModule  } from 'ngx-bootstrap';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 import { CustomFormsModule } from 'ng2-validation';
 import { ChangeUserNameComponent } from './components/change-user-name/change-user-name.component';
@@ -39,6 +40,7 @@ import { ErrorModalComponent } from './components/error-modal/error-modal.compon
     ReactiveFormsModule,
     CommonModule,
     RouterModule,
+    ChartsModule,
     CustomFormsModule,
     ModalModule.forRoot(),
     PopoverModule.forRoot()

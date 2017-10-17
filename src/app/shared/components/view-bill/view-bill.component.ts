@@ -1,6 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { filter, forEach, clone } from 'lodash';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 
+import { filter, forEach, clone } from 'lodash';
+import { isFunction } from 'lodash';
+
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { environment } from 'environments/environment';
 
@@ -11,12 +15,30 @@ import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { InvoiceService } from 'app/core/invoiceservice.service';
 import { UtilityService } from 'app/core/utility.service';
 
+
 @Component({
   selector: 'mygexa-view-bill',
   templateUrl: './view-bill.component.html',
   styleUrls: ['./view-bill.component.scss']
 })
 export class ViewBillComponent implements OnInit {
+
+  @ViewChild('gaugeText') gaugeText;
+  @ViewChild('gauge') gauge;
+
+  public clearTimeout = null;
+  public clearIsDone = null;
+
+  public doughnutChartOptions: any = Observable.of({});
+  public doughnutChartDataSet = Observable.of(['0', '0', '0', '0']);
+  public chartType: string = null;
+  public chartTimestamp: Date = null;
+
+  totalBill = '0.00';
+  gexaCharges = '0.00';
+  tduCharges = '0.00';
+  taxCharges = '0.00';
+  dollarAmountFormatter: string;
 
   @Input() bill_object: IInvoice;
 
@@ -31,15 +53,28 @@ export class ViewBillComponent implements OnInit {
   public invoice_date: Date;
 
   invoicesUrl: string;
-
   serviceAccountId: string;
 
   private openCharges = [];
-
   private ActiveServiceAccountSubscription: Subscription = null;
   private tduName: string;
 
-  constructor(private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService, private utilityService: UtilityService) {
+  constructor(private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService, private utilityService: UtilityService, private decimalPipe: DecimalPipe) {
+    this.dollarAmountFormatter = environment.DollarAmountFormatter;
+    this.doughnutChartOptions = Observable.of({
+      cutoutPercentage: 75,
+      tooltips: {
+        callbacks: {
+          label: (tooltipItem) => {
+            return [
+              ` GEXA CHARGES $${this.gexaCharges}`,
+              ` TAX $${this.taxCharges}`,
+              ` ${this.tduName} CHARGES $${this.tduCharges}`
+            ][tooltipItem.index];
+          }
+        }
+      }
+    });
   }
 
   ngOnInit() {
@@ -75,6 +110,8 @@ export class ViewBillComponent implements OnInit {
           this.bill_item_details_other_charges = filter(this.bill_item_details, item => (item.Bill_Line_Item_Type === 'GEXA'
                                                         && item.Bill_Line_Item_Sub_Type === 'None'));
           this.bill_item_details_tax = filter(this.bill_item_details, item => (item.Bill_Line_Item_Type === 'TAX'));
+
+          this.LoadGauge();
         }
       );
   }
@@ -112,6 +149,26 @@ export class ViewBillComponent implements OnInit {
     }
   }
 
+  chartClicked($event) {
+    if ($event.active && $event.active[0]) {
+      const index = $event.active[0]._index;
+      alert(index);
+      switch (index) {
+        case 0 :
+          this.chargeToggle(this.bill_item_details_gexa_charges);
+          break;
+
+        case 1 :
+          this.chargeToggle(this.bill_item_details_tax);
+          break;
+
+        case 2:
+          this.chargeToggle(this.bill_item_details_TDU_charges);
+          break;
+      }
+    }
+  }
+
   public downloadInvoice($event) {
 
     $event.preventDefault();
@@ -121,5 +178,87 @@ export class ViewBillComponent implements OnInit {
     this.invoiceService.getInvoicePDF(invoiceId).subscribe(
       data => this.utilityService.downloadFile(data)
     );
+  }
+
+  LoadGauge() {
+
+    this.gexaCharges = this.decimalPipe.transform(this.subtotal(this.bill_item_details_gexa_charges) + this.subtotal(this.bill_item_details_other_charges), this.dollarAmountFormatter);
+    this.tduCharges = this.decimalPipe.transform(this.subtotal(this.bill_item_details_TDU_charges), this.dollarAmountFormatter);
+    this.taxCharges = this.decimalPipe.transform(this.subtotal(this.bill_item_details_tax), this.dollarAmountFormatter);
+    this.totalBill = this.decimalPipe.transform(this.subtotal(this.bill_item_details_gexa_charges)
+                     + this.subtotal(this.bill_item_details_other_charges)
+                     + this.subtotal(this.bill_item_details_TDU_charges)
+                     + this.subtotal(this.bill_item_details_tax), this.dollarAmountFormatter);
+
+    this.buildChart();
+  }
+
+  buildChart(): void {
+
+    this.chartType = 'standard';
+
+    this.clearFirst(() => {
+
+      this.doughnutChartDataSet = Observable.of([this.gexaCharges, this.taxCharges, this.tduCharges]);
+
+      try {
+
+        const gaugeText = this.getTextCanvas();
+
+        // Print out the message according to the short-term window.
+        gaugeText.font = '50pt sans-serif';
+        gaugeText.fillStyle = 'black';
+        gaugeText.fillText('Click any Section', 500, 650);
+        gaugeText.globalCompositeOperation = 'source-over';
+
+        gaugeText.fillStyle = 'rgba(46,177,52,1.0)';
+        gaugeText.font = 'bold 150pt sans-serif';
+        gaugeText.fillText(`$${this.totalBill}`, 500, 475);
+      } catch (e) {
+        // If thrown, the browser likely does not support the HTML5 canvas API/object.
+        console.error(e);
+      }
+    });
+  }
+
+  clearFirst(callback: Function) {
+
+    // If we haven't yet drawn any charts, have no delay on the initial.
+    const delay = this.clearIsDone === null ? 0 : 1000;
+
+    this.chartTimestamp = null;
+    this.clearIsDone = false;
+
+    // Stop any previous jobs/timeouts.
+    if (this.clearTimeout) {
+      clearTimeout(this.clearTimeout);
+    }
+
+    // Clear the doughnut chart (starting its' animation.)
+    this.doughnutChartDataSet = Observable.of(['0', '0', '0']);
+
+    // Try to clear the gauge's text.
+    try {
+      this.getTextCanvas();
+    } catch (e) {
+      // If thrown, the browser likely does not support the HTML5 canvas API/object.
+      console.error(e);
+    }
+
+    // Run the callback after the delay (once the animation has finished.)
+    this.clearTimeout = setTimeout(() => {
+      this.clearIsDone = true;
+
+      if (isFunction(callback)) {
+        callback();
+      }
+    }, delay);
+  }
+
+  getTextCanvas() {
+    const gaugeText = this.gaugeText.nativeElement.getContext('2d');
+    gaugeText.fillStyle = 'blue';
+    gaugeText.textAlign = 'center';
+    return gaugeText;
   }
 }
