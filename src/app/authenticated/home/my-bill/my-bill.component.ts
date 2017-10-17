@@ -1,7 +1,7 @@
 /**
  * Created by vikram.chirumamilla on 7/31/2017.
  */
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 import { environment } from 'environments/environment';
@@ -19,7 +19,7 @@ import { PaymentsHistory } from '../../../core/models/payments/payments-history.
   templateUrl: './my-bill.component.html',
   styleUrls: ['./my-bill.component.scss']
 })
-export class MyBillComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MyBillComponent implements OnInit, OnDestroy {
 
    dollarAmountFormatter: string;
    totalDue: number;
@@ -85,9 +85,6 @@ export class MyBillComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
   );
-  }
-
-  ngAfterViewInit() {
   }
 
   setFlags() {

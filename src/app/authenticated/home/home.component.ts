@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { ServiceAccountService } from '../../core/serviceaccount.service';
 import { Subscription } from 'rxjs/Subscription';
 import { ServiceAccount } from '../../core/models/serviceaccount/serviceaccount.model';
