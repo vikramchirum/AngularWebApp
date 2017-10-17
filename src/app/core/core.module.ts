@@ -37,6 +37,7 @@ import { ChannelService } from './channelservice.service';
 import { ChannelStore } from './store/channelstore';
 import { PaymentExtensionService } from './payment-extension.service';
 import { AvailableDateService } from './availabledate.service';
+import { CalendarService } from "./calendar.service";
 import { PaymentsHistoryStore } from './store/paymentsstore';
 import { NotificationOptionsStore } from './store/notificationoptionsstore';
 import { InvoiceStore } from './store/invoicestore';
@@ -82,7 +83,9 @@ import { InvoiceStore } from './store/invoicestore';
     AvailableDateService,
     PaymentsHistoryStore,
     NotificationOptionsStore,
-    InvoiceStore
+    InvoiceStore,
+    AvailableDateService,
+    CalendarService
   ]
 })
 export class CoreModule { }
