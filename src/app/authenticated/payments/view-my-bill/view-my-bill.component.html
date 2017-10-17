@@ -11,21 +11,22 @@
             <col width="10%"/>
             </colgroup>
             <tbody>
-              <tr class="bg-success">
-                <td>Current Charges</td>
-                <td colspan="2">${{ req_bill?.Current_Charges }}</td>
+
+              <tr class="">
+                <td>Past Due</td>
+                <td colspan="2">${{ pastDue | number : dollarAmountFormatter}}</td>
               </tr>
+              <hr>
               <tr>
-                <td colspan="2">&nbsp;</td>
+                <td>Current Bill</td>
+                <td colspan="2">${{ currentDue | number : dollarAmountFormatter}}</td>
               </tr>
-              <tr *ngIf="req_bill?.Balance_Forward" class="bg-success">
-                <td>Balance Forward</td>
-                <td >${{ req_bill?.Balance_Forward }}</td>
+              <br>
+              <tr class="bg-success">
+                <td><h4>Amount Due</h4></td>
+                <td><h4>${{ totalDue | number : dollarAmountFormatter }}</h4></td>
               </tr>
-              <tr class="total" >
-                <td>Total</td>
-                <td ><h4>${{ req_bill?.Current_Charges + req_bill?.Balance_Forward }}</h4></td>
-              </tr>
+
             </tbody>
           </table>
           <br>

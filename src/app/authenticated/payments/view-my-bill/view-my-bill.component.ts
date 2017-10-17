@@ -19,7 +19,9 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
   all_bills: IInvoice[];
   sort_all_bills: IInvoice[];
   public req1_bill: IInvoice;
-
+  pastDue: number = null;
+  currentDue: number = null;
+  totalDue: number = null;
   error: string = null;
   public req_bill: IInvoice;
   public latest_invoice_id: number;
@@ -44,7 +46,11 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
       result => {
         // this.latest_invoice_id = result.Latest_Invoice_Id;
         // Need to get latest invoice
-
+        if (result) {
+          this.currentDue = result.Current_Due;
+          this.pastDue = result.Past_Due;
+          this.totalDue = result.Current_Due + result.Past_Due;
+        }
         this.service_account_id = result.Id;
         this.InvoiceStore.LatestInvoiceDetails.subscribe(
           latestInvoice => {

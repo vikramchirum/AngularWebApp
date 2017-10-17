@@ -162,9 +162,9 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                           this.dueDate = new Date(latestInvoice.Due_Date);
                           this.dueDate.setDate(this.dueDate.getDate() + 1);
                           this.exceededDueDate = (this.dueDate < new Date() && this.pastDue > 0) ? true : false;
-                          console.log('exceededDueDate', this.dueDate < new Date() );
-                          console.log('past due', this.pastDue );
-                          console.log('due date', this.dueDate );
+                          // console.log('exceededDueDate', this.dueDate < new Date() );
+                          // console.log('past due', this.pastDue );
+                          // console.log('due date', this.dueDate );
                         }
                       );
                     }});
