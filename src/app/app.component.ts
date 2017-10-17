@@ -3,6 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 
 import { debounce, result } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
+import { ChannelStore } from './core/store/channelstore';
 
 @Component({
   selector: 'mygexa-app',

@@ -1,36 +1,82 @@
-<section class="account-profile">
-  <div class="row" style="padding: 45px 0 0 0;">
-    <div class="col-md-12 col-xs-6">
-        <mygexa-service-account-selector
-          [selectedServiceAccount]="editingServiceAccount"
-          (changedServiceAccount)="serviceChanged($event)"
-        ></mygexa-service-account-selector>
-    </div>
-  </div>
-</section>
-<section class="details">
-  <div class="row">
-    <div class="col-md-4 col-xs-6">
-      <label>0</label>
-      <h5>Total Current referrals</h5>
-    </div>
-    <div class="col-md-4 col-xs-6">
-      <label>0</label>
-      <h5>Total Share & Save bill credits this month</h5>
-    </div>
-    <div class="col-md-4 col-xs-6">
-      <label>0</label>
-      <h5>Total referrals till date</h5>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="alert alert-success text-center">
-        <b>TOTAL SAVINGS TO DATE : 0 </b>
+<div *ngIf="!isLoading; then referrals else showLoadingScreen"></div>
+<ng-template #referrals>
+  <br/>
+  <br/>
+  <section class="details">
+    <div class="row">
+      <div class="col-md-5 col-xs-5 col-xs-offset-1 ">
+        <label>{{ (referral && referral.RefereeList) ? referral.RefereeList.length : 0 }}</label>
+        <h5>Total Current Referrals</h5>
+      </div>
+      <div class="col-md-5 col-xs-6">
+        <label><sup>$</sup>{{totalSavingsToDate | number : dollarAmountFormatter}}</label>
+        <h5>Total Savings to Date</h5>
       </div>
     </div>
+    <br>
+
+    <ng-container *ngIf="(referral && referral.RefereeList); else norefees">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="alert  text-center">
+            <b>Your Referred Customers </b>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <div class="row">
+        <div class="col-md-4">
+          <b>Referee Name</b>
+        </div>
+        <div class="col-md-4">
+          <b>Months Credited</b>
+        </div>
+        <div class="col-md-4">
+          <b>Total Amount Credited</b>
+        </div>
+      </div>
+      <hr/>
+
+      <div *ngFor="let referee of referral.RefereeList; let i = index">
+        <div class="row">
+          <div class="col-md-4">
+            <b>{{referee.FirstName}} {{referee.LastName}}</b>
+          </div>
+          <div class="col-md-4">
+            <b>{{referee.MonthsCredited}}</b>
+          </div>
+          <div class="col-md-4">
+            <b>{{referee.Total_Amount_Credited}}</b>
+          </div>
+        </div>
+        <hr/>
+      </div>
+
+    </ng-container>
+
+    <ng-template #norefees>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="alert  text-center">
+            <b>No Referred Customers</b>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <br>
+    <br>
+    <br>
+  </section>
+</ng-template>
+
+
+<ng-template #showLoadingScreen>
+  <div class="text-center">
+    <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
+    <h2>
+      <small class="text-muted">Loading your Rewards...</small>
+    </h2>
   </div>
-  <br>
-  <br>
-  <br>
-</section>
+</ng-template>

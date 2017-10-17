@@ -1,11 +1,7 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { Component , OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { FormBuilder , FormGroup, Validators} from '@angular/forms';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
-
 import { CustomerAccountService } from 'app/core/CustomerAccount.service';
-
-
 import { InvoiceService } from 'app/core/invoiceservice.service';
 import { PaymentsHistoryService } from 'app/core/payments-history.service';
 import { PaymentsService } from 'app/core/payments.service';
@@ -16,15 +12,17 @@ import { UserService } from 'app/core/user.service';
 import { FloatToMoney } from 'app/shared/pipes/FloatToMoney.pipe';
 import { validMoneyAmount } from 'app/validators/validator';
 import { Subscription } from 'rxjs/Subscription';
-import { assign, endsWith, get, replace, result } from 'lodash';
-import {CustomerAccount} from '../../../core/models/customeraccount/customeraccount.model';
-import {Paymethod} from '../../../core/models/paymethod/Paymethod.model';
-import {IPaymethodRequest} from '../../../core/models/paymethod/paymethodrequest.model';
-import {IPaymethodRequestEcheck} from '../../../core/models/paymethod/paymethodrequestecheck.model';
-import {IPaymethodRequestCreditCard} from '../../../core/models/paymethod/paymethodrequestcreditcard.model';
-import {CardBrands} from '../../../core/models/paymethod/constants';
-import {ServiceAccount} from '../../../core/models/serviceaccount/serviceaccount.model';
-import {IInvoice} from '../../../core/models/invoices/invoice.model';
+import { assign , endsWith, get, replace, result} from 'lodash';
+import { CustomerAccount } from '../../../core/models/customeraccount/customeraccount.model';
+import { Paymethod } from '../../../core/models/paymethod/Paymethod.model';
+import { IPaymethodRequest } from '../../../core/models/paymethod/paymethodrequest.model';
+import { IPaymethodRequestEcheck } from '../../../core/models/paymethod/paymethodrequestecheck.model';
+import { IPaymethodRequestCreditCard } from '../../../core/models/paymethod/paymethodrequestcreditcard.model';
+import { CardBrands } from '../../../core/models/paymethod/constants';
+import { ServiceAccount } from '../../../core/models/serviceaccount/serviceaccount.model';
+import { IInvoice } from '../../../core/models/invoices/invoice.model';
+import { PaymentsHistoryStore } from '../../../core/store/paymentsstore';
+import { InvoiceStore } from '../../../core/store/invoicestore';
 
 @Component({
   selector: 'mygexa-make-payment',
@@ -49,7 +47,10 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   private CustomerAccountId: string = null;
 
   private _paymentLoadingMessage: string = null;
-  get paymentLoadingMessage(): string { return this._paymentLoadingMessage; }
+  get paymentLoadingMessage(): string {
+    return this._paymentLoadingMessage;
+  }
+
   set paymentLoadingMessage(paymentLoadingMessage) {
     this._paymentLoadingMessage = paymentLoadingMessage;
     // If there is a loading message then disable all forms, otherwise enable them.
@@ -61,7 +62,10 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
   private PaymethodSubscription: Subscription = null;
   private _Paymethods: Paymethod[] = null;
-  get Paymethods(): Paymethod[] { return this._Paymethods; }
+  get Paymethods(): Paymethod[] {
+    return this._Paymethods;
+  }
+
   set Paymethods(Paymethods: Paymethod[]) {
     this._Paymethods = Paymethods;
     if (Paymethods.length > 0) {
@@ -72,7 +76,10 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   }
 
   private _LatestInvoice: IInvoice = null;
-  get LatestInvoice(): IInvoice { return this._LatestInvoice; }
+  get LatestInvoice(): IInvoice {
+    return this._LatestInvoice;
+  }
+
   set LatestInvoice(LatestInvoice: IInvoice) {
     this._LatestInvoice = LatestInvoice;
     this.formGroup.controls['payment_now'].setValue(`$${FloatToMoney(LatestInvoice.Current_Charges + LatestInvoice.Balance_Forward)}`);
@@ -80,26 +87,33 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
   private ActiveServiceAccountSubscription: Subscription = null;
   private _ActiveServiceAccount: ServiceAccount = null;
-  get ActiveServiceAccount(): ServiceAccount { return this._ActiveServiceAccount; }
+  get ActiveServiceAccount(): ServiceAccount {
+    return this._ActiveServiceAccount;
+  }
+
   set ActiveServiceAccount(ActiveServiceAccount: ServiceAccount) {
     this._ActiveServiceAccount = ActiveServiceAccount;
     if (ActiveServiceAccount) {
-      this.InvoiceService.getInvoice(ActiveServiceAccount.Latest_Invoice_Id).subscribe(
-        LatestInvoice => this.LatestInvoice = LatestInvoice
-      );
+      this.InvoiceStore.LatestInvoiceDetails.subscribe(
+        latestInvoice => {
+          if (!latestInvoice) {
+            return;
+          }
+          this.LatestInvoice = latestInvoice;
+        });
     }
   }
 
-  constructor(
-    private CustomerAccountService: CustomerAccountService,
-    private PaymentsHistoryService: PaymentsHistoryService,
-    private PaymentsService: PaymentsService,
-    private PaymethodService: PaymethodService,
-    private FormBuilder: FormBuilder,
-    private ServiceAccountService: ServiceAccountService,
-    private InvoiceService: InvoiceService,
-    private UserService: UserService
-  ) {
+  constructor(private CustomerAccountService: CustomerAccountService,
+              private PaymentsHistoryService: PaymentsHistoryService,
+              private PaymentsHistoryStore: PaymentsHistoryStore,
+              private PaymentsService: PaymentsService,
+              private PaymethodService: PaymethodService,
+              private FormBuilder: FormBuilder,
+              private ServiceAccountService: ServiceAccountService,
+              private InvoiceService: InvoiceService,
+              private InvoiceStore: InvoiceStore,
+              private UserService: UserService) {
     this.formGroup = FormBuilder.group({
       payment_now: ['', Validators.compose([Validators.required, validMoneyAmount])],
       payment_save: ['']
@@ -220,15 +234,15 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
               PaymethodName: 'TEMP: My one-time payment paymethod',
               AccountNumber: ForteData.last_4
             }, this.paymentOneTimeType === 'CreditCard'
-            ? {
-              PaymethodType: 'CreditCard',
-              AccountHolder: this.addCreditCardComponent.formGroup.value.cc_name.toUpperCase(),
-              CreditCardType: replace(get(CardBrands, ForteData.card_type, 'Unknown'), ' ', '')
-            } : {
-              PaymethodType: 'eCheck',
-              AccountHolder: this.addEcheckComponent.formGroup.value.echeck_name.toUpperCase(),
-              RoutingNumber: get(onetimePaymethod, 'Echeck.routing_number')
-            }
+              ? {
+                PaymethodType: 'CreditCard',
+                AccountHolder: this.addCreditCardComponent.formGroup.value.cc_name.toUpperCase(),
+                CreditCardType: replace(get(CardBrands, ForteData.card_type, 'Unknown'), ' ', '')
+              } : {
+                PaymethodType: 'eCheck',
+                AccountHolder: this.addEcheckComponent.formGroup.value.echeck_name.toUpperCase(),
+                RoutingNumber: get(onetimePaymethod, 'Echeck.routing_number')
+              }
           )),
           error => reject(error)
         );
@@ -237,46 +251,50 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     })
 
     // Catch any errors from getting the Paymethod.
-    .catch(error => {
-      console.log('An error occurred getting the Paymethod to charge. error = ', error);
-      alert('An error occurred and needs to be handled.\nPlease view the console.');
-      this.paymentLoadingMessage = null;
-    })
+      .catch(error => {
+        console.log('An error occurred getting the Paymethod to charge. error = ', error);
+        alert('An error occurred and needs to be handled.\nPlease view the console.');
+        this.paymentLoadingMessage = null;
+      })
 
-    // Pass the Paymethod data to the Payments service.
-    .then((PaymethodToCharge: Paymethod) => {
+      // Pass the Paymethod data to the Payments service.
+      .then((PaymethodToCharge: Paymethod) => {
 
-      this.paymentLoadingMessage = 'Submitting your payment...';
+        this.paymentLoadingMessage = 'Submitting your payment...';
 
-      const payment_now = <string>get(this.formGroup.value, 'payment_now');
+        const payment_now = <string>get(this.formGroup.value, 'payment_now');
 
-      const AuthorizationAmount = Number(payment_now[0] === '$' ? payment_now.substring(1) : payment_now);
+        const AuthorizationAmount = Number(payment_now[0] === '$' ? payment_now.substring(1) : payment_now);
 
-      this.PaymentsService.MakePayment(
-        AuthorizationAmount,
-        this.ActiveServiceAccount,
-        PaymethodToCharge
-      ).subscribe(
-        res => {
-          this.paymentSubmittedWithoutError = true;
-          console.log('The paymethod was charged!', res);
-          this.paymentLoadingMessage = null;
-        },
-        error => {
-          this.paymentSubmittedWithoutError = false;
-          console.log('An error occurred charging the paymethod!', error);
-          this.paymentLoadingMessage = null;
-        },
-        () => this.PaymentsHistoryService.AddNewPaymentToHistory({
-          PaymentDate: new Date,
-          PaymentAmount: AuthorizationAmount,
-          PaymentStatus: 'Processing',
-          PaymentMethod: PaymethodToCharge.CreditCard ? 'Credit Card' : 'eCheck',
-          PaymentAccount: PaymethodToCharge.CreditCard ? PaymethodToCharge.CreditCard.AccountNumber : PaymethodToCharge.BankAccount.AccountNumber
-        })
-      );
+        const UserName = String(this.UserService.UserCache.Profile.Username);
 
-    });
+        this.PaymentsService.MakePayment(
+          UserName,
+          AuthorizationAmount,
+          this.ActiveServiceAccount,
+          PaymethodToCharge
+        ).subscribe(
+          res => {
+            this.paymentSubmittedWithoutError = true;
+            console.log('The paymethod was charged!', res);
+            this.paymentLoadingMessage = null;
+            this.PaymentsHistoryStore.LoadPaymentsHistory(this.ActiveServiceAccount);
+          },
+          error => {
+            this.paymentSubmittedWithoutError = false;
+            console.log('An error occurred charging the paymethod!', error);
+            this.paymentLoadingMessage = null;
+          },
+          () => this.PaymentsHistoryService.AddNewPaymentToHistory({
+            PaymentDate: new Date,
+            PaymentAmount: AuthorizationAmount,
+            PaymentStatus: 'Processing',
+            PaymentMethod: PaymethodToCharge.CreditCard ? 'Credit Card' : 'eCheck',
+            PaymentAccount: PaymethodToCharge.CreditCard ? PaymethodToCharge.CreditCard.AccountNumber : PaymethodToCharge.BankAccount.AccountNumber
+      })
+        );
+
+      });
 
   }
 

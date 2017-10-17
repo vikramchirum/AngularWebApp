@@ -1,13 +1,17 @@
+import {Offer} from '../offers/offer.model';
 /**
  * Created by vikram.chirumamilla on 7/10/2017.
  */
 
 export interface IRenewal {
-  id: number;
-  service_account_id: number;
-  user_name: string;
-  offeringname: string;
-  start_date: Date;
-  execution_date: Date;
-  is_pending: boolean;
+  Id: string;
+  Service_Account_Id: string;
+  User_Name: string;
+  OfferingName: string;
+  Offer: Offer;
+  Start_Date: Date;
+  Execution_Date: Date;
+  Is_Pending: boolean;
+  End_Date: Date;
 }
+

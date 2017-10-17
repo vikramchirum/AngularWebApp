@@ -1,44 +1,51 @@
-import {Component, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { isFunction } from 'lodash';
+
+import { RenewalStore } from 'app/core/store/renewalstore';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import { IRenewalDetails } from 'app/core/models/renewals/renewaldetails.model';
 
 @Component({
   selector: 'mygexa-renewal-gauge',
   templateUrl: './renewal-gauge.component.html',
   styleUrls: ['./renewal-gauge.component.scss']
 })
-export class RenewalGaugeComponent {
+export class RenewalGaugeComponent implements OnInit, OnDestroy {
 
   @ViewChild('gaugeText') gaugeText;
+  renewalGaugeSubscription: Subscription;
 
   public doughnutChartOptions: any = Observable.of({});
   public doughnutChartDataSet: Observable<any[]> = Observable.of([0, 0, 0, 0]);
-  public clearTimeout = null;
-  public clearIsDone = null;
-  public chartTimestamp: Date = null;
   public chartType: string = null;
 
-  constructor() {
+  public clearTimeout = null;
+  public clearIsDone = null;
+
+  public chartTimestamp: Date = null;
+
+  constructor(private serviceAccountService: ServiceAccountService, private renewalStore: RenewalStore) {
     this.doughnutChartOptions = Observable.of({
       cutoutPercentage: 80,
       tooltips: {
         callbacks: {
           label: (tooltipItem) => {
-
             if (this.chartType === 'holdover') {
-              return 'Green Holdover Bar';
+              return 'Plan Time Remaining';
             }
 
             if (this.chartType === 'renewal') {
-              return 'Green Renewal Bar';
+              return 'Plan Time Remaining';
             }
-
             return [
-              ' Blue Standard Bar',
-              ' Green Standard Bar',
-              ' Yellow Standard Bar',
-              ' Red Standard Bar'
+              ' Plan Time Used',
+              ' Plan Time Remaining',
+              ' 30 Day Reminder',
+              ' 15 Day Reminder'
             ][tooltipItem.index];
           }
         }
@@ -46,75 +53,144 @@ export class RenewalGaugeComponent {
     });
   }
 
-  clearFirst(callback: Function) {
+  ngOnInit() {
 
-    // If we haven't yet drawn any charts, have no delay on the initial.
-    const delay = this.clearIsDone === null ? 0 : 1000;
+    const renewalDetails$ = this.renewalStore.RenewalDetails;
+    const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
 
-    this.chartTimestamp = null;
-    this.clearIsDone = false;
+    this.renewalGaugeSubscription = renewalDetails$.withLatestFrom(activeServiceAccount$).subscribe(result => {
+      this.LoadGauge(result[1], result[0]);
+    });
+  }
 
-    // Stop any previous jobs/timeouts.
-    if (this.clearTimeout) {
-      clearTimeout(this.clearTimeout);
+  LoadGauge(activeServiceAccount: ServiceAccount, renewal_details: IRenewalDetails) {
+
+    if (renewal_details.Existing_Renewal) {
+      this.buildRenewedChart(
+        new Date(renewal_details.Existing_Renewal.Start_Date)
+      );
+    } else if (activeServiceAccount.Current_Offer.IsHoldOverRate === true) {
+      this.buildHoldoverChart();
+    } else {
+      this.buildChart(
+        new Date(activeServiceAccount.Contract_Start_Date),
+        activeServiceAccount.Contract_End_Date ? new Date(activeServiceAccount.Contract_End_Date) : activeServiceAccount.Calculated_Contract_End_Date
+      );
     }
+  }
 
-    // Clear the doughnut chart (starting its' animation.)
-    this.doughnutChartDataSet = Observable.of([0, 0, 0, 0]);
+  buildRenewedChart(startDate: Date): void {
 
-    // Try to clear the gauge's text.
-    try {
-      this.prepareTextCanvas();
-    } catch (e) {
-      // If thrown, the browser likely does not support the HTML5 canvas API/object.
-      console.error(e);
-    }
+    this.chartType = 'renewed';
 
-    // Run the callback after the delay (once the animation has finished.)
-    this.clearTimeout = setTimeout(() => {
-      this.clearIsDone = true;
+    this.clearFirst(() => {
 
-      if (isFunction(callback)) {
-        callback();
+
+      // Keep aside a timestamp to tell if we've stopped the later animation.
+      const timestamp = this.chartTimestamp = new Date();
+
+      // Show a completely green chart.
+      this.doughnutChartDataSet = Observable.of([0, 1, 0, 0]);
+
+      // Calculate the amount of days between now and the start date of the new contract.
+      const startDateTime = startDate.getTime();
+      const currentTime = (new Date()).getTime();
+      const daysLeft = Math.round(Math.abs((startDateTime - currentTime) / (24 * 60 * 60 * 1000)));
+
+      try {
+
+        const gaugeText = this.getTextCanvas();
+
+        gaugeText.font = '60pt sans-serif';
+        gaugeText.fillStyle = 'rgba(46,177,52,1.0)';
+        gaugeText.fillText('Until your', 500, 600);
+        gaugeText.fillText('new plan starts', 500, 685);
+
+        gaugeText.fillStyle = 'black';
+        gaugeText.font = 'bold 45pt sans-serif';
+        gaugeText.fillText('Only', 500, 330);
+
+        gaugeText.font = 'bold 100pt sans-serif';
+
+        const renderDays = (day) => {
+          // Continue only if the this component's chartTimestamp is still this scope's timestamp.
+          // If this condition is no longer met then another chart has been started for another activated service account.
+          if (timestamp === this.chartTimestamp) {
+            gaugeText.clearRect(0, 375, 1000, 150);
+            gaugeText.fillText(`${day} Day${daysLeft === 1 ? '' : 's'}`, 500, 480);
+
+            if (++day <= daysLeft) {
+              requestAnimationFrame(() => renderDays(day));
+            }
+          }
+        };
+        renderDays(0);
+      } catch (e) {
+        // If thrown, the browser likely does not support the HTML5 canvas API/object.
+        console.error(e);
       }
-    }, delay);
-
+    });
   }
 
-  prepareTextCanvas() {
-    const gaugeText = this.gaugeText.nativeElement.getContext('2d');
-    gaugeText.clearRect(0, 0, 1000, 1000);
-    gaugeText.textAlign = 'center';
+  buildHoldoverChart(): void {
+    this.chartType = 'holdover';
+    this.clearFirst(() => {
 
-    return gaugeText;
+      // Show a completely green chart.
+      this.doughnutChartDataSet = Observable.of([0, 1, 0, 0]);
+
+      try {
+
+        const gaugeText = this.getTextCanvas();
+        gaugeText.fillStyle = 'black';
+
+        gaugeText.font = 'bold 100pt sans-serif';
+        gaugeText.fillText('All Set!', 500, 475);
+
+        gaugeText.font = '50pt sans-serif';
+        gaugeText.fillStyle = 'rgba(46,177,52,1.0)';
+        gaugeText.fillText('No Expiration Date', 500, 580);
+        gaugeText.fillText('on your plan', 500, 670);
+      } catch (e) {
+        // If thrown, the browser likely does not support the HTML5 canvas API/object.
+        console.error(e);
+      }
+    });
   }
 
-  buildChart(Start_Date: Date, Today: Date, End_Date: Date): void {
+  buildChart(contractStartDate: Date, contractEndDate: Date): void {
 
     this.chartType = 'standard';
 
     this.clearFirst(() => {
 
+      const currentDate = new Date();
       const timestamp = this.chartTimestamp = new Date;
 
-      const start_Date_Time = Start_Date.getTime();
-      const today_Time = Today.getTime();
-      const end_Date_Time = End_Date.getTime();
+      const startDateTime = contractStartDate.getTime();
+      const todayTime = currentDate.getTime();
+      const endDateTime = contractEndDate.getTime();
       const aDay = 24 * 60 * 60 * 1000;
 
-      console.log('arguments', Start_Date, Today, End_Date);
+      console.log('arguments', contractStartDate, currentDate, contractEndDate);
 
-      const totalDaysOfContract = Math.round(Math.abs((end_Date_Time - start_Date_Time) / aDay));
-      const totalDaysUsed = Math.round(Math.abs((today_Time - start_Date_Time) / aDay));
+
+      const totalDaysOfContract = Math.round(Math.abs((endDateTime - startDateTime) / aDay));
+      const totalDaysUsed = Math.round(Math.abs((todayTime - startDateTime) / aDay));
       const totalTimeRemaining = totalDaysOfContract - totalDaysUsed;
       const percentageOfTimeRemaining = Math.round((totalTimeRemaining * 100) / totalDaysOfContract);
       const renewalWindow = 30;
+
+
+      // Warning: Don't Delete the following comments.
       // Hard-code in values for testing.
-      // const totalDaysOfContract: number = 100;
-      // const totalDaysUsed: number = 1;
-      // const totalTimeRemaining: number = totalDaysOfContract - totalDaysUsed;
-      // const percentageOfTimeRemaining = Math.round((totalTimeRemaining * 100) / totalDaysOfContract);
-      // const renewalWindow: number = 30;
+
+      /*
+       const totalDaysOfContract: number = 360;
+       const totalDaysUsed: number = 360;
+       const totalTimeRemaining: number = totalDaysOfContract - totalDaysUsed;
+       const percentageOfTimeRemaining = Math.round((totalTimeRemaining * 100) / totalDaysOfContract);
+       const renewalWindow: number = 30; */
 
       if (totalTimeRemaining <= renewalWindow - 15) {
         // 15 days or less remain - show blue bar touching the red.
@@ -130,7 +206,8 @@ export class RenewalGaugeComponent {
       }
 
       try {
-        const gaugeText = this.prepareTextCanvas();
+
+        const gaugeText = this.getTextCanvas();
 
         // Print out the message according to the short-term window.
         gaugeText.font = '50pt sans-serif';
@@ -180,88 +257,50 @@ export class RenewalGaugeComponent {
         console.error(e);
       }
     });
-
   }
 
-  buildRenewedChart(Today: Date, Start_Date: Date): void {
+  clearFirst(callback: Function) {
 
-    this.chartType = 'renewed';
+    // If we haven't yet drawn any charts, have no delay on the initial.
+    const delay = this.clearIsDone === null ? 0 : 1000;
 
-    this.clearFirst(() => {
+    this.chartTimestamp = null;
+    this.clearIsDone = false;
 
-      // Keep aside a timestamp to tell if we've stopped the later animation.
-      const timestamp = this.chartTimestamp = new Date;
+    // Stop any previous jobs/timeouts.
+    if (this.clearTimeout) {
+      clearTimeout(this.clearTimeout);
+    }
 
-      // Show a completely green chart.
-      this.doughnutChartDataSet = Observable.of([0, 1, 0, 0]);
+    // Clear the doughnut chart (starting its' animation.)
+    this.doughnutChartDataSet = Observable.of([0, 0, 0, 0]);
 
-      // Calculate the amount of days between now and the start date of the new contract.
-      const start_Date_Time = Start_Date.getTime();
-      const today_Time = Today.getTime();
-      const daysLeft = Math.round(Math.abs((start_Date_Time - today_Time) / (24 * 60 * 60 * 1000)));
+    // Try to clear the gauge's text.
+    try {
+      this.getTextCanvas();
+    } catch (e) {
+      // If thrown, the browser likely does not support the HTML5 canvas API/object.
+      console.error(e);
+    }
 
-      try {
-        const gaugeText = this.prepareTextCanvas();
+    // Run the callback after the delay (once the animation has finished.)
+    this.clearTimeout = setTimeout(() => {
+      this.clearIsDone = true;
 
-        gaugeText.font = '60pt sans-serif';
-        gaugeText.fillStyle = 'rgba(46,177,52,1.0)';
-        gaugeText.fillText('Until your', 500, 600);
-        gaugeText.fillText('new plan starts', 500, 685);
-
-        gaugeText.fillStyle = 'black';
-        gaugeText.font = 'bold 45pt sans-serif';
-        gaugeText.fillText('Only', 500, 330);
-
-        gaugeText.font = 'bold 100pt sans-serif';
-        const renderDays = (day) => {
-          // Continue only if the this component's chartTimestamp is still this scope's timestamp.
-          // If this condition is no longer met then another chart has been started for another activated service account.
-          if (timestamp === this.chartTimestamp) {
-            gaugeText.clearRect(0, 375, 1000, 150);
-            gaugeText.fillText(`${day} Day${daysLeft === 1 ? '' : 's'}`, 500, 480);
-
-            if (++day <= daysLeft) {
-              requestAnimationFrame(() => renderDays(day));
-            }
-          }
-        };
-        renderDays(0);
-
-      } catch (e) {
-        // If thrown, the browser likely does not support the HTML5 canvas API/object.
-        console.error(e);
+      if (isFunction(callback)) {
+        callback();
       }
-
-    });
-
+    }, delay);
   }
 
-  buildHoldoverChart(): void {
-
-    this.chartType = 'holdover';
-
-    this.clearFirst(() => {
-
-      // Show a completely green chart.
-      this.doughnutChartDataSet = Observable.of([0, 1, 0, 0]);
-
-      try {
-        const gaugeText = this.prepareTextCanvas();
-        gaugeText.fillStyle = 'black';
-
-        gaugeText.font = 'bold 100pt sans-serif';
-        gaugeText.fillText('All Set!', 500, 475);
-
-        gaugeText.font = '50pt sans-serif';
-        gaugeText.fillStyle = 'rgba(46,177,52,1.0)';
-        gaugeText.fillText('No Expiration Date', 500, 580);
-        gaugeText.fillText('on your plan', 500, 670);
-      } catch (e) {
-        // If thrown, the browser likely does not support the HTML5 canvas API/object.
-        console.error(e);
-      }
-    });
-
+  getTextCanvas() {
+    const gaugeText = this.gaugeText.nativeElement.getContext('2d');
+    gaugeText.clearRect(0, 0, 1000, 1000);
+    gaugeText.textAlign = 'center';
+    return gaugeText;
   }
 
+  ngOnDestroy() {
+    this.renewalGaugeSubscription.unsubscribe();
+  }
 }

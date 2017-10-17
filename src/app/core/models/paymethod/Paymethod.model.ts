@@ -1,6 +1,6 @@
 
 import { assign, get } from 'lodash';
-import { CardBrands, CardFontAwesomeClasses } from './constants';
+import {CardBrands, CardBrands_CreditCard, CardFontAwesomeClasses} from './constants';
 
 export interface IPaymethod {
   PayMethodId: number;
@@ -34,7 +34,7 @@ export class Paymethod implements IPaymethod {
    */
   getBrand(): string {
     return this.PaymethodType === 'CreditCard'
-      ? get(CardBrands, this.CreditCard.CreditCardType.toLowerCase(), 'Credit Card')
+      ? get(CardBrands_CreditCard, this.CreditCard.CreditCardType.toLowerCase(), 'Credit Card')
       : 'eCheck';
   }
 

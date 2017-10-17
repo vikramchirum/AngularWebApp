@@ -1,20 +1,32 @@
 .home-multi-accounts-modal {
+  .loading {
+    
+    p, .fa {
+      color:#fff;
+    }
+  }
+  
+  h3 {
+    margin-top: 0;
+    color: #fff;
+    font-size: 24px;
+  }
   .modal-body {
     overflow: hidden;
+    background: rgba(46, 177, 52, 0.8);
   }
   .modal-content {
     border-radius: 0;
     box-shadow: none;
     border:none;
   }
-  .account-header{
+  .account-header {
     .account-title{
-      display: inline-block;
-      background: rgba(6,81,128,1.0);
       color:white;
-      width:250px;
       padding: 10px;
       text-align: center;
+      font-size: 18px;
+      margin-bottom: 0;
     }
     .close-btn {
       font-size: 40px;
@@ -22,44 +34,37 @@
   }
 
   h1,h2,h3,h4,h5 {
-    font-weight:bold;
+    font-weight:400;
   }
   /*Style the DIV*/
-  .select-account-container .box{
-    width: 250px;
-    float: left;
-    margin: 2px;
+  .select-account-container {
+    margin: 10px 0;
     //padding: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid #fff;
     text-align: center;
+    background-color: rgba(255,255,255,.1);
+    border-radius: 5px;   
+    padding: 10px;
   }
 
-  /*Fade all the DIV when user hovers on any div*/
-  .select-account-container:hover .box {
-    zoom: 1;
-    filter: alpha(opacity=45);
-    opacity: 0.45;
-    -webkit-transition: opacity .5s ease-in-out;
-    -moz-transition: opacity .5s ease-in-out;
-    -ms-transition: opacity .5s ease-in-out;
-    -o-transition: opacity .5s ease-in-out;
-    transition: opacity .5s ease-in-out;
-  }
 
   /*Fade out the particular DIV when user hover on that DIV*/
-  .select-account-container-active .box,
-  .select-account-container .box:hover {
-    background: rgba(6,81,128,.5);
+  .select-account-container:hover {
+    background: rgba( 255,255,1255,.9);
     cursor: pointer;
-    color:#fff !important;
+    color:green !important;
     /*Opacity*/
     zoom: 1;
-    filter: alpha(opacity=100);
     opacity: 1;
 
     h3 {
       color:#fff;
     }
+    
+     .account-title{
+      color: rgba(46, 177, 52, 1);
+    }
+    
   }
 
   .continue-button{
@@ -67,14 +72,3 @@
   }
 
 }
-
-
-.select-account-card {
-  border: 2px solid #000;
-  text-align: center;
-  padding: 1em;
-  margin: 1em;
-  background: white;
-  //border-radius: 1em;
-}
-

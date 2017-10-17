@@ -51,15 +51,18 @@
       </div>
 
       <div class="text-right">
-        <button class="btn btn-primary" [disabled]="">Save</button>
+        <button class="btn btn-primary"  type="submit" [disabled]="">Save</button>
         <button class="btn btn-default" type="button" (click)="emitCancel()">Cancel</button>
       </div>
 
-      <ng-container *ngIf="IsResetSuccessful">
+      <!--<ng-container *ngIf="IsResetSuccessful">-->
+        <!--<br/>-->
+        <!--<div class="alert alert-success">Email updated successfully!</div>-->
+      <!--</ng-container>-->
+      <ng-container *ngIf="IsError">
         <br/>
-        <div class="alert alert-success">Email updated successfully!</div>
+        <div class="alert alert-danger">Error: + {{errorMessage}}!</div>
       </ng-container>
-
     </form>
     <hr/>
   </div>

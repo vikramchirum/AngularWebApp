@@ -14,20 +14,19 @@ import { CustomValidators } from 'ng2-validation';
 export function validCreditCard(control: FormControl): any {
 
   const value: string = control.value;
-
   if (
     // Test for an empty string.
-  !value
-  // Test using the third-party validator.
-  || CustomValidators.creditCard(control) !== null
-  // Test if there are non-credit card characters (other than 0-9, spaces, and dashes)
-  || /([^0-9 -])/g.test(value)
-  ) {
-    return {invalidCreditCard: true};
-  }
-
-  return null;
-
+    value
+    //Test if the card type is Mastercard or not
+    && (/^5[1-5][0-9]{14}$/g.test(value)
+    //Test if the card type is Visa or not
+    || /^4[0-9]{12}(?:[0-9]{3})?$/g.test(value)
+    //Test if the card type is Discover or not
+    || /^6(?:011|5[0-9]{2})[0-9]{12}$/g.test(value)
+    )) {
+      return null;     
+    }
+  return {invalidCreditCard: true};
 }
 
 export function validMoneyAmount(control: FormControl): any {
@@ -73,6 +72,34 @@ export function minimumMoneyAmount(amount: number) {
   };
 }
 
+
+export function validateCardName(c: FormControl) {
+  // const CARDNAME_REGEXP = /^(?![0-9]*$)[a-zA-Z0-9 ' ']+$/;
+  const CARDNAME_REGEXP = /^(?![0-9]*$)[a-zA-Z0-9' ']+$/;
+  return CARDNAME_REGEXP.test(c.value) ? null : {
+    validateCardName: {
+      valid: false
+    }
+  };
+}
+
+export function validateName(c: FormControl) {
+  let inputArray: string[];
+  let inputArrayLength: number;
+  inputArray = (c.value.trim()).split(' ');
+  inputArrayLength = inputArray.length;
+    return inputArrayLength > 1 ? null : {
+      validateName: {
+        valid: false
+      }
+    };
+}
+
+export function validateNameOnCard(c: FormControl) {
+  const value = (c.value.trim()).replace(/\s+/g, '');
+  return parseInt(value, 10) ? { validateNameOnCard : { valid: false } } : null;
+}
+
 export function validateInteger(c: FormControl) {
   const INTEGER_REGEXP = /^[0-9]*$/;
   return INTEGER_REGEXP.test(c.value) ? null : {
@@ -93,7 +120,10 @@ export function validateEmail(c: FormControl) {
 
 
 export function validatePassword(c: FormControl) {
-  const PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,10}$/;
+  // const PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{6,10}$/;
+  // const PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+  // At least one digit, one upper case, one lower case. (Special characters optional and are pre- defined as below.
+  const PASSWORD_REGEXP = /^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(^[a-zA-Z0-9@\$=!:.#%&*~^()_]+$)/;
   return PASSWORD_REGEXP.test(c.value) ? null : {
     validatePassword: {
       valid: false

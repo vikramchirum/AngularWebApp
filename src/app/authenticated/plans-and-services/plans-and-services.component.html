@@ -2,7 +2,8 @@
   <div class="row">
     <div class="col-sm-3 hidden-xs plans-side-panel">
 
-      <ng-template *ngIf="ActiveServiceAccount?.IsUpForRenewal; then ShowRenewalNav else ShowStandardNav;"></ng-template>
+      <ng-template *ngIf="IsUpForRenewal &&  !ActiveServiceAccount?.Current_Offer?.IsHoldOverRate && !IsRenewalPending; then ShowRenewalNav else ShowStandardNav;"></ng-template>
+
       <ng-template #ShowRenewalNav>
         <mygexa-left-nav-panel [sideNavData] = "
          {
@@ -15,6 +16,7 @@
           ]
         }" ></mygexa-left-nav-panel>
       </ng-template>
+
       <ng-template #ShowStandardNav>
         <mygexa-left-nav-panel [sideNavData] = "
          {
@@ -29,10 +31,12 @@
       </ng-template>
 
     </div>
+
     <div class="col-sm-9">
       <mygexa-status-bar></mygexa-status-bar>
       <router-outlet></router-outlet>
     </div>
+
   </div>
 </div>
 
@@ -40,35 +44,38 @@
 
   <div class="container-fluid callout-container plans" *ngIf="startsWith(Router.url, '/plans-and-services/my-services-plans')">
     <div class="container">
-      <mygexa-change-your-plan></mygexa-change-your-plan>
+      <mygexa-change-your-plan [promoCode] = promoCode></mygexa-change-your-plan>
     </div>
   </div>
 
   <div class="container-fluid callout-container plans" *ngIf="startsWith(Router.url, '/plans-and-services/moving')">
     <div class="container">
       <div class="col-md-8 col-md-offset-2">
+
         <h2>Gexa Connects</h2>
         <p>Let us help you make your move a smooth one with our GexaConnects service. With GexaConnects, you can quickly compare rates and sign up for home service plans for:</p>
+
         <br/>
 
         <div class="row">
 
-          <div class="col-md-4 text-center">
+          <div class="col-xs-4 col-md-4 text-center">
             <img src="/assets/global/mouse.png"/>
             <h4>High-Speed Internet</h4>
           </div>
 
-          <div class="col-md-4 text-center">
+          <div class="col-xs-4 col-md-4 text-center">
             <img src="/assets/global/flat_screen.png"/>
             <h4>Digital TV</h4>
           </div>
 
-          <div class="col-md-4 text-center">
+          <div class="col-xs-4 col-md-4 text-center">
             <img src="/assets/global/cordless.png"/>
             <h4>Home Phone</h4>
           </div>
 
         </div>
+
         <br/>
 
         <p><strong>With GexaConnects it's easy to compare rates and connect your internet, TV and home phone service in a few easy steps! <a href="http://gexaconnects.com/" target="_blank">Find out more</a> or call (866) 891-9341 today!
@@ -80,4 +87,3 @@
   </div>
 
 </ng-container>
-

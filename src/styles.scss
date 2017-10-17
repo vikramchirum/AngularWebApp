@@ -12,9 +12,18 @@ a, a:link, a:visited, a:active {
   border-radius: 0;
   text-transform: uppercase;
 }
+
+.btn:disabled {
+  cursor: pointer !important;
+}
+
 .carousel-indicators {
   position: absolute;
   bottom: -10px;
+}
+
+.no-padding {
+  padding: 0;
 }
 
 .fa-wh {
@@ -401,6 +410,9 @@ footer.fixedToBottom {
   margin-right: 0;
 }
 
+.alert {
+    border-left: 10px solid;
+}
 
 .tooltipClass {
   background-color: black !important;
@@ -409,3 +421,4 @@ footer.fixedToBottom {
   font-size:12px !important;
   padding: 5px 5px 5px 5px !important;
 }
+

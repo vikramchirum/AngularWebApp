@@ -1,3 +1,11 @@
+<section *ngIf="serviceAccountsCount>1" class="account-profile">
+  <div class="row" style="padding: 45px 0 0 0;">
+    <div class="col-md-12 col-xs-6">
+      <mygexa-service-account-selector [setActiveServiceAccount]="true"></mygexa-service-account-selector>
+    </div>
+  </div>
+</section>
+
 <div class="account-profile" *ngIf="customerDetails">
   <section class="contact-address">
     <div>
@@ -5,7 +13,8 @@
       <p>Questions? Comments? Complete the form below and we’ll reply back to you at the email address provided. </p>
     </div>
 
-    <br/><br/>
+    <br/>
+
     <div class="account-info">
 
       <div class="form-horizontal">
@@ -38,18 +47,9 @@
               {{emailAddress}}
             </div>
           </div>
-          <div class="col-xs-2 col-sm-2">
-            <a class="btn btn-primary btn-link" (click)="toggleEmailEdit($event)"><i class="fa" [ngClass]="'fa-' + (emailEditing ? 'remove' : 'pencil')"></i></a></div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div *ngIf="emailEditing">
-              <mygexa-change-email-address></mygexa-change-email-address>
-            </div>
-          </div>
         </div>
       </div>
     </div>
   </section>
-  <mygexa-contact-form [phoneNumber]="customerDetails.Phone"></mygexa-contact-form>
+  <mygexa-contact-form [phoneNumber]="phoneNumber"></mygexa-contact-form>
 </div>

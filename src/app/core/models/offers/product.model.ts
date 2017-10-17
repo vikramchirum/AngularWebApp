@@ -17,6 +17,7 @@ export interface IProduct {
   Product_Family: string;
   Product_Features: string[];
   Usage_Profile: string;
+  Featured_Usage_Level: string;
   Id: string;
   Creation_Time: string;
   Date_Created: string;

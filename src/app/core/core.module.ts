@@ -19,6 +19,29 @@ import { PaymentsHistoryService } from './payments-history.service';
 import { PaymentsService } from './payments.service';
 import { PaymethodService } from './Paymethod.service';
 import { UsageHistoryService } from './usage-history.service';
+import { NotificationOptionsService } from './notificationoptions.service';
+import { DocumentsService } from './documents.service';
+import { RenewalService } from './renewal.service';
+import { RenewalStore } from './store/renewalstore';
+import { OffersStore } from './store/offersstore';
+import { CustomerAccountStore } from './store/CustomerAccountStore';
+import { MessageCenterService } from './messagecenter.service';
+import { ReferralStore } from './store/referralstore';
+import { ReferralService } from './referral.service';
+import { ModalStore } from './store/modalstore';
+import { UpgradeService } from './upgrade.service';
+import { UpgradeStore } from './store/upgradestore';
+import { EnrollService } from './enroll.service';
+import { UtilityService } from './utility.service';
+import { ChannelService } from './channelservice.service';
+import { ChannelStore } from './store/channelstore';
+import { PaymentExtensionService } from './payment-extension.service';
+import { AvailableDateService } from './availabledate.service';
+import { CalendarService } from "./calendar.service";
+import { PaymentsHistoryStore } from './store/paymentsstore';
+import { NotificationOptionsStore } from './store/notificationoptionsstore';
+import { InvoiceStore } from './store/invoicestore';
+
 
 @NgModule({
   imports: [
@@ -38,7 +61,31 @@ import { UsageHistoryService } from './usage-history.service';
     PaymentsHistoryService,
     PaymentsService,
     PaymethodService,
-    UsageHistoryService
+    UsageHistoryService,
+    NotificationOptionsService,
+    DocumentsService,
+    RenewalService,
+    RenewalStore,
+    UpgradeService,
+    UpgradeStore,
+    OffersStore,
+    CustomerAccountStore,
+    ReferralStore,
+    ReferralService,
+    MessageCenterService,
+    ModalStore,
+    UpgradeService,
+    EnrollService,
+    UtilityService,
+    ChannelService,
+    ChannelStore,
+    PaymentExtensionService,
+    AvailableDateService,
+    PaymentsHistoryStore,
+    NotificationOptionsStore,
+    InvoiceStore,
+    AvailableDateService,
+    CalendarService
   ]
 })
 export class CoreModule { }

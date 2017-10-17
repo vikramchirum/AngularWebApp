@@ -1,0 +1,15 @@
+@import '../../../../basecolors';
+
+.search-result{
+  border-bottom: 1px solid #858585;
+  border-left: 1px solid #858585;
+  border-right: 1px solid #858585;
+  padding: 5px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.search-result:hover {
+  color: #fff;
+  background-color: $plans-base;
+}

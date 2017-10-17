@@ -5,6 +5,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { UsageHistoryService } from 'app/core/usage-history.service';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import { result, startsWith } from 'lodash';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'mygexa-controls-and-insights',
@@ -13,6 +16,7 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
 })
 export class ControlsAndInsightsComponent implements OnDestroy {
 
+  private startsWith = startsWith;
   private activeServiceAccount: ServiceAccount = null;
   private ServiceAccountsSubscription: Subscription = null;
   private isDataAvailable = false;
@@ -23,7 +27,9 @@ export class ControlsAndInsightsComponent implements OnDestroy {
 
   constructor(
     private usageHistoryService: UsageHistoryService,
-    private ServiceAccountService: ServiceAccountService
+    private ServiceAccountService: ServiceAccountService,
+    private Router: Router
+
   ) {
     this.ServiceAccountsSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       activeServiceAccount => {

@@ -1,47 +1,57 @@
 <section class="refer-friend-options">
   <div class="row">
     <div class="col-xs-4 col-md-2">
-      <h3>Option 1</h3>
+      <h2>Option 1</h2>
     </div>
     <div class="col-xs-8 col-md-10">
-      <div class="content">Enter your friend’s information in the fields below. If you would like to refer more than one friend, click the “Refer Another Friend” link. Once you have entered all your friends’ information, click the “Send Email” button. That’s it! Come back to this page anytime to enter more friends’ names and email addresses.</div>
+      <div class="content">Enter your friend’s information in the fields below. If you would like to refer more than one
+        friend, click the “Refer Another Friend” link. Once you have entered all your friends’ information, click the
+        “Send Email” button. That’s it! Come back to this page anytime to enter more friends’ names and email addresses.
+      </div>
     </div>
   </div>
   <form [formGroup]="friendsForm" novalidate (submit)="onSubmit(friendsForm)" class="friends-form">
     <div class="row">
       <div class="col-md-10 col-md-offset-2">
-       <div class="control">
-        <div class="friends">
-          <div formArrayName="friends">
-            <div *ngFor="let friend of friendsForm.controls.friends.controls; let i = index">
-              <div class="row" [formGroupName]="i">
-                <div [formGroupName]="'name'">
-                  <div class="col-sm-4">
-                    <div *ngIf="i === 0" >
-                      <input type="text" class="form-control" placeholder="First Name" formControlName="first"/>
-                    </div>
-                    <div *ngIf="i !== 0" class="input-group" >
-                       <div class="input-group-btn">
-                        <button class="btn btn-default" type="button" (click)="removeFriend(i)"><i class="fa fa-times"></i></button>
+        <div class="control">
+          <div class="friends">
+            <div formArrayName="FriendsList">
+              <div *ngFor="let friend of friendsForm.controls.FriendsList.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                  <div>
+                    <div class="col-xs-6 col-sm-4">
+                      <div *ngIf="i === 0">
+                        <input type="text" class="form-control" placeholder="First Name" formControlName="FirstName"/>
                       </div>
-                      <input type="text" class="form-control" placeholder="First Name" formControlName="first"/>
+                      <div *ngIf="i !== 0" class="input-group">
+                        <div class="input-group-btn">
+                          <button class="btn btn-default" type="button" (click)="removeFriend(i)"><i
+                            class="fa fa-times"></i></button>
+                        </div>
+                        <input type="text" class="form-control" placeholder="First Name" formControlName="FirstName"/>
+                      </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-4">
+                      <input type="text" class="form-control" placeholder="Last Name" formControlName="LastName"/>
                     </div>
                   </div>
-                  <div class="col-sm-4">
-                      <input type="text" class="form-control" placeholder="Last Name" formControlName="last"/>
+                  <div class="col-xs-12 col-sm-4">
+                    <br class="visible-xs">
+                    <input type="email" class="form-control"
+                           [ngClass]="{ 'ng-invalid': !friend.controls['EmailAddress'].hasError('validateEmail') }"
+                           placeholder="Email Address" formControlName="EmailAddress"/>
                   </div>
                 </div>
-                <div class="col-sm-4">
-                    <input type="email" class="form-control" [ngClass]="{ 'ng-invalid': !friend.controls['email'].hasError('validateEmail') }" placeholder="Email Address" formControlName="email"/>
-                </div>
+                <hr/>
               </div>
             </div>
           </div>
         </div>
-        </div>
         <div class="row">
           <div class="col-xs-6 col-md-4">
-            <button class="btn btn-block btn-link btn-add-more-friends" type="button" (click)="addFriend()"><i class="fa fa-fw fa-plus-circle"></i> Refer Another Friend</button>
+            <button class="btn btn-block btn-link btn-add-more-friends" type="button" (click)="addFriend()"><i
+              class="fa fa-fw fa-plus-circle"></i> Refer Another Friend
+            </button>
           </div>
           <div class="col-xs-6 col-md-4 col-md-offset-4">
             <button class="btn btn-primary" type="submit" [disabled]="!friendsForm.valid">Send Email</button>
@@ -51,22 +61,31 @@
     </div>
   </form>
 
-<hr/>
+  <br/>
+  <div class="message-confirmation" *ngIf="isSubmitted">
+    <div class="alert alert-success"><strong>Referral emails are sent.</strong></div>
+  </div>
+
+  <hr/>
   <div class="row">
     <div class="col-xs-4 col-md-2">
-      <h3>Option 2</h3>
+      <h2>Option 2</h2>
     </div>
     <div class="col-xs-8 col-md-10">
-      <div class="content">If you don’t know your friends’ email addresses, you can still share the savings. Tell your friends to go to www.gexaenergy.com. Be sure to give them your Personal Referral ID# so that you both receive your Share & Save bill credits.</div>
+      <div class="content">If you don’t know your friends’ email addresses, you can still share the savings. Tell your
+        friends to go to www.gexaenergy.com. Be sure to give them your Personal Referral ID# so that you both receive
+        your Share & Save bill credits.
+      </div>
     </div>
   </div>
   <div class="row">
     <div class="col-md-10 col-md-offset-2">
       <p>Copy the below link & share with your friends and family:</p>
       <div class="input-group has-success">
-        <input #referralLink type="text" class="form-control bg-info" readonly value="https://zkjdgfuk/RefereeEnrollment.aspx?Referralid=123456"/>
+        <input #referralLink type="text" class="form-control bg-info" readonly value="{{ gexaShareUrl }}"/>
         <span class="input-group-btn">
-          <button class="btn btn-primary" type="button" (click)="getReferralLink()"><i class="fa fa-fw fa-link"></i></button>
+          <button class="btn btn-primary" type="button" (click)="getReferralLink()"><i
+            class="fa fa-fw fa-link"></i></button>
         </span>
       </div>
       <br/>

@@ -17,7 +17,10 @@
 
 }
 .new-service-address {
-    margin:3em 0;
+    //margin:3em 0;
+}
+.start-service-text{
+    margin-left:15px;
 }
 
 .add-services-verify-info {
@@ -25,4 +28,16 @@
         border-top: 2px solid #000;
     }
 
+}
+.featured-offers{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.start-date-tooltip {
+    .fa {
+        margin-top : 1em;
+    }
 }

@@ -3,7 +3,7 @@
  */
 
 export interface IGetRenewalRequest {
-  service_account_id: number;
+  service_account_id: string;
   user_name: string;
   is_pending: boolean;
 }

@@ -7,6 +7,7 @@ import { Response, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { HttpClient } from './httpclient';
+
 import { IRenewal } from './models/renewals/renewal.model';
 import { ICreateRenewalRequest } from './models/renewals/createrenewalrequest.model';
 import { ICancelRenewalRequest} from './models/renewals/cancelrenewalrequest.model';
@@ -19,7 +20,7 @@ export class RenewalService {
   constructor(private http: HttpClient) {
   }
 
-  getRenewal(serviceAccountId: number): Observable<IRenewal>   {
+  getRenewal(serviceAccountId: string): Observable<IRenewal>   {
     const relativePath = `/renewals/${serviceAccountId}`;
     return this.http.get(relativePath)
       .map((response: Response) => { return <IRenewal> response.json(); })
@@ -42,7 +43,7 @@ export class RenewalService {
       .catch(error => this.http.handleHttpError(error));
   }
 
-  getRenewalDetails(serviceAccountId: number): Observable<IRenewalDetails>   {
+  getRenewalDetails(serviceAccountId: string): Observable<IRenewalDetails>   {
     const relativePath = `/renewals/${serviceAccountId}/details`;
     return this.http.get(relativePath)
       .map((response: Response) => { return <IRenewalDetails> response.json(); })
@@ -51,7 +52,7 @@ export class RenewalService {
 
   createRenewal(request: ICreateRenewalRequest): Observable<IRenewal> {
     const body = JSON.stringify(request);
-    const relativePath = `/renewals/${request.service_account_id}/create_renewal`;
+    const relativePath = `/renewals/${request.Service_Account_Id}/create_renewal`;
     return this.http.post(relativePath, body)
       .map((response: Response) => { return <IRenewal> response.json(); })
       .catch(error => this.http.handleHttpError(error));

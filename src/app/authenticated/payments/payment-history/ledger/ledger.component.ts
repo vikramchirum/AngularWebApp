@@ -11,6 +11,7 @@ import { PaymentsHistoryService } from 'app/core/payments-history.service';
 import { PaymentsHistory } from 'app/core/models/payments/payments-history.model';
 import { IInvoice } from 'app/core/models/invoices/invoice.model';
 import { ViewMyBillModalComponent } from '../view-my-bill-modal/view-my-bill-modal.component';
+import { PaymentsHistoryStore } from '../../../../core/store/paymentsstore';
 
 interface IHistoryLedger {
   Id: string;
@@ -64,6 +65,7 @@ export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
   constructor(
     private ServiceAccountService: ServiceAccountService,
     private PaymentsHistoryService: PaymentsHistoryService,
+    private PaymentsHistoryStore: PaymentsHistoryStore,
     private InvoiceService: InvoiceService
   ) { }
 
@@ -78,19 +80,20 @@ export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
       ActiveServiceAccount => {
 
         this.Payments = null;
-        this.PaymentsHistoryService.GetPaymentsHistoryCacheable(ActiveServiceAccount).subscribe(
+        // this.PaymentsHistoryService.GetPaymentsHistoryCacheable(ActiveServiceAccount).subscribe
+        this.PaymentsHistoryStore.PaymentHistory.subscribe(
           PaymentsHistoryItems => {
-            this.Payments = clone(PaymentsHistoryItems);
-            let total = 0;
-            forEach(PaymentsHistoryItems, payment => total += payment.PaymentAmount);
-            console.log('Payments Total:', total);
-            console.log('Payments', PaymentsHistoryItems.length, PaymentsHistoryItems);
+            if (PaymentsHistoryItems) {
+              this.Payments = clone(PaymentsHistoryItems);
+              let total = 0;
+              forEach(PaymentsHistoryItems, payment => total += payment.PaymentAmount);
+            }
           }
         );
 
         this.Invoices = null;
         const invoiceSearchRequest = {} as IInvoiceSearchRequest;
-        invoiceSearchRequest.Service_Account_Id = Number(ActiveServiceAccount.Id);
+        invoiceSearchRequest.Service_Account_Id = ActiveServiceAccount.Id;
         this.InvoiceService.getInvoicesCacheable(invoiceSearchRequest).subscribe(
           Invoices => {
             this.Invoices = clone(Invoices);

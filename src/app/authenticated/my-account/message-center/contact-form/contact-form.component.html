@@ -5,8 +5,9 @@
       <label class="control-label col-sm-2"> Your Phone: </label>
       <div class="col-sm-8">
         <input type="text" class="form-control" placeholder="Enter Phone Number" required [(ngModel)]="phoneNumber"
-            name="phoneNumber" required #phone="ngModel">
-        <div [hidden]="phone.valid || phone.pristine" class="text-danger"> Please enter numerical digits with 10 characters long. </div>
+            name="phoneNumber" required #phone="ngModel" maxlength="16"
+               mygexaPhone (rawChange)="rawPhone=$event">
+        <div [hidden]="phone.valid || phone.pristine" class="text-danger"> Please enter valid phone number. </div>
       </div>
     </div>
     <div class="form-group">
@@ -18,7 +19,7 @@
         <div [hidden]="msg.valid || msg.pristine" class="text-danger"> Message is required </div>
       </div>
     </div>
-    
+
        <div class="form-group">
       <div class="col-sm-8 col-sm-offset-2">
               <button class="btn btn-primary" [disabled]="!contactForm.form.valid">Send</button>
@@ -33,8 +34,5 @@
 <!--Message Confirmation Screen -->
 
 <div [hidden]="!submitted" class="message-confirmation">
-  <div class="alert alert-success"> <strong>Thanks Charlie!</strong> Your Message Has Been Sent </div>
-  <p>{{phoneNumber | PhonePipe}}</p>
-  <p>"{{message}}"</p>
+  <div class="alert alert-success"> <strong>Thanks {{ name }}!</strong> Your Message Has Been Sent </div>
 </div>
-<!--<p>{{myNumber | PhonePipe }}</p>-->

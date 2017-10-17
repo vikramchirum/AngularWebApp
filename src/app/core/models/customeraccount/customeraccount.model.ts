@@ -20,13 +20,12 @@ export class CustomerAccount {
   Language: string;
   Drivers_License: ICustomerAccountDriversLicense;
   Social_Security_Number: string;
-  Phone: string;
   Past_Due: number;
   Bad_Debt_Balance: number;
   Pledge_On_Entity: boolean;
   Primary_Phone: ICustomerAccountPrimaryPhone;
   Contacts: [ ICustomerAccountContacts ];
-
+  EnrolledInShareAndSave: boolean;
   constructor(opts: any) {
     assign(this, opts);
   }

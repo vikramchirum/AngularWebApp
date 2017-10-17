@@ -37,14 +37,11 @@ export class ServiceAccount {
   AutoPayConfigId: number;
   PayMethodId: number;
   Is_Happiness_Guranteed: boolean;
-  Latest_Invoice_Id: string;
+  Latest_Invoice_Id: number;
   Average_Usage: number;
   Current_Offer: IServiceAccountPlanHistoryOffer;
   Offering_Name: string;
-  IsUpForRenewal: boolean;
-  IsOnHoldOver: boolean;
-  IsUpgraded: boolean;
-  IsRenewed: boolean;
+  Calculated_Contract_End_Date: Date;
 
   constructor(opts: any) {
     assign(this, opts);

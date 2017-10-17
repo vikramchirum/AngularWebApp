@@ -5,9 +5,21 @@
 export const CardBrands = {
   amex: 'American Express',
   'diners-club': 'Diners Club',
+  disc: 'Discover',
+  jcb: 'JCB',
+  mast: 'Mastercard',
+  paypal: 'PayPal',
+  stripe: 'Stripe',
+  visa: 'Visa'
+};
+
+
+export const CardBrands_CreditCard = {
+  amex: 'American Express',
+  'diners-club': 'Diners Club',
   discover: 'Discover',
   jcb: 'JCB',
-  mastercard: 'Mastercard',
+  mastercard: 'Master Card',
   paypal: 'PayPal',
   stripe: 'Stripe',
   visa: 'Visa'

@@ -3,8 +3,9 @@
  */
 
 export interface ICreateRenewalRequest {
-  service_account_id: number;
-  user_name: string;
-  start_date: Date;
-  offering_id: string;
+  Service_Account_Id: string;
+  User_Name: string;
+  Offering_Id: string;
+  Partner_Account_Number: string;
+  Partner_Name_On_Account: string;
 }

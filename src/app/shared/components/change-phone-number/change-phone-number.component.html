@@ -29,7 +29,19 @@
           <span class="help-block">Enter a valid phone number</span>
         </div>
       </div>
-
+      <div class="form-group">
+        <label class="radio-inline">
+          <input type="radio" name="radioGroup" value="mobile"  [formControl]="changePhoneNumberForm.controls['mobileRadio']"
+                 (change)="radioButtonSelected(changePhoneNumberForm.controls['mobileRadio'].value)"> Mobile
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="radioGroup" value="landline" [formControl]="changePhoneNumberForm.controls['landlineRadio']"
+                 (change)="radioButtonSelected(changePhoneNumberForm.controls['landlineRadio'].value)">Landline
+        </label>
+      </div>
+      <div class="has-error" *ngIf="IsNoSelected">
+        <span class="help-block">Type is required.</span>
+      </div>
       <div class="form-group" [ngClass]="{'has-error':!changePhoneNumberForm.controls['confirmPhone'].valid && submitAttempt}">
         <input
           type="text"
@@ -50,12 +62,28 @@
         </div>
       </div>
 
-      <div class="text-right">
-        <button class="btn btn-primary" [disabled]="">Save</button>
-        <button class="btn btn-default" type="button" (click)="emitCancel()">Cancel</button>
+      <div class="form-group" *ngIf="IsMobileSelected">
+        <label class="checkbox-inline" style="float:left"><input type="checkbox" (change)="mobileCheckBoxChecked($event)" id="mobileCheckbox" [formControl]="changePhoneNumberForm.controls['mobileCheckbox']">Yes, Allow Notifications</label><br>
+        <label class="phoneNumLabel">
+          For your convenience, we may reach out to you with an automated text or phone call when you have product or service offers and notifications, including account alerts.
+        </label><br>
+        <label class="phoneNumSmallLabel">
+          Standard message and data rates may apply. This is not required to purchase goods and services from Gexa Energy.
+        </label>
       </div>
 
+      <div class="text-right">
+        <button class="btn btn-primary" type="submit" [disabled]="">Save</button>
+        <button class="btn btn-default" type="button" (click)="emitCancel()">Cancel</button>
+      </div>
+      <!--<div #phone_pop="bs-popover" [popover]="showpop" placement="bottom" outsideClick="true">-->
+        <!--<ng-template #showpop>-->
+          <!--<button type="button" class="close text-right" aria-label="Close" (click)="phone_pop.hide()">-->
+            <!--<span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>-->
+        <!--</ng-template>-->
+      <!--</div>-->
     </form>
     <hr/>
   </div>
 </div>
+<mygexa-phone-number-confirmation-modal #phonePopModal (action)="onNotify($event)"></mygexa-phone-number-confirmation-modal>

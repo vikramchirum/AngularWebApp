@@ -6,6 +6,7 @@ import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { PaymentsHistoryService } from 'app/core/payments-history.service';
 import { PaymentsHistory } from 'app/core/models/payments/payments-history.model';
 import { ColumnHeader } from 'app/core/models/columnheader.model';
+import { PaymentsHistoryStore } from '../../../../core/store/paymentsstore';
 
 @Component({
   selector: 'mygexa-payment-history-payments',
@@ -34,6 +35,7 @@ export class PaymentsComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private ServiceAccountService: ServiceAccountService,
     private PaymentsHistoryService: PaymentsHistoryService,
+    private paymentsHistoryStore: PaymentsHistoryStore,
     private CurrencyPipe: CurrencyPipe,
     private DatePipe: DatePipe
   ) { }
@@ -48,10 +50,13 @@ export class PaymentsComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       activeServiceAccount => {
-        this.PaymentsHistoryService.GetPaymentsHistoryCacheable(activeServiceAccount).subscribe(
+        // this.PaymentsHistoryService.GetPaymentsHistoryCacheable(activeServiceAccount).subscribe(
+        this.paymentsHistoryStore.PaymentHistory.subscribe(
           PaymentsHistoryItems => {
-            this.Payments = PaymentsHistoryItems;
-            this.onChangeTable(this.config);
+            if (PaymentsHistoryItems) {
+              this.Payments = PaymentsHistoryItems;
+              this.onChangeTable(this.config);
+            }
           });
       }
     );

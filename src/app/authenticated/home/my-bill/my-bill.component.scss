@@ -1,7 +1,43 @@
 @import '../../../../styles.scss';
+@import '../../../../basecolors.scss';
 
 .my-bill-grid {
   table {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+  }
+  tr.bg-success > td {
+    border-top: 1px solid $payment-base;
+    border-bottom: 1px solid $payment-base;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    
+    h4 {
+    color: $payment-base;
+      text-align: left;
+      }
+  }
+  tr.bg-spacer > td {
+    padding: 0;
+    
+  }
+  .text-left {
+    text-align: left;
+  }
+  .text-center
+  {
+    text-align: center;
+  }
+  .disconnected {
+    color: red !important;
+  }
+  .exceededDueDatebtn {
+    background-color: orange !important;
+  }
+  .exceededDueDate{
+    color: orange !important;
+  }
+  .paymentMade {
+    color: #5cb85c !important;
   }
 }

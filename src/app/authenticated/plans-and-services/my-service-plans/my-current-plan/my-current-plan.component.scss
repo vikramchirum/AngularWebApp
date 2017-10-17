@@ -10,21 +10,20 @@
 }
 
 .plan-card-container{
-  border: 2px solid black;
-  border-radius: 20px;
   padding: 20px;
   .card-content{
     position: relative;
     text-align: center;
-    .sup-text {
-      font-size: 12px;
-      top: -1.5em;
+     .sup-text {
+      font-weight: 200;
+      font-size: 20px;
+      top: -0.9em;
     }
-    .sub-text {
+   .sub-text {
       font-size:12px;
       right:0.5em;
+     font-weight: bold
     }
-
     .corner-ribbon{
       width: 125px;
       height:63px;
@@ -161,3 +160,30 @@
   }
 
 }
+
+.popover.in {
+  max-width: 350px !important;
+}
+
+
+   .agreement-section {
+     
+        position: absolute;
+        top: 134px;
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        left: 10%;
+        z-index: 1;
+        box-shadow: 1px 1px 3px #ccc;
+        width: 80%;
+
+     
+       label {
+           p {
+               font-size:0.9em;
+           }
+       }
+
+   }
+

@@ -7,7 +7,10 @@ import { Observer } from 'rxjs/Observer';
 import { clone, find, first, forEach, get, isString, map, pull } from 'lodash';
 import { HttpClient } from './httpclient';
 import { UserService } from './user.service';
-import { ServiceAccount } from './models/serviceaccount/serviceaccount.model';
+import {ServiceAccount} from './models/serviceaccount/serviceaccount.model';
+import {RenewalService} from './renewal.service';
+import {IRenewalDetails} from './models/renewals/renewaldetails.model';
+import {Subscription} from 'rxjs/Subscription';
 
 @Injectable()
 export class ServiceAccountService {
@@ -54,6 +57,7 @@ export class ServiceAccountService {
 
     // Respond to the first (initializing) call.
     this.ServiceAccountsObservable.first().delay(0).subscribe((result) => {
+      console.log('Service accounts', result);
       this.initialized = true;
       if (this.ActiveServiceAccountId) {
         this.SetActiveServiceAccount(this.ActiveServiceAccountId);
@@ -77,15 +81,16 @@ export class ServiceAccountService {
   set CustomerAccountId(CustomerAccountId: string) {
     if (this._CustomerAccountId !== CustomerAccountId) {
       this._CustomerAccountId = CustomerAccountId;
-      this.UpdateServiceAccounts();
+      this.serviceAccountsCacheable();
     }
   }
 
-  UpdateServiceAccounts(): Observable<Response> {
+  public UpdateServiceAccounts(ReLoadRequested: boolean): Observable<Response> {console.log('Update service Accounts');
 
     // If we're already requesting then return the original request observable.
-    if (this.requestObservable) { return this.requestObservable; }
-
+    if (!ReLoadRequested) {
+      if (this.requestObservable) { return this.requestObservable; }
+    }
     // If we don't have a Customer Account Id then return null;
     if (this.CustomerAccountId === null) { return Observable.from(null); }
 
@@ -100,16 +105,20 @@ export class ServiceAccountService {
       ServiceAccounts => this.ServiceAccountsCache = <any>ServiceAccounts,
       error => this.HttpClient.handleHttpError(error),
       () => {
-        console.log('ServiceAccounts =', this.ServiceAccountsCache);
         // We're no longer requesting.
         this.requestObservable = null;
         // Emit our new data to all of our observers.
         this.emitToObservers(this.ServiceAccountsObservers, this.ServiceAccountsCache);
       }
     );
-
     return this.requestObservable;
+  }
 
+  serviceAccountsCacheable(): Observable<any> {
+    if (this.ServiceAccountsCache) {
+      return Observable.of(this.ServiceAccountsCache).delay(0);
+    }
+    return this.UpdateServiceAccounts(false);
   }
 
   SetActiveServiceAccount(ServiceAccount: ServiceAccount | string): ServiceAccount {
@@ -125,12 +134,15 @@ export class ServiceAccountService {
 
     // If no Service account was found then use the first one.
     if (ActiveServiceAccount === null) { ActiveServiceAccount = first(this.ServiceAccountsCache); }
+    // else {
+    //   this.SetIsOnRenewalFlag(this.ActiveServiceAccountId);
+    // }
 
     // Assign the newly active Service account.
     this.ActiveServiceAccountCache = ActiveServiceAccount;
     if (this.ActiveServiceAccountCache) { this.ActiveServiceAccountId = this.ActiveServiceAccountCache.Id; }
 
-    this.ActiveServiceAccountCache = this.SetIsUpFOrRenewalFlag(this.ActiveServiceAccountCache);
+    this.ActiveServiceAccountCache = this.SetFlags(this.ActiveServiceAccountCache);
 
     // Emit our new data to all of our observers.
     this.emitToObservers(this.ActiveServiceAccountObservers, this.ActiveServiceAccountCache);
@@ -139,46 +151,20 @@ export class ServiceAccountService {
 
   }
 
-  SetIsUpFOrRenewalFlag(ServiceAccount: ServiceAccount): ServiceAccount {
-
+  SetFlags(ServiceAccount: ServiceAccount): ServiceAccount {
     const currentDate = new Date();
-
-    // End dates should not be null - for dev purposes, handle null dates:
-    const endDate = ServiceAccount.Contract_End_Date === null
-      // If no end date, take the current time and add a year's milliseconds to it.
-      ? new Date(currentDate.getTime() + 1000 * 60 * 60 * 24 * 365)
-      // Otherwise, use the provided date.
-      : new Date(ServiceAccount.Contract_End_Date);
-
-    // Get the first day of the 90 day period by subtracting 90 day's milliseconds from the end date.
-    const req90Day: Date = new Date(endDate.getTime() - 1000 * 60 * 60 * 24 * 90);
-
-    // Determine if the current day is past the first day of the 90 day period.
-    ServiceAccount.IsUpForRenewal = currentDate > req90Day;
-
-    // Determine if the service account is on hold over using its' current offer.
-    // Term === 1 would mean a monthly plan but should we determine with another attribute?
-    ServiceAccount.IsOnHoldOver = ServiceAccount.Current_Offer.Term === 1;
-
-    return ServiceAccount;
-  }
-
-  OnUpgradeOrRenew(choice: string) {
-    if (choice === 'Renewal') {
-      this.ActiveServiceAccountObservable.subscribe(
-        ActiveServiceAccount => {
-          ActiveServiceAccount.IsRenewed = true;
-          console.log('Renewed');
-        }
-      );
-    } else if (choice === 'Upgrade') {
-      this.ActiveServiceAccountObservable.subscribe(
-        ActiveServiceAccount => {
-          ActiveServiceAccount.IsUpgraded = true;
-          console.log('Upgraded');
-        }
-      );
+    if (ServiceAccount) {
+      const term = ServiceAccount.Current_Offer ? Number(ServiceAccount.Current_Offer.Term) : 0;
+      // End dates should not be null - for dev purposes, handle null dates:
+      const endDate = ServiceAccount.Contract_End_Date === null
+        // If no end date, take the current offer's term and add it.
+        ? new Date(new Date(ServiceAccount.Contract_Start_Date).setMonth(new Date(ServiceAccount.Contract_Start_Date).getMonth() + term))
+        // Otherwise, use the provided date.
+        : new Date(ServiceAccount.Contract_End_Date);
+      // // Set calculated end date
+      ServiceAccount.Calculated_Contract_End_Date = endDate;
     }
+    return  ServiceAccount;
   }
 
   private emitToObservers(observers: Observer<any>[], data: any) {

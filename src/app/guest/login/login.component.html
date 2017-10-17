@@ -17,14 +17,14 @@
 </nav>
 <div class="homepage-hero-wrapper">
   <div class="homepage-hero-module">
-    <div class="video-container">
+     <div class="video-container">
       <div class="filter"></div>
       <video autoplay loop class="fillWidth" id="login-video-player">
-        <source src="/assets/home/MP4/Up.mp4" type="video/mp4" />
+        <source src="/assets/home/MP4/aerial_houston_xs.mp4" type="video/mp4" />
         Your browser does not support the video tag. I suggest you upgrade your browser.
-        <source src="/assets/home/WEBM/Up.webm" type="video/webm" />
+        <source src="/assets/home/WEBM/aerial_houston_xs.webm" type="video/webm" />
         Your browser does not support the video tag. I suggest you upgrade your browser. </video>
-      <div class="poster hidden"> <img src="/assets/home/Snapshots/Up.jpg" alt=""> </div>
+      <div class="poster hidden"> <img src="/assets/home/Snapshots/aerial_houston_xs.jpg" alt=""> </div>
     </div>
   </div>
 </div>
@@ -44,7 +44,7 @@
                   name="user_name"
                   type="text"
                   class="form-control"
-                  style="border-radius: 5px;"
+                  style="border-radius: 5px; cursor: pointer"
                   placeholder="Username"
                   required
                   #username="ngModel"
@@ -59,13 +59,14 @@
                   name="password"
                   type="password"
                   class="form-control"
-                  style="border-radius: 5px;"
+                  style="border-radius: 5px; cursor: pointer"
                   placeholder="Type your Password"
                   required
                   #em="ngModel"
                 />
             <small [hidden]="em.valid || em.pristine || processing" class="text-danger">Password is required</small> </div>
-          <div class="text-danger" *ngIf="invalidCreds">Either username or password is wrong</div>
+          <div class="text-danger" *ngIf="invalidCreds && !error">Either username or password is wrong </div>
+          <div class="text-danger" *ngIf="error">{{error}}</div>
           <br>
           <div class="row">
             <div class="col-md-6">
@@ -101,18 +102,18 @@
       <p>You'll earn a $5 bill credit every month for each friend or family member who signs up for a new Gexa Energy Plan!</p>
       <hr/>
       <div class="media">
-        <div class="media-left"><i class="fa fa-cubes fa-3x"></i></div>
+        <div class="media-left"><i class="fa fa-gear fa-3x"></i></div>
         <div class="media-body">
-          <h4 class="media-heading">Heading One</h4>
-          <p>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+          <h4 class="media-heading">Set Up Auto Pay!</h4>
+          <p>Don’t stress about payment due dates. Never miss a payment with auto bill pay.</p>
         </div>
       </div>
         <hr/>
       <div class="media">
         <div class="media-left"><i class="fa fa-leaf fa-3x"></i></div>
         <div class="media-body">
-          <h4 class="media-heading">Heading Two</h4>
-          <p>Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+          <h4 class="media-heading">Go Paperless</h4>
+          <p>Enjoy the convenience of electronic communications! Select email for both billing and plan documents.</p>
         </div>
       </div>
     </div>

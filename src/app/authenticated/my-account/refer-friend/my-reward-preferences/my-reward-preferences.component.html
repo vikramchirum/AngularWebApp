@@ -1,0 +1,20 @@
+
+<ng-container *ngIf="!isLoading; then myRewardPreferences else showLoadingScreen;"></ng-container>
+
+<ng-template #myRewardPreferences>
+<br/>
+<br/>
+<div>Please select which Service Plan your rewards will be credited to.</div>
+<br/>
+<mygexa-service-account-selector selectorLabel="" [selectedServiceAccount]="selectedServiceAccount" (changedServiceAccount)="serviceChanged($event)"></mygexa-service-account-selector>
+<button type="submit" class="btn btn-primary" (click)="changeRewardPreferences()" >Save</button>
+</ng-template>
+
+<ng-template #showLoadingScreen>
+  <div class="text-center">
+    <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
+    <h2>
+      <small class="text-muted">Loading your reward preferences...</small>
+    </h2>
+  </div>
+</ng-template>

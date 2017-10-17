@@ -3,7 +3,6 @@
   <div *ngIf="PaymentMessage" [ngClass]="PaymentMessage.classes" [innerHTML]="PaymentMessage.innerHTML"></div>
 
   <h2>Payment Accounts</h2>
-  <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. </p>
 
   <br/>
   <ng-template *ngIf="Paymethods === null; then ShowLoadingScreen else ShowPaymethods;"></ng-template>
@@ -127,66 +126,8 @@
     </ng-template>
   </ng-template>
 
-  <h4 class="new-header">NEW PAYMENT ACCOUNT</h4>
+  <mygexa-add-payment-accounts (onAddPaymentAccountSubmittedEvent)="handleAddPaymentAccountSubmittedEvent($event)"></mygexa-add-payment-accounts>
 
-  <div class="row">
-    <div class="col-md-12">
-      <button
-        class="btn btn-link new-button"
-        [disabled]="addingCreditCard"
-        (click)="addingCreditCardToggle()"
-      ><i class="fa fa-fw fa-plus-circle"></i>ADD NEW CREDIT CARD</button>
-      <ng-container *ngIf="addingCreditCard">
-        <mygexa-payment-method-add-cc
-          (changed)="addingCreditCardFormChanged($event)"
-        ></mygexa-payment-method-add-cc>
-        <br/>
-        <div class="text-right">
-          <button
-            type="button"
-            class="btn btn-primary"
-            [disabled]="!addingCreditCardFormValid"
-            (click)="addingCreditCardSubmit()"
-          >Add Now</button>
-          <button
-            type="button"
-            class="btn btn-link"
-            (click)="addingCreditCardToggle(false)"
-          >Cancel</button>
-        </div>
-        <hr/>
-      </ng-container>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <button
-        class="btn btn-link new-button"
-        [disabled]="addingEcheck"
-        (click)="addingEcheckToggle()"
-      ><i class="fa fa-fw fa-plus-circle"></i>ADD NEW E-CHECK</button>
-      <ng-container *ngIf="addingEcheck">
-        <mygexa-payment-method-add-echeck
-          (changed)="addingEcheckFormChanged($event)"
-        ></mygexa-payment-method-add-echeck>
-        <br/>
-        <div class="text-right">
-          <button
-            type="button"
-            class="btn btn-primary"
-            [disabled]="!addingEcheckFormValid"
-            (click)="addingEcheckSubmit()"
-          >Add Now</button>
-          <button
-            type="button"
-            class="btn btn-link"
-            (click)="addingEcheckToggle(false)"
-          >Cancel</button>
-        </div>
-      </ng-container>
-    </div>
-  </div>
 
 </section>
 

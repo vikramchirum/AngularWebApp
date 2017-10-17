@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import {Component, OnInit, ViewChild, OnDestroy, OnChanges, Input} from '@angular/core';
 import { ModalDirective} from 'ngx-bootstrap';
 import {Subscription} from 'rxjs/Subscription';
 import {CustomerAccountService} from '../../../../core/CustomerAccount.service';
@@ -11,13 +11,14 @@ import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceacco
   templateUrl: './plan-confirmation-popover.component.html',
   styleUrls: ['./plan-confirmation-popover.component.scss']
 })
-export class PlanConfirmationPopoverComponent implements OnInit, OnDestroy {
+export class PlanConfirmationPopoverComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('planPopModal') public planPopModal: ModalDirective;
+  @Input() IsInRenewalTimeFrame: boolean;
+  @Input() IsOnHoldOver: boolean;
   CustomerAccountServiceSubscription: Subscription = null;
   activeServiceAccountDetails: ServiceAccount;
   customerDetails: CustomerAccount = null;
   serviceAccountSubscription: Subscription;
-  IsInRenewalTimeFrame: boolean;
 
   constructor(private CustomerAccountService: CustomerAccountService, private serviceAccountService: ServiceAccountService) { }
 
@@ -25,23 +26,12 @@ export class PlanConfirmationPopoverComponent implements OnInit, OnDestroy {
     this.CustomerAccountServiceSubscription = this.CustomerAccountService.CustomerAccountObservable.subscribe(
       result => this.customerDetails = result
     );
-
-    this.serviceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
-      result => {
-        this.activeServiceAccountDetails = result;
-        this.IsInRenewalTimeFrame = result.IsUpForRenewal;
-      });
-
+  }
+  ngOnChanges() {
   }
 
   renewedNewplan() {
     this.hidePlanPopModal();
-    if (this.IsInRenewalTimeFrame) {
-      this.serviceAccountService.OnUpgradeOrRenew('Renewal');
-    } else {
-      this.serviceAccountService.OnUpgradeOrRenew('Upgrade');
-    }
-    location.reload();
   }
 
   public showPlanPopModal(): void {
@@ -53,6 +43,6 @@ export class PlanConfirmationPopoverComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
     this.CustomerAccountServiceSubscription.unsubscribe();
-    this.serviceAccountSubscription.unsubscribe();
+    // this.serviceAccountSubscription.unsubscribe();
   }
 }

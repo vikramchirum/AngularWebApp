@@ -1,8 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { sumBy } from 'lodash';
+
+import { environment } from 'environments/environment';
+
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
+import { IReferral } from 'app/core/models/referrals/referral.model';
+
+import { CustomerAccountService } from 'app/core/CustomerAccount.service';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { ReferralStore } from 'app/core/store/referralstore';
 
 @Component({
   selector: 'mygexa-my-rewards',
@@ -11,43 +21,44 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
 })
 export class MyRewardsComponent implements OnInit, OnDestroy {
 
-  public selectedServiceAccount: ServiceAccount = null;
-  public editingServiceAccount: ServiceAccount = null;
-  public editingAddress: boolean = null;
+  customerServiceAccountSubscription: Subscription;
+  referralSubscription: Subscription;
 
-  private ServiceAccounts: ServiceAccount[] = null;
-  private ServiceAccountsSubscription: Subscription = null;
+  isLoading = true;
+  referral: IReferral;
+  customerAccount: CustomerAccount;
+  serviceAccount: ServiceAccount;
+  totalSavingsToDate: number;
+  dollarAmountFormatter: string;
 
-  constructor(
-    private ServiceAccountService: ServiceAccountService
-  ) {
-    this.editingAddress = false;
+  constructor(private customerAccountService: CustomerAccountService, private serviceAccountService: ServiceAccountService, private referralStore: ReferralStore) {
   }
-
-  serviceChanged(newServiceAccount: ServiceAccount) {
-    this.editingServiceAccount = newServiceAccount;
-  }
-
-  serviceUse() {
-    this.selectedServiceAccount = this.editingServiceAccount;
-    this.editingAddress = !this.editingAddress;
-  }
-
   ngOnInit() {
-    this.ServiceAccountsSubscription = this.ServiceAccountService.ServiceAccountsObservable.subscribe(
-      (ServiceAccounts: ServiceAccount[]) => {
-        this.selectedServiceAccount = this.ServiceAccountService.ActiveServiceAccountCache;
-        this.ServiceAccounts = ServiceAccounts;
+
+    this.dollarAmountFormatter = environment.DollarAmountFormatter;
+
+    const customerAccount$ = this.customerAccountService.CustomerAccountObservable.filter(customerAccount => customerAccount != null);
+    const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
+    const referral$ = this.referralStore.Referral;
+
+    this.customerServiceAccountSubscription = Observable.combineLatest(customerAccount$, activeServiceAccount$).distinctUntilChanged(null, x => x[1]).subscribe(result => {
+      this.customerAccount = result[0];
+      this.serviceAccount = result[1];
+    });
+
+    this.referralSubscription = referral$.subscribe(result => {
+      this.referral = result;
+      this.isLoading = false;
+      if (this.referral) {
+        this.totalSavingsToDate = (sumBy(this.referral.RefereeList, function (r) {
+          return r.Total_Amount_Credited;
+        }));
       }
-    );
+    });
   }
 
   ngOnDestroy() {
-    this.ServiceAccountsSubscription.unsubscribe();
-  }
-
-  toggleAddressEdit() {
-    this.editingServiceAccount = this.selectedServiceAccount;
-    this.editingAddress = !this.editingAddress;
+    this.customerServiceAccountSubscription.unsubscribe();
+    this.referralSubscription.unsubscribe();
   }
 }

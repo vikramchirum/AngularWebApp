@@ -1,36 +1,126 @@
-<div class="row" *ngIf="!IsInRenewalTimeFrame">
-  <section>
-    <div class="col-sm-2">
-      <h2> Want to Upgrade your Plan? </h2>
-    </div>
-    <div class="col-sm-9">
-      <div class="row change-plans-grid" *ngIf="AllOffers">
-        <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
-        <div class="col-md-4 plan-card" *ngFor="let offer of AllOfferss">
-          <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
-        </div>
+<ng-container *ngIf="!isLoading; then offers else showLoadingScreen"></ng-container>
+<ng-template #offers>
+  <ng-container #showRenewalOrUpgrade *ngIf="showRenewals; then renewalSection else upgradeSection"></ng-container>
+  <ng-container #showRenewalOrUpgradeLegalSection *ngIf="showRenewals; then renewalLegalSection else upgradeLegalSection"></ng-container>
+  <ng-template #renewalSection>
+    <div class="row">
+      <div class="col-sm-2">
+        <h2> View more renewal plans </h2>
+        <a (click)="showPromoCodeInput($event)">
+          <p> Have a promo code?</p>
+        </a>
+        <form #promoCodeForm="ngForm" class="promocode" *ngIf="hasPromoCode">
+          <div class="input-group">
+            <input type="text" class="form-control" id="promoCode" required [(ngModel)]="promoCode" name="promoCode">
+            <br>
+            <span class="input-group-btn">
+                  <button class="btn btn-default" [class.disabled]="!promoCodeForm.form.valid" style="border-left: none;" (click)="promoCodeForm.form.valid && resetOffers($event)">
+                  <span class="close-btn"  aria-hidden="true"><i class="fa fa-times fa-x"></i></span>
+                  </button>
+                  </span>
+          </div>
+          <br>
+          <a class="boxed btn btn-primary" [class.disabled]="!promoCodeForm.form.valid" (click)="onPromoCodeSubmit($event)">Submit</a>
+        </form>
+      </div>
+      <div class="col-sm-9">
+        <ng-container *ngIf="!isLoadingRenewals; else showLoadingRenewals">
+          <div class="row">
+            <ng-container *ngIf="(renewalOffers && (renewalOffers.length > 0)); else noRenewalOffers">
+              <section>
+                <div class="col-md-4 plan-card" *ngFor="let offer of renewalOffers; let i= index;">
+                  <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Renewal"
+                                    (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-plan-card>
+                </div>
+              </section>
+            </ng-container>
+            <ng-template #noRenewalOffers>
+              <div class="row">
+                <div class="col-sm-24">
+                  <h2>No renewal offers available for this service account.</h2>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </ng-container>
+        <ng-template #showLoadingRenewals>
+          <div class="text-center">
+            <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
+            <h2>
+              <small class="text-muted">Loading more renewals...</small>
+            </h2>
+          </div>
+        </ng-template>
       </div>
     </div>
-  </section>
-</div>
-
-<div class="row" *ngIf="IsInRenewalTimeFrame">
-  <section id="renewPlan">
-    <div class="col-sm-2">
-      <h2>View more renewal plans </h2>
-      <a  (click)="showPromoCodeInput($event)"> <p> Have a promo code?</p></a>
-       <form #promoCodeForm="ngForm"  *ngIf="havePromoCode">
-      <input type="text" class="form-control" required ngModel name="name"
-               #name="ngModel"><br>
-      <a class="boxed btn btn-primary" [class.disabled]="!promoCodeForm.form.valid">Submit</a></form></div>
-
-    <div class="col-sm-9">
-      <div class="row change-plans-grid" *ngIf="AllOffers">
-        <!-- It should be reapted in a for loop. Since we dont have dont have data, it is called multiple times -->
-        <div class="col-md-4 plan-card" *ngFor="let offer of AllOfferss">
-          <mygexa-change-your-plan-card [Offer]=offer></mygexa-change-your-plan-card>
-        </div>
+  </ng-template>
+  <ng-template #upgradeSection>
+    <div class="row">
+      <div class="col-sm-2">
+        <h2> Want to Upgrade your Plan? </h2>
+      </div>
+      <div class="col-sm-9">
+        <ng-container *ngIf="!isLoadingUpgrades; else showLoadingUpgrades">
+          <div class="row change-plans-grid">
+            <ng-container *ngIf="(upgradeOffers && (upgradeOffers.length >0)); else noUpgradeOffers">
+              <section>
+                <div class="col-md-4 plan-card" *ngFor="let offer of upgradeOffers; let i= index;">
+                  <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Upgrade"
+                                    (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-plan-card>
+                </div>
+              </section>
+            </ng-container>
+            <ng-template #noUpgradeOffers>
+              <div class="row">
+                <div class="col-sm-24">
+                  <h2>No upgrade offers available for this service account.</h2>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </ng-container>
+        <ng-template #showLoadingUpgrades>
+          <div class="text-center">
+            <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
+            <h2>
+              <small class="text-muted">Loading more upgrades...</small>
+            </h2>
+          </div>
+        </ng-template>
       </div>
     </div>
-  </section>
-</div>
+  </ng-template>
+  <br>
+  <ng-template #renewalLegalSection>
+    <div *ngIf="renewalOffersLegalTextArray">
+      <div *ngFor="let text of renewalOffersLegalTextArray">
+        <div *ngIf="text">
+          <small>{{text}}</small>
+        </div>
+        <br> <br>
+      </div>
+    </div>
+
+  </ng-template>
+  <ng-template #upgradeLegalSection>
+    <div *ngIf="upgradeOffersLegalTextArray">
+      <div *ngFor="let text of upgradeOffersLegalTextArray">
+        <div *ngIf="text">
+          <small>{{text}}</small>
+        </div>
+        <br> <br>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+<ng-template #showLoadingScreen>
+  <div class="text-center">
+    <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
+    <h2>
+      <small class="text-muted">Loading more offers...</small>
+    </h2>
+  </div>
+</ng-template>
+<br>
+<mygexa-plan-confirmation-modal #planConfirmationModal></mygexa-plan-confirmation-modal>
+<mygexa-error-modal #errorModal></mygexa-error-modal>

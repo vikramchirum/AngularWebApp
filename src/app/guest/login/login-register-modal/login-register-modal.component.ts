@@ -33,12 +33,15 @@ export class LoginRegisterModalComponent implements OnInit {
     this.registerForm = this.registerFormInit();
   }
 
-  ngOnInit() {
+  public getSecurityQuestions() {
     this.UserService.getSecurityQuestions()
       .subscribe(
         response => this.secQuesArray = response,
         error => this.error = <any>error
       );
+  }
+
+  ngOnInit() {
   }
 
   save(model: IRegUser, isValid: boolean) {
@@ -68,8 +71,8 @@ export class LoginRegisterModalComponent implements OnInit {
     return this.FormBuilder.group({
       Service_Account_Id: ['', Validators.required],
       Zip_Code: ['', Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(5), validateInteger])],
-      User_name: ['', Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(8)])],
-      Password: ['', Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(10), validatePassword])],
+      User_name: ['', Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(100)])],
+      Password: ['', Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(100), validatePassword])],
       ConfirmPassword: ['', Validators.required],
       Email_Address: ['', Validators.compose([Validators.required, validateEmail])],
       Security_Question_Id: ['', Validators.required],

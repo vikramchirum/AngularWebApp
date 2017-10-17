@@ -1,0 +1,14 @@
+<form novalidate #f="ngForm">
+  <div id="search-component">
+    <input #searchBox id="search-box" required class="form-control"  name="newAddressField" placeholder="Enter New Address" [(ngModel)]="selectedAddress"
+      #newAddress="ngModel" (keyup)="search(searchBox.value)" autocomplete="off"/>
+    <div>
+      <ng-container *ngIf="newAddressList && showAddressList">
+        <div *ngFor="let result of newAddressList | async" (click)="selectNewServiceAddress(result, $event)" class="search-result">
+          {{result.newAddressString()}}
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <small *ngIf="newAddress.errors?.required && newAddress.touched" class="text-danger">   Please select new Address    </small>
+</form>

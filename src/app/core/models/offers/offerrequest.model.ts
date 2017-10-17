@@ -5,4 +5,7 @@
 export interface OfferRequest {
   startDate: string;
   dunsNumber: string;
+  approved: boolean;
+  page_size: number;
+  channelId: string;
 }

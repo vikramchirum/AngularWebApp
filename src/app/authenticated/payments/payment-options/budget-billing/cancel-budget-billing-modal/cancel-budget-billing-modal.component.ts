@@ -1,11 +1,12 @@
 /**
  * Created by vikram.chirumamilla on 7/13/2017.
  */
-import {Component, OnInit, ViewChild, Output, EventEmitter} from '@angular/core';
-import {ModalDirective} from 'ngx-bootstrap';
+import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 
-import {environment} from 'environments/environment';
-import {IBudgetBillingInfo} from '../../../../../core/models/budgetbilling/budgetbillinginfo.model';
+import { ModalDirective } from 'ngx-bootstrap';
+import { environment } from 'environments/environment';
+
+import { IBudgetBillingInfo } from 'app/core/models/budgetbilling/budgetbillinginfo.model';
 
 @Component({
   selector: 'mygexa-cancel-budget-billing-modal',

@@ -1,13 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { filter, forEach, clone } from 'lodash';
-import { Subscription } from 'rxjs/Subscription';
 
-import { InvoiceService } from 'app/core/invoiceservice.service';
+import { Subscription } from 'rxjs/Subscription';
+import { environment } from 'environments/environment';
+
 import { IInvoiceLineItem } from 'app/core/models/invoices/invoicelineitem.model';
 import { IInvoice } from 'app/core/models/invoices/invoice.model';
-import { ServiceAccountService } from 'app/core/serviceaccount.service';
-import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { InvoiceService } from 'app/core/invoiceservice.service';
+import { UtilityService } from 'app/core/utility.service';
 
 @Component({
   selector: 'mygexa-view-bill',
@@ -15,6 +17,7 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
   styleUrls: ['./view-bill.component.scss']
 })
 export class ViewBillComponent implements OnInit {
+
   @Input() bill_object: IInvoice;
 
   error: string = null;
@@ -27,36 +30,45 @@ export class ViewBillComponent implements OnInit {
   public invoice_num: number;
   public invoice_date: Date;
 
+  invoicesUrl: string;
+
+  serviceAccountId: string;
+
   private openCharges = [];
-  
+
   private ActiveServiceAccountSubscription: Subscription = null;
   private tduName: string;
 
-  constructor(   
-    private invoice_service: InvoiceService,
-    private serviceAccountService : ServiceAccountService
+  constructor(private invoiceService: InvoiceService,
+              private serviceAccountService: ServiceAccountService,
+              private utilityService: UtilityService,
   ) {
-    
-   }
+  }
 
   ngOnInit() {
+
     if (this.bill_object) {
       this.PopulateItemizedBill(this.bill_object);
     }
 
      this.ActiveServiceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
-        this.tduName = result.TDU_Name;      
+        this.tduName = result.TDU_Name;
+        this.serviceAccountId = result.Id;
       }
     );
   }
 
   public PopulateItemizedBill(bill_object: IInvoice) {
-    const invoice_id = Number(bill_object.Invoice_Id);
-    this.invoice_service.getItemizedInvoiceDetails(invoice_id)
+    const invoice_id = +(bill_object.Invoice_Id);
+    this.invoicesUrl = environment.Documents_Url.concat(`/invoice/generate/${invoice_id}`);
+      this.invoiceService.getItemizedInvoiceDetails(invoice_id, this.serviceAccountId)
       .subscribe(
         bill_item_details => {
-          console.log("bill item details", bill_item_details);
+          if (!bill_item_details) {
+            return;
+          }
+          console.log('bill item details', bill_item_details);
           this.openCharges = [];
           this.bill_object = bill_object;
           this.invoice_num = invoice_id;
@@ -103,5 +115,16 @@ export class ViewBillComponent implements OnInit {
     } else {
       this.openCharges.splice(indexOf, 1);
     }
+  }
+
+  public downloadInvoice($event) {
+
+    $event.preventDefault();
+    $event.stopPropagation();
+
+    const invoiceId = this.bill_object.Invoice_Id;
+    this.invoiceService.getInvoicePDF(invoiceId).subscribe(
+      data => this.utilityService.downloadFile(data)
+    );
   }
 }

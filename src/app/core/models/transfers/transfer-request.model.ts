@@ -9,7 +9,7 @@ export class TransferRequest {
     Final_Bill_To_Old_Service_Address?: boolean;
     Final_Bill_Address: IAddress;
     UAN: string;
-    Service_Address?: IAddress;
+    Billing_Address?: IAddress;
     TDSP_Instructions?: string;
     New_Service_Start_Date: string;
     Keep_Current_Offer?: boolean;
@@ -20,6 +20,8 @@ export class TransferRequest {
     Channel_Id?: string;
     Referrer_Id?: string;
     Date_Sent: string;
+    Partner_Account_Number?: string;
+    Partner_Name_On_Account?: string;
 }
 
 export interface ContactInfo {

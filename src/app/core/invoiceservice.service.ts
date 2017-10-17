@@ -43,15 +43,35 @@ export class InvoiceService {
     return this.getInvoices(invoiceSearchRequest);
   }
 
-  getInvoice(invoiceId: string): Observable<IInvoice>   {
-    return this.HttpClient.get(`/invoice/${invoiceId}`)
+  getInvoice(invoiceId: number, serviceAccountId: string): Observable<IInvoice>   {
+    return this.HttpClient.get(`/invoice/${serviceAccountId}/${invoiceId}`)
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err));
   }
 
-  getItemizedInvoiceDetails(invoiceId: number | string): Observable<IInvoiceLineItem[]>   {
-    return this.HttpClient.get(`/invoice/${invoiceId}/details`)
+  getItemizedInvoiceDetails(invoiceId: number, serviceAccountId: string): Observable<IInvoiceLineItem[]>   {
+    const req = {} as IInvoiceSearchRequest;
+    req.Invoice_Id = invoiceId;
+    req.Service_Account_Id = serviceAccountId;
+    return this.HttpClient.get(`/invoice/${serviceAccountId}/${invoiceId}/details`)
       .map(res => res.json())
+      .catch(err => this.HttpClient.handleHttpError(err));
+  }
+
+  getLatestInvoiceId(serviceAccountId: string): Observable<number> {
+    return this.HttpClient.get(`/service_accounts/${serviceAccountId}/latest_invoice_id`)
+      .map(res => res.json())
+      .catch(err => this.HttpClient.handleHttpError(err));
+  }
+
+  getLatestInvoice(serviceAccountId: string): Observable<IInvoice> {
+    return this.HttpClient.get(`/service_accounts/${serviceAccountId}/latest_invoice`)
+      .map(res => res.json())
+      .catch(err => this.HttpClient.handleHttpError(err));
+  }
+
+  getInvoicePDF(invoiceId: number | string): Observable<any> {
+    return this.HttpClient.downloadFile(`/documents/invoice/generate/${invoiceId}`)
       .catch(err => this.HttpClient.handleHttpError(err));
   }
 }

@@ -3,22 +3,33 @@
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
-        <div class="modal-body">
+        <div class="modal-body"> 
           <!--<button type="button" class="close text-right" aria-label="Close" (click)="hideMovingServiceModal()">
           <span class="close-btn" aria-hidden="true">&times;</span></button><br>-->
-
-          <!--Plan information -->
-          <div class="row" class="plan-info">
-            <div class="col-md-4 col-xs-12"  *ngFor="let offers of newPlans.Items">
-              <div class="select-plan-container">
-              <div class="select-plan-card">
-                <p>{{offers.Plan.Name}}</p>
-                <p>{{offers.Price_At_2000_kwh | number : '1.1-1'}}¢ pkw/hr</p>
-                <p>{{offers.End_Date | date:'d/M/yy'}}</p>
-              </div>
-              <div align="center"><button class="btn btn-default" (click)="selectPlan(offers)">Select Plan</button></div>
+          
+          <div class="row plan-info">
+            <div class="col-md-4 col-xs-12"  *ngFor="let offers of newPlans">
+              <div class="plan-card-container">
+                <div class="card-content">
+                  <div class="card-title">
+                    <h4>{{offers.Plan.Name}}</h4>
+                  </div>
+                  <div class="select-plan-card">
+                    <h2>{{offers.Price_At_1000_kwh | number : '1.1-1'}}<sup>&cent;</sup><small> pkw/hr</small></h2>
+                    <p class="bg-defau;t">{{offers.End_Date | date:'d/M/yy'}}</p>
+                  </div>
+                  <div align="center">
+                    <button class="btn btn-success" (click)="selectPlan(offers)">Select Plan</button>
+                  </div>
+                </div>
               </div>
             </div>
+            <!--Plan information --> 
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="text-center">
+            <button type="button" class="btn btn-link btn-block" data-dismiss="bs-modal" (click)="selectPlanCancel();"> Cancel </button>
           </div>
         </div>
       </div>

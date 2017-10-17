@@ -90,4 +90,24 @@ export class CustomerAccountService {
     // We "clone" because an observer may remove itself out of the original array - this solves an indexing problem.
     forEach(clone(observers), observer => observer.next(data));
   }
+
+  GetCustomerDetails(CustomerAccountId: string): Observable<CustomerAccount> {
+    const relativePath = `/customer_accounts/${this.CustomerAccountId}`;
+    return this.HttpClient.get(relativePath)
+       .map(data => data.json())
+      .map(data => {new CustomerAccount(data); console.log('Customer account', data); return data; })
+      .catch(error => this.HttpClient.handleHttpError(error));
+  }
+
+  UpdateCustomerDetails(CustomerDetails: CustomerAccount): Observable<CustomerAccount> {
+    const body = CustomerDetails;
+    const relativePath = `/customer_accounts/`;
+    return this.HttpClient.put(relativePath, body)
+      .map(res => res.json())
+      .map(res => {new CustomerAccount(res);
+      // console.log('Updated Customer account', res);
+      return res; })
+      .catch(error => this.HttpClient.handleHttpError(error));
+  }
+
 }

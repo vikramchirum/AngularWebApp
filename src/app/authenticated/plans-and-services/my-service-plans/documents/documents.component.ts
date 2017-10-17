@@ -1,48 +1,77 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { get, result } from 'lodash';
+import { Subscription } from 'rxjs/Subscription';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
-import {Subscription} from 'rxjs/Subscription';
-import {IOffers} from '../../../../core/models/offers/offers.model';
-import {AllOffersClass} from '../../../../core/models/offers/alloffers.model';
-import {OfferService} from '../../../../core/offer.service';
+import { IOffers } from '../../../../core/models/offers/offers.model';
+import { AllOffersClass } from '../../../../core/models/offers/alloffers.model';
+import { OfferService } from '../../../../core/offer.service';
+import { DocumentsService } from '../../../../core/documents.service';
+import { RenewalStore } from '../../../../core/store/renewalstore';
+import {OffersStore} from '../../../../core/store/offersstore';
 import {ServiceAccountService} from '../../../../core/serviceaccount.service';
-import {MdTooltipModule} from '@angular/material';
+import {Observable} from 'rxjs/Observable';
+
 @Component({
   selector: 'mygexa-documents',
   templateUrl: './documents.component.html',
   styleUrls: ['./documents.component.scss']
 })
 export class DocumentsComponent implements OnInit, OnDestroy {
-
-  @Input() ActiveServiceAccount: ServiceAccount = null;
-  activeserviceAccountOffersSubscription: Subscription;
-
+  ActiveServiceAccount: ServiceAccount = null;
+  renewalStoreSubscription: Subscription;
+  OffersServiceSubscription: Subscription;
+  plansServicesSubscription: Subscription;
+  public eflLink;
+  public tosLink;
+  public yraacLink;
+  public AllOffers: AllOffersClass[];
   public FeaturedOffers: AllOffersClass[];
   public RenewalOffers: IOffers;
   IsOffersReady: boolean = null;
-  IsInRenewalTimeFrame: boolean;
+  public IsUpForRenewal: boolean = null;
+  public IsRenewalPending: boolean = null;
 
-  constructor(private serviceAccount_service: ServiceAccountService, private active_serviceaccount_service: OfferService) {
-    this.IsInRenewalTimeFrame = false;
+  constructor(private serviceAccountService: ServiceAccountService,
+              private renewalStore: RenewalStore,
+              private OfferStore: OffersStore,
+              private documentsService: DocumentsService) {
+    this.IsUpForRenewal = this.IsRenewalPending = null;
     this.RenewalOffers = null;
   }
 
   ngOnInit() {
+    const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
+    const renewalDetails$ = this.renewalStore.RenewalDetails;
+    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinct(x => x[1].Service_Account_Id).subscribe(result => {
+      this.ActiveServiceAccount = result[0];
+      this.IsUpForRenewal = result[1].Is_Account_Eligible_Renewal;
+      this.IsRenewalPending = result[1].Is_Pending_Renewal;
+      if (this.IsUpForRenewal) {
+        this.OffersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
+          All_Offers => {
+            if (All_Offers != null) {
+              this.FeaturedOffers = All_Offers.filter(item => item.Type === 'Featured_Offers');
+              this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
+            }
+          });
+      }
+      let docId = '';
+      if (this.ActiveServiceAccount.Current_Offer.IsLegacyOffer) {
+        docId = this.ActiveServiceAccount.Current_Offer.Rate_Code;
+      } else {
+        docId = this.ActiveServiceAccount.Current_Offer.Client_Key;
+      }
 
-    if (this.ActiveServiceAccount) {
-      this.IsInRenewalTimeFrame = this.ActiveServiceAccount.IsUpForRenewal;
-    }
-
-    this.activeserviceAccountOffersSubscription = this.active_serviceaccount_service.ActiveServiceAccountOfferObservable.subscribe(
-      all_offers => {
-        this.FeaturedOffers = all_offers.filter(item => item.Type === 'Featured_Offers');
-        this.RenewalOffers = get(this, 'FeaturedOffers[0].Offers[0]', null);
-        this.IsOffersReady = true;
-        console.log('Featured_Offers', this.RenewalOffers);
-      });
+      this.eflLink = this.documentsService.getEFLLink(docId);
+      this.tosLink = this.documentsService.getTOSLink(this.ActiveServiceAccount.Current_Offer.IsFixed);
+      this.yraacLink = this.documentsService.getYRAACLink();
+    });
   }
 
   ngOnDestroy() {
-    result(this.activeserviceAccountOffersSubscription, 'unsubscribe');
+    this.plansServicesSubscription.unsubscribe();
+    if (this.IsUpForRenewal) {
+      result(this.OffersServiceSubscription, 'unsubscribe');
+    }
   }
 }
