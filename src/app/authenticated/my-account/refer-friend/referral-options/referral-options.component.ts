@@ -21,6 +21,7 @@ export class ReferralOptionsComponent implements OnInit {
   gexaShareUrl: string;
   friendsForm: FormGroup;
   customerAccount: CustomerAccount;
+  isSubmitted = false;
 
   constructor(private FormBuilder: FormBuilder, private customerAccountService: CustomerAccountService, private referralStore: ReferralStore) {
   }
@@ -60,6 +61,8 @@ export class ReferralOptionsComponent implements OnInit {
 
   onSubmit(friendsForm: FormGroup) {
 
+    this.isSubmitted = false;
+
     const inviteRefereeRequest = {} as IInviteRefereeRequest;
     inviteRefereeRequest.Customer_Account_Id = this.customerAccount.Id;
     inviteRefereeRequest.FriendsList = friendsForm.get('FriendsList').value;
@@ -67,6 +70,7 @@ export class ReferralOptionsComponent implements OnInit {
     this.referralStore.inviteReferees(inviteRefereeRequest).subscribe(result => {
       if (result) {
         console.log('Referees Invited');
+        this.isSubmitted = true;
       }
     });
   }
