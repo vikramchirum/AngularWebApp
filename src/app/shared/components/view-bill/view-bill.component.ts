@@ -266,6 +266,7 @@ export class ViewBillComponent implements OnInit {
 
   getTextCanvas() {
     const gaugeText = this.gaugeText.nativeElement.getContext('2d');
+    gaugeText.clearRect(0, 0, 1000, 1000);
     gaugeText.fillStyle = 'blue';
     gaugeText.textAlign = 'center';
     return gaugeText;
