@@ -92,8 +92,6 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
 
   setFlags() {
     if (this.activeServiceAccount) {
-      console.log('auto pay', this.autoPay);
-      console.log('paymentStatus', this.paymentStatus);
       if (!this.autoPay) {
           if ( this.paymentStatus === 'In Progress' ) {
             this.currentView = 'PaymentPending';

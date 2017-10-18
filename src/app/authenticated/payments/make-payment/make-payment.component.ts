@@ -146,30 +146,30 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                                 this.totalDue = ActiveServiceAccount.Past_Due + ActiveServiceAccount.Current_Due;
                                 this.autoPay = ActiveServiceAccount.Is_Auto_Bill_Pay;
               if (this.ActiveServiceAccount) {
-                this.PaymentHistorySubscription = this.PaymentsHistoryStore.PaymentHistory.subscribe(
-                  PaymentsHistoryItems => {
-                    if (PaymentsHistoryItems) {
-                      this.paymentStatus = PaymentsHistoryItems[0].PaymentStatus;
-                      if (this.paymentStatus === 'In Progress') {
-                        this.LatestBillAmount = PaymentsHistoryItems[0].PaymentAmount;
-                        this.LatestBillPaymentDate = PaymentsHistoryItems[0].PaymentDate;
-                      }
-                      this.LatestInvoiceDetailsSubscription = this.InvoiceStore.LatestInvoiceDetails.subscribe(
-                        latestInvoice => {
-                          if (!latestInvoice) {
-                            return;
+                this.LatestInvoiceDetailsSubscription = this.InvoiceStore.LatestInvoiceDetails.subscribe(
+                  latestInvoice => {
+                    if (!latestInvoice) {
+                      return;
+                    }
+                    this.dueDate = new Date(latestInvoice.Due_Date);
+                    this.dueDate.setDate(this.dueDate.getDate() + 1);
+                    this.exceededDueDate = (this.dueDate < new Date() && this.pastDue > 0) ? true : false;
+                    this.PaymentHistorySubscription = this.PaymentsHistoryStore.PaymentHistory.subscribe(
+                      PaymentsHistoryItems => {
+                        if (PaymentsHistoryItems) {
+                          this.paymentStatus = PaymentsHistoryItems[0].PaymentStatus;
+                          if (this.paymentStatus === 'In Progress') {
+                            this.LatestBillAmount = PaymentsHistoryItems[0].PaymentAmount;
+                            this.LatestBillPaymentDate = PaymentsHistoryItems[0].PaymentDate;
                           }
-                          this.dueDate = new Date(latestInvoice.Due_Date);
-                          this.dueDate.setDate(this.dueDate.getDate() + 1);
-                          this.exceededDueDate = (this.dueDate < new Date() && this.pastDue > 0) ? true : false;
-                          // console.log('exceededDueDate', this.dueDate < new Date() );
-                          // console.log('past due', this.pastDue );
-                          // console.log('due date', this.dueDate );
-                        }
-                      );
-                    }});
-    this.setFlags();
-                                }});
+                          this.setFlags();
+                        }});
+                    // console.log('exceededDueDate', this.dueDate < new Date() );
+                    // console.log('past due', this.pastDue );
+                    // console.log('due date', this.dueDate );
+                  }
+                );
+                            }});
     this.UserCustomerAccountSubscription = this.UserService.UserCustomerAccountObservable.subscribe(
       CustomerAccountId => this.CustomerAccountId = CustomerAccountId
     );
