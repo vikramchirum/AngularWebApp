@@ -54,7 +54,7 @@ export class MyBillComponent implements OnInit, OnDestroy {
           this.pastDue = activeServiceAccount.Past_Due;
           this.totalDue = activeServiceAccount.Current_Due + activeServiceAccount.Past_Due;
           this.autoPay = activeServiceAccount.Is_Auto_Bill_Pay;
-          this.exceededDueDate =  (new Date(this.activeServiceAccount.Due_Date) > new Date()) ? true : false;
+          // this.exceededDueDate =  (new Date(this.activeServiceAccount.Due_Date) > new Date()) ? true : false;
           this.paymentHistorySubscription = this.PaymentHistoryStore.PaymentHistory.subscribe(
             PaymentsHistoryItems => {
               if (PaymentsHistoryItems) {
