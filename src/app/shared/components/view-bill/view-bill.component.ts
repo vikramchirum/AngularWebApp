@@ -67,9 +67,9 @@ export class ViewBillComponent implements OnInit {
         callbacks: {
           label: (tooltipItem) => {
             return [
-              ` GEXA CHARGES $${this.gexaCharges}`,
+              ` GEXA Charges $${this.gexaCharges}`,
               ` TAX $${this.taxCharges}`,
-              ` ${this.tduName} CHARGES $${this.tduCharges}`
+              ` ${this.tduName}  Charges $${this.tduCharges}`
             ][tooltipItem.index];
           }
         }
@@ -152,7 +152,6 @@ export class ViewBillComponent implements OnInit {
   chartClicked($event) {
     if ($event.active && $event.active[0]) {
       const index = $event.active[0]._index;
-      alert(index);
       switch (index) {
         case 0 :
           this.chargeToggle(this.bill_item_details_gexa_charges);

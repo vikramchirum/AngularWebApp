@@ -1,5 +1,6 @@
 @import "../../../../basecolors.scss";
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700,800');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400');
+@import url(//fonts.googleapis.com/css?family=Oswald:400);
 
 hr {
   margin:10px 3px;
@@ -7,10 +8,7 @@ hr {
 }
 h2 {margin-top:0}
 .chart {
-  margin: 0 auto;
-  width: 250px;
-  height: 250px;
-  position: relative;
+
   font-family: "Oswald", sans-serif;
 }
 p { margin-bottom:0; font-size:12px}
@@ -34,6 +32,7 @@ p { margin-bottom:0; font-size:12px}
   transform: all .3s;
   pointer-events: none;
   font-family: "Oswald", sans-serif;
+  z-index: 2;
 }
 
 .doughnutTip:after {
@@ -154,14 +153,15 @@ p { margin-bottom:0; font-size:12px}
 }
 
 .viewBillGaugeComponent {
-  float: left;
-  width: 100%;
-  margin-bottom: 2rem;
-  overflow: hidden;
-  position: relative;
-
+    width: 270px;
+    margin-bottom: 2rem;
+    position: relative;
+    border-radius: 151px;
+    z-index: 22222;
+    height: 270px;
+  
   .gaugeChart {
-    z-index: -1001 !important;
+    z-index: -1;
   }
 
   .gaugeText {
@@ -173,6 +173,6 @@ p { margin-bottom:0; font-size:12px}
     bottom:0;
     height: 100%;
     width: 100%;
-    z-index: -1000 !important;
+    z-index: -1;
   }
 }
