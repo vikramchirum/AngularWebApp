@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { ServiceAccountService } from '../../core/serviceaccount.service';
 import { Subscription } from 'rxjs/Subscription';
 import { ServiceAccount } from '../../core/models/serviceaccount/serviceaccount.model';
@@ -7,6 +7,7 @@ import { NotificationOptionsStore } from '../../core/store/notificationoptionsst
 import { NotificationStatus } from '../../core/models/enums/notificationstatus';
 import { INotificationOption } from '../../core/models/notificationoptions/notificationoption.model';
 import { InvoiceStore } from '../../core/store/invoicestore';
+import { PaymentsHistoryStore } from '../../core/store/paymentsstore';
 
 @Component({
   selector: 'mygexa-home',
@@ -29,7 +30,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor( private ServiceAccountService: ServiceAccountService,
                private OfferStore: OffersStore,
                private NotificationOptionsStore: NotificationOptionsStore,
-               private InvoiceStore: InvoiceStore
+               private InvoiceStore: InvoiceStore,
+               private PaymentStore: PaymentsHistoryStore
   ) { }
 
   ngOnInit() {
@@ -37,6 +39,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
         this.InvoiceStore.LoadLatestInvoiceDetails(ActiveServiceAccount.Id);
+        this.PaymentStore.LoadPaymentsHistory(ActiveServiceAccount);
         this.Is_Auto_Bill_Pay = this.ActiveServiceAccount.Is_Auto_Bill_Pay;
         this.Budget_Billing = this.ActiveServiceAccount.Budget_Billing;
         this.NotificationOptionsStore.Notification_Options.subscribe(

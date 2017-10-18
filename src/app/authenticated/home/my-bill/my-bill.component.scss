@@ -9,9 +9,9 @@
   tr.bg-success > td {
     border-top: 1px solid $payment-base;
     border-bottom: 1px solid $payment-base;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    
+    padding-top: 0px;
+    padding-bottom: 0px;
+
     h4 {
     color: $payment-base;
       text-align: left;
@@ -19,7 +19,7 @@
   }
   tr.bg-spacer > td {
     padding: 0;
-    
+
   }
   .text-left {
     text-align: left;
@@ -40,4 +40,30 @@
   .paymentMade {
     color: #5cb85c !important;
   }
+  .btn-round-lg {
+    border-radius: 5px;
+  }
+  .btn-round-sides {
+    border-radius: 0px 5px 5px 0px;
+  }
+  .custom {
+    width: 315px !important;
+  }
+  .linkLabel {
+    margin: 15px 5px 5px 5px;
+    font-weight: 700;
+    text-align: center;
+    font-size: 12px;
+  }
+  .btn-payment {
+    margin: 5px 5px 5px 5px;
+    font-weight: 700;
+    text-align: center;
+    padding-bottom: 5px;
+  }
+  .alert {
+    height: 55px;
+    padding: 5px 0px 5px 0px;
+  }
 }
+
