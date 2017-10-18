@@ -1,6 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
-
+import { Component, OnInit, Input } from '@angular/core';
 import { filter, forEach, clone } from 'lodash';
 import { isFunction } from 'lodash';
 
@@ -94,10 +92,12 @@ export class ViewBillComponent implements OnInit {
   public PopulateItemizedBill(bill_object: IInvoice) {
     const invoice_id = +(bill_object.Invoice_Id);
     this.invoicesUrl = environment.Documents_Url.concat(`/invoice/generate/${invoice_id}`);
-
-    this.invoiceService.getItemizedInvoiceDetails(invoice_id, this.serviceAccountId)
+      this.invoiceService.getItemizedInvoiceDetails(invoice_id, this.serviceAccountId)
       .subscribe(
         bill_item_details => {
+          if (!bill_item_details) {
+            return;
+          }
           console.log('bill item details', bill_item_details);
           this.openCharges = [];
           this.bill_object = bill_object;

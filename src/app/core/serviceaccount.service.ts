@@ -85,11 +85,12 @@ export class ServiceAccountService {
     }
   }
 
-  UpdateServiceAccounts(): Observable<Response> {console.log('Update service Accounts');
+  public UpdateServiceAccounts(ReLoadRequested: boolean): Observable<Response> {console.log('Update service Accounts');
 
     // If we're already requesting then return the original request observable.
-    if (this.requestObservable) { return this.requestObservable; }
-
+    if (!ReLoadRequested) {
+      if (this.requestObservable) { return this.requestObservable; }
+    }
     // If we don't have a Customer Account Id then return null;
     if (this.CustomerAccountId === null) { return Observable.from(null); }
 
@@ -117,7 +118,7 @@ export class ServiceAccountService {
     if (this.ServiceAccountsCache) {
       return Observable.of(this.ServiceAccountsCache).delay(0);
     }
-    return this.UpdateServiceAccounts();
+    return this.UpdateServiceAccounts(false);
   }
 
   SetActiveServiceAccount(ServiceAccount: ServiceAccount | string): ServiceAccount {

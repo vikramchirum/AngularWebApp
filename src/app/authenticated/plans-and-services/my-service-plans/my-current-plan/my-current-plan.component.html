@@ -19,7 +19,7 @@
             <md-card-content>
               <h2>{{RenewalAccount?.Existing_Renewal?.Offer?.RateAt2000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup
                 class="sup-text">&cent;</sup>
-                <small>per kwh</small>
+                <small class="sub-text">per kWh</small>
               </h2>
               <p class="bg-default">TERM: {{RenewalAccount?.Existing_Renewal?.Offer?.Term}} Months</p>
               <p>START: {{RenewalAccount?.Existing_Renewal?.Start_Date | date: 'MM/dd/yyyy'}}</p>
@@ -62,10 +62,10 @@
               <div class="mat-card-content">
                 <h2>{{ Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup
                   class="sup-text">&cent;</sup>
-                  <small>per kwh</small>
+                  <small class="sub-text">per kWh</small>
                 </h2>
                 <p class="bg-default">at {{RenewalOffers.Plan.Product.Featured_Usage_Level}}</p>
-                <p>TERM:{{RenewalOffers.Plan.Term}} months</p>
+                <p>TERM: {{RenewalOffers.Plan.Term}} months</p>
                 <p class="bg-default">{{RenewalOffers.Promotion?.Name}} </p>
               </div>
             </div>
@@ -233,7 +233,7 @@
             <md-card-content>
               <h2>{{ActiveServiceAccount.Current_Offer.RateAt2000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup
                 class="sup-text">&cent;</sup>
-                <small>per kwh</small>
+                <small class="sub-text">per kWh</small>
               </h2>
               <p class="bg-default">TERM: {{ActiveServiceAccount.Current_Offer.Term}} Months</p>
               <p>START: {{ActiveServiceAccount.Contract_Start_Date | date: 'MM/dd/yyyy'}}</p>

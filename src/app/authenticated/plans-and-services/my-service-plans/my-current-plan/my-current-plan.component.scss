@@ -14,15 +14,16 @@
   .card-content{
     position: relative;
     text-align: center;
-    .sup-text {
-      font-size: 12px;
-      top: -1.5em;
+     .sup-text {
+      font-weight: 200;
+      font-size: 20px;
+      top: -0.9em;
     }
-    .sub-text {
+   .sub-text {
       font-size:12px;
       right:0.5em;
+     font-weight: bold
     }
-
     .corner-ribbon{
       width: 125px;
       height:63px;

@@ -27,6 +27,9 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
         this.OfferStore.LoadLyricOfferDetails(this.ActiveServiceAccount.TDU_DUNS_Number);
         this.offersServiceSubscription = this.OfferStore.GexaLyricOffer.subscribe(
           GexaOffer => {
+            if (!GexaOffer) {
+              return;
+            }
             this.GexaCarouselOffer = GexaOffer[0];
             this.promoCode =
               GexaOffer[0] ?
@@ -38,11 +41,12 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
         );
       });
   }
+
   ngOnDestroy() {
     this.serviceAccountServiceSubscription.unsubscribe();
+
     if (this.offersServiceSubscription) {
       this.offersServiceSubscription.unsubscribe();
     }
   }
-
 }
