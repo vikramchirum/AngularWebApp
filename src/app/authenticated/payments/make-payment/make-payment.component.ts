@@ -177,22 +177,6 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
   setFlags() {
     if (this.ActiveServiceAccount) {
-      if (this.exceededDueDate) {
-        console.log('this.paymentStatus', this.paymentStatus);
-        if (!this.autoPay) {
-          if (this.paymentStatus === 'Cleared') {
-            this.currentView = 'MakePayment';
-          } else if ( this.paymentStatus === 'In Progress' ) {
-            this.currentView = 'PaymentPending';
-          }
-        } else {
-          if (this.paymentStatus === 'Cleared') {
-            this.currentView = 'MakePayment';
-          } else {
-            this.currentView = 'AutoPay';
-          }
-        }
-      } else {
         if (!this.autoPay) {
           if (this.paymentStatus === 'In Progress') {
             this.currentView = 'PaymentPending';
@@ -206,7 +190,6 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             this.currentView = 'AutoPay';
           }
         }
-      }
     }
   }
 
