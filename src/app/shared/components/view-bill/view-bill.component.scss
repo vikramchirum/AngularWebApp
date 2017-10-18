@@ -1,76 +1,178 @@
 @import "../../../../basecolors.scss";
-
-
-.view-bill-container {
-
-  div {
-    line-height: 5rem;
-        
-  }
-  
-    .view-bill-subrow {
-        border-top: 1px solid #fff;
-      }
-
-  .bill-name {
-    color: #555555;
-  }
-  .bill-uasge {
-    float: right;
-    margin-right: 2rem;
-  }
-  
-  .col-sm-11.text-right {
-    text-transform: uppercase;
-  }
-
-}
-  .btn-round {
-    height: 250px;
-    border-radius: 100%;
-    width: 250px;
-    margin: 0 auto;
-  }
-
-.details, .view-bill-container h4 {
-  color:#000000;
-  
-}
-
-.details_head {
-  
-  h2, h5 {
-    margin-top: 0
-  }
-  h5 {
-    margin-bottom: 5px;
-  }
-
-}
-
-.details_body {   
-    background-color: rgba(255,255,255,.5);
-    margin-top: -10px;
-    margin: -10px 1px;
-  
-  .fa-in-circle {
-     background: #2eb134;
-    color: #fff;
-    border-radius: 20px;
-    display: inline-block;
-    padding: 4px 5px;
-    width: 20px;
-    height: 20px;
-  }
-}
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400');
+@import url(//fonts.googleapis.com/css?family=Oswald:400);
 
 hr {
-  border-top-color: $plans-base;
-  margin: 10px 0;
+  margin:10px 3px;
+  border-color:#fff
 }
-.btn.charge-toggle {
+h2 {margin-top:0}
+.chart {
+
+  font-family: "Oswald", sans-serif;
+}
+p { margin-bottom:0; font-size:12px}
+
+.doughnutTip {
+  position: absolute;
+  float: left;
+  min-width: 30px;
+  max-width: 300px;
+  padding: 5px 15px;
+  border-radius: 1px;
+  background: rgba(0, 0, 0, .8);
+  color: #ddd;
+  font-size: 17px;
+  text-shadow: 0 1px 0 #000;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.3;
+  letter-spacing: .06em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  transform: all .3s;
+  pointer-events: none;
+  font-family: "Oswald", sans-serif;
+  z-index: 2;
+}
+
+.doughnutTip:after {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  content: "";
+  height: 0;
+  margin: 0 0 0 -6px;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  border-top: 6px solid rgba(0, 0, 0, .7);
+  line-height: 0;
+}
+
+.doughnutSummary {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  color: #d5d5d5;
+  text-align: center;
+  cursor: default;
+  text-transform: uppercase;
+  font-family: "Oswald", sans-serif;
+}
+
+.doughnutSummaryTitle {
+  position: absolute;
+  top: 85%;
+  width: 100%;
+  font-size: 13px;
+  letter-spacing: .06em;
+  line-height: 16px;
+  color: #000;
+  letter-spacing: 1px;
+  font-family: "Oswald", sans-serif;
+}
+
+.doughnutTypeTitle {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  font-size: 22px;
+  letter-spacing: .06em;
+  line-height: 22px;
+}
+
+.doughnutSummaryNumber {
+  position: absolute;
+  top: 10%;
+  width: 100%;
+  margin-top: -3%;
+  font-size: 65px;
+  left: -15px;
+  color: rgb(43, 166, 40);
+  letter-spacing: -2px;
+  font-family: "Oswald", sans-serif;
+}
+
+.doughnutSummaryNumber:before {
+  content: '$';
+  font-size: 40px;
+  vertical-align: super;
+  margin-right: -5px;
+}
+
+.doughnutSummaryNumber:after {
+  content: '.30';
+  font-size: 40px;
+  vertical-align: super;
+}
+
+.chart path:hover {
+  opacity: .65;
+}
+
+.gexa-row {
+  padding: 5px 10px;
+  background-color: rgba(46, 177, 52, 1.0);
+  color: #fff;
+}
+.gexa-row.selected {
+  background-color: rgba(46, 177, 52, 1.0);
+  color: #fff;
+}
+
+.oncor-row {
+  background-color: rgba(6, 81, 128, 1);
+  padding: 5px 10px;
+  color: #fff;
+}
+.oncor-row.selected {
+  background-color: rgba(6, 81, 128, 1);
+  padding: 5px 10px;
+  color: #fff;
+}
+
+.taxes-row {
+  background-color: rgba(254, 162, 32, 1);
+  padding: 5px 10px;
+  color: #fff;
+}
+.taxes-row.selected {
+  background-color: rgba(254, 162, 32, 1);
+  padding: 5px 10px;
+  color: #fff;
+}
+.details {
+  padding: 5px 10px;
+}
+.fa-plus {
+  cursor:pointer;
+  margin-top:2px;
+}
+.details div[class*="col-"] {
+  border-bottom:1px solid #eee;
+  padding-bottom:3px;
+}
+
+.viewBillGaugeComponent {
+    width: 270px;
+    margin-bottom: 2rem;
+    position: relative;
+    border-radius: 151px;
+    z-index: 22222;
+    height: 270px;
   
-   padding: 0;
-    border: 0;
-    margin: 0;
+  .gaugeChart {
+    z-index: -1;
+  }
+
+  .gaugeText {
+    position: absolute;
+    text-align: center;
+    top: 0;
+    left: 0;
+    right:0;
+    bottom:0;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+  }
 }
