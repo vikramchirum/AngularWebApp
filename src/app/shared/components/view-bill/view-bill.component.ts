@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+
 import { filter, forEach, clone } from 'lodash';
 import { isFunction } from 'lodash';
 
@@ -13,7 +15,6 @@ import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { InvoiceService } from 'app/core/invoiceservice.service';
 import { UtilityService } from 'app/core/utility.service';
 
-
 @Component({
   selector: 'mygexa-view-bill',
   templateUrl: './view-bill.component.html',
@@ -24,13 +25,11 @@ export class ViewBillComponent implements OnInit {
   @ViewChild('gaugeText') gaugeText;
   @ViewChild('gauge') gauge;
 
-  public clearTimeout = null;
-  public clearIsDone = null;
+  clearTimeout = null;
+  clearIsDone = null;
 
-  public doughnutChartOptions: any = Observable.of({});
-  public doughnutChartDataSet = Observable.of(['0', '0', '0', '0']);
-  public chartType: string = null;
-  public chartTimestamp: Date = null;
+  doughnutChartOptions: any = Observable.of({});
+  doughnutChartDataSet = Observable.of(['0', '0', '0', '0']);
 
   totalBill = '0.00';
   gexaCharges = '0.00';
@@ -57,7 +56,8 @@ export class ViewBillComponent implements OnInit {
   private ActiveServiceAccountSubscription: Subscription = null;
   private tduName: string;
 
-  constructor(private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService, private utilityService: UtilityService, private decimalPipe: DecimalPipe) {
+  constructor(private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService
+              , private utilityService: UtilityService, private decimalPipe: DecimalPipe) {
     this.dollarAmountFormatter = environment.DollarAmountFormatter;
     this.doughnutChartOptions = Observable.of({
       cutoutPercentage: 75,
@@ -76,15 +76,15 @@ export class ViewBillComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    if (this.bill_object) {
-      this.PopulateItemizedBill(this.bill_object);
-    }
-
-     this.ActiveServiceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
+    this.ActiveServiceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.tduName = result.TDU_Name;
         this.serviceAccountId = result.Id;
+
+        if (this.bill_object) {
+          this.PopulateItemizedBill(this.bill_object);
+        }
+
       }
     );
   }
@@ -92,13 +92,12 @@ export class ViewBillComponent implements OnInit {
   public PopulateItemizedBill(bill_object: IInvoice) {
     const invoice_id = +(bill_object.Invoice_Id);
     this.invoicesUrl = environment.Documents_Url.concat(`/invoice/generate/${invoice_id}`);
-      this.invoiceService.getItemizedInvoiceDetails(invoice_id, this.serviceAccountId)
+    this.invoiceService.getItemizedInvoiceDetails(invoice_id, this.serviceAccountId)
       .subscribe(
         bill_item_details => {
           if (!bill_item_details) {
             return;
           }
-          console.log('bill item details', bill_item_details);
           this.openCharges = [];
           this.bill_object = bill_object;
           this.invoice_num = invoice_id;
@@ -106,9 +105,9 @@ export class ViewBillComponent implements OnInit {
           this.bill_item_details = bill_item_details;
           this.bill_item_details_TDU_charges = filter(this.bill_item_details, item => (item.Bill_Line_Item_Type === 'TDSP'));
           this.bill_item_details_gexa_charges = filter(this.bill_item_details, item => (item.Bill_Line_Item_Type === 'GEXA'
-                                                       && item.Bill_Line_Item_Sub_Type === 'Energy'));
+          && item.Bill_Line_Item_Sub_Type === 'Energy'));
           this.bill_item_details_other_charges = filter(this.bill_item_details, item => (item.Bill_Line_Item_Type === 'GEXA'
-                                                        && item.Bill_Line_Item_Sub_Type === 'None'));
+          && item.Bill_Line_Item_Sub_Type === 'None'));
           this.bill_item_details_tax = filter(this.bill_item_details, item => (item.Bill_Line_Item_Type === 'TAX'));
 
           this.LoadGauge();
@@ -194,8 +193,6 @@ export class ViewBillComponent implements OnInit {
 
   buildChart(): void {
 
-    this.chartType = 'standard';
-
     this.clearFirst(() => {
 
       this.doughnutChartDataSet = Observable.of([this.gexaCharges, this.taxCharges, this.tduCharges]);
@@ -205,14 +202,28 @@ export class ViewBillComponent implements OnInit {
         const gaugeText = this.getTextCanvas();
 
         // Print out the message according to the short-term window.
-        gaugeText.font = '50pt sans-serif';
+        gaugeText.font = '40pt sans-serif';
         gaugeText.fillStyle = 'black';
         gaugeText.fillText('Click any Section', 500, 650);
         gaugeText.globalCompositeOperation = 'source-over';
 
+        gaugeText.textAlign = 'center';
         gaugeText.fillStyle = 'rgba(46,177,52,1.0)';
-        gaugeText.font = 'bold 150pt sans-serif';
-        gaugeText.fillText(`$${this.totalBill}`, 500, 475);
+        gaugeText.font = 'bold 100pt sans-serif';
+        gaugeText.fillText(`${this.totalBill}`, 500, 500);
+        gaugeText.textAlign = 'end';
+
+        gaugeText.fillStyle = 'rgba(46,177,52,1.0)';
+        gaugeText.font = 'bold 100pt sans-serif';
+
+        if (this.totalBill.length === 6) {
+          gaugeText.fillText(`$      `, 500, 475);
+        } else if (this.totalBill.length === 5) {
+          gaugeText.fillText(`$     `, 500, 475);
+        } else {
+          gaugeText.fillText(`$    `, 500, 475);
+        }
+        gaugeText.textAlign = 'end';
       } catch (e) {
         // If thrown, the browser likely does not support the HTML5 canvas API/object.
         console.error(e);
@@ -225,7 +236,6 @@ export class ViewBillComponent implements OnInit {
     // If we haven't yet drawn any charts, have no delay on the initial.
     const delay = this.clearIsDone === null ? 0 : 1000;
 
-    this.chartTimestamp = null;
     this.clearIsDone = false;
 
     // Stop any previous jobs/timeouts.
