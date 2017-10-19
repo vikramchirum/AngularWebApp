@@ -66,6 +66,8 @@ export class MyBillComponent implements OnInit, OnDestroy {
                   this.LatestBillAmount = this.Payments[0].PaymentAmount;
                   this.LatestBillPaymentDate = this.Payments[0].PaymentDate;
                   this.showDueDate = false;
+                } else {
+                  this.showDueDate = true;
                 }
                 this.latestInvoiceDetailsSubscription = this.InvoiceStore.LatestInvoiceDetails.subscribe(
                   latestInvoice => {
