@@ -1,6 +1,6 @@
 <div *ngIf="activeServiceAccount" class="my-bill-grid thumbnail">
-  <div class="alert alert-danger pull-right bg-danger" *ngIf="exceededDueDate">Due Date: {{ latestInvoice?.Due_Date | date:'MM/dd/yyyy' }}</div>
-  <div class="alert pull-right alert-info text-center"  *ngIf="!exceededDueDate"><span>
+  <div class="alert alert-danger pull-right bg-danger" *ngIf="exceededDueDate && !(paymentStatus === 'In Progress') ">Due Date: {{ latestInvoice?.Due_Date | date:'MM/dd/yyyy' }}</div>
+  <div class="alert pull-right alert-info text-center"  *ngIf="!exceededDueDate || (paymentStatus === 'In Progress') "><span>
     Thanks for your payment <br> of ${{LatestBillAmount}} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </span></div>
   <h1 [ngClass]="{'paymentMade': !exceededDueDate || (exceededDueDate && paymentStatus === 'In Progress'), 'exceededDueDate': exceededDueDate}">My Bill</h1>
 

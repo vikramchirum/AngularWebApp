@@ -31,9 +31,10 @@ export class MyBillComponent implements OnInit, OnDestroy {
    paymentStatus: string = null;
    currentView: string = null;
    dueDate: Date = null;
-  public Payments: PaymentsHistory[] = null;
-  LatestBillAmount: number;
-  LatestBillPaymentDate: Date;
+    public Payments: PaymentsHistory[] = null;
+    LatestBillAmount: number;
+    LatestBillPaymentDate: Date;
+    showDueDate: boolean = null;
 
   private activeServiceAccountSubscription: Subscription = null;
   private latestInvoiceDetailsSubscription: Subscription = null;
@@ -64,6 +65,7 @@ export class MyBillComponent implements OnInit, OnDestroy {
                 if (this.paymentStatus === 'In Progress' || this.paymentStatus === 'Cleared') {
                   this.LatestBillAmount = this.Payments[0].PaymentAmount;
                   this.LatestBillPaymentDate = this.Payments[0].PaymentDate;
+                  this.showDueDate = false;
                 }
                 this.latestInvoiceDetailsSubscription = this.InvoiceStore.LatestInvoiceDetails.subscribe(
                   latestInvoice => {
@@ -117,6 +119,7 @@ export class MyBillComponent implements OnInit, OnDestroy {
         }
       }
     }
+
     console.log('currentView', this.currentView);
   }
 
