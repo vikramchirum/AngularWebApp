@@ -31,7 +31,10 @@
           </table>
           <br>
           <div [ngSwitch]="currentView">
-
+            <div *ngSwitchCase="'PastDuePayNow'">
+              <button class="btn btn-block exceededDueDatebtn btn-lg" routerLink="/payments/make-payment" type="button">
+                Past due - Pay now</button>
+            </div>
             <div *ngSwitchCase="'PaymentPending'">
               <div class="input-group text-center">
                 <div class="input-group-btn">
@@ -99,8 +102,6 @@
         <div class="view-my-bill-billing-pad">
           <h3>Your Settings</h3>
           <mygexa-view-my-bill-preference></mygexa-view-my-bill-preference>
-          <!-- <mygexa-view-my-bill-preference [preference]="'budget-billing'"></mygexa-view-my-bill-preference>
-          <mygexa-view-my-bill-preference [preference]="'ebill-paperless'"></mygexa-view-my-bill-preference> -->
         </div>
       </div>
     </div>
