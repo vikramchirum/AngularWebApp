@@ -16,6 +16,8 @@ import { PaymentsHistoryStore } from '../../core/store/paymentsstore';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   serviceAccountServiceSubscription: Subscription = null;
+  notificationOptionsStoreSubscription: Subscription = null;
+
   ActiveServiceAccount: ServiceAccount = null;
   Is_Auto_Bill_Pay: boolean = null;
   Paperless_Billing: boolean = null;
@@ -42,7 +44,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.PaymentStore.LoadPaymentsHistory(ActiveServiceAccount);
         this.Is_Auto_Bill_Pay = this.ActiveServiceAccount.Is_Auto_Bill_Pay;
         this.Budget_Billing = this.ActiveServiceAccount.Budget_Billing;
-        this.NotificationOptionsStore.Notification_Options.subscribe(
+        this.notificationOptionsStoreSubscription = this.NotificationOptionsStore.Notification_Options.subscribe(
           Options => {
             if (Options && Options.length > 0) {
               this.NotificationOptions = Options[0];
@@ -68,5 +70,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.serviceAccountServiceSubscription.unsubscribe();
+    if (this.notificationOptionsStoreSubscription) {
+      this.notificationOptionsStoreSubscription.unsubscribe();
+    }
   }
 }
