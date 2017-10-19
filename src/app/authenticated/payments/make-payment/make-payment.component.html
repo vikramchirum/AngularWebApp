@@ -28,14 +28,14 @@
     <div class="form-group">
       <label for="payment-amount" class="col-md-3 control-label">Current Balance</label>
       <div class="col-md-8 col-lg-6">
-        <p class="form-control-static"><b>${{ LatestInvoice?.Current_Charges | FloatToMoneyPipe }}</b></p>
+        <p class="form-control-static"><b>${{ ActiveServiceAccount?.Current_Due | FloatToMoneyPipe }}</b></p>
       </div>
     </div>
 
     <div class="form-group">
       <label for="payment-amount" class="col-md-3 control-label">Past Due</label>
       <div class="col-md-8 col-lg-6">
-        <p class="form-control-static text-muted">${{ LatestInvoice?.Balance_Forward | FloatToMoneyPipe }}</p>
+        <p class="form-control-static text-muted">${{ ActiveServiceAccount?.Past_Due | FloatToMoneyPipe }}</p>
       </div>
     </div>
 
@@ -172,7 +172,6 @@
           </div>
         </div>
       </div>
-
       <div *ngSwitchCase="'MakePayment'">
         <div class="form-group text-center" *ngIf="paymentSubmittedWithoutError != true">
           <div class="col-lg-8">

@@ -92,11 +92,14 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
 
   setFlags() {
     if (this.activeServiceAccount) {
-      if (!this.autoPay) {
-          if ( this.paymentStatus === 'In Progress' ) {
+      if (this.exceededDueDate) {
+        if (!this.autoPay) {
+          if (this.paymentStatus === 'Cleared') {
+            this.currentView = 'MakePayment';
+          } else if ( this.paymentStatus === 'In Progress' ) {
             this.currentView = 'PaymentPending';
           } else {
-              this.currentView = 'MakePayment';
+            this.currentView = 'PastDuePayNow';
           }
         } else {
           if (this.paymentStatus === 'Cleared') {
@@ -105,6 +108,21 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
             this.currentView = 'AutoPay';
           }
         }
+      } else {
+        if (!this.autoPay) {
+          if (this.paymentStatus === 'In Progress') {
+            this.currentView = 'PaymentPending';
+          } else {
+            this.currentView = 'MakePayment';
+          }
+        } else {
+          if (this.paymentStatus === 'Cleared') {
+            this.currentView = 'MakePayment';
+          } else {
+            this.currentView = 'AutoPay';
+          }
+        }
+      }
     }
   }
 
