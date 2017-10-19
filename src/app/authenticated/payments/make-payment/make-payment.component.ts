@@ -153,7 +153,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                     }
                     this.dueDate = new Date(latestInvoice.Due_Date);
                     this.dueDate.setDate(this.dueDate.getDate() + 1);
-                    this.exceededDueDate = (this.dueDate < new Date() && this.pastDue > 0) ? true : false;
+                    this.exceededDueDate = (this.totalDue > 0) ? true : false;
                     this.PaymentHistorySubscription = this.PaymentsHistoryStore.PaymentHistory.subscribe(
                       PaymentsHistoryItems => {
                         if (PaymentsHistoryItems) {

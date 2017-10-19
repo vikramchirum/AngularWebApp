@@ -70,7 +70,7 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
               this.dueDate = new Date(latestInvoice.Due_Date);
               this.dueDate.setDate(this.dueDate.getDate() + 1);
               console.log('After setting invoice id');
-              this.exceededDueDate = (this.dueDate < new Date() && this.pastDue > 0) ? true : false;
+              this.exceededDueDate = (this.totalDue > 0) ? true : false;
               this.req_bill = latestInvoice;
               this.PaymentsHistoryStore.PaymentHistory.subscribe(
                 PaymentsHistoryItems => {
@@ -94,9 +94,7 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
     if (this.activeServiceAccount) {
       if (this.exceededDueDate) {
         if (!this.autoPay) {
-          if (this.paymentStatus === 'Cleared') {
-            this.currentView = 'MakePayment';
-          } else if ( this.paymentStatus === 'In Progress' ) {
+          if ( this.paymentStatus === 'In Progress' ) {
             this.currentView = 'PaymentPending';
           } else {
             this.currentView = 'PastDuePayNow';
