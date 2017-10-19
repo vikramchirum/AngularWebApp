@@ -5,7 +5,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
 
 import { IInvoice } from 'app/core/models/invoices/invoice.model';
-import { ViewBillComponent } from 'app/shared/components/view-bill/view-bill.component';
+import { ViewBillDetailsComponent } from 'app/shared/components/view-bill-details/view-bill-details.component';
 
 @Component({
   selector: 'mygexa-view-my-bill-modal',
@@ -15,7 +15,7 @@ import { ViewBillComponent } from 'app/shared/components/view-bill/view-bill.com
 export class ViewMyBillModalComponent {
 
   @ViewChild('viewMyBillModal') public viewMyBillModal: ModalDirective;
-  @ViewChild(ViewBillComponent) private viewBill: ViewBillComponent;
+  @ViewChild(ViewBillDetailsComponent) private viewBill: ViewBillDetailsComponent;
   public bill: IInvoice;
 
   constructor() {}
