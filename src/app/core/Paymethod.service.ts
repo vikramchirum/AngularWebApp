@@ -151,8 +151,8 @@ export class PaymethodService {
           observer.next(data);
           observer.complete();
         });
-
-    });
+    },
+    error => { console.log('Error occurred here', error); });
 
   }
 
@@ -266,10 +266,17 @@ export class PaymethodService {
               observer.complete();
             });
 
+        },
+        error => {
+          return observer.error(error);
         }
-      );
 
-    });
+      );
+    },
+    error => {
+      console.log('error occurred', error);
+    }
+    );
 
   }
 

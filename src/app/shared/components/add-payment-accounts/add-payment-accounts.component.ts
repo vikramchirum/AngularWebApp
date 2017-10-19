@@ -68,6 +68,16 @@ export class AddPaymentAccountsComponent implements OnInit {
           this.onAddPaymentAccountSubmittedEvent.emit(this.paymentMessage);
         }
         this.paymethodService.UpdatePaymethods();
+      },
+      error => {
+        console.log('Errorsfge3', error.response_description);
+        const errorMessage = String(error.response_description);
+        this.paymentMessage = {
+          classes: ['alert', 'alert-danger'],
+          innerHTML: `<b>Error occurred!</b> ${ errorMessage }`,
+          isCompleted: true
+        };
+        this.onAddPaymentAccountSubmittedEvent.emit(this.paymentMessage);
       }
     );
   }
