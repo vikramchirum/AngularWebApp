@@ -33,6 +33,7 @@ import { PlanCardComponent } from './components/plan-card/plan-card.component';
 import { OfferDetailsPopoverComponent } from './components/offer-details-popover/offer-details-popover.component';
 import { AddPaymentAccountsComponent } from './components/add-payment-accounts/add-payment-accounts.component';
 import { ErrorModalComponent } from './components/error-modal/error-modal.component';
+import { ViewBillDetailsComponent } from './components/view-bill-details/view-bill-details.component';
 
 @NgModule({
   imports: [
@@ -69,7 +70,8 @@ import { ErrorModalComponent } from './components/error-modal/error-modal.compon
     PlanCardComponent,
     OfferDetailsPopoverComponent,
     AddPaymentAccountsComponent,
-    ErrorModalComponent
+    ErrorModalComponent,
+    ViewBillDetailsComponent
   ],
   exports: [
     ChangeUserNameComponent,
@@ -94,7 +96,8 @@ import { ErrorModalComponent } from './components/error-modal/error-modal.compon
     PlanCardComponent,
     OfferDetailsPopoverComponent,
     AddPaymentAccountsComponent,
-    ErrorModalComponent
+    ErrorModalComponent,
+    ViewBillDetailsComponent
   ]
 })
 export class SharedModule { }
