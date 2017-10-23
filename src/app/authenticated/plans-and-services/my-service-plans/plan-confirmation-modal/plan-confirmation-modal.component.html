@@ -5,16 +5,21 @@
     <div class="modal-dialog modal-md">
       <div class="modal-content">
 
-          <div class="plan-confirmation-header">
-            <button type="button" class="close pull-right" aria-label="Close" style="padding-right: 20px"  (click)="hidePlanConfirmationModal()">
-              <span class="close-btn" aria-hidden="true">
-              <i class="fa fa-remove"></i></span>
-            </button>
-          </div><br>
+          <!--<div class="plan-confirmation-header">-->
+            <!--<button type="button" class="close pull-right" aria-label="Close" style="padding-right: 20px"  (click)="hidePlanConfirmationModal()">-->
+              <!--<span class="close-btn" aria-hidden="true">-->
+              <!--<i class="fa fa-remove"></i></span>-->
+            <!--</button>-->
+          <!--</div><br>-->
 
         <div class="modal-body">
 
-          <h2 class="modal-title"><b>Thanks, <span class="hidden-xs">{{customerDetails?.First_Name.charAt(0).toUpperCase() +  customerDetails?.First_Name.slice(1).toLowerCase() + '!'}}</span></b></h2>
+          <h2 class="modal-title"><b>Thanks, <span class="hidden-xs">{{customerDetails?.First_Name.charAt(0).toUpperCase() +  customerDetails?.First_Name.slice(1).toLowerCase() + '!'}}</span></b>
+            <button type="button" class="close pull-right close-btn" aria-label="Close"  (click)="hidePlanConfirmationModal()">
+              <span class="" aria-hidden="true">
+              <i class="fa fa-remove close-btn" ></i></span>
+            </button>
+          </h2>
           <div class="modal-body container-fluid">
             <ng-template *ngIf="isRenewalPlan; then RenewalSection else UpgradeSection"></ng-template>
             <ng-template #UpgradeSection>

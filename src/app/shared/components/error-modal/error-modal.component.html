@@ -5,16 +5,20 @@
     <div class="modal-dialog modal-md">
       <div class="modal-content">
 
-        <div class="error-header">
-          <button type="button" class="close pull-right" aria-label="Close" style="padding-right: 20px"  (click)="hideErrorModal()">
-              <span class="close-btn" aria-hidden="true">
-              <i class="fa fa-remove"></i></span>
-          </button>
-        </div><br>
+        <!--<div class="error-header">-->
+          <!--<button type="button" class="close pull-right" aria-label="Close" style="padding-right: 20px"  (click)="hideErrorModal()">-->
+              <!--<span class="close-btn" aria-hidden="true">-->
+              <!--<i class="fa fa-remove"></i></span>-->
+          <!--</button>-->
+        <!--</div><br>-->
 
         <div class="modal-body">
 
-          <h2 class="modal-title"><b><span class="hidden-xs">Error!!!</span></b></h2>
+          <h2 class="modal-title"><b><span class="hidden-xs">Error!!!</span></b>
+            <button type="button" class="close pull-right"  aria-label="Close"  (click)="hideErrorModal()">
+              <span class="" aria-hidden="true">
+              <i class="fa fa-remove close-btn"></i></span>
+            </button></h2>
           <div class="modal-body container-fluid">
               <div class="row">
                 <h4 class="text-center error-info">{{ errorResponse?.Message }}</h4>
