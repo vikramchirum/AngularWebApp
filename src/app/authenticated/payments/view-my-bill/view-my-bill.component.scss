@@ -1,6 +1,9 @@
 @import '../../../../styles.scss';
 @import '../../../../basecolors.scss';
 table {
+  td{
+    padding: 0px 8px;
+  }
   tr.bg-success > td {
     border-top: 1px solid $payment-base;
     border-bottom: 1px solid $payment-base;
