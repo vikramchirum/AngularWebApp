@@ -60,7 +60,6 @@ export class MyBillComponent implements OnInit, OnDestroy {
             PaymentsHistoryItems => {
               if (PaymentsHistoryItems) {
                 this.Payments = PaymentsHistoryItems;
-                // console.log('payments', this.Payments);
                 this.paymentStatus = this.Payments[0].PaymentStatus;
                 if (this.paymentStatus === 'In Progress' || this.paymentStatus === 'Cleared') {
                   this.LatestBillAmount = this.Payments[0].PaymentAmount;
@@ -121,8 +120,6 @@ export class MyBillComponent implements OnInit, OnDestroy {
         }
       }
     }
-
-    console.log('currentView', this.currentView);
   }
 
   ngOnDestroy() {

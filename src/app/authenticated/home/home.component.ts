@@ -42,8 +42,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.serviceAccountServiceSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       ActiveServiceAccount => {
         if (ActiveServiceAccount) {
-          console.log('Is_Auto_Bill_Pay1', this.Is_Auto_Bill_Pay);
-
           this.ActiveServiceAccount = ActiveServiceAccount;
           this.SearchNotificationOptions = {
             Account_Info: {
@@ -59,9 +57,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.Budget_Billing = this.ActiveServiceAccount.Budget_Billing;
           this.notificationOptionsStoreSubscription = this.NotificationOptionsStore.Notification_Options.subscribe(
             Options => {
-              // console.log('hi', Options);
               if (Options && Options.length > 0) {
-                // console.log('Is_Auto_Bill_Pay2', this.Is_Auto_Bill_Pay);
                 this.NotificationOptions = Options[0];
                 if (String(this.NotificationOptions.Status) === NotificationStatus[NotificationStatus.Active]) {
                   this.Paperless_Billing = Boolean(this.NotificationOptions.Paperless);
@@ -76,7 +72,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   showHideTile() {
-    console.log('Is_Auto_Bill_Pay', this.Is_Auto_Bill_Pay);
     if ( this.ActiveServiceAccount && this.NotificationOptions) {
       this.ShowAutoBillPay = this.Is_Auto_Bill_Pay ? false : true;
       this.ShowPaperlessBilling = (this.Is_Auto_Bill_Pay && !this.Paperless_Billing) ? true : false;
