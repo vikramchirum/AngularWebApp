@@ -43,6 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.serviceAccountServiceSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       ActiveServiceAccount => {
         if (ActiveServiceAccount) {
+
           this.ActiveServiceAccount = ActiveServiceAccount;
           this.SearchNotificationOptions = {
             Account_Info: {

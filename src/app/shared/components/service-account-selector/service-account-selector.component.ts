@@ -59,7 +59,7 @@ export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
     const SelectedServiceAccount = find(this.ServiceAccounts, { Id: this.ServiceAccountSelectedId });
 
     // If we're setting the global account then do so here.
-    if (this.setActiveServiceAccount) { this.ServiceAccountService.SetActiveServiceAccount(SelectedServiceAccount); }
+    if (this.setActiveServiceAccount) { this.ServiceAccountService.SetActiveServiceAccount(SelectedServiceAccount, false); }
 
     // Emit this change-event to any listeners.
     if (SelectedServiceAccount) { this.changedServiceAccount.emit(SelectedServiceAccount); }

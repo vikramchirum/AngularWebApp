@@ -164,9 +164,6 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                           }
                           this.setFlags();
                         }});
-                    // console.log('exceededDueDate', this.dueDate < new Date() );
-                    // console.log('past due', this.pastDue );
-                    // console.log('due date', this.dueDate );
                   }
                 );
                             }});
@@ -337,6 +334,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             console.log('The paymethod was charged!', res);
             this.paymentLoadingMessage = null;
             this.PaymentsHistoryStore.LoadPaymentsHistory(this.ActiveServiceAccount);
+            this.ServiceAccountService.UpdateServiceAccounts(true);
           },
           error => {
             this.paymentSubmittedWithoutError = false;
