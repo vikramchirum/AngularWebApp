@@ -89,7 +89,6 @@ export class MyBillComponent implements OnInit, OnDestroy {
 
   setFlags() {
     if (this.activeServiceAccount) {
-      // console.log('autoPay', this.autoPay);
       if (this.exceededDueDate) {
         if (!this.autoPay) {
           if ( this.paymentStatus === 'In Progress' ) {
