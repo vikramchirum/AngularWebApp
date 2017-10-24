@@ -28,7 +28,7 @@ table.card-table {
   }
   td.card-remove-active,
   td.card-remove-active * {
-    background: black !important;
+    background: orange;
     color: white !important;
   }
 }
@@ -36,13 +36,13 @@ table.card-table-odd {
   background: #EBEBEB;
 }
 div.card-prompt {
-  border: 1px solid black;
-  padding: 2rem;
-  text-align: center;
+     border: 1px solid #ccc;
+    padding: 2rem 4em;
+    text-align: center;
+    box-shadow: 2px 2px 8px #ccc;
 
   button.btn-block {
-    margin: 1rem 0;
-    padding: 3rem 0;
+    margin: 30px 10px 0px 10px;
   }
   .DoNotAllowToDeleteAndEdit {
     padding: 4rem 1rem;
