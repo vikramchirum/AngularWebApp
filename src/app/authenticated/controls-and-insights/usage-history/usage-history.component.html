@@ -4,13 +4,13 @@
 <div class="usage-history container-fluid usage-history" *ngIf="isDataAvailable">
   <h1>Usage History</h1>
   <br/>
-  <div class="col position-relative">
+  <div class="col position-relative col-sm-scroll">
     <div class="bar-chart">
       <h3>Select a Month for Detail</h3>
       <div *ngFor='let index of barChartData'>
         <canvas
         baseChart
-        height="50px"
+        height="75px"
         [datasets]="index"
         [labels]="monthNames"
         [options]="barChartOptions"
