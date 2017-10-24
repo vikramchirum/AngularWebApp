@@ -36,6 +36,17 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   paymentSubmittedWithoutError: boolean = null;
   formGroup: FormGroup = null;
 
+  totalDue: number;
+  pastDue: number;
+  exceededDueDate: boolean = null;
+  autoPay: boolean;
+  paymentStatus: string = null;
+  currentView: string = null;
+  dueDate: Date = null;
+  LatestBillAmount: number;
+  LatestBillPaymentDate: Date;
+
+
   PaymethodSelected: Paymethod = null;
 
   @ViewChild(PaymethodAddCcComponent) private addCreditCardComponent: PaymethodAddCcComponent;
@@ -43,6 +54,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
   private UserCustomerAccountSubscription: Subscription = null;
   private CustomerAccountSubscription: Subscription = null;
+  private PaymentHistorySubscription: Subscription = null;
+  private LatestInvoiceDetailsSubscription: Subscription = null;
   private CustomerAccount: CustomerAccount = null;
   private CustomerAccountId: string = null;
 
@@ -125,14 +138,56 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
       CustomerAccount => this.CustomerAccount = CustomerAccount
     );
     this.PaymethodSubscription = this.PaymethodService.PaymethodsObservable.subscribe(
-      Paymethods => this.Paymethods = Paymethods
+      Paymethods => { this.Paymethods = Paymethods; }
     );
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
-      ActiveServiceAccount => this.ActiveServiceAccount = ActiveServiceAccount
-    );
+      ActiveServiceAccount => { this.ActiveServiceAccount = ActiveServiceAccount;
+                                this.pastDue = ActiveServiceAccount.Past_Due;
+                                this.totalDue = ActiveServiceAccount.Past_Due + ActiveServiceAccount.Current_Due;
+                                this.autoPay = ActiveServiceAccount.Is_Auto_Bill_Pay;
+              if (this.ActiveServiceAccount) {
+                this.LatestInvoiceDetailsSubscription = this.InvoiceStore.LatestInvoiceDetails.subscribe(
+                  latestInvoice => {
+                    if (!latestInvoice) {
+                      return;
+                    }
+                    this.dueDate = new Date(latestInvoice.Due_Date);
+                    this.dueDate.setDate(this.dueDate.getDate() + 1);
+                    this.exceededDueDate = (this.totalDue > 0) ? true : false;
+                    this.PaymentHistorySubscription = this.PaymentsHistoryStore.PaymentHistory.subscribe(
+                      PaymentsHistoryItems => {
+                        if (PaymentsHistoryItems) {
+                          this.paymentStatus = PaymentsHistoryItems[0].PaymentStatus;
+                          if (this.paymentStatus === 'In Progress') {
+                            this.LatestBillAmount = PaymentsHistoryItems[0].PaymentAmount;
+                            this.LatestBillPaymentDate = PaymentsHistoryItems[0].PaymentDate;
+                          }
+                          this.setFlags();
+                        }});
+                  }
+                );
+                            }});
     this.UserCustomerAccountSubscription = this.UserService.UserCustomerAccountObservable.subscribe(
       CustomerAccountId => this.CustomerAccountId = CustomerAccountId
     );
+  }
+
+  setFlags() {
+    if (this.ActiveServiceAccount) {
+        if (!this.autoPay) {
+          if (this.paymentStatus === 'In Progress') {
+            this.currentView = 'PaymentPending';
+          } else {
+            this.currentView = 'MakePayment';
+          }
+        } else {
+          if (this.paymentStatus === 'Cleared') {
+            this.currentView = 'MakePayment';
+          } else {
+            this.currentView = 'AutoPay';
+          }
+        }
+    }
   }
 
   ngOnDestroy() {
@@ -279,6 +334,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             console.log('The paymethod was charged!', res);
             this.paymentLoadingMessage = null;
             this.PaymentsHistoryStore.LoadPaymentsHistory(this.ActiveServiceAccount);
+            this.ServiceAccountService.UpdateServiceAccounts(true);
           },
           error => {
             this.paymentSubmittedWithoutError = false;

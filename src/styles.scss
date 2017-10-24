@@ -176,10 +176,13 @@ footer.fixedToBottom {
 
     a, a:link, a:visited {
       color: $plans-base;
+      white-space: pre-line;
     }
   }
   li.active a {
     color: $plans-base;
+    white-space: pre-line;
+
   }
   li.active:before {
     color: $plans-base;
@@ -255,6 +258,7 @@ footer.fixedToBottom {
 
 .btn-round {
   height: 250px;
+  width: 250px;
   border-radius: 100%;
 
   .fa {

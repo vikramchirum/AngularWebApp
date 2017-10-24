@@ -22,22 +22,23 @@
         </div>
         <!--Signup for Auto Pay -->
         <div class="col-md-4">
-          <ng-template *ngIf="ShowAutoBillPay; then AutoBillPay"></ng-template>
-          <ng-template *ngIf="ShowPaperlessBilling; then PaperlessBilling"></ng-template>
-          <ng-template *ngIf="ShowBudgetBilling; then BudgetBilling"></ng-template>
-          <ng-template *ngIf="ShowEnergySavingTips; then EnergySavingTips"></ng-template>
-          <ng-template #AutoBillPay>
-            <mygexa-auto-pay-signup></mygexa-auto-pay-signup>
-          </ng-template>
-          <ng-template #PaperlessBilling>
-            <mygexa-paperless-billing-signup></mygexa-paperless-billing-signup>
-          </ng-template>
-          <ng-template #BudgetBilling>
-            <mygexa-budget-billing-signup></mygexa-budget-billing-signup>
-          </ng-template>
-          <ng-template #EnergySavingTips>
-            <mygexa-energy-saving-tips></mygexa-energy-saving-tips>
-          </ng-template>
+          <div [ngSwitch]="currentView">
+            <div *ngSwitchCase="'ShowAutoBillPay'">
+              <mygexa-auto-pay-signup></mygexa-auto-pay-signup>
+            </div>
+            <div *ngSwitchCase="'ShowPaperlessBilling'">
+              <mygexa-paperless-billing-signup></mygexa-paperless-billing-signup>
+            </div>
+            <div *ngSwitchCase="'ShowBudgetBilling'">
+              <mygexa-budget-billing-signup></mygexa-budget-billing-signup>
+            </div>
+            <div *ngSwitchCase="'ShowEnergySavingTips'">
+              <mygexa-energy-saving-tips></mygexa-energy-saving-tips>
+            </div>
+            <div *ngSwitchDefault>
+              <mygexa-energy-saving-tips></mygexa-energy-saving-tips>
+            </div>
+          </div>
         </div>
         <!--Refer a friend Program -->
         <div class="col-md-4">

@@ -53,54 +53,45 @@
         <div class="card-prompt" *ngIf="PaymentEditting === paymentMethod">
           <ng-template *ngIf="PaymentEdittingIsUsedForAutoPayment === null; then PreparingToRemove else ReadyToRemove"></ng-template>
           <ng-template #PreparingToRemove>
-            <h1>
-              <i class="fa fa-spin fa-circle-o-notch"></i>
-              <br/>
-              <small>Preparing to remove...</small>
-            </h1>
+            <h4>
+              <i class="fa fa-spin fa-circle-o-notch"></i> <small>Preparing to remove...</small>
+            </h4>
           </ng-template>
           <ng-template #ReadyToRemove>
             <ng-template *ngIf="PaymentEdittingIsUsedForAutoPayment; then IsUsedForAutoPayment else IsNotUsedForAutoPayment"></ng-template>
             <ng-template #IsUsedForAutoPayment>
-              <h1>
-                <b>Delete Payment Account</b>
-              </h1>
+              <h3>Delete Payment Account</h3>
               <div class="alert alert-warning"><i class="fa fa-fw fa-info-circle"></i> <b>You are about to delete a saved pay method that is set up for Auto Pay.</b></div>
-              <h1>
-                <small>What Would You Like To Do?</small>
-              </h1>
+              <div>What Would You Like To Do?</div>
               <div class="row">
                 <ng-template *ngIf="Paymethods.length > 1; then AllowToDeleteAndEdit else DoNotAllowToDeleteAndEdit"></ng-template>
                 <ng-template #AllowToDeleteAndEdit>
-                  <div class="col-sm-6">
-                    <button class="btn btn-block btn-warning" (click)="removePaymethodStopAutoPay()">Delete and Stop Auto Pay</button>
+                  <div class="col-sm-5  col-sm-offset-1">
+                    <button class="btn btn-block btn-success" (click)="removePaymethodStopAutoPay()">Delete and Stop Auto Pay</button>
                   </div>
-                  <div class="col-sm-6">
+                  <div class="col-sm-5  col-sm-offset-1">
                     <button class="btn btn-block btn-success" (click)="removePaymethodEditAutoPay()">Delete and Edit Auto Pay</button>
                   </div>
                 </ng-template>
                 <ng-template #DoNotAllowToDeleteAndEdit>
-                  <div class="col-sm-6 col-sm-offset-3">
-                    <button class="btn btn-block btn-warning" (click)="removePaymethodStopAutoPay()">Delete and Stop Auto Pay</button>
+                  <div class="col-sm-5 col-sm-offset-1">
+                    <button class="btn btn-block btn-success" (click)="removePaymethodStopAutoPay()">Delete and Stop Auto Pay</button>
                   </div>
                 </ng-template>
+                <div class="col-sm-5 ">
+                <button class="btn btn-block btn-link" (click)="removePaymethod()">Cancel</button>
               </div>
-              <div class="text-center">
-                <button class="btn btn-lg btn-link" (click)="removePaymethod()">Cancel</button>
-              </div>
-            </ng-template>
-            <ng-template #IsNotUsedForAutoPayment>
-              <h1>
-                <b>Warning!</b>
-                <div>You are about to delete this payment method.</div>
-                <small>Are your sure?</small>
-              </h1>
-              <div class="row">
-                <div class="col-sm-6">
-                  <button class="btn btn-block btn-warning" (click)="removePaymethodConfirm()">Yes - delete this payment method.</button>
                 </div>
-                <div class="col-sm-6">
-                  <button class="btn btn-block btn-secondary" (click)="removePaymethod()">No - cancel and go back.</button>
+            </ng-template>
+             <ng-template #IsNotUsedForAutoPayment>
+               <h3>Confirmation</h3>
+                <div>Are your sure you would like to remove this payment method?</div>
+              <div class="row">
+                <div class="col-sm-5  col-sm-offset-1">
+                  <button class="btn btn-block btn-success" (click)="removePaymethodConfirm()">Yes - please delete it</button>
+                </div>
+                <div class="col-sm-5 ">
+                  <button class="btn btn-block btn-link" (click)="removePaymethod()">No - cancel</button>
                 </div>
               </div>
             </ng-template>
@@ -128,6 +119,7 @@
 
   <mygexa-add-payment-accounts (onAddPaymentAccountSubmittedEvent)="handleAddPaymentAccountSubmittedEvent($event)"></mygexa-add-payment-accounts>
 
-
+<br/>
+<br/>
 </section>
 

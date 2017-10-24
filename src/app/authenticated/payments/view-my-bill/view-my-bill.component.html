@@ -4,43 +4,104 @@
       <h1>My Current Bill</h1>
       <p *ngIf="service_account_id">Account No: {{service_account_id}} </p>
       <div class="col-md-8 col-md-offset-2"> <br/>
-        <div [hidden]="!req_bill">
+        <div [hidden]="!service_account_id">
           <table  border="0" width="100%">
             <colgroup>
-            <col width="80%"/>
-            <col width="10%"/>
+              <col width="80%"/>
+              <col width="20%"/>
             </colgroup>
             <tbody>
-              <tr class="bg-success">
-                <td>Current Charges</td>
-                <td colspan="2">${{ req_bill?.Current_Charges }}</td>
+
+              <tr class="">
+                <td>Past Due</td>
+                <td colspan="2">${{ pastDue | FloatToMoneyPipe}}</td>
               </tr>
+              <hr>
               <tr>
-                <td colspan="2">&nbsp;</td>
+                <td>Current Bill</td>
+                <td colspan="2">${{ currentDue | FloatToMoneyPipe}}</td>
               </tr>
-              <tr *ngIf="req_bill?.Balance_Forward" class="bg-success">
-                <td>Balance Forward</td>
-                <td >${{ req_bill?.Balance_Forward }}</td>
+              <br>
+              <tr class="bg-success">
+                <td><h4>Amount Due</h4></td>
+                <td colspan="2"><h4>${{ totalDue | FloatToMoneyPipe}}</h4></td>
               </tr>
-              <tr class="total" >
-                <td>Total</td>
-                <td ><h4>${{ req_bill?.Current_Charges + req_bill?.Balance_Forward }}</h4></td>
-              </tr>
+
             </tbody>
           </table>
           <br>
-          <a class="btn btn-success pull-right" routerLink="/payments/make-payment">Make a Payment</a> </div>
+          <div [ngSwitch]="currentView">
+            <div *ngSwitchCase="'PastDuePayNow'">
+              <button class="btn btn-block exceededDueDatebtn btn-lg" routerLink="/payments/make-payment" type="button">
+                Past due - Pay now</button>
+            </div>
+            <div *ngSwitchCase="'PaymentPending'">
+              <div class="input-group text-center">
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-success btn-lg custom" data-label-placement>
+                    <span class="small">PAYMENT PENDING</span>
+                  </button>
+                  <button type="button" class="btn btn-success dropdown-toggle btn-lg active"  data-toggle="dropdown">
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu pull-right col-sm-8" style=" text-align: center;" role="menu">
+                    <li class="linkLabel" *ngIf="!autoPay">
+                      Your payment of ${{LatestBillAmount}} is pending
+                    </li>
+                    <hr>
+                    <li>
+                      <a routerLink="/payments/make-payment" class="btn btn-link btn-small btn-success btn-payment" >
+                        Make a payment
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+            <div *ngSwitchCase="'AutoPay'">
+
+              <div class="input-group text-center">
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-success btn-round-lg btn-lg custom" data-label-placement>
+                    <span class="fa fa-clock-o"></span>
+                    <span class="small">AUTO PAY IS SCHEDULED</span>
+                  </button>
+                  <button type="button" class="btn btn-success dropdown-toggle btn-lg active" data-toggle="dropdown">
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu pull-right col-sm-8" style=" text-align: center;" role="menu">
+                    <li class="linkLabel" *ngIf="autoPay">
+                      Auto Pay is scheduled for {{LatestBillPaymentDate| date:'MM/dd/yyyy'}}
+                    </li>
+                    <hr>
+                    <li>
+                      <a routerLink="/payments/make-payment" class="btn btn-link btn-small btn-success btn-payment" >
+                        Make a payment
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+            <div *ngSwitchCase="'MakePayment'">
+              <button class="btn btn-block btn-success btn-lg" routerLink="/payments/make-payment" type="button">
+                Make a Payment</button>
+            </div>
+          </div>
+          <!--<a class="btn btn-success pull-right" routerLink="/payments/make-payment">Make a Payment</a> -->
+        </div>
       </div>
     </div>
     <br class="visible-xs"/>
     <div class="col-lg-4">
-      <div class="alert alert-info" *ngIf="payments">Thank you for your payment of ${{LatestBillAmount}} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </div>
+      <div class="alert alert-info" *ngIf="!exceededDueDate" >Thank you for your payment of ${{LatestBillAmount}} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </div>
+      <div class="alert alert-danger" *ngIf="payments && exceededDueDate">Due Date: {{ req_bill?.Due_Date | date:'MM/dd/yyyy' }}</div>
       <div class="view-my-bill-billing-payment-preferences">
         <div class="view-my-bill-billing-pad">
           <h3>Your Settings</h3>
           <mygexa-view-my-bill-preference></mygexa-view-my-bill-preference>
-          <!-- <mygexa-view-my-bill-preference [preference]="'budget-billing'"></mygexa-view-my-bill-preference>
-          <mygexa-view-my-bill-preference [preference]="'ebill-paperless'"></mygexa-view-my-bill-preference> -->
         </div>
       </div>
     </div>

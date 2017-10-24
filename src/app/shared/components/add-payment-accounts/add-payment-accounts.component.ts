@@ -20,7 +20,7 @@ export class AddPaymentAccountsComponent implements OnInit {
   private addEcheckComponent: PaymethodAddEcheckComponent;
 
   @Output() public onAddPaymentAccountSubmittedEvent = new EventEmitter<IPaymentMessage>();
-
+  errorFromForte: string = null;
   addingEcheck: boolean = null;
   addingEcheckFormValid: boolean = null;
   addingCreditCard: boolean = null;
@@ -65,9 +65,21 @@ export class AddPaymentAccountsComponent implements OnInit {
             innerHTML: `<b>Ok!</b> your credit account, ending in <b>${ accountNumber }</b> has been added as a payment method! <br/> <b>Please Wait!</b> Loading your saved payment methods.`,
             isCompleted: true
           };
+          this.errorFromForte = null;
           this.onAddPaymentAccountSubmittedEvent.emit(this.paymentMessage);
         }
         this.paymethodService.UpdatePaymethods();
+      },
+      error => {
+          console.log('Error', error.response_description);
+          const errorMessage = String(error.response_description);
+          this.errorFromForte = String(error.response_description);
+          this.paymentMessage = {
+            classes: ['alert', 'alert-danger'],
+            innerHTML: `<b>Error occurred!</b> ${ errorMessage }`,
+            isCompleted: true
+          };
+          this.onAddPaymentAccountSubmittedEvent.emit(this.paymentMessage);
       }
     );
   }
@@ -90,6 +102,7 @@ export class AddPaymentAccountsComponent implements OnInit {
       innerHTML: `<i class="fa fa-fw fa-spinner fa-spin"></i> <b>Please wait</b> we're adding your new payment method now.`,
       isCompleted: false
     };
+    this.errorFromForte = null;
     this.onAddPaymentAccountSubmittedEvent.emit(this.paymentMessage);
 
     this.paymethodService.AddPaymethodEcheckFromComponent(this.addEcheckComponent).subscribe(

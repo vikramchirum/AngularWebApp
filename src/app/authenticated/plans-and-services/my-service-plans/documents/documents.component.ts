@@ -7,9 +7,10 @@ import { AllOffersClass } from '../../../../core/models/offers/alloffers.model';
 import { OfferService } from '../../../../core/offer.service';
 import { DocumentsService } from '../../../../core/documents.service';
 import { RenewalStore } from '../../../../core/store/renewalstore';
-import {OffersStore} from '../../../../core/store/offersstore';
-import {ServiceAccountService} from '../../../../core/serviceaccount.service';
-import {Observable} from 'rxjs/Observable';
+import { OffersStore } from '../../../../core/store/offersstore';
+import { ServiceAccountService } from '../../../../core/serviceaccount.service';
+import { Observable } from 'rxjs/Observable';
+import { IRenewalDetails } from '../../../../core/models/renewals/renewaldetails.model';
 
 @Component({
   selector: 'mygexa-documents',
@@ -18,7 +19,6 @@ import {Observable} from 'rxjs/Observable';
 })
 export class DocumentsComponent implements OnInit, OnDestroy {
   ActiveServiceAccount: ServiceAccount = null;
-  renewalStoreSubscription: Subscription;
   OffersServiceSubscription: Subscription;
   plansServicesSubscription: Subscription;
   public eflLink;
@@ -30,7 +30,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   IsOffersReady: boolean = null;
   public IsUpForRenewal: boolean = null;
   public IsRenewalPending: boolean = null;
-
+  RenewalDetails: IRenewalDetails = null;
   constructor(private serviceAccountService: ServiceAccountService,
               private renewalStore: RenewalStore,
               private OfferStore: OffersStore,
@@ -40,12 +40,15 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
-    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinct(x => x[1].Service_Account_Id).subscribe(result => {
-      this.ActiveServiceAccount = result[0];
-      this.IsUpForRenewal = result[1].Is_Account_Eligible_Renewal;
-      this.IsRenewalPending = result[1].Is_Pending_Renewal;
+
+    this.plansServicesSubscription = renewalDetails$.withLatestFrom(activeServiceAccount$).subscribe(result => {
+      this.ActiveServiceAccount = result[1];
+      this.RenewalDetails = result[0];
+      this.IsUpForRenewal = result[0].Is_Account_Eligible_Renewal;
+      this.IsRenewalPending = result[0].Is_Pending_Renewal;
       if (this.IsUpForRenewal) {
         this.OffersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
           All_Offers => {
@@ -56,14 +59,14 @@ export class DocumentsComponent implements OnInit, OnDestroy {
           });
       }
       let docId = '';
-      if (this.ActiveServiceAccount.Current_Offer.IsLegacyOffer) {
-        docId = this.ActiveServiceAccount.Current_Offer.Rate_Code;
+      if (this.IsRenewalPending) {
+        docId = this.RenewalDetails.Existing_Renewal.Offer.IsLegacyOffer ? this.RenewalDetails.Existing_Renewal.Offer.Rate_Code : this.RenewalDetails.Existing_Renewal.Offer.Client_Key;
+        this.tosLink = this.documentsService.getTOSLink(this.RenewalDetails.Existing_Renewal.Offer.IsFixed);
       } else {
-        docId = this.ActiveServiceAccount.Current_Offer.Client_Key;
+        docId = this.ActiveServiceAccount.Current_Offer.IsLegacyOffer ? this.ActiveServiceAccount.Current_Offer.Rate_Code : this.ActiveServiceAccount.Current_Offer.Client_Key;
+        this.tosLink = this.documentsService.getTOSLink(this.ActiveServiceAccount.Current_Offer.IsFixed);
       }
-
       this.eflLink = this.documentsService.getEFLLink(docId);
-      this.tosLink = this.documentsService.getTOSLink(this.ActiveServiceAccount.Current_Offer.IsFixed);
       this.yraacLink = this.documentsService.getYRAACLink();
     });
   }

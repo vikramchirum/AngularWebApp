@@ -60,10 +60,10 @@ export class ServiceAccountService {
       console.log('Service accounts', result);
       this.initialized = true;
       if (this.ActiveServiceAccountId) {
-        this.SetActiveServiceAccount(this.ActiveServiceAccountId);
+        this.SetActiveServiceAccount(this.ActiveServiceAccountId, false);
       } else {
         if (result.length === 1) {
-          this.SetActiveServiceAccount(result[0].Id);
+          this.SetActiveServiceAccount(result[0].Id, false);
         }
       }
     });
@@ -109,6 +109,10 @@ export class ServiceAccountService {
         this.requestObservable = null;
         // Emit our new data to all of our observers.
         this.emitToObservers(this.ServiceAccountsObservers, this.ServiceAccountsCache);
+        // Reset active service account
+        if (ReLoadRequested) {
+          this.SetActiveServiceAccount(this.ActiveServiceAccountId, true);
+        }
       }
     );
     return this.requestObservable;
@@ -121,13 +125,15 @@ export class ServiceAccountService {
     return this.UpdateServiceAccounts(false);
   }
 
-  SetActiveServiceAccount(ServiceAccount: ServiceAccount | string): ServiceAccount {
+  SetActiveServiceAccount(ServiceAccount: ServiceAccount | string, ReLoadRequested: boolean): ServiceAccount {
 
     // Determine the provided (from string or object) Service account id.
     ServiceAccount = isString(ServiceAccount) ? ServiceAccount : get(ServiceAccount, 'Id', this.ActiveServiceAccountId);
 
     // If there is nothing to change then return.
-    if (get(this.ActiveServiceAccountCache, 'Id') === ServiceAccount) { return this.ActiveServiceAccountCache; }
+    if (!ReLoadRequested) {
+      if (get(this.ActiveServiceAccountCache, 'Id') === ServiceAccount) { return this.ActiveServiceAccountCache; }
+    }
 
     // Find the specified Service account.
     let ActiveServiceAccount = find(this.ServiceAccountsCache, ['Id', ServiceAccount], null);
@@ -141,7 +147,7 @@ export class ServiceAccountService {
     // Assign the newly active Service account.
     this.ActiveServiceAccountCache = ActiveServiceAccount;
     if (this.ActiveServiceAccountCache) { this.ActiveServiceAccountId = this.ActiveServiceAccountCache.Id; }
-
+    // console.log('Active service account set', this.ActiveServiceAccountCache);
     this.ActiveServiceAccountCache = this.SetFlags(this.ActiveServiceAccountCache);
 
     // Emit our new data to all of our observers.

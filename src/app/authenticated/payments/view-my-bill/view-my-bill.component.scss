@@ -1,12 +1,27 @@
-
+@import '../../../../styles.scss';
+@import '../../../../basecolors.scss';
 table {
-  tr.bg-success{
-    td {
-      line-height: 4rem;
-          padding:5px 10px;
-      margin-bottom: 5px;
+  td{
+    padding: 0px 8px;
+  }
+  tr.bg-success > td {
+    border-top: 1px solid $payment-base;
+    border-bottom: 1px solid $payment-base;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    h4 {
+      color: $payment-base;
+      text-align: left;
     }
   }
+  //tr.bg-success{
+  //  td {
+  //    line-height: 4rem;
+  //        padding:5px 10px;
+  //    margin-bottom: 5px;
+  //  }
+  //}
   tr.total {
     border-top: 1px solid #999;
 
@@ -14,4 +29,32 @@ table {
       padding-top: 20px;
     }
   }
+}
+.btn-round-lg {
+  border-radius: 5px;
+}
+.btn-round-sides {
+  border-radius: 0px 5px 5px 0px;
+}
+.custom {
+  width: 300px !important;
+}
+.linkLabel {
+  margin: 15px 5px 5px 5px;
+  font-weight: 700;
+  text-align: center;
+  font-size: 12px;
+}
+.btn-payment {
+  margin: 5px 5px 5px 5px;
+  font-weight: 700;
+  text-align: center;
+  padding-bottom: 5px;
+  color:  #5cb85c !important;
+}
+.exceededDueDatebtn {
+  background-color: orange !important;
+}
+.alert-danger {
+  width:185px;
 }

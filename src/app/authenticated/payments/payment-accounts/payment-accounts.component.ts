@@ -109,6 +109,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
         // Only continue if our local timestamp matches the components, otherwise it's safe to assume the user navigated away.
         .filter(() => timestamp === this.PaymentEdittingIsUsedForAutoPaymentTimestamp)
         .subscribe(res => {
+          console.log('Response', res);
           this.autoPayConfigIdsToModify = <string[]>map(res, apc => apc.Id);
           this.PaymentEdittingIsUsedForAutoPayment = get(res, 'length', 0) > 0;
         });

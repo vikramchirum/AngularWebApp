@@ -1,26 +1,27 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-
-import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model'
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { NotificationOptionsStore } from '../../../../core/store/notificationoptionsstore';
+import { INotificationOption } from '../../../../core/models/notificationoptions/notificationoption.model';
+import { NotificationStatus } from '../../../../core/models/enums/notificationstatus';
 
 @Component({
   selector: 'mygexa-view-my-bill-preference',
   templateUrl: './preference.component.html',
   styleUrls: ['./preference.component.scss']
 })
-export class PreferenceComponent implements OnInit {
- // @Input() preference: string;
+export class PreferenceComponent implements OnInit, OnDestroy {
 
-  // active: boolean;
-  // preference_text: string;
-  public serviceAccountDetails : ServiceAccount = null;
-  
+  public serviceAccountDetails: ServiceAccount = null;
   private ActiveServiceAccountSubscription: Subscription = null;
+  NotificationOptionsStoreSubscription: Subscription = null;
+  NotificationOptions: INotificationOption = null;
+  Paperless_Billing: boolean = null;
 
-  constructor(private ServiceAccountService: ServiceAccountService) {
-    // Make 'null' to tell the view we're loading:
-    //this.active = true;
+  constructor(private ServiceAccountService: ServiceAccountService,
+              private NotificationOptionsStore: NotificationOptionsStore,
+  ) {
   }
 
   ngOnInit() {
@@ -28,30 +29,25 @@ export class PreferenceComponent implements OnInit {
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.serviceAccountDetails = result;
-
-      })
-    // Using localStorage for temporary data:
-    // this.active = localStorage.getItem(`mygexa_view_bill_preference_${this.preference}`) === 'true';
-    // switch (this.preference) {
-    //   case 'auto-pay': {
-    //     this.preference_text = 'Automatic Payments';
-    //     break;
-    //   }
-    //   case 'budget-billing': {
-    //     this.preference_text = 'Budget Billing';
-    //     break;
-    //   }
-    //   case 'ebill-paperless': {
-    //     this.preference_text = 'eBill (Paperless)';
-    //     break;
-    //   }
-    // }
+        if (result) {
+          this.NotificationOptionsStoreSubscription = this.NotificationOptionsStore.Notification_Options.subscribe(
+            Options => {
+              if (Options && Options.length > 0) {
+                this.NotificationOptions = Options[0];
+                if (String(this.NotificationOptions.Status) === NotificationStatus[NotificationStatus.Active]) {
+                  this.Paperless_Billing = Boolean(this.NotificationOptions.Paperless);
+                }
+              }
+            }
+          );
+        }
+      });
   }
 
-  togglePreference() {
-    // Send update to the Service_Account API:
-   // this.active = !this.active;
-    // Using localStorage for temporary data:
-  //  localStorage.setItem(`mygexa_view_bill_preference_${this.preference}`, this.active ? 'true' : 'false');
+  ngOnDestroy() {
+    this.ActiveServiceAccountSubscription.unsubscribe();
+    if (this.NotificationOptionsStoreSubscription) {
+      this.NotificationOptionsStoreSubscription.unsubscribe();
+    }
   }
 }

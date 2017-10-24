@@ -18,7 +18,6 @@ export class ServiceAccount {
   TDU_DUNS_Number: string;
   Service_Address: IAddress;
   Mailing_Address: IAddress;
-  Paperless_Billing: boolean;
   Budget_Billing: boolean;
   Service_Stop_Request_date: string;
   Status_Id: number;

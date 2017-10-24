@@ -16,26 +16,26 @@
   <ng-container *ngIf="!LatestInvoice" >
     <h4 class="text-muted"><i class="fa fa-fw fa-circle-o-notch fa-spin"></i> Loading your current bill.</h4>
   </ng-container>
-  
+
 
   <form
     class="form-horizontal"
     [hidden]="!LatestInvoice"
     [formGroup]="formGroup" novalidate
-   
+
     >
 
     <div class="form-group">
       <label for="payment-amount" class="col-md-3 control-label">Current Balance</label>
       <div class="col-md-8 col-lg-6">
-        <p class="form-control-static"><b>${{ LatestInvoice?.Current_Charges | FloatToMoneyPipe }}</b></p>
+        <p class="form-control-static"><b>${{ ActiveServiceAccount?.Current_Due | FloatToMoneyPipe }}</b></p>
       </div>
     </div>
 
     <div class="form-group">
       <label for="payment-amount" class="col-md-3 control-label">Past Due</label>
       <div class="col-md-8 col-lg-6">
-        <p class="form-control-static text-muted">${{ LatestInvoice?.Balance_Forward | FloatToMoneyPipe }}</p>
+        <p class="form-control-static text-muted">${{ ActiveServiceAccount?.Past_Due | FloatToMoneyPipe }}</p>
       </div>
     </div>
 
@@ -122,19 +122,84 @@
 
     </ng-container>
 
-    <div class="form-group" *ngIf="paymentSubmittedWithoutError != true">
-      <div class="col-lg-8 text-right">
-        <button
-          type="submit"
-          class="btn  btn-primary"
-          (click)="paymentSubmit()"
-          [disabled]="!paymentReady || paymentLoadingMessage"
-        >
-          <i class="fa fa-spin fa-spinner" *ngIf="paymentLoadingMessage"></i>
-          {{ paymentLoadingMessage ? paymentLoadingMessage : 'Make Payment' }}
-        </button>
+    <div [ngSwitch]="currentView">
+
+      <div *ngSwitchCase="'PaymentPending'">
+        <div class="input-group text-center">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-success btn-lg custom" data-label-placement>
+              <span class="small">PAYMENT PENDING</span>
+            </button>
+            <button type="button" class="btn btn-success dropdown-toggle btn-lg active" [disabled]="!paymentReady || paymentLoadingMessage" data-toggle="dropdown">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+              <li class="linkLabel" *ngIf="!autoPay">
+                Your payment of ${{LatestBillAmount}} is pending
+              </li>
+              <hr>
+              <li>
+                <a (click)="paymentSubmit()" class="btn btn-link btn-small btn-success btn-payment" >
+                  Make a payment
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+      <div *ngSwitchCase="'AutoPay'">
+        <div class="input-group text-center">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-success btn-round-lg btn-lg custom" data-label-placement>
+              <span class="fa fa-clock-o"></span>
+              <span class="small">AUTO PAY IS SCHEDULED</span>
+            </button>
+            <button type="button" class="btn btn-success dropdown-toggle btn-lg active" [disabled]="!paymentReady || paymentLoadingMessage" data-toggle="dropdown">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu pull-right"  role="menu">
+              <li class="linkLabel" *ngIf="autoPay">
+                Auto Pay is scheduled for {{LatestBillPaymentDate| date:'MM/dd/yyyy'}}
+              </li>
+              <hr>
+              <li>
+                <a (click)="paymentSubmit()" class="btn btn-link btn-small btn-success btn-payment" >
+                  Make a payment
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div *ngSwitchCase="'MakePayment'">
+        <div class="form-group text-center" *ngIf="paymentSubmittedWithoutError != true">
+          <div class="col-lg-8">
+            <button
+              type="submit"
+              class="btn  btn-primary"
+              (click)="paymentSubmit()"
+              [disabled]="!paymentReady || paymentLoadingMessage">
+              <i class="fa fa-spin fa-spinner" *ngIf="paymentLoadingMessage"></i>
+              {{ paymentLoadingMessage ? paymentLoadingMessage : 'Make a Payment' }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!--<div class="form-group" *ngIf="paymentSubmittedWithoutError != true">-->
+      <!--<div class="col-lg-8">-->
+        <!--<button-->
+          <!--type="submit"-->
+          <!--class="btn  btn-primary"-->
+          <!--(click)="paymentSubmit()"-->
+          <!--[disabled]="!paymentReady || paymentLoadingMessage">-->
+          <!--<i class="fa fa-spin fa-spinner" *ngIf="paymentLoadingMessage"></i>-->
+          <!--{{ paymentLoadingMessage ? paymentLoadingMessage : 'Make Payment' }}-->
+        <!--</button>-->
+      <!--</div>-->
+    <!--</div>-->
 
   </form>
 </section>

@@ -16,7 +16,7 @@ import { InvoiceStore } from '../../core/store/invoicestore';
   providers: [PaymentsHistoryStore, InvoiceStore]
 
 })
-export class PaymentsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PaymentsComponent implements OnInit, OnDestroy {
 
   private startsWith = startsWith;
   private ActiveServiceAccountSubscription: Subscription = null;
@@ -38,13 +38,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit, OnDestroy {
       result => {
         this.InvoiceStore.LoadLatestInvoiceDetails(result.Id);
         this.paymentsHistoryStore.LoadPaymentsHistory(result);
-        // this.invoice_service.getLatestInvoiceId(result.Id).subscribe(
-        //   resp => {
-        //     this.invoice_service.getInvoice(resp, result.Id)
-        //       .filter(() => !this.ActiveServiceAccountSubscription.closed)
-        //       .subscribe(res => this.viewBill.PopulateItemizedBill(res));
-        //   }
-        // );
       }
     );
 
@@ -56,32 +49,6 @@ export class PaymentsComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
     );
-  }
-
-  ngAfterViewInit() {
-    // this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
-    //   result => {
-    //     this.paymentsHistoryStore.LoadPaymentsHistory(result);
-    //     this.InvoiceStore.LatestInvoiceId.subscribe(
-    //       InvoiceId => {
-    //         if (InvoiceId) {
-    //           console.log('hi', InvoiceId);
-    //           this.invoice_service.getInvoice(InvoiceId, result.Id)
-    //             .filter(() => !this.ActiveServiceAccountSubscription.closed)
-    //             .subscribe(res => this.viewBill.PopulateItemizedBill(res));
-    //         }
-    //         }
-    //     );
-    //     // this.invoice_service.getLatestInvoiceId(result.Id).subscribe(
-    //     //   resp => {
-    //     //     this.invoice_service.getInvoice(resp, result.Id)
-    //     //       .filter(() => !this.ActiveServiceAccountSubscription.closed)
-    //     //       .subscribe(res => this.viewBill.PopulateItemizedBill(res));
-    //     //   }
-    //     // );
-    //   }
-    //
-    // );
   }
 
   ngOnDestroy() {

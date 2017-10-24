@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { ModalModule, PopoverModule  } from 'ngx-bootstrap';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 import { CustomFormsModule } from 'ng2-validation';
 import { ChangeUserNameComponent } from './components/change-user-name/change-user-name.component';
@@ -32,6 +33,7 @@ import { PlanCardComponent } from './components/plan-card/plan-card.component';
 import { OfferDetailsPopoverComponent } from './components/offer-details-popover/offer-details-popover.component';
 import { AddPaymentAccountsComponent } from './components/add-payment-accounts/add-payment-accounts.component';
 import { ErrorModalComponent } from './components/error-modal/error-modal.component';
+import { ViewBillDetailsComponent } from './components/view-bill-details/view-bill-details.component';
 
 @NgModule({
   imports: [
@@ -39,6 +41,7 @@ import { ErrorModalComponent } from './components/error-modal/error-modal.compon
     ReactiveFormsModule,
     CommonModule,
     RouterModule,
+    ChartsModule,
     CustomFormsModule,
     ModalModule.forRoot(),
     PopoverModule.forRoot()
@@ -67,7 +70,8 @@ import { ErrorModalComponent } from './components/error-modal/error-modal.compon
     PlanCardComponent,
     OfferDetailsPopoverComponent,
     AddPaymentAccountsComponent,
-    ErrorModalComponent
+    ErrorModalComponent,
+    ViewBillDetailsComponent
   ],
   exports: [
     ChangeUserNameComponent,
@@ -92,7 +96,8 @@ import { ErrorModalComponent } from './components/error-modal/error-modal.compon
     PlanCardComponent,
     OfferDetailsPopoverComponent,
     AddPaymentAccountsComponent,
-    ErrorModalComponent
+    ErrorModalComponent,
+    ViewBillDetailsComponent
   ]
 })
 export class SharedModule { }

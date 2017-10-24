@@ -1,6 +1,8 @@
 <div *ngIf="activeServiceAccount" class="my-bill-grid thumbnail">
-  <div class="alert pull-right bg-danger" *ngIf="totalDue">Due Date: {{ latestInvoice?.Due_Date | date:'MM/dd/yyyy' }}</div>
-  <h1 [ngClass]="{'paymentMade': noCurrentDue, 'exceededDueDate': exceededDueDate}">My Bill</h1>
+  <div class="alert alert-danger pull-right bg-danger" *ngIf="exceededDueDate  ">Due Date: {{ latestInvoice?.Due_Date | date:'MM/dd/yyyy' }}</div>
+  <div class="alert pull-right alert-info text-center"  *ngIf="!exceededDueDate "><span>
+    Thanks for your payment <br> of ${{LatestBillAmount}} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </span></div>
+  <h1 [ngClass]="{'paymentMade': !exceededDueDate || (exceededDueDate && paymentStatus === 'In Progress'), 'exceededDueDate': exceededDueDate}">My Bill</h1>
 
   <table class="table " border="0" width="100%">
     <tbody>
@@ -8,9 +10,9 @@
       <td><h4>Total Amount Due</h4></td>
       <td><h4>${{ totalDue | number : dollarAmountFormatter }}</h4></td>
     </tr>
-    <tr class="bg-spacer">
-      <td><small>&nbsp;</small></td>
-    </tr>
+    <!--<tr class="bg-spacer">-->
+      <!--<td><small>&nbsp;</small></td>-->
+    <!--</tr>-->
     <tr >
       <td>Current Amount Due</td>
       <td>${{ activeServiceAccount?.Current_Due  | number : dollarAmountFormatter }}</td>
@@ -21,6 +23,68 @@
     </tr>
     </tbody>
   </table>
-  <button class="btn btn-small btn-link pull-right" [ngClass]="{'btn-success': ((noCurrentDue && !exceededDueDate) || (!noCurrentDue && !exceededDueDate )), 'exceededDueDate': exceededDueDate && !noCurrentDue}" routerLink="/payments/view-my-bill" type="button">View Bill</button>
-  <button class="btn btn-block btn-success btn-lg" [ngClass]="{'btn-success': ((noCurrentDue && !exceededDueDate) || (!noCurrentDue && !exceededDueDate )), 'exceededDueDatebtn': exceededDueDate && !noCurrentDue}" routerLink="/payments/make-payment" type="button">Make a Payment</button>
+  <button class="btn btn-small btn-link pull-right" [ngClass]="{'paymentMade': !exceededDueDate || (exceededDueDate && paymentStatus === 'In Progress'), 'exceededDueDate': exceededDueDate}" routerLink="/payments/view-my-bill" type="button">View Bill</button>
+  <div [ngSwitch]="currentView">
+    <div *ngSwitchCase="'PastDuePayNow'">
+      <!--<button class="btn btn-block btn-success btn-lg" [ngClass]="{'btn-success': ((noCurrentDue && !exceededDueDate) || (!noCurrentDue && !exceededDueDate )), 'exceededDueDatebtn': exceededDueDate && !noCurrentDue}" routerLink="/payments/make-payment" type="button">-->
+        <!--{{ (exceededDueDate && !noCurrentDue) ? 'Past due - Pay now' : 'Make a Payment' }}</button>-->
+      <button class="btn btn-block exceededDueDatebtn btn-lg" routerLink="/payments/make-payment" type="button">
+        Past due - Pay now</button>
+    </div>
+    <div *ngSwitchCase="'PaymentPending'">
+      <div class="input-group text-center">
+        <div class="input-group-btn">
+          <button type="button" class="btn btn-success btn-lg custom" data-label-placement>
+            <span class="small">PAYMENT PENDING</span>
+          </button>
+          <button type="button" class="btn btn-success dropdown-toggle btn-lg active"  data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu pull-right col-sm-8" style=" text-align: center;" role="menu">
+            <li class="linkLabel" *ngIf="!autoPay">
+              Your payment of ${{LatestBillAmount}} is pending
+            </li>
+            <hr>
+            <li>
+              <a routerLink="/payments/make-payment" class="btn btn-link btn-small btn-success btn-payment" >
+                Make a payment
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+    <div *ngSwitchCase="'AutoPay'">
+
+      <div class="input-group text-center">
+        <div class="input-group-btn">
+          <button type="button" class="btn btn-success btn-round-lg btn-lg custom" data-label-placement>
+            <span class="fa fa-clock-o"></span>
+            <span class="small">AUTO PAY IS SCHEDULED</span>
+          </button>
+          <button type="button" class="btn btn-success dropdown-toggle btn-lg active" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu pull-right col-sm-8" style=" text-align: center;" role="menu">
+            <li class="linkLabel" *ngIf="autoPay">
+              Auto Pay is scheduled for {{LatestBillPaymentDate| date:'MM/dd/yyyy'}}
+            </li>
+            <hr>
+            <li>
+              <a routerLink="/payments/make-payment" class="btn btn-link btn-small btn-success btn-payment" >
+                Make a payment
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+    <div *ngSwitchCase="'MakePayment'">
+      <button class="btn btn-block btn-success btn-lg" routerLink="/payments/make-payment" type="button">
+        Make a Payment</button>
+    </div>
+  </div>
+
 </div>

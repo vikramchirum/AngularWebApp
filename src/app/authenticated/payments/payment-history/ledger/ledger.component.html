@@ -14,15 +14,15 @@
         <td class="ref">
           <button class="btn btn-blank" (click)="openBill(row)"><i class="fa fa-fw fa-file-pdf-o"></i></button>
         </td>
-        <td class="charge">{{ row.amount | number : dollarAmountFormatter }}</td>
+        <td class="charge">{{ row.amount | currency : 'USD' : true }}</td>
         <td class="payment"></td>
       </ng-template>
       <ng-template #TransactionPayment>
         <td class="ref"><i class="fa fa-fw fa-cc-visa"></i></td>
         <td class="charge"></td>
-        <td class="payment">{{ row.amount | number : dollarAmountFormatter }}</td>
+        <td class="payment">{{ row.amount | currency : 'USD' : true  }}</td>
       </ng-template>
-      <td class="balance" [ngClass]="{ 'text-danger': row.balance < 0 }">{{ row.balance | number : dollarAmountFormatter }}</td>
+      <td class="balance">{{ row.balance*-1 | currency : 'USD' : true }}</td>
     </tr>
   </tbody>
 </table>
