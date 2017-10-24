@@ -68,7 +68,7 @@ export class PaymentsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     if (columnHeader.type === 'date') {
-      return this.DatePipe.transform(row[columnHeader.name], 'd MMM y');
+      return this.DatePipe.transform(row[columnHeader.name], 'M/d/y');
     }
 
     if (columnHeader.type === 'dollar') {

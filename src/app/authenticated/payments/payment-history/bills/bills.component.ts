@@ -97,7 +97,7 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (columnHeader.type === 'date') {
-      return this.datePipe.transform(row[columnHeader.name], 'd MMM y');
+      return this.datePipe.transform(row[columnHeader.name], 'M/d/y');
     }
 
     if (columnHeader.type === 'dollar') {
