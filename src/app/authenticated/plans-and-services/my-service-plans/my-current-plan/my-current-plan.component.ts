@@ -70,16 +70,16 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
 
-    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1]).subscribe(result => {
-      this.ActiveServiceAccount = result[0];
-      this.RenewalAccount = result[1];
+    this.plansServicesSubscription = renewalDetails$.withLatestFrom(activeServiceAccount$).subscribe(result => {
+      this.ActiveServiceAccount = result[1];
+      this.RenewalAccount = result[0];
       this.isOnHoldOver = this.ActiveServiceAccount.Current_Offer.IsHoldOverRate;
-      if (result[1] != null) {
-        this.ActiveServiceAccount = result[0];
-        this.RenewalAccount = result[1];
-        if (result[1] != null) {
-          this.isUpForRenewal = result[1].Is_Account_Eligible_Renewal;
-          this.isRenewalPending = result[1].Is_Pending_Renewal;
+      if (result[0] != null) {
+        this.ActiveServiceAccount = result[1];
+        this.RenewalAccount = result[0];
+        if (result[0] != null) {
+          this.isUpForRenewal = result[0].Is_Account_Eligible_Renewal;
+          this.isRenewalPending = result[0].Is_Pending_Renewal;
           this.setFlags();
           if (this.isUpForRenewal) {
             this.OffersServiceSubscription = this.OfferStore.ServiceAccount_RenewalOffers.subscribe(
