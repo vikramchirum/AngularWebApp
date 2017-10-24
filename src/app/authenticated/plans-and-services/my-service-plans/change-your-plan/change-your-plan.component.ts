@@ -85,10 +85,10 @@ export class ChangeYourPlanComponent implements OnInit, OnChanges, OnDestroy {
     const activeServiceAccount$ = this.serviceAccount_service.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
 
-    this.plansServicesSubscription = Observable.combineLatest(activeServiceAccount$, renewalDetails$).distinctUntilChanged(null, x => x[1]).subscribe(result => {
+    this.plansServicesSubscription = renewalDetails$.withLatestFrom(activeServiceAccount$).subscribe(result => {
       this.isLoading = false;
-      this.activeServiceAccountDetails = result[0];
-      this.renewalDetails = result[1];
+      this.activeServiceAccountDetails = result[1];
+      this.renewalDetails = result[0];
       this.populateOffers();
     });
   }
