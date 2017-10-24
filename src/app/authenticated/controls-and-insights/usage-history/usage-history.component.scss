@@ -12,3 +12,16 @@ table {
 .btn-round, .pagination .active > a {
   background-color:   rgba(27,141,205,1.0);
 }
+
+@media only screen and (max-width :992px){
+
+.col-sm-scroll { 
+  
+  overflow-x: scroll;
+  overflow-y: hidden;
+    
+    .bar-chart {
+      min-width:800px;
+      }
+}
+  }

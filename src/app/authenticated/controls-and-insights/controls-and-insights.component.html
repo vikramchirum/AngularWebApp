@@ -23,13 +23,13 @@
 <div class="container-fluid container-breakout bg-info"  *ngIf="startsWith(Router.url, '/controls-and-insights/usage-history')">
   <div class="container">
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-3 hidden-xs  hidden-sm">
         <button
           class="btn btn-primary btn-block btn-round"
         ><i class="fa fa-fw fa-3x fa-file-excel-o"></i><br/>Insight History <span class="boxed">Download</span>
         </button>
       </div>
-      <div class="col-md-8 col-md-offset-1" style="margin-bottom: 10px;">
+      <div class="col-sm-12 col-md-8 col-md-offset-1" style="margin-bottom: 10px;">
         <ng-container *ngIf="isDataAvailable">
           <h1>Insight History Table</h1>
           <table class="table table-responsive table-condensed">
