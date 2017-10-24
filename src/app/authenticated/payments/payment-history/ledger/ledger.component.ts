@@ -35,9 +35,9 @@ export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
   public columnHeaders: ColumnHeader[] = [
     { title: 'Date', name: 'date', type: 'date' },
     { title: 'Ref', name: 'ref', type: '' },
-    { title: 'Charges ($)', name: 'charge', type: 'dollar' },
-    { title: 'Payments ($)', name: 'payment', type: 'dollar' },
-    { title: 'Balance ($)', name: 'balance', type: 'dollar' }
+    { title: 'Charges', name: 'charge', type: 'dollar' },
+    { title: 'Payments', name: 'payment', type: 'dollar' },
+    { title: 'Balance', name: 'balance', type: 'dollar' }
   ];
   public rows: any[] = [];
 
@@ -167,7 +167,6 @@ export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
       }
       transaction.balance = balance;
     });
-
     this.transactions = reverse(transactions);
 
     this.onChangeTable(this.config);
