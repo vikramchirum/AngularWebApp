@@ -12,7 +12,7 @@ export class OrderStatus {
     Order_Placed: String;
     Order_Type: String;
     Status: String;
-
+    Start_Date: string;
   constructor(opts: any) {
     assign(this, opts);
   }
