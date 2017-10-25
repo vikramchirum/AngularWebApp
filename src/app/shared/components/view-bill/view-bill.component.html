@@ -47,6 +47,16 @@
       </div>
       <br/>
 
+      <!--<button (click)="expand()">Open</button>-->
+      <!--<button (click)="collapse()">Closed</button>-->
+      <!--<hr />-->
+      <!--<div class="toggle-container" [@openClose]="stateExpression">-->
+      <!--Look at this box-->
+      <!--</div>--> {{toggleGexa}} {{toggleTDU}} {{toggleTax}}
+      {{'Gexa' + GexaChargesState}}
+      {{'TDU' + TDUChargesState}}
+      {{'Tax:' + TaxChargesState}}
+
       <div *ngIf="bill_object && bill_item_details">
 
         <div>
@@ -61,31 +71,36 @@
                 ${{ gexaCharges }}
               </div>
               <div class="col-xs-2">
-                <i (click)="chargeToggle(bill_item_details_gexa_charges)" class="fa fa-plus gexa-detail pull-right"></i>
+                <i (click)="chargeToggle(bill_item_details_gexa_charges); toggle('GexaCharges');" class="fa gexa-detail pull-right"
+                   [ngClass]="{'fa-plus': GexaChargesState === 'collapsed', 'fa-minus': GexaChargesState === 'expanded' }"></i>
               </div>
             </div>
-            <ng-container *ngIf="chargeOpened(bill_item_details_gexa_charges)">
-              <div class="row details" *ngFor="let item of bill_item_details_gexa_charges">
-                <div class="col-xs-8">
-                  <span>{{ item.Descripton }}</span><span class="bill-uasge" *ngIf="item.Quantity">{{ item.Quantity }}@{{item.Multiplier}} </span>
+            <div class="toggle-container" [@openCloseGexaCharges]="GexaChargesState">
+              <ng-container *ngIf="chargeOpened(bill_item_details_gexa_charges)">
+                <div class="row details" *ngFor="let item of bill_item_details_gexa_charges">
+                  <div class="col-xs-8">
+                    <span>{{ item.Descripton }}</span><span class="bill-uasge" *ngIf="item.Quantity">{{ item.Quantity }}@{{item.Multiplier}} </span>
+                  </div>
+                  <div class="col-xs-4">
+                    ${{ item.Amount | FloatToMoneyPipe }}
+                  </div>
                 </div>
-                <div class="col-xs-4">
-                  ${{ item.Amount | FloatToMoneyPipe }}
+                <div class="row details" *ngFor="let item of bill_item_details_other_charges">
+                  <div class="col-xs-8">
+                    {{ item.Descripton }}
+                  </div>
+                  <div class="col-xs-4">
+                    ${{ item.Amount | FloatToMoneyPipe }}
+                  </div>
                 </div>
-              </div>
-              <div class="row details" *ngFor="let item of bill_item_details_other_charges">
-                <div class="col-xs-8">
-                  {{ item.Descripton }}
-                </div>
-                <div class="col-xs-4">
-                  ${{ item.Amount | FloatToMoneyPipe }}
-                </div>
-              </div>
-            </ng-container>
+              </ng-container>
+            </div>
           </ng-template>
           <ng-template #noChargesToList>
-            <div class="col-xs-12"><b> Gexa Charges</b>
-              <small>(No charges to list.)</small>
+            <div class="toggle-container" [@openCloseGexaCharges]="GexaChargesState">
+              <div class="col-xs-12"><b> Gexa Charges</b>
+                <small>(No charges to list.)</small>
+              </div>
             </div>
           </ng-template>
         </div>
@@ -102,25 +117,29 @@
                 ${{ tduCharges }}
               </div>
               <div class="col-xs-2">
-                <i class="fa fa-plus oncor-detail pull-right" (click)="chargeToggle(bill_item_details_TDU_charges)"></i>
+                <i class="fa oncor-detail pull-right" (click)="chargeToggle(bill_item_details_TDU_charges); toggle('TDUCharges');"
+                   [ngClass]="{'fa-plus':TDUChargesState === 'collapsed', 'fa-minus': TDUChargesState === 'expanded' }"></i>
               </div>
             </div>
-            <ng-container *ngIf="chargeOpened(bill_item_details_TDU_charges)">
-              <div class="row details" *ngFor="let item of bill_item_details_TDU_charges">
-                <div class="col-xs-8">
-                  {{ item.Descripton }}
+            <div class="toggle-container" [@openCloseTDUCharges]="TDUChargesState">
+
+              <ng-container *ngIf="chargeOpened(bill_item_details_TDU_charges)">
+                <div class="row details" *ngFor="let item of bill_item_details_TDU_charges">
+                  <div class="col-xs-8">
+                    {{ item.Descripton }}
+                  </div>
+                  <div class="col-xs-4">
+                    ${{ item.Amount | FloatToMoneyPipe }}
+                  </div>
                 </div>
-                <div class="col-xs-4">
-                  ${{ item.Amount | FloatToMoneyPipe }}
-                </div>
-              </div>
-            </ng-container>
+              </ng-container>
+            </div>
           </ng-template>
           <ng-template #noTDUChargesToList>
-            <div class="col-xs-12"><b> Gexa Charges</b>
-              <h2>{{tduName}}
-                <small>(No TDU charges to list.)</small>
-              </h2>
+            <div class="toggle-container" [@openCloseTDUCharges]="TDUChargesState">
+              <div class="col-xs-12"><b> {{tduName}} Charges</b>
+                  <small>(No TDU charges to list.)</small>
+              </div>
             </div>
           </ng-template>
         </div>
@@ -137,25 +156,30 @@
                 {{ taxCharges }}
               </div>
               <div class="col-xs-2">
-                <i class="fa fa-plus tax-detail pull-right" (click)="chargeToggle(bill_item_details_tax)"></i>
+                <i class="fa tax-detail pull-right" (click)="chargeToggle(bill_item_details_tax); toggle('TaxCharges');"
+                   [ngClass]="{'fa-plus': TaxChargesState === 'collapsed', 'fa-minus': TaxChargesState === 'expanded' }"></i>
               </div>
             </div>
-            <ng-container *ngIf="chargeOpened(bill_item_details_tax)">
-              <div class="row details" *ngFor="let item of bill_item_details_tax">
-                <div class="col-xs-8">
-                  {{ item.Descripton }}
+            <div class="toggle-container" [@openCloseTaxCharges]="TaxChargesState">
+
+              <ng-container *ngIf="chargeOpened(bill_item_details_tax)">
+                <div class="row details" *ngFor="let item of bill_item_details_tax">
+                  <div class="col-xs-8">
+                    {{ item.Descripton }}
+                  </div>
+                  <div class="col-xs-4">
+                    ${{ item.Amount | FloatToMoneyPipe }}
+                  </div>
                 </div>
-                <div class="col-xs-4">
-                  ${{ item.Amount | FloatToMoneyPipe }}
-                </div>
-              </div>
-            </ng-container>
+              </ng-container>
+            </div>
           </ng-template>
 
           <ng-template #noTaxChargesToList>
-            <div class="row">
-              <div class="col-xs-11"> (No tax charges to list.)</div>
-            </div>
+            <div class="toggle-container" [@openCloseTaxCharges]="TaxChargesState">
+              <div class="col-xs-12"> <b> Tax charges </b>
+                <small> (No tax charges to list.)</small></div>
+              </div>
           </ng-template>
 
         </div>

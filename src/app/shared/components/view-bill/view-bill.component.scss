@@ -159,7 +159,7 @@ p { margin-bottom:0; font-size:12px}
     border-radius: 151px;
     z-index: 22222;
     height: 270px;
-  
+
   .gaugeChart {
     z-index: -1;
   }
@@ -175,4 +175,14 @@ p { margin-bottom:0; font-size:12px}
     width: 100%;
     z-index: -1;
   }
+}
+.toggle-container {
+  //background-color:white;
+  //border:10px solid black;
+  //width:200px;
+  // text-align:center;
+  //line-height:100px;
+  //font-size:50px;
+  //box-sizing:border-box;
+  overflow:hidden;
 }

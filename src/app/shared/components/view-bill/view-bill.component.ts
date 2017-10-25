@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import { filter, forEach, clone } from 'lodash';
 import { isFunction } from 'lodash';
 
@@ -18,13 +19,41 @@ import { UtilityService } from 'app/core/utility.service';
 @Component({
   selector: 'mygexa-view-bill',
   templateUrl: './view-bill.component.html',
-  styleUrls: ['./view-bill.component.scss']
+  styleUrls: ['./view-bill.component.scss'],
+  animations: [trigger(
+    'openCloseGexaCharges',
+    [
+      state('collapsed, void', style({height: '0px'})),
+      state('expanded', style({height: '*'})),
+      transition(
+        'collapsed <=> expanded', [animate(1500), animate(2000)])
+    ]
+  ),
+    trigger(
+      'openCloseTDUCharges',
+      [
+        state('collapsed, void', style({height: '0px'})),
+        state('expanded', style({height: '*'})),
+        transition(
+          'collapsed <=> expanded', [animate(1000), animate(2000)])
+      ]),
+    trigger(
+      'openCloseTaxCharges',
+      [
+        state('collapsed, void', style({height: '0px'})),
+        state('expanded', style({height: '*'})),
+        transition(
+          'collapsed <=> expanded', [animate(500), animate(2000)])
+      ])
+  ],
 })
 export class ViewBillComponent implements OnInit {
 
   @ViewChild('gaugeText') gaugeText;
   @ViewChild('gauge') gauge;
-
+  GexaChargesState: string;
+  TDUChargesState: string;
+  TaxChargesState: string;
   clearTimeout = null;
   clearIsDone = null;
 
@@ -51,6 +80,9 @@ export class ViewBillComponent implements OnInit {
 
   invoicesUrl: string;
   serviceAccountId: string;
+  toggleGexa: boolean = null;
+  toggleTDU: boolean = null;
+  toggleTax: boolean = null;
 
   private openCharges = [];
   private ActiveServiceAccountSubscription: Subscription = null;
@@ -58,6 +90,8 @@ export class ViewBillComponent implements OnInit {
 
   constructor(private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService
               , private utilityService: UtilityService, private decimalPipe: DecimalPipe) {
+    this.collapse('');
+    this.toggleGexa = this.toggleTDU = this.toggleTax = false;
     this.dollarAmountFormatter = environment.DollarAmountFormatter;
     this.doughnutChartOptions = Observable.of({
       cutoutPercentage: 75,
@@ -74,21 +108,91 @@ export class ViewBillComponent implements OnInit {
       }
     });
   }
+  toggle(section: string) {
+    console.log('section', section);
+    switch (section) {
+      case 'GexaCharges': {
+        this.toggleGexa = !this.toggleGexa;
+        if (this.toggleGexa) { this.expand(section); } else {
+          this.collapse(section);
+        }
+        break;
+      }
+      case 'TDUCharges': {
+        this.toggleTDU = !this.toggleTDU;
+        if (this.toggleTDU) { this.expand(section); } else {
+          this.collapse(section);
+        }
+        break;
+      }
+      case 'TaxCharges': {
+        this.toggleTax = !this.toggleTax;
+        if (this.toggleTax) { this.expand(section); } else {
+          this.collapse(section);
+        }
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }
+  expand(section: string) {
+    switch (section) {
+      case 'GexaCharges': {
+        this.GexaChargesState = 'expanded';
+        break;
+      }
+      case 'TDUCharges': {
+        this.TDUChargesState = 'expanded';
+        break;
+      }
+      case 'TaxCharges': {
+        this.TaxChargesState = 'expanded';
+        break;
+      }
+      default: {
+        this.GexaChargesState = '';
+        this.TDUChargesState = '';
+        this.TaxChargesState = '';
+        break;
+      }
+    }
+  }
+  collapse(section: string) {
+    switch (section) {
+      case 'GexaCharges': {
+        this.GexaChargesState = 'collapsed';
+        break;
+      }
+      case 'TDUCharges': {
+        this.TDUChargesState = 'collapsed';
+        break;
+      }
+      case 'TaxCharges': {
+        this.TaxChargesState = 'collapsed';
+        break;
+      }
+      default: {
+        this.GexaChargesState = 'collapsed';
+        this.TDUChargesState = 'collapsed';
+        this.TaxChargesState = 'collapsed';
+        break;
+      }
+    }
+  }
 
   ngOnInit() {
     this.ActiveServiceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.tduName = result.TDU_Name;
         this.serviceAccountId = result.Id;
-
         if (this.bill_object) {
           this.PopulateItemizedBill(this.bill_object);
         }
-
       }
     );
   }
-
   public PopulateItemizedBill(bill_object: IInvoice) {
     const invoice_id = +(bill_object.Invoice_Id);
     this.invoicesUrl = environment.Documents_Url.concat(`/invoice/generate/${invoice_id}`);
@@ -266,7 +370,7 @@ export class ViewBillComponent implements OnInit {
 
   getTextCanvas() {
     const gaugeText = this.gaugeText.nativeElement.getContext('2d');
-    gaugeText.clearRect(0, 0, 1000, 1000);
+    gaugeText.clearRect(0, 0, 1000, 1000);
     gaugeText.fillStyle = 'blue';
     gaugeText.textAlign = 'center';
     return gaugeText;
