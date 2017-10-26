@@ -26,7 +26,7 @@ import { UtilityService } from 'app/core/utility.service';
       state('collapsed, void', style({height: '0px'})),
       state('expanded', style({height: '*'})),
       transition(
-        'collapsed <=> expanded', [animate(1500), animate(2000)])
+        'collapsed <=> expanded', [animate(500), animate(1200)])
     ]
   ),
     trigger(
@@ -35,7 +35,7 @@ import { UtilityService } from 'app/core/utility.service';
         state('collapsed, void', style({height: '0px'})),
         state('expanded', style({height: '*'})),
         transition(
-          'collapsed <=> expanded', [animate(1000), animate(2000)])
+          'collapsed <=> expanded', [animate(1000), animate(1200)])
       ]),
     trigger(
       'openCloseTaxCharges',
@@ -43,7 +43,7 @@ import { UtilityService } from 'app/core/utility.service';
         state('collapsed, void', style({height: '0px'})),
         state('expanded', style({height: '*'})),
         transition(
-          'collapsed <=> expanded', [animate(500), animate(2000)])
+          'collapsed <=> expanded', [animate(1000), animate(1200)])
       ])
   ],
 })
@@ -56,7 +56,7 @@ export class ViewBillComponent implements OnInit {
   TaxChargesState: string;
   clearTimeout = null;
   clearIsDone = null;
-
+  togg: boolean = null;
   doughnutChartOptions: any = Observable.of({});
   doughnutChartDataSet = Observable.of(['0', '0', '0', '0']);
 
@@ -90,6 +90,7 @@ export class ViewBillComponent implements OnInit {
 
   constructor(private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService
               , private utilityService: UtilityService, private decimalPipe: DecimalPipe) {
+    this.togg = false;
     this.collapse('');
     this.toggleGexa = this.toggleTDU = this.toggleTax = false;
     this.dollarAmountFormatter = environment.DollarAmountFormatter;
@@ -258,14 +259,17 @@ export class ViewBillComponent implements OnInit {
       switch (index) {
         case 0 :
           this.chargeToggle(this.bill_item_details_gexa_charges);
+          this.toggle('GexaCharges');
           break;
 
         case 1 :
           this.chargeToggle(this.bill_item_details_tax);
+          this.toggle('TaxCharges');
           break;
 
         case 2:
           this.chargeToggle(this.bill_item_details_TDU_charges);
+          this.toggle('TDUCharges');
           break;
       }
     }
