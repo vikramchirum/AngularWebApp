@@ -159,7 +159,7 @@ p { margin-bottom:0; font-size:12px}
     border-radius: 151px;
     z-index: 22222;
     height: 270px;
-  
+
   .gaugeChart {
     z-index: -1;
   }
@@ -175,4 +175,30 @@ p { margin-bottom:0; font-size:12px}
     width: 100%;
     z-index: -1;
   }
+}
+.toggle-container {
+  overflow:hidden;
+}
+
+.slider {
+  overflow-y: hidden;
+  max-height: 500px; /* approximate max height */
+  transition-property: all;
+  transition-duration: 1.5s;
+  // transition-timing-function: ease-in;
+  //transition-timing-function: cubic-bezier(0, 1, 0.8, 1);
+  -webkit-transition-timing-function: cubic-bezier(0.470, 0.000, 0.745, 0.715);
+  -moz-transition-timing-function: cubic-bezier(0.470, 0.000, 0.745, 0.715);
+  -o-transition-timing-function: cubic-bezier(0.470, 0.000, 0.745, 0.715);
+  transition-timing-function: cubic-bezier(0.470, 0.000, 0.745, 0.715);
+}
+
+.slider.closed {
+   transition-duration: 5s;
+  max-height: 0px; /* approximate max height */
+  transition-property: all;
+  -webkit-transition-timing-function: cubic-bezier(0.390, 0.575, 0.565, 1.000);
+  -moz-transition-timing-function: cubic-bezier(0.390, 0.575, 0.565, 1.000);
+  -o-transition-timing-function: cubic-bezier(0.390, 0.575, 0.565, 1.000);
+  transition-timing-function: cubic-bezier(0.390, 0.575, 0.565, 1.000);
 }
