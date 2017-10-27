@@ -25,14 +25,14 @@
               <div class='row'>
                 <h5 class='lbl col-md-2 col-md-offset-3'>From:</h5>
                 <h5 class='col-md-7'>{{ order.prevServiceAccountAddressString()}}</h5>
-              </div>              
+              </div>
               <div class='row'>
                 <h5 class='lbl col-md-2  col-md-offset-3'>To: </h5>
                 <h5 class='col-md-7'>{{ order.serviceAccountAddressString()}}</h5>
               </div>
               <div class='row'>
                 <h5 class='lbl col-md-2  col-md-offset-3'>On:</h5>
-                <h5 class='col-md-7'>{{ order.Order_Placed | date: 'longDate' }}</h5>
+                <h5 class='col-md-7'>{{ order.Start_Date | date: 'longDate' }}</h5>
               </div>
             </div>
             <div *ngIf='order.Order_Type == "Upgrade" || order.Order_Type == "Renewal" || order.Order_Type == "Additional_Service" || order.Order_Type == "Reconnect"'>
@@ -46,7 +46,7 @@
               </div>
               <div class='row'>
                 <h5 class='lbl col-md-2  col-md-offset-3'>Date: </h5>
-                <h5 class='col-md-7'>{{ order.Order_Placed | date: 'longDate' }}</h5>
+                <h5 class='col-md-7'>{{ order.Start_Date | date: 'longDate' }}</h5>
               </div>
             </div>
           </div>

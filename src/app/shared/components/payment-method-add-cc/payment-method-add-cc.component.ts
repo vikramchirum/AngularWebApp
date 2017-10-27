@@ -67,8 +67,10 @@ export class PaymethodAddCcComponent implements OnInit, OnDestroy {
     return this.FormBuilder.group({
       cc_name: ['', Validators.compose([Validators.required, validateCardName, validateName, validateNameOnCard])],
       cc_number: ['', validCreditCard],
-      cc_month: [`${thisMonth < 10 ? '0' : ''}${thisMonth}`, Validators.required],
-      cc_year: [this.years[0], Validators.required],
+      cc_month: ['', Validators.required],
+      cc_year: ['', Validators.required],
+      // cc_month: [`${thisMonth < 10 ? '0' : ''}${thisMonth}`, Validators.required],
+      // cc_year: [this.years[0], Validators.required],
       cc_ccv: ['', Validators.compose([Validators.required, CustomValidators.digits, Validators.minLength(3)])]
     });
   }

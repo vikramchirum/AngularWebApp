@@ -55,7 +55,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   private customerDetails: CustomerAccount = null;
   private Waiver: string;
   private serviceType?: ServiceType;
-  private selectedStartDate: Date;
+  private selectedStartDate: IMyDateModel;
   private selectedOfferId: string;
   private enrollErrorMsg: string;
   private enrolled: boolean = false;
@@ -245,7 +245,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     if ( !(this.selectedServiceAddress) ) {
       this.enrollErrorMsg = 'Please select Service Address to Continue';
       return false;
-    } else if ( !(this.addServiceForm.controls[ 'Service_Start_Date' ].value) ) {
+    } else if ( !(this.selectedStartDate) ) {
       this.enrollErrorMsg = 'Please select Service Start date to Continue';
       return false;
     }
@@ -256,6 +256,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     if ( this.isTokenError ) {
       return false;
     }
+
     this.enrollmentRequest = {
       Email_Address: environment.Client_Email_Addresses,
       Offer_Id: this.selectedOfferId,
@@ -263,7 +264,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       Customer_Check_Token: this.tokenMsg,
       Waiver: this.Waiver,
       Service_Type: this.serviceType,
-      Selected_Start_Date: this.selectedStartDate,
+      Selected_Start_Date: this.selectedStartDate.jsdate,
       Language_Preference: this.customerDetails.Language,
       Contact_Info: {
         Email_Address: environment.Client_Email_Addresses,
