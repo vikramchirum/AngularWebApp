@@ -35,9 +35,10 @@
               </section>
             </ng-container>
             <ng-template #noRenewalOffers>
-              <div class="row">
-                  <div class="col-sm-11 col-sm-offset-1">
-                  <div class="alert alert-success">We're sorry, no upgrade offers are available for this service account.</div>
+              <div class="row" style="padding-top: 150px;">
+                  <div class="col-sm-3 col-sm-offset-1">
+                  <!--<div class="alert alert-success">We're sorry, no upgrade offers are available for this service account.</div>-->
+                    <div class="alert alert-danger">Invalid Promo Code.</div>
                 </div>
               </div>
             </ng-template>
@@ -73,7 +74,7 @@
             <ng-template #noUpgradeOffers>
               <div class="row">
                  <div class="col-sm-11 col-sm-offset-1">
-                  <div class="alert alert-success">We're sorry, no upgrade offers are available for this service account.</div>
+                  <div class="alert alert-warning">We're sorry, no upgrade offers are available for this service account.</div>
                 </div>
               </div>
             </ng-template>
