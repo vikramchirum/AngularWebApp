@@ -9,15 +9,15 @@
       <ng-template #features>
         <div *ngFor="let feature of RenewalOffers?.Plan?.Product?.Product_Features">
           <div class="row">
-            <div class="col-sm-2  col-offset-1"><i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i></div>
-            <div class="col-sm-9">{{feature}}</div>
+            <div class="col-xs-2 col-sm-2  col-offset-1"><i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i></div>
+            <div class="col-xs-9 col-sm-9">{{feature}}</div>
           </div>
           <br>
         </div>
       </ng-template>
       <ng-template #noFeatures>
         <div class="row">
-          <div class="col-sm-2">
+          <div class="col-xs-2 col-sm-2">
             <i class="fa fa-exclamation-triangle fa-fw fa-in-circle"></i>
           </div>
           <div class="col-sm-10">
@@ -30,17 +30,17 @@
       <b><p class="form-control">Renewal Details</p></b>
       <br>
       <div class="row">
-          <div class="col-sm-2 col-offset-1"><i class="fa fa-info fa-fw fa-in-circle"
+          <div class="col-xs-2 col-sm-2 col-offset-1"><i class="fa fa-info fa-fw fa-in-circle"
                                    tooltip ngToolTipClass ="tooltipClass"
                                    content="Don’t worry! Your electric service will continue on our month-to-month plan.
                                    You’ll receive the details for that plan in your contract expiration notice."></i></div>
-        <div class="col-sm-9">What happens if I don't renew?</div>
+        <div class="col-xs-9 col-sm-9">What happens if I don't renew?</div>
       </div>
       <br>
       <div class="row">
-        <div class="col-sm-2  col-offset-1"><i class="fa fa-list fa-fw fa-in-circle" (click)="pop.show()"></i>
+        <div class="col-xs-2 col-sm-2  col-offset-1"><i class="fa fa-list fa-fw fa-in-circle" (click)="pop.show()"></i>
         </div>
-        <div class="col-sm-9">View your current plan details</div>
+        <div class="col-xs-9 col-sm-9">View your current plan details</div>
         <br>
         <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
           <ng-template #options>

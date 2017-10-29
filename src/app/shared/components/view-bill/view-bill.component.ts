@@ -24,26 +24,26 @@ import { UtilityService } from 'app/core/utility.service';
     'openCloseGexaCharges',
     [
       state('collapsed, void', style({height: '0px'})),
-      state('expanded', style({height: '*'})),
+      state('expanded', style({height: '75px'})),
       transition(
-        'collapsed <=> expanded', [animate(500), animate(1200)])
+        'collapsed <=> expanded', [animate(200), animate(100)])
     ]
   ),
     trigger(
       'openCloseTDUCharges',
       [
         state('collapsed, void', style({height: '0px'})),
-        state('expanded', style({height: '*'})),
+        state('expanded', style({height: '450px'})),
         transition(
-          'collapsed <=> expanded', [animate(1000), animate(1200)])
+          'collapsed <=> expanded', [animate(300), animate(200)])
       ]),
     trigger(
       'openCloseTaxCharges',
       [
         state('collapsed, void', style({height: '0px'})),
-        state('expanded', style({height: '*'})),
+        state('expanded', style({height: '35px'})),
         transition(
-          'collapsed <=> expanded', [animate(1000), animate(1200)])
+          'collapsed <=> expanded', [animate(200), animate(100)])
       ])
   ],
 })
