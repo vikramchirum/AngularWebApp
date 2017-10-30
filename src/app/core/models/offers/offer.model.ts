@@ -30,6 +30,7 @@ export interface Offer {
   Start_Date: string;
   End_Date: string;
   Partner_Info: IPartnerInfo;
+  Featured_Usage_Level: string;
   IsHoldOverRate: boolean;
   IsLegacyOffer: boolean;
   IsFixed: boolean;

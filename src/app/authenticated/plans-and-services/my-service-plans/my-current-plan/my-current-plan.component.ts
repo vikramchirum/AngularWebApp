@@ -20,6 +20,8 @@ import { ICreateRenewalRequest } from 'app/core/models/renewals/createrenewalreq
 import { PlanConfirmationPopoverComponent } from '../plan-confirmation-popover/plan-confirmation-popover.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ErrorModalComponent } from '../../../../shared/components/error-modal/error-modal.component';
+import { Offer } from '../../../../core/models/offers/offer.model';
+import { IServiceAccountPlanHistoryOffer } from '../../../../core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -45,6 +47,8 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   public RenewalOffers: IOffers = null;
   public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
+  public Price_atFeatured_Usage_Level_Renewal: number;
+  public Price_atFeatured_Usage_Level_Current: number;
   // selectCheckBox = false;
   // enableSelect = false;
   currentView: string = null;
@@ -77,7 +81,9 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
       if (result[0] != null) {
         this.ActiveServiceAccount = result[1];
         this.RenewalAccount = result[0];
+        console.log('Renewal account', this.RenewalAccount);
         if (result[0] != null) {
+          if (this.RenewalAccount.Existing_Renewal) {  this.checkRenewalFeaturedUsageLevel(this.RenewalAccount.Existing_Renewal.Offer); }
           this.isUpForRenewal = result[0].Is_Account_Eligible_Renewal;
           this.isRenewalPending = result[0].Is_Pending_Renewal;
           this.setFlags();
@@ -114,9 +120,32 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     }
   }
 
+  checkCurrentFeaturedUsageLevel(CurrentOffer: IServiceAccountPlanHistoryOffer) {
+    if (CurrentOffer) {
+        switch (CurrentOffer.Featured_Usage_Level) {
+          case  '500 kWh': {
+            this.Price_atFeatured_Usage_Level_Current = CurrentOffer.RateAt500kwh;
+            break;
+          }
+          case  '1000 kWh': {
+            this.Price_atFeatured_Usage_Level_Current = CurrentOffer.RateAt1000kwh;
+            break;
+          }
+          case  '2000 kWh': {
+            this.Price_atFeatured_Usage_Level_Current = CurrentOffer.RateAt2000kwh;
+            break;
+          }
+          default: {
+            CurrentOffer.Featured_Usage_Level = '2000 kWh';
+            this.Price_atFeatured_Usage_Level_Current = CurrentOffer.RateAt2000kwh;
+            break;
+          }
+        }
+    }
+  }
+
   checkFeaturedUsageLevel(RenewalOffer: IOffers) {
     if (RenewalOffer) {
-      if (RenewalOffer.Plan.Product.Featured_Usage_Level != null) {
         switch (RenewalOffer.Plan.Product.Featured_Usage_Level) {
           case  '500 kWh': {
             this.Price_atFeatured_Usage_Level = RenewalOffer.Price_At_500_kwh;
@@ -136,7 +165,30 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
             break;
           }
         }
-      }
+    }
+  }
+
+  checkRenewalFeaturedUsageLevel(RenewalOffer: Offer) {
+    if (RenewalOffer) {
+        switch (RenewalOffer.Featured_Usage_Level) {
+          case  '500 kWh': {
+            this.Price_atFeatured_Usage_Level_Renewal = RenewalOffer.RateAt500kwh;
+            break;
+          }
+          case  '1000 kWh': {
+            this.Price_atFeatured_Usage_Level_Renewal = RenewalOffer.RateAt1000kwh;
+            break;
+          }
+          case  '2000 kWh': {
+            this.Price_atFeatured_Usage_Level_Renewal = RenewalOffer.RateAt2000kwh;
+            break;
+          }
+          default: {
+            RenewalOffer.Featured_Usage_Level = '2000 kWh';
+            this.Price_atFeatured_Usage_Level_Renewal = RenewalOffer.RateAt2000kwh;
+            break;
+          }
+        }
     }
   }
 
