@@ -146,6 +146,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
 
   checkFeaturedUsageLevel(RenewalOffer: IOffers) {
     if (RenewalOffer) {
+      console.log('hi', RenewalOffer.Plan.Product.Featured_Usage_Level);
         switch (RenewalOffer.Plan.Product.Featured_Usage_Level) {
           case  '500 kWh': {
             this.Price_atFeatured_Usage_Level = RenewalOffer.Price_At_500_kwh;

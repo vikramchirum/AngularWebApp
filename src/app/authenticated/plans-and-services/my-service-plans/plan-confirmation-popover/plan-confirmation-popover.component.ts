@@ -1,10 +1,10 @@
-import {Component, OnInit, ViewChild, OnDestroy, OnChanges, Input} from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, OnChanges, Input } from '@angular/core';
 import { ModalDirective} from 'ngx-bootstrap';
-import {Subscription} from 'rxjs/Subscription';
-import {CustomerAccountService} from '../../../../core/CustomerAccount.service';
-import {CustomerAccount} from '../../../../core/models/customeraccount/customeraccount.model';
-import {ServiceAccountService} from '../../../../core/serviceaccount.service';
-import {ServiceAccount} from '../../../../core/models/serviceaccount/serviceaccount.model';
+import { Subscription } from 'rxjs/Subscription';
+import { CustomerAccountService } from '../../../../core/CustomerAccount.service';
+import { CustomerAccount } from '../../../../core/models/customeraccount/customeraccount.model';
+import { ServiceAccountService } from '../../../../core/serviceaccount.service';
+import { ServiceAccount } from '../../../../core/models/serviceaccount/serviceaccount.model';
 
 @Component({
   selector: 'mygexa-plan-confirmation-popover',
