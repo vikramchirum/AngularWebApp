@@ -23,7 +23,7 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
   public config: any;
   public columnHeaders: ColumnHeader[] = [
     { title: 'Bill Date',       name: 'Invoice_Date',    sort: 'desc', type: 'date' },
-    { title: 'Usage',           name: 'Total_Usage',           sort: '',     type: '' },
+    { title: 'Usage',           name: 'Total_Usage',     sort: '',     type: '' },
     { title: 'Due Date',        name: 'Due_Date',        sort: '',     type: 'date' },
     { title: 'Current Charges', name: 'Current_Charges', sort: '',     type: 'dollar' },
     { title: 'Total',           name: 'Amount_Due',      sort: '',     type: 'dollar' }
@@ -104,11 +104,15 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
       return this.currencyPipe.transform(row[columnHeader.name], 'USD', true, '.2');
     }
 
-    if (columnHeader.name === 'Usage') {
-      return `${row[columnHeader.name]}kwh`;
+    if (columnHeader.name === 'Total_Usage') {
+      let usage: string;
+      usage = String(row[columnHeader.name]);
+      const spliced_usage = usage.substring(0, usage.length - 3);
+      const result = spliced_usage + ' kWh';
+      return result;
     }
 
-    return row[columnHeader.name];
+     return row[columnHeader.name];
   }
 
   public getInvoiceId(row: any): any {
