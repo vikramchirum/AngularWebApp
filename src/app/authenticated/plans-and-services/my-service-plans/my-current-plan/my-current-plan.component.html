@@ -17,7 +17,7 @@
               </div>
             </md-card-title>
             <md-card-content>
-              <h2>{{RenewalAccount?.Existing_Renewal?.Offer?.RateAt2000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup
+              <h2>{{Price_atFeatured_Usage_Level_Renewal | DollarToCentsPipe | number: '1.1-1'}}<sup
                 class="sup-text">&cent;</sup>
                 <small class="sub-text">per kWh</small>
               </h2>
@@ -228,8 +228,8 @@
                 </ng-template>
               </div>
             </md-card-title>
-            <md-card-content>
-              <h2>{{ActiveServiceAccount.Current_Offer.RateAt2000kwh | DollarToCentsPipe | number: '1.1-1'}}<sup
+            <md-card-content> {{checkCurrentFeaturedUsageLevel(ActiveServiceAccount?.Current_Offer)}}
+              <h2>{{Price_atFeatured_Usage_Level_Current | DollarToCentsPipe | number: '1.1-1'}}<sup
                 class="sup-text">&cent;</sup>
                 <small class="sub-text">per kWh</small>
               </h2>
