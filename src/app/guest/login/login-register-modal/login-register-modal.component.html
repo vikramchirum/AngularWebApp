@@ -47,7 +47,7 @@
                   && formSubmitted}">
                   <label class="control-label">User Name</label>
                     <input name="User_name" type="text" class="form-control "
-                                 placeholder="Create A Username"
+                                 placeholder="Create Username"
                                  [formControl]="registerForm.controls['User_name']">
                   <!--<div class="help-block" >Username must be at least 8 characters.</div>-->
                   <div class="has-error" *ngIf="registerForm.controls['User_name'].hasError('required') && formSubmitted  || registerForm.controls['User_name'].hasError('minlength')
@@ -66,7 +66,7 @@
                   && formSubmitted}">
                   <label class="control-label">Password</label>
                     <input name="Password" type="password" class="form-control "
-                                 placeholder="Create A Password"
+                                 placeholder="Create Password"
                                  [formControl]="registerForm.controls['Password']">
 
                   <div class="has-error" *ngIf="registerForm.controls['Password'].hasError('required') && formSubmitted ||  registerForm.controls['Password'].hasError('validatePassword') && registerForm.controls['Password'].touched || registerForm.controls['Password'].hasError('minlength')
@@ -124,7 +124,7 @@
                    <label class="control-label">Security Answer</label>
                     <input name="Security_Question_Answer" type="text" class="form-control "
                                  [formControl]="registerForm.controls['Security_Question_Answer']"
-                                 placeholder="Enter your response.">
+                                 placeholder="Enter your response">
                   <div class="has-error" *ngIf="registerForm.controls['Security_Question_Answer'].hasError('required')
                     && formSubmitted"> <div class="help-block">Response is required.</div> </div>
                 </div>
