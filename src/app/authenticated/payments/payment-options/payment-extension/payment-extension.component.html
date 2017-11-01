@@ -18,14 +18,14 @@
         </div>
       </ng-template>
       <ng-template #HavePastDueAmount>
-        <ng-template *ngIf="pastDueAmount; then PastDueAmount else NoPastDueAmount;"></ng-template>
+        <ng-template *ngIf="pastDueAmount > 0; then PastDueAmount else NoPastDueAmount;"></ng-template>
         <ng-template #PastDueAmount>
           <ng-template *ngIf="requestedExtension; then ExtensionRequested else ExtensionNotRequested;"></ng-template>
           <ng-template #ExtensionNotRequested>
             <div class="alert alert-warning">
               <div class="row">
                 <div class="col-sm-12">
-                  <p class="pull-left">You have a past-due balance of <b>$ {{pastDueAmount | number : dollarAmountFormatter}}</b><br>
+                  <p class="pull-left">You have a past-due balance of <b>${{pastDueAmount | number : dollarAmountFormatter}}</b><br>
                     Would you like to request an extension?</p>
                   <div style="float: right;">
                     <button class="btn btn-primary center pull-right" (click)="requestExtension()"><i class="fa fa-handshake-o"></i> Request Extension</button>
@@ -73,7 +73,7 @@
                   <div class="row">
                     <div class="col-sm-12">
                       <p class="pull-left">A payment extension has been approved!<br>
-                        Your account has been updated. No further action required!</p>
+                        Your account has been updated. No further action required! Followup date: {{paymentExtension.FollowupDate |  date: 'MM/dd/yyyy'}}</p>
                       <div style="float: right;">
                         <button class="btn btn-primary center pull-right"><i class="fa fa-thumbs-up"></i> Request
                           Approved
@@ -103,7 +103,6 @@
         <ng-template #NoPastDueAmount>
           <div class="alert alert-info"><b>No Worries!</b> You have no past due amount. Payment Extension is not required at this time.</div>
         </ng-template>
-
       </ng-template>
     </div>
   </div>

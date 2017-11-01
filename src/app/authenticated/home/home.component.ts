@@ -61,9 +61,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             Options => {
               if (Options && Options.length > 0) {
                 this.NotificationOptions = Options[0];
-                if (String(this.NotificationOptions.Status) === NotificationStatus[NotificationStatus.Active]) {
-                  this.Paperless_Billing = Boolean(this.NotificationOptions.Paperless);
-                }
+                this.Paperless_Billing = (String(this.NotificationOptions.Status) === NotificationStatus[NotificationStatus.Active]) ? Boolean(this.NotificationOptions.Paperless) : false;
               } else {
                 this.Paperless_Billing = false;
               }
@@ -81,6 +79,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.ShowPaperlessBilling = (this.Is_Auto_Bill_Pay && !this.Paperless_Billing) ? true : false;
       this.ShowBudgetBilling = (this.Is_Auto_Bill_Pay && this.Paperless_Billing && !this.Budget_Billing) ? true : false;
       this.ShowEnergySavingTips = (this.Is_Auto_Bill_Pay  && this.Paperless_Billing && this.Budget_Billing) ? true : false;
+
       if (this.ShowAutoBillPay) {
         this.currentView = 'ShowAutoBillPay';
       } else if (this.ShowPaperlessBilling) {

@@ -7,6 +7,7 @@ import { IRenewalDetails} from 'app/core/models/renewals/renewaldetails.model';
 import { DocumentsService} from 'app/core/documents.service';
 import { IServiceAccountPlanHistoryOffer } from '../../../core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
 import { Offer } from '../../../core/models/offers/offer.model';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'mygexa-offer-details-popover',
@@ -28,11 +29,15 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
   public eflLink;
   public tosLink;
   public yraacLink;
+  kWhAmountFormatter: string;
+  dollarAmountFormatter: string;
 
   constructor(private documentsService: DocumentsService) {
   }
 
   ngOnInit() {
+    this.kWhAmountFormatter = environment.kWhAmountFormatter;
+    this.dollarAmountFormatter = environment.DollarAmountFormatter;
     if (this.ActiveOfferDetails) {
       this.checkCurrentFeaturedUsageLevel(this.ActiveOfferDetails.Current_Offer);
     } else if (this.RenewalAccountDetails) {

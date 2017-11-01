@@ -52,7 +52,7 @@
             <ng-template #NonZeroMin> ( >= {{charge.Min}} kWh)</ng-template>
             <!--<ng-template #OnlyMax> ( >= {{charge.Max}} kWh)</ng-template>-->
             <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}} kWh) </ng-template>
-            <td class="bill-amount">${{charge.Amount | number: '1.1-4' }}  per kWh</td>
+            <td class="bill-amount">${{charge.Amount | number: kWhAmountFormatter }}  per kWh</td>
           </tr>
           <tr *ngFor="let charge of ActiveOfferDetails.Current_Offer.Usage_Charges">
             <td class="bill-name">Monthly Usage Charges<small>
@@ -65,7 +65,7 @@
             <ng-template #NonZeroMin> ( >= {{charge.Min}})</ng-template>
             <!--<ng-template #OnlyMax> ( >= {{charge.Max}})</ng-template>-->
             <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}}) </ng-template>
-            <td class="bill-amount">${{charge.Amount | number: '1.1-4' }}</td>
+            <td class="bill-amount">${{charge.Amount | number: dollarAmountFormatter }}</td>
           </tr>
           <tr *ngFor="let charge of ActiveOfferDetails.Current_Offer.Usage_Credits">
             <td class="bill-name">Monthly Usage Credits<small>
@@ -78,11 +78,11 @@
             <ng-template #NonZeroMin> ( >= {{charge.Min}})</ng-template>
             <!--<ng-template #OnlyMax> ( >= {{charge.Max}})</ng-template>-->
             <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}}) </ng-template>
-            <td class="bill-amount">${{charge.Amount | number: '1.1-4' }}</td>
+            <td class="bill-amount">${{charge.Amount | number: dollarAmountFormatter }}</td>
           </tr>
           <tr *ngIf="ActiveOfferDetails.Current_Offer.Base_Charge">
             <td class="bill-name">Base Charge <small>(per month)</small></td>
-            <td class="bill-amount">${{ActiveOfferDetails.Current_Offer.Base_Charge | number: '1.1-2' }}*</td>
+            <td class="bill-amount">${{ActiveOfferDetails.Current_Offer.Base_Charge | number: dollarAmountFormatter }}*</td>
           </tr>
           </tbody>
         </table>
@@ -93,11 +93,11 @@
           <tbody>
           <tr>
             <td class="bill-name">TDU Delivery Charges <small>(per kWh)</small></td>
-            <td class="bill-amount">${{ActiveOfferDetails.Current_Offer.Delivery_Charge | number: '1.1-2' }}</td>
+            <td class="bill-amount">${{ActiveOfferDetails.Current_Offer.Delivery_Charge | number: kWhAmountFormatter }}</td>
           </tr>
           <tr>
             <td class="bill-name">TDU Meter Charges <small>(per month)</small></td>
-            <td class="bill-amount">${{ActiveOfferDetails.Current_Offer.Meter_Charge | number: '1.1-4' }}</td>
+            <td class="bill-amount">${{ActiveOfferDetails.Current_Offer.Meter_Charge | number: dollarAmountFormatter }}</td>
           </tr>
           </tbody>
         </table>
@@ -172,7 +172,7 @@
             <ng-template #NonZeroMin> ( >= {{charge.Min}} kWh)</ng-template>
             <!--<ng-template #OnlyMax> ( >= {{charge.Max}} kWh)</ng-template>-->
             <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}} kWh) </ng-template>
-            <td class="bill-amount">${{charge.Amount | number: '1.1-4' }}  per kWh</td>
+            <td class="bill-amount">${{charge.Amount | number: kWhAmountFormatter }}  per kWh</td>
           </tr>
           <tr *ngFor="let charge of RenewalAccountDetails?.Existing_Renewal?.Offer?.Usage_Charges">
             <td class="bill-name">Monthly Usage Charges<small>
@@ -185,7 +185,7 @@
             <ng-template #NonZeroMin> ( >= {{charge.Min}})</ng-template>
             <!--<ng-template #OnlyMax> ( >= {{charge.Max}})</ng-template>-->
             <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}}) </ng-template>
-            <td class="bill-amount">${{charge.Amount | number: '1.1-4' }}</td>
+            <td class="bill-amount">${{charge.Amount | number: dollarAmountFormatter }}</td>
           </tr>
           <tr *ngFor="let charge of RenewalAccountDetails?.Existing_Renewal?.Offer?.Usage_Credits">
             <td class="bill-name">Monthly Usage Credits<small>
@@ -198,11 +198,11 @@
             <ng-template #NonZeroMin> ( >= {{charge.Min}})</ng-template>
             <!--<ng-template #OnlyMax> ( >= {{charge.Max}})</ng-template>-->
             <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}}) </ng-template>
-            <td class="bill-amount">${{charge.Amount | number: '1.1-4' }}</td>
+            <td class="bill-amount">${{charge.Amount | number: dollarAmountFormatter }}</td>
           </tr>
           <tr *ngIf="RenewalAccountDetails?.Existing_Renewal?.Offer?.Base_Charge">
             <td class="bill-name">Base Charge <small>(per month)</small></td>
-            <td class="bill-amount">${{RenewalAccountDetails?.Existing_Renewal?.Offer?.Base_Charge | number: '1.1-2' }}*</td>
+            <td class="bill-amount">${{RenewalAccountDetails?.Existing_Renewal?.Offer?.Base_Charge | number: dollarAmountFormatter }}*</td>
           </tr>
           </tbody>
         </table>
@@ -213,11 +213,11 @@
           <tbody>
           <tr>
             <td class="bill-name">TDU Delivery Charges <small>(per kWh)</small></td>
-            <td class="bill-amount">${{RenewalAccountDetails?.Existing_Renewal?.Offer?.Delivery_Charge | number: '1.1-2' }}</td>
+            <td class="bill-amount">${{RenewalAccountDetails?.Existing_Renewal?.Offer?.Delivery_Charge | number: kWhAmountFormatter }}</td>
           </tr>
           <tr>
             <td class="bill-name">TDU Meter Charges <small>(per month)</small></td>
-            <td class="bill-amount">${{RenewalAccountDetails?.Existing_Renewal?.Offer?.Meter_Charge | number: '1.1-4' }}</td>
+            <td class="bill-amount">${{RenewalAccountDetails?.Existing_Renewal?.Offer?.Meter_Charge | number: dollarAmountFormatter }}</td>
           </tr>
           </tbody>
         </table>
@@ -285,7 +285,7 @@
             <ng-template #NonZeroMin> ( >= {{charge.Min}} kWh)</ng-template>
             <!--<ng-template #OnlyMax> ( >= {{charge.Max}} kWh)</ng-template>-->
             <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}} kWh) </ng-template>
-            <td class="bill-amount">${{charge.Amount | number: '1.1-4' }}  per kWh</td>
+            <td class="bill-amount">${{charge.Amount | number: kWhAmountFormatter }}  per kWh</td>
           </tr>
 
           <tr *ngFor="let charge of OfferDetails?.Actual_Pricing.Usage_Charges">
@@ -299,7 +299,7 @@
             <ng-template #NonZeroMin> ( >= {{charge.Min}})</ng-template>
             <!--<ng-template #OnlyMax> ( >= {{charge.Max}})</ng-template>-->
             <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}}) </ng-template>
-            <td class="bill-amount">${{charge.Amount | number: '1.1-4' }}</td>
+            <td class="bill-amount">${{charge.Amount | number: dollarAmountFormatter }}</td>
           </tr>
 
           <tr *ngFor="let charge of OfferDetails?.Actual_Pricing.Usage_Credits">
@@ -314,11 +314,11 @@
             <!--<ng-template #OnlyMax> ( >= {{charge.Max}})</ng-template>-->
             <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}}) </ng-template>
             <td *ngIf="charge.Min > 0 && charge.Max === ''">heloooooo</td>
-            <td class="bill-amount">${{charge.Amount | number: '1.1-4' }}</td>
+            <td class="bill-amount">${{charge.Amount | number: dollarAmountFormatter }}</td>
           </tr>
           <tr *ngIf="OfferDetails?.Actual_Pricing.Base_Charge">
             <td class="bill-name">Base charge<small>(per month)</small></td>
-            <td class="bill-amount">${{OfferDetails?.Plan.Pricing_Definition.Base_Charge | number: '1.1-2' }}*</td>
+            <td class="bill-amount">${{OfferDetails?.Plan.Pricing_Definition.Base_Charge | number: dollarAmountFormatter }}*</td>
           </tr>
           </tbody>
         </table>
@@ -329,11 +329,11 @@
           <tbody>
           <tr>
             <td class="bill-name">TDU delivery charges <small>(per kWh)</small></td>
-            <td class="bill-amount">${{OfferDetails.Plan.TDU.Delivery_Charge | number: '1.1-2' }}</td>
+            <td class="bill-amount">${{OfferDetails.Plan.TDU.Delivery_Charge | number: kWhAmountFormatter }}</td>
           </tr>
           <tr>
             <td class="bill-name">TDU meter charges <small>(per month)</small></td>
-            <td class="bill-amount">${{OfferDetails.Plan.TDU.Meter_Charge | number: '1.1-4' }}</td>
+            <td class="bill-amount">${{OfferDetails.Plan.TDU.Meter_Charge | number: dollarAmountFormatter }}</td>
           </tr>
           </tbody>
         </table>

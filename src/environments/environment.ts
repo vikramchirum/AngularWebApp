@@ -12,5 +12,6 @@ export const environment = {
   DollarAmountFormatter: '1.2-2',
   Documents_Url: 'http://azureapidev/api/documents',
   GexaShare_Url: 'https://webauthoring.gexa.gexaenergy.com/OEF/RefereeEnrollment.aspx?ReferralId=',
-  Client_Email_Addresses: 'mygexa.azure@gexaenergy.com'
+  Client_Email_Addresses: 'mygexa.azure@gexaenergy.com',
+  kWhAmountFormatter: '1.4-4'
 };
