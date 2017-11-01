@@ -95,7 +95,9 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
   set LatestInvoice(LatestInvoice: IInvoice) {
     this._LatestInvoice = LatestInvoice;
-    this.formGroup.controls['payment_now'].setValue(`$${FloatToMoney(LatestInvoice.Current_Charges + LatestInvoice.Balance_Forward)}`);
+    if (this.ActiveServiceAccount) {
+      this.formGroup.controls['payment_now'].setValue(`$${FloatToMoney(this.ActiveServiceAccount.Current_Due + this.ActiveServiceAccount.Past_Due)}`);
+    }
   }
 
   private ActiveServiceAccountSubscription: Subscription = null;
