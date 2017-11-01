@@ -285,7 +285,7 @@
             <ng-template #NonZeroMin> ( >= {{charge.Min}} kWh)</ng-template>
             <!--<ng-template #OnlyMax> ( >= {{charge.Max}} kWh)</ng-template>-->
             <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}} kWh) </ng-template>
-            <td class="bill-amount">${{charge.Amount | number: '1.1-4' }}  per kWh</td>
+            <td class="bill-amount">${{charge.Amount | number: '1.4-4' }}  per kWh</td>
           </tr>
 
           <tr *ngFor="let charge of OfferDetails?.Actual_Pricing.Usage_Charges">
@@ -329,11 +329,11 @@
           <tbody>
           <tr>
             <td class="bill-name">TDU delivery charges <small>(per kWh)</small></td>
-            <td class="bill-amount">${{OfferDetails.Plan.TDU.Delivery_Charge | number: '1.1-2' }}</td>
+            <td class="bill-amount">${{OfferDetails.Plan.TDU.Delivery_Charge | number: '1.4-4' }}</td>
           </tr>
           <tr>
             <td class="bill-name">TDU meter charges <small>(per month)</small></td>
-            <td class="bill-amount">${{OfferDetails.Plan.TDU.Meter_Charge | number: '1.1-4' }}</td>
+            <td class="bill-amount">${{OfferDetails.Plan.TDU.Meter_Charge | number: '1.4-4' }}</td>
           </tr>
           </tbody>
         </table>
