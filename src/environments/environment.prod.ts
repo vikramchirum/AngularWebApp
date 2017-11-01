@@ -10,5 +10,6 @@ export const environment = {
   DollarAmountFormatter: '1.2-2',
   Documents_Url: 'https://gexaapi.azure-api.net/servicing/api/documents',
   GexaShare_Url: 'http://www.gexaenergy.com/customer-type/location/?ReferralId=',
-  Client_Email_Addresses: 'mygexa.azure@gexaenergy.com'
+  Client_Email_Addresses: 'mygexa.azure@gexaenergy.com',
+  kWhAmountFormatter: '1.4-4'
 };

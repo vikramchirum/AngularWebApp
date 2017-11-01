@@ -9,6 +9,7 @@ import { IBudgetBillingInfo } from 'app/core/models/budgetbilling/budgetbillingi
 import { IBudgetBillingEstimate } from 'app/core/models/budgetbilling/budgetbillingestimate.model';
 import { CancelBudgetBillingModalComponent } from './cancel-budget-billing-modal/cancel-budget-billing-modal.component';
 import { ICancelBudgetBillingRequest } from 'app/core/models/budgetbilling/cancelbudgetbillingrequest.model';
+import { UserService } from '../../../../core/user.service';
 
 @Component({
   selector: 'mygexa-budget-billing',
@@ -17,7 +18,6 @@ import { ICancelBudgetBillingRequest } from 'app/core/models/budgetbilling/cance
   providers: [BudgetBillingService]
 })
 export class BudgetBillingComponent implements OnInit, OnDestroy {
-
   isEnrolled = false;
   isEnrollError = false;
   isCancelled = false;
@@ -25,23 +25,29 @@ export class BudgetBillingComponent implements OnInit, OnDestroy {
   signingUpToBudgetBilling = false;
   cancelBudgetBillingRequest: ICancelBudgetBillingRequest;
   budgetBillingInfo: IBudgetBillingInfo;
-
+  username: string = null;
   @ViewChild('cancelBudgetBillingModal') cancelBudgetBillingModal: CancelBudgetBillingModalComponent;
   dollarAmountFormatter: string;
-
   budgetBillingInfo$: Observable<IBudgetBillingInfo>;
   budgetBillingEstimate$: Observable<IBudgetBillingEstimate>;
   cancelBudgetBillingObservable$: Observable<boolean>;
 
   private ActiveServiceAccountSubscription: Subscription = null;
+  private UserServiceSubscription: Subscription = null;
   private serviceAccountId: number;
 
-  constructor(private budgetBillingService: BudgetBillingService
-    , private serviceAccountService: ServiceAccountService) {
+  constructor(private budgetBillingService: BudgetBillingService,
+              private UserService: UserService,
+              private serviceAccountService: ServiceAccountService) {
   }
 
   ngOnInit() {
     this.dollarAmountFormatter = environment.DollarAmountFormatter;
+    this.UserServiceSubscription = this.UserService.UserObservable.subscribe(
+      result => {
+        this.username = result.Profile.Username;
+      }
+    );
     this.ActiveServiceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         // always reset the budget billing screen to initial screen.
@@ -72,6 +78,7 @@ export class BudgetBillingComponent implements OnInit, OnDestroy {
   }
 
   handleBudgetBillingEvent(event) {
+    console.log('event', event);
     if (!event.IsCancel) {
       this.budgetBillingService.createBudgetBilling(event.CreateBudgetBillingRequest).subscribe(response => {
         if (response) {
@@ -89,7 +96,7 @@ export class BudgetBillingComponent implements OnInit, OnDestroy {
     if (event.IsCancel) {
       const cancelBudgetBillingRequest = {} as ICancelBudgetBillingRequest;
       cancelBudgetBillingRequest.Service_Account_Id = this.serviceAccountId;
-      cancelBudgetBillingRequest.User_Name = 'test_vikram';
+      cancelBudgetBillingRequest.User_Name = this.username;
       this.cancelBudgetBillingObservable$.subscribe(response => {
         if (response) {
           this.isCancelled = true;
