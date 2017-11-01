@@ -83,6 +83,8 @@ export class BudgetBillingComponent implements OnInit, OnDestroy {
       this.budgetBillingService.createBudgetBilling(event.CreateBudgetBillingRequest).subscribe(response => {
         if (response) {
           this.isEnrolled = true;
+          // Refresh cache
+          this.serviceAccountService.UpdateServiceAccounts(true);
         } else {
           this.isEnrollError = true;
         }
@@ -104,6 +106,8 @@ export class BudgetBillingComponent implements OnInit, OnDestroy {
           this.isCancelError = true;
         }
       });
+      // Refresh cache
+      this.serviceAccountService.UpdateServiceAccounts(true);
     }
   }
 
@@ -129,5 +133,8 @@ export class BudgetBillingComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.ActiveServiceAccountSubscription.unsubscribe();
+    if (this.UserServiceSubscription) {
+      this.UserServiceSubscription.unsubscribe();
+    }
   }
 }
