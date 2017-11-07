@@ -22,7 +22,6 @@ export class LoginRegisterModalComponent implements OnInit {
   error: string = null;
   errorMsg: string = null;
   secQuesArray: ISecurityQuestions[] = [];
-
   constructor(
     private UserService: UserService,
     private Router: Router,
@@ -45,23 +44,65 @@ export class LoginRegisterModalComponent implements OnInit {
   }
 
   save(model: IRegUser, isValid: boolean) {
-    this.formSubmitted = true;
+    this.resetValidationErrors();
     // call API to save customer
     if (isValid) {
       this.UserService.signup(model).subscribe(
         () => this.Router.navigate([this.UserService.UserState || '/']),
         error => {
-          if (error.includes('Internal')) {
-            console.log('Hi');
+          let errorMessage: string;
+          errorMessage = error.Message;
+          if (errorMessage.includes('The Service Account Search request is invalid.')) {
+            this.registerForm.controls['Service_Account_Id'].setErrors({'incorrect': true});
+            // this.errorMsg = 'We are having trouble finding this service account number. Please check the number, or call 866-961-9399 for assistance.';
+          } else if (errorMessage.includes('User Exists')) {
+            this.registerForm.controls['User_name'].setErrors({'userExists': true});
+          } else if (errorMessage.includes('Username already created for CSP ID.')) {
+            this.registerForm.controls['User_name'].setErrors({'userNameInUse': true});
           } else {
-            this.errorMsg = error.toString();
-            this.processing = false;
+            this.errorMsg = error.Message;
           }
+          this.processing = false;
         }
       );
+    } else {
+      console.log('Invalid form');
+      console.log('Invalid service account id', this.registerForm.controls['Service_Account_Id'].valid );
+      console.log('Invalid Zip_Code', this.registerForm.controls['Zip_Code'].valid );
+      console.log('Invalid User_name', this.registerForm.controls['User_name'].valid );
+      console.log('Invalid Password', this.registerForm.controls['Password'].valid );
+      console.log('Invalid ConfirmPassword', this.registerForm.controls['ConfirmPassword'].valid );
+      console.log('Invalid Email_Address', this.registerForm.controls['Email_Address'].valid );
+      console.log('Invalid Email_Address', this.registerForm.controls['Email_Address'].hasError('validateEmail') );
+      console.log('Invalid Security_Question_Id', this.registerForm.controls['Security_Question_Id'].valid );
+      console.log('Invalid Security_Question_Answer', this.registerForm.controls['Security_Question_Answer'].valid );
+      this.processing = false;
     }
   }
+
+  resetValidationErrors() {
+    this.processing = true;
+    this.formSubmitted = true;
+    this.errorMsg = null;
+    console.log('Invalid service account id', this.registerForm.controls['Service_Account_Id'].valid );
+    console.log('Invalid User_name', this.registerForm.controls['User_name'].valid );
+    if (!this.registerForm.controls['Service_Account_Id'].valid) {
+      // this.registerForm.controls['Service_Account_Id'].setValue('', { onlySelf: true });
+      //  this.registerForm.controls['Service_Account_Id'].setErrors({'incorrect': null});
+      this.registerForm.controls['Service_Account_Id'].setErrors(null);
+    }
+    if (! this.registerForm.controls['User_name'].valid ) {
+      // this.registerForm.controls['User_name'].setValue('', { onlySelf: true });
+      // this.registerForm.controls['User_name'].setErrors({'userExists': null});
+      // this.registerForm.controls['User_name'].setErrors({'userNameInUse': null});
+      this.registerForm.controls['User_name'].setErrors(null);
+    }
+    console.log('Invalid service account id', this.registerForm.controls['Service_Account_Id'].valid );
+    console.log('Invalid User_name', this.registerForm.controls['User_name'].valid );
+  }
+
   reset() {
+    this.processing = false;
     this.formSubmitted = false;
     this.errorMsg = null;
     this.registerForm = this.registerFormInit();
