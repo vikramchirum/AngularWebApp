@@ -59,23 +59,16 @@ export class LoginRegisterModalComponent implements OnInit {
             this.registerForm.controls['User_name'].setErrors({'userExists': true});
           } else if (errorMessage.includes('Username already created for CSP ID.')) {
             this.registerForm.controls['User_name'].setErrors({'userNameInUse': true});
+          } else if (errorMessage.includes('We could not find the service account you supplied.')) {
+            this.errorMsg = 'Information provided does not match our records. Please check the details, or call 866-961-9399 for assistance.';
           } else {
-            this.errorMsg = error.Message;
+            this.errorMsg = errorMessage;
           }
           this.processing = false;
         }
       );
     } else {
       console.log('Invalid form');
-      console.log('Invalid service account id', this.registerForm.controls['Service_Account_Id'].valid );
-      console.log('Invalid Zip_Code', this.registerForm.controls['Zip_Code'].valid );
-      console.log('Invalid User_name', this.registerForm.controls['User_name'].valid );
-      console.log('Invalid Password', this.registerForm.controls['Password'].valid );
-      console.log('Invalid ConfirmPassword', this.registerForm.controls['ConfirmPassword'].valid );
-      console.log('Invalid Email_Address', this.registerForm.controls['Email_Address'].valid );
-      console.log('Invalid Email_Address', this.registerForm.controls['Email_Address'].hasError('validateEmail') );
-      console.log('Invalid Security_Question_Id', this.registerForm.controls['Security_Question_Id'].valid );
-      console.log('Invalid Security_Question_Answer', this.registerForm.controls['Security_Question_Answer'].valid );
       this.processing = false;
     }
   }
@@ -84,21 +77,17 @@ export class LoginRegisterModalComponent implements OnInit {
     this.processing = true;
     this.formSubmitted = true;
     this.errorMsg = null;
-    console.log('Invalid service account id', this.registerForm.controls['Service_Account_Id'].valid );
-    console.log('Invalid User_name', this.registerForm.controls['User_name'].valid );
-    if (!this.registerForm.controls['Service_Account_Id'].valid) {
-      // this.registerForm.controls['Service_Account_Id'].setValue('', { onlySelf: true });
-      //  this.registerForm.controls['Service_Account_Id'].setErrors({'incorrect': null});
-      this.registerForm.controls['Service_Account_Id'].setErrors(null);
-    }
-    if (! this.registerForm.controls['User_name'].valid ) {
-      // this.registerForm.controls['User_name'].setValue('', { onlySelf: true });
-      // this.registerForm.controls['User_name'].setErrors({'userExists': null});
-      // this.registerForm.controls['User_name'].setErrors({'userNameInUse': null});
-      this.registerForm.controls['User_name'].setErrors(null);
-    }
-    console.log('Invalid service account id', this.registerForm.controls['Service_Account_Id'].valid );
-    console.log('Invalid User_name', this.registerForm.controls['User_name'].valid );
+    // if ( this.registerForm.controls['Service_Account_Id'].value !== '' && !this.registerForm.controls['Service_Account_Id'].valid) {
+    //   // this.registerForm.controls['Service_Account_Id'].setValue('', { onlySelf: true });
+    //   //  this.registerForm.controls['Service_Account_Id'].setErrors({'incorrect': null});
+    //   this.registerForm.controls['Service_Account_Id'].setErrors(null);
+    // }
+    // if ( this.registerForm.controls['User_name'].value !== '' && ! this.registerForm.controls['User_name'].valid ) {
+    //   // this.registerForm.controls['User_name'].setValue('', { onlySelf: true });
+    //   // this.registerForm.controls['User_name'].setErrors({'userExists': null});
+    //   // this.registerForm.controls['User_name'].setErrors({'userNameInUse': null});
+    //   this.registerForm.controls['User_name'].setErrors(null);
+    // // }
   }
 
   reset() {
