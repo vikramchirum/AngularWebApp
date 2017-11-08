@@ -129,8 +129,7 @@
                                  class="form-control " placeholder="Enter Email"
                                  [formControl]="registerForm.controls['Email_Address']">
                   <div class="has-error"
-                             *ngIf="registerForm.controls['Email_Address'].hasError('required') && formSubmitted ||
-                                    registerForm.controls['Email_Address'].hasError('validateEmail')" >
+                             *ngIf="!registerForm.controls['Email_Address'].valid" >
                     <div class="help-block">
                        <span *ngIf="registerForm.controls['Email_Address'].hasError('required')
                     && formSubmitted">  Email is required. </span>

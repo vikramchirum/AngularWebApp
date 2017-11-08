@@ -17,14 +17,14 @@ export function validCreditCard(control: FormControl): any {
   if (
     // Test for an empty string.
     value
-    //Test if the card type is Mastercard or not
+    // Test if the card type is Mastercard or not
     && (/^5[1-5][0-9]{14}$/g.test(value)
-    //Test if the card type is Visa or not
+    // Test if the card type is Visa or not
     || /^4[0-9]{12}(?:[0-9]{3})?$/g.test(value)
-    //Test if the card type is Discover or not
+    // Test if the card type is Discover or not
     || /^6(?:011|5[0-9]{2})[0-9]{12}$/g.test(value)
     )) {
-      return null;     
+      return null;
     }
   return {invalidCreditCard: true};
 }
@@ -111,6 +111,7 @@ export function validateInteger(c: FormControl) {
 
 export function validateEmail(c: FormControl) {
   const EMAIL_REGEXP = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  console.log('value', EMAIL_REGEXP.test(c.value));
   return EMAIL_REGEXP.test(c.value) ? null : {
     validateEmail: {
       valid: false
