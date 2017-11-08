@@ -29,8 +29,10 @@
             <ng-container *ngIf="(renewalOffers && (renewalOffers.length > 0)); else noRenewalOffers">
               <section>
                 <div class="col-md-4 plan-card" *ngFor="let offer of renewalOffers; let i= index;">
-                  <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Renewal"
-                                    (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-plan-card>
+                  <!-- <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Renewal"
+                                    (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-plan-card> -->
+                  <mygexa-play-card [offer]="offer" [offerSelectionType]="offerSelectionType.Renewal"
+                                    (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-play-card>
                 </div>
               </section>
             </ng-container>
