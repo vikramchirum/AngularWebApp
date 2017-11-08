@@ -24,7 +24,7 @@ export function validCreditCard(control: FormControl): any {
     //Test if the card type is Discover or not
     || /^6(?:011|5[0-9]{2})[0-9]{12}$/g.test(value)
     )) {
-      return null;     
+      return null;
     }
   return {invalidCreditCard: true};
 }

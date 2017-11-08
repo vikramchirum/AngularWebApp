@@ -33,8 +33,8 @@ import { IOfferSelectionPayLoad } from '../../../shared/models/offerselectionpay
 import { ErrorModalComponent } from '../../../shared/components/error-modal/error-modal.component';
 import { AvailableDateService } from '../../../core/availabledate.service';
 import { ITduAvailabilityResult } from '../../../core/models/availabledate/tduAvailabilityResult.model';
-import { ServiceType } from "../../../core/models/enums/serviceType";
-import { CalendarService } from "../../../core/calendar.service";
+import { ServiceType } from '../../../core/models/enums/serviceType';
+import { CalendarService } from '../../../core/calendar.service';
 
 @Component( {
   selector: 'mygexa-moving-center-form',

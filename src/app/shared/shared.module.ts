@@ -35,6 +35,7 @@ import { AddPaymentAccountsComponent } from './components/add-payment-accounts/a
 import { ErrorModalComponent } from './components/error-modal/error-modal.component';
 import { ViewBillDetailsComponent } from './components/view-bill-details/view-bill-details.component';
 import { PlayCardComponent } from './components/play-card/play-card.component';
+import { PaymentConfirmationModalComponent } from './components/payment-confirmation-modal/payment-confirmation-modal.component';
 
 @NgModule({
   imports: [
@@ -73,6 +74,7 @@ import { PlayCardComponent } from './components/play-card/play-card.component';
     AddPaymentAccountsComponent,
     ErrorModalComponent,
     ViewBillDetailsComponent,
+    PaymentConfirmationModalComponent,
     PlayCardComponent
   ],
   exports: [
@@ -100,6 +102,7 @@ import { PlayCardComponent } from './components/play-card/play-card.component';
     AddPaymentAccountsComponent,
     ErrorModalComponent,
     ViewBillDetailsComponent,
+    PaymentConfirmationModalComponent,
     PlayCardComponent
   ]
 })
