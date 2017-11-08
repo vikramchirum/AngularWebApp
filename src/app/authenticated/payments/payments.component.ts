@@ -36,8 +36,10 @@ export class PaymentsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
-        this.InvoiceStore.LoadLatestInvoiceDetails(result.Id);
-        this.paymentsHistoryStore.LoadPaymentsHistory(result);
+        if (result) {
+          this.InvoiceStore.LoadLatestInvoiceDetails(result.Id);
+          this.paymentsHistoryStore.LoadPaymentsHistory(result);
+        }
       }
     );
 

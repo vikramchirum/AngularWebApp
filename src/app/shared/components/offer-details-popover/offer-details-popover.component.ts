@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, SimpleChanges, OnChanges, Output, EventEmitter } from '@angular/core';
 import { PopoverDirective } from 'ngx-bootstrap';
 
 import { IOffers} from 'app/core/models/offers/offers.model';
@@ -21,6 +21,7 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
   @Input() ActiveOfferDetails: ServiceAccount;
   @Input() IsCurrentPlanPopOver: boolean;
   @Input() RenewalAccountDetails: IRenewalDetails;
+  @Output() public revertBackEvent: EventEmitter<string> = new EventEmitter();
 
   public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
@@ -182,5 +183,8 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
         this.yraacLink = this.documentsService.getYRAACLink();
       }
     }
+  }
+  revertBack(flag) {
+    this.revertBackEvent.emit(this.OfferDetails.Id+flag);
   }
 }

@@ -139,7 +139,7 @@
               </li>
               <hr>
               <li>
-                <a (click)="paymentSubmit()" class="btn btn-link btn-small btn-success btn-payment" >
+                <a (click)="checkAmountBeforeSubmit()" class="btn btn-link btn-small btn-success btn-payment" >
                   Make a payment
                 </a>
               </li>
@@ -164,7 +164,7 @@
               </li>
               <hr>
               <li>
-                <a (click)="paymentSubmit()" class="btn btn-link btn-small btn-success btn-payment" >
+                <a (click)="checkAmountBeforeSubmit()" class="btn btn-link btn-small btn-success btn-payment" >
                   Make a payment
                 </a>
               </li>
@@ -178,7 +178,7 @@
             <button
               type="submit"
               class="btn  btn-primary"
-              (click)="paymentSubmit()"
+              (click)="checkAmountBeforeSubmit()"
               [disabled]="!paymentReady || paymentLoadingMessage">
               <i class="fa fa-spin fa-spinner" *ngIf="paymentLoadingMessage"></i>
               {{ paymentLoadingMessage ? paymentLoadingMessage : 'Make a Payment' }}
@@ -203,3 +203,4 @@
 
   </form>
 </section>
+<mygexa-payment-confirmation-modal (onPaymentConfirmationEvent) = "onSelection($event)" #paymentConfirmationModal></mygexa-payment-confirmation-modal>
