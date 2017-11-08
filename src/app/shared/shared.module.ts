@@ -34,6 +34,7 @@ import { OfferDetailsPopoverComponent } from './components/offer-details-popover
 import { AddPaymentAccountsComponent } from './components/add-payment-accounts/add-payment-accounts.component';
 import { ErrorModalComponent } from './components/error-modal/error-modal.component';
 import { ViewBillDetailsComponent } from './components/view-bill-details/view-bill-details.component';
+import { PlayCardComponent } from './components/play-card/play-card.component';
 import { PaymentConfirmationModalComponent } from './components/payment-confirmation-modal/payment-confirmation-modal.component';
 
 @NgModule({
@@ -73,7 +74,8 @@ import { PaymentConfirmationModalComponent } from './components/payment-confirma
     AddPaymentAccountsComponent,
     ErrorModalComponent,
     ViewBillDetailsComponent,
-    PaymentConfirmationModalComponent
+    PaymentConfirmationModalComponent,
+    PlayCardComponent
   ],
   exports: [
     ChangeUserNameComponent,
@@ -100,7 +102,8 @@ import { PaymentConfirmationModalComponent } from './components/payment-confirma
     AddPaymentAccountsComponent,
     ErrorModalComponent,
     ViewBillDetailsComponent,
-    PaymentConfirmationModalComponent
+    PaymentConfirmationModalComponent,
+    PlayCardComponent
   ]
 })
 export class SharedModule { }
