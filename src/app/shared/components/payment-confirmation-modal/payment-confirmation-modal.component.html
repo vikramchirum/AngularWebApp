@@ -1,0 +1,35 @@
+<section class="paymentConfirmation-modal">
+  <div [config]="{ backdrop: 'static', keyboard: false }"
+       bsModal #paymentConfirmationModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+          <!--<h2 class="modal-title"><b><span class="hidden-xs">Error!!!</span></b>-->
+            <!--<button type="button" class="close pull-right"  aria-label="Close"  (click)="hideErrorModal()">-->
+              <!--<span class="" aria-hidden="true">-->
+              <!--<i class="fa fa-remove close-btn"></i></span>-->
+            <!--</button></h2>-->
+          <div class="modal-body">
+              <h4 class="text-center">{{ errorResponse }}</h4>
+          </div>
+        <div class="modal-footer">
+          <div class="row" *ngIf="!minPayRequired">
+              <div class="text-center btn-toolbar">
+                <button class="btn btn-primary pull-left" (click)="onConfirmation(true)">Yes, Continue </button>
+                <button class="btn btn-secondary pull-right" (click)="onConfirmation(false)">No, Cancel </button>
+              </div>
+          </div>
+          <div class="row" *ngIf="minPayRequired">
+            <div class="text-center">
+              <button class="btn btn-primary center" (click)="onConfirmation(false)"> Ok </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
