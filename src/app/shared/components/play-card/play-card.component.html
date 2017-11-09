@@ -6,7 +6,7 @@
         Pending
         </h4>
           </div>{{checkFeaturedUsageLevel(offer)}}
-          <h4>{{offer.Plan.Name}}</h4>
+          <h2>{{offer.Plan.Name}}</h2>
           <div class="rate">
               {{priceAtFeaturedUsageLevel | DollarToCentsPipe | number: '1.1-1'}}<sup>&cent;</sup> <small>per kWh</small>
           </div>
@@ -22,8 +22,8 @@
           WHAT'S IN THE PLAN ? 
           </h4>
           <div class="row buttons">
-            <div class="col-xs-8 col-xs-offset-2">
-              <button (click)='onSelectOffer($event)' type="button" class="btn btn-block btn-success btn-select">
+            <div class="">
+              <button (click)='onSelectOffer($event)' type="button" class="btn btn-success btn-select">
                 SELECT PLAN <i class="fa fa-chevron-right"></i>
               </button>
             </div>

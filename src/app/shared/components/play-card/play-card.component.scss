@@ -125,11 +125,15 @@ body {
       h2 {
         color: $payment-base;
         font-family: 'Oswald', 'Open Sans', sans;
+        font-size: 24px;
       }
       h4 {
         color: $payment-base;
         &.plan-info {
-          margin-top: 30px;
+          /* margin-top: 30px; */
+          position: absolute;
+          bottom: 70px;
+          left: 10px;
           cursor: pointer;
         }
       }

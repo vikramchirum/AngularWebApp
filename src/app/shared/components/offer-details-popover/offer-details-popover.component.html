@@ -357,15 +357,15 @@
 
 
 <section *ngIf="OfferDetails">
-    <div class="panel-group" id="accordion">
+    <div class="panel-group" id="accordion_{{OfferDetails.Id}}">
        <div class="panel panel-default">
          <div class="panel-heading">
            <h4 class="panel-title">
-       <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+       <a data-toggle="collapse" [attr.data-parent]="'#accordion_'+OfferDetails.Id" href="#collapse1_{{OfferDetails.Id}}">
        What's Included</a>
      </h4>
          </div>
-         <div id="collapse1" class="panel-collapse collapse in">
+         <div id="collapse1_{{OfferDetails.Id}}" class="panel-collapse collapse in">
            <div class="panel-body">
              <div *ngIf="(OfferDetails.Feature_List && OfferDetails.Feature_List.length > 0); then features else noFeatures"></div>
              <ng-template #features>
@@ -396,11 +396,11 @@
        <div class="panel panel-default">
          <div class="panel-heading">
            <h4 class="panel-title">
-       <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+       <a data-toggle="collapse" [attr.data-parent]="'#accordion_'+OfferDetails.Id" href="#collapse2_{{OfferDetails.Id}}">
        Plan Documents</a>
      </h4>
          </div>
-         <div id="collapse2" class="panel-collapse collapse">
+         <div id="collapse2_{{OfferDetails.Id}}" class="panel-collapse collapse">
            <div class="panel-body">
              <div class="row doc-row">
                <div class="col-xs-4">
@@ -423,11 +423,11 @@
        <div class="panel panel-default">
          <div class="panel-heading">
            <h4 class="panel-title">
-       <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+       <a data-toggle="collapse" [attr.data-parent]="'#accordion_'+OfferDetails.Id" href="#collapse3_{{OfferDetails.Id}}">
        Cost Components</a>
      </h4>
          </div>
-         <div id="collapse3" class="panel-collapse collapse">
+         <div id="collapse3_{{OfferDetails.Id}}" class="panel-collapse collapse">
            <div class="panel-body p-o">
              <div class="row cost-row">
                <div class="col-xs-12">
@@ -519,11 +519,11 @@
        <div class="panel panel-default">
          <div class="panel-heading">
            <h4 class="panel-title">
-       <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">
+       <a data-toggle="collapse" [attr.data-parent]="'#accordion_'+OfferDetails.Id" href="#collapse4_{{OfferDetails.Id}}">
        Terms and Fees</a>
      </h4>
          </div>
-         <div id="collapse4" class="panel-collapse collapse">
+         <div id="collapse4_{{OfferDetails.Id}}" class="panel-collapse collapse">
            <div class="panel-body">
              <div class="row terms-row">
                <div class="col-xs-6">
@@ -538,13 +538,13 @@
          </div>
        </div>
        <div class="row buttons">
-         <div class="col-xs-6">
-           <button (click)="revertBack('#')" type="button" class="btn btn-block btn-success btn-back">
+         <div class="pd-lf-10 pd-rt-10 col-xs-5">
+           <button (click)="revertBack('#')" type="button" class="pd-lf-5 pd-rt-5 btn btn-block btn-success btn-back">
              <i class="fa fa-chevron-left"></i> BACK
            </button>
          </div>
-         <div class="col-xs-6">
-           <button (click)="revertBack('')" type="button" class="btn btn-block btn-success btn-select">
+         <div class="pd-lf-0 pd-rt-10 col-xs-7">
+           <button (click)="revertBack('')" type="button" class="pd-lf-5 pd-rt-5 btn btn-block btn-success btn-select">
              SELECT PLAN <i class="fa fa-chevron-right"></i>
            </button>
          </div>
