@@ -51,7 +51,7 @@ body {
   -ms-perspective: 1000px;
   /* margin: 80px 150px;
   width: 325px; */
-  height: 375px;
+  height: 345px;
   vertical-align: top;
   /* position: absolute; */
   display: block;
@@ -126,13 +126,16 @@ body {
         color: $payment-base;
         font-family: 'Oswald', 'Open Sans', sans;
         font-size: 24px;
+        min-height: 52px;
+        margin-bottom: 0;
       }
       h4 {
         color: $payment-base;
         &.plan-info {
           /* margin-top: 30px; */
           position: absolute;
-          bottom: 70px;
+          width:100%;
+          bottom: 55px;
           left: 10px;
           cursor: pointer;
         }
@@ -163,7 +166,7 @@ body {
         display: inline-block;
         padding-top: 8px;
         padding-bottom: 8px;
-        margin-top: 10px;
+        margin-top: 5px;
       }
     }
     .planMore {
