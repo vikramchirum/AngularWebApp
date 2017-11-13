@@ -9,7 +9,7 @@
     </div>
     <br/>
 
-    <div class="row" *ngIf="orderDetails; then showDetails else noDetails"></div>
+    <div class="row" *ngIf="(orderDetails?.length || 0); then showDetails else noDetails"></div>
 
      <ng-template #noDetails>
       <div class="col-md-10 details">

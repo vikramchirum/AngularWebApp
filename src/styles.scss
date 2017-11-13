@@ -79,6 +79,28 @@ footer#footer {
         .text-sm-center,
         .text-sm-center * {
           text-align: center !important;
+          padding-left: 0;
+          padding-right: 0;
+        }
+        
+        footer.fixedToBottom {
+          position: static;
+          margin-top: 5px;
+          
+        }
+      }
+      
+        @media (max-width: $screen-sm-max) {
+        .text-sm-center,
+        .text-sm-center * {
+          text-align: center !important;
+          padding-left: 0;
+          padding-right: 0;
+        }
+        
+        footer.fixedToBottom {
+          position: static;
+          margin-top: 5px;
         }
       }
     }
