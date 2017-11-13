@@ -16,10 +16,10 @@
               <br/>
               <i class="fa fa-lock"></i> For {{offer.Plan.Term}} Months
             </p>
-            <p>{{offer.Promotion?.Name}}</p>
+            <p *ngIf="offer.Promotion?.Name">{{offer.Promotion?.Name}}</p>
           </div>
           <h4 class="plan-info" (click)="applyFlip()">
-          WHAT'S IN THE PLAN ? 
+          WHAT'S IN THE PLAN ?
           </h4>
           <div class="row buttons">
             <div class="">
@@ -32,15 +32,15 @@
         <div class="planMore">
             <mygexa-offer-details-popover (revertBackEvent)="revertToPlan($event)" [OfferDetails]="offer"></mygexa-offer-details-popover>
         </div>
-    
+
         <div class="planSelect">
           <div id="planSelect_confirm_{{offer.Id}}" class="planSelect_confirm slide-up-fade-in" style="display:none">
             <h3>
     Confirm Selection
     </h3>
-      
+
             <h2>{{offer.Plan.Name}}</h2>
-    
+
             <div *ngIf="isOfferSelected">
             <form novalidate (ngSubmit)="selectOffer()" [formGroup]="renewalUpgradeFormGroup" class="form-horizontal">
             <div *ngIf="offer.Has_Partner">
@@ -83,8 +83,8 @@
               </div>
             </div>
             </div>
-            
-            
+
+
             <div class="row">
               <div class="col-xs-1 col-xs-offset-1">
               <div class="checkbox">
@@ -98,10 +98,10 @@
                 <p>By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.
                 </p>
                 <p>
-    
+
                   View your <a href="#stay">Terms Of Service</a>, <a href="#stay">Electricity Facts Label(EFL)</a> and <a href="#stay">Your Rights As a Customer</a> prior to enrollment.</p>
               </div>
-    
+
             </div>
             <div class="row buttons">
               <button *ngIf="!isMoving" type="submit" (click)="btnSubmit()" class="btn btn-success btn-final" [disabled]='isCreateOfferEnabled()'>
@@ -119,201 +119,3 @@
         </div>
       </div>
     </div>
-    
-
-<!-- <div class="plan">
-    <div class="content">
-      <div class="planFront">
-        <div class="planConfirm" style="display:none">
-          <h4>
-      Pending
-      </h4>
-        </div>{{checkFeaturedUsageLevel(offer)}}
-        <h2>{{offer.Plan.Name}}</h2>
-        <div class="rate">
-          {{priceAtFeaturedUsageLevel | DollarToCentsPipe | number: '1.1-1'}}<sup>&cent;</sup> <small>per kWh</small>
-        </div>
-        <div class="details">
-          <p class="usage">
-            at {{offer.Plan.Product.Featured_Usage_Level}}
-            <br/>
-            <i class="fa fa-lock"></i> For {{offer.Plan.Term}} Months
-          </p>
-        </div>
-        <h4 class="plan-info" (click)="applyFlip()">
-        WHAT'S IN THE PLAN ? 
-        </h4>
-        <div class="row buttons">
-          <div class="col-xs-8 col-xs-offset-2">
-            <button type="button" class="btn btn-block btn-success btn-select" (click)="btnSelect()">
-              SELECT PLAN <i class="fa fa-chevron-right"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="planMore">
-          <mygexa-offer-details-popover [OfferDetails]=offer></mygexa-offer-details-popover> -->
-        <!-- <div class="panel-group" id="accordion">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-          What's Included</a>
-        </h4>
-            </div>
-            <div id="collapse1" class="panel-collapse collapse in">
-              <div class="panel-body">
-                  <div
-                  *ngIf="(offer.Feature_List && offer.Feature_List.length > 0); then features else noFeatures"></div>
-                <ng-template #features>
-                  <div *ngFor="let feature of offer.Feature_List">
-                    <div class="row">
-                      <div class="col-sm-2">
-                        <i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>
-                      </div>
-                      <div class="col-sm-10">
-                        {{feature}}
-                      </div>
-                    </div>
-                    <br>
-                  </div>
-                </ng-template>
-                <ng-template #noFeatures>
-                  <div class="col-sm-2">
-                    <i class="fa fa-exclamation-triangle fa-fw fa-in-circle"></i>
-                  </div>
-                  <div class="col-sm-10">
-                    No features available for this plan yet!
-                  </div>
-                  <br>
-                </ng-template>
-              </div>
-            </div>
-          </div>
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-          Plan Documents</a>
-        </h4>
-            </div>
-            <div id="collapse2" class="panel-collapse collapse">
-              <div class="panel-body">
-                <div class="row doc-row">
-                  <div class="col-xs-4">
-                    <i class="fa fa-2x fa-file-pdf-o"></i>
-                    <small><a href="{{eflLink}}" target="_blank">Electricty Facts Label</a></small>
-                  </div>
-                  <div class="col-xs-4">
-                    <i class="fa fa-2x fa-file-pdf-o"></i>
-                    <small><a href="{{yraacLink}}" target="_blank">Your Rights as a Customer</a></small>
-                  </div>
-                  <div class="col-xs-4">
-                    <i class="fa fa-2x fa-file-pdf-o"></i>
-                    <small><a href="{{tosLink}}" target="_blank">Term and Conditions</a></small>
-                  </div>
-                </div>
-  
-              </div>
-            </div>
-          </div>
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
-          Cost Components</a>
-        </h4>
-            </div>
-            <div id="collapse3" class="panel-collapse collapse">
-              <div class="panel-body p-o">
-                <div class="row cost-row">
-                  <div class="col-xs-12">
-                    <strong>Gexa Energy</strong>
-                    <p>
-  
-                      Energy Charges (0 - 999999999 kWh) <span class="pull-right">$0.0819 per kWh</span></p>
-                    <p>
-                      Base Charge (per month) <span class="pull-right">$9.95*</span></p>
-                    <strong>CenterPoint Energy (TDU)</strong>
-                    <p>
-  
-                      TDU Delivery Charges (per kWh) <span class="pull-right">$0.04</span>
-                      <p>
-                        TDU Meter Charges (per month) <span class="pull-right">$5.47</span></p>
-                  </div>
-                </div>
-  
-              </div>
-            </div>
-          </div>
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">
-          Terms and Fees</a>
-        </h4>
-            </div>
-            <div id="collapse4" class="panel-collapse collapse">
-              <div class="panel-body">
-                <div class="row terms-row">
-                  <div class="col-xs-6">
-                    <strong>Contract Term</strong> {{offer.plan.Term}} months
-                  </div>
-                  <div class="col-xs-6">
-                    <strong>Cancellation Fee</strong> $0
-                  </div>
-                </div>
-  
-              </div>
-            </div>
-          </div>
-          <div class="row buttons">
-            <div class="col-xs-6">
-              <button type="button" class="btn btn-block btn-success btn-back" (click)="backBtnClick()">
-                <i class="fa fa-chevron-left"></i> BACK
-              </button>
-            </div>
-            <div class="col-xs-6">
-              <button type="button" class="btn btn-block btn-success btn-select" (click)="btnSelect()">
-                SELECT PLAN <i class="fa fa-chevron-right"></i>
-              </button>
-            </div>
-          </div>
-        </div> -->
-     <!--  </div>
-  
-      <div class="planSelect">
-        <div class="planSelect_confirm slide-up-fade-in" style="display:none">
-          <h3>
-  Confirm Selection
-  </h3>
-          <p>
-            <strong>
-          <h2>Gexa Preferred Lyric 24</h2>
-  </strong>
-          </p>
-          <div class="row">
-            <div class="col-xs-1 col-xs-offset-1">
-              <input type="checkbox" class="checkbox" />
-            </div>
-            <div class="col-xs-9">
-              <p>By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.
-              </p>
-              <p>
-  
-                View your <a href="#stay">Terms Of Service</a>, <a href="#stay">Electricity Facts Label(EFL)</a> and <a href="#stay">Your Rights As a Customer</a> prior to enrollment.</p>
-            </div>
-  
-          </div>
-          <div class="row buttons">
-            <button class="btn btn-success btn-final" (click)="btnSubmit()">
-              SUBMIT
-            </button>
-            <button class="btn btn-link btn-cancel" (click)="btnCancel()">
-              CANCEL
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->

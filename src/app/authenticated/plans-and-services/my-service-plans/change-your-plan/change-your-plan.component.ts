@@ -58,10 +58,9 @@ export class ChangeYourPlanComponent implements OnInit, OnChanges, OnDestroy {
   bestRenewalOffer: IOffers;
   renewalOffers: IOffers[];
   upgradeOffers: IOffers[];
-
   renewalOffersLegalTextArray: string[] = [];
   upgradeOffersLegalTextArray: string[] = [];
-
+  showMorePlans: boolean = null;
 
   offersServiceSubscription: Subscription;
   plansServicesSubscription: Subscription;
@@ -285,7 +284,9 @@ export class ChangeYourPlanComponent implements OnInit, OnChanges, OnDestroy {
 
   private movingOffer(offerSelectionPayload: IOfferSelectionPayLoad) {
   }
-
+  morePlansClicked() {
+    this.showMorePlans = !this.showMorePlans;
+  }
   ngOnDestroy() {
     if (this.offersServiceSubscription) {
       this.offersServiceSubscription.unsubscribe();
