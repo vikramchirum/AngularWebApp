@@ -44,10 +44,10 @@
         <ng-template
           *ngIf="isOffersReady && RenewalOffers ; then ShowRenewalOffer else ShowLoadingScreen"></ng-template>
         <ng-template #ShowRenewalOffer>
-          <div class="current-plan-card plan-card-container mat-card">
+          <div class="pd-bt-0 current-plan-card plan-card-container mat-card">
             <div class="card-content">
-              <div class="alert alert-warning"> Recommended for your home</div>
-              <div class="mat-card-title">
+              <div class="mg-bt-0 alert alert-warning"> Recommended for your home</div>
+              <!-- <div class="mat-card-title">
                 <h2>{{RenewalOffers.Plan.Name}}
                   <small><i class="fa fa-info-circle" (click)="pop.show()" aria-hidden="true"></i></small>
                 </h2>
@@ -159,16 +159,18 @@
                   </div>
                 </div>
               </form>
-            </div>
-            <br/>
+            </div> -->
+           <!--  <br/>
               <div class="row">
                 <div style="text-align:center">
                   <button class="btn btn-primary"
                           (click)='onSelectOffer($event)'>
                     Select <i class="fa fa-chevron-right fa-wh" style="color: white" aria-hidden="true"></i></button>
-                </div>
+                </div> -->
               </div>
           </div>
+          <mygexa-play-card [offer]="RenewalOffers" [offerSelectionType]="offerSelectionType.Renewal"
+          (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-play-card>
         </ng-template>
         <ng-template #ShowLoadingScreen>
           <div *ngIf="RenewalOffers != null; then showLoading else showNothing"></div>

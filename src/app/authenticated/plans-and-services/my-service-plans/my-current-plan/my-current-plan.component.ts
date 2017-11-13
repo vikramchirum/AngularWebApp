@@ -22,6 +22,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ErrorModalComponent } from '../../../../shared/components/error-modal/error-modal.component';
 import { Offer } from '../../../../core/models/offers/offer.model';
 import { IServiceAccountPlanHistoryOffer } from '../../../../core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
+import { OfferSelectionType } from 'app/core/models/enums/offerselectiontype';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -53,6 +54,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   // enableSelect = false;
   currentView: string = null;
   renewalUpgradeFormGroup: FormGroup;
+  offerSelectionType = OfferSelectionType;
 
   constructor(private userService: UserService, private serviceAccountService: ServiceAccountService
     , private OfferStore: OffersStore, private renewalStore: RenewalStore, private utilityService: UtilityService,
@@ -255,5 +257,9 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     if (this.isUpForRenewal) {
       this.OffersServiceSubscription.unsubscribe();
     }
+  }
+  onOfferSelected(event) {
+    //console.log(event);
+    this.createRenewal();
   }
 }

@@ -4,7 +4,7 @@
   <ng-template *ngIf="IsUpForRenewal && !IsRenewalPending && !ActiveServiceAccount.Current_Offer.IsHoldOverRate; then ShowWhatIsIncluded else ShowDocuments"></ng-template>
   <ng-template #ShowWhatIsIncluded>
     <section id="RenewalPlan">
-      <b><p class="form-control">What's included</p></b><br>
+      <!-- <b><p class="form-control">What's included</p></b><br>
       <div *ngIf="RenewalOffers?.Plan?.Product?.Product_Features != null; then features else noFeatures"></div>
       <ng-template #features>
         <div *ngFor="let feature of RenewalOffers?.Plan?.Product?.Product_Features">
@@ -25,7 +25,7 @@
           </div>
         </div>
         <br>
-      </ng-template>
+      </ng-template> -->
       <br/>
       <b><p class="form-control">Renewal Details</p></b>
       <br>
