@@ -26,7 +26,7 @@
       <div class="col-sm-9">
         <ng-container *ngIf="!isLoadingRenewals; else showLoadingRenewals">
           <div class="row">
-            <ng-container *ngIf="(renewalOffers && (renewalOffers.length > 0)); else noRenewalOffers">
+            <ng-container *ngIf="(renewalOffers && (renewalOffers?.length > 0)); else noRenewalOffers">
               <section>
                 <div class="col-md-4 plan-card" *ngFor="let offer of renewalOffers | slice:0:3; let i= index;">
                   <!-- <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Renewal"
@@ -35,14 +35,14 @@
                                     (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-play-card>
                 </div>
               </section>
-              <div class="pull-right">
+              <div class="pull-right" *ngIf="renewalOffers?.length > 3">
                 <p class="p-plans">View More Plans  <i class="fa"
                                                        (click)="morePlansClicked()"
                                                        [ngClass]="showMorePlans ? 'fa-chevron-down' : 'fa-chevron-up'">
                 </i></p>
               </div>
               <section *ngIf="showMorePlans">
-                <ng-template *ngIf="renewalOffers.length >= 3 && showMorePlans; then Offers else noOffers"></ng-template>
+                <ng-template *ngIf="renewalOffers?.length >= 3 && showMorePlans; then Offers else noOffers"></ng-template>
                 <ng-template #Offers>
                 <div class="col-md-4 plan-card" *ngFor="let offer of renewalOffers | slice: 3: (renewalOffers.length) ;  let i= index;">
                   <!-- <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Renewal"
@@ -59,7 +59,6 @@
                 </div>
                 </ng-template>
               </section>
-              <br>
             </ng-container>
             <ng-template #noRenewalOffers>
               <div class="row" style="padding-top: 150px;">
@@ -92,12 +91,36 @@
           <div class="row change-plans-grid">
             <ng-container *ngIf="(upgradeOffers && (upgradeOffers.length >0)); else noUpgradeOffers">
               <section>
-                <div class="col-md-4 plan-card" *ngFor="let offer of upgradeOffers; let i= index;">
+                <div class="col-md-4 plan-card" *ngFor="let offer of upgradeOffers | slice:0:3; let i= index;">
                   <!-- <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Upgrade"
                                     (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-plan-card> -->
                   <mygexa-play-card [offer]="offer" [offerSelectionType]="offerSelectionType.Upgrade"
                                     (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-play-card>
                 </div>
+              </section>
+              <div class="pull-right" *ngIf="upgradeOffers.length > 3">
+                <p class="p-plans">View More Plans  <i class="fa"
+                                                       (click)="morePlansClicked()"
+                                                       [ngClass]="showMorePlans ? 'fa-chevron-down' : 'fa-chevron-up'">
+                </i></p>
+              </div>
+              <section *ngIf="showMorePlans">
+                <ng-template *ngIf="upgradeOffers.length >= 3 && showMorePlans; then Offers else noOffers"></ng-template>
+                <ng-template #Offers>
+                  <div class="col-md-4 plan-card" *ngFor="let offer of upgradeOffers | slice: 3: (upgradeOffers.length) ;  let i= index;">
+                    <!-- <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Renewal"
+                                      (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-plan-card> -->
+                    <mygexa-play-card [offer]="offer" [offerSelectionType]="offerSelectionType.Upgrade"
+                                      (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-play-card>
+                  </div>
+                </ng-template>
+                <ng-template #noOffers>
+                  <div class="row">
+                    <div class="col-sm-24">
+                      <h2>No more offers available for this service account.</h2>
+                    </div>
+                  </div>
+                </ng-template>
               </section>
             </ng-container>
             <ng-template #noUpgradeOffers>
