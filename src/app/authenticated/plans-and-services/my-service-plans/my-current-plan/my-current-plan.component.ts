@@ -70,7 +70,10 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
       accountName: ['', Validators.required],
       rewardsNumber: ['', Validators.required]
     });
+    this.getData();
+  }
 
+  public getData() {
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
 
@@ -103,6 +106,13 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  OnConfirmation(event) {
+    if (event) {
+      console.log('Refersh requested.');
+      this.getData();
+    }
   }
 
   setFlags() {
@@ -251,7 +261,9 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.plansServicesSubscription.unsubscribe();
+    if ( this.plansServicesSubscription) {
+      this.plansServicesSubscription.unsubscribe();
+    }
     if (this.isUpForRenewal) {
       this.OffersServiceSubscription.unsubscribe();
     }

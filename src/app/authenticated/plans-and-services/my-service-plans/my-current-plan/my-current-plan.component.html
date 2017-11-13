@@ -154,7 +154,7 @@
                 </div>
                 <div class="row">
                   <div style="text-align:center">
-                    <button class="btn btn-primary" [disabled]="isCreateOfferEnabled()">Submit</button>
+                    <button class="btn btn-primary" type="submit" [disabled]="isCreateOfferEnabled()">Submit</button>
                     <button class="btn btn-link" (click)="onCloseSelectOffer($event)" aria-hidden="true">Cancel</button>
                   </div>
                 </div>
@@ -241,7 +241,7 @@
         </div>
       </section>
     </div>
-    <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame]="isUpForRenewal"
+    <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame]="isUpForRenewal" (onConfirmation) = 'OnConfirmation($event)'
                                       [IsOnHoldOver]="isOnHoldOver"></mygexa-plan-confirmation-popover>
   </div>
 </div>
