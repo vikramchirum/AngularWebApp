@@ -72,7 +72,10 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
       accountName: ['', Validators.required],
       rewardsNumber: ['', Validators.required]
     });
+    this.getData();
+  }
 
+  public getData() {
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
 
@@ -105,6 +108,12 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  OnConfirmation(event) {
+    if (event) {
+      this.getData();
+    }
   }
 
   setFlags() {
@@ -148,7 +157,6 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
 
   checkFeaturedUsageLevel(RenewalOffer: IOffers) {
     if (RenewalOffer) {
-      console.log('hi', RenewalOffer.Plan.Product.Featured_Usage_Level);
         switch (RenewalOffer.Plan.Product.Featured_Usage_Level) {
           case  '500 kWh': {
             this.Price_atFeatured_Usage_Level = RenewalOffer.Price_At_500_kwh;
@@ -253,13 +261,14 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.plansServicesSubscription.unsubscribe();
+    if ( this.plansServicesSubscription) {
+      this.plansServicesSubscription.unsubscribe();
+    }
     if (this.isUpForRenewal) {
       this.OffersServiceSubscription.unsubscribe();
     }
   }
   onOfferSelected(event) {
-    //console.log(event);
     this.createRenewal();
   }
 }

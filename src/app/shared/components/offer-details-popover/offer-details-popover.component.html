@@ -238,124 +238,6 @@
 
 </section>
 
-
-<!-- <section *ngIf="OfferDetails" >
-  <div class="service-upgrade-modal" >
-    <h3 class="text-center plan-info">{{ Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup>&cent;</sup> per KWh</h3>
-    <p class="text-center">AT {{OfferDetails.Plan.Product.Featured_Usage_Level}}</p>
-    <hr>
-    <div class="row plan-documents">
-      <div class="col-md-12">
-        <h4>Plan Documents</h4>
-      </div>
-      <div class="col-md-4">
-        <div class="col-md-12 text-center">
-          <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
-        </div>
-        <small><a href="{{eflLink}}" target="_blank">Electricty Facts Label</a></small>
-      </div>
-      <div class="col-md-4">
-        <div class="col-md-12 text-center">
-          <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
-        </div>
-        <small><a href="{{yraacLink}}" target="_blank">Your Rights as a Customer</a></small>
-      </div>
-      <div class="col-md-4">
-        <div class="col-md-12 text-center">
-          <i class="fa fa-file-pdf-o fa-fw fa-in-circle"></i>
-        </div>
-        <small><a href="{{tosLink}}" target="_blank">Terms of Service</a></small>
-      </div>
-
-    </div>
-    <hr>
-    <div class="row cost-components">
-      <div class="col-md-12">
-        <h4>Cost Components</h4>
-        <h5>Gexa Energy</h5>
-        <table border="0" width="100%" class="table-condensed table-striped">
-          <tbody>
-          <tr *ngFor="let charge of OfferDetails?.Actual_Pricing.Energy_Charges">
-            <td class="bill-name">Energy Charge<small>
-              <ng-template *ngIf="charge.Min === 0 && charge.Max === null; then OnlyMin"></ng-template>
-              <ng-template *ngIf="charge.Min > 0 && charge.Max === null; then NonZeroMin"></ng-template>
-              
-              <ng-template *ngIf="charge.Min >= 0 && charge.Max > 0; then MinMax"></ng-template>
-            </small></td>
-            <ng-template #OnlyMin></ng-template>
-            <ng-template #NonZeroMin> ( >= {{charge.Min}} kWh)</ng-template>
-            
-            <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}} kWh) </ng-template>
-            <td class="bill-amount">${{charge.Amount | number: kWhAmountFormatter }}  per kWh</td>
-          </tr>
-
-          <tr *ngFor="let charge of OfferDetails?.Actual_Pricing.Usage_Charges">
-            <td class="bill-name">Monthly Usage Charges<small>
-              <ng-template *ngIf="charge.Min === 0 && charge.Max === null; then OnlyMin"></ng-template>
-              <ng-template *ngIf="charge.Min > 0 && charge.Max === null; then NonZeroMin"></ng-template>
-              
-              <ng-template *ngIf="charge.Min >= 0 && charge.Max > 0; then MinMax"></ng-template>
-            </small></td>
-            <ng-template #OnlyMin>hi</ng-template>
-            <ng-template #NonZeroMin> ( >= {{charge.Min}})</ng-template>
-            
-            <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}}) </ng-template>
-            <td class="bill-amount">${{charge.Amount | number: dollarAmountFormatter }}</td>
-          </tr>
-
-          <tr *ngFor="let charge of OfferDetails?.Actual_Pricing.Usage_Credits">
-            <td class="bill-name">Monthly Usage Credits<small>
-              <ng-template *ngIf="charge.Min === 0 && charge.Max === null; then OnlyMin"></ng-template>
-              <ng-template *ngIf="charge.Min > 0 && charge.Max === null; then NonZeroMin"></ng-template>
-              
-              <ng-template *ngIf="charge.Min >= 0 && charge.Max > 0; then MinMax"></ng-template>
-            </small></td>
-            <ng-template #OnlyMin>hi</ng-template>
-            <ng-template #NonZeroMin> ( >= {{charge.Min}})</ng-template>
-            
-            <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}}) </ng-template>
-            <td *ngIf="charge.Min > 0 && charge.Max === ''">heloooooo</td>
-            <td class="bill-amount">${{charge.Amount | number: dollarAmountFormatter }}</td>
-          </tr>
-          <tr *ngIf="OfferDetails?.Actual_Pricing.Base_Charge">
-            <td class="bill-name">Base charge<small>(per month)</small></td>
-            <td class="bill-amount">${{OfferDetails?.Plan.Pricing_Definition.Base_Charge | number: dollarAmountFormatter }}*</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="col-md-12">
-        <h5>{{OfferDetails.Plan.TDU.Name}} (TDU)</h5>
-        <table border="0" width="100%" class="table-condensed table-striped">
-          <tbody>
-          <tr>
-            <td class="bill-name">TDU delivery charges <small>(per kWh)</small></td>
-            <td class="bill-amount">${{OfferDetails.Plan.TDU.Delivery_Charge | number: kWhAmountFormatter }}</td>
-          </tr>
-          <tr>
-            <td class="bill-name">TDU meter charges <small>(per month)</small></td>
-            <td class="bill-amount">${{OfferDetails.Plan.TDU.Meter_Charge | number: dollarAmountFormatter }}</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-
-    </div>
-    <div class="row  bg-info">
-      <div class="col-md-6 text-center">
-        <small><strong>Contract term</strong>
-          <p>{{OfferDetails?.Plan.Term}} months</p></small>
-      </div>
-      <div class="col-md-6 text-center">
-        <small><strong>Cancellation fee</strong>
-          <p>${{OfferDetails?.Actual_Pricing.Early_Termination_Fee}}</p></small>
-      </div>
-    </div>
-    
-  </div>
-</section> -->
-
-
 <section *ngIf="OfferDetails">
     <div class="panel-group" id="accordion_{{OfferDetails.Id}}">
        <div class="panel panel-default">
@@ -366,7 +248,7 @@
      </h4>
          </div>
          <div id="collapse1_{{OfferDetails.Id}}" class="panel-collapse collapse in">
-           <div class="panel-body">
+           <div class="panel-body Inc-p-o">
              <div *ngIf="(OfferDetails.Feature_List && OfferDetails.Feature_List.length > 0); then features else noFeatures"></div>
              <ng-template #features>
                <div *ngFor="let feature of OfferDetails.Feature_List">
@@ -374,7 +256,7 @@
                    <div class="col-sm-2">
                      <i class="fa fa-lightbulb-o fa-fw fa-in-circle"></i>
                    </div>
-                   <div class="col-sm-10">
+                   <div class="col-sm-10" >
                      {{feature}}
                    </div>
                  </div>
@@ -416,7 +298,7 @@
                  <small><a href="{{tosLink}}" target="_blank">Term and Conditions</a></small>
                </div>
              </div>
-   
+
            </div>
          </div>
        </div>
@@ -433,7 +315,7 @@
                <div class="col-xs-12">
                  <strong>Gexa Energy</strong>
                  <!-- <p>
-   
+
                    Energy Charges (0 - 999999999 kWh) <span class="pull-right">$0.0819 per kWh</span></p>
                  <p>
                    Base Charge (per month) <span class="pull-right">$9.95*</span></p> -->
@@ -452,7 +334,7 @@
                        <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}} kWh) </ng-template>
                        <td class="bill-amount">${{charge.Amount | number: kWhAmountFormatter }}  per kWh</td>
                      </tr>
-           
+
                      <tr *ngFor="let charge of OfferDetails?.Actual_Pricing.Usage_Charges">
                        <td class="bill-name">Monthly Usage Charges<small>
                          <ng-template *ngIf="charge.Min === 0 && charge.Max === null; then OnlyMin"></ng-template>
@@ -466,7 +348,7 @@
                        <ng-template #MinMax> ({{charge.Min}} - {{charge.Max}}) </ng-template>
                        <td class="bill-amount">${{charge.Amount | number: dollarAmountFormatter }}</td>
                      </tr>
-           
+
                      <tr *ngFor="let charge of OfferDetails?.Actual_Pricing.Usage_Credits">
                        <td class="bill-name">Monthly Usage Credits<small>
                          <ng-template *ngIf="charge.Min === 0 && charge.Max === null; then OnlyMin"></ng-template>
@@ -486,7 +368,7 @@
                        <td class="bill-amount">${{OfferDetails?.Plan.Pricing_Definition.Base_Charge | number: dollarAmountFormatter }}*</td>
                      </tr>
                      </tbody>
-                   </table>                
+                   </table>
                  <strong>{{OfferDetails.Plan.TDU.Name}} (TDU)</strong>
                  <!-- <p>
                    TDU Delivery Charges (per kWh) <span class="pull-right">$0.04</span>
@@ -509,10 +391,10 @@
                      <td class="bill-amount">${{OfferDetails.Plan.TDU.Meter_Charge | number: dollarAmountFormatter }}</td>
                    </tr>
                    </tbody>
-                 </table>    
+                 </table>
                </div>
              </div>
-   
+
            </div>
          </div>
        </div>
@@ -520,7 +402,7 @@
          <div class="panel-heading">
            <h4 class="panel-title">
        <a data-toggle="collapse" [attr.data-parent]="'#accordion_'+OfferDetails.Id" href="#collapse4_{{OfferDetails.Id}}">
-       Terms and Fees</a>
+       Term and Fees</a>
      </h4>
          </div>
          <div id="collapse4_{{OfferDetails.Id}}" class="panel-collapse collapse">
@@ -533,7 +415,7 @@
                  <strong>Cancellation Fee</strong> ${{OfferDetails?.Actual_Pricing.Early_Termination_Fee}}
                </div>
              </div>
-   
+
            </div>
          </div>
        </div>

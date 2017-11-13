@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy, OnChanges, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { ModalDirective} from 'ngx-bootstrap';
 import { Subscription } from 'rxjs/Subscription';
 import { CustomerAccountService } from '../../../../core/CustomerAccount.service';
@@ -15,12 +15,14 @@ export class PlanConfirmationPopoverComponent implements OnInit, OnDestroy, OnCh
   @ViewChild('planPopModal') public planPopModal: ModalDirective;
   @Input() IsInRenewalTimeFrame: boolean;
   @Input() IsOnHoldOver: boolean;
+  @Output() onConfirmation = new EventEmitter();
   CustomerAccountServiceSubscription: Subscription = null;
   activeServiceAccountDetails: ServiceAccount;
   customerDetails: CustomerAccount = null;
   serviceAccountSubscription: Subscription;
 
-  constructor(private CustomerAccountService: CustomerAccountService, private serviceAccountService: ServiceAccountService) { }
+  constructor(private CustomerAccountService: CustomerAccountService,
+              private serviceAccountService: ServiceAccountService) { }
 
   ngOnInit() {
     this.CustomerAccountServiceSubscription = this.CustomerAccountService.CustomerAccountObservable.subscribe(
@@ -31,6 +33,7 @@ export class PlanConfirmationPopoverComponent implements OnInit, OnDestroy, OnCh
   }
 
   renewedNewplan() {
+    this.onConfirmation.emit(true);
     this.hidePlanPopModal();
   }
 

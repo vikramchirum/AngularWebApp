@@ -22,17 +22,17 @@ import * as $ from 'jquery';
   styleUrls: ['./play-card.component.scss']
 })
 export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
-  
+
     @ViewChild('pop') public pop: ModalDirective;
     @Input('offer') offer: IOffers;
     @Input('offerSelectionType') offerSelectionType: OfferSelectionType;
     @Output() public onOfferSelectedEvent: EventEmitter<IOfferSelectionPayLoad> = new EventEmitter();
     isMoving: boolean = null;
     renewalUpgradeFormGroup: FormGroup;
-  
+
     activeServiceAccountDetails: ServiceAccount = null;
     user: IUser;
-  
+
     priceAtFeaturedUsageLevel: number;
     isOfferSelected = false;
     isOfferAgreed = false;
@@ -42,7 +42,7 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
     handleOfferPopOversModalSubscription: Subscription;
 
     offerPassed: string;
-  
+
     constructor(private userService: UserService,
                 private serviceAccount_service: ServiceAccountService,
                 private modalStore: ModalStore,
@@ -50,27 +50,27 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
                 private viewContainerRef: ViewContainerRef) {
       this.isMoving = false;
     }
-  
+
     ngOnInit() {
       if (this.offerSelectionType === OfferSelectionType.Moving) {
         this.isMoving = true;
       }
-  
+
       this.renewalUpgradeFormGroup = this.formBuilder.group({
         accountName: ['', Validators.required],
         rewardsNumber: ['', Validators.required]
       });
-     
+
       this.userServiceSubscription = this.userService.UserObservable.subscribe(result => {
         this.user = result;
       });
-  
+
       this.activeServiceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null)
         .subscribe(result => {
           this.activeServiceAccountDetails = result;
         });
     }
-  
+
     ngAfterViewInit() {
       this.handleOfferPopOversModalSubscription = this.modalStore.HandleOfferPopOversModal.subscribe(rateCode => {
         if (this.offer) {
@@ -83,7 +83,7 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     }
-  
+
     checkFeaturedUsageLevel(offer: IOffers) {
       const renewalOfferFeaturedUsageLevel = offer.Plan.Product.Featured_Usage_Level;
       if (renewalOfferFeaturedUsageLevel) {
@@ -107,31 +107,31 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
     }
-  
+
     onProductFeaturesSelected() {
       this.productFeaturesSelected = !this.productFeaturesSelected;
     }
-  
+
     onSelectOffer(event) {
       event.preventDefault();
       event.stopPropagation();
       this.isOfferSelected = true;
-      //this.modalStore.handleOfferPopOversModal(this.offer.Rate_Code);
-      $('#planSelect_confirm_'+this.offer.Id).toggleClass('reveal');
+      // this.modalStore.handleOfferPopOversModal(this.offer.Rate_Code);
+      $('#planSelect_confirm_' + this.offer.Id).toggleClass('reveal');
     }
-  
+
     toggleButton() {
       this.isOfferAgreed = !this.isOfferAgreed;
     }
-  
+
     onCloseSelectOffer(event) {
       event.preventDefault();
       event.stopPropagation();
       this.isOfferSelected = false;
-      $('#planSelect_confirm_'+this.offer.Id).toggleClass('reveal');
-      //$('.planSelect_confirm').toggleClass('reveal');
+      $('#planSelect_confirm_' + this.offer.Id).toggleClass('reveal');
+      // $('.planSelect_confirm').toggleClass('reveal');
     }
-  
+
     selectOffer() {
       const offerSelectionPayLoad = {} as IOfferSelectionPayLoad;
       offerSelectionPayLoad.Service_Account_Id = this.activeServiceAccountDetails.Id;
@@ -144,12 +144,12 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
       offerSelectionPayLoad.OfferSelectionType = this.offerSelectionType;
       this.onOfferSelectedEvent.emit(offerSelectionPayLoad);
     }
-  
+
     openOfferDetailsPopOver() {
       this.modalStore.handleOfferPopOversModal(this.offer.Rate_Code);
       this.pop.show();
     }
-  
+
     isCreateOfferEnabled() {
       if (this.offer.Has_Partner) {
         if (!this.isOfferAgreed) {
@@ -162,7 +162,7 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
         return true;
       }
     }
-  
+
     ngOnDestroy() {
       this.userServiceSubscription.unsubscribe();
       this.activeServiceAccountSubscription.unsubscribe();
@@ -170,29 +170,30 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
   applyFlip() {
-    $('#plan_'+this.offer.Id).toggleClass('applyflip');
-    //$('.btn-select').removeClass('disabled');
+    $('#plan_' + this.offer.Id).toggleClass('applyflip');
+    // $('.btn-select').removeClass('disabled');
     /* var $myPlan = $(this).parents('.plan');console.log($myPlan);
     $myPlan.toggleClass('applyflip');
     $myPlan.find('.btn-select').removeClass('disabled'); */
   }
    revertToPlan(event) {
     this.offerPassed = event;
-    if(event.indexOf('#') > 0) {
-      this.offerPassed = event.substr(0, (event.length-1));
-      $('#plan_'+this.offerPassed).toggleClass('applyflip');  
-    }
-    else {
-      $('#plan_'+this.offerPassed).toggleClass('applyflip');
+    if (event.indexOf('#') > 0) {
+      this.offerPassed = event.substr(0, (event.length - 1));
+      $('#plan_' + this.offerPassed).toggleClass('applyflip');
+    } else {
+      $('#plan_' + this.offerPassed).toggleClass('applyflip');
       this.isOfferSelected = true;
-      $('#planSelect_confirm_'+this.offer.Id).toggleClass('reveal');
+      $('#planSelect_confirm_' + this.offer.Id).toggleClass('reveal');
     }
   }
 
   btnSubmit() {
-    $('#planSelect_confirm_'+this.offer.Id).toggleClass('reveal');
-    $('#plan_'+this.offer.Id).removeClass('applyflip');
-    //$('.planConfirm').show();
-    //$('.btn-select').addClass('disabled');
+      this.selectOffer();
+      console.log('select offer called on button click');
+    $('#planSelect_confirm_' + this.offer.Id).toggleClass('reveal');
+    $('#plan_' + this.offer.Id).removeClass('applyflip');
+    // $('.planConfirm').show();
+    // $('.btn-select').addClass('disabled');
   }
 }
