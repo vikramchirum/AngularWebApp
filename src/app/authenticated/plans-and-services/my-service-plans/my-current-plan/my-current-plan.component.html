@@ -32,6 +32,7 @@
                     <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
                   <mygexa-offer-details-popover [ActiveOfferDetails]="ActiveServiceAccount"
                                                 [IsCurrentPlanPopOver]="true"></mygexa-offer-details-popover>
+
                 </ng-template>
               </div>
             </md-card-content>
@@ -44,130 +45,15 @@
         <ng-template
           *ngIf="isOffersReady && RenewalOffers ; then ShowRenewalOffer else ShowLoadingScreen"></ng-template>
         <ng-template #ShowRenewalOffer>
-          <div class="current-plan-card plan-card-container mat-card">
-            <div class="card-content">
-              <div class="alert alert-warning"> Recommended for your home</div>
-              <div class="mat-card-title">
-                <h2>{{RenewalOffers.Plan.Name}}
-                  <small><i class="fa fa-info-circle" (click)="pop.show()" aria-hidden="true"></i></small>
-                </h2>
-                <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
-                  <ng-template #options>
-                    <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
-                      <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-                    <mygexa-offer-details-popover [OfferDetails]="RenewalOffers"></mygexa-offer-details-popover>
-                  </ng-template>
-                </div>
-              </div>
-              <div class="mat-card-content">
-                <h2>{{ Price_atFeatured_Usage_Level | DollarToCentsPipe | number: '1.1-1'}}<sup
-                  class="sup-text">&cent;</sup>
-                  <small class="sub-text">per kWh</small>
-                </h2>
-                <p class="bg-default">at {{RenewalOffers.Plan.Product.Featured_Usage_Level}}</p>
-                <p>TERM: {{RenewalOffers.Plan.Term}} months</p>
-                <p class="bg-default">{{RenewalOffers.Promotion?.Name}} </p>
+          <div class="col-md-10">
+            <div class="pd-bt-0  current-plan-card plan-card-container mat-card">
+              <div class="card-content">
+                <div class="mg-bt-0 alert alert-warning"> Recommended for your home </div>
               </div>
             </div>
-            <div #plan_pop="bs-popover" [popover]="showpop" placement="bottom" outsideClick="true">
-              <ng-template #showpop>
-                <button type="button" class="close text-right" aria-label="Close" (click)="plan_pop.hide()">
-                  <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-              </ng-template>
-            </div>
-            <div *ngIf="isOfferSelected" class="agreement-section">
-              <form novalidate (ngSubmit)="createRenewal()" [formGroup]="renewalUpgradeFormGroup" class="form-horizontal">
-                <div *ngIf="RenewalOffers.Has_Partner">
-                  <div [ngClass]="{'has-error': (renewalUpgradeFormGroup.get('accountName').touched ||
-                        renewalUpgradeFormGroup.get('accountName').dirty) &&
-                        !renewalUpgradeFormGroup.get('accountName').valid}">
-                    <div class="row">
-                      <div class="col-xs-2">
-                        <label for="accountNameId">Name</label>
-                      </div>
-                      <div class="col-xs-10">
-                        <input type="text"
-                               class="form-control form-control-wireframe"
-                               id="accountNameId"
-                               placeholder="Name on Account (required)"
-                               formControlName="accountName"
-                               required
-                               autocomplete="off">
-                        <ng-container *ngIf="(renewalUpgradeFormGroup.get('accountName').touched ||
-                                       renewalUpgradeFormGroup.get('accountName').dirty) &&
-                                       renewalUpgradeFormGroup.get('accountName').errors">
-                     <span class="help-block">
-                        <small class="text-danger">
-                           <i class="fa fa-fw fa-asterisk"></i>
-                           <ng-container
-                             *ngIf="renewalUpgradeFormGroup.get('accountName').errors.required">Account Name is required.</ng-container>
-                        </small>
-                     </span>
-                        </ng-container>
-                      </div>
-                    </div>
-                  </div>
-                  <br>
-
-                  <div [ngClass]="{'has-error': (renewalUpgradeFormGroup.get('rewardsNumber').touched ||
-                        renewalUpgradeFormGroup.get('rewardsNumber').dirty) &&
-                        !renewalUpgradeFormGroup.get('rewardsNumber').valid}">
-                    <div class="row">
-                      <div class="col-xs-2">
-                        <label for="rewardsNumberId">Enter</label>
-                      </div>
-                      <div class="col-xs-10">
-                        <input
-                          type="text"
-                          class="form-control form-control-wireframe"
-                          id="rewardsNumberId"
-                          placeholder="Rewards Number (required)"
-                          formControlName="rewardsNumber"
-                          required
-                          autocomplete="off">
-                        <ng-container *ngIf="(renewalUpgradeFormGroup.get('rewardsNumber').touched ||
-                             renewalUpgradeFormGroup.get('rewardsNumber').dirty) &&
-                             renewalUpgradeFormGroup.get('rewardsNumber').errors">
-                     <span class="help-block">
-                        <small class="text-danger">
-                           <i class="fa fa-fw fa-asterisk"></i>
-                           <ng-container
-                             *ngIf="renewalUpgradeFormGroup.get('rewardsNumber').errors.required">Rewards Number is required.</ng-container>
-                        </small>
-                     </span>
-                        </ng-container>
-
-                      </div>
-                    </div>
-                  </div>
-                  <br>
-                </div>
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" [checked]="isOfferAgreed" (click)="toggleButton()">
-                    <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-                    <p class="text-left">By checking this box, I agree to this service plan and rate shown above with
-                      Gexa
-                      energy, LP.<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a
-                      Customer prior to enrollment.</p>
-                  </label>
-                </div>
-                <div class="row">
-                  <div style="text-align:center">
-                    <button class="btn btn-primary" [disabled]="isCreateOfferEnabled()">Submit</button>
-                    <button class="btn btn-link" (click)="onCloseSelectOffer($event)" aria-hidden="true">Cancel</button>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <br/>
-              <div class="row">
-                <div style="text-align:center">
-                  <button class="btn btn-primary"
-                          (click)='onSelectOffer($event)'>
-                    Select <i class="fa fa-chevron-right fa-wh" style="color: white" aria-hidden="true"></i></button>
-                </div>
-              </div>
+            <br>
+            <mygexa-play-card [offer]="RenewalOffers" [offerSelectionType]="offerSelectionType.Renewal"
+                              (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-play-card>
           </div>
         </ng-template>
         <ng-template #ShowLoadingScreen>
@@ -241,7 +127,7 @@
         </div>
       </section>
     </div>
-    <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame]="isUpForRenewal"
+    <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame]="isUpForRenewal" (onConfirmation) = 'OnConfirmation($event)'
                                       [IsOnHoldOver]="isOnHoldOver"></mygexa-plan-confirmation-popover>
   </div>
 </div>

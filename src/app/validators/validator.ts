@@ -17,14 +17,14 @@ export function validCreditCard(control: FormControl): any {
   if (
     // Test for an empty string.
     value
-    //Test if the card type is Mastercard or not
+    // Test if the card type is Mastercard or not
     && (/^5[1-5][0-9]{14}$/g.test(value)
-    //Test if the card type is Visa or not
+    // Test if the card type is Visa or not
     || /^4[0-9]{12}(?:[0-9]{3})?$/g.test(value)
-    //Test if the card type is Discover or not
+    // Test if the card type is Discover or not
     || /^6(?:011|5[0-9]{2})[0-9]{12}$/g.test(value)
     )) {
-      return null;     
+      return null;
     }
   return {invalidCreditCard: true};
 }

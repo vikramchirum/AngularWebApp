@@ -22,6 +22,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ErrorModalComponent } from '../../../../shared/components/error-modal/error-modal.component';
 import { Offer } from '../../../../core/models/offers/offer.model';
 import { IServiceAccountPlanHistoryOffer } from '../../../../core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
+import { OfferSelectionType } from 'app/core/models/enums/offerselectiontype';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -53,6 +54,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   // enableSelect = false;
   currentView: string = null;
   renewalUpgradeFormGroup: FormGroup;
+  offerSelectionType = OfferSelectionType;
 
   constructor(private userService: UserService, private serviceAccountService: ServiceAccountService
     , private OfferStore: OffersStore, private renewalStore: RenewalStore, private utilityService: UtilityService,
@@ -70,7 +72,10 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
       accountName: ['', Validators.required],
       rewardsNumber: ['', Validators.required]
     });
+    this.getData();
+  }
 
+  public getData() {
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
 
@@ -103,6 +108,12 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  OnConfirmation(event) {
+    if (event) {
+      this.getData();
+    }
   }
 
   setFlags() {
@@ -146,7 +157,6 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
 
   checkFeaturedUsageLevel(RenewalOffer: IOffers) {
     if (RenewalOffer) {
-      console.log('hi', RenewalOffer.Plan.Product.Featured_Usage_Level);
         switch (RenewalOffer.Plan.Product.Featured_Usage_Level) {
           case  '500 kWh': {
             this.Price_atFeatured_Usage_Level = RenewalOffer.Price_At_500_kwh;
@@ -251,9 +261,14 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.plansServicesSubscription.unsubscribe();
+    if ( this.plansServicesSubscription) {
+      this.plansServicesSubscription.unsubscribe();
+    }
     if (this.isUpForRenewal) {
       this.OffersServiceSubscription.unsubscribe();
     }
+  }
+  onOfferSelected(event) {
+    this.createRenewal();
   }
 }
