@@ -260,13 +260,14 @@ export class UserService implements CanActivate {
     return null;
   }
 
-  recoverUsername(Email_Address) {
-    const body = Email_Address;
+  recoverUsername(Email_Address: string): Observable<boolean> {
+    const body = JSON.stringify(Email_Address);
 
     return this.httpClient.post(this.getUsernameUrl, body)
       .map(res => res.json())
       .map(res => {
-        if (res && res.length) {
+        console.log('response', res);
+        if (res) {
           sessionStorage.setItem('User_Name', res);
           return true;
         } else {

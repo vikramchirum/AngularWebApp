@@ -39,7 +39,7 @@
           </div>
 
           <!--<div class="help-block" *ngIf="recoverUsernameForm.controls['Email_Address'].hasError('validateEmail') && formSubmitted"> Enter a valid email. Email format should be <i>john@doe.com</i>. </div>-->
-          <div class="alert alert-success" *ngIf="IsValidEmail && recoverUsernameForm.valid && formSubmitted"> User name has been sent to your email address!! </div>
+          <div class="alert alert-success" *ngIf="IsValidEmail && recoverUsernameForm.valid && formSubmitted"> User name: {{RecoveredUsername}} has been sent to your email address!! </div>
           <div class="alert alert-danger" *ngIf="!IsValidEmail && recoverUsernameForm.valid && formSubmitted"> No user is registered with the given email address. </div>
           <br>
           <div class="btn-toolbar">
