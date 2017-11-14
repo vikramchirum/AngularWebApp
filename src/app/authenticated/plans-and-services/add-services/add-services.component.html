@@ -43,7 +43,7 @@
 
     <!-- start service -->
     <div class="row">
-      <h3 class="start-service-text">When would you like start service?</h3>
+      <h3 class="start-service-text">When would you like to start service?</h3>
       <div class="col-md-6">
         <my-date-picker name="Service_Start_Date" [(ngModel)]="selectedStartDate" [options]="ServiceStartDate" [disabled]="!enableDates"
           (dateChanged)="onStartDateChanged($event)"></my-date-picker>
@@ -59,8 +59,10 @@
         <div class="row" class="featured-offers">
           <div class="col-md-4" *ngFor="let featuredOffer of this.featuredOffers">
             <!-- <mygexa-select-plan (selectedOffer)="onNotify($event)" [featuredOffer]="featuredOffer"></mygexa-select-plan> -->
-            <mygexa-plan-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
-            (onOfferSelectedEvent)="onNotify($event)"></mygexa-plan-card>
+            <!-- <mygexa-plan-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
+            (onOfferSelectedEvent)="onNotify($event)"></mygexa-plan-card> -->
+            <mygexa-play-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
+            (onOfferSelectedEvent)="onNotify($event)"></mygexa-play-card>
           </div>
         </div>
       </div>

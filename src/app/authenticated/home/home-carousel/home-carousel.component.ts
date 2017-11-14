@@ -33,6 +33,7 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
     this.serviceAccountServiceSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
+        if (this.ActiveServiceAccount) {
         this.OfferStore.LoadLyricOfferDetails(this.ActiveServiceAccount.TDU_DUNS_Number);
         this.offersServiceSubscription = this.OfferStore.GexaLyricOffer.subscribe(
           GexaOffer => {
@@ -61,6 +62,7 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
             }
           }
         );
+      }
       });
   }
 

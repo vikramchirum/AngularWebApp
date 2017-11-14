@@ -99,8 +99,8 @@ export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
             this.Invoices = clone(Invoices);
             let total = 0;
             forEach(Invoices, invoice => total += invoice.Current_Charges);
-            console.log('Invoices Total:', total);
-            console.log('Invoices', Invoices.length, Invoices);
+            // console.log('Invoices Total:', total);
+            // console.log('Invoices', Invoices.length, Invoices);
           }
         );
 

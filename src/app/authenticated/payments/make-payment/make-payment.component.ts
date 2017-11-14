@@ -23,6 +23,7 @@ import { ServiceAccount } from '../../../core/models/serviceaccount/serviceaccou
 import { IInvoice } from '../../../core/models/invoices/invoice.model';
 import { PaymentsHistoryStore } from '../../../core/store/paymentsstore';
 import { InvoiceStore } from '../../../core/store/invoicestore';
+import { PaymentConfirmationModalComponent } from '../../../shared/components/payment-confirmation-modal/payment-confirmation-modal.component';
 
 @Component({
   selector: 'mygexa-make-payment',
@@ -51,6 +52,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
   @ViewChild(PaymethodAddCcComponent) private addCreditCardComponent: PaymethodAddCcComponent;
   @ViewChild(PaymethodAddEcheckComponent) private addEcheckComponent: PaymethodAddEcheckComponent;
+  @ViewChild( 'paymentConfirmationModal' ) paymentConfirmationModal: PaymentConfirmationModalComponent;
 
   private UserCustomerAccountSubscription: Subscription = null;
   private CustomerAccountSubscription: Subscription = null;
@@ -95,7 +97,9 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
   set LatestInvoice(LatestInvoice: IInvoice) {
     this._LatestInvoice = LatestInvoice;
-    this.formGroup.controls['payment_now'].setValue(`$${FloatToMoney(LatestInvoice.Current_Charges + LatestInvoice.Balance_Forward)}`);
+    if (this.ActiveServiceAccount) {
+      this.formGroup.controls['payment_now'].setValue(`$${FloatToMoney(this.ActiveServiceAccount.Current_Due + this.ActiveServiceAccount.Past_Due)}`);
+    }
   }
 
   private ActiveServiceAccountSubscription: Subscription = null;
@@ -220,6 +224,43 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     return (this.formGroup.valid && this.paymentOneTimeValid === true);
   }
 
+  onSelection(event: boolean) {
+    if (event) {
+      this.paymentConfirmationModal.hideConfirmationMessageModal();
+      this.paymentSubmit();
+    } else {
+      this.paymentConfirmationModal.hideConfirmationMessageModal();
+      this.formGroup.controls['payment_now'].setValue('');
+    }
+  }
+
+  checkAmountBeforeSubmit() {
+    let payment_entered: string;     let pay_entered: number; let errorMessage: string = null;
+    payment_entered = String(get(this.formGroup.value, 'payment_now'));
+    if ( payment_entered.substring(0, 1)  === '$') {
+      pay_entered = Number(payment_entered.slice(1));
+    } else {
+      pay_entered = Number(payment_entered);
+    }
+    // console.log('first char', payment_entered.substring(0, 1) );
+    // console.log('payment_entered', pay_entered);
+    // pay_entered = Number((String(get(this.formGroup.value, 'payment_now')).slice(1)));
+    if (pay_entered !== 0) {
+      if ( Number(this.totalDue) < pay_entered ) {
+        errorMessage = 'This payment entered is greater than the total amount due, are you sure you want to continue?';
+        this.paymentConfirmationModal.showConfirmationMessageModal(errorMessage, false);
+      } else if (Number(this.totalDue) > 10 && (pay_entered < 10)) {
+        errorMessage = 'Sorry you must make a minimum payment of $10.00';
+        this.paymentConfirmationModal.showConfirmationMessageModal(errorMessage, true);
+        // console.log('total Due', Number(this.totalDue));
+        // console.log('payment_entered', pay_entered);
+      } else {
+        this.paymentConfirmationModal.hideConfirmationMessageModal();
+        this.paymentSubmit();
+      }
+    }
+  }
+
   paymentSubmit(): void {
 
     // Remove any previous message.
@@ -227,7 +268,6 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
     // Determine the Paymethod Data to pass.
     new Promise((resolve, reject) => {
-
       // If we're selecting a saved method, use it.
       if (this.PaymethodSelected) {
         return resolve({

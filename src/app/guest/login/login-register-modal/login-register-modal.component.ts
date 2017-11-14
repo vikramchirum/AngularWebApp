@@ -22,7 +22,6 @@ export class LoginRegisterModalComponent implements OnInit {
   error: string = null;
   errorMsg: string = null;
   secQuesArray: ISecurityQuestions[] = [];
-
   constructor(
     private UserService: UserService,
     private Router: Router,
@@ -45,23 +44,54 @@ export class LoginRegisterModalComponent implements OnInit {
   }
 
   save(model: IRegUser, isValid: boolean) {
-    this.formSubmitted = true;
+    this.resetValidationErrors();
     // call API to save customer
     if (isValid) {
       this.UserService.signup(model).subscribe(
         () => this.Router.navigate([this.UserService.UserState || '/']),
         error => {
-          if (error.includes('Internal')) {
-            console.log('Hi');
+          let errorMessage: string;
+          errorMessage = error.Message;
+          if (errorMessage.includes('The Service Account Search request is invalid.')) {
+            this.registerForm.controls['Service_Account_Id'].setErrors({'incorrect': true});
+            // this.errorMsg = 'We are having trouble finding this service account number. Please check the number, or call 866-961-9399 for assistance.';
+          } else if (errorMessage.includes('User Exists')) {
+            this.registerForm.controls['User_name'].setErrors({'userExists': true});
+          } else if (errorMessage.includes('Username already created for CSP ID.')) {
+            this.registerForm.controls['User_name'].setErrors({'userNameInUse': true});
+          } else if (errorMessage.includes('We could not find the service account you supplied.')) {
+            this.errorMsg = 'Information provided does not match our records. Please check the details, or call 866-961-9399 for assistance.';
           } else {
-            this.errorMsg = error.toString();
-            this.processing = false;
+            this.errorMsg = errorMessage;
           }
+          this.processing = false;
         }
       );
+    } else {
+      console.log('Invalid form');
+      this.processing = false;
     }
   }
+
+  resetValidationErrors() {
+    this.processing = true;
+    this.formSubmitted = true;
+    this.errorMsg = null;
+    // if ( this.registerForm.controls['Service_Account_Id'].value !== '' && !this.registerForm.controls['Service_Account_Id'].valid) {
+    //   // this.registerForm.controls['Service_Account_Id'].setValue('', { onlySelf: true });
+    //   //  this.registerForm.controls['Service_Account_Id'].setErrors({'incorrect': null});
+    //   this.registerForm.controls['Service_Account_Id'].setErrors(null);
+    // }
+    // if ( this.registerForm.controls['User_name'].value !== '' && ! this.registerForm.controls['User_name'].valid ) {
+    //   // this.registerForm.controls['User_name'].setValue('', { onlySelf: true });
+    //   // this.registerForm.controls['User_name'].setErrors({'userExists': null});
+    //   // this.registerForm.controls['User_name'].setErrors({'userNameInUse': null});
+    //   this.registerForm.controls['User_name'].setErrors(null);
+    // // }
+  }
+
   reset() {
+    this.processing = false;
     this.formSubmitted = false;
     this.errorMsg = null;
     this.registerForm = this.registerFormInit();

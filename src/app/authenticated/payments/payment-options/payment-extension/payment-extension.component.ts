@@ -14,7 +14,9 @@ import { ExtensionStatus } from '../../../../core/models/enums/extensionstatus';
 export class PaymentExtensionComponent implements OnInit, OnDestroy {
   PaymentExtensionResponseStatus: ExtensionStatus;
   customer_On_Payment_Extension: boolean = null;
+  paymentExtensionStatus: boolean = null;
   paymentExtension: IPaymentExtension = null;
+  paymentExtensionRequired: boolean = null;
   paymentExtensionServiceSubscription: Subscription = null;
   serviceAccountDetailsSubscription: Subscription = null;
   serviceAccountDetails: ServiceAccount;
@@ -34,8 +36,19 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
 
   setPastDue() {
     this.serviceAccountDetailsSubscription  = this.activeServiceAccount.ActiveServiceAccountObservable.subscribe(
-      ActiveServiceAccountDetails => {  this.cancelExtension(); this.serviceAccountDetails = ActiveServiceAccountDetails;
-        this.pastDueAmount = ActiveServiceAccountDetails.Past_Due; this.pastDueSet = true; console.log('paste due', this.pastDueAmount); }
+      ActiveServiceAccountDetails => {
+        this.cancelExtension();
+        this.serviceAccountDetails = ActiveServiceAccountDetails;
+        this.paymentExtensionServiceSubscription = this.paymentExtensionService.checkPaymentExtensionStatus(this.serviceAccountDetails.Id)
+          .subscribe(
+            PaymentExtensionStatus => {
+              this.paymentExtensionStatus = PaymentExtensionStatus;
+            }
+          );
+        this.pastDueAmount = ActiveServiceAccountDetails.Past_Due;
+        this.paymentExtensionRequired = (!this.paymentExtensionStatus && this.pastDueAmount <= 0) ? false : true;
+        this.pastDueSet = true;
+      }
     );
   }
 
@@ -55,12 +68,11 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
     );
   }
   cancelExtension() {
-    console.log('hi cancelled');
     this.requestedExtension = null;
     this.paymentExtension = null;
     this.extensionSuccessfull = null;
     this.pastDueAmount = null;
-    // this.pastDueSet = null;
+    this.pastDueSet = null;
   }
 
   ngOnDestroy() {

@@ -12,16 +12,14 @@
 
         <ng-template #ShowRenewal>
          <div class="row ui-renew-row">
-           <div class="col-sm-7">
+           <div class="col-sm-12">
             <h1>Renew your plan</h1>
            </div>
-           <div class="col-sm-5">
-            <div class="alert alert-danger">
-        Contract End Date: {{ (plansServicesResult[0].Contract_End_Date ? plansServicesResult[0].Contract_End_Date : plansServicesResult[0].Calculated_Contract_End_Date) | date: 'MM/dd/yyyy'}}
-           </div>
-         </div>
+
         </div>
-          <p> <strong>Account No: {{ plansServicesResult[0].Id }}</strong><br/>Your plan is ready to be renewed! Based on your product history, we found a renewal plan that's recommended for your home.  View plan details and contract documents by clicking the information icon. </p>
+          <p style=" margin-bottom: 0px;"><strong>Account No: {{ plansServicesResult[0].Id }}</strong></p>
+          <p style=" margin-bottom: 0px;"><strong>Contract End Date: {{ (plansServicesResult[0].Contract_End_Date ? plansServicesResult[0].Contract_End_Date : plansServicesResult[0].Calculated_Contract_End_Date) | date: 'MM/dd/yyyy'}}</strong></p>
+          <p>Your plan is ready to be renewed! Based on your product history, we found a renewal plan that's recommended for your home.  Click What's In The Plan for contract documents. </p>
         </ng-template>
 
         <ng-template #ShowCurrentPlan>

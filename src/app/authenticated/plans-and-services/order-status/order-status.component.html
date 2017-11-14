@@ -8,7 +8,18 @@
       </div>
     </div>
     <br/>
-    <div class='row' *ngIf="orderDetails">
+
+    <div class="row" *ngIf="(orderDetails?.length || 0); then showDetails else noDetails"></div>
+
+     <ng-template #noDetails>
+      <div class="col-md-10 details">
+        <div class="alert alert-info">
+          No orders have been placed
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #showDetails>
+    <div class="row">
       <div class="col-md-10 details">
         <div *ngFor='let order of orderDetails' [style.backgroundColor]="orderOpened(order) ? 'aliceblue' : ''">
           <div class='row'>
@@ -53,6 +64,6 @@
         </div>
       </div>
     </div>
+    </ng-template>
   </section>
-</div>
 <br/><br/>

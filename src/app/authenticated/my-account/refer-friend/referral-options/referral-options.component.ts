@@ -73,6 +73,13 @@ export class ReferralOptionsComponent implements OnInit {
         this.isSubmitted = true;
       }
     });
+
+    if (this.isSubmitted) {
+      this.friendsForm = this.FormBuilder.group({
+        FriendsList: this.FormBuilder.array([])
+      });
+      this.addFriend();
+    }
   }
 
   getReferralLink() {
