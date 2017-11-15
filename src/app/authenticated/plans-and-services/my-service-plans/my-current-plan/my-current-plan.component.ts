@@ -23,6 +23,7 @@ import { ErrorModalComponent } from '../../../../shared/components/error-modal/e
 import { Offer } from '../../../../core/models/offers/offer.model';
 import { IServiceAccountPlanHistoryOffer } from '../../../../core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
 import { OfferSelectionType } from 'app/core/models/enums/offerselectiontype';
+import { IOfferSelectionPayLoad } from 'app/shared/models/offerselectionpayload';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -55,6 +56,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   currentView: string = null;
   renewalUpgradeFormGroup: FormGroup;
   offerSelectionType = OfferSelectionType;
+  offerSelectionPayLoad: IOfferSelectionPayLoad;
 
   constructor(private userService: UserService, private serviceAccountService: ServiceAccountService
     , private OfferStore: OffersStore, private renewalStore: RenewalStore, private utilityService: UtilityService,
@@ -260,6 +262,11 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     }
   }
   onOfferSelected(event) {
+    this.offerSelectionPayLoad = event;
+    if(this.offerSelectionPayLoad.Has_Partner) {
+      this.renewalUpgradeFormGroup.get('accountName').setValue(this.offerSelectionPayLoad.Partner_Account_Number);
+      this.renewalUpgradeFormGroup.get('rewardsNumber').setValue(this.offerSelectionPayLoad.Partner_Name_On_Account);
+    }
     this.createRenewal();
   }
 }

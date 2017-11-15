@@ -38,6 +38,7 @@
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-copy": "^1.0.0",
+    "intl": "^1.2.5",
     "jquery": "^3.2.1",
     "load-grunt-tasks": "^3.5.2",
     "lodash": "^4.17.4",
