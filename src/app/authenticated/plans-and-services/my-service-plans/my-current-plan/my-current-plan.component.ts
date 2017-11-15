@@ -283,7 +283,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   }
   onOfferSelected(event) {
     this.offerSelectionPayLoad = event;
-    if(this.offerSelectionPayLoad.Has_Partner) {
+    if (this.offerSelectionPayLoad.Has_Partner) {
       this.renewalUpgradeFormGroup.get('accountName').setValue(this.offerSelectionPayLoad.Partner_Account_Number);
       this.renewalUpgradeFormGroup.get('rewardsNumber').setValue(this.offerSelectionPayLoad.Partner_Name_On_Account);
     }
