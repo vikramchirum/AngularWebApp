@@ -185,8 +185,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             this.currentView = 'MakePayment';
           }
         } else {
-          if (this.paymentStatus === 'Cleared') {
-            this.currentView = 'MakePayment';
+          if (this.totalDue > 0 ) {
+            this.currentView = 'PastDuePayNow';
           } else {
             this.currentView = 'AutoPay';
           }

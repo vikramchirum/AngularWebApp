@@ -123,7 +123,10 @@
     </ng-container>
 
     <div [ngSwitch]="currentView">
-
+      <div *ngSwitchCase="'PastDuePayNow'">
+        <button class="btn exceededDueDatebtn btn-lg custom"(click)="checkAmountBeforeSubmit()"  type="button">
+          Past due - Pay now</button>
+      </div>
       <div *ngSwitchCase="'PaymentPending'">
         <div class="input-group text-center">
           <div class="input-group-btn">
