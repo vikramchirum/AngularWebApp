@@ -30,6 +30,7 @@
       "environmentSource": "environments/environment.ts",
       "environments": {
         "local": "environments/environment.local.ts",
+        "publish": "environments/environment.publish.ts",
         "dev": "environments/environment.dev.ts",
         "qa": "environments/environment.qa.ts",
         "staging": "environments/environment.staging.ts",
