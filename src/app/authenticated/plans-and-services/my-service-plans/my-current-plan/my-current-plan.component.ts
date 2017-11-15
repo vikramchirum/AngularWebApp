@@ -72,10 +72,6 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
       accountName: ['', Validators.required],
       rewardsNumber: ['', Validators.required]
     });
-    this.getData();
-  }
-
-  public getData() {
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
 
@@ -108,12 +104,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
         }
       }
     });
-  }
 
-  OnConfirmation(event) {
-    if (event) {
-      this.getData();
-    }
   }
 
   setFlags() {
@@ -236,7 +227,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
       request.Partner_Account_Number = this.renewalUpgradeFormGroup.get('accountName').value;
       request.Partner_Name_On_Account = this.renewalUpgradeFormGroup.get('rewardsNumber').value;
     }
-    // console.log('request', request);
+     console.log('request', request);
     this.renewalStore.createRenewal(request).subscribe(result => {
       if (result) {
         console.log('Renewal Created');

@@ -15,7 +15,6 @@ export class PlanConfirmationPopoverComponent implements OnInit, OnDestroy, OnCh
   @ViewChild('planPopModal') public planPopModal: ModalDirective;
   @Input() IsInRenewalTimeFrame: boolean;
   @Input() IsOnHoldOver: boolean;
-  @Output() onConfirmation = new EventEmitter();
   CustomerAccountServiceSubscription: Subscription = null;
   activeServiceAccountDetails: ServiceAccount;
   customerDetails: CustomerAccount = null;
@@ -33,7 +32,6 @@ export class PlanConfirmationPopoverComponent implements OnInit, OnDestroy, OnCh
   }
 
   renewedNewplan() {
-    this.onConfirmation.emit(true);
     this.hidePlanPopModal();
   }
 

@@ -14,12 +14,12 @@ import {  validateEmail } from 'app/validators/validator';
 export class RecoverUsernameComponent implements OnInit {
 
   recoverUsernameForm: FormGroup; userExists: boolean;
-  public IsValidEmail: boolean; formSubmitted: boolean = null;
+  public IsValidEmail: boolean;
+  formSubmitted: boolean = null;
   error: string = null;
-
+  RecoveredUsername: string = null;
   constructor(private user_service: UserService, private router: Router, private fb: FormBuilder, private _http: Http) {
     this.recoverUsernameForm = this.recoverUsernameFormInit();
-    this.IsValidEmail = false;
   }
 
   recoverUsernameFormInit(): FormGroup {
@@ -34,9 +34,10 @@ export class RecoverUsernameComponent implements OnInit {
       if (email_address && email_address.length) {
         this.user_service.recoverUsername(email_address).subscribe(
           result => {
-            console.log(this.IsValidEmail)
-            console.log(result)
             this.IsValidEmail = result;
+            this.RecoveredUsername = sessionStorage.getItem('User_Name');
+            console.log('IsValidEmail', this.IsValidEmail);
+            console.log('Username', result);
           },
           error => {
             this.error = error.Message;
