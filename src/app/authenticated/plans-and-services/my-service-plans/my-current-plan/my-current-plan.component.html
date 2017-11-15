@@ -91,7 +91,7 @@
             </md-card-title>
             <md-card-content>
               <p class="bg-default">TERM: Month to month</p>
-              <p>START: {{ActiveServiceAccount.Current_Offer.Start_Date | date: 'MM/dd/yyyy'}}</p>
+              <p>START: {{ActiveServiceAccount.Contract_Start_Date | date: 'MM/dd/yyyy'}}</p>
             </md-card-content>
           </md-card>
         </div>
@@ -127,8 +127,10 @@
         </div>
       </section>
     </div>
-    <mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame]="isUpForRenewal"
-                                      [IsOnHoldOver]="isOnHoldOver"></mygexa-plan-confirmation-popover>
+    <mygexa-plan-confirmation-modal #planConfirmationModal></mygexa-plan-confirmation-modal>
+
+    <!--<mygexa-plan-confirmation-popover #planPopModal [IsInRenewalTimeFrame]="isUpForRenewal"-->
+                                      <!--[IsOnHoldOver]="isOnHoldOver"></mygexa-plan-confirmation-popover>-->
   </div>
 </div>
 <mygexa-error-modal #errorModal></mygexa-error-modal>
