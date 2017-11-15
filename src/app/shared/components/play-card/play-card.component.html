@@ -42,7 +42,7 @@
             <h2>{{offer.Plan.Name}}</h2>
 
             <div *ngIf="isOfferSelected">
-            <form novalidate (ngSubmit)="selectOffer()" [formGroup]="renewalUpgradeFormGroup" class="form-horizontal">
+            <form novalidate [formGroup]="renewalUpgradeFormGroup" class="form-horizontal">
             <div *ngIf="offer.Has_Partner">
               <div class="form-group form-group-sm">
                <label for="accountNameId" class="control-label col-xs-3">Name<sup>*</sup></label>
