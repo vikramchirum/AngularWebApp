@@ -6,7 +6,7 @@
       <div class="modal-content ">
         <div class="modal-header">
           <button type="button" class="close" aria-label="Close" (click)="hidePlanPopModal()" style="padding:15px 100px 10px 0px;"> <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-          <h2 class="modal-title"><b>Thanks, <span class="hidden-xs">{{customerDetails?.First_Name.charAt(0).toUpperCase() +  customerDetails?.First_Name.slice(1).toLowerCase() + '!'}}</span></b></h2>
+          <h2 class="modal-title"><b>Thanks<span class="hidden-xs">,  {{customerDetails?.First_Name.charAt(0).toUpperCase() +  customerDetails?.First_Name.slice(1).toLowerCase() + '!'}}</span></b></h2>
           <div class="modal-body container-fluid">
             <ng-template *ngIf="IsInRenewalTimeFrame && !IsOnHoldOver; then RenewalSection else UpgradeSection"></ng-template>
             <ng-template #UpgradeSection>
