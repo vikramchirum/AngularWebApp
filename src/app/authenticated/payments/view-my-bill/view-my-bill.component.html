@@ -96,8 +96,8 @@
     </div>
     <br class="visible-xs"/>
     <div class="col-lg-4">
-      <div class="alert alert-info" *ngIf="!exceededDueDate" >Thank you for your payment of ${{LatestBillAmount}} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </div>
-      <div class="alert alert-danger" *ngIf="payments && exceededDueDate">Due Date: {{ req_bill?.Due_Date | date:'MM/dd/yyyy' }}</div>
+      <div class="alert alert-info" *ngIf="(payments && payments.length > 0) && !exceededDueDate" >Thank you for your payment of ${{LatestBillAmount}} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </div>
+      <div class="alert alert-danger" *ngIf="(payments && payments.length > 0) && exceededDueDate">Due Date: {{ req_bill?.Due_Date | date:'MM/dd/yyyy' }}</div>
       <div class="view-my-bill-billing-payment-preferences">
         <div class="view-my-bill-billing-pad">
           <h3>Your Settings</h3>

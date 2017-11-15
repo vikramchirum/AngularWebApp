@@ -76,9 +76,11 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
                 PaymentsHistoryItems => {
                   if (PaymentsHistoryItems) {
                     this.payments = PaymentsHistoryItems;
-                    this.paymentStatus = PaymentsHistoryItems[0].PaymentStatus;
-                    this.LatestBillAmount = this.payments[0].PaymentAmount;
-                    this.LatestBillPaymentDate = this.payments[0].PaymentDate;
+                    if ( this.payments  && this.payments.length > 0) {
+                      this.paymentStatus = PaymentsHistoryItems[0].PaymentStatus;
+                      this.LatestBillAmount = this.payments[0].PaymentAmount;
+                      this.LatestBillPaymentDate = this.payments[0].PaymentDate;
+                    }
                     this.setFlags();
                   }
                 }
@@ -100,8 +102,8 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
             this.currentView = 'PastDuePayNow';
           }
         } else {
-          if (this.paymentStatus === 'Cleared') {
-            this.currentView = 'MakePayment';
+          if (this.totalDue > 0 ) {
+            this.currentView = 'PastDuePayNow';
           } else {
             this.currentView = 'AutoPay';
           }
@@ -114,8 +116,8 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
             this.currentView = 'MakePayment';
           }
         } else {
-          if (this.paymentStatus === 'Cleared') {
-            this.currentView = 'MakePayment';
+          if (this.totalDue > 0 ) {
+            this.currentView = 'PastDuePayNow';
           } else {
             this.currentView = 'AutoPay';
           }

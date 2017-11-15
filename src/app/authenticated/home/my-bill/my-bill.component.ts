@@ -35,7 +35,8 @@ export class MyBillComponent implements OnInit, OnDestroy {
     LatestBillAmount: number;
     LatestBillPaymentDate: Date;
     showDueDate: boolean = null;
-
+    pastDueOnAutoPay: boolean = null;
+    PaymentsLength: number = null;
   private activeServiceAccountSubscription: Subscription = null;
   private latestInvoiceDetailsSubscription: Subscription = null;
   private paymentHistorySubscription: Subscription = null;
@@ -55,11 +56,13 @@ export class MyBillComponent implements OnInit, OnDestroy {
           this.pastDue = activeServiceAccount.Past_Due;
           this.totalDue = activeServiceAccount.Current_Due + activeServiceAccount.Past_Due;
           this.autoPay = activeServiceAccount.Is_Auto_Bill_Pay;
+          this.pastDueOnAutoPay = this.totalDue > 0 && this.autoPay;
           this.exceededDueDate =  this.totalDue > 0 ? true : false;
           this.paymentHistorySubscription = this.PaymentHistoryStore.PaymentHistory.subscribe(
             PaymentsHistoryItems => {
               if (PaymentsHistoryItems) {
                 this.Payments = PaymentsHistoryItems;
+                this.PaymentsLength = this.Payments.length;
                 this.paymentStatus = this.Payments[0].PaymentStatus;
                 if (this.paymentStatus === 'In Progress' || this.paymentStatus === 'Cleared') {
                   this.LatestBillAmount = this.Payments[0].PaymentAmount;
@@ -97,8 +100,8 @@ export class MyBillComponent implements OnInit, OnDestroy {
             this.currentView = 'PastDuePayNow';
           }
         } else {
-          if (this.paymentStatus === 'Cleared') {
-            this.currentView = 'MakePayment';
+          if (this.totalDue > 0) {
+            this.currentView = 'PastDuePayNow';
           } else {
             this.currentView = 'AutoPay';
           }
@@ -111,8 +114,8 @@ export class MyBillComponent implements OnInit, OnDestroy {
             this.currentView = 'MakePayment';
           }
         } else {
-          if (this.paymentStatus === 'Cleared') {
-            this.currentView = 'MakePayment';
+          if (this.totalDue > 0) {
+            this.currentView = 'PastDuePayNow';
           } else {
             this.currentView = 'AutoPay';
           }

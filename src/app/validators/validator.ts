@@ -18,7 +18,7 @@ export function validCreditCard(control: FormControl): any {
     // Test for an empty string.
     value
     // Test if the card type is Mastercard or not
-    && (/^5[1-5][0-9]{14}$/g.test(value)
+    && (/^(5[1-5][0-9]{14}|2[2-7][0-9]{14})$/g.test(value)
     // Test if the card type is Visa or not
     || /^4[0-9]{12}(?:[0-9]{3})?$/g.test(value)
     // Test if the card type is Discover or not
