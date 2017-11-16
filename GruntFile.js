@@ -53,6 +53,7 @@ module.exports = function ( grunt ) {
     var version = pkg.version;
 
     if ( branch_name !== 'dev' && branch_name !== 'master' ) {
+      branch_name = branch_name.replace("\\", "-")
       version += '-' + branch_name;
     }
 
