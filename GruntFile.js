@@ -52,11 +52,14 @@ module.exports = function ( grunt ) {
     var pkg = grunt.file.readJSON( 'package.json' );
     var version = pkg.version;
 
+    grunt.log.writeln( branch_name );
+
     if ( branch_name !== 'dev' && branch_name !== 'master' ) {
+      branch_name = branch_name.replace("\\", "-").replace("/", "-");
       version += '-' + branch_name;
     }
 
-    grunt.log.writeln( 'Version: ' + pkg.version );
+    grunt.log.writeln( version );
 
     grunt.config.set( 'octo-pack.prod.options.version', version );
     grunt.task.run( 'octo-pack:prod' );
