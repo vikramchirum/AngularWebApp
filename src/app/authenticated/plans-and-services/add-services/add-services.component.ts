@@ -20,10 +20,10 @@ import { IOfferSelectionPayLoad } from 'app/shared/models/offerselectionpayload'
 import { environment } from 'environments/environment';
 import { AvailableDateService } from 'app/core/availabledate.service';
 import { ITduAvailabilityResult } from 'app/core/models/availabledate/tduAvailabilityResult.model';
-import { ServiceType } from "app/core/models/enums/serviceType";
-import { TduAction } from "../../../core/models/enums/tduAction";
-import { forEach } from "@angular/router/src/utils/collection";
-import { CalendarService } from "../../../core/calendar.service";
+import { ServiceType } from 'app/core/models/enums/serviceType';
+import { TduAction } from '../../../core/models/enums/tduAction';
+import { forEach } from '@angular/router/src/utils/collection';
+import { CalendarService } from '../../../core/calendar.service';
 
 @Component( {
   selector: 'mygexa-add-services',
@@ -146,8 +146,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     if ( this.serviceType ) {
       this.enableDates = true;
       this.populateCalendar();
-    }
-    else {
+    } else {
       this.enableDates = false;
     }
   }
