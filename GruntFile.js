@@ -55,7 +55,7 @@ module.exports = function ( grunt ) {
     grunt.log.writeln( branch_name );
 
     if ( branch_name !== 'dev' && branch_name !== 'master' ) {
-      branch_name = branch_name.replace("\\", "-").replace("/", "");
+      branch_name = branch_name.replace("\\", "-").replace("/", "-");
       version += '-' + branch_name;
     }
 
