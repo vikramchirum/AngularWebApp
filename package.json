@@ -12,7 +12,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "serve-local": "ng serve --environment=local",
-    "serve-qa": "ng senpm rurve -o --environment=qa",
+    "serve-qa": "ng serve -o --environment=qa",
     "build-dev": "npm install && ng build --aot=false --target=production --environment=dev --output-hashing all",
     "build-qa": "npm install && ng build --aot=false --target=production --environment=qa --output-hashing all",
     "build-stg": "npm install && ng build --aot=false --target=production --environment=stg --output-hashing all",
