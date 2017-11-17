@@ -23,6 +23,10 @@ import { ErrorModalComponent } from '../../../../shared/components/error-modal/e
 import { Offer } from '../../../../core/models/offers/offer.model';
 import { IServiceAccountPlanHistoryOffer } from '../../../../core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
 import { OfferSelectionType } from 'app/core/models/enums/offerselectiontype';
+import { IOfferSelectionPayLoad } from 'app/shared/models/offerselectionpayload';
+import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-confirmation-modal.component';
+import { CustomerAccountService } from '../../../../core/CustomerAccount.service';
+import { CustomerAccount } from '../../../../core/models/customeraccount/customeraccount.model';
 
 @Component({
   selector: 'mygexa-my-current-plan',
@@ -30,14 +34,17 @@ import { OfferSelectionType } from 'app/core/models/enums/offerselectiontype';
   styleUrls: ['./my-current-plan.component.scss']
 })
 export class MyCurrentPlanComponent implements OnInit, OnDestroy {
-  @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
+  // @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
   @ViewChild('errorModal') errorModal: ErrorModalComponent;
+  @ViewChild('planConfirmationModal') planConfirmationModal: PlanConfirmationModalComponent;
 
   user: IUser;
+  customerDetails: CustomerAccount;
   ActiveServiceAccount: ServiceAccount;
   public RenewalAccount: IRenewalDetails;
   plansServicesSubscription: Subscription;
   OffersServiceSubscription: Subscription;
+  customerAccountServiceSubscription: Subscription;
   isOffersReady: boolean = null;
   public isUpForRenewal: boolean;
   isOfferAgreed = false;
@@ -55,9 +62,14 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   currentView: string = null;
   renewalUpgradeFormGroup: FormGroup;
   offerSelectionType = OfferSelectionType;
+  offerSelectionPayLoad: IOfferSelectionPayLoad;
 
-  constructor(private userService: UserService, private serviceAccountService: ServiceAccountService
-    , private OfferStore: OffersStore, private renewalStore: RenewalStore, private utilityService: UtilityService,
+  constructor(private userService: UserService,
+              private serviceAccountService: ServiceAccountService,
+              private OfferStore: OffersStore,
+              private renewalStore: RenewalStore,
+              private utilityService: UtilityService,
+              private customerAccountService: CustomerAccountService,
               private formBuilder: FormBuilder) {
     this.isOffersReady = false;
   }
@@ -67,15 +79,14 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     this.userService.UserObservable.subscribe(user => {
       this.user = user;
     });
+    this.customerAccountServiceSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(result => {
+      this.customerDetails = result;
+    });
 
     this.renewalUpgradeFormGroup = this.formBuilder.group({
       accountName: ['', Validators.required],
       rewardsNumber: ['', Validators.required]
     });
-    this.getData();
-  }
-
-  public getData() {
     const activeServiceAccount$ = this.serviceAccountService.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null);
     const renewalDetails$ = this.renewalStore.RenewalDetails;
 
@@ -108,12 +119,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
         }
       }
     });
-  }
 
-  OnConfirmation(event) {
-    if (event) {
-      this.getData();
-    }
   }
 
   setFlags() {
@@ -236,11 +242,15 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
       request.Partner_Account_Number = this.renewalUpgradeFormGroup.get('accountName').value;
       request.Partner_Name_On_Account = this.renewalUpgradeFormGroup.get('rewardsNumber').value;
     }
-    // console.log('request', request);
+     console.log('request', request);
     this.renewalStore.createRenewal(request).subscribe(result => {
       if (result) {
         console.log('Renewal Created');
-        this.planPopModal.showPlanPopModal();
+        this.planConfirmationModal.showPlanConfirmationModal({
+          isRenewalPlan: true,
+          customerDetails: this.customerDetails
+        });
+        // this.planPopModal.showPlanPopModal();
       }
     }, err => {
       this.errorModal.showErrorModal(err);
@@ -267,8 +277,16 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     if (this.isUpForRenewal) {
       this.OffersServiceSubscription.unsubscribe();
     }
+    if (this.customerAccountServiceSubscription) {
+      this.customerAccountServiceSubscription.unsubscribe();
+    }
   }
   onOfferSelected(event) {
+    this.offerSelectionPayLoad = event;
+    if (this.offerSelectionPayLoad.Has_Partner) {
+      this.renewalUpgradeFormGroup.get('accountName').setValue(this.offerSelectionPayLoad.Partner_Account_Number);
+      this.renewalUpgradeFormGroup.get('rewardsNumber').setValue(this.offerSelectionPayLoad.Partner_Name_On_Account);
+    }
     this.createRenewal();
   }
 }

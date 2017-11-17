@@ -1,8 +1,8 @@
 <div *ngIf="activeServiceAccount" class="my-bill-grid thumbnail">
-  <div class="alert alert-danger pull-right bg-danger" *ngIf="exceededDueDate  ">Due Date: {{ latestInvoice?.Due_Date | date:'MM/dd/yyyy' }}</div>
-  <div class="alert pull-right alert-info text-center"  *ngIf="!exceededDueDate "><span>
+  <div class="alert alert-danger pull-right bg-danger" *ngIf="(pastDueExists || totalDue > 0) && PaymentsLength > 0">Due Date: {{ latestInvoice?.Due_Date | date:'MM/dd/yyyy' }}</div>
+  <div class="alert pull-right alert-info text-center"  *ngIf="!pastDueExists && PaymentsLength > 0 && totalDue <= 0"><span>
     Thanks for your payment <br> of ${{LatestBillAmount}} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </span></div>
-  <h1 [ngClass]="{'paymentMade': !exceededDueDate || (exceededDueDate && paymentStatus === 'In Progress'), 'exceededDueDate': exceededDueDate}">My Bill</h1>
+  <h1 [ngClass]="{'paymentMade': !pastDueExists, 'exceededDueDate': pastDueExists }">My Bill</h1>
 
   <table class="table " border="0" width="100%">
     <tbody>
@@ -23,7 +23,7 @@
     </tr>
     </tbody>
   </table>
-  <button class="btn btn-small btn-link pull-right" [ngClass]="{'paymentMade': !exceededDueDate || (exceededDueDate && paymentStatus === 'In Progress'), 'exceededDueDate': exceededDueDate}" routerLink="/payments/view-my-bill" type="button">View Bill</button>
+  <button class="btn btn-small btn-link pull-right" [ngClass]="{'paymentMade': !pastDueExists, 'exceededDueDate': pastDueExists }" routerLink="/payments/view-my-bill" type="button">View Bill</button>
   <div [ngSwitch]="currentView">
     <div *ngSwitchCase="'PastDuePayNow'">
       <!--<button class="btn btn-block btn-success btn-lg" [ngClass]="{'btn-success': ((noCurrentDue && !exceededDueDate) || (!noCurrentDue && !exceededDueDate )), 'exceededDueDatebtn': exceededDueDate && !noCurrentDue}" routerLink="/payments/make-payment" type="button">-->

@@ -25,6 +25,7 @@ export class MyBillComponent implements OnInit, OnDestroy {
    totalDue: number;
    pastDue: number;
    exceededDueDate: boolean = null;
+   pastDueExists: boolean = null;
    activeServiceAccount: ServiceAccount;
    latestInvoice: IInvoice;
    autoPay: boolean;
@@ -35,7 +36,7 @@ export class MyBillComponent implements OnInit, OnDestroy {
     LatestBillAmount: number;
     LatestBillPaymentDate: Date;
     showDueDate: boolean = null;
-
+    PaymentsLength: number = null;
   private activeServiceAccountSubscription: Subscription = null;
   private latestInvoiceDetailsSubscription: Subscription = null;
   private paymentHistorySubscription: Subscription = null;
@@ -55,18 +56,21 @@ export class MyBillComponent implements OnInit, OnDestroy {
           this.pastDue = activeServiceAccount.Past_Due;
           this.totalDue = activeServiceAccount.Current_Due + activeServiceAccount.Past_Due;
           this.autoPay = activeServiceAccount.Is_Auto_Bill_Pay;
-          this.exceededDueDate =  this.totalDue > 0 ? true : false;
+          this.pastDueExists = this.pastDue > 0 ? true : false;
           this.paymentHistorySubscription = this.PaymentHistoryStore.PaymentHistory.subscribe(
             PaymentsHistoryItems => {
               if (PaymentsHistoryItems) {
                 this.Payments = PaymentsHistoryItems;
-                this.paymentStatus = this.Payments[0].PaymentStatus;
-                if (this.paymentStatus === 'In Progress' || this.paymentStatus === 'Cleared') {
-                  this.LatestBillAmount = this.Payments[0].PaymentAmount;
-                  this.LatestBillPaymentDate = this.Payments[0].PaymentDate;
-                  this.showDueDate = false;
-                } else {
-                  this.showDueDate = true;
+                this.PaymentsLength = this.Payments.length;
+                if (this.Payments[0]) {
+                  this.paymentStatus = this.Payments[0].PaymentStatus;
+                  if (this.paymentStatus === 'In Progress' || this.paymentStatus === 'Cleared') {
+                    this.LatestBillAmount = this.Payments[0].PaymentAmount;
+                    this.LatestBillPaymentDate = this.Payments[0].PaymentDate;
+                    this.showDueDate = false;
+                  } else {
+                    this.showDueDate = true;
+                  }
                 }
                 this.latestInvoiceDetailsSubscription = this.InvoiceStore.LatestInvoiceDetails.subscribe(
                   latestInvoice => {
@@ -76,7 +80,7 @@ export class MyBillComponent implements OnInit, OnDestroy {
                     this.latestInvoice = latestInvoice;
                     this.dueDate = new Date(latestInvoice.Due_Date);
                     this.dueDate.setDate(this.dueDate.getDate() + 1);
-                    // this.exceededDueDate = (this.dueDate < new Date() && this.pastDue > 0) ? true : false;
+                    this.exceededDueDate = (this.dueDate < new Date()) ? true : false;
                   }
                 );
                 this.setFlags();
@@ -89,20 +93,8 @@ export class MyBillComponent implements OnInit, OnDestroy {
 
   setFlags() {
     if (this.activeServiceAccount) {
-      if (this.exceededDueDate) {
-        if (!this.autoPay) {
-          if ( this.paymentStatus === 'In Progress' ) {
-            this.currentView = 'PaymentPending';
-          } else {
-            this.currentView = 'PastDuePayNow';
-          }
-        } else {
-          if (this.paymentStatus === 'Cleared') {
-            this.currentView = 'MakePayment';
-          } else {
-            this.currentView = 'AutoPay';
-          }
-        }
+      if (this.pastDueExists) {
+        this.currentView = 'PastDuePayNow';
       } else {
         if (!this.autoPay) {
           if (this.paymentStatus === 'In Progress') {
@@ -111,11 +103,7 @@ export class MyBillComponent implements OnInit, OnDestroy {
             this.currentView = 'MakePayment';
           }
         } else {
-          if (this.paymentStatus === 'Cleared') {
-            this.currentView = 'MakePayment';
-          } else {
             this.currentView = 'AutoPay';
-          }
         }
       }
     }
