@@ -60,7 +60,7 @@
     </ng-container>
     <ng-container *ngIf="pastDueErrorMessage">
       <small class="text-danger" *ngIf="pastDueErrorMessage">
-        <p>{{pastDueErrorMessage}} <b>$ {{customerDetails?.Past_Due | number : dollarAmountFormatter}}</b> </p>
+        <p>{{pastDueErrorMessage}} <b>${{ActiveServiceAccount?.Past_Due | number : dollarAmountFormatter}}</b> </p>
       </small>
       <br>
       <div class="row" *ngIf="pastDueErrorMessage">

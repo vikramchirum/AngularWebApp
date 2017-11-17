@@ -5,7 +5,15 @@ module.exports = function ( grunt ) {
 
   var path = grunt.option( 'deploypath' );
 
+  var pkg = grunt.file.readJSON( 'package.json' );
+  var version = pkg.version;
+
   var branch_name = grunt.option( 'branch_name' );
+  if ( branch_name !== 'dev' && branch_name !== 'master' ) {
+    branch_name = branch_name.replace("\\", "-").replace("/", "-");
+    version += '-' + branch_name;
+  }
+
   var octo_api_url = grunt.option( 'octo_api_url' );
   var octo_api_key = grunt.option( 'octo_api_key' );
 
@@ -17,7 +25,7 @@ module.exports = function ( grunt ) {
       prod: {
         options: {
           dst: './pkg',
-          version: ''
+          version: version
         },
         cwd: './dist',
         src: [ '**/*' ]
@@ -47,36 +55,7 @@ module.exports = function ( grunt ) {
     }
   } );
 
-  grunt.registerTask( 'octopack', function () {
-
-    var pkg = grunt.file.readJSON( 'package.json' );
-    var version = pkg.version;
-
-    if ( branch_name !== 'dev' && branch_name !== 'master' ) {
-      version += '-' + branch_name;
-    }
-
-    grunt.log.writeln( 'Version: ' + pkg.version );
-
-    grunt.config.set( 'octo-pack.prod.options.version', version );
-    grunt.task.run( 'octo-pack:prod' );
-
-  } );
-
-  grunt.registerTask( 'publish', function () {
-
-    if ( branch_name === 'dev' ) {
-      grunt.task.run( 'bump-only:patch', 'copy:config', 'clean', 'octopack', 'octo-push' );
-    }
-    else if ( branch_name === 'master' ) {
-      grunt.task.run( 'bump-only:minor', 'copy:config', 'clean', 'octopack', 'octo-push' );
-    }
-    else {
-      grunt.task.run( 'copy:config', 'clean', 'octopack', 'octo-push' );
-    }
-
-
-  } );
+  grunt.registerTask( 'publish', ['copy:config', 'clean', 'octo-pack', 'octo-push']);
 
   require( 'load-grunt-tasks' )( grunt );
 };
