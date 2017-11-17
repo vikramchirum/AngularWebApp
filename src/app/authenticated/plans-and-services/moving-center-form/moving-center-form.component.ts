@@ -60,6 +60,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   availableOffers = null;
   isLoading: boolean = null;
   showNewPlans: boolean = null;
+  isKeepCurrent: boolean = false;
+  isSelectNew: boolean = false;
+  isUseCurrent: boolean = false;
+  isUseNew: boolean = false;
   offerId: string;
   showHideAdressList: boolean = true;
   pastDueErrorMessage: string;
@@ -278,6 +282,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   showPlans() {
     this.ServicePlanForm.controls[ 'service_plan' ].setValue( 'New Plan' );
     this.showNewPlans = true;
+    this.isKeepCurrent = false;
+    this.isSelectNew = true;
     // this.selectPlanModal.show();
   }
 
@@ -289,6 +295,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.ServicePlanForm.controls[ 'service_plan' ].setValue( 'Current Plan' );
     this.showNewPlans = false;
     this.selectedOffer = null;
+    this.isKeepCurrent = true;
+    this.isSelectNew = false;
+    
     // should not pass offerId if the user selects existing Plan.
     this.offerId = undefined;
 
@@ -303,11 +312,15 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   useCurrentAddress() {
     this.ServicePlanForm.controls[ 'service_address' ].setValue( 'Current Address' );
     this.finalBillAddress = 'Current Address';
+    this.isUseNew = false;
+    this.isUseCurrent = true;
   }
 
   useNewAddress() {
     this.ServicePlanForm.controls[ 'service_address' ].setValue( 'New Address' );
     this.finalBillAddress = 'New Address';
+    this.isUseNew = true;
+    this.isUseCurrent = false;
   }
 
   onSubmitMove( addressForm, billSelector ) {
