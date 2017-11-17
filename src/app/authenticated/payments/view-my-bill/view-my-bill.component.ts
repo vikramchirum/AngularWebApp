@@ -35,6 +35,7 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
   public service_account_id: string;
   public id: string;
   date_today = new Date;
+  pastDueExists: boolean = null;
   LatestBillAmount: number;
   LatestBillPaymentDate: Date;
   private payments: PaymentsHistory[] = null;
@@ -58,6 +59,7 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
           this.autoPay = result.Is_Auto_Bill_Pay;
           this.currentDue = result.Current_Due;
           this.pastDue = result.Past_Due;
+          this.pastDueExists = this.pastDue > 0 ? true : false;
           this.totalDue = result.Current_Due + result.Past_Due;
           this.service_account_id = result.Id;
           this.InvoiceStore.LatestInvoiceDetails.subscribe(
@@ -70,7 +72,7 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
               this.dueDate = new Date(latestInvoice.Due_Date);
               this.dueDate.setDate(this.dueDate.getDate() + 1);
               console.log('After setting invoice id');
-              this.exceededDueDate = (this.totalDue > 0) ? true : false;
+              this.exceededDueDate = (this.dueDate < new Date()) ? true : false;
               this.req_bill = latestInvoice;
               this.PaymentsHistoryStore.PaymentHistory.subscribe(
                 PaymentsHistoryItems => {
@@ -94,20 +96,8 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
 
   setFlags() {
     if (this.activeServiceAccount) {
-      if (this.exceededDueDate) {
-        if (!this.autoPay) {
-          if ( this.paymentStatus === 'In Progress' ) {
-            this.currentView = 'PaymentPending';
-          } else {
-            this.currentView = 'PastDuePayNow';
-          }
-        } else {
-          if (this.totalDue > 0 ) {
-            this.currentView = 'PastDuePayNow';
-          } else {
-            this.currentView = 'AutoPay';
-          }
-        }
+      if (this.pastDueExists) {
+        this.currentView = 'PastDuePayNow';
       } else {
         if (!this.autoPay) {
           if (this.paymentStatus === 'In Progress') {
@@ -116,11 +106,7 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
             this.currentView = 'MakePayment';
           }
         } else {
-          if (this.totalDue > 0 ) {
-            this.currentView = 'PastDuePayNow';
-          } else {
             this.currentView = 'AutoPay';
-          }
         }
       }
     }
