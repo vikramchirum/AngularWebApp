@@ -101,6 +101,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     // start date and end date must be future date.
     this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId => {
       this.channelId = ChannelId;
+      console.log('Channel Id', this.channelId);
     } );
   }
 
@@ -139,15 +140,20 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       movingFromAccount => {
         // console.log("Active Service Account", movingFromAccount);
         this.ActiveServiceAccount = movingFromAccount;
+        if ( this.ActiveServiceAccount.Past_Due > 49 ) {
+          this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
+        } else {
+          this.pastDueErrorMessage = null;
+        }
       }
     );
     this.CustomerAccountSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(
       result => {
         this.customerDetails = result;
         // console.log('Customer Account**************************', result);
-        if ( this.customerDetails.Past_Due > 49 ) {
-          this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
-        }
+        // if ( this.customerDetails.Past_Due > 49 ) {
+        //   this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
+        // }
       }
     );
   }
@@ -195,13 +201,13 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
   populateCalendar() {
     if ( this.tduAvailabilityResult ) {
-      //Clear the selected date
+      // Clear the selected date
       this.newServiceStartDate = null;
-      //Filter the dates
+      // Filter the dates
       var calendarData = this.calendarService.getCalendarData( this.tduAvailabilityResult, ServiceType.MoveIn );
 
-      //Set calendar options
-      //Color code the dates
+      // Set calendar options
+      // Color code the dates
       this.newServiceStartDate = {
         disableUntil: calendarData.startDate,
         disableSince: calendarData.endDate,
@@ -239,9 +245,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   addressFormSubmit( addressForm ) {
-    if ( this.customerDetails && this.customerDetails.Past_Due > 40 ) {
-      this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
-    }
+    this.pastDueErrorMessage = ( this.ActiveServiceAccount && this.ActiveServiceAccount.Past_Due > 40 ) ? 'We are unable to process your request due to Past due Balance' : null;
 
     // start date - when the customer wants to turn on their service.
     // dunsNumber - TDU_DNS number from New Address Search API
@@ -262,7 +266,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
         console.log( 'this.available offers', this.availableOffers );
         // prevent user from navigating to plans page if we don't offer service in the moving address
         // prevent user from submitting the form if past due balance over 40
-        if ( this.availableOffers.length > 0 && this.customerDetails.Past_Due < 40 ) {
+        if ( this.availableOffers.length > 0 && this.ActiveServiceAccount.Past_Due < 40 ) {
           this.nextClicked = true;
           this.previousClicked = !this.previousClicked;
           this.selectedOffer = null;
