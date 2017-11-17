@@ -27,12 +27,16 @@
       <ng-container *ngIf="(budgetBillingFormGroup.get('amount').touched ||
                                                          budgetBillingFormGroup.get('amount').dirty) &&
                                                          budgetBillingFormGroup.get('amount').errors">
-        <span class="help-block">
+
+        <div class="help-block">
+                     <div class="col-sm-offset-4 col-md-8">
+
         <small class="text-danger"><i class="fa fa-fw fa-asterisk"></i>
           <ng-container *ngIf="budgetBillingFormGroup.get('amount').errors.required">Please enter your amount for budget billing.</ng-container>
           <ng-container *ngIf="budgetBillingFormGroup.get('amount').errors.minimumValue">Amount for budget billing should be a minimum of {{ minimumAmount }}.</ng-container>
         </small>
-        </span>
+          </div>
+        </div>
       </ng-container>
     </div>
   </div>
