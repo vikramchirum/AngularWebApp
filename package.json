@@ -7,7 +7,7 @@
     "start": "ng serve -o",
     "build": "ng build --aot=false --target=production --environment=publish --output-hashing all",
     "review": "npm install && ng build --aot=false --target=production --environment=publish --output-hashing all",
-    "approve": "npm version patch && git push",
+    "approve": "npm version patch && git push --tags",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
