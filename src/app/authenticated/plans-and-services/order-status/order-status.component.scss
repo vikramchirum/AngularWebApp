@@ -3,32 +3,31 @@
     line-height: 1.42857143;
     vertical-align: top;
     border-top: 1px solid #ddd;
-  
+
   &:nth-child(odd) {
     background-color: rgb(249,249,249);
   }
-  
+
   .date, .status {
     padding-top: 5px;
     padding-bottom: 5px;
   }
-  
+
   .Pending {
-    
+
     color: rgba(46,177,52,1.0);
-    font-style: italic;    
-  }
-  
-  .Canceled {
-    
-    color: red;
-    
-  }
-  
-  .Complete {
-    
-    color: rgba(46,177,52,1.0);
-    
+    font-style: italic;
   }
 
+  .Canceled {
+
+    color: red;
+
+  }
+
+  .Complete {
+
+    color: rgba(46,177,52,1.0);
+
+  }
 }
