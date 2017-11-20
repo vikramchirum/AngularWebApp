@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { indexOf } from 'lodash';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-
 import { OrderStatusService } from '../../../core/order-status.service';
 import { OrderStatus } from '../../../core/models/order-status.model';
 import { UserService } from 'app/core/user.service';
@@ -11,22 +9,18 @@ import { UserService } from 'app/core/user.service';
   templateUrl: './order-status.component.html',
   styleUrls: ['./order-status.component.scss']
 })
-export class OrderStatusComponent implements OnInit {
- 
+export class OrderStatusComponent implements OnInit, OnDestroy {
   public openCharges = [];
   public orderDetails: OrderStatus[] = null;
-  private UserCustomerAccountSubsciption: Subscription = null;
-
-  // get data() {
-  //   console.log('slice', this.orderData.slice(0, this.orderData.length));
-  //   return this.orderData.slice(0, this.orderData.length);
-  // }
+  private UserCustomerAccountSubscription: Subscription = null;
 
   constructor(private orderStatusService: OrderStatusService,
-    private UserService: UserService, ) {
-    this.UserCustomerAccountSubsciption = this.UserService.UserCustomerAccountObservable.subscribe(
+              private UserService: UserService) {
+    this.UserCustomerAccountSubscription = this.UserService.UserCustomerAccountObservable.subscribe(
       CustomerAccountId => {
-        this.getOrderStatusByCustomerId(CustomerAccountId);
+        if (CustomerAccountId) {
+          this.getOrderStatusByCustomerId(CustomerAccountId);
+        }
       }
     );
   }
@@ -38,7 +32,7 @@ export class OrderStatusComponent implements OnInit {
   getOrderStatusByCustomerId(customerId) {
     this.orderStatusService.fetchOrderDetails(customerId).subscribe(
       result => {
-        console.log('******Order Status********', result)
+        console.log('******Order Status********', result);
         this.orderDetails = result;
       }
     );
@@ -59,8 +53,8 @@ export class OrderStatusComponent implements OnInit {
 
   ngOnDestroy() {
     // Un-subscribe to prevent memory-leaks:
-    this.UserCustomerAccountSubsciption.unsubscribe();
+    if (this.UserCustomerAccountSubscription) {
+      this.UserCustomerAccountSubscription.unsubscribe();
+    }
   }
-
-
 }
