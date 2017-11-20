@@ -49,17 +49,34 @@ export class ServiceAccount {
   addressString(type: string): string {
     if (type === 'Service_Address'
         || type === 'Mailing_Address') {
-      return [
-        this[type].Line1,
-        this[type].Line2 && this[type].Line2 !== '' ? ' ' + this[type].Line2 : '',
-        ', ',
-        this[type].City,
-        ', ',
-        this[type].State,
-        ' ',
-        this[type].Zip,
-        this[type].Zip_4 && this[type].Zip_4 !== '' ? '-' + this[type].Zip_4 : ''
-      ].join('');
+       if (this.Status === 'Disconnected') {
+         return [
+           this[type].Line1,
+           this[type].Line2 && this[type].Line2 !== '' ? ' ' + this[type].Line2 : '',
+           ', ',
+           this[type].City,
+           ', ',
+           this[type].State,
+           ' ',
+           this[type].Zip,
+           this[type].Zip_4 && this[type].Zip_4 !== '' ? '-' + this[type].Zip_4 : '',
+           ' ',
+           '(Closed Account)'
+         ].join('');
+       } else {
+        return [
+          this[type].Line1,
+          this[type].Line2 && this[type].Line2 !== '' ? ' ' + this[type].Line2 : '',
+          ', ',
+          this[type].City,
+          ', ',
+          this[type].State,
+          ' ',
+          this[type].Zip,
+          this[type].Zip_4 && this[type].Zip_4 !== '' ? '-' + this[type].Zip_4 : ''
+        ].join('');
+      }
+
     }
     return null;
   }
