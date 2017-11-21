@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewContainerRef, ViewChild, AfterViewInit, Output, EventEmitter, OnDestroy} from '@angular/core';
-import { FormGroup, FormBuilder, Validators} from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormsModule} from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
 import { ModalDirective } from 'ngx-bootstrap';
@@ -68,7 +68,7 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
       this.activeServiceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null)
         .subscribe(result => {
           this.activeServiceAccountDetails = result;
-        });
+        });      
     }
 
     ngAfterViewInit() {
@@ -121,7 +121,17 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     toggleButton() {
+      
+      var offerCheckbox = $('input[name="isOfferAgreedBox"]');
+      
+      $(offerCheckbox).on('change', function () {
+        $(offerCheckbox).not(this).prop('checked', false);
+        $(offerCheckbox).not(this).closest('.planSelect_confirm').find('.btn-final').attr('disabled', 'disabled');
+        
+      });
+      
       this.isOfferAgreed = !this.isOfferAgreed;
+      
     }
 
     onCloseSelectOffer(event) {
