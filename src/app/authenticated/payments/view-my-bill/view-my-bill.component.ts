@@ -38,6 +38,7 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
   pastDueExists: boolean = null;
   LatestBillAmount: number;
   LatestBillPaymentDate: Date;
+  PaymentsLength: number = null;
   private payments: PaymentsHistory[] = null;
   private ActiveServiceAccountSubscription: Subscription = null;
 
@@ -78,6 +79,7 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
                 PaymentsHistoryItems => {
                   if (PaymentsHistoryItems) {
                     this.payments = PaymentsHistoryItems;
+                    this.PaymentsLength = this.payments.length;
                     if ( this.payments  && this.payments.length > 0) {
                       this.paymentStatus = PaymentsHistoryItems[0].PaymentStatus;
                       this.LatestBillAmount = this.payments[0].PaymentAmount;

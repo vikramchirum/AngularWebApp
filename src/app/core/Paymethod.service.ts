@@ -105,7 +105,7 @@ export class PaymethodService {
     if (this.CustomerAccountId === null) { return Observable.from(null); }
 
     // Assign the Http request to prevent any similar requests.
-    this.requestObservable = this.HttpClient.get(`/Paymethods?isActive=true&userKey=${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`)
+    this.requestObservable = this.HttpClient.get(`/Paymethods?isActive=true&clientApplicationName=Residential%20Portal&userKey=${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`)
       .map(data => data.json())
       .map(data => map(data, PaymethodData => new Paymethod(PaymethodData)))
       .catch(error => error);

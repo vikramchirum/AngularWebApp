@@ -20,7 +20,7 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
   switchingAutoBillPay: boolean = null;
   unenrollingFromAutoBillPay: boolean = null;
   enrollingToAutoBillPay: boolean = null;
-
+  internalError: boolean = null;
   private _autoBillPaymethod: Paymethod = null;
   get autoBillPaymethod(): Paymethod { return this._autoBillPaymethod; }
   set autoBillPaymethod(autoBillPaymethod) {
@@ -92,7 +92,13 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
         setTimeout(() => this.enrollingToAutoBillPay = false, random(500, 1500));
         this.ServiceAccountService.UpdateServiceAccounts(true);
       },
-      err => console.log('err', err)
+      err => {
+        this.enrollingToAutoBillPay = false;
+        // if (err.Message === 'Internal Server Error') {
+          this.internalError = true;
+        // }
+        console.log('err', err);
+      }
     );
   }
 
@@ -123,12 +129,20 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
           this.enrollingToAutoBillPay = false;
           this.switchingAutoBillPay = false;
         }, random(500, 1500));
+      },
+      err => {
+        this.enrollingToAutoBillPay = false;
+        // if (err.Message === 'Internal Server Error') {
+        this.internalError = true;
+        // }
+        console.log('err', err);
       }
     );
   }
 
   switchingAutoBillPayCanceled(): void {
     this.switchingAutoBillPay = false;
+    this.internalError = false;
   }
 
 }
