@@ -54,10 +54,12 @@
                     <br/>
                     <button
                       class="btn btn-blank switchAutoBillPayButton"
-                      (click)="switchingAutoBillPay = true"
-                    >
+                      (click)="switchingAutoBillPay = true">
                       <h4><i class="fa fa-chevron-down"></i> Switch Payment Accounts</h4>
                     </button>
+                  </div>
+                  <div *ngIf="!enrollingToAutoBillPay && internalError" class="alert alert-danger">
+                    We're sorry, it looks like there was an issue with this payment method. Please contact Customer Service at 866-691-9399.
                   </div>
                   <mygexa-payment-method-selector
                     *ngIf="switchingAutoBillPay"
@@ -77,6 +79,9 @@
         <ng-template #Not_Enrolled_In_Auto_Bill_Pay>
           <h2>Enroll In Auto Bill Pay</h2>
           <br/>
+          <div *ngIf="!enrollingToAutoBillPay && internalError" class="alert alert-danger">
+            We're sorry, it looks like there was an issue with this payment method. Please contact Customer Service at 866-691-9399.
+          </div>
           <mygexa-payment-method-selector
             (changedPaymethod)="enrollInAutoBillPaySelected($event)"
             [cancelProvide]="false"

@@ -62,7 +62,7 @@ export class AddPaymentAccountsComponent implements OnInit {
 
           this.paymentMessage = {
             classes: ['alert', 'alert-success'],
-            innerHTML: `<b>Ok!</b> your credit account, ending in <b>${ accountNumber }</b> has been added as a payment method! <br/> <b>Please Wait!</b> Loading your saved payment methods.`,
+            innerHTML: `<b>Ok!</b> your credit account, ending in <b>${ accountNumber }</b> has been added as a payment method! <br/> <i class="fa fa-fw fa-spinner fa-spin"> </i> <b>Please Wait!</b> Loading your saved payment methods.`,
             isCompleted: true
           };
           this.errorFromForte = null;
@@ -111,7 +111,7 @@ export class AddPaymentAccountsComponent implements OnInit {
         if (accountNumber) {
           this.paymentMessage = {
             classes: ['alert', 'alert-success'],
-            innerHTML: `<b>Ok!</b> your bank account, ending in <b>${ accountNumber }</b> has been added as a payment method! <br/> <b>Please Wait!</b> Loading your saved payment methods.`,
+            innerHTML: `<b>Ok!</b> your bank account, ending in <b>${ accountNumber }</b> has been added as a payment method! <br/> <i class="fa fa-fw fa-spinner fa-spin"> </i> <b>Please Wait!</b> Loading your saved payment methods.`,
             isCompleted: true
           };
           this.onAddPaymentAccountSubmittedEvent.emit(this.paymentMessage);
