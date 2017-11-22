@@ -50,7 +50,7 @@
 }
 .hang-indent {
   display: inline-block;
-  width: 93%;
+  width: 90%;
   float: right;
 }
 .btn-group button.active {
@@ -63,4 +63,7 @@ a {
 
 a:hover, a:active {
   text-decoration: underline !important;
+}
+.img-responsive {
+  margin: 0 auto;
 }
