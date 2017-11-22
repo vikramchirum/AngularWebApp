@@ -1,15 +1,29 @@
 .login-add-claims-modal{
 
-  .btnreg{
-    margin-top: 25px;
-    font-size: 15px;
-    padding: 15px 45px 15px 45px;
-    background-color: white;
-    box-shadow: 5px 5px 2px black;
-    border: 1.5px solid black;
-    border-radius: 0px;
-    border-style: outset;
-    border-color: black;
+  .modal-content{
+    text-align: center;
+    //width:550px; height: 850px;
+    //overflow-y: scroll;
   }
-
+  .modal-header {
+    padding-top:10px;
+    border-bottom: 0px white;
+    .modal-title{
+      padding:2px 0px 5px 75px ;
+      font: bold;
+      padding: 10px 0;
+      }
+    button.close {
+      margin-top:20px;
+      text-align: left;
+    }
+  }
+  .control-label {
+    text-align: left;
+    display: block;
+  }
+  .help-block {
+    // font-size:10px;
+    text-align: left;
+  }
 }
