@@ -24,6 +24,8 @@ import { ServiceType } from 'app/core/models/enums/serviceType';
 import { TduAction } from '../../../core/models/enums/tduAction';
 import { forEach } from '@angular/router/src/utils/collection';
 import { CalendarService } from '../../../core/calendar.service';
+import { TDUStore } from '../../../core/store/tdustore';
+import { ITDU } from '../../../core/models/tdu/tdu.model';
 
 @Component( {
   selector: 'mygexa-add-services',
@@ -44,14 +46,15 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   private tokenRes: CustomerCheckToken;
   private tokenMsg: string;
   private isTokenError = false;
-
+  isValidAddress: boolean = null;
   private enrollmentRequest: EnrollmentRequest = null;
   private CustomerAccountSubscription: Subscription = null;
   private channelStoreSubscription: Subscription = null;
   private availableDateServiceSubscription: Subscription = null;
+  private TDUDunsServiceSubscription: Subscription = null;
   enableDates: boolean = null;
   private selectedOffers: string[];
-
+  addressNotServed: boolean = null;
   private customerDetails: CustomerAccount = null;
   private Waiver: string;
   private serviceType?: ServiceType;
@@ -63,10 +66,12 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   offerSelectionType = OfferSelectionType;
   selectedOffer: IOfferSelectionPayLoad;
   pricingMessage: string;
-
+  TDUDuns: ITDU[] = [];
+  TDUDunsNumbers: string[] = [];
   constructor( private fb: FormBuilder,
                private offerService: OfferService, private UserService: UserService, private enrollService: EnrollService, private customerAccountService: CustomerAccountService,
-               private modalStore: ModalStore, private channelStore: ChannelStore, private availableDateService: AvailableDateService, private calendarService: CalendarService ) {
+               private modalStore: ModalStore, private channelStore: ChannelStore, private availableDateService: AvailableDateService, private calendarService: CalendarService,
+               private tduStore: TDUStore ) {
 
 
     // Keep our customer account id up-to-date.
@@ -80,7 +85,17 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
+    this.TDUDunsServiceSubscription = this.tduStore.TDUDetails.subscribe(
+      TDUDuns => {
+        this.TDUDuns = TDUDuns;
+        let DunsNumber: string[] = [];
+        this.TDUDuns.forEach(
+          item => DunsNumber.push(item.Duns_Number)
+        );
+        this.TDUDunsNumbers = DunsNumber;
+        // console.log('TDU duns number array', this.TDUDunsNumbers);
+      }
+    );
   }
 
   private ServiceStartDate: IMyOptions = {
@@ -93,12 +108,12 @@ export class AddServicesComponent implements OnInit, OnDestroy {
 
   populateCalendar() {
     if ( this.serviceType && this.tduAvailabilityResult ) {
-      //Clear the selected date
+      // Clear the selected date
       this.selectedStartDate = null;
-      //Filter the dates
+      // Filter the dates
       var calendarData = this.calendarService.getCalendarData( this.tduAvailabilityResult, this.serviceType );
 
-      //Set calendar options
+      // Set calendar options
       console.log( calendarData );
       this.ServiceStartDate = {
         disableUntil: calendarData.startDate,
@@ -113,18 +128,24 @@ export class AddServicesComponent implements OnInit, OnDestroy {
 
   disableFields( $event ) {
     // console.log('h', $event);
-    this.enableDates = false;
-    this.ServiceStartDate.disableUntil = { year: 0, month: 0, day: 0 };
-    this.ServiceStartDate.disableSince = { year: 0, month: 0, day: 0 };
-    this.ServiceStartDate.disableDays = [];
-    this.ServiceStartDate = null;
+    this.isValidAddress = $event;
+    if (this.isValidAddress) {
+      this.enableDates = false;
+      this.ServiceStartDate.disableUntil = { year: 0, month: 0, day: 0 };
+      this.ServiceStartDate.disableSince = { year: 0, month: 0, day: 0 };
+      this.ServiceStartDate.disableDays = [];
+      this.ServiceStartDate = null;
+    }
   }
 
   // Fetch Offers when users selects new address
   getSelectedAddress( serviceLocation ) {
     this.selectedServiceAddress = serviceLocation;
+    console.log('selected address duns', this.selectedServiceAddress.Meter_Info.TDU_DUNS);
+    // console.log('result', this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS));
+    this.addressNotServed = this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS);
     // Get Available dates
-    if ( this.selectedServiceAddress.Meter_Info.UAN !== null ) {
+    if ( this.selectedServiceAddress.Meter_Info.UAN !== null && this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS)) {
       this.availableDateServiceSubscription = this.availableDateService.getAvailableDate( this.selectedServiceAddress.Meter_Info.UAN ).subscribe(
         availableDates => {
           this.tduAvailabilityResult = availableDates;
@@ -285,6 +306,9 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     }
     if ( this.availableDateServiceSubscription ) {
       this.availableDateServiceSubscription.unsubscribe();
+    }
+    if (this.TDUDunsServiceSubscription) {
+      this.TDUDunsServiceSubscription.unsubscribe();
     }
   }
 }

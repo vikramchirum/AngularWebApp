@@ -12,6 +12,8 @@ import { RenewalStore } from 'app//core/store/renewalstore';
 import { UpgradeStore } from 'app/core/store/upgradestore';
 import { OffersStore } from 'app//core/store/offersstore';
 import { ModalStore } from 'app//core/store/modalstore';
+import { TDUStore } from '../../core/store/tdustore';
+import { ChannelStore } from '../../core/store/channelstore';
 
 @Component({
   selector: 'mygexa-plans-and-services',
@@ -36,14 +38,15 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
     private renewalStore: RenewalStore,
     private Router: Router,
     private Route: ActivatedRoute,
+    private tduStore: TDUStore,
+    private channelStore: ChannelStore
   ) {
   }
 
   ngOnInit() {
+    this.channelStore.LoadChannelId();
     this.promoCodeSubscription = this.Route.queryParams.subscribe(params => { this.promoCode = params['pCode'] || null; });
     console.log('Promocode', this.promoCode);
-
-
     this.serviceAccountServiceSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
@@ -62,6 +65,7 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
         this.OfferStore.LoadUpgradeOffersData(this.ActiveServiceAccount.Id);
       }
     });
+    this.tduStore.LoadTDUDetails();
   }
 
   ngOnDestroy() {
