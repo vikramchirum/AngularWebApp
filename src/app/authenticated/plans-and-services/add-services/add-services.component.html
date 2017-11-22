@@ -15,6 +15,7 @@
         </h3>
         <!-- <input type="text" class="form-control" placeholder="Enter New Address"> -->
         <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)" (onServiceAddressChanged) = "disableFields($event)"></mygexa-address-search>
+        <small *ngIf="!(isValidAddress === false) && addressNotServed === false" class="text-danger">   We're sorry, we don't offer electricity service at the location you specified. Please check the address, or contact Customer Service for assistance.   </small>
       </div>
     </div>
 
