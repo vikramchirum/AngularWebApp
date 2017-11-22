@@ -9,7 +9,7 @@
       <h2><i class="fa fa-spin fa-circle-o-notch"></i> Enrolling into Autopay...</h2>
     </ng-template>
     <ng-template #DoNotShowEnrolling>
-      <a routerLink="/payments/payment-options" class="visible-xs"><i class="fa fa-4x fa-arrow-left"></i></a>
+      <a routerLink="/payments/payment-options" class="visible-xs btn btn-sm btn-default btn-block"><i class="fa fa-arrow-left"></i> Back to Payment Options</a>
       <ng-template *ngIf="ActiveServiceAccount === null; then LoadingActiveServiceAccount else LoadedActiveServiceAccount"></ng-template>
       <ng-template #LoadingActiveServiceAccount>
         <h2><i class="fa fa-spin fa-circle-o-notch"></i> Loading your service account information</h2>
