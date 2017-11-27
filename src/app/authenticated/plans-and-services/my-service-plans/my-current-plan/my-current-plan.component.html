@@ -6,12 +6,26 @@
           <md-card class="current-plan-card" *ngIf="RenewalAccount">
             <md-card-title>
               <h2>{{RenewalAccount?.Existing_Renewal?.Offer?.Product_Name}}*
+                <small><i class="fa fa-info-circle" (click)="isRenewalPlan=true; pop.show()"></i></small>
               </h2>
-              <div #pop="bs-popover" [popover]="options" placement="top">
+              <!--<div #pop="bs-popover" [popover]="options" placement="top">-->
+                <!--<ng-template #options>-->
+                  <!--<button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">-->
+                    <!--<span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>-->
+                  <!--<mygexa-offer-details-popover [RenewalAccountDetails]="RenewalAccount"></mygexa-offer-details-popover>-->
+                <!--</ng-template>-->
+              <!--</div>-->
+              <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
                 <ng-template #options>
                   <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
                     <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-                  <mygexa-offer-details-popover [RenewalAccountDetails]="RenewalAccount"></mygexa-offer-details-popover>
+                  <div *ngIf="isRenewalPlan">
+                    <mygexa-offer-details-popover [RenewalAccountDetails]="RenewalAccount"></mygexa-offer-details-popover>
+                  </div>
+                  <div *ngIf="!isRenewalPlan">
+                    <mygexa-offer-details-popover [ActiveOfferDetails]="ActiveServiceAccount"
+                                                  [IsCurrentPlanPopOver]="true"></mygexa-offer-details-popover>
+                  </div>
                 </ng-template>
               </div>
             </md-card-title>
@@ -23,17 +37,21 @@
               <p class="bg-default">TERM: {{RenewalAccount?.Existing_Renewal?.Offer?.Term}} Months</p>
               <p style="color:orange"><i class="fa fa-chevron-right" style="color:orange"></i> START: {{RenewalAccount?.Existing_Renewal?.Start_Date | date: 'MM/dd/yyyy'}}</p>
               <p class="bg-default">END: {{RenewalAccount.Existing_Renewal.End_Date | date:'MM/dd/yyyy'}}</p>
-              <p><br/><a (click)="pop.show()" style="color:orange"> *Plan Pending: View Your Current Plan</a></p>
+              <p><br/><a (click)="isRenewalPlan=false; pop.show()" style="color:orange"> *Plan Pending: View Your Current Plan</a></p>
               <br>
-              <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
-                <ng-template #options>
-                  <button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">
-                    <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
-                  <mygexa-offer-details-popover [ActiveOfferDetails]="ActiveServiceAccount"
-                                                [IsCurrentPlanPopOver]="true"></mygexa-offer-details-popover>
-
-                </ng-template>
-              </div>
+              <!--<div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">-->
+                <!--<ng-template #options>-->
+                  <!--<button type="button" class="close text-right" aria-label="Close" (click)="pop.hide()">-->
+                    <!--<span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>-->
+                  <!--<div *ngIf="isRenewalPlan">-->
+                    <!--<mygexa-offer-details-popover [RenewalAccountDetails]="RenewalAccount"></mygexa-offer-details-popover>-->
+                  <!--</div>-->
+                  <!--<div *ngIf="!isRenewalPlan">-->
+                    <!--<mygexa-offer-details-popover [ActiveOfferDetails]="ActiveServiceAccount"-->
+                                                  <!--[IsCurrentPlanPopOver]="true"></mygexa-offer-details-popover>-->
+                  <!--</div>-->
+                <!--</ng-template>-->
+              <!--</div>-->
             </md-card-content>
           </md-card>
         </div>

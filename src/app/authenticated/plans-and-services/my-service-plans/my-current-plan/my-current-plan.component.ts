@@ -57,6 +57,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   public Price_atFeatured_Usage_Level: number;
   public Price_atFeatured_Usage_Level_Renewal: number;
   public Price_atFeatured_Usage_Level_Current: number;
+  isRenewalPlan: boolean = null;
   // selectCheckBox = false;
   // enableSelect = false;
   currentView: string = null;
