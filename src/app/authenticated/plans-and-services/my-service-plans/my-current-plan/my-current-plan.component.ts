@@ -122,6 +122,13 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
     });
 
   }
+  showPlan(planType: string) {
+    if (planType === 'Renewal') {
+      this.isRenewalPlan = true;
+    } else {
+
+    }
+  }
 
   setFlags() {
     if (this.ActiveServiceAccount) {
