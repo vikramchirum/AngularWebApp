@@ -23,7 +23,7 @@
 <nav class="navbar custom-nav" id="custom-nav">
   <div class="container container-relaxed">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle pull-left no-hamburger" (click)="toggleAccordion($event)"><small>
+      <button #menuIcon type="button" class="navbar-toggle pull-left no-hamburger" (click)="toggleAccordion($event)"><small>
         {{( accordionVisible ? 'CLOSE' : 'MENU')}}</small></button>
       <div class="navbar-logo">
         <a [routerLinkActive]="['active']" routerLink="/"><img src="/assets/global/gexa-lq.png" alt="Gexa Energy"/></a>
@@ -216,7 +216,7 @@
   </div>
 </nav>
 <br class="visible-xs" />
-<div class="container-fluid mygexa-responsive-menu visible-xs" *ngIf="accordionVisible">
+<div #menuDropdown class="container-fluid mygexa-responsive-menu visible-xs" *ngIf="accordionVisible">
     <div class="row" style="height: 100%;">
       <mygexa-responsive-hamburger-menu
         (signout)="logout($event)"
