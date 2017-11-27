@@ -7,7 +7,9 @@ a {
 .tel {
   white-space: nowrap;
 }
-
+p {
+  color: white;
+}
 @media (max-width: $screen-sm-max) {
 
 footer.fixedToBottom {
