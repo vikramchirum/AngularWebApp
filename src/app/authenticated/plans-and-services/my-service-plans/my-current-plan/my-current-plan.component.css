@@ -1,3 +1,6 @@
+@import "../../../basecolors";
+
+
 .current-plan-card {
   text-align: center; }
   .current-plan-card .mat-button {
