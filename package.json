@@ -1,6 +1,6 @@
 {
   "name": "mygexa.gexaenergy.com",
-  "version": "0.15.11",
+  "version": "0.15.13",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
