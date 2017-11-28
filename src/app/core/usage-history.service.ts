@@ -7,7 +7,7 @@ import { HttpClient } from './httpclient';
 import { UsageHistory } from './models/usage-history.model';
 import { ServiceAccount } from './models/serviceaccount/serviceaccount.model';
 import { ServiceAccountService } from './serviceaccount.service';
-
+import * as moment from 'moment';
 @Injectable()
 export class UsageHistoryService {
 
@@ -35,13 +35,14 @@ export class UsageHistoryService {
         if (!months[data[index].Usage_Month]) {
           months[data[index].Usage_Month] = {
             usage: 0,
-            date: new Date(data[index].Usage_Month)
+            //date: new Date(data[index].Usage_Month)
+            date: moment(data[index].Usage_Month, moment.ISO_8601).toDate()
           };
         }
         months[data[index].Usage_Month].usage += data[index].Usage;
       }
     }
-
+    //console.log("******",months);
     return sortBy(values(months));
   }
 }
