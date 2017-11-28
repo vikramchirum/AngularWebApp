@@ -20,12 +20,12 @@
               </tr>
               <hr>
               <tr>
-                <td>Current Bill</td>
+                <td>Current Charges Due</td>
                 <td colspan="2">${{ currentDue | FloatToMoneyPipe}}</td>
               </tr>
               <br>
               <tr class="bg-success">
-                <td><h4>Amount Due</h4></td>
+                <td><h4>Total Amount Due</h4></td>
                 <td colspan="2"><h4>${{ totalDue | FloatToMoneyPipe}}</h4></td>
               </tr>
 
@@ -85,6 +85,7 @@
                   </ul>
                 </div>
               </div>
+
 
             </div>
             <div *ngSwitchCase="'MakePayment'">
