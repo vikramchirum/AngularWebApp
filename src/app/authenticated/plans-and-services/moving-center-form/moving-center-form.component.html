@@ -142,13 +142,15 @@
       </div>
     </div>
     <br>
+    
+    
     <div class="container-fluid plans">
         <div class="row service-plan">
           <div class="col-sm-12" *ngIf="showNewPlans">
             <ng-container *ngIf="!isLoading; else showLoadingOffers">
               <div class="row change-plans-grid">
                 <ng-container *ngIf="(availableOffers && (availableOffers.length > 0)); else noOffers">
-                  <div class="col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:0:3; let i= index;">
+                  <div class="col-xs-12 col-sm-6 col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:0:3; let i= index;">
                     <!-- <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
                                       (onOfferSelectedEvent)="getSelectedOffer($event)"></mygexa-plan-card> -->
                     <mygexa-play-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
