@@ -2,7 +2,7 @@
 <div class="container">
   <div class="row">
 
-    <div class="col-sm-4">
+    <div class="col-sm-6 col-md-4">
       <div id="understandingMyBill" class="chart">
 
         <div class="viewBillGaugeComponent">
@@ -26,12 +26,12 @@
       </div>
     </div>
 
-    <div class="col-sm-8">
+    <div class="col-sm-6 col-md-8">
       <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-12 col-md-6">
           <h2>Understand Your Bill</h2>
         </div>
-        <div *ngIf="bill_object && bill_item_details" class="col-sm-3 text-right">
+        <div *ngIf="bill_object && bill_item_details" class="col-sm-6 col-md-3 text-right">
           <p>
             Invoice #{{ invoice_num }}
           </p>
@@ -39,7 +39,7 @@
             {{ invoice_date | date }}
           </p>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-6 col-md-3">
           <button class="btn btn-success btn-block" (click)="downloadInvoice($event)">
             <i class="fa fa-file-o"></i> Download
           </button>

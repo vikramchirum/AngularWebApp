@@ -377,6 +377,13 @@ footer.fixedToBottom {
   .text-xs-left {
     text-align: left !important;
   }
+  
+  select,
+  textarea,
+  input {
+    font-size: 16px !important;
+  }
+  
 }
 
 .card-container {
