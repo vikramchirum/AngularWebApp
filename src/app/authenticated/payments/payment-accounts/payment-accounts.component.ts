@@ -24,7 +24,6 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
   PaymentEdittingIsUsedForAutoPaymentTimestamp: number = null;
   PaymentMessage: IPaymentMessage = null;
   PaymentAbpSelecting: Paymethod = null;
-
   private autoPayConfigIdsToModify: string[] = null;
 
   private _PaymentEdittingIsUsedForAutoPayment: boolean = null;
@@ -96,11 +95,9 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
   removePaymethod(paymentMethod: Paymethod): void {
     const timestamp = this.PaymentEdittingIsUsedForAutoPaymentTimestamp = now();
-    if (
-      !paymentMethod
-      || this.PaymentEditting === paymentMethod
-    ) {
+    if (!paymentMethod || this.PaymentEditting === paymentMethod) {
       this.PaymentEditting = null;
+      console.log("Pay method isn't deleted");
     } else if (paymentMethod) {
       this.PaymentEditting = paymentMethod;
       this.AutoPaymentConfigService.SearchAutoPayments({ paymethodId: paymentMethod.PayMethodId })
@@ -112,7 +109,17 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
           console.log('Response', res);
           this.autoPayConfigIdsToModify = <string[]>map(res, apc => apc.Id);
           this.PaymentEdittingIsUsedForAutoPayment = get(res, 'length', 0) > 0;
-        });
+        },
+          error => {
+            this.PaymentMessage = {
+              classes: ['alert', 'alert-danger'],
+              innerHTML: [
+                `<b>We're sorry, it looks like there was an issue with this payment method. Please contact Customer Service at 866-691-9399.</b>`
+              ].join(''),
+              isCompleted: true
+            };
+            console.log('removePaymethodError => ', error); }
+        );
     }
   }
 
@@ -126,7 +133,15 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
         innerHTML: `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted!`,
         isCompleted: true
       },
-      error => console.log('handle error => ', error),
+      error => {
+          this.PaymentMessage = {
+            classes: ['alert', 'alert-danger'],
+            innerHTML: [
+              `<b>We're sorry, it looks like there was an issue with this payment method. Please contact Customer Service at 866-691-9399.</b>`
+            ].join(''),
+            isCompleted: true
+          };
+          console.log('removePaymethodConfirmError => ', error); },
       () => this.removePaymethodEditAutoPayCancel()
     );
 
@@ -135,30 +150,51 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
   removePaymethodStopAutoPay(): void {
 
     const PaymethodToDelete = this.PaymentEditting;
-
+    let errorOccurred = false;
     forEach(this.autoPayConfigIdsToModify, autoPayConfigId => {
       this.ServiceAccountService.RemoveAutoPaymentConfig(isNumber(autoPayConfigId) ? autoPayConfigId : Number(autoPayConfigId));
       this.AutoPaymentConfigService.CancelAutoPayment(autoPayConfigId).subscribe(
-        res => console.log('CancelAutoPayment res', res),
-        err => console.log('CancelAutoPayment err', err)
+        res => {
+          console.log('CancelAutoPayment res', res);
+          },
+        err =>  {
+          errorOccurred = true;
+          console.log('StopAutoPayError err', err);
+          this.PaymentMessage = {
+            classes: ['alert', 'alert-danger'],
+            innerHTML: [
+              `<b>We're sorry, it looks like there was an issue with this payment method. Please contact Customer Service at 866-691-9399.</b>`
+            ].join(''),
+            isCompleted: true
+          };
+        }
       );
     });
-
-    this.PaymethodService.RemovePaymethod(PaymethodToDelete)
-      .delay(random(500, 1500))
-      .subscribe(
-        result => this.PaymentMessage = {
-          classes: ['alert', 'alert-success'],
-          innerHTML: [
-            `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted`,
-            ` and <b>Auto Pay</b> has been stopped!`
-          ].join(''),
-          isCompleted: true
-        },
-        error => console.log('handle error => ', error),
-        () => this.removePaymethodEditAutoPayCancel()
-      );
-
+    console.log('Error', errorOccurred);
+    if (!errorOccurred) {
+      this.PaymethodService.RemovePaymethod(PaymethodToDelete)
+        .delay(random(500, 1500))
+        .subscribe(
+          result => this.PaymentMessage = {
+            classes: ['alert', 'alert-success'],
+            innerHTML: [
+              `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted`,
+              ` and <b>Auto Pay</b> has been stopped!`
+            ].join(''),
+            isCompleted: true
+          },
+          error => {
+            this.PaymentMessage = {
+              classes: ['alert', 'alert-danger'],
+              innerHTML: [
+                `<b>We're sorry, it looks like there was an issue with this payment method. Please contact Customer Service at 866-691-9399.</b>`
+              ].join(''),
+              isCompleted: true
+            };
+            console.log('RemovePaymethodError => ', error); },
+          () => this.removePaymethodEditAutoPayCancel()
+        );
+    }
   }
 
   removePaymethodEditAutoPay(): void {
@@ -170,7 +206,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
     const PaymethodToDelete = this.PaymentAbpSelecting;
     const PaymethodToUse = this.PaymentAbpSelected;
-
+    let errorOccured = false;
     forEach(this.autoPayConfigIdsToModify, autoPayConfigId => {
       this.ServiceAccountService.UpdateAutoPaymentConfig(
         isNumber(autoPayConfigId) ? autoPayConfigId : Number(autoPayConfigId),
@@ -181,24 +217,68 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
         APCId: autoPayConfigId,
         PayMethodId: PaymethodToUse.PayMethodId
       }).subscribe(
-        res => console.log('UpdateAutoPayment res', res),
-        err => console.log('UpdateAutoPayment err', err)
+        res =>  {
+          console.log('UpdateAutoPayment res', res);
+          this.PaymethodService.RemovePaymethod(PaymethodToDelete).subscribe(
+            () => this.PaymentMessage = {
+              classes: ['alert', 'alert-success'],
+              innerHTML: [
+                `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted and `,
+                `<b>Auto Bill Pay</b> is using your payment account ending in <b>${ PaymethodToUse.getLast() }</b>!`
+              ].join(''),
+              isCompleted: true
+            },
+            error =>  {
+              console.log('RemovePaymethodError => ', error);
+              this.PaymentMessage = {
+                classes: ['alert', 'alert-danger'],
+                innerHTML: [
+                  `<b>We're sorry, it looks like there was an issue with this payment method. Please contact Customer Service at 866-691-9399.</b>`
+                ].join(''),
+                isCompleted: true
+              };
+            },
+            () => this.removePaymethodEditAutoPayCancel()
+          );
+          },
+        err =>  {
+          errorOccured = true;
+          console.log('UpdateAutoPayment err', err);
+          this.PaymentMessage = {
+            classes: ['alert', 'alert-danger'],
+            innerHTML: [
+              `<b>We're sorry, it looks like there was an issue with this payment method. Please contact Customer Service at 866-691-9399.</b>`
+            ].join(''),
+            isCompleted: true
+          };
+        }
       );
     });
-
-    this.PaymethodService.RemovePaymethod(PaymethodToDelete).subscribe(
-      () => this.PaymentMessage = {
-        classes: ['alert', 'alert-success'],
-        innerHTML: [
-          `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted and `,
-          `<b>Auto Bill Pay</b> is using your payment account ending in <b>${ PaymethodToUse.getLast() }</b>!`
-        ].join(''),
-        isCompleted: true
-      },
-      error => console.log('handle error => ', error),
-      () => this.removePaymethodEditAutoPayCancel()
-    );
-
+    console.log ('Eroor ', errorOccured);
+    // if (!errorOccured) {
+    //   console.log('hello');
+    //   this.PaymethodService.RemovePaymethod(PaymethodToDelete).subscribe(
+    //     () => this.PaymentMessage = {
+    //       classes: ['alert', 'alert-success'],
+    //       innerHTML: [
+    //         `<b>Ok!</b> your payment account, ending in <b>${ PaymethodToDelete.getLast() }</b> was deleted and `,
+    //         `<b>Auto Bill Pay</b> is using your payment account ending in <b>${ PaymethodToUse.getLast() }</b>!`
+    //       ].join(''),
+    //       isCompleted: true
+    //     },
+    //     error =>  {
+    //       console.log('handle error4 => ', error);
+    //       this.PaymentMessage = {
+    //         classes: ['alert', 'alert-danger'],
+    //         innerHTML: [
+    //           `<b>We're sorry, it looks like there was an issue with this payment method. Please contact Customer Service at 866-691-9399.</b>`
+    //         ].join(''),
+    //         isCompleted: true
+    //       };
+    //     },
+    //     () => this.removePaymethodEditAutoPayCancel()
+    //   );
+    // }
   }
 
   removePaymethodEditAutoPayCancel(): void {

@@ -25,6 +25,7 @@
       <div class="col-md-6">
         <h3>You are Moving To</h3>
         <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)" (onServiceAddressChanged) = "disableFields($event)"></mygexa-address-search>
+        <small *ngIf="!(isValidAddress === false) && addressNotServed === false" class="text-danger">   We're sorry, we don't offer electricity service at the location you specified. Please check the address, or contact Customer Service for assistance.   </small>
       </div>
 
       <!-- select date when customer wants their service turned on at the new home  -->
@@ -120,13 +121,13 @@
  <div class="row text-center">
           <div class="container-fluid">
             <div class="col-sm-12">
-          
+
               <small class="alert alert-warning" [ngClass]="{'alert-danger' : ServicePlanForm.controls?.service_plan.errors?.tduCheck }" > Review Service Plan Options<span class="alert alert-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck">. Moving address is not in same TDU. Please select New Plan. </span></small>
             </div>
           </div>
         </div>
-       
-        
+
+
          <div class="row text-center">
            <div class="col-sm-6">
              <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isKeepCurrent }" (click)="getCurrentPlan()"><i class="fa fa-check" style="visibility: hidden" ></i> KEEP CURRENT PLAN</button>
@@ -137,17 +138,19 @@
              (click)="showPlans()"><i class="fa fa-check" style="visibility: hidden"  ></i> CHANGE PLAN</button>
            </div>
         </div>
-       
+
       </div>
     </div>
     <br>
+    
+    
     <div class="container-fluid plans">
         <div class="row service-plan">
           <div class="col-sm-12" *ngIf="showNewPlans">
             <ng-container *ngIf="!isLoading; else showLoadingOffers">
               <div class="row change-plans-grid">
                 <ng-container *ngIf="(availableOffers && (availableOffers.length > 0)); else noOffers">
-                  <div class="col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:0:3; let i= index;">
+                  <div class="col-xs-12 col-sm-6 col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:0:3; let i= index;">
                     <!-- <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
                                       (onOfferSelectedEvent)="getSelectedOffer($event)"></mygexa-plan-card> -->
                     <mygexa-play-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
@@ -227,7 +230,7 @@
           <div class="bg-plans-round">
             2
         </div>
-        
+
           <h3 class="text-center">Choose Your Final Bill Destination</h3>
           <div class="hidden">
             <label class="radio-inline  col-sm-6">
@@ -242,7 +245,7 @@
         <i class="fa fa-chevron-right fa-3x"></i>
       </div>
       <div class="col-sm-8">
-        
+
          <div class="row text-center">
           <div class="container-fluid">
             <div class="col-sm-12">
@@ -250,7 +253,7 @@
             </div>
           </div>
         </div>
-        
+
          <div class="row text-center">
            <div class="col-sm-6">
              <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isUseCurrent }"  (click)="useCurrentAddress()"><i class="fa fa-check" style="visibility: hidden" ></i> CURRENT ADDRESS</button>

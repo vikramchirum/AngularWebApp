@@ -140,12 +140,26 @@
     font-size: 20px;
     color:black !important;
   }
+  .mat-card-title h2 {
+        font-family: 'Oswald', 'Open Sans', 'AvenirNextCondensed-Bold', sans;
+    font-size: 24px;
+
+  }
 
   .mat-card-content {
     h2 {
-      font-weight:800;
-      color:#000;
+    font-weight: 400;
+    color: #000;
+        font-family: 'Oswald', 'Open Sans', 'AvenirNextCondensed-Bold', sans;
+    font-size: 50px;
 
+    }
+    
+    small {
+      font-size:20px;
+      margin-left: -20px;
+      color:#000;
+      
     }
 
     .bg-default {

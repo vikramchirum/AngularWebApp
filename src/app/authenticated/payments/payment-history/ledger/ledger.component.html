@@ -1,6 +1,7 @@
 
+<div class="table-responsive">
 
-<table width="100%" class="table table-striped table-condensed">
+<table width="100%" class="table table-striped table-responsive table-condensed">
   <thead>
     <tr class="options">
       <th *ngFor="let columnHeader of columnHeaders">{{ columnHeader.title }}</th>
@@ -26,6 +27,7 @@
     </tr>
   </tbody>
 </table>
+</div>
 
 <br/>
 <pagination-controls class="my-pagination pager" (pageChange)="currentPage = $event"></pagination-controls>

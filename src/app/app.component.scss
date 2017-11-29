@@ -1,6 +1,26 @@
+
+@import '../../styles/bootstrap/stylesheets/bootstrap/_variables';
+
 a {
   cursor: pointer;
 }
 .tel {
   white-space: nowrap;
+}
+p {
+  color: white;
+}
+@media (max-width: $screen-sm-max) {
+
+footer.fixedToBottom {
+    position: static;
+  }
+}
+
+
+@media (max-width: $screen-xs-max) {
+
+  footer.fixedToBottom {
+    position: static;
+  }
 }

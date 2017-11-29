@@ -11,10 +11,10 @@ export class TransferService {
   submitMove(transferRequest): Observable<string> {
     console.log('transferRequest......', JSON.stringify(transferRequest));
     return this.http.post(`/Transfer_Service`, JSON.stringify(transferRequest))
-    .map(res => {
-      res.json();
-      console.log('res', res.json());
-    })
-    .catch(error => this.http.handleHttpError(error));
+      .map(res => {
+        res.json();
+        console.log('res', res.json());
+      })
+      .catch(error => this.http.handleHttpError(error));
   }
 }

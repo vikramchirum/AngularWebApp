@@ -45,7 +45,9 @@ export class PreferenceComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.ActiveServiceAccountSubscription.unsubscribe();
+    if (this.ActiveServiceAccountSubscription) {
+      this.ActiveServiceAccountSubscription.unsubscribe();
+    }
     if (this.NotificationOptionsStoreSubscription) {
       this.NotificationOptionsStoreSubscription.unsubscribe();
     }

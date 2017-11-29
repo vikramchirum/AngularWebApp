@@ -19,7 +19,7 @@
   <div class="homepage-hero-module">
      <div class="video-container">
       <div class="filter"></div>
-      <video autoplay loop class="fillWidth" id="login-video-player">
+        <video autoplay loop class="fillWidth" id="login-video-player" poster="/assets/home/Snapshots/aerial_houston_xs.jpg">        
         <source src="/assets/home/MP4/aerial_houston_xs.mp4" type="video/mp4" />
         Your browser does not support the video tag. I suggest you upgrade your browser.
         <source src="/assets/home/WEBM/aerial_houston_xs.webm" type="video/webm" />
@@ -30,10 +30,10 @@
 </div>
 <div class="container login-container">
   <div class="row">
-    <div class="col-md-6 col-xs-12 ui-light">
+    <div class="col-sm-6 col-md-6 col-xs-12 ui-light">
       <div class="my-gexa-login-form">
         <h2><b>Sign in to MyGexa!</b></h2>
-        <br>
+        <br class="hidden-xs">
         <br>
         <form (ngSubmit)="login()" #myGexaLoginForm="ngForm">
           <div class="form-group" [ngClass]="{ 'has-error': !username.valid && !username.pristine && !processing }">
@@ -97,7 +97,7 @@
         </form>
       </div>
     </div>
-    <div class="ui-dark col-md-6 hidden-xs">
+    <div class="ui-dark col-sm-6 col-md-6 hidden-xs">
       <h1>Enroll in our Share &amp; Save Referral Program</h1>
       <p>You'll earn a $5 bill credit every month for each friend or family member who signs up for a new Gexa Energy Plan!</p>
       <hr/>
