@@ -190,6 +190,11 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     // other end date options here...;
     enableDays: [],
     disableDays: [],
+    disableUntil: {
+      year: new Date().getFullYear(),
+      month: new Date().getUTCMonth() + 1,
+      day: new Date().getDate() - 1
+    },
     dateFormat: 'mm-dd-yyyy'
   };
 
