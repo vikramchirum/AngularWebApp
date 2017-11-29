@@ -138,9 +138,15 @@ ins.overlay-menu {
       }
     }
   }
+  
   .navbar.custom-nav {
   margin-bottom: 0
-}
+  }
+  
+  .custom-nav .navbar-nav > li.dropdown-full > .dropdown-menu {
+    width: 100%;
+  }
+
 }
 
 

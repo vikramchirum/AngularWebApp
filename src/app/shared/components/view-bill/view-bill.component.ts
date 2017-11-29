@@ -341,6 +341,14 @@ export class ViewBillComponent implements OnInit {
           gaugeText.fillText( `$    `, 500, 475 );
         }
         gaugeText.textAlign = 'end';
+        
+        
+        gaugeText.textAlign = 'center';
+        gaugeText.fillStyle = 'rgba(0,0,0,1.0)';
+        gaugeText.font = 'bold 48pt sans-serif';
+        gaugeText.fillText('Current Charges', 500, 325);
+
+        
       } catch ( e ) {
         // If thrown, the browser likely does not support the HTML5 canvas API/object.
         console.error( e );
