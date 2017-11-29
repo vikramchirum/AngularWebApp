@@ -1,17 +1,24 @@
-<div class="plans-profile">
+<div class="plans-profile" *ngIf="orderDetails; then showOrderStatus else showLoadingScreen"></div>
+<ng-template #showLoadingScreen>
+  <div class="text-center">
+    <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
+    <h2>
+      <small class="text-muted">Loading your order status...</small>
+    </h2>
+  </div>
+</ng-template>
+<ng-template #showOrderStatus>
   <section class='order-status'>
     <h1>Order Status</h1>
     <br/><br/>
     <div class='row'>
-        <div class="col-md-2">
-          <strong>&nbsp;ORDER PLACED</strong>
+      <div class="col-md-2">
+        <strong>&nbsp;ORDER PLACED</strong>
       </div>
     </div>
     <br/>
-
     <div class="row" *ngIf="(orderDetails?.length || 0); then showDetails else noDetails"></div>
-
-     <ng-template #noDetails>
+    <ng-template #noDetails>
       <div class="col-md-10 details">
         <div class="alert alert-info">
           No orders have been placed
@@ -19,51 +26,54 @@
       </div>
     </ng-template>
     <ng-template #showDetails>
-    <div class="row">
-      <div class="col-md-10 details">
-        <div *ngFor='let order of orderDetails' [style.backgroundColor]="orderOpened(order) ? 'aliceblue' : ''">
-          <div class='row'>
-            <div class='col-md-3 date'>{{ order.Order_Placed | date:'longDate' }}</div>
-            <div class="col-md-7">
-             <button class="charge-toggle form-inline btn-link" (click)="orderToggle(order)">
-              <i class="fa" [ngClass]="orderOpened(order) ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
-            </button>
-            <strong>{{ order.Order_Type }}</strong></div>
-            <div class='status f col-md-2 {{ order.Status }}'>{{ order.Status }}</div>
-          </div>
-          <div *ngIf="orderOpened(order)" border="0" width="100%">
-            <div *ngIf='order.Order_Type === "Moving"'>
-              <div class='row'>
-                <h5 class='lbl col-md-2 col-md-offset-3'>From:</h5>
-                <h5 class='col-md-7'>{{ order.prevServiceAccountAddressString()}}</h5>
-              </div>
-              <div class='row'>
-                <h5 class='lbl col-md-2  col-md-offset-3'>To: </h5>
-                <h5 class='col-md-7'>{{ order.serviceAccountAddressString()}}</h5>
-              </div>
-              <div class='row'>
-                <h5 class='lbl col-md-2  col-md-offset-3'>On:</h5>
-                <h5 class='col-md-7'>{{ order.Start_Date | date: 'longDate' }}</h5>
-              </div>
+      <div class="row">
+        <div class="col-md-10 details">
+          <div *ngFor='let order of orderDetails' [style.backgroundColor]="orderOpened(order) ? 'aliceblue' : ''">
+            <div class='row'>
+              <div class='col-md-3 date'>{{ order.Order_Placed | date:'longDate' }}</div>
+              <div class="col-md-7">
+                <button class="charge-toggle form-inline btn-link" (click)="orderToggle(order)">
+                  <i class="fa" [ngClass]="orderOpened(order) ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                </button>
+                <strong>{{ order.Order_Type }}</strong></div>
+              <div class='status f col-md-2 {{ order.Status }}'>{{ order.Status }}</div>
             </div>
-            <div *ngIf='order.Order_Type == "Upgrade" || order.Order_Type == "Renewal" || order.Order_Type == "Additional_Service" || order.Order_Type == "Reconnect"'>
-              <div class='row'>
-                <h5 class='lbl col-md-2  col-md-offset-3'>Address: </h5>
-                <h5 class='col-md-7'>{{order.serviceAccountAddressString()}}</h5>
+            <div *ngIf="orderOpened(order)" border="0" width="100%">
+              <div *ngIf='order.Order_Type === "Moving"'>
+                <div class='row'>
+                  <h5 class='lbl col-md-2 col-md-offset-3'>From:</h5>
+                  <h5 class='col-md-7'>{{ order.prevServiceAccountAddressString()}}</h5>
+                </div>
+                <div class='row'>
+                  <h5 class='lbl col-md-2  col-md-offset-3'>To: </h5>
+                  <h5 class='col-md-7'>{{ order.serviceAccountAddressString()}}</h5>
+                </div>
+                <div class='row'>
+                  <h5 class='lbl col-md-2  col-md-offset-3'>On:</h5>
+                  <h5 class='col-md-7'>{{ order.Start_Date | date: 'longDate' }}</h5>
+                </div>
               </div>
-              <div class='row'>
-                <h5 class='lbl col-md-2  col-md-offset-3'>Offer: </h5>
-                <h5 class='col-md-7'>{{ order.Offer.Product_Name }}</h5>
-              </div>
-              <div class='row'>
-                <h5 class='lbl col-md-2  col-md-offset-3'>Date: </h5>
-                <h5 class='col-md-7'>{{ order.Start_Date | date: 'longDate' }}</h5>
+              <div
+                *ngIf='order.Order_Type == "Upgrade" || order.Order_Type == "Renewal" || order.Order_Type == "Additional_Service" || order.Order_Type == "Reconnect"'>
+                <div class='row'>
+                  <h5 class='lbl col-md-2  col-md-offset-3'>Address: </h5>
+                  <h5 class='col-md-7'>{{order.serviceAccountAddressString()}}</h5>
+                </div>
+                <div class='row'>
+                  <h5 class='lbl col-md-2  col-md-offset-3'>Offer: </h5>
+                  <h5 class='col-md-7'>{{ order.Offer.Product_Name }}</h5>
+                </div>
+                <div class='row'>
+                  <h5 class='lbl col-md-2  col-md-offset-3'>Date: </h5>
+                  <h5 class='col-md-7'>{{ order.Start_Date | date: 'longDate' }}</h5>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     </ng-template>
   </section>
-<br/><br/>
+  <br/><br/>
+</ng-template>
+

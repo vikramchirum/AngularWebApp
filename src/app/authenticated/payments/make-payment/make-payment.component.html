@@ -123,12 +123,12 @@
     </ng-container>
 
     <div [ngSwitch]="currentView">
-      <div *ngSwitchCase="'PastDuePayNow'">
+      <div class="btnMobile" *ngSwitchCase="'PastDuePayNow'">
         <button class="btn exceededDueDatebtn btn-lg custom"(click)="checkAmountBeforeSubmit()"  type="button">
           Past due - Pay now</button>
       </div>
       <div *ngSwitchCase="'PaymentPending'">
-        <div class="input-group text-center">
+        <div class="mg-bt-15 input-group text-center">
           <div class="input-group-btn">
             <button type="button" class="btn btn-success btn-lg custom" data-label-placement>
               <span class="small">PAYMENT PENDING</span>
@@ -152,7 +152,7 @@
 
       </div>
       <div *ngSwitchCase="'AutoPay'">
-        <div class="input-group text-center">
+        <div class="mg-bt-15 input-group text-center">
           <div class="input-group-btn">
             <button type="button" class="btn btn-success btn-round-lg btn-lg custom" data-label-placement>
               <span class="fa fa-clock-o"></span>

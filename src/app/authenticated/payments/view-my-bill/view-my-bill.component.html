@@ -3,6 +3,8 @@
     <div class="col-lg-8 clearfix">
       <h1>My Current Bill</h1>
       <p *ngIf="service_account_id">Account No: {{service_account_id}} </p>
+            <div class="alert alert-info visible-xs visible-sm visible-md" *ngIf="!pastDueExists && PaymentsLength > 0 && totalDue <= 0" >Thank you for your payment of ${{LatestBillAmount}} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </div>
+      <div class="alert alert-danger visible-xs visible-sm visible-md" *ngIf="(pastDueExists || totalDue > 0) && PaymentsLength > 0">Due Date: {{ req_bill?.Due_Date | date:'MM/dd/yyyy' }}</div>
       <div class="col-md-8 col-md-offset-2"> <br/>
         <div [hidden]="!service_account_id">
           <table  border="0" width="100%">
@@ -18,12 +20,12 @@
               </tr>
               <hr>
               <tr>
-                <td>Current Bill</td>
+                <td>Current Charges Due</td>
                 <td colspan="2">${{ currentDue | FloatToMoneyPipe}}</td>
               </tr>
               <br>
               <tr class="bg-success">
-                <td><h4>Amount Due</h4></td>
+                <td><h4>Total Amount Due</h4></td>
                 <td colspan="2"><h4>${{ totalDue | FloatToMoneyPipe}}</h4></td>
               </tr>
 
@@ -84,6 +86,7 @@
                 </div>
               </div>
 
+
             </div>
             <div *ngSwitchCase="'MakePayment'">
               <button class="btn btn-block btn-success btn-lg" routerLink="/payments/make-payment" type="button">
@@ -96,8 +99,9 @@
     </div>
     <br class="visible-xs"/>
     <div class="col-lg-4">
-      <div class="alert alert-info" *ngIf="(payments && payments.length > 0) && !exceededDueDate" >Thank you for your payment of ${{LatestBillAmount}} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </div>
-      <div class="alert alert-danger" *ngIf="(payments && payments.length > 0) && exceededDueDate">Due Date: {{ req_bill?.Due_Date | date:'MM/dd/yyyy' }}</div>
+             <div class="alert alert-info hidden-xs hidden-sm hidden-md" *ngIf="!pastDueExists && PaymentsLength > 0 && totalDue <= 0" >Thank you for your payment of ${{LatestBillAmount}} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </div>
+            <div class="alert alert-danger hidden-xs hidden-sm hidden-md" *ngIf="(pastDueExists || totalDue > 0) && PaymentsLength > 0">Due Date: {{ req_bill?.Due_Date | date:'MM/dd/yyyy' }}</div>
+
       <div class="view-my-bill-billing-payment-preferences">
         <div class="view-my-bill-billing-pad">
           <h3>Your Settings</h3>

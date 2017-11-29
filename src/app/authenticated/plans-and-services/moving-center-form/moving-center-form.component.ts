@@ -35,6 +35,8 @@ import { AvailableDateService } from '../../../core/availabledate.service';
 import { ITduAvailabilityResult } from '../../../core/models/availabledate/tduAvailabilityResult.model';
 import { ServiceType } from '../../../core/models/enums/serviceType';
 import { CalendarService } from '../../../core/calendar.service';
+import { TDUStore } from '../../../core/store/tdustore';
+import { ITDU } from '../../../core/models/tdu/tdu.model';
 
 @Component( {
   selector: 'mygexa-moving-center-form',
@@ -77,7 +79,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   private channelStoreSubscription: Subscription = null;
   private offerSubscription: Subscription = null;
   private availableDateServiceSubscription: Subscription = null;
-
+  TDUDunsServiceSubscription: Subscription= null;
+  TDUDuns: ITDU[];
   private ActiveServiceAccount: ServiceAccount = null;
   private TDU_DUNS_Number: string = null;
   customerDetails: CustomerAccount = null;
@@ -87,7 +90,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   notSameTDU: boolean = null;
   showMorePlans: boolean = null;
   pricingMessage: string;
-
+  TDUDunsNumbers: string[] = [];
+  addressNotServed: boolean = null;
+  isValidAddress: boolean = null;
   @ViewChild( 'selectPlanModal' ) selectPlanModal: SelectPlanModalDialogComponent;
   @ViewChild( 'errorModal' ) errorModal: ErrorModalComponent;
 
@@ -101,7 +106,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
                private addressSearchService: AddressSearchService,
                private channelStore: ChannelStore,
                private availableDateService: AvailableDateService,
-               private calendarService: CalendarService ) {
+               private calendarService: CalendarService,
+               private tduStore: TDUStore ) {
     // start date and end date must be future date.
     this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId => {
       this.channelId = ChannelId;
@@ -111,7 +117,16 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
 
   ngOnInit() {
-
+    this.TDUDunsServiceSubscription = this.tduStore.TDUDetails.subscribe(
+      TDUDuns => {
+        this.TDUDuns = TDUDuns;
+        let DunsNumber: string[] = [];
+        this.TDUDuns.forEach(
+          item => DunsNumber.push(item.Duns_Number)
+        );
+        this.TDUDunsNumbers = DunsNumber;
+      }
+    );
     this.movingAddressForm = this.fb.group( {
       'Current_Service_End_Date': [ null, Validators.compose( [
         Validators.required,
@@ -175,6 +190,11 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     // other end date options here...;
     enableDays: [],
     disableDays: [],
+    disableUntil: {
+      year: new Date().getFullYear(),
+      month: new Date().getUTCMonth() + 1,
+      day: new Date().getDate() - 1
+    },
     dateFormat: 'mm-dd-yyyy'
   };
 
@@ -225,6 +245,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
   disableFields( $event ) {
     // console.log('h', $event);
+    this.isValidAddress = $event;
     this.enableDates = false;
     this.movingAddressForm.controls[ 'New_Service_Start_Date' ].setValue( '' );
   }
@@ -235,7 +256,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     // if ( this.newServiceAddress === null) {
     //   this.enableDates = false;
     // }
-    if ( this.newServiceAddress.Meter_Info.UAN !== null ) {
+    this.addressNotServed = this.TDUDunsNumbers.includes(this.newServiceAddress.Meter_Info.TDU_DUNS);
+    if ( this.newServiceAddress.Meter_Info.UAN !== null && this.TDUDunsNumbers.includes(this.newServiceAddress.Meter_Info.TDU_DUNS )) {
       this.availableDateServiceSubscription = this.availableDateService.getAvailableDate( this.newServiceAddress.Meter_Info.UAN ).subscribe(
         availableDates => {
           this.tduAvailabilityResult = availableDates;
@@ -297,7 +319,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.selectedOffer = null;
     this.isKeepCurrent = true;
     this.isSelectNew = false;
-    
+
     // should not pass offerId if the user selects existing Plan.
     this.offerId = undefined;
 
@@ -397,6 +419,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     if ( this.availableDateServiceSubscription ) {
       this.availableDateServiceSubscription.unsubscribe();
     }
+    if (this.TDUDunsServiceSubscription) {
+      this.TDUDunsServiceSubscription.unsubscribe();
+    }
+
   }
 
 

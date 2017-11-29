@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation, HostListener, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { UserService } from 'app/core/user.service';
@@ -35,7 +35,8 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
   UserServiceSubscription: Subscription = null;
   SearchNotificationOptions = null;
   @ViewChild('homeMultiAccountsModal') homeMultiAccountsModal: HomeMultiAccountsModalComponent;
-
+  @ViewChild('menuIcon') menuIcon;
+  @ViewChild('menuDropdown') menuDropdown;
   constructor(
     private UserService: UserService,
     private Router: Router,
@@ -94,6 +95,17 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
 
   toggleAccordion(evt) {
     this.accordionVisible = !this.accordionVisible;
+  }
+
+  @HostListener('document:click', ['$event']) clickedOutside($event){
+    // here you can hide your menu
+    
+    if(!((this.menuIcon && this.menuIcon.nativeElement && this.menuIcon.nativeElement.contains($event.target)) || 
+    (this.menuDropdown && this.menuDropdown.nativeElement && this.menuDropdown.nativeElement.contains($event.target)))) {
+      if(this.accordionVisible) {
+        this.accordionVisible = false;
+      }
+    }
   }
 
   onNotify(message: string): void {
