@@ -68,7 +68,7 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
       this.activeServiceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null)
         .subscribe(result => {
           this.activeServiceAccountDetails = result;
-        });      
+        });
     }
 
     ngAfterViewInit() {
@@ -118,20 +118,21 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isOfferSelected = true;
       // this.modalStore.handleOfferPopOversModal(this.offer.Rate_Code);
       $('#planSelect_confirm_' + this.offer.Id).toggleClass('reveal');
+      if (this.isMoving) { $('#plan_' + this.offer.Id).removeClass('plan-background'); };
     }
 
     toggleButton() {
-      
+
       var offerCheckbox = $('input[name="isOfferAgreedBox"]');
-      
+
       $(offerCheckbox).on('change', function () {
         $(offerCheckbox).not(this).prop('checked', false);
         $(offerCheckbox).not(this).closest('.planSelect_confirm').find('.btn-final').attr('disabled', 'disabled');
-        
+
       });
-      
+
       this.isOfferAgreed = !this.isOfferAgreed;
-      
+
     }
 
     onCloseSelectOffer(event) {
@@ -139,6 +140,7 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
       event.stopPropagation();
       this.isOfferSelected = false;
       $('#planSelect_confirm_' + this.offer.Id).toggleClass('reveal');
+      if (this.isMoving) { $('#plan_' + this.offer.Id).addClass('plan-background'); };
       // $('.planSelect_confirm').toggleClass('reveal');
     }
 
@@ -181,6 +183,7 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   applyFlip() {
     $('#plan_' + this.offer.Id).toggleClass('applyflip');
+    if (this.isMoving) { $('#plan_' + this.offer.Id).removeClass('plan-background'); };
     // $('.btn-select').removeClass('disabled');
     /* var $myPlan = $(this).parents('.plan');console.log($myPlan);
     $myPlan.toggleClass('applyflip');
@@ -190,9 +193,11 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.offerPassed = event;
     if (event.indexOf('#') > 0) {
       this.offerPassed = event.substr(0, (event.length - 1));
+      if (this.isMoving) { $('#plan_' + this.offer.Id).addClass('plan-background'); };
       $('#plan_' + this.offerPassed).toggleClass('applyflip');
     } else {
       $('#plan_' + this.offerPassed).toggleClass('applyflip');
+      if (this.isMoving) { $('#plan_' + this.offer.Id).removeClass('plan-background'); };
       this.isOfferSelected = true;
       $('#planSelect_confirm_' + this.offer.Id).toggleClass('reveal');
     }

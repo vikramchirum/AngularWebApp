@@ -185,6 +185,6 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
     }
   }
   revertBack(flag) {
-    this.revertBackEvent.emit(this.OfferDetails.Id+flag);
+    this.revertBackEvent.emit(this.OfferDetails.Id + flag);
   }
 }
