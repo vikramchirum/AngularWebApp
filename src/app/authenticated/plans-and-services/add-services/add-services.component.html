@@ -9,7 +9,7 @@
 
     <!-- Enter New Service Address -->
     <div class="row">
-      <div class="col-md-6 new-service-address">
+      <div class="col-sm-12 col-md-7 new-service-address">
         <h3>
           Enter New Service Address
         </h3>
@@ -21,17 +21,17 @@
 
     <!-- Service Type Selection -->
     <div class="row">
-      <div class="col-md-6  new-service-address">
+      <div class="col-sm-12 col-md-7  new-service-address">
         <h3>Service Type</h3>
         <div class="row">
-          <div class="col-xs-6 col-md-5">
+          <div class="col-xs-6 col-sm-6 col-md-5">
             <div class="form-control">
               <label class="radio-inline">
                 <input type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.MoveIn">I'm Moving
               </label>
             </div>
           </div>
-          <div class="col-xs-6 col-md-5 col-md-offset-1">
+          <div class="col-xs-6 col-sm-6 col-md-5 col-md-offset-1">
             <div class="form-control">
               <label class="radio-inline">
                 <input type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.Switch">I'm Switching
@@ -58,7 +58,7 @@
       <div *ngIf="showPlansFlag">
         <h2>Select a Plan</h2>
         <div class="row" class="featured-offers">
-          <div class="col-md-4" *ngFor="let featuredOffer of this.featuredOffers">
+          <div class="col-xs-12 col-sm-6 col-md-4" *ngFor="let featuredOffer of this.featuredOffers">
             <!-- <mygexa-select-plan (selectedOffer)="onNotify($event)" [featuredOffer]="featuredOffer"></mygexa-select-plan> -->
             <!-- <mygexa-plan-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
             (onOfferSelectedEvent)="onNotify($event)"></mygexa-plan-card> -->
@@ -112,9 +112,10 @@
         </div>
       </div>
       <br/> -->
+      <br>
       <div class="row" *ngIf="this.featuredOffers && this.featuredOffers.length > 0 && !showPlansFlag">
         <div class="col-md-12 col-xs-12 text-right">
-          <button class="btn btn-primary btn-lg" (click)="showPlans()">View Plans
+          <button class="btn btn-primary" (click)="showPlans()">View Plans
             <i class="fa fa-chevron-right fa-wh" style="color: white" aria-hidden="true"></i>
           </button>
         </div>

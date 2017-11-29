@@ -35,9 +35,17 @@
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
+  background-color: rgba(239,238,202,1.0);
+  padding-top: 10px;
+
+  
 }
 .start-date-tooltip {
     .fa {
         margin-top : 1em;
     }
 }
+
+.content {
+    background-color: rgba(239,238,202,1.0)
+  }
