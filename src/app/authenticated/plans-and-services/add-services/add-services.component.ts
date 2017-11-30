@@ -128,15 +128,21 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   }
 
   disableFields( $event ) {
-     console.log('h', $event);
+     // console.log('h', $event);
     this.isValidAddress = $event;
     if (!this.isValidAddress) {
-      this.enableDates = false;
-      this.ServiceStartDate.disableUntil = { year: 0, month: 0, day: 0 };
-      this.ServiceStartDate.disableSince = { year: 0, month: 0, day: 0 };
-      this.ServiceStartDate.disableDays = [];
-      this.selectedStartDate = this.serviceType = null;
+      // console.log('hellllloo');
+      this.clearFields();
     }
+  }
+
+  clearFields() {
+    this.enableDates = false;
+    this.ServiceStartDate.disableUntil = { year: 0, month: 0, day: 0 };
+    this.ServiceStartDate.disableSince = { year: 0, month: 0, day: 0 };
+    this.ServiceStartDate.disableDays = [];
+    this.selectedStartDate = this.serviceType = this.featuredOffers = this.featuredOffersLength = null;
+    this.showPlansFlag = false;
   }
 
   // Fetch Offers when users selects new address
@@ -145,7 +151,10 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     console.log('selected address duns', this.selectedServiceAddress.Meter_Info.TDU_DUNS);
     // console.log('result', this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS));
     this.addressServed = this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS);
-    console.log('addressServed', this.addressServed);
+    if (!this.addressServed) {
+      this.clearFields();
+    }
+    // console.log('addressServed', this.addressServed);
     // Get Available dates
     if ( this.selectedServiceAddress.Meter_Info.UAN !== null && this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS)) {
       this.availableDateServiceSubscription = this.availableDateService.getAvailableDate( this.selectedServiceAddress.Meter_Info.UAN ).subscribe(
