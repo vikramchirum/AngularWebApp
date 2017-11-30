@@ -15,7 +15,7 @@
         </h3>
         <!-- <input type="text" class="form-control" placeholder="Enter New Address"> -->
         <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)" (onServiceAddressChanged) = "disableFields($event)"></mygexa-address-search>
-        <small *ngIf="!(isValidAddress === false) && addressNotServed === false" class="text-danger">   We're sorry, we don't offer electricity service at the location you specified. Please check the address, or contact Customer Service for assistance.   </small>
+        <small *ngIf="isValidAddress === false && addressServed === false" class="text-danger">   We're sorry, we don't offer electricity service at the location you specified. Please check the address, or contact Customer Service for assistance.   </small>
       </div>
     </div>
 
@@ -58,14 +58,14 @@
       <div *ngIf="showPlansFlag">
         <h2>Select a Plan</h2>
         <div class="row" class="featured-offers">
-          <div class="col-md-4" *ngFor="let featuredOffer of this.featuredOffers">
-            <!-- <mygexa-select-plan (selectedOffer)="onNotify($event)" [featuredOffer]="featuredOffer"></mygexa-select-plan> -->
-            <!-- <mygexa-plan-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
-            (onOfferSelectedEvent)="onNotify($event)"></mygexa-plan-card> -->
-            <mygexa-play-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
-            (onOfferSelectedEvent)="onNotify($event)"></mygexa-play-card>
-          </div>
+        <div class="col-md-4" *ngFor="let featuredOffer of this.featuredOffers | slice:0:3; let i= index">
+          <!-- <mygexa-select-plan (selectedOffer)="onNotify($event)" [featuredOffer]="featuredOffer"></mygexa-select-plan> -->
+          <!-- <mygexa-plan-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
+          (onOfferSelectedEvent)="onNotify($event)"></mygexa-plan-card> -->
+          <mygexa-play-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
+                            (onOfferSelectedEvent)="onNotify($event)"></mygexa-play-card>
         </div>
+      </div>
       </div>
       <div *ngIf="this.featuredOffers && this.featuredOffers.length <= 0" >
           <h2> No available offers for this service account. </h2>
@@ -92,7 +92,26 @@
           </div>
         </div>
     </div>
-
+    <br>
+    <div class="row">
+      <div class="col-sm-6">
+      </div>
+      <div class="col-sm-6" *ngIf="showPlansFlag && featuredOffersLength > 3 " >
+        <p class="p-plans">View More Plans  <i class="fa"
+                                               (click)="morePlansClicked()"
+                                               [ngClass]="showMorePlans ? 'fa-chevron-up' : 'fa-chevron-down'">
+        </i></p>
+      </div><br>
+    </div>
+    <div class="row" class="featured-offers" *ngIf="showPlansFlag && showMorePlans">
+      <div class="col-md-4" *ngFor="let featuredOffer of  featuredOffers | slice:3: (featuredOffersLength); let i= index">
+        <!-- <mygexa-select-plan (selectedOffer)="onNotify($event)" [featuredOffer]="featuredOffer"></mygexa-select-plan> -->
+        <!-- <mygexa-plan-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
+        (onOfferSelectedEvent)="onNotify($event)"></mygexa-plan-card> -->
+        <mygexa-play-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
+                          (onOfferSelectedEvent)="onNotify($event)"></mygexa-play-card>
+      </div>
+    </div>
     <h2 *ngIf="enrollErrorMsg && enrollErrorMsg.length > 0">{{enrollErrorMsg}}</h2>
 
 

@@ -208,6 +208,7 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log('select offer called on button click');
     $('#planSelect_confirm_' + this.offer.Id).toggleClass('reveal');
     $('#plan_' + this.offer.Id).removeClass('applyflip');
+    if (this.isMoving) { $('#plan_' + this.offer.Id).addClass('plan-background'); };
     // $('.planConfirm').show();
     // $('.btn-select').addClass('disabled');
   }

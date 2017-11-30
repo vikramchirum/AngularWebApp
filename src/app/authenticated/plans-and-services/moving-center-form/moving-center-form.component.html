@@ -42,7 +42,7 @@
 
     <!--If we don't offer service in the moving address, we should show the message-->
     <ng-container *ngIf="availableOffers">
-      <div *ngIf="availableOffers.length === 0" class="alert alert-info fade in alert-dismissable">
+      <div *ngIf="availableOffersLength === 0" class="alert alert-info fade in alert-dismissable">
         <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
         <strong>We're Sorry!</strong> We cannot register your move online, please call 1-888 888 8888 for assistance. </div>
 
@@ -147,7 +147,7 @@
           <div class="col-sm-12" *ngIf="showNewPlans">
             <ng-container *ngIf="!isLoading; else showLoadingOffers">
               <div class="row change-plans-grid">
-                <ng-container *ngIf="(availableOffers && (availableOffers.length > 0)); else noOffers">
+                <ng-container *ngIf="(availableOffers && (availableOffersLength > 0)); else noOffers">
                   <div class="col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:0:3; let i= index;">
                     <!-- <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
                                       (onOfferSelectedEvent)="getSelectedOffer($event)"></mygexa-plan-card> -->
@@ -192,8 +192,8 @@
             <div class="col-sm-12" *ngIf="showNewPlans">
               <ng-container *ngIf="!isLoading; else showLoadingOffers">
                 <div class="row change-plans-grid">
-                  <ng-container *ngIf="(availableOffers && (availableOffers.length > 0)); else noOffers">
-                    <div class="col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:3:(availableOffers.length - 3); let i= index;">
+                  <ng-container *ngIf="(availableOffers && (availableOffersLength > 0)); else noOffers">
+                    <div class="col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:3:(availableOffersLength); let i= index;">
                       <!-- <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
                                         (onOfferSelectedEvent)="getSelectedOffer($event)"></mygexa-plan-card> -->
                       <mygexa-play-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
