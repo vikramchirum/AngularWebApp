@@ -184,7 +184,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   // Fetch Offers by passing start date and TDU_DUNS number of selected addresss
   getFeaturedOffers( ServiceStartDate ) {
     this.offerRequestParams = {
-      startDate: ServiceStartDate.toISOString(),
+      startDate: ServiceStartDate ? ServiceStartDate.toISOString() : '',
       dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS,
       approved: true,
       page_size: 100,
