@@ -40,7 +40,8 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   availableOffers: IOffers[] = null;
   featuredOffers = null;
   serviceTypeSource = ServiceType;
-
+  featuredOffersLength: number = null;
+  showMorePlans: boolean = null;
   private customerAccountId: string;
   private channelId: string;
   private tokenRes: CustomerCheckToken;
@@ -54,7 +55,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   private TDUDunsServiceSubscription: Subscription = null;
   enableDates: boolean = null;
   private selectedOffers: string[];
-  addressNotServed: boolean = null;
+  addressServed: boolean = null;
   private customerDetails: CustomerAccount = null;
   private Waiver: string;
   private serviceType?: ServiceType;
@@ -127,15 +128,21 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   }
 
   disableFields( $event ) {
-    // console.log('h', $event);
+     // console.log('h', $event);
     this.isValidAddress = $event;
-    if (this.isValidAddress) {
-      this.enableDates = false;
-      this.ServiceStartDate.disableUntil = { year: 0, month: 0, day: 0 };
-      this.ServiceStartDate.disableSince = { year: 0, month: 0, day: 0 };
-      this.ServiceStartDate.disableDays = [];
-      this.ServiceStartDate = null;
+    if (!this.isValidAddress) {
+      // console.log('hellllloo');
+      this.clearFields();
     }
+  }
+
+  clearFields() {
+    this.enableDates = false;
+    this.ServiceStartDate.disableUntil = { year: 0, month: 0, day: 0 };
+    this.ServiceStartDate.disableSince = { year: 0, month: 0, day: 0 };
+    this.ServiceStartDate.disableDays = [];
+    this.selectedStartDate = this.serviceType = this.featuredOffers = this.featuredOffersLength = null;
+    this.showPlansFlag = false;
   }
 
   // Fetch Offers when users selects new address
@@ -143,7 +150,11 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     this.selectedServiceAddress = serviceLocation;
     console.log('selected address duns', this.selectedServiceAddress.Meter_Info.TDU_DUNS);
     // console.log('result', this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS));
-    this.addressNotServed = this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS);
+    this.addressServed = this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS);
+    if (!this.addressServed) {
+      this.clearFields();
+    }
+    // console.log('addressServed', this.addressServed);
     // Get Available dates
     if ( this.selectedServiceAddress.Meter_Info.UAN !== null && this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS)) {
       this.availableDateServiceSubscription = this.availableDateService.getAvailableDate( this.selectedServiceAddress.Meter_Info.UAN ).subscribe(
@@ -157,7 +168,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     this.enrollErrorMsg = '';
     this.tokenMsg = '';
     this.isTokenError = false;
-    if ( this.serviceType ) {
+    if ( this.serviceType && this.addServiceForm && this.addServiceForm.value.Service_Start_Date.jsdate ) {
       this.getFeaturedOffers( this.addServiceForm.value.Service_Start_Date.jsdate );
     }
     this.checkCustomerToken();
@@ -182,7 +193,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   // Fetch Offers by passing start date and TDU_DUNS number of selected addresss
   getFeaturedOffers( ServiceStartDate ) {
     this.offerRequestParams = {
-      startDate: ServiceStartDate.toISOString(),
+      startDate: ServiceStartDate ? ServiceStartDate.toISOString() : '',
       dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS,
       approved: true,
       page_size: 100,
@@ -201,9 +212,14 @@ export class AddServicesComponent implements OnInit, OnDestroy {
             return this.availableOffers;
           }
         } );
+        this.featuredOffersLength = this.featuredOffers ? this.featuredOffers.length : 0;
         console.log( 'Featured Offers', this.featuredOffers );
 
       } );
+  }
+
+  morePlansClicked() {
+    this.showMorePlans = !this.showMorePlans;
   }
 
   scrollTop() {

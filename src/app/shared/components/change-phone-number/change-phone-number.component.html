@@ -7,6 +7,11 @@
     <label class="form-control-label">Change Phone Number</label>
   </div>
   <div class="col-md-6">
+    <div class="form-group">
+      <label class="phoneNumSmallLabel">
+        By providing your phone number you agree that Gexa may contact you at the number with account–related information and alerts, including via automated and/or prerecorded calls or texts.
+      </label>
+    </div>
     <form
       id="changePhoneNumberForm"
       novalidate
@@ -63,13 +68,13 @@
       </div>
 
       <div class="form-group" *ngIf="IsMobileSelected">
-        <label class="checkbox-inline" style="float:left"><input type="checkbox" (change)="mobileCheckBoxChecked($event)" id="mobileCheckbox" [formControl]="changePhoneNumberForm.controls['mobileCheckbox']">Yes, Allow Notifications</label><br>
+        <label class="checkbox-inline" style="float:left"><input type="checkbox" (change)="mobileCheckBoxChecked($event)" id="mobileCheckbox" [formControl]="changePhoneNumberForm.controls['mobileCheckbox']">Yes, Allow Offer Notifications</label><br>
         <label class="phoneNumLabel">
-          For your convenience, we may reach out to you with an automated text or phone call when you have product or service offers and notifications, including account alerts.
+          For your convenience, we would like to reach out to your mobile number regarding special product or service offers from Gexa Energy using automated texts and/or phone calls.  Message and data rates may apply, and your consent is not required to make a purchase. To agree to this service please select the Allow Offer Notifications box.
         </label><br>
-        <label class="phoneNumSmallLabel">
-          Standard message and data rates may apply. This is not required to purchase goods and services from Gexa Energy.
-        </label>
+        <!--<label class="phoneNumSmallLabel">-->
+          <!--Standard message and data rates may apply. This is not required to purchase goods and services from Gexa Energy.-->
+        <!--</label>-->
       </div>
 
       <div class="text-right">

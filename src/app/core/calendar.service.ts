@@ -7,9 +7,9 @@ import 'rxjs/add/operator/map';
 import { environment } from '../../environments/environment';
 
 import { DocumentType } from './models/enums/documenttype';
-import { ITduAvailabilityResult } from "./models/availabledate/tduAvailabilityResult.model";
-import { ServiceType } from "./models/enums/serviceType";
-import { TduAction } from "./models/enums/tduAction";
+import { ITduAvailabilityResult } from './models/availabledate/tduAvailabilityResult.model';
+import { ServiceType } from './models/enums/serviceType';
+import { TduAction } from './models/enums/tduAction';
 
 @Injectable()
 export class CalendarService {
@@ -111,14 +111,14 @@ export class CalendarService {
 
   formatCalendarDate( date ) {
     var new_date = new Date( date );
-    console.log( date );
-    console.log( new_date );
+    // console.log( date );
+    // console.log( new_date );
     var result = {
       year: new_date.getUTCFullYear(),
       month: new_date.getUTCMonth() + 1,
       day: new_date.getUTCDate()
     };
-    console.log( result )
+    // console.log( result )
     return result;
   };
 
