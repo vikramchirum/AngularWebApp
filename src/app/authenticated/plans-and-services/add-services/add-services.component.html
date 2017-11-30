@@ -58,7 +58,7 @@
       <div *ngIf="showPlansFlag">
         <h2>Select a Plan</h2>
         <div class="row" class="featured-offers">
-          <div class="col-xs-12 col-sm-6 col-md-4" *ngFor="let featuredOffer of this.featuredOffers">
+          <div class="col-xs-12 col-sm-6 col-md-4" *ngFor="let featuredOffer of this.featuredOffers | slice:0:3; let i= index;">
             <!-- <mygexa-select-plan (selectedOffer)="onNotify($event)" [featuredOffer]="featuredOffer"></mygexa-select-plan> -->
             <!-- <mygexa-plan-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
             (onOfferSelectedEvent)="onNotify($event)"></mygexa-plan-card> -->
