@@ -159,7 +159,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     this.enrollErrorMsg = '';
     this.tokenMsg = '';
     this.isTokenError = false;
-    if ( this.serviceType && this.addServiceForm.value.Service_Start_Date.jsdate ) {
+    if ( this.serviceType && this.addServiceForm && this.addServiceForm.value.Service_Start_Date.jsdate ) {
       this.getFeaturedOffers( this.addServiceForm.value.Service_Start_Date.jsdate );
     }
     this.checkCustomerToken();
