@@ -7,6 +7,11 @@
 
 }
 
+.change-plans-grid {
+ background-color:  rgba(251,247,220,1.0);
+padding-top:30px;
+}
+
 .plans-bg {
   color: $plans-base;
 }
@@ -16,7 +21,6 @@
   border-radius:30px;
   background-color: $plans-base;
     text-align: center;
-    margin: 20px auto;
     padding-top: 6px;
     font-size: 32px;
     color: #fff;
@@ -211,6 +215,12 @@ small.alert {
   }
 }
 @media only screen and (max-width: 480px) {
+  
+  .service-plan h3.text-center {
+    margin-top: 10px;
+    text-align: left;
+  }
+  
   .filter-select,
   #keyword {
     width: 100%;
@@ -225,7 +235,7 @@ small.alert {
 
 .mat-card.current-plan-card {
   .mat-card-title h2 {
-    font-family: Oswald, "Open Sans", "sans-serif";
+        font-family: 'Oswald', 'Open Sans', 'AvenirNextCondensed-Bold', sans;
     font-size: 24px;
   }
 
@@ -233,7 +243,7 @@ small.alert {
     h2 {
     font-weight: 400;
     color: #000;
-    font-family: Oswald, "Open Sans", "sans-serif";
+        font-family: 'Oswald', 'Open Sans', 'AvenirNextCondensed-Bold', sans;
     font-size: 50px;
 
     }
@@ -246,4 +256,19 @@ small.alert {
     }
   }
 
+}
+
+
+@media only screen and (max-width: 769px) {
+  .service-plan h3.text-center {
+    margin-top: 15px;
+    text-align: left;
+  }
+  .planSelect_confirm h2 {
+  font-size:22px;
+}
+  .agreement-text {
+      max-height: 125px;
+    overflow-y: scroll;
+}
 }

@@ -45,8 +45,10 @@ export class AddressSearchComponent implements OnInit {
     this.searchTerms.next(term);
     if ( !term ) {
       this.isValidAddress = false;
-      this.onServiceAddressChanged.emit(this.isValidAddress);
+    } else {
+      this.isValidAddress = true;
     }
+    this.onServiceAddressChanged.emit(this.isValidAddress);
   }
 
   ngOnInit(): void {
