@@ -60,6 +60,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   // selectedOffer: IOffers = null;
   selectedOffer: IOfferSelectionPayLoad = null;
   availableOffers = null;
+  availableOffersLength: number =null;
   isLoading: boolean = null;
   showNewPlans: boolean = null;
   isKeepCurrent: boolean = false;
@@ -288,6 +289,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.offerSubscription = this.offerService.getOffers( this.offerRequestParams )
       .subscribe( result => {
         this.availableOffers = result;
+        this.availableOffersLength = this.availableOffers ? this.availableOffers.length : 0;
         this.isLoading = false;
         console.log( 'this.available offers', this.availableOffers );
         // prevent user from navigating to plans page if we don't offer service in the moving address

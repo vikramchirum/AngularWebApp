@@ -42,7 +42,7 @@
 
     <!--If we don't offer service in the moving address, we should show the message-->
     <ng-container *ngIf="availableOffers">
-      <div *ngIf="availableOffers.length === 0" class="alert alert-info fade in alert-dismissable">
+      <div *ngIf="availableOffersLength === 0" class="alert alert-info fade in alert-dismissable">
         <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
         <strong>We're Sorry!</strong> We cannot register your move online, please call 1-888 888 8888 for assistance. </div>
 
@@ -82,28 +82,28 @@
     <p>A few more items and we can finalize your order</p>
     <br/>
     <div class="row service-plan">
-      <div class="col-sm-3">
-          <div class="bg-plans-round">
+      <div class="col-md-3 col-sm-12">
+          <div class="bg-plans-round col-xs-2  col-sm-2 col-md-8 col-md-offset-4 ">
             1
         </div>
-        <h3 class="text-center">Select Your Service Plan</h3>
+        <h3 class="text-center col-xs-10 col-sm-10 col-md-12">Select Your Service Plan</h3>
         <!--<p> Would you like to keep your existing service plan?</p>-->
         <div class="row hidden">
             <div class="hidden">
               <label class="radio-inline col-sm-6">
                 <input type="radio" formControlName="service_plan" value="Current Plan" checked="checked" >
-                Keep Current Plan</label>
-              <label class="radio-inline col-sm-5">
+                Keep <span class="hidden-sm hidden-xs">Current</span> Plan</label>
+              <label class="radio-inline col-sm-6">
                 <input type="radio" formControlName="service_plan" value="New Plan">
                 Select New Plan</label>
             </div>
         </div>
           <!--<mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>-->
         </div>
-      <div class="col-xs-hidden col-sm-1">
+      <div class="hidden-xs hidden-sm col-md-1">
         <i class="fa fa-chevron-right fa-3x"></i>
       </div>
-      <div class="col-sm-8">
+      <div class="col-md-8 col-xs-12">
         <div class="current-plan-card mat-card" *ngIf="selectedOffer">
           <h2 class="mat-card-title ">{{selectedOffer?.Offer?.Plan?.Name}}</h2>
           <div class="mat-card-content">
@@ -129,11 +129,12 @@
 
 
          <div class="row text-center">
-           <div class="col-sm-6">
-             <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isKeepCurrent }" (click)="getCurrentPlan()"><i class="fa fa-check" style="visibility: hidden" ></i> KEEP CURRENT PLAN</button>
+           <div class="col-xs-6 col-sm-6 col-md-6">
+             <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isKeepCurrent }" (click)="getCurrentPlan()"><i class="fa fa-check" style="visibility: hidden" ></i>Keep <span class="hidden-sm hidden-xs">Current</span> Plan
+</button>
            </div>
-           <div class="col-sm-1"></div>
-          <div class="col-sm-5">
+           <div class="hidden-sm col-md-1"></div>
+          <div class="col-xs-6 col-sm-6 col-md-5">
             <button class="btn btn-default btn-block"  [ngClass]="{ 'btn-primary': isSelectNew }"
              (click)="showPlans()"><i class="fa fa-check" style="visibility: hidden"  ></i> CHANGE PLAN</button>
            </div>
@@ -142,15 +143,15 @@
       </div>
     </div>
     <br>
-    
-    
+
+
     <div class="container-fluid plans">
         <div class="row service-plan">
           <div class="col-sm-12" *ngIf="showNewPlans">
             <ng-container *ngIf="!isLoading; else showLoadingOffers">
               <div class="row change-plans-grid">
-                <ng-container *ngIf="(availableOffers && (availableOffers.length > 0)); else noOffers">
-                  <div class="col-xs-12 col-sm-6 col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:0:3; let i= index;">
+                <ng-container *ngIf="(availableOffers && (availableOffersLength > 0)); else noOffers">
+                  <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-offset-0 col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:0:3; let i= index;">
                     <!-- <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
                                       (onOfferSelectedEvent)="getSelectedOffer($event)"></mygexa-plan-card> -->
                     <mygexa-play-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
@@ -179,12 +180,12 @@
         </div>
     </div>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="hidden-sm col-md-6">
       </div>
-      <div class="col-sm-6" *ngIf="showNewPlans" >
+      <div class="col-sm-12 col-md-6" *ngIf="showNewPlans" >
         <p class="p-plans">View More Plans  <i class="fa"
                                                (click)="morePlansClicked()"
-                                               [ngClass]="showMorePlans ? 'fa-chevron-up' : 'fa-chevron-down'">
+                                               [ngClass]="showMorePlans ? 'fa-chevron-down' : 'fa-chevron-up'">
         </i></p>
       </div><br>
     </div>
@@ -194,8 +195,8 @@
             <div class="col-sm-12" *ngIf="showNewPlans">
               <ng-container *ngIf="!isLoading; else showLoadingOffers">
                 <div class="row change-plans-grid">
-                  <ng-container *ngIf="(availableOffers && (availableOffers.length > 0)); else noOffers">
-                    <div class="col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:3:(availableOffers.length - 3); let i= index;">
+                  <ng-container *ngIf="(availableOffers && (availableOffersLength > 0)); else noOffers">
+                    <div class="col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:3:(availableOffersLength); let i= index;">
                       <!-- <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
                                         (onOfferSelectedEvent)="getSelectedOffer($event)"></mygexa-plan-card> -->
                       <mygexa-play-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
@@ -226,25 +227,25 @@
     </div>
    <hr>
     <div class="row">
-         <div class="col-sm-3">
-          <div class="bg-plans-round">
+         <div class="col-md-3 col-sm-12 clearfix">
+          <div class="bg-plans-round col-xs-2 col-sm-2 col-md-8 col-md-offset-4">
             2
         </div>
 
-          <h3 class="text-center">Choose Your Final Bill Destination</h3>
+          <h3 class="text-center col-xs-8 col-sm-8 col-md-12">Choose Your Final Bill Destination</h3>
           <div class="hidden">
             <label class="radio-inline  col-sm-6">
               <input type="radio" formControlName="service_address" value="Current Address">
               Your Current Address </label>
-            <label class="radio-inline  col-sm-5">
+            <label class="radio-inline  col-sm-6">
               <input type="radio" formControlName="service_address" value="New Address" >
               Your New Address </label>
           </div>
         </div>
-      <div class="col-xs-hidden col-sm-1">
+      <div class="hidden-xs hidden-sm col-md-1">
         <i class="fa fa-chevron-right fa-3x"></i>
       </div>
-      <div class="col-sm-8">
+      <div class="col-sm-12 col-md-8">
 
          <div class="row text-center">
           <div class="container-fluid">
@@ -255,11 +256,11 @@
         </div>
 
          <div class="row text-center">
-           <div class="col-sm-6">
+           <div class="col-xs-6 col-md-6">
              <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isUseCurrent }"  (click)="useCurrentAddress()"><i class="fa fa-check" style="visibility: hidden" ></i> CURRENT ADDRESS</button>
            </div>
-           <div class="col-sm-1"></div>
-          <div class="col-sm-5">
+           <div class="col-md-1 hidden-sm"></div>
+          <div class="col-xs-6 col-md-5">
             <button class="btn btn-default btn-block"  [ngClass]="{ 'btn-primary': isUseNew }"
              (click)="useNewAddress()"><i class="fa fa-check" style="visibility: hidden"  ></i> NEW ADDRESS</button>
            </div>
