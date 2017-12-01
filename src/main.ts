@@ -15,7 +15,7 @@ if (environment.Production) {
 const inlineBundleJs = document.getElementsByTagName('script')[0];
 const forteLibraryJs = document.createElement('script');
 forteLibraryJs.type = 'text/javascript';
-forteLibraryJs.src = `https://${ environment['forteProduction'] === true ? 'api.forte.net' : 'sandbox.forte.net/api' }/js/v1`;
+forteLibraryJs.src = environment.forte_api_url;
 inlineBundleJs.parentNode.insertBefore(forteLibraryJs, inlineBundleJs);
 
 platformBrowserDynamic().bootstrapModule(AppModule);
