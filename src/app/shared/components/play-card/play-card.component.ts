@@ -15,6 +15,7 @@ import { UserService } from 'app/core/user.service';
 import { ModalStore } from 'app/core/store/modalstore';
 
 import * as $ from 'jquery';
+import { DocumentsService } from '../../../core/documents.service';
 
 @Component({
   selector: 'mygexa-play-card',
@@ -40,13 +41,16 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
     userServiceSubscription: Subscription;
     activeServiceAccountSubscription: Subscription;
     handleOfferPopOversModalSubscription: Subscription;
-
+    public eflLink;
+    public tosLink;
+    public yraacLink;
     offerPassed: string;
 
     constructor(private userService: UserService,
                 private serviceAccount_service: ServiceAccountService,
                 private modalStore: ModalStore,
                 private formBuilder: FormBuilder,
+                private documentsService: DocumentsService,
                 private viewContainerRef: ViewContainerRef) {
       this.isMoving = false;
     }
@@ -68,7 +72,13 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
       this.activeServiceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null)
         .subscribe(result => {
           this.activeServiceAccountDetails = result;
+
         });
+
+      this.eflLink = this.documentsService.getEFLLink(this.offer.Id);
+      this.tosLink = this.documentsService.getTOSLink(this.offer.Plan.Product.Fixed);
+      this.yraacLink = this.documentsService.getYRAACLink();
+
     }
 
     ngAfterViewInit() {

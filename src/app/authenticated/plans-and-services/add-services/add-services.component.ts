@@ -115,14 +115,15 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       var calendarData = this.calendarService.getCalendarData( this.tduAvailabilityResult, this.serviceType );
 
       // Set calendar options
-      console.log( calendarData );
-      this.ServiceStartDate = {
-        disableUntil: calendarData.startDate,
-        disableSince: calendarData.endDate,
-        disableDays: calendarData.unavailableDates,
-        markDates: [ { dates: calendarData.alertDates, color: 'Red' } ]
-      };
-
+      console.log( 'calendarData', calendarData );
+      if (calendarData) {
+        this.ServiceStartDate = {
+          disableUntil: calendarData.startDate,
+          disableSince: calendarData.endDate,
+          disableDays: calendarData.unavailableDates,
+          markDates: [ { dates: calendarData.alertDates, color: 'Red' } ]
+        };
+      }
       this.pricingMessage = calendarData.pricingMessage;
     }
   }
@@ -176,8 +177,8 @@ export class AddServicesComponent implements OnInit, OnDestroy {
 
   onChangeServiceType() {
     if ( this.serviceType ) {
-      this.enableDates = true;
       this.populateCalendar();
+      this.enableDates = true;
     } else {
       this.enableDates = false;
     }
