@@ -2,27 +2,30 @@
   <div  [config]="{ backdrop: 'static', keyboard: false }"
            bsModal #phonePopModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
            aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
       <div class="modal-content ">
         <div class="modal-header">
-          <h4 class="modal-title text-center">Important Account Updates</h4>
-          <button type="button" class="close" (click)="hidePhoneConfirmationModal()"><span class="close-btn"
-                                                                                           aria-hidden="true"><i
+          <div class="row">
+            <div class="col-xs-10 col-md-8 col-md-offset-2">
+              <h4 class="modal-title text-center">Offer Notifications</h4>
+            </div>
+            <div class="col-xs-2 col-md-2">
+              <button type="button" class="close" (click)="hidePhoneConfirmationModal()">
+              <span class="close-btn"  aria-hidden="true"><i
             class="fa fa-remove" style="color: white"></i></span></button>
+            </div>
+          </div>
         </div>
         <div class="modal-body container-fluid">
-          <p class="text-center">Are you sure you do not want to receive account updates and alerts through text
-            messages?</p>
+          <p class="text-center">Are you sure you do not want to receive auto calls/texts to your mobile about special product and service offers?</p>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer"> 
           <!--<div class="btn-toolbar text-center">-->
           <button type="button"  class="btn btn-default" (click)="hidePhoneConfirmationModal()">No, Return to Form</button>
-          <button type="button" class="btn btn-info" (click)="saveChanges()" style="color: white; background-color: #00b0ff; text-transform: none;">Yes, Save Changes</button>
-          <!--</div>-->
+          <button type="button" class="btn btn-success" (click)="saveChanges()">Yes, Save Changes</button>
+          <!--</div>--> 
         </div>
       </div>
     </div>
-
   </div>
 </section>
-
