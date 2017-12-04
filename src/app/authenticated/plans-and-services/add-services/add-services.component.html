@@ -5,20 +5,16 @@
         <h2>Add Service Location</h2>
       </div>
     </div>
-
-
     <!-- Enter New Service Address -->
     <div class="row">
       <div class="col-sm-12 col-md-7 new-service-address">
         <h3>
           Enter New Service Address
         </h3>
-        <!-- <input type="text" class="form-control" placeholder="Enter New Address"> -->
         <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)" (onServiceAddressChanged) = "disableFields($event)"></mygexa-address-search>
         <small *ngIf="addressServed === false" class="text-danger">   We're sorry, we don't offer electricity service at the location you specified. Please check the address, or contact Customer Service for assistance.   </small>
       </div>
     </div>
-
     <!-- Service Type Selection -->
     <div class="row">
       <div class="col-sm-12 col-md-7  new-service-address">
@@ -27,26 +23,26 @@
           <div class="col-xs-6 col-sm-6 col-md-5">
             <div class="form-control">
               <label class="radio-inline">
-                <input type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.MoveIn">I'm Moving
+                <input style="cursor: pointer" type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.MoveIn" [disabled]="addressServed === false">I'm Moving
               </label>
             </div>
           </div>
           <div class="col-xs-6 col-sm-6 col-md-5 col-md-offset-1">
             <div class="form-control">
               <label class="radio-inline">
-                <input type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.Switch">I'm Switching
+                <input style="cursor: pointer"  type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.Switch" [disabled]="addressServed === false">I'm Switching
               </label>
             </div>
           </div>
         </div>
       </div>
     </div>
-
     <!-- start service -->
     <div class="row">
-      <h3 class="start-service-text">When would you like to start service?      <small class="start-date-tooltip" tooltip="If you require service before 3 business days then call 855-639-8118."><i aria-hidden="true" class="fa fa-info-circle" ></i></small></h3>
+      <h3 class="start-service-text">When would you like to start service?
+        <small class="start-date-tooltip" tooltip="If you require service before 3 business days then call 855-639-8118."><i aria-hidden="true" class="fa fa-info-circle" ></i></small></h3>
       <div class="col-md-6">
-        <my-date-picker name="Service_Start_Date" [(ngModel)]="selectedStartDate" [options]="ServiceStartDate" [disabled]="!enableDates"
+        <my-date-picker style="cursor: pointer" name="Service_Start_Date" [(ngModel)]="selectedStartDate" [options]="ServiceStartDate" [disabled]="!enableDates || addressServed === false"
           (dateChanged)="onStartDateChanged($event)"></my-date-picker>
         <small>{{pricingMessage}}</small>
       </div>
