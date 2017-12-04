@@ -12,5 +12,5 @@ export const environment = {
   GexaShare_Url: '#{GexaShare_Url}',
   Client_Email_Addresses: '#{Client_Email_Addresses}',
   kWhAmountFormatter: '1.4-4',
-  forte_api_url: '#{forteProduction}'
+  forte_api_url: '#{forte_api_url}'
 };
