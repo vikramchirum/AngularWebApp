@@ -24,7 +24,7 @@ import { InvoiceStore } from '../../core/store/invoicestore';
 })
 export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  startsWith = startsWith;
+  public startsWith = startsWith;
   service_account_length: number = null;
   env = environment.Name;
   username: string = null;
@@ -39,8 +39,8 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('menuDropdown') menuDropdown;
   constructor(
     private UserService: UserService,
-    private Router: Router,
-    private ServiceAccountService: ServiceAccountService,
+    public Router: Router,
+    public ServiceAccountService: ServiceAccountService,
     private CustomerAccountService: CustomerAccountService,
     private NotificationOptionsStore: NotificationOptionsStore,
     private InvoiceStore: InvoiceStore
@@ -97,12 +97,12 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
     this.accordionVisible = !this.accordionVisible;
   }
 
-  @HostListener('document:click', ['$event']) clickedOutside($event){
+  @HostListener('document:click', ['$event']) clickedOutside($event) {
     // here you can hide your menu
-    
-    if(!((this.menuIcon && this.menuIcon.nativeElement && this.menuIcon.nativeElement.contains($event.target)) || 
+
+    if (!((this.menuIcon && this.menuIcon.nativeElement && this.menuIcon.nativeElement.contains($event.target)) ||
     (this.menuDropdown && this.menuDropdown.nativeElement && this.menuDropdown.nativeElement.contains($event.target)))) {
-      if(this.accordionVisible) {
+      if (this.accordionVisible) {
         this.accordionVisible = false;
       }
     }

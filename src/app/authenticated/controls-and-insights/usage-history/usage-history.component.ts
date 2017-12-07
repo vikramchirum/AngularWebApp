@@ -15,7 +15,7 @@ export class UsageHistoryComponent implements OnDestroy {
 
   private activeServiceAccount: ServiceAccount = null;
   private ServiceAccountsSubscription: Subscription = null;
-  private isDataAvailable = false;
+  public isDataAvailable = false;
   private monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
     'September', 'October', 'November', 'December'];
 

@@ -18,7 +18,7 @@ export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
   @Input() selectorLabel: string = null;
   @Output() changedServiceAccount: EventEmitter<any> =  new EventEmitter<any>();
 
-  private ServiceAccounts: ServiceAccount[] = null;
+  public ServiceAccounts: ServiceAccount[] = null;
   private ServiceAccountSelectedId: string = null;
   private ServiceAccountsSubscription: Subscription = null;
   private ActiveServiceAccountsSubscription: Subscription = null;

@@ -22,7 +22,7 @@
               <div class="col-sm-8">
               <h2 class="active-budget">${{ budgetBillingInfo.Amount }} Per Month</h2>
               <p>Start Date: {{ budgetBillingInfo.Create_Date | date:'d MMM y' }}</p>
-           
+
             <ng-container *ngIf="(budgetBillingInfo.Pending_Cancel_Count > 0)">
               <br/><div class="alert alert-info">Cancel Budget Billing Request is already Pending</div>
             </ng-container>
@@ -32,7 +32,7 @@
               </div>
                 </div>
             </div>
-              
+
             </div>
             <br/>
           </ng-container>
@@ -55,7 +55,7 @@
                 You may also visit any MoneyGram location where a processing fee will be applied.
                 Once your balance has been paid in full, you may enroll in Budget Billing. <br/>
               </ng-container>
-              <ng-container *ngIf="(budgetBillingEstimate.Variance > 0) && (budgetBillingEstimate.Amount > 0)">
+              <ng-container *ngIf="unableToProcess">
                 <div class="alert alert-waring"> Unfortunately we are unable to process your request to enroll in Budget Billing until you have paid your
                   variance bill amount of <b>$ {{ budgetBillingEstimate.Variance | number : dollarAmountFormatter }} </b>. </div>
                 <br/>
@@ -64,7 +64,7 @@
                 You may also visit any MoneyGram location where a processing fee will be applied.
                 Once your balance has been paid in full, you may enroll in Budget Billing. <br/>
               </ng-container>
-              <ng-container *ngIf="(!budgetBillingEstimate.IsVarianceBillGenerated > 0) && (budgetBillingEstimate.Amount > 0)"> <br/>
+              <ng-container *ngIf="(!budgetBillingEstimate.IsVarianceBillGenerated) && (budgetBillingEstimate.Amount > 0)"> <br/>
                 <div class="alert alert-waring"> Unfortunately we are unable to process your request to enroll in Budget Billing until your variance bill is
                   generated. </div>
                 <br/>

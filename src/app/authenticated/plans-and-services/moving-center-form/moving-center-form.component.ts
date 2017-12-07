@@ -82,7 +82,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   private availableDateServiceSubscription: Subscription = null;
   TDUDunsServiceSubscription: Subscription= null;
   TDUDuns: ITDU[];
-  private ActiveServiceAccount: ServiceAccount = null;
+  public ActiveServiceAccount: ServiceAccount = null;
   private TDU_DUNS_Number: string = null;
   customerDetails: CustomerAccount = null;
   offerRequestParams: OfferRequest = null;
@@ -178,7 +178,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     );
   }
 
-  private newServiceStartDate: IMyOptions = {
+  public newServiceStartDate: IMyOptions = {
     // start date options here...
     disableDays: [],
     disableUntil: { year: 0, month: 0, day: 0 },
@@ -187,7 +187,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   };
 
 
-  private currentServiceEndDate: IMyOptions = {
+  public currentServiceEndDate: IMyOptions = {
     // other end date options here...;
     enableDays: [],
     disableDays: [],

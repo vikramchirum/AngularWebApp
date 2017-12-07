@@ -26,7 +26,7 @@ import { ServiceAddress } from 'app/core/models/serviceaddress/serviceaddress.mo
 })
 export class AddressSearchComponent implements OnInit {
 
-  private selectedAddress: string = '';
+  public selectedAddress: string = '';
   newAddressList: Observable<ServiceAddress[]>;
   private searchTerms = new Subject<string>();
   showAddressList: boolean = true;
