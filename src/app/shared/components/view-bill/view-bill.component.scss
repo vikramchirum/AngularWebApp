@@ -182,25 +182,15 @@ p { margin-bottom:0; font-size:12px}
   overflow:hidden;
 }
 
-.slider {
-  overflow-y: hidden;
+
+div.ng-trigger-openCloseTDUCharges, div.ng-trigger-openCloseTaxCharges, div.ng-trigger-openCloseGexaCharges {
   max-height: 500px; /* approximate max height */
-  transition-property: all;
-  transition-duration: 1.5s;
   // transition-timing-function: ease-in;
   //transition-timing-function: cubic-bezier(0, 1, 0.8, 1);
-  -webkit-transition-timing-function: cubic-bezier(0.470, 0.000, 0.745, 0.715);
-  -moz-transition-timing-function: cubic-bezier(0.470, 0.000, 0.745, 0.715);
-  -o-transition-timing-function: cubic-bezier(0.470, 0.000, 0.745, 0.715);
-  transition-timing-function: cubic-bezier(0.470, 0.000, 0.745, 0.715);
+  -webkit-transition: max-height 0.5s ease-in-out;
+  -moz-transition: max-height 0.5s ease-in-out;
+  -o-transition: max-height 0.5s ease-in-out;
+  transition: max-height 0.5s ease-in-out;
+  
 }
 
-.slider.closed {
-   transition-duration: 5s;
-  max-height: 0px; /* approximate max height */
-  transition-property: all;
-  -webkit-transition-timing-function: cubic-bezier(0.390, 0.575, 0.565, 1.000);
-  -moz-transition-timing-function: cubic-bezier(0.390, 0.575, 0.565, 1.000);
-  -o-transition-timing-function: cubic-bezier(0.390, 0.575, 0.565, 1.000);
-  transition-timing-function: cubic-bezier(0.390, 0.575, 0.565, 1.000);
-}
