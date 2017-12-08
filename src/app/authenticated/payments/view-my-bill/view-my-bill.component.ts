@@ -9,6 +9,7 @@ import { PaymentsHistory } from '../../../core/models/payments/payments-history.
 import { PaymentsHistoryStore } from '../../../core/store/paymentsstore';
 import { InvoiceStore } from '../../../core/store/invoicestore';
 import { ServiceAccount } from '../../../core/models/serviceaccount/serviceaccount.model';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'mygexa-view-my-bill',
@@ -41,6 +42,7 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
   PaymentsLength: number = null;
   private payments: PaymentsHistory[] = null;
   private ActiveServiceAccountSubscription: Subscription = null;
+  dollarAmountFormatter: string;
 
   constructor(private invoice_service: InvoiceService,
               private InvoiceStore: InvoiceStore,
@@ -51,6 +53,7 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.dollarAmountFormatter = environment.DollarAmountFormatter;
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.activeServiceAccount = result;

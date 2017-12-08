@@ -24,6 +24,7 @@ import { IInvoice } from '../../../core/models/invoices/invoice.model';
 import { PaymentsHistoryStore } from '../../../core/store/paymentsstore';
 import { InvoiceStore } from '../../../core/store/invoicestore';
 import { PaymentConfirmationModalComponent } from '../../../shared/components/payment-confirmation-modal/payment-confirmation-modal.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'mygexa-make-payment',
@@ -47,7 +48,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   dueDate: Date = null;
   LatestBillAmount: number;
   LatestBillPaymentDate: Date;
-
+  dollarAmountFormatter: string;
 
   PaymethodSelected: Paymethod = null;
 
@@ -139,6 +140,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.dollarAmountFormatter = environment.DollarAmountFormatter;
     this.CustomerAccountSubscription = this.CustomerAccountService.CustomerAccountObservable.subscribe(
       CustomerAccount => this.CustomerAccount = CustomerAccount
     );
