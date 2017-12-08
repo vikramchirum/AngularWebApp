@@ -4,12 +4,15 @@
 module.exports = function ( grunt ) {
 
   var path = grunt.option( 'deploypath' );
+  if (!path){
+    path = 'c:\\inetpub\\wwwroot\\dev\\test';
+  }
 
   var pkg = grunt.file.readJSON( 'package.json' );
   var version = pkg.version;
 
   var branch_name = grunt.option( 'branch_name' );
-  if ( branch_name !== 'dev' && branch_name !== 'master' ) {
+  if ( branch_name && branch_name !== 'dev' && branch_name !== 'master' ) {
     branch_name = branch_name.replace("\\", "-").replace("/", "-");
     version += '-' + branch_name;
   }
