@@ -23,16 +23,16 @@ import { UtilityService } from 'app/core/utility.service';
   animations: [ trigger(
     'openCloseGexaCharges',
     [
-      state( 'collapsed, void', style( { height: '0px' } ) ),
-      state( 'expanded', style( { height: '*' } ) ),
+      state( 'collapsed, void', style( { 'max-height': '0px' } ) ),
+      state( 'expanded', style( { 'max-height': '*' } ) ),
       transition(
         'collapsed <=> expanded', [ animate( 200 ), animate( 100 ) ] )
     ] ),
     trigger(
       'openCloseTDUCharges',
       [
-        state( 'collapsed, void', style( { 'height': '0px' } ) ),
-        state( 'expanded', style( { 'height': '*' } ) ),
+        state( 'collapsed, void', style( { 'max-height': '0px' } ) ),
+        state( 'expanded', style( { 'max-height': '*' } ) ),
         transition(
           'collapsed <=> expanded', [ animate( 200 ), animate( 100 ) ] )
       ] ),
