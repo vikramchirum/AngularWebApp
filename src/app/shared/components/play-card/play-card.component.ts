@@ -146,6 +146,7 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     onCloseSelectOffer(event) {
+      this.isOfferAgreed = false;
       event.preventDefault();
       event.stopPropagation();
       this.isOfferSelected = false;

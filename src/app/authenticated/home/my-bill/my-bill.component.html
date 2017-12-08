@@ -1,7 +1,7 @@
 <div *ngIf="activeServiceAccount" class="my-bill-grid thumbnail">
   <div class="alert alert-danger pull-right bg-danger" *ngIf="(pastDueExists || totalDue > 0) && PaymentsLength > 0">Due Date: {{ latestInvoice?.Due_Date | date:'MM/dd/yyyy' }}</div>
   <div class="alert pull-right alert-info text-center"  *ngIf="!pastDueExists && PaymentsLength > 0 && totalDue <= 0"><span>
-    Thanks for your payment <br> of ${{LatestBillAmount}} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </span></div>
+    Thanks for your payment <br> of ${{LatestBillAmount | number: dollarAmountFormatter}} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </span></div>
   <h1 [ngClass]="{'paymentMade': !pastDueExists, 'exceededDueDate': pastDueExists }">My Bill</h1>
 
   <table class="table " border="0" width="100%">
@@ -42,7 +42,7 @@
           </button>
           <ul class="dropdown-menu pull-right col-sm-8" style=" text-align: center;" role="menu">
             <li class="linkLabel" *ngIf="!autoPay">
-              Your payment of ${{LatestBillAmount}} is pending
+              Your payment of ${{LatestBillAmount | number: dollarAmountFormatter }} is pending
             </li>
             <hr>
             <li>
