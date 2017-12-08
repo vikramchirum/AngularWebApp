@@ -16,9 +16,9 @@ import { CustomerAccountService } from '../../core/CustomerAccount.service';
 })
 export class MyAccountComponent implements OnInit, OnDestroy {
   UserServiceSubscription: Subscription;
-  private startsWith = startsWith;
+  public startsWith = startsWith;
   constructor(
-    private Router: Router,
+    public Router: Router,
     private referralStore: ReferralStore,
     private UserService: UserService,
     private CustomerAccountStore: CustomerAccountStore,

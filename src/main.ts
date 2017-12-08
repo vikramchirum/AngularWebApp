@@ -12,10 +12,10 @@ if (environment.Production) {
   console.log('environment', environment);
 }
 
-const inlineBundleJs = document.getElementsByTagName('script')[0];
-const forteLibraryJs = document.createElement('script');
-forteLibraryJs.type = 'text/javascript';
-forteLibraryJs.src = environment.forte_api_url;
-inlineBundleJs.parentNode.insertBefore(forteLibraryJs, inlineBundleJs);
+ const head = document.getElementsByTagName('head')[0];
+ const forteLibraryJs = document.createElement('script');
+ forteLibraryJs.type = 'text/javascript';
+ forteLibraryJs.src = environment.forte_api_url;
+ head.appendChild(forteLibraryJs);
 
 platformBrowserDynamic().bootstrapModule(AppModule);

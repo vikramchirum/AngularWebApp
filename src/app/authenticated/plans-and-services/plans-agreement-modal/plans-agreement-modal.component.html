@@ -5,21 +5,21 @@
       <div class="modal-dialog modal-md ">
         <div class="modal-content ">
           <div class="modal-header">
-            <button type="button" class="close" aria-label="Close" (click)="hidePlanPopModal()" style="padding:15px 100px 10px 0px;"> <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
+            <button type="button" class="close" aria-label="Close"  style="padding:15px 100px 10px 0px;"> <span class="close-btn" aria-hidden="true"><i class="fa fa-remove"></i></span></button>
             <h2 class="modal-title"><b>Thanks, </b></h2>
             <div class="modal-body container-fluid">
-              <div *ngIf="selectCheckBox" class="agreement-section">
+              <div  class="agreement-section">
                   <div class="checkbox">
                     <label>
-                    <input type="checkbox" value="" (click) = "toggleButton()">
+                    <input type="checkbox" value="">
                     <span class="cr"><i class="cr-icon fa fa-check"></i></span>
                     <p class="text-left">By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.<br/><br/>View your Terms Of Service, Electricity Facts Label(EFL) and Your Rights As a Customer prior to enrollment.</p>
                   </label>
                   </div>
                   <div class="row">
                     <div style="text-align:center">
-                      <button class="btn btn-primary" [disabled]="selectCheckBox && !enableSelect" (click)="showConfirmationPop()" >Submit</button>
-                      <button class="btn btn-link" (click)="closeCheckBox()" aria-hidden="true">Cancel</button>
+                      <button class="btn btn-primary"  >Submit</button>
+                      <button class="btn btn-link"  aria-hidden="true">Cancel</button>
                     </div>
                   </div>
                 </div>
@@ -27,8 +27,7 @@
           </div>
         </div>
       </div>
-  
+
     </div>
   </section>
-  
-  
+

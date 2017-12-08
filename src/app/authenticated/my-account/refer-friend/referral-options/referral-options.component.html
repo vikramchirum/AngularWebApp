@@ -16,7 +16,7 @@
         <div class="control">
           <div class="friends">
             <div formArrayName="FriendsList">
-              <div *ngFor="let friend of friendsForm.controls.FriendsList.controls; let i = index">
+              <div *ngFor="let friend of FriendsList.controls; let i = index">
                 <div class="row" [formGroupName]="i">
                   <div>
                     <div class="col-xs-6 col-sm-4">

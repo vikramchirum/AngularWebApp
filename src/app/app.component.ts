@@ -14,7 +14,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private $content;
   private RouterSubscription: Subscription = null;
-  private fixedToBottom = false;
+  public fixedToBottom = false;
   private intervalCheck = null;
 
   constructor(

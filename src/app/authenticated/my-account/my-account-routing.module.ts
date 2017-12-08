@@ -16,7 +16,7 @@ const routes: Route[] = [
     path: '', component: MyAccountComponent,
     children: [
       { path: 'refer-a-friend', redirectTo: 'refer-a-friend/referral-options', pathMatch: 'full' },
-      { path: 'refer-a-friend', loadChildren: loadReferFriendModule },
+      { path: 'refer-a-friend', loadChildren: './refer-friend/refer-friend.module#ReferFriendModule' },
       { path: 'profile', component: ProfileComponent },
       { path: 'message-center', component: MessageCenterComponent }
     ]

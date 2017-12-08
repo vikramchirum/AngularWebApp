@@ -15,7 +15,7 @@ export class ResponsiveHamburgerMenuComponent implements OnInit {
   startsWith = startsWith;
 
   constructor(
-        private Router: Router,
+        public Router: Router,
   ) { }
 
   ngOnInit() { }

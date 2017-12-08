@@ -22,6 +22,7 @@ export class ReferralOptionsComponent implements OnInit {
   friendsForm: FormGroup;
   customerAccount: CustomerAccount;
   isSubmitted = false;
+  get FriendsList() { return <FormArray>this.friendsForm.get('FriendsList'); }
 
   constructor(private FormBuilder: FormBuilder, private customerAccountService: CustomerAccountService, private referralStore: ReferralStore) {
   }

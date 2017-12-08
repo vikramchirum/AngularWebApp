@@ -58,12 +58,12 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   addressServed: boolean = null;
   private customerDetails: CustomerAccount = null;
   private Waiver: string;
-  private serviceType?: ServiceType;
-  private selectedStartDate: IMyDateModel;
+  public serviceType?: ServiceType;
+  public selectedStartDate: IMyDateModel;
   private selectedOfferId: string;
-  private enrollErrorMsg: string;
-  private enrolled: boolean = false;
-  private showPlansFlag: boolean = false;
+  public enrollErrorMsg: string;
+  public enrolled = false;
+  public showPlansFlag = false;
   offerSelectionType = OfferSelectionType;
   selectedOffer: IOfferSelectionPayLoad;
   pricingMessage: string;
@@ -99,7 +99,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     );
   }
 
-  private ServiceStartDate: IMyOptions = {
+  public ServiceStartDate: IMyOptions = {
     // start date options here...
     disableDays: [],
     disableUntil: { year: 0, month: 0, day: 0 },
