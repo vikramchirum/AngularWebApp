@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve -o",
-    "build": "ng build --aot=false --target=production --environment=publish --output-hashing all",
+    "build": "ng build --aot=true --target=production --environment=publish --output-hashing all",
     "review": "npm install && ng build --aot=false --target=production --environment=publish --output-hashing all",
     "approve": "npm version patch && git push --tags",
     "test": "ng test",
