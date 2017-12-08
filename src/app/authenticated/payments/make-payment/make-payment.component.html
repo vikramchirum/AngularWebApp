@@ -138,7 +138,7 @@
             </button>
             <ul class="dropdown-menu pull-right" role="menu">
               <li class="linkLabel" *ngIf="!autoPay">
-                Your payment of ${{LatestBillAmount}} is pending
+                Your payment of ${{ LatestBillAmount | number: dollarAmountFormatter }} is pending
               </li>
               <hr>
               <li>

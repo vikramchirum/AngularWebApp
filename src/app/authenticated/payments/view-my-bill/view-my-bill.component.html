@@ -48,7 +48,7 @@
                   </button>
                   <ul class="dropdown-menu pull-right col-sm-8" style=" text-align: center;" role="menu">
                     <li class="linkLabel" *ngIf="!autoPay">
-                      Your payment of ${{LatestBillAmount}} is pending
+                      Your payment of ${{LatestBillAmount | number: dollarAmountFormatter }} is pending
                     </li>
                     <hr>
                     <li>
@@ -99,7 +99,7 @@
     </div>
     <br class="visible-xs"/>
     <div class="col-lg-4">
-             <div class="alert alert-info hidden-xs hidden-sm hidden-md" *ngIf="!pastDueExists && PaymentsLength > 0 && totalDue <= 0" >Thank you for your payment of ${{LatestBillAmount}} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </div>
+             <div class="alert alert-info hidden-xs hidden-sm hidden-md" *ngIf="!pastDueExists && PaymentsLength > 0 && totalDue <= 0" >Thank you for your payment of ${{LatestBillAmount | number: dollarAmountFormatter }} on {{LatestBillPaymentDate | date:'MM/dd/yyyy'}} </div>
             <div class="alert alert-danger hidden-xs hidden-sm hidden-md" *ngIf="(pastDueExists || totalDue > 0) && PaymentsLength > 0">Due Date: {{ req_bill?.Due_Date | date:'MM/dd/yyyy' }}</div>
 
       <div class="view-my-bill-billing-payment-preferences">
