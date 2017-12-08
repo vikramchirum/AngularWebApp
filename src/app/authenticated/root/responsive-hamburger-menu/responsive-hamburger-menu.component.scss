@@ -46,12 +46,23 @@
   
       .panel-body { 
      
-        > li > a {
+        ul li > a {
           font-size: 12px;
           padding: 30px 20px;
+          -webkit-tap-highlight-color: aliceblue;
+        }
+ 
+        ul li > a:hover  {
+           background-color: #ececec;           
         }
         
-        > li.divider {
+        ul li > a:active {           
+           background-color: #1D1C1C ;
+                   color:#fff;
+        }
+          
+        
+        ul  li.divider {
           display: inline-block;
           width: 1px;
           height: 50px;

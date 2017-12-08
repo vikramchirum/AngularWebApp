@@ -10,7 +10,7 @@
            [ngClass]="{ 'payment-option-active': Router.url === '/payments/payment-options/auto-bill-payment' }"
            [routerLink]="Router.url === '/payments/payment-options/auto-bill-payment' ? '/payments/payment-options' : '/payments/payment-options/auto-bill-payment'"
         >
-          <h4>{{ ActiveServiceAccount?.AutoPayConfigId ? 'You\'re enrolled in Autopay' : 'Never forget to pay your bill again, setup Autopay' }}</h4>
+          <h4>{{ ActiveServiceAccount?.AutoPayConfigId ? 'You\'re enrolled in Autopay' : 'Never miss a payment with Autopay.' }}</h4>
             <div class="payment-option-icon"><i class="fa fa-4x fa-clock-o"></i></div>
           <h4 class="payment-option-name">{{ ActiveServiceAccount?.AutoPayConfigId ? 'View' : 'Setup' }} Autopay</h4>
         </a>
