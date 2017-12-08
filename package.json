@@ -13,11 +13,11 @@
     "e2e": "ng e2e",
     "serve-local": "ng serve --environment=local",
     "serve-qa": "ng serve -o --environment=qa",
-    "build-dev": "npm install && ng build --aot=false --target=production --environment=dev --output-hashing all",
-    "build-qa": "npm install && ng build --aot=false --target=production --environment=qa --output-hashing all",
-    "build-stg": "npm install && ng build --aot=false --target=production --environment=stg --output-hashing all",
-    "build-prd": "npm install && ng build --aot=false --target=production --environment=prod --output-hashing all",
-    "deploy-local": "npm install && ng build --aot=false --target=production --environment=dev --output-path C:\\inetpub\\wwwroot\\DEV\\test --output-hashing all"
+    "build-dev": "npm install && ng build --aot=true --target=production --environment=dev --output-hashing all",
+    "build-qa": "npm install && ng build --aot=true --target=production --environment=qa --output-hashing all",
+    "build-stg": "npm install && ng build --aot=true --target=production --environment=stg --output-hashing all",
+    "build-prd": "npm install && ng build --aot=true --target=production --environment=prod --output-hashing all",
+    "deploy-local": "npm install && ng build --aot=true --target=production --environment=dev --output-path C:\\inetpub\\wwwroot\\DEV\\test --output-hashing all"
   },
   "private": true,
   "dependencies": {
