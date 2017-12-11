@@ -66,6 +66,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   public showPlansFlag = false;
   offerSelectionType = OfferSelectionType;
   selectedOffer: IOfferSelectionPayLoad;
+  offerSelected: boolean = null;
   pricingMessage: string;
   TDUDuns: ITDU[] = [];
   TDUDunsNumbers: string[] = [];
@@ -227,10 +228,15 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     window.scrollTo( 0, 0 );
   }
 
-
-  onNotify( event: IOfferSelectionPayLoad ) {
+  onOfferSelected ( event: IOfferSelectionPayLoad ) {
+    this.offerSelected = true;
     this.selectedOffer = event;
+    console.log('Selected offer', this.selectedOffer);
     this.selectedOfferId = event.Offer.Id;
+    // this.formEnrollmentRequest();
+  }
+
+  onNotify() {
     if ( this.formEnrollmentRequest() ) {
       this.enrollService.createEnrollment( this.enrollmentRequest )
         .subscribe( result => {

@@ -114,7 +114,7 @@
         <div *ngIf="ActiveServiceAccount" [hidden]="selectedOffer" class="current-plan-card mat-card">
           <h2 class="mat-card-title ">{{ActiveServiceAccount.Current_Offer.Product_Name}}</h2>
           <div class="mat-card-content">
-            <h2>{{ActiveServiceAccount.Current_Offer.RateAt2000kwh | DollarToCentsPipe | number : '1.1-1'}}<sup>&cent;</sup><small>pkw/hr</small></h2>
+            <h2>{{ActiveServiceAccount.Current_Offer.RateAt2000kwh | DollarToCentsPipe | number : '1.1-1'}}<sup>&cent;</sup><small>per kWh</small></h2>
             <p>Expires {{ActiveServiceAccount.Current_Offer.End_Date | date:'d/M/yy'}}</p>
           </div>
         </div>
@@ -130,7 +130,7 @@
 
          <div class="row text-center">
            <div class="col-xs-6 col-sm-6 col-md-6">
-             <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isKeepCurrent }" (click)="getCurrentPlan()"><i class="fa fa-check" style="visibility: hidden" ></i>Keep <span class="hidden-sm hidden-xs">Current</span> Plan
+             <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isKeepCurrent }" (click)="getCurrentPlan()"><i class="fa fa-check" style="visibility: hidden" ></i> Keep <span class="hidden-sm hidden-xs">Current</span> Plan
 </button>
            </div>
            <div class="hidden-sm col-md-1"></div>

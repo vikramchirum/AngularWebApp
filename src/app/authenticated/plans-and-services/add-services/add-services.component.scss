@@ -23,6 +23,10 @@
     margin-left:15px;
 }
 
+.selectedPlanText {
+  color: #fea220;
+}
+
 .add-services-verify-info {
     .divider-line {
         border-top: 2px solid #000;
@@ -47,5 +51,79 @@
 }
 .p-plans {
   margin-left: 265px;
+}
+
+.current-plan-card {
+  text-align: center;
+  .mat-button {
+    color:black;
+  }
+  .check-mark{
+    margin-top:-15px;
+    margin-right:-10px;
+  }
+}
+
+
+.mat-card.current-plan-card {
+  box-shadow: none;
+  margin-top: 0;
+
+  h2, .fa {
+    color: rgba(46,177,52,1.0);
+  }
+  small .fa {
+    font-size: 18px;
+    font-weight: 100;
+    vertical-align: super;
+  }
+  .fa-remove {
+    font-size: 20px;
+    color:black !important;
+  }
+
+  .mat-card-content {
+    h2 {
+      font-weight:800;
+      color:#000;
+
+    }
+
+    .bg-default {
+      background-color: #ececec;
+      margin-bottom:0;
+      line-height: 30px;
+    }
+    p {
+      margin-bottom:0;
+      line-height: 30px;
+    }
+  }
+
+}
+
+.mat-card.current-plan-card {
+  .mat-card-title h2 {
+    font-family: 'Oswald', 'Open Sans', 'AvenirNextCondensed-Bold', sans;
+    font-size: 24px;
+  }
+
+  .mat-card-content {
+    h2 {
+      font-weight: 400;
+      color: #000;
+      font-family: 'Oswald', 'Open Sans', 'AvenirNextCondensed-Bold', sans;
+      font-size: 50px;
+
+    }
+
+    small {
+      font-size:20px;
+      margin-left: -10px;
+      color:#000;
+
+    }
+  }
+
 }
 
