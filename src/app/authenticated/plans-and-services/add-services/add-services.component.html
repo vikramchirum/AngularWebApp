@@ -39,14 +39,23 @@
     </div>
     <!-- start service -->
     <div class="row">
+      <div class="col-sm-6 col-md-6">
       <h3 class="start-service-text">When would you like to start service?
         <small class="start-date-tooltip" tooltip="If you require service before 3 business days then call 855-639-8118."><i aria-hidden="true" class="fa fa-info-circle" ></i></small></h3>
-      <div class="col-md-6">
         <my-date-picker style="cursor: pointer" name="Service_Start_Date" [(ngModel)]="selectedStartDate" [options]="ServiceStartDate" [disabled]="!enableDates || addressServed === false"
           (dateChanged)="onStartDateChanged($event)"></my-date-picker>
         <small>{{pricingMessage}}</small>
       </div>
-
+      <div class="col-sm-6 col-md-6" *ngIf="offerSelected && showPlansFlag">
+        <h2 class="selectedPlanText text-center">Selected Plan</h2>
+          <div class="current-plan-card mat-card" *ngIf="offerSelected">
+            <h2 class="mat-card-title ">{{ selectedOffer?.Offer?.Plan?.Name}}</h2>
+            <div class="mat-card-content">
+              <h2>{{selectedOffer?.Offer?.Price_At_2000_kwh | DollarToCentsPipe | number : '1.1-1'}}<sup>&cent;</sup><small>per kWh</small></h2>
+              <p *ngIf="selectedOffer?.Offer?.End_Date" >Expires {{selectedOffer?.Offer?.End_Date| date:'d/M/yy'}}</p>
+            </div>
+          </div>
+      </div>
     </div>
 
     <!-- Select Plan -->
@@ -55,11 +64,8 @@
         <h2>Select a Plan</h2>
         <div class="row" class="featured-offers">
           <div class="col-xs-12 col-sm-6 col-md-4" *ngFor="let featuredOffer of this.featuredOffers | slice:0:3; let i= index;">
-            <!-- <mygexa-select-plan (selectedOffer)="onNotify($event)" [featuredOffer]="featuredOffer"></mygexa-select-plan> -->
-            <!-- <mygexa-plan-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
-            (onOfferSelectedEvent)="onNotify($event)"></mygexa-plan-card> -->
             <mygexa-play-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
-            (onOfferSelectedEvent)="onNotify($event)"></mygexa-play-card>
+            (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-play-card>
           </div>
         </div>
       </div>
@@ -101,41 +107,15 @@
     </div>
     <div class="row" class="featured-offers" *ngIf="showPlansFlag && showMorePlans">
       <div class="col-xs-12 col-sm-6 col-md-4" *ngFor="let featuredOffer of this.featuredOffers | slice:3: (featuredOffersLength); let i= index">
-        <!-- <mygexa-select-plan (selectedOffer)="onNotify($event)" [featuredOffer]="featuredOffer"></mygexa-select-plan> -->
-        <!-- <mygexa-plan-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
-        (onOfferSelectedEvent)="onNotify($event)"></mygexa-plan-card> -->
+
         <mygexa-play-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
                           (onOfferSelectedEvent)="onNotify($event)"></mygexa-play-card>
       </div>
     </div>
-    <!--<div class="row" class="featured-offers" *ngIf="showPlansFlag && showMorePlans">-->
-      <!--<div class="col-md-4" *ngFor="let featuredOffer of  featuredOffers | slice:3: (featuredOffersLength); let i= index">-->
-        <!--&lt;!&ndash; <mygexa-select-plan (selectedOffer)="onNotify($event)" [featuredOffer]="featuredOffer"></mygexa-select-plan> &ndash;&gt;-->
-        <!--&lt;!&ndash; <mygexa-plan-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"-->
-        <!--(onOfferSelectedEvent)="onNotify($event)"></mygexa-plan-card> &ndash;&gt;-->
-        <!--<mygexa-play-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"-->
-                          <!--(onOfferSelectedEvent)="onNotify($event)"></mygexa-play-card>-->
-      <!--</div>-->
-    <!--</div>-->
+
     <h2 *ngIf="enrollErrorMsg && enrollErrorMsg.length > 0">{{enrollErrorMsg}}</h2>
 
-
-    <!-- Credit Check -->
-    <!--<h4>Credit Check</h4>
-  <mygexa-credit-check></mygexa-credit-check>-->
-
     <div class="add-services-verify-info">
-      <!-- <div class="alert alert-info clearfix">
-        <div class="row">
-          <div class="col-md-9">
-            Please review all your information and make it is accurate before submitting
-          </div>
-          <div class="col-md-3">
-            <i class="fa fa-arrow-up pull-right" aria-hidden="true" (click)="scrollTop()"></i>
-          </div>
-        </div>
-      </div>
-      <br/> -->
       <br>
       <div class="row" *ngIf="this.featuredOffers && this.featuredOffers.length > 0 && !showPlansFlag">
         <div class="col-md-12 col-xs-12 text-right">
@@ -144,6 +124,9 @@
           </button>
         </div>
       </div>
+    </div>
+    <div class="text-center" *ngIf="offerSelected && showPlansFlag">
+      <button class="btn btn-primary" [disabled]="!offerSelected" (click)="onNotify()">Submit Enrollment</button>
     </div>
   </form>
 
