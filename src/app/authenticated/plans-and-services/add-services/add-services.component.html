@@ -15,6 +15,49 @@
         <small *ngIf="addressServed === false" class="text-danger">   We're sorry, we don't offer electricity service at the location you specified. Please check the address, or contact Customer Service for assistance.   </small>
       </div>
     </div>
+    <div *ngIf="true" class="row text-left">
+      <div class="col-xs-1">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" [checked]="useBillAddress" (click)="toggleAddress()" class="checkbox">
+            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+          </label>
+        </div>
+      </div>
+      <div class="useAddressText col-xs-9">
+        My billing address is the same as my service address.
+      </div>
+     </div>
+     <div class="row" *ngIf="!useBillAddress">
+      <form [formGroup]="dynamicAddressForm" novalidate>
+      <div class="row">
+        <div class="col-sm-6">
+          <label for="Line1" style="display:none">Street Address:</label>
+          <input (change)="enableSubmitMove()" type="text" placeholder="Street Address" class="form-control" formControlName="Line1" id="Line1">
+        </div>
+        <div class="form-group col-sm-2">
+          <label for="Line2" style="display:none">Apt or Suite #:</label>
+          <input (change)="enableSubmitMove()" type="text" placeholder="Apt or Suite #" class="form-control" formControlName="Line2" id="Line2">
+        </div>
+
+      </div>
+       <div class="row">
+        <div class="col-sm-4">
+          <label for="City" style="display:none">City:</label>
+          <input (change)="enableSubmitMove()" type="text" placeholder="City " class="form-control" formControlName="City" id="City">
+        </div>
+          <div class="col-sm-2 ">
+          <label for="State" style="display:none">State:</label>
+          <input (change)="enableSubmitMove()" type="text" placeholder="State " class="form-control" formControlName="State" id="State">
+        </div>
+        <div class="form-group col-sm-2">
+          <label for="Zip" style="display:none">Zip:</label>
+          <input (change)="enableSubmitMove()" type="text" placeholder="Zip" class="form-control" formControlName="Zip" id="Zip">
+        </div>
+
+      </div>
+    </form>
+  </div>
     <!-- Service Type Selection -->
     <div class="row">
       <div class="col-sm-12 col-md-7  new-service-address">
@@ -127,11 +170,10 @@
         </div>
       </div>
     </div>
-    <div class="text-center" *ngIf="offerSelected && showPlansFlag">
-      <button class="btn btn-primary" [disabled]="!offerSelected" (click)="onNotify()">Submit Enrollment</button>
+    <div class="text-center" *ngIf="offerSelected && showPlansFlag && enableSubmitEnroll">
+      <button class="btn btn-primary" [disabled]="(!offerSelected && !enableSubmitEnroll)" (click)="onNotify()">Submit Enrollment</button>
     </div>
   </form>
-
  <!--Enrollment Services Confirmation Screen -->
  <div [hidden]="!enrolled" class="col-md-8">
     <h2>Success!</h2>

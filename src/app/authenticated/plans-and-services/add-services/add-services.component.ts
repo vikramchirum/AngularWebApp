@@ -26,6 +26,7 @@ import { forEach } from '@angular/router/src/utils/collection';
 import { CalendarService } from '../../../core/calendar.service';
 import { TDUStore } from '../../../core/store/tdustore';
 import { ITDU } from '../../../core/models/tdu/tdu.model';
+import { IAddress } from 'app/core/models/address/address.model';
 
 @Component( {
   selector: 'mygexa-add-services',
@@ -70,6 +71,9 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   pricingMessage: string;
   TDUDuns: ITDU[] = [];
   TDUDunsNumbers: string[] = [];
+  useBillAddress: boolean = true;
+  dynamicAddressForm: FormGroup;
+  enableSubmitEnroll: boolean = false;
   constructor( private fb: FormBuilder,
                private offerService: OfferService, private UserService: UserService, private enrollService: EnrollService, private customerAccountService: CustomerAccountService,
                private modalStore: ModalStore, private channelStore: ChannelStore, private availableDateService: AvailableDateService, private calendarService: CalendarService,
@@ -98,6 +102,13 @@ export class AddServicesComponent implements OnInit, OnDestroy {
         // console.log('TDU duns number array', this.TDUDunsNumbers);
       }
     );
+    this.dynamicAddressForm = this.fb.group({
+      'Line1': [null, Validators.required],
+      'Line2': [null, Validators.required],
+      'City': [null, Validators.required],
+      'State': [null, Validators.required],
+      'Zip': [null, Validators.required]
+    });
   }
 
   public ServiceStartDate: IMyOptions = {
@@ -234,6 +245,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     console.log('Selected offer', this.selectedOffer);
     this.selectedOfferId = event.Offer.Id;
     // this.formEnrollmentRequest();
+    this.enableSubmitMove();
   }
 
   onNotify() {
@@ -299,7 +311,24 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     if ( this.isTokenError ) {
       return false;
     }
-
+    const dynamicAddress = {} as IAddress;
+    if(this.useBillAddress) {
+      dynamicAddress.City = this.selectedServiceAddress.Address.City;
+      dynamicAddress.State = this.selectedServiceAddress.Address.State
+      dynamicAddress.Line1 = this.selectedServiceAddress.Address.Line1;
+      dynamicAddress.Line2 = this.selectedServiceAddress.Address.Line2;
+      dynamicAddress.Zip = this.selectedServiceAddress.Address.Zip;
+      dynamicAddress.Zip_4 = this.selectedServiceAddress.Address.Zip_4;
+    }
+    else {
+      dynamicAddress.City = this.dynamicAddressForm.get("City").value;
+      dynamicAddress.State = this.dynamicAddressForm.get("State").value;
+      dynamicAddress.Line1 = this.dynamicAddressForm.get("Line1").value;
+      dynamicAddress.Line2 = this.dynamicAddressForm.get("Line2").value;
+      dynamicAddress.Zip = this.dynamicAddressForm.get("Zip").value;
+      dynamicAddress.Zip_4 = null;
+    }
+    
     this.enrollmentRequest = {
       Email_Address: environment.Client_Email_Addresses,
       Offer_Id: this.selectedOfferId,
@@ -313,7 +342,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
         Email_Address: environment.Client_Email_Addresses,
         Primary_Phone_Number: this.customerDetails.Primary_Phone
       },
-      Billing_Address: this.selectedServiceAddress.Address
+      Billing_Address: dynamicAddress
     };
     if ( this.selectedOffer.Offer.Has_Partner ) {
       this.enrollmentRequest.Partner_Account_Number = this.selectedOffer.Partner_Account_Number;
@@ -332,6 +361,23 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     }
     if (this.TDUDunsServiceSubscription) {
       this.TDUDunsServiceSubscription.unsubscribe();
+    }
+  }
+  toggleAddress() {
+    this.useBillAddress = !this.useBillAddress;
+    this.enableSubmitMove();
+  }
+  enableSubmitMove() {
+    if(!this.useBillAddress) {
+      if(this.dynamicAddressForm.valid) {
+        this.enableSubmitEnroll = true;
+      }
+      else {
+        this.enableSubmitEnroll = false;
+      }
+    }
+    else {
+      this.enableSubmitEnroll = true;
     }
   }
 }
