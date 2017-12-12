@@ -250,19 +250,19 @@
          <div class="row text-center">
           <div class="container-fluid">
             <div class="col-sm-12">
-             <small class="alert alert-warning"> Please select final service address</small>
+             <small class="alert alert-warning"> Please select an address</small>
             </div>
           </div>
         </div>
 
          <div class="row text-center">
            <div class="col-xs-6 col-md-6">
-             <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isUseCurrent }"  (click)="useCurrentAddress()"><i class="fa fa-check" style="visibility: hidden" ></i> CURRENT ADDRESS</button>
+             <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isUseCurrent }"  (click)="useCurrentAddress()"><i class="fa fa-check" style="visibility: hidden" ></i> CURRENT <span class="hidden-xs">ADDRESS</span></button>
            </div>
            <div class="col-md-1 hidden-sm"></div>
           <div class="col-xs-6 col-md-5">
             <button class="btn btn-default btn-block"  [ngClass]="{ 'btn-primary': isUseNew }"
-             (click)="useNewAddress()"><i class="fa fa-check" style="visibility: hidden"  ></i> NEW ADDRESS</button>
+                    (click)="useNewAddress()"><i class="fa fa-check" style="visibility: hidden"  ></i> NEW <span class="hidden-xs">ADDRESS</span></button>
            </div>
         </div>
       </div>
