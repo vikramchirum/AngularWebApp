@@ -257,18 +257,3 @@ small.alert {
   }
 
 }
-
-
-@media only screen and (max-width: 769px) {
-  .service-plan h3.text-center {
-    margin-top: 15px;
-    text-align: left;
-  }
-  .planSelect_confirm h2 {
-  font-size:22px;
-}
-  .agreement-text {
-      max-height: 125px;
-    overflow-y: scroll;
-}
-}

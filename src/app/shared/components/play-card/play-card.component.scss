@@ -517,6 +517,23 @@ body {
     text-transform: uppercase;
   }
 }
-.agreement-text p {
-  font-size: 12px;
+.planSelect_confirm {
+  
+  h3 {
+  margin-top: -29px;
+  background-color: $plans-base;
+  padding: 5px 0;
+  color: #fff;
+  font-weight: 400;
+  }
+  
+  h2 {
+  font-size:18px;
+  }
+
+  .agreement-text {
+    max-height: 140px;
+    overflow-y: scroll;
+    font-size: 12px;
+  }
 }
