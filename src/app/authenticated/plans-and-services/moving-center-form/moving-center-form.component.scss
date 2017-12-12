@@ -154,7 +154,7 @@ small.alert {
 }
 
 .p-plans {
-  margin-left: 265px;
+  text-align: right;
 }
 
 .mat-card.current-plan-card {
@@ -215,12 +215,12 @@ small.alert {
   }
 }
 @media only screen and (max-width: 480px) {
-  
+
   .service-plan h3.text-center {
     margin-top: 10px;
     text-align: left;
   }
-  
+
   .filter-select,
   #keyword {
     width: 100%;
@@ -247,31 +247,17 @@ small.alert {
     font-size: 50px;
 
     }
-    
+
     small {
       font-size:20px;
       margin-left: -10px;
       color:#000;
-      
+
     }
   }
 
 }
 
-
-@media only screen and (max-width: 769px) {
-  .service-plan h3.text-center {
-    margin-top: 15px;
-    text-align: left;
-  }
-  .planSelect_confirm h2 {
-  font-size:22px;
-}
-  .agreement-text {
-      max-height: 125px;
-    overflow-y: scroll;
-}
-}
 .checkbox label:after {
   content: '';
   display: table;

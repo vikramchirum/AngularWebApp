@@ -250,19 +250,19 @@
          <div class="row text-center">
           <div class="container-fluid">
             <div class="col-sm-12">
-             <small class="alert alert-warning"> Please select final service address</small>
+             <small class="alert alert-warning"> Please select an address</small>
             </div>
           </div>
         </div>
 
          <div class="row text-center">
            <div class="col-xs-6 col-md-6">
-             <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isUseCurrent }"  (click)="useCurrentAddress()"><i class="fa fa-check" style="visibility: hidden" ></i> CURRENT ADDRESS</button>
+             <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isUseCurrent }"  (click)="useCurrentAddress()"><i class="fa fa-check" style="visibility: hidden" ></i> CURRENT <span class="hidden-xs">ADDRESS</span></button>
            </div>
            <div class="col-md-1 hidden-sm"></div>
           <div class="col-xs-6 col-md-5">
             <button class="btn btn-default btn-block"  [ngClass]="{ 'btn-primary': isUseNew }"
-             (click)="useNewAddress()"><i class="fa fa-check" style="visibility: hidden"  ></i> NEW ADDRESS</button>
+                    (click)="useNewAddress()"><i class="fa fa-check" style="visibility: hidden"  ></i> NEW <span class="hidden-xs">ADDRESS</span></button>
              <div *ngIf="isUseNew" class="row checkbox text-left">
               <div class="col-xs-1 col-xs-offset-1">
                 <div class="checkbox">
@@ -289,7 +289,7 @@
             <label for="Line2" style="display:none">Apt or Suite #:</label>
             <input (change)="enableSubmitMove()" type="text" placeholder="Apt or Suite #" class="form-control" formControlName="Line2" id="Line2">
           </div>
-         
+
         </div>
          <div class="row">
           <div class="col-sm-4 col-sm-offset-2">
@@ -304,7 +304,7 @@
             <label for="Zip" style="display:none">Zip:</label>
             <input (change)="enableSubmitMove()" type="text" placeholder="Zip" class="form-control" formControlName="Zip" id="Zip">
           </div>
-         
+
         </div>
       </form>
     </div>
