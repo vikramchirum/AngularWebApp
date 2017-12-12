@@ -20,23 +20,23 @@
       <table cellpadding="0" cellspacing="0" width="100%">
         <tbody>
         <tr>
-          <td width="74%"><h4>Your Payment Options</h4></td>
-          <td width="13%"><h4 class="text-center">Expires</h4></td>
-          <td width="13%" *ngIf="!PaymentAbpSelecting"><h4 class="text-center">Remove</h4></td>
-          <td width="13%" *ngIf="PaymentAbpSelecting" class="card-abp"><h4 class="text-center">Select</h4></td>
+          <td width="64%"><h4><span class="hidden-xs">Your Payment</span> Accounts</h4></td>
+          <td width="13%"><h4 class="text-center">Exp<span class="hidden-xs">ires</span></h4></td>
+          <td width="23%" *ngIf="!PaymentAbpSelecting"><h4 class="text-center">Remove</h4></td>
+          <td width="23%" *ngIf="PaymentAbpSelecting" class="card-abp"><h4 class="text-center">Select</h4></td>
         </tr>
         </tbody>
       </table>
       <div *ngFor="let paymentMethod of Paymethods; let i = index">
-        <table class="card-table" cellpadding="0" cellspacing="0" width="100%" [ngClass]="{ 'card-table-odd': i % 2 !== 0 }">
+        <table class="card-table table" cellpadding="0" cellspacing="0" width="100%" [ngClass]="{ 'card-table-odd': i % 2 !== 0 }">
           <tbody>
           <tr [ngClass]="{ 'text-muted': PaymentAbpSelecting === paymentMethod }">
-            <td class="card-brand" width="31%"><i class="fa fa-fw" [ngClass]="paymentMethod.getFontAwesomeTag()"></i>{{ paymentMethod.getBrand() }}</td>
-            <td class="card-ending" width="43%">ENDING IN <b>{{ paymentMethod.getLast() }}</b></td>
-            <td class="card-expires" width="13%">{{ paymentMethod.getExpiration() }}</td>
+            <td class="card-brand"><i class="fa fa-fw" [ngClass]="paymentMethod.getFontAwesomeTag()"></i>{{ paymentMethod.getBrand() }}</td>
+            <td class="card-ending">ENDING IN <br class="visible-xs"> <b>{{ paymentMethod.getLast() }}</b></td>
+            <td class="card-expires">{{ paymentMethod.getExpiration() }}</td>
             <ng-template *ngIf="PaymentAbpSelecting; then ShowAbpSelection else ShowRemovalButton"></ng-template>
             <ng-template #ShowAbpSelection>
-              <td class="card-abp" width="13%">
+              <td class="card-abp">
                 <button class="btn btn-block btn-link" *ngIf="PaymentAbpSelecting !== paymentMethod" (click)="PaymentAbpSelected = paymentMethod">
                   <i class="fa fa-fw" [ngClass]="PaymentAbpSelected === paymentMethod ? 'fa-check-circle-o' : 'fa-circle-o' "></i>
                 </button>
