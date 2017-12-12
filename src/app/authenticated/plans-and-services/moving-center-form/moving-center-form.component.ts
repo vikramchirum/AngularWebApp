@@ -37,6 +37,7 @@ import { ServiceType } from '../../../core/models/enums/serviceType';
 import { CalendarService } from '../../../core/calendar.service';
 import { TDUStore } from '../../../core/store/tdustore';
 import { ITDU } from '../../../core/models/tdu/tdu.model';
+import { IAddress } from 'app/core/models/address/address.model';
 
 @Component( {
   selector: 'mygexa-moving-center-form',
@@ -96,8 +97,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   isValidAddress: boolean = null;
   @ViewChild( 'selectPlanModal' ) selectPlanModal: SelectPlanModalDialogComponent;
   @ViewChild( 'errorModal' ) errorModal: ErrorModalComponent;
-
-
+  useOldAddress: boolean = true;
+  dynamicAddressForm: FormGroup;
+  enableSubmitMoveBtn: boolean = false;
+  
   constructor( private fb: FormBuilder,
                private viewContainerRef: ViewContainerRef,
                private ServiceAccountService: ServiceAccountService,
@@ -152,6 +155,13 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
         // 'agree_to_terms': [false, [Validators.pattern('true')]],
         'final_service_address': this.fb.array( [] )
       } );
+      this.dynamicAddressForm = this.fb.group({
+        'Line1': [null, Validators.required],
+        'Line2': [null, Validators.required],
+        'City': [null, Validators.required],
+        'State': [null, Validators.required],
+        'Zip': [null, Validators.required]
+      });
   }
 
   ngAfterViewInit() {
@@ -332,12 +342,29 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.ServicePlanForm.get( 'service_plan' ).setValidators( [ Validators.required, tduCheck( this.ActiveServiceAccount.TDU_DUNS_Number, this.newServiceAddress.Meter_Info.TDU_DUNS ) ] );
 
   }
-
+  enableSubmitMove() {
+    
+    if(this.ServicePlanForm && this.ServicePlanForm.valid) {
+      this.enableSubmitMoveBtn = true;
+      if(!this.useOldAddress) {
+        if(this.dynamicAddressForm && this.dynamicAddressForm.valid) {
+          this.enableSubmitMoveBtn = true;
+        }
+        else {
+          this.enableSubmitMoveBtn = false;
+        }  
+      }
+    }
+    else {
+      this.enableSubmitMoveBtn = false;
+    }
+  }
   useCurrentAddress() {
     this.ServicePlanForm.controls[ 'service_address' ].setValue( 'Current Address' );
     this.finalBillAddress = 'Current Address';
     this.isUseNew = false;
     this.isUseCurrent = true;
+    this.enableSubmitMove();
   }
 
   useNewAddress() {
@@ -345,6 +372,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.finalBillAddress = 'New Address';
     this.isUseNew = true;
     this.isUseCurrent = false;
+    if(!this.useOldAddress) {
+      this.ServicePlanForm.controls['final_service_address'].setValue({});
+    }
+    this.enableSubmitMove();
   }
 
   onSubmitMove( addressForm, billSelector ) {
@@ -360,7 +391,21 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       billSelector.final_service_address = addressForm.current_bill_address;
       this.Final_Bill_To_Old_Service_Address = true;
     } else {
-      billSelector.final_service_address = this.newServiceAddress.Address;
+      if(this.useOldAddress) {
+        billSelector.final_service_address = this.newServiceAddress.Address;
+      }
+      else {
+        const dynamicAddress = {} as IAddress;
+        dynamicAddress.City = this.dynamicAddressForm.get("City").value;
+        dynamicAddress.State = this.dynamicAddressForm.get("State").value;
+        dynamicAddress.Line1 = this.dynamicAddressForm.get("Line1").value;
+        dynamicAddress.Line2 = this.dynamicAddressForm.get("Line2").value;
+        dynamicAddress.Zip = this.dynamicAddressForm.get("Zip").value;
+        dynamicAddress.Zip_4 = null;
+        console.log(dynamicAddress);
+        billSelector.final_service_address = dynamicAddress;
+      }
+      //billSelector.final_service_address = this.newServiceAddress.Address;
       this.Final_Bill_To_Old_Service_Address = false;
     }
 
@@ -427,5 +472,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
   }
 
+  toggleAddress() {
+    this.useOldAddress = !this.useOldAddress;
+    this.enableSubmitMove();
+  }
 
 }
