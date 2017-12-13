@@ -263,7 +263,7 @@
           <div class="col-xs-6 col-md-5">
             <button class="btn btn-default btn-block"  [ngClass]="{ 'btn-primary': isUseNew }"
                     (click)="useNewAddress()"><i class="fa fa-check" style="visibility: hidden"  ></i> NEW <span class="hidden-xs">ADDRESS</span></button>
-             <div *ngIf="isUseNew" class="row checkbox text-left">
+             <div class="row checkbox text-left">
               <div class="col-xs-1 col-xs-offset-1">
                 <div class="checkbox">
                   <label>
@@ -278,7 +278,7 @@
              </div>
             </div>
         </div>
-        <div *ngIf="isUseNew && !useOldAddress">
+        <div *ngIf="!useOldAddress">
         <form [formGroup]="dynamicAddressForm" novalidate>
         <div class="row">
           <div class="col-sm-6 col-sm-offset-2">
