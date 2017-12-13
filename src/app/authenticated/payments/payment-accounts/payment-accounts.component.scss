@@ -1,33 +1,38 @@
 @import "../../../../../styles/bootstrap/stylesheets/bootstrap/_variables";
 
 table.card-table {
-  td {
-    vertical-align: middle !important;
-    line-height: 4rem;
-  }
+  margin-bottom: 0;
+
   td.card-brand {
+    width:31%;
     i.fa {
       margin-right: 4px;
-      margin-left: 1rem;
     }
   }
   td.card-ending {
+    width:33%;
     b {
       font-family: monospace;
     }
   }
   td.card-expires {
-    text-align: center;
+    text-align: left;
+    width: 23%;
   }
-  td.card-remove {
-    text-align: center;
+  td.card-remove,  td.card-abp {
+    text-align: left;
+    width:13%;
 
     button {
       outline: none;
     }
   }
+  td.card-remove {
+    width:13%;
+  }
   td.card-remove-active,
   td.card-remove-active * {
+    width:13%;
     background: orange;
     color: white !important;
   }
