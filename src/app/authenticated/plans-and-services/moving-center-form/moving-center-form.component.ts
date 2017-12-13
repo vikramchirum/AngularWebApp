@@ -100,7 +100,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   useOldAddress: boolean = true;
   dynamicAddressForm: FormGroup;
   enableSubmitMoveBtn: boolean = false;
-  
+  dynamicUAN = null;
   constructor( private fb: FormBuilder,
                private viewContainerRef: ViewContainerRef,
                private ServiceAccountService: ServiceAccountService,
@@ -384,6 +384,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
     console.log( 'addressForm', addressForm );
     console.log( 'billSelector', billSelector );
+    const dynamicAddress = {} as IAddress;
 
     addressForm.current_bill_address = this.ActiveServiceAccount.Mailing_Address;
     // Address where the customer wants to send their final bill
@@ -391,23 +392,30 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       billSelector.final_service_address = addressForm.current_bill_address;
       this.Final_Bill_To_Old_Service_Address = true;
     } else {
-      if(this.useOldAddress) {
-        billSelector.final_service_address = this.newServiceAddress.Address;
-      }
-      else {
-        const dynamicAddress = {} as IAddress;
-        dynamicAddress.City = this.dynamicAddressForm.get("City").value;
-        dynamicAddress.State = this.dynamicAddressForm.get("State").value;
-        dynamicAddress.Line1 = this.dynamicAddressForm.get("Line1").value;
-        dynamicAddress.Line2 = this.dynamicAddressForm.get("Line2").value;
-        dynamicAddress.Zip = this.dynamicAddressForm.get("Zip").value;
-        dynamicAddress.Zip_4 = null;
-        console.log(dynamicAddress);
-        billSelector.final_service_address = dynamicAddress;
-      }
-      //billSelector.final_service_address = this.newServiceAddress.Address;
+      billSelector.final_service_address = this.newServiceAddress.Address;
       this.Final_Bill_To_Old_Service_Address = false;
     }
+    if(this.useOldAddress) {console.log(1);
+      dynamicAddress.City = this.newServiceAddress.Address.City;
+      dynamicAddress.State = this.newServiceAddress.Address.State;
+      dynamicAddress.Line1 = this.newServiceAddress.Address.Line1;
+      dynamicAddress.Line2 = this.newServiceAddress.Address.Line2;
+      dynamicAddress.Zip = this.newServiceAddress.Address.Zip
+      dynamicAddress.Zip_4 = this.newServiceAddress.Address.Zip_4;
+      this.dynamicUAN = this.newServiceAddress.Meter_Info.UAN;
+    }
+    else {console.log(2);
+      dynamicAddress.City = this.dynamicAddressForm.get("City").value;
+      dynamicAddress.State = this.dynamicAddressForm.get("State").value;
+      dynamicAddress.Line1 = this.dynamicAddressForm.get("Line1").value;
+      dynamicAddress.Line2 = this.dynamicAddressForm.get("Line2").value;
+      dynamicAddress.Zip = this.dynamicAddressForm.get("Zip").value;
+      dynamicAddress.Zip_4 = null;
+      this.dynamicUAN = null;
+     
+      //billSelector.final_service_address = dynamicAddress;
+    }
+    console.log("dynamicAddress",dynamicAddress);
 
     // If user selects existing plan , set current offer as true
     if ( billSelector.service_plan === 'Current Plan' ) {
@@ -430,8 +438,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       Current_Service_End_Date: addressForm.Current_Service_End_Date.jsdate,
       Final_Bill_To_Old_Service_Address: this.Final_Bill_To_Old_Service_Address,
       Final_Bill_Address: billSelector.final_service_address,
-      UAN: this.newServiceAddress.Meter_Info.UAN,
-      Billing_Address: this.newServiceAddress.Address,
+      UAN: this.dynamicUAN,
+      Billing_Address: dynamicAddress,
       TDSP_Instructions: '',
       New_Service_Start_Date: addressForm.New_Service_Start_Date.jsdate,
       Keep_Current_Offer: this.Keep_Current_Offer,

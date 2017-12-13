@@ -27,6 +27,7 @@ import { CalendarService } from '../../../core/calendar.service';
 import { TDUStore } from '../../../core/store/tdustore';
 import { ITDU } from '../../../core/models/tdu/tdu.model';
 import { IAddress } from 'app/core/models/address/address.model';
+import { IMeterInfo } from 'app/core/models/serviceaddress/meterinfo.model';
 
 @Component( {
   selector: 'mygexa-add-services',
@@ -74,6 +75,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   useBillAddress: boolean = true;
   dynamicAddressForm: FormGroup;
   enableSubmitEnroll: boolean = false;
+  dynamicUAN = null;
   constructor( private fb: FormBuilder,
                private offerService: OfferService, private UserService: UserService, private enrollService: EnrollService, private customerAccountService: CustomerAccountService,
                private modalStore: ModalStore, private channelStore: ChannelStore, private availableDateService: AvailableDateService, private calendarService: CalendarService,
@@ -312,6 +314,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       return false;
     }
     const dynamicAddress = {} as IAddress;
+    
     if(this.useBillAddress) {
       dynamicAddress.City = this.selectedServiceAddress.Address.City;
       dynamicAddress.State = this.selectedServiceAddress.Address.State
@@ -319,6 +322,8 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       dynamicAddress.Line2 = this.selectedServiceAddress.Address.Line2;
       dynamicAddress.Zip = this.selectedServiceAddress.Address.Zip;
       dynamicAddress.Zip_4 = this.selectedServiceAddress.Address.Zip_4;
+      
+      this.dynamicUAN = this.selectedServiceAddress.Meter_Info.UAN;
     }
     else {
       dynamicAddress.City = this.dynamicAddressForm.get("City").value;
@@ -327,12 +332,13 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       dynamicAddress.Line2 = this.dynamicAddressForm.get("Line2").value;
       dynamicAddress.Zip = this.dynamicAddressForm.get("Zip").value;
       dynamicAddress.Zip_4 = null;
+      this.dynamicUAN = null;
     }
     
     this.enrollmentRequest = {
       Email_Address: environment.Client_Email_Addresses,
       Offer_Id: this.selectedOfferId,
-      UAN: this.selectedServiceAddress.Meter_Info.UAN,
+      UAN: this.dynamicUAN,
       Customer_Check_Token: this.tokenMsg,
       Waiver: this.Waiver,
       Service_Type: this.serviceType,
