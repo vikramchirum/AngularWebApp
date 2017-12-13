@@ -92,7 +92,7 @@
                  </label>
                  </div>
               </div>
-              <div class="col-xs-9 agreement-text">
+              <div class="col-xs-9 agreement-text" [ngClass]="offer.Has_Partner ? 'has-partner' : 'no-partner'">
                 <p>By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.
                 </p>
                 <p>
