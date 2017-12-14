@@ -21,7 +21,7 @@
     //margin:3em 0;
 }
 .start-service-text{
-    margin-left:15px;
+    margin-left:0;
 }
 
 .selectedPlanText {
@@ -181,5 +181,12 @@
 @media screen and (max-width: 767px) {
   .useAddressText {
     margin-left: 0px;
+  }
+  .new-billing-form {
+    margin-top: 10px;
+  
+    .form-control {
+      margin-bottom: 10px;
+    } 
   }
 }
