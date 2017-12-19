@@ -80,7 +80,7 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
               this.req_bill = latestInvoice;
               this.PaymentsHistoryStore.PaymentHistory.subscribe(
                 PaymentsHistoryItems => {
-                  if (PaymentsHistoryItems) {
+                  if (PaymentsHistoryItems && PaymentsHistoryItems.length > 0) {
                     this.payments = PaymentsHistoryItems;
                     this.PaymentsLength = this.payments.length;
                     if ( this.payments  && this.payments.length > 0) {
@@ -88,10 +88,9 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
                       this.LatestBillAmount = this.payments[0].PaymentAmount;
                       this.LatestBillPaymentDate = this.payments[0].PaymentDate;
                     }
-                    this.setFlags();
                   }
-                }
-              );
+                });
+              this.setFlags();
             });
           // this.PaymentsHistoryService.GetPaymentsHistoryCacheable(result).subscribe(
       }
@@ -119,6 +118,8 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this.ActiveServiceAccountSubscription.unsubscribe();
+    if (this.ActiveServiceAccountSubscription) {
+      this.ActiveServiceAccountSubscription.unsubscribe();
+    }
   }
 }
