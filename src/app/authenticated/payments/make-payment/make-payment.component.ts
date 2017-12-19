@@ -164,14 +164,15 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                     this.exceededDueDate = (this.dueDate < new Date()) ? true : false;
                     this.PaymentHistorySubscription = this.PaymentsHistoryStore.PaymentHistory.subscribe(
                       PaymentsHistoryItems => {
-                        if (PaymentsHistoryItems) {
+                        if (PaymentsHistoryItems && PaymentsHistoryItems.length > 0) {
                           this.paymentStatus = PaymentsHistoryItems[0].PaymentStatus;
                           if (this.paymentStatus === 'In Progress') {
                             this.LatestBillAmount = PaymentsHistoryItems[0].PaymentAmount;
                             this.LatestBillPaymentDate = PaymentsHistoryItems[0].PaymentDate;
                           }
-                          this.setFlags();
-                        }});
+                        }
+                      });
+                    this.setFlags();
                   }
                 );
                             }});
@@ -199,10 +200,18 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.CustomerAccountSubscription.unsubscribe();
-    this.PaymethodSubscription.unsubscribe();
-    this.ActiveServiceAccountSubscription.unsubscribe();
-    this.UserCustomerAccountSubscription.unsubscribe();
+    if (this.CustomerAccountSubscription) {
+      this.CustomerAccountSubscription.unsubscribe();
+    }
+    if (this.PaymethodSubscription) {
+      this.PaymethodSubscription.unsubscribe();
+    }
+    if (this.ActiveServiceAccountSubscription) {
+      this.ActiveServiceAccountSubscription.unsubscribe();
+    }
+    if (this.UserCustomerAccountSubscription) {
+      this.UserCustomerAccountSubscription.unsubscribe();
+    }
   }
 
   paymentOneTime($event, type): void {
