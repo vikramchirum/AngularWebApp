@@ -26,7 +26,7 @@ import { UtilityService } from 'app/core/utility.service';
       state( 'collapsed, void', style( { 'max-height': '0px' } ) ),
       state( 'expanded', style( { 'max-height': '*' } ) ),
       transition(
-        'collapsed <=> expanded', [ animate( 200 ), animate( 100 ) ] )
+        'collapsed <=> expanded',[] )
     ] ),
     trigger(
       'openCloseTDUCharges',
@@ -34,7 +34,7 @@ import { UtilityService } from 'app/core/utility.service';
         state( 'collapsed, void', style( { 'max-height': '0px' } ) ),
         state( 'expanded', style( { 'max-height': '*' } ) ),
         transition(
-          'collapsed <=> expanded', [ animate( 200 ), animate( 100 ) ] )
+          'collapsed <=> expanded', [] )
       ] ),
     trigger(
       'openCloseTaxCharges',
@@ -42,7 +42,7 @@ import { UtilityService } from 'app/core/utility.service';
         state( 'collapsed, void', style( { height: '0px' } ) ),
         state( 'expanded', style( { height: '*' } ) ),
         transition(
-          'collapsed <=> expanded', [ animate( 200 ), animate( 100 ) ] )
+          'collapsed <=> expanded', [] )
       ] )
   ],
 } )
