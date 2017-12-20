@@ -123,15 +123,19 @@
     </ng-container>
 
     <div [ngSwitch]="currentView">
+
       <div class="btnMobile" *ngSwitchCase="'PastDuePayNow'">
         <button class="btn exceededDueDatebtn btn-lg custom"(click)="checkAmountBeforeSubmit()"  type="button">
-          SUBMIT PAYMENT</button>
+          <span *ngIf="processing" class="fa fa-spin fa-spinner"></span>
+        {{processing ? 'Submitting your payment....' : 'SUBMIT PAYMENT'}}</button>
       </div>
+
       <div *ngSwitchCase="'PaymentPending'">
         <div class="mg-bt-15 input-group text-center">
           <div class="input-group-btn">
             <button type="button" class="btn btn-success btn-lg custom" data-label-placement>
-              <span class="small">PAYMENT PENDING</span>
+              <span *ngIf="processing" class="fa fa-spin fa-spinner"></span>
+              <span class="small">{{processing ? 'Submitting your payment....' : 'PAYMENT PENDING'}}</span>
             </button>
             <button type="button" class="btn btn-success dropdown-toggle btn-lg active" [disabled]="!paymentReady || paymentLoadingMessage" data-toggle="dropdown">
               <span class="caret"></span>
@@ -149,14 +153,15 @@
             </ul>
           </div>
         </div>
-
       </div>
+
       <div *ngSwitchCase="'AutoPay'">
         <div class="mg-bt-15 input-group text-center">
           <div class="input-group-btn">
-            <button type="button" class="btn btn-success btn-round-lg btn-lg custom" data-label-placement>
-              <span class="fa fa-clock-o"></span>
-              <span class="small">AUTO PAY IS SCHEDULED</span>
+            <button  type="button" class="btn btn-success btn-round-lg btn-lg custom" data-label-placement>
+              <span *ngIf="!processing" class="fa fa-clock-o"></span>
+              <span *ngIf="processing" class="fa fa-spin fa-spinner"></span>
+              <span class="small">{{processing ? 'Submitting your payment....' : 'AUTO PAY IS SCHEDULED'}}</span>
             </button>
             <button type="button" class="btn btn-success dropdown-toggle btn-lg active" [disabled]="!paymentReady || paymentLoadingMessage" data-toggle="dropdown">
               <span class="caret"></span>
@@ -175,12 +180,13 @@
           </div>
         </div>
       </div>
+
       <div *ngSwitchCase="'MakePayment'">
         <div class="form-group text-center" *ngIf="paymentSubmittedWithoutError != true">
           <div class="col-lg-8">
             <button
               type="submit"
-              class="btn  btn-primary"
+              class="btn  btn-primary btnCustom"
               (click)="checkAmountBeforeSubmit()"
               [disabled]="!paymentReady || paymentLoadingMessage">
               <i class="fa fa-spin fa-spinner" *ngIf="paymentLoadingMessage"></i>

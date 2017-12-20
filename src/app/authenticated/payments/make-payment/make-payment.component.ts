@@ -49,7 +49,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   LatestBillAmount: number;
   LatestBillPaymentDate: Date;
   dollarAmountFormatter: string;
-
+  processing: boolean = null;
   PaymethodSelected: Paymethod = null;
 
   @ViewChild(PaymethodAddCcComponent) private addCreditCardComponent: PaymethodAddCcComponent;
@@ -171,8 +171,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                             this.LatestBillPaymentDate = PaymentsHistoryItems[0].PaymentDate;
                           }
                         }
+                        this.setFlags();
                       });
-                    this.setFlags();
                   }
                 );
                             }});
@@ -248,6 +248,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   }
 
   checkAmountBeforeSubmit() {
+    this.processing = true;
     let payment_entered: string;     let pay_entered: number; let errorMessage: string = null;
     payment_entered = String(get(this.formGroup.value, 'payment_now'));
     if ( payment_entered.substring(0, 1)  === '$') {
@@ -255,6 +256,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     } else {
       pay_entered = Number(payment_entered);
     }
+    console.log('payment', pay_entered);
     // console.log('first char', payment_entered.substring(0, 1) );
     // console.log('payment_entered', pay_entered);
     // pay_entered = Number((String(get(this.formGroup.value, 'payment_now')).slice(1)));
@@ -271,6 +273,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
         this.paymentConfirmationModal.hideConfirmationMessageModal();
         this.paymentSubmit();
       }
+    } else {
+      this.processing = false;
     }
   }
 
@@ -363,6 +367,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
         console.log('An error occurred getting the Paymethod to charge. error = ', error);
         alert('An error occurred and needs to be handled.\nPlease view the console.');
         this.paymentLoadingMessage = null;
+        this.processing = false;
       })
 
       // Pass the Paymethod data to the Payments service.
@@ -388,19 +393,23 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             this.paymentLoadingMessage = null;
             this.PaymentsHistoryStore.LoadPaymentsHistory(this.ActiveServiceAccount);
             this.ServiceAccountService.UpdateServiceAccounts(true);
+            this.processing = false;
           },
           error => {
             this.paymentSubmittedWithoutError = false;
             console.log('An error occurred charging the paymethod!', error);
             this.paymentLoadingMessage = null;
+            this.processing = false;
           },
-          () => this.PaymentsHistoryService.AddNewPaymentToHistory({
+          () => { this.PaymentsHistoryService.AddNewPaymentToHistory({
             PaymentDate: new Date,
             PaymentAmount: AuthorizationAmount,
             PaymentStatus: 'Processing',
             PaymentMethod: PaymethodToCharge.CreditCard ? 'Credit Card' : 'eCheck',
             PaymentAccount: PaymethodToCharge.CreditCard ? PaymethodToCharge.CreditCard.AccountNumber : PaymethodToCharge.BankAccount.AccountNumber
-      })
+      });
+
+          }
         );
 
       });
