@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit, SimpleChanges, ViewChild } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -27,13 +27,13 @@ import { IOfferSelectionPayLoad } from 'app/shared/models/offerselectionpayload'
 import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-confirmation-modal.component';
 import { CustomerAccountService } from '../../../../core/CustomerAccount.service';
 import { CustomerAccount } from '../../../../core/models/customeraccount/customeraccount.model';
-
+import * as $ from 'jquery';
 @Component({
   selector: 'mygexa-my-current-plan',
   templateUrl: './my-current-plan.component.html',
   styleUrls: ['./my-current-plan.component.scss']
 })
-export class MyCurrentPlanComponent implements OnInit, OnDestroy {
+export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy {
   // @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
   @ViewChild('errorModal') errorModal: ErrorModalComponent;
   @ViewChild('planConfirmationModal') planConfirmationModal: PlanConfirmationModalComponent;
@@ -64,6 +64,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   renewalUpgradeFormGroup: FormGroup;
   offerSelectionType = OfferSelectionType;
   offerSelectionPayLoad: IOfferSelectionPayLoad;
+  showViewMoreRenewals: boolean = false;
 
   constructor(private userService: UserService,
               private serviceAccountService: ServiceAccountService,
@@ -129,7 +130,15 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
 
     }
   }
-
+  ngAfterViewInit() {
+    var ele = $('#moreRenewal');
+    if(ele) {
+      this.showViewMoreRenewals = true;
+    }
+    else {
+      this.showViewMoreRenewals = false;
+    }
+  }
   setFlags() {
     if (this.ActiveServiceAccount) {
       if (this.isRenewalPending) {
@@ -296,5 +305,10 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
       this.renewalUpgradeFormGroup.get('rewardsNumber').setValue(this.offerSelectionPayLoad.Partner_Name_On_Account);
     }
     this.createRenewal();
+  }
+  scroll2renewalSection() {
+    var ele = $('#moreRenewal');
+    //console.log(ele.offset().left);
+    window.scrollTo({ left: ele.offset().left, top: ele.offset().top, behavior: 'smooth' });
   }
 }

@@ -206,4 +206,8 @@
    .pd-bt-0 {
      padding-bottom: 0px;
    }
-
+.view-more, .view-more:focus {
+  outline: 0 none;
+  text-decoration: none;
+  margin-top: 15px;
+}
