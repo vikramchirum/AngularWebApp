@@ -49,7 +49,8 @@
         >
           <option *ngFor="let month of months" [value]="month[0]">{{ month[0] }} - {{ month[1] }}</option>
         </select>
-        <small class="text-success"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
+        <small class="text-danger" *ngIf="formGroup.controls?.cc_month.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
+        <small class="text-success" *ngIf="formGroup.controls?.cc_month.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
       <div class="col-md-3 col-lg-3">
         <select
           class="form-control "
@@ -58,7 +59,8 @@
         >
           <option *ngFor="let year of years" [value]="year">{{ year }}</option>
         </select>
-        <small class="text-success"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
+        <small class="text-danger" *ngIf="formGroup.controls?.cc_year.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
+        <small class="text-success" *ngIf="formGroup.controls?.cc_year.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
     </div>
     <div class="form-group">
       <label for="payment-horizontal-cc-cvv" class="col-md-3 control-label">CVV</label>
@@ -70,7 +72,8 @@
           formControlName="cc_ccv"
           maxlength="3"
         />
-        <small class="text-danger" *ngIf="formGroup.controls?.cc_ccv.errors"><i class="fa fa-fw fa-asterisk"></i> required</small> <small class="text-success" *ngIf="formGroup.controls?.cc_ccv.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
+        <small class="text-danger" *ngIf="formGroup.controls?.cc_ccv.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
+        <small class="text-success" *ngIf="formGroup.controls?.cc_ccv.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
     </div>
   </ng-template>
   <ng-template #FormNormal>
