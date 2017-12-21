@@ -89,8 +89,8 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
                       this.LatestBillPaymentDate = this.payments[0].PaymentDate;
                     }
                   }
+                  this.setFlags();
                 });
-              this.setFlags();
             });
           // this.PaymentsHistoryService.GetPaymentsHistoryCacheable(result).subscribe(
       }

@@ -81,7 +81,6 @@ export class MyBillComponent implements OnInit, OnDestroy {
                         this.showDueDate = true;
                       }
                     }
-
                   }
                   this.setFlags();
                 });
