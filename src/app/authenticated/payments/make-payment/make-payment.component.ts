@@ -37,7 +37,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   paymentOneTimeValid: boolean = null;
   paymentSubmittedWithoutError: boolean = null;
   formGroup: FormGroup = null;
-
+  zeroAmountEntered: boolean = null;
   totalDue: number;
   pastDue: number;
   pastDueExists: boolean = null;
@@ -140,6 +140,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.checkAmount();
     this.dollarAmountFormatter = environment.DollarAmountFormatter;
     this.CustomerAccountSubscription = this.CustomerAccountService.CustomerAccountObservable.subscribe(
       CustomerAccount => this.CustomerAccount = CustomerAccount
@@ -246,9 +247,23 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
       this.formGroup.controls['payment_now'].setValue('');
     }
   }
-
+  checkAmount() {
+    console.log('hi');
+    let payment_entered: string;     let pay_entered: number;
+    payment_entered = String(get(this.formGroup.value, 'payment_now'));
+    if ( payment_entered.substring(0, 1)  === '$') {
+      pay_entered = Number(payment_entered.slice(1));
+    } else {
+      pay_entered = Number(payment_entered);
+    }
+    if (pay_entered === 0) {
+      this.zeroAmountEntered = true;
+    } else {
+      this.zeroAmountEntered = false;
+    }
+  }
   checkAmountBeforeSubmit() {
-    this.processing = true;
+    this.processing = true; this.zeroAmountEntered = false;
     let payment_entered: string;     let pay_entered: number; let errorMessage: string = null;
     payment_entered = String(get(this.formGroup.value, 'payment_now'));
     if ( payment_entered.substring(0, 1)  === '$') {
@@ -275,6 +290,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
       }
     } else {
       this.processing = false;
+      this.zeroAmountEntered = true;
     }
   }
 

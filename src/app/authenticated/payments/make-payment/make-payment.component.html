@@ -48,11 +48,18 @@
           id="payment-amount"
           formControlName="payment_now"
           autocomplete="off"
+          (keyup)="checkAmount()"
         />
       </div>
-       <div class="col-md-1">
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-3">
+      </div>
+      <div class="col-md-8 col-lg-6">
+        <small class="text-danger" *ngIf="zeroAmountEntered === true"><i class="fa fa-fw fa-asterisk"></i> Choose an amount greater than $0</small>
         <small class="text-danger" *ngIf="formGroup.controls?.payment_now.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
-        <small class="text-success" *ngIf="formGroup.controls?.payment_now.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+        <small class="text-success" *ngIf="formGroup.controls?.payment_now.valid && !(zeroAmountEntered === true)"><i class="fa fa-fw fa-check"></i> Ok</small>
       </div>
     </div>
 
