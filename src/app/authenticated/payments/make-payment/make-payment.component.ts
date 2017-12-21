@@ -399,7 +399,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             PaymentAmount: AuthorizationAmount,
             PaymentStatus: 'Processing',
             PaymentMethod: PaymethodToCharge.CreditCard ? 'Credit Card' : 'eCheck',
-            PaymentAccount: PaymethodToCharge.CreditCard ? PaymethodToCharge.CreditCard.AccountNumber : PaymethodToCharge.BankAccount.AccountNumber
+            PaymentAccount: PaymethodToCharge.CreditCard ? (PaymethodToCharge.CreditCard.AccountNumber ? PaymethodToCharge.CreditCard.AccountNumber : ''  ) : PaymethodToCharge.BankAccount.AccountNumber
       })
         );
 
