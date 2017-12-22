@@ -132,10 +132,9 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   ngAfterViewInit() {
     var ele = $('#moreRenewal');
-    if(ele) {
+    if (ele) {
       this.showViewMoreRenewals = true;
-    }
-    else {
+    } else {
       this.showViewMoreRenewals = false;
     }
   }
@@ -143,7 +142,9 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.ActiveServiceAccount) {
       if (this.isRenewalPending) {
         this.currentView = 'PendingRenewalPlan';
-        this.RenewalAccount.Existing_Renewal.End_Date = this.utilityService.addMonths(new Date(this.RenewalAccount.Existing_Renewal.Start_Date), this.RenewalAccount.Existing_Renewal.Offer.Term);
+        if (this.RenewalAccount.Existing_Renewal) {
+          this.RenewalAccount.Existing_Renewal.End_Date = this.utilityService.addMonths(new Date(this.RenewalAccount.Existing_Renewal.Start_Date), this.RenewalAccount.Existing_Renewal.Offer.Term);
+        }
       } else if (this.isUpForRenewal && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate) {
         this.currentView = 'RenewalPlan';
       } else if (this.ActiveServiceAccount.Current_Offer.IsHoldOverRate) {
@@ -308,7 +309,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   scroll2renewalSection() {
     var ele = $('#moreRenewal');
-    //console.log(ele.offset().left);
+    // console.log(ele.offset().left);
     window.scrollTo({ left: ele.offset().left, top: ele.offset().top, behavior: 'smooth' });
   }
 }

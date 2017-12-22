@@ -301,6 +301,8 @@ export class RenewalGaugeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.renewalGaugeSubscription.unsubscribe();
+    if (this.renewalGaugeSubscription) {
+      this.renewalGaugeSubscription.unsubscribe();
+    }
   }
 }
