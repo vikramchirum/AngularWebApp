@@ -72,7 +72,7 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.plansServicesSubscription.unsubscribe();
+    if (this.plansServicesSubscription) { this.plansServicesSubscription.unsubscribe(); }
     if (this.IsUpForRenewal) {
       result(this.OffersServiceSubscription, 'unsubscribe');
     }

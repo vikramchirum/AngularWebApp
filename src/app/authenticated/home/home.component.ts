@@ -10,6 +10,7 @@ import { InvoiceStore } from '../../core/store/invoicestore';
 import { PaymentsHistoryStore } from '../../core/store/paymentsstore';
 import { AccountType } from '../../core/models/enums/accounttype';
 import { NotificationType } from '../../core/models/enums/notificationtype';
+import { RenewalStore } from '../../core/store/renewalstore';
 
 @Component({
   selector: 'mygexa-home',
@@ -19,7 +20,6 @@ import { NotificationType } from '../../core/models/enums/notificationtype';
 export class HomeComponent implements OnInit, OnDestroy {
   serviceAccountServiceSubscription: Subscription = null;
   notificationOptionsStoreSubscription: Subscription = null;
-
   ActiveServiceAccount: ServiceAccount = null;
   Is_Auto_Bill_Pay: boolean = null;
   Paperless_Billing: boolean = null;
@@ -32,8 +32,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   SearchNotificationOptions = null;
   currentView: string = null;
 
+
   constructor( private ServiceAccountService: ServiceAccountService,
                private OfferStore: OffersStore,
+               private renewalStore: RenewalStore,
                private NotificationOptionsStore: NotificationOptionsStore,
                private InvoiceStore: InvoiceStore,
                private PaymentStore: PaymentsHistoryStore
@@ -45,6 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (ActiveServiceAccount) {
 
           this.ActiveServiceAccount = ActiveServiceAccount;
+          this.renewalStore.LoadRenewalDetails(this.ActiveServiceAccount.Id);
           this.SearchNotificationOptions = {
             Account_Info: {
               Account_Type: AccountType.GEMS_Residential_Customer_Account,
