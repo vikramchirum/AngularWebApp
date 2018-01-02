@@ -71,12 +71,13 @@ export class UsageSummaryComponent implements OnDestroy {
 
   // Fetching labels and data from api response and to show it on chart.
   populateChart(usageHistory) {
-
+    usageHistory.sort((a, b) => a.date - b.date);
+    //console.log("usageHistory**************************",usageHistory);
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
       'September', 'October', 'November', 'December'];
-
+      
     const months: any[] = takeRight(usageHistory, 3);
-
+    
     // Add the new bar chart:
     this.barChartData.push({
       datasets: [{
