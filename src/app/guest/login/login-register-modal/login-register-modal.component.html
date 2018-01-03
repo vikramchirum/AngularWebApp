@@ -15,176 +15,220 @@
           </div>
         </div>
         <div class="modal-body container-fluid">
-          <div class="row">
-            <div class="col-xs-12 col-md-8 col-md-offset-2">
-              <form id="registration" novalidate [formGroup]="registerForm"
-                          (ngSubmit)="save(registerForm.value, registerForm.valid)">
-                <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Service_Account_Id'].valid
+          <ng-template *ngIf="!registerClicked; then registrationFields else verificationFields;"></ng-template>
+          <ng-template #registrationFields>
+            <div class="row">
+              <div class="col-xs-12 col-md-8 col-md-offset-2">
+                <form id="registration" novalidate [formGroup]="registerForm"
+                      (ngSubmit)="save(registerForm.value, registerForm.valid)">
+                  <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Service_Account_Id'].valid
                   && formSubmitted}">
-                  <label class="control-label">Service Number</label>
-                  <input name="Service_Account_Id" type="text" class="form-control "
-                                 [formControl]="registerForm.controls['Service_Account_Id']"
-                                 placeholder="Enter your Service Number">
-                  <div class="has-error" *ngIf="registerForm.controls['Service_Account_Id'].hasError('required') && formSubmitted
+                    <label class="control-label">Service Number</label>
+                    <input name="Service_Account_Id" type="text" class="form-control "
+                           [formControl]="registerForm.controls['Service_Account_Id']"
+                           placeholder="Enter your Service Number">
+                    <div class="has-error" *ngIf="registerForm.controls['Service_Account_Id'].hasError('required') && formSubmitted
                        || registerForm.controls['Service_Account_Id'].touched || registerForm.controls['Service_Account_Id'].hasError('incorrect')">
-                  <div class="help-block">
+                      <div class="help-block">
                      <span *ngIf="registerForm.controls['Service_Account_Id'].hasError('required')
                     && formSubmitted"> Service number is required. </span>
-                    <span *ngIf="registerForm.controls['Service_Account_Id'].hasError('incorrect')
+                        <span *ngIf="registerForm.controls['Service_Account_Id'].hasError('incorrect')
                     && formSubmitted"> We are having trouble finding this service account number. Please check the number, or call 866-961-9399 for assistance. </span>
-                  </div> </div>
-                </div>
-
-
-                 <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Zip_Code'].valid
+                      </div> </div>
+                  </div>
+                  <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Zip_Code'].valid
                   && formSubmitted}">
-                   <label class="control-label">Zip Code</label>
+                    <label class="control-label">Zip Code</label>
                     <input name="Zip_Code" type="text" class="form-control "
-                                 placeholder=" Enter your Zip Code" [formControl]="registerForm.controls['Zip_Code']">
-                  <div class="has-error" *ngIf="registerForm.controls['Zip_Code'].hasError('required') && formSubmitted ||  registerForm.controls['Zip_Code'].hasError('validateInteger') && registerForm.controls['Zip_Code'].touched || registerForm.controls['Zip_Code'].hasError('minlength')
+                           placeholder=" Enter your Zip Code" [formControl]="registerForm.controls['Zip_Code']">
+                    <div class="has-error" *ngIf="registerForm.controls['Zip_Code'].hasError('required') && formSubmitted ||  registerForm.controls['Zip_Code'].hasError('validateInteger') && registerForm.controls['Zip_Code'].touched || registerForm.controls['Zip_Code'].hasError('minlength')
                     && registerForm.controls['Zip_Code'].touched || registerForm.controls['Zip_Code'].hasError('maxlength')
                     && registerForm.controls['Zip_Code'].touched">
-                    <div class="help-block">
+                      <div class="help-block">
                         <span *ngIf="registerForm.controls['Zip_Code'].hasError('required')
                     && formSubmitted"> Zip code is required. </span><span  *ngIf="registerForm.controls['Zip_Code'].hasError('validateInteger') && registerForm.controls['Zip_Code'].touched">Zip code should be a number. </span>
-                      <span *ngIf="registerForm.controls['Zip_Code'].hasError('minlength')
+                        <span *ngIf="registerForm.controls['Zip_Code'].hasError('minlength')
                     && registerForm.controls['Zip_Code'].touched">Zip must be at least 5 characters long. </span><span *ngIf="registerForm.controls['Zip_Code'].hasError('maxlength')
                     && registerForm.controls['Zip_Code'].touched">Zip cannot exceed 5
                     characters. </span>
+                      </div>
                     </div>
-                   </div>
-                </div>
+                  </div>
 
-                <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['User_name'].valid
+                  <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['User_name'].valid
                   && formSubmitted}">
-                  <label class="control-label">User Name</label>
+                    <label class="control-label">User Name</label>
                     <input name="User_name" type="text" class="form-control "
-                                 placeholder="Create Username"
-                                 [formControl]="registerForm.controls['User_name']">
-                  <!--<div class="help-block" >Username must be at least 8 characters.</div>-->
-                  <div class="has-error" *ngIf="registerForm.controls['User_name'].hasError('required') && formSubmitted  || registerForm.controls['User_name'].hasError('minlength')
+                           placeholder="Create Username"
+                           [formControl]="registerForm.controls['User_name']">
+                    <!--<div class="help-block" >Username must be at least 8 characters.</div>-->
+                    <div class="has-error" *ngIf="registerForm.controls['User_name'].hasError('required') && formSubmitted  || registerForm.controls['User_name'].hasError('minlength')
                     && registerForm.controls['User_name'].touched || registerForm.controls['User_name'].hasError('maxlength')
                       && registerForm.controls['User_name'].touched || registerForm.controls['User_name'].hasError('userExists')
                       && registerForm.controls['User_name'].touched || registerForm.controls['User_name'].hasError('userNameInUse')
                     && registerForm.controls['User_name'].touched">
-                    <div class="help-block">
+                      <div class="help-block">
                         <span *ngIf="registerForm.controls['User_name'].hasError('required')
                     && formSubmitted"> Username is required. </span>
-                      <span *ngIf="registerForm.controls['User_name'].hasError('minlength')
+                        <span *ngIf="registerForm.controls['User_name'].hasError('minlength')
                     && registerForm.controls['User_name'].touched">Username must be at least 8 characters long. </span>
-                      <span *ngIf="registerForm.controls['User_name'].hasError('userExists')
+                        <span *ngIf="registerForm.controls['User_name'].hasError('userExists')
                     && registerForm.controls['User_name'].touched">Sorry, this user name has already been taken. Please try again. </span>
-                      <span *ngIf="registerForm.controls['User_name'].hasError('userNameInUse')
+                        <span *ngIf="registerForm.controls['User_name'].hasError('userNameInUse')
                     && registerForm.controls['User_name'].touched"> A user name has already been created for this Service Account Number. Please check the account number, or
                         <a routerLink="/login/recover-username"><u>recover your user name.</u></a> </span>
+                      </div>
                     </div>
                   </div>
-                  <!--<div class="has-error" *ngIf="userNameExists || userNameInUse" >-->
-                    <!--<div class="help-block">-->
-                      <!--<span *ngIf="userNameExists" >Sorry, this user name has already been taken. Please try again.</span>-->
-                      <!--<span *ngIf="userNameInUse"> A user name has already been created for this Service Account Number. Please check the account number, or-->
-                        <!--<a routerLink="/login/recover-username"><u>recover your user name.</u></a></span>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                </div>
-
-                <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Password'].valid
+                  <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Password'].valid
                   && formSubmitted}">
-                  <label class="control-label">Password</label>
+                    <label class="control-label">Password</label>
                     <input name="Password" type="password" class="form-control "
-                                 placeholder="Create Password"
-                                 [formControl]="registerForm.controls['Password']">
-
-                  <div class="has-error" *ngIf="registerForm.controls['Password'].hasError('required') && formSubmitted ||  registerForm.controls['Password'].hasError('validatePassword') && registerForm.controls['Password'].touched || registerForm.controls['Password'].hasError('minlength')
+                           placeholder="Create Password"
+                           [formControl]="registerForm.controls['Password']">
+                    <div class="has-error" *ngIf="registerForm.controls['Password'].hasError('required') && formSubmitted ||  registerForm.controls['Password'].hasError('validatePassword') && registerForm.controls['Password'].touched || registerForm.controls['Password'].hasError('minlength')
                     && registerForm.controls['Password'].touched || registerForm.controls['Password'].hasError('maxlength')
                     && registerForm.controls['Password'].touched">
-                  <div class="help-block">
+                      <div class="help-block">
                         <span *ngIf="registerForm.controls['Password'].hasError('required')
                     && formSubmitted"> Password is required. </span>
-                    <span  *ngIf="registerForm.controls['Password'].hasError('validatePassword') && registerForm.controls['Password'].touched">Password must have at least one uppercase letter, one lowercase letter, one number. </span>
-                    <span *ngIf="registerForm.controls['Password'].hasError('minlength')
+                        <span  *ngIf="registerForm.controls['Password'].hasError('validatePassword') && registerForm.controls['Password'].touched">Password must have at least one uppercase letter, one lowercase letter, one number. </span>
+                        <span *ngIf="registerForm.controls['Password'].hasError('minlength')
                     && registerForm.controls['Password'].touched">Password be at least 8 characters long. </span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-
-                </div>
-
-                 <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['ConfirmPassword'].valid
+                  <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['ConfirmPassword'].valid
                   && formSubmitted}">
-                   <label class="control-label">Confirm Password</label>
+                    <label class="control-label">Confirm Password</label>
                     <input name="ConfirmPassword" class="form-control "
-                                 placeholder="Confirm Password" type="password"
-                                 [formControl]="registerForm.controls['ConfirmPassword']">
-                  <div class="has-error" *ngIf="(registerForm.controls['ConfirmPassword'].hasError('required') && formSubmitted) ||
+                           placeholder="Confirm Password" type="password"
+                           [formControl]="registerForm.controls['ConfirmPassword']">
+                    <div class="has-error" *ngIf="(registerForm.controls['ConfirmPassword'].hasError('required') && formSubmitted) ||
                   (registerForm.controls['ConfirmPassword'].touched && !(registerForm.controls['ConfirmPassword'].value == registerForm.controls['Password'].value))">
-                    <div class="help-block">
+                      <div class="help-block">
                        <span *ngIf="registerForm.controls['ConfirmPassword'].hasError('required')
                     && formSubmitted"> Confirm Password is required. </span>
-                      <span *ngIf="!(registerForm.controls['ConfirmPassword'].value == registerForm.controls['Password'].value)
+                        <span *ngIf="!(registerForm.controls['ConfirmPassword'].value == registerForm.controls['Password'].value)
                     && registerForm.controls['ConfirmPassword'].touched">Passwords mismatch. </span>
+                      </div>
                     </div>
                   </div>
-                  <!--<div class="has-error" *ngIf="!registerForm.controls['ConfirmPassword'].hasError('required')-->
-                     <!--&& formSubmitted-->
-                     <!--&& !(registerForm.controls['ConfirmPassword'].value == registerForm.controls['Password'].value)"> <div class="help-block">Passwords mismatch</div> </div>-->
-                </div>
-                <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Email_Address'].valid
+                  <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Email_Address'].valid
                   && formSubmitted}">
-                  <label class="control-label">Email</label>
+                    <label class="control-label">Email</label>
                     <input name="Email_Address" type="text"
-                                 class="form-control " placeholder="Enter Email"
-                                 [formControl]="registerForm.controls['Email_Address']">
-                  <div class="has-error"
-                             *ngIf="!registerForm.controls['Email_Address'].valid" >
-                    <div class="help-block">
+                           class="form-control " placeholder="Enter Email"
+                           [formControl]="registerForm.controls['Email_Address']">
+                    <div class="has-error"
+                         *ngIf="!registerForm.controls['Email_Address'].valid" >
+                      <div class="help-block">
                        <span *ngIf="registerForm.controls['Email_Address'].hasError('required')
                     && formSubmitted">  Email is required. </span>
-                      <span *ngIf="registerForm.controls['Email_Address'].hasError('validateEmail')
+                        <span *ngIf="registerForm.controls['Email_Address'].hasError('validateEmail')
                     && registerForm.controls['Email_Address'].touched">Enter a valid email. Email format should be <i>john@doe.com</i>. </span>
+                      </div>
                     </div>
                   </div>
-                  <!--<div class="has-error" *ngIf="registerForm.controls['Email_Address'].hasError('validateEmail') && formSubmitted"> -->
-                    <!--<div class="help-block">Enter a valid email. Email format should be <i>john@doe.com</i>.</div> </div>-->
-                </div>
-
-                 <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Security_Question_Id'].valid
+                  <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Security_Question_Id'].valid
                   && formSubmitted}">
-                   <label class="control-label">Security Question</label>
+                    <label class="control-label">Security Question</label>
                     <select name="Security_Question_Id" class="form-control" style="padding-left:40px "
-                                  [formControl]="registerForm.controls['Security_Question_Id']">
+                            [formControl]="registerForm.controls['Security_Question_Id']">
                       <option value="">Please select a security question</option>
                       <option *ngFor="let secQues of secQuesArray" [value]="secQues.Id">{{ secQues.Question }} </option>
                     </select>
-                  <div class="has-error" *ngIf="registerForm.controls['Security_Question_Id'].hasError('required')
+                    <div class="has-error" *ngIf="registerForm.controls['Security_Question_Id'].hasError('required')
                      && formSubmitted "> <div class="help-block">Security question is required.</div> </div>
-
-                </div>
-
-                 <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Security_Question_Answer'].valid
+                  </div>
+                  <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Security_Question_Answer'].valid
                   && formSubmitted}">
-                   <label class="control-label">Security Answer</label>
+                    <label class="control-label">Security Answer</label>
                     <input name="Security_Question_Answer" type="text" class="form-control "
-                                 [formControl]="registerForm.controls['Security_Question_Answer']"
-                                 placeholder="Enter your response">
-                  <div class="has-error" *ngIf="registerForm.controls['Security_Question_Answer'].hasError('required')
+                           [formControl]="registerForm.controls['Security_Question_Answer']"
+                           placeholder="Enter your response">
+                    <div class="has-error" *ngIf="registerForm.controls['Security_Question_Answer'].hasError('required')
                     && formSubmitted"> <div class="help-block">Response is required.</div> </div>
-                </div>
-
-                 <div class="form-group"  *ngIf="errorMsg">
-                  <div class="alert alert-danger" ><b>{{errorMsg}}</b></div>
-                </div>
-                <div class="text-right">
-                  <button type="submit" *ngIf="!processing"
-                                class="btn-block btn btn-primary">Register </button>
-                  <button type="submit" *ngIf="processing" disabled
-                          class="btn-block btn btn-primary">
-                    <i class="fa fa-spin fa-cog"></i> Registering... </button>
-                </div>
-              </form>
+                  </div>
+                  <div class="form-group"  *ngIf="errorMsg">
+                    <div class="alert alert-danger" ><b>{{errorMsg}}</b></div>
+                  </div>
+                  <div class="text-right">
+                    <button type="submit" *ngIf="!processing"
+                            class="btn-block btn btn-primary">Register </button>
+                    <button type="submit" *ngIf="processing" disabled
+                            class="btn-block btn btn-primary">
+                      <i class="fa fa-spin fa-cog"></i> Registering... </button>
+                  </div>
+                </form>
+              </div>
             </div>
-          </div>
+          </ng-template>
+          <ng-template #verificationFields>
+            <div class="row">
+              <div class="col-xs-12 col-md-8 col-md-offset-2">
+                <form id="verification" novalidate [formGroup]="verificationForm">
+                  <div class="form-group">
+                    <div class="alert alert-warning" >Please verify one of the following so we can complete your registration.</div>
+                  </div>
+                  <div [ngSwitch]="currentView">
+                    <div *ngSwitchCase="'ssn'">
+                      <div class="form-group">
+                        <label class="control-label">Last 4 Digits of SSN Number</label>
+                        <input name="Last_4" type="text" class="form-control "
+                               [formControl]="verificationForm.controls['Last_4']"
+                               placeholder="XXXX">
+                      </div>
+                    </div>
+                    <div *ngSwitchCase="'ddl/id'">
+                      <div class="form-group">
+                        <label class="control-label">Drivers License Number and State Issued</label>
+                        <input name="DDL" type="text" class="form-control "
+                               [formControl]="verificationForm.controls['DDL']"
+                               placeholder="Enter your License Number">
+                      </div>
+                      <div class="form-group">
+                        <select name="State" class="form-control"
+                                [formControl]="verificationForm.controls['State']">
+                          <option value="">State</option>
+                        </select>
+                      </div>
+                      <br>
+
+                      <div class="form-group" style="color: #2eb134;">
+                        or
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label">Passport ID Number</label>
+                        <input name="Id" type="text" class="form-control "
+                               [formControl]="verificationForm.controls['Id']"
+                               placeholder="Passport ID Number">
+                      </div>
+                    </div>
+                    <div *ngSwitchDefault>
+                      <div class="form-group">
+                        <label class="control-label">Last 4 Digits of SSN Number</label>
+                        <input name="Last_4" type="text" class="form-control "
+                               [formControl]="verificationForm.controls['Last_4']"
+                               placeholder="XXXX">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="text-right">
+                    <button type="button"
+                            class="btn-block btn btn-primary"> VERIFY AND COMPLETE  </button>
+                    <!--<button type="submit" *ngIf="processing" disabled-->
+                            <!--class="btn-block btn btn-primary">-->
+                      <!--<i class="fa fa-spin fa-cog"></i> Registering... </button>-->
+                  </div>
+                </form>
+              </div>
+              </div>
+          </ng-template>
         </div>
       </div>
     </div>
   </div>
 </section>
+
