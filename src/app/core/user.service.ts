@@ -52,6 +52,7 @@ export class UserService implements CanActivate {
   private updateSecQuestion = '/user/updateSecurityQuestion';
   private updateUsername = '/user/updateUsername';
   private updatePassword = '/user/updatePassword';
+  private getStates = '/Enums/States';
   get user_token(): string {
 
     // See if we already have it cached and return it.
@@ -217,6 +218,11 @@ export class UserService implements CanActivate {
       .map(res => res.json())
       .map(res => this.getSecurityQuestionsCached = res)
       .catch(error => this.httpClient.handleHttpError(error));
+  }
+
+  getStatesAbb(): Observable<string[]> {
+    return this.httpClient.get(this.getStates)
+      .map(res => { return <string[]>res.json(); });
   }
 
   getSecQuesByUserName(user_name: string): Observable<string> {
