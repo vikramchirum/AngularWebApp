@@ -57,7 +57,7 @@ export class LoginRegisterModalComponent implements OnInit {
     console.log('register model', model);
     console.log('register verification model', modelVerify);
     if (this.currentView === 'ssn') {
-      if (modelVerify.Last_4 === this.customerDetails.Social_Security_Number) {
+      if (modelVerify.Last_4 === String(this.customerDetails.Social_Security_Number).slice(-4)) {
         this.resgister(model);
       } else if (modelVerify.DDL && modelVerify.DDL === this.customerDetails.Drivers_License.Number && modelVerify.State === this.customerDetails.Drivers_License.State) {
         this.resgister(model);
