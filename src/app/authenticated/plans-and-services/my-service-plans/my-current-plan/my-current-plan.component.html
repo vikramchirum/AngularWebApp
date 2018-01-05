@@ -34,6 +34,8 @@
                 class="sup-text">&cent;</sup>
                 <small class="sub-text">per kWh</small>
               </h2>
+              
+              
               <p class="bg-default">TERM: {{RenewalAccount?.Existing_Renewal?.Offer?.Term}} Months</p>
               <p style="color:orange"><i class="fa fa-chevron-right" style="color:orange"></i> START: {{RenewalAccount?.Existing_Renewal?.Start_Date | date: 'MM/dd/yyyy'}}</p>
               <p class="bg-default">END: {{RenewalAccount.Existing_Renewal.End_Date | date:'MM/dd/yyyy'}}</p>
@@ -136,7 +138,7 @@
         <div layout-align="center">
           <md-card class="current-plan-card" *ngIf="ActiveServiceAccount">
             <md-card-title>
-              <h2>{{ActiveServiceAccount.Current_Offer.Product_Name}}
+              <h2>{{ActiveServiceAccount.Current_Offer.Product_Name}} FOO
                 <small><i class="fa fa-info-circle" (click)="pop.show()"></i></small>
               </h2>
               <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
@@ -153,9 +155,10 @@
                 class="sup-text">&cent;</sup>
                 <small class="sub-text">per kWh</small>
               </h2>
-              <p class="bg-default">TERM: {{ActiveServiceAccount.Current_Offer.Term}} Months</p>
-              <p>START: {{ActiveServiceAccount.Contract_Start_Date | date: 'MM/dd/yyyy'}}</p>
-              <p class="bg-default">END: {{ActiveServiceAccount.Calculated_Contract_End_Date | date:'MM/dd/yyyy'}}</p>
+              <p class="bg-default">AT: {{ActiveServiceAccount.Current_Offer.Featured_Usage_Level}}</p>
+              <p >TERM: {{ActiveServiceAccount.Current_Offer.Term}} Months</p>
+              <p class="bg-default">START: {{ActiveServiceAccount.Contract_Start_Date | date: 'MM/dd/yyyy'}}</p>
+              <p>END: {{ActiveServiceAccount.Calculated_Contract_End_Date | date:'MM/dd/yyyy'}}</p>
             </md-card-content>
           </md-card>
         </div>
