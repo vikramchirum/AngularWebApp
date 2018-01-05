@@ -8,7 +8,7 @@
   <div class="thumbnail">
     <div class="clearfix">
       <div *ngFor='let index of barChartData' class="bar-chart col-md-offset-1 col-md-10">
-        <canvas
+        <canvas class="barCanvas"
           baseChart
           [datasets]="index.datasets"
           [labels]="index.labels"
