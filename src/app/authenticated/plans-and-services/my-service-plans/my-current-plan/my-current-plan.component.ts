@@ -157,6 +157,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
 
   checkCurrentFeaturedUsageLevel(CurrentOffer: IServiceAccountPlanHistoryOffer) {
     if (CurrentOffer) {
+        this.Featured_Usage_Level = CurrentOffer.Featured_Usage_Level;
         switch (CurrentOffer.Featured_Usage_Level) {
           case  '500 kWh': {
             this.Price_atFeatured_Usage_Level_Current = CurrentOffer.RateAt500kwh;
