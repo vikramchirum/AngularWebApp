@@ -138,7 +138,7 @@
         <div layout-align="center">
           <md-card class="current-plan-card" *ngIf="ActiveServiceAccount">
             <md-card-title>
-              <h2>{{ActiveServiceAccount.Current_Offer.Product_Name}} FOO
+              <h2>{{ActiveServiceAccount.Current_Offer.Product_Name}}
                 <small><i class="fa fa-info-circle" (click)="pop.show()"></i></small>
               </h2>
               <div #pop="bs-popover" [popover]="options" placement="bottom" outsideClick="true">
@@ -155,7 +155,7 @@
                 class="sup-text">&cent;</sup>
                 <small class="sub-text">per kWh</small>
               </h2>
-              <p class="bg-default">AT: {{ActiveServiceAccount.Current_Offer.Featured_Usage_Level}}</p>
+              <p class="text-center bg-default">AT {{ActiveServiceAccount.Current_Offer.Featured_Usage_Level}}</p>
               <p >TERM: {{ActiveServiceAccount.Current_Offer.Term}} Months</p>
               <p class="bg-default">START: {{ActiveServiceAccount.Contract_Start_Date | date: 'MM/dd/yyyy'}}</p>
               <p>END: {{ActiveServiceAccount.Calculated_Contract_End_Date | date:'MM/dd/yyyy'}}</p>
