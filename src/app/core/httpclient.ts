@@ -130,7 +130,7 @@ export class HttpClient extends Http {
       console.log(DisplayErrMsg);
       return Observable.throw(errorResponse);
     } else if (error.status === 500) {
-      const internalServerErrorMessage = "We're sorry, something didn't work. Please try again";
+      const internalServerErrorMessage = {Message: "We're sorry, something didn't work. Please try again"};
       console.log(DisplayErrMsg);
       return Observable.throw(internalServerErrorMessage);
     } else if (error.status === 503) {
