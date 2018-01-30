@@ -7,6 +7,7 @@ import { assign } from 'lodash';
 import { ICustomerAccountDriversLicense } from './customeraccountdriverslicense.model';
 import { ICustomerAccountPrimaryPhone } from './customeraccountprimaryphone.model';
 import { ICustomerAccountContacts } from './customeraccountcontacts.model';
+import { ICustomerAccountAlternateID } from './customeraccountalternateid.model';
 
 export class CustomerAccount {
   Id: string;
@@ -19,6 +20,7 @@ export class CustomerAccount {
   Last_Name: string;
   Language: string;
   Drivers_License: ICustomerAccountDriversLicense;
+  AlternateID: ICustomerAccountAlternateID;
   Social_Security_Number: string;
   Past_Due: number;
   Bad_Debt_Balance: number;

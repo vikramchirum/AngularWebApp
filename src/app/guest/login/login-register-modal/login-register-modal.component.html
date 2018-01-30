@@ -176,43 +176,35 @@
                 <ng-template #verificationFields>
                   <ng-template *ngIf="currentView; then verificationForm else Loading;"></ng-template>
                   <ng-template #verificationForm>
-                    <form id="verification" novalidate [formGroup]="verificationForm" (ngSubmit)="verifyForm(registerForm.value, verificationForm.value)">
+                    <form id="verification" #verificationForm = "ngForm" (ngSubmit)="verifyForm(registerForm.value)">
                       <div class="alert alert-warning">Please verify one of the following so we can complete your registration.</div>
-                      <div [ngSwitch]="currentView">
-                        <div *ngSwitchCase="'ssn'">
-                          <div class="form-group">
+
+                          <div class="form-group" *ngIf="currentView === 'ssn'">
                             <label class="control-label">Last 4 Digits of SSN Number</label>
-                            <input name="Last_4" type="text" class="form-control "
-                                   [formControl]="verificationForm.controls['Last_4']"
+                            <input  [(ngModel)]="Last_4" name="Last_4" type="text" class="form-control"  #last4="ngModel"
                                    placeholder="XXXX">
                           </div>
-                        </div>
-                        <div *ngSwitchCase="'ddl/id'">
-                          <div class="form-group">
+                          <div class="form-group" *ngIf="currentView === 'ddl/id'">
                             <label class="control-label">Drivers License Number and State Issued</label>
-                            <input name="DDL" type="text" class="form-control "
-                                   [formControl]="verificationForm.controls['DDL']"
+                            <input  [(ngModel)]="DDL"  name="DDL" type="text" class="form-control" #ddl="ngModel"
                                    placeholder="Enter your License Number">
                           </div>
-                          <div class="form-group">
-                            <select name="State" class="form-control"
-                                    [formControl]="verificationForm.controls['State']">
-                              <option value="">State</option>
+                          <div class="form-group" *ngIf="currentView === 'ddl/id'">
+                            <select [(ngModel)]="State" name="State" class="form-control" #state="ngModel">
+                              <option value="">Select the State</option>
+                              <option *ngFor="let state of statesArray" [value]="state">{{ state }}
+                              </option>
                             </select>
                           </div>
                           <br>
-
-                          <div class="form-group" style="color: #2eb134;">
+                          <div class="form-group" *ngIf="currentView === 'ddl/id'" style="color: #2eb134;">
                             or
                           </div>
-                          <div class="form-group">
-                            <label class="control-label">Passport ID Number</label>
-                            <input name="Id" type="text" class="form-control "
-                                   [formControl]="verificationForm.controls['Id']"
-                                   placeholder="Passport ID Number">
+                          <div class="form-group" *ngIf="currentView === 'ddl/id'">
+                            <label class="control-label">Alternate ID Number</label>
+                            <input [(ngModel)]="Id" name="Id" type="text" class="form-control" #id="ngModel"
+                                   placeholder="Alternate ID Number">
                           </div>
-                        </div>
-                      </div>
                       <div class="form-group" *ngIf="errorMsg">
                         <div class="alert alert-danger"><b>{{errorMsg}}</b></div>
                       </div>

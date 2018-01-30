@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { equalCheck, validateEmail, validateInteger, validatePassword } from 'app/validators/validator';
 import { HttpClient } from '../../../core/httpclient';
 import { IRegUser } from '../../../core/models/register/register-user.model';
-import { IRegUserVerification } from '../../../core/models/register/register-verify.model';
 import { CustomerAccountStore } from '../../../core/store/CustomerAccountStore';
 import { CustomerAccount } from '../../../core/models/customeraccount/customeraccount.model';
 
@@ -18,14 +17,18 @@ import { CustomerAccount } from '../../../core/models/customeraccount/customerac
 })
 export class LoginRegisterModalComponent implements OnInit {
   @ViewChild('loginRegisterModal') public loginRegisterModal: ModalDirective;
+  Last_4: string = null;
+  DDL: string = null;
+  State: string = null;
+  Id: string = null;
   processing: boolean = null;
   registerClicked: boolean = null;
   registerForm: FormGroup = null;
-  verificationForm: FormGroup = null;
   formSubmitted: boolean = null;
   user: IRegUser = null;
   error: string = null;
   errorMsg: string = null;
+  statesArray: string[] = [];
   secQuesArray: ISecurityQuestions[] = [];
   currentView: string = null;
   customerDetails: CustomerAccount = null;
@@ -38,8 +41,6 @@ export class LoginRegisterModalComponent implements OnInit {
   ) {
     this.processing = this.registerClicked = false; this.errorMsg = null;
     this.registerForm = this.registerFormInit();
-    this.verificationForm = this.verificationFormInit();
-    // this.currentView = 'ddl/id';
   }
 
   public getSecurityQuestions() {
@@ -48,20 +49,30 @@ export class LoginRegisterModalComponent implements OnInit {
         response => this.secQuesArray = response,
         error => this.error = <any>error
       );
+    this.UserService.getStatesAbb().subscribe(
+      response => this.statesArray = response,
+      error => this.error = <any>error
+    );
   }
 
   ngOnInit() {
   }
 
-  verifyForm(model: IRegUser, modelVerify: IRegUserVerification) {
+  verifyForm(model: IRegUser) {
     console.log('register model', model);
-    console.log('register verification model', modelVerify);
+    console.log('register verification model', this.Last_4);
+    console.log('DDL', this.DDL);
+    console.log('State', this.State);
+
     if (this.currentView === 'ssn') {
-      if (modelVerify.Last_4 === String(this.customerDetails.Social_Security_Number).slice(-4)) {
+      if (this.Last_4 && this.Last_4 === String(this.customerDetails.Social_Security_Number).slice(-4)) {
+         this.resgister(model);
+      }
+    } else if (this.currentView === 'ddl/id') {
+       if (this.DDL && ((this.State + '-' + this.DDL) === this.customerDetails.Drivers_License.Number) && this.State === this.customerDetails.Drivers_License.State) {
         this.resgister(model);
-      } else if (modelVerify.DDL && modelVerify.DDL === this.customerDetails.Drivers_License.Number && modelVerify.State === this.customerDetails.Drivers_License.State) {
+      } else if (this.Id && this.Id === this.customerDetails.AlternateID.Number) {
         this.resgister(model);
-      } else {
       }
     }
   }
@@ -95,16 +106,16 @@ export class LoginRegisterModalComponent implements OnInit {
     if (isValid) {
       this.registerClicked = true;
       this.UserService.registerVerification(model).subscribe(
-        result => { this.customerDetails = result; }
+        result => { this.customerDetails = result;
+          if (this.customerDetails.Social_Security_Number) {
+            this.currentView = 'ssn';
+          } else if (this.customerDetails.Drivers_License.Number) {
+            this.currentView = 'ddl/id';
+          }
+        }
       );
-      if (this.customerDetails.Social_Security_Number) {
-        this.currentView = 'ssn';
-      } else if (this.customerDetails.Drivers_License.Number) {
-        this.currentView = 'ddl/id';
-      }
-
     } else {
-      console.log('Invalid form');
+      // console.log('Invalid form');
       this.processing = false;
       this.registerClicked = false;
     }
@@ -138,14 +149,7 @@ export class LoginRegisterModalComponent implements OnInit {
       validator: equalCheck('Password', 'ConfirmPassword')
     });
   }
-  verificationFormInit(): FormGroup {
-    return this.FormBuilder.group({
-      Last_4: [''],
-      DDL: [''],
-      State: [''],
-      Id: ['']
-    });
-  }
+
   public showLoginRegisterModal(): void {
     this.loginRegisterModal.show();
   }
