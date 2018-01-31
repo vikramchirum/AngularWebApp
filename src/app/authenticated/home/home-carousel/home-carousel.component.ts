@@ -8,10 +8,14 @@ import { NotificationOptionsStore } from '../../../core/store/notificationoption
 import { NotificationStatus } from '../../../core/models/enums/notificationstatus';
 import { INotificationOption } from '../../../core/models/notificationoptions/notificationoption.model';
 import { RenewalStore } from '../../../core/store/renewalstore';
+import { CarouselConfig } from 'ngx-bootstrap/carousel';
 
 @Component({
   selector: 'mygexa-home-carousel',
   templateUrl: './home-carousel.component.html',
+  providers: [
+    { provide: CarouselConfig, useValue: { interval: 10000, noPause: false } }
+  ],
   styleUrls: ['./home-carousel.component.scss']
 })
 export class HomeCarouselComponent implements OnInit, OnDestroy {
