@@ -16,7 +16,7 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
 export class AutoBillPaymentComponent implements OnInit, OnDestroy {
 
   protected includes = includes;
-
+  showTerms: boolean = false;
   switchingAutoBillPay: boolean = null;
   unenrollingFromAutoBillPay: boolean = null;
   enrollingToAutoBillPay: boolean = null;

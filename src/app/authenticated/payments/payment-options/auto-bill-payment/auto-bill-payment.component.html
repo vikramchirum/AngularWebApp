@@ -86,6 +86,21 @@
             (changedPaymethod)="enrollInAutoBillPaySelected($event)"
             [cancelProvide]="false"
           ></mygexa-payment-method-selector>
+          <br>
+          <div class="col-xs-12 col-sm-4 col-sm-offset-8">
+            <small><button (click)="showTerms = !showTerms" class="btn btn-sm btn-link">View Auto Bill Pay Terms and Conditions <i class="fa fa-chevron-down"></i></button></small>
+          </div>
+              <ng-container *ngIf="showTerms">
+
+          <div class="col-xs-12">
+            <br>
+            <small>
+              Auto Bill Pay. By clicking “Submit” as your electronic signature, you authorize Gexa Energy or its payment processor to automatically debit your bank account/debit card or charge your credit card, on a recurring basis on your due date or the first business day after your due date until you terminate your authorization online at mygexa.gexaenergy.com or by calling 866-961-9399. The amount of each monthly recurring payment will be the full price reflected on your monthly bill for electricity service, plus any additional services, equipment, taxes, fees and other charges applicable to your Gexa Energy purchase(s). If you find a billing error and notify Gexa Energy before your monthly bill is due, we will attempt to correct the error before the next recurring payment (otherwise you may cancel Auto Bill Pay to prevent the automatic payment). Also, if you sign up for, cancel or make changes to Auto Bill Pay on the day of the due date, the change may not take effect until the following payment cycle. Otherwise, we will automatically debit/charge the amount reflected on your monthly bill. After terminating your authorization, you will be responsible for scheduling payments for subsequent monthly charges. See “Bill Payment Programs” in your Terms of Service for additional information about Auto Bill Pay.
+            </small>
+            <br/>&nbsp;
+            <br/>
+          </div>
+          </ng-container>
         </ng-template>
       </ng-template>
     </ng-template>
