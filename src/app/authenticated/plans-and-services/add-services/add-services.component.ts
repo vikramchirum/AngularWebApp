@@ -314,27 +314,23 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       return false;
     }
     const dynamicAddress = {} as IAddress;
-    
-    if(this.useBillAddress) {
+    if (this.useBillAddress) {
       dynamicAddress.City = this.selectedServiceAddress.Address.City;
-      dynamicAddress.State = this.selectedServiceAddress.Address.State
+      dynamicAddress.State = this.selectedServiceAddress.Address.State;
       dynamicAddress.Line1 = this.selectedServiceAddress.Address.Line1;
       dynamicAddress.Line2 = this.selectedServiceAddress.Address.Line2;
       dynamicAddress.Zip = this.selectedServiceAddress.Address.Zip;
       dynamicAddress.Zip_4 = this.selectedServiceAddress.Address.Zip_4;
-      
       this.dynamicUAN = this.selectedServiceAddress.Meter_Info.UAN;
-    }
-    else {
-      dynamicAddress.City = this.dynamicAddressForm.get("City").value;
-      dynamicAddress.State = this.dynamicAddressForm.get("State").value;
-      dynamicAddress.Line1 = this.dynamicAddressForm.get("Line1").value;
-      dynamicAddress.Line2 = this.dynamicAddressForm.get("Line2").value;
-      dynamicAddress.Zip = this.dynamicAddressForm.get("Zip").value;
+    } else {
+      dynamicAddress.City = this.dynamicAddressForm.get('City').value;
+      dynamicAddress.State = this.dynamicAddressForm.get('State').value;
+      dynamicAddress.Line1 = this.dynamicAddressForm.get('Line1').value;
+      dynamicAddress.Line2 = this.dynamicAddressForm.get('Line2').value;
+      dynamicAddress.Zip = this.dynamicAddressForm.get('Zip').value;
       dynamicAddress.Zip_4 = null;
       this.dynamicUAN = null;
     }
-    
     this.enrollmentRequest = {
       Email_Address: environment.Client_Email_Addresses,
       Offer_Id: this.selectedOfferId,
@@ -345,7 +341,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       Selected_Start_Date: this.selectedStartDate.jsdate,
       Language_Preference: this.customerDetails.Language,
       Contact_Info: {
-        Email_Address: environment.Client_Email_Addresses,
+        Email_Address: this.customerDetails.Email,
         Primary_Phone_Number: this.customerDetails.Primary_Phone
       },
       Billing_Address: dynamicAddress
@@ -374,15 +370,13 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     this.enableSubmitMove();
   }
   enableSubmitMove() {
-    if(!this.useBillAddress) {
-      if(this.dynamicAddressForm.valid) {
+    if (!this.useBillAddress) {
+      if (this.dynamicAddressForm.valid) {
         this.enableSubmitEnroll = true;
-      }
-      else {
+      } else {
         this.enableSubmitEnroll = false;
       }
-    }
-    else {
+    } else {
       this.enableSubmitEnroll = true;
     }
   }

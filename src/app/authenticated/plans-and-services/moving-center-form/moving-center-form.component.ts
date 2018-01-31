@@ -38,6 +38,7 @@ import { CalendarService } from '../../../core/calendar.service';
 import { TDUStore } from '../../../core/store/tdustore';
 import { ITDU } from '../../../core/models/tdu/tdu.model';
 import { IAddress } from 'app/core/models/address/address.model';
+import { environment } from '../../../../environments/environment';
 
 @Component( {
   selector: 'mygexa-moving-center-form',
@@ -165,7 +166,6 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   ngAfterViewInit() {
-
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       movingFromAccount => {
         // console.log("Active Service Account", movingFromAccount);
@@ -343,19 +343,16 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
   }
   enableSubmitMove() {
-    
-    if(this.ServicePlanForm && this.ServicePlanForm.valid) {
+    if (this.ServicePlanForm && this.ServicePlanForm.valid) {
       this.enableSubmitMoveBtn = true;
-      if(!this.useOldAddress) {
-        if(this.dynamicAddressForm && this.dynamicAddressForm.valid) {
+      if (!this.useOldAddress) {
+        if (this.dynamicAddressForm && this.dynamicAddressForm.valid) {
           this.enableSubmitMoveBtn = true;
-        }
-        else {
+        } else {
           this.enableSubmitMoveBtn = false;
-        }  
+        }
       }
-    }
-    else {
+    } else {
       this.enableSubmitMoveBtn = false;
     }
   }
@@ -372,7 +369,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.finalBillAddress = 'New Address';
     this.isUseNew = true;
     this.isUseCurrent = false;
-    if(!this.useOldAddress) {
+    if (!this.useOldAddress) {
       this.ServicePlanForm.controls['final_service_address'].setValue({});
     }
     this.enableSubmitMove();
@@ -395,27 +392,25 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       billSelector.final_service_address = this.newServiceAddress.Address;
       this.Final_Bill_To_Old_Service_Address = false;
     }
-    if(this.useOldAddress) {console.log(1);
+    if (this.useOldAddress) {console.log(1);
       dynamicAddress.City = this.newServiceAddress.Address.City;
       dynamicAddress.State = this.newServiceAddress.Address.State;
       dynamicAddress.Line1 = this.newServiceAddress.Address.Line1;
       dynamicAddress.Line2 = this.newServiceAddress.Address.Line2;
-      dynamicAddress.Zip = this.newServiceAddress.Address.Zip
+      dynamicAddress.Zip = this.newServiceAddress.Address.Zip;
       dynamicAddress.Zip_4 = this.newServiceAddress.Address.Zip_4;
       this.dynamicUAN = this.newServiceAddress.Meter_Info.UAN;
-    }
-    else {console.log(2);
-      dynamicAddress.City = this.dynamicAddressForm.get("City").value;
-      dynamicAddress.State = this.dynamicAddressForm.get("State").value;
-      dynamicAddress.Line1 = this.dynamicAddressForm.get("Line1").value;
-      dynamicAddress.Line2 = this.dynamicAddressForm.get("Line2").value;
-      dynamicAddress.Zip = this.dynamicAddressForm.get("Zip").value;
+    } else {console.log(2);
+      dynamicAddress.City = this.dynamicAddressForm.get('City').value;
+      dynamicAddress.State = this.dynamicAddressForm.get('State').value;
+      dynamicAddress.Line1 = this.dynamicAddressForm.get('Line1').value;
+      dynamicAddress.Line2 = this.dynamicAddressForm.get('Line2').value;
+      dynamicAddress.Zip = this.dynamicAddressForm.get('Zip').value;
       dynamicAddress.Zip_4 = null;
       this.dynamicUAN = null;
-     
-      //billSelector.final_service_address = dynamicAddress;
+      // billSelector.final_service_address = dynamicAddress;
     }
-    console.log("dynamicAddress",dynamicAddress);
+    console.log('dynamicAddress', dynamicAddress);
 
     // If user selects existing plan , set current offer as true
     if ( billSelector.service_plan === 'Current Plan' ) {
@@ -433,7 +428,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     // Request Parms to post data to Transfer service API
     this.transferRequest = {
       // The email must match an email that is attached to a channel.  It is hardcoded now
-      Email_Address: 'sirisha.gunupati@gexaenergy.com', // this.customerDetails.Email,
+      Email_Address: String(environment.Client_Email_Addresses),
       Service_Account_Id: this.ActiveServiceAccount.Id,
       Current_Service_End_Date: addressForm.Current_Service_End_Date.jsdate,
       Final_Bill_To_Old_Service_Address: this.Final_Bill_To_Old_Service_Address,
@@ -445,7 +440,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       Keep_Current_Offer: this.Keep_Current_Offer,
       Offer_Id: this.offerId,
       Contact_Info: {
-        Email_Address: 'sirisha.gunupati@gexaenergy.com', // this.customerDetails.Email,
+        Email_Address: this.customerDetails.Email,
         Primary_Phone_Number: this.customerDetails.Primary_Phone
       },
       Language_Preference: this.customerDetails.Language,
