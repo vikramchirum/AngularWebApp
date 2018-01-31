@@ -39,6 +39,8 @@ import { TDUStore } from '../../../core/store/tdustore';
 import { ITDU } from '../../../core/models/tdu/tdu.model';
 import { IAddress } from 'app/core/models/address/address.model';
 import { environment } from '../../../../environments/environment';
+import { IServiceAccountPlanHistoryOffer } from '../../../core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
+
 
 @Component( {
   selector: 'mygexa-moving-center-form',
@@ -85,6 +87,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   TDUDunsServiceSubscription: Subscription= null;
   TDUDuns: ITDU[];
   public ActiveServiceAccount: ServiceAccount = null;
+  public Featured_Usage_Level: string = null;
+  public Price_atFeatured_Usage_Level: number;
+  public Price_atFeatured_Usage_Level_Renewal: number;
+  public Price_atFeatured_Usage_Level_Current: number;
   private TDU_DUNS_Number: string = null;
   customerDetails: CustomerAccount = null;
   offerRequestParams: OfferRequest = null;
@@ -232,6 +238,31 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     console.log( 'Offer selected', this.selectedOffer );
     // OfferId should only get passed when user wants to change their offer
     this.offerId = this.selectedOffer.Offer.Id;
+  }
+
+  checkCurrentFeaturedUsageLevel(CurrentOffer: IServiceAccountPlanHistoryOffer) {
+    if (CurrentOffer) {
+        this.Featured_Usage_Level = CurrentOffer.Featured_Usage_Level;
+        switch (CurrentOffer.Featured_Usage_Level) {
+          case  '500 kWh': {
+            this.Price_atFeatured_Usage_Level_Current = CurrentOffer.RateAt500kwh;
+            break;
+          }
+          case  '1000 kWh': {
+            this.Price_atFeatured_Usage_Level_Current = CurrentOffer.RateAt1000kwh;
+            break;
+          }
+          case  '2000 kWh': {
+            this.Price_atFeatured_Usage_Level_Current = CurrentOffer.RateAt2000kwh;
+            break;
+          }
+          default: {
+            CurrentOffer.Featured_Usage_Level = '2000 kWh';
+            this.Price_atFeatured_Usage_Level_Current = CurrentOffer.RateAt2000kwh;
+            break;
+          }
+        }
+    }
   }
 
   populateCalendar() {

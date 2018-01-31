@@ -111,12 +111,14 @@
             <p >Expires {{selectedOffer?.Offer?.End_Date| date:'d/M/yy'}}</p>
           </div>
         </div>
-        <div *ngIf="ActiveServiceAccount" [hidden]="selectedOffer" class="current-plan-card mat-card">
+        <div *ngIf="ActiveServiceAccount" [hidden]="selectedOffer" class="current-plan-card mat-card">          
           <h2 class="mat-card-title ">{{ActiveServiceAccount.Current_Offer.Product_Name}}</h2>
-          <div class="mat-card-content">
+          <div class="mat-card-content">{{checkCurrentFeaturedUsageLevel(ActiveServiceAccount?.Current_Offer)}}
             <h2>{{ActiveServiceAccount.Current_Offer.RateAt2000kwh | DollarToCentsPipe | number : '1.1-1'}}<sup>&cent;</sup><small>per kWh</small></h2>
+             <p class="text-center bg-default">AT {{ActiveServiceAccount.Current_Offer.Featured_Usage_Level}}</p>
             <p>Expires {{ActiveServiceAccount.Current_Offer.End_Date | date:'d/M/yy'}}</p>
-          </div>
+          </div> 
+        
         </div>
  <div class="row text-center">
           <div class="container-fluid">
@@ -232,7 +234,7 @@
             2
         </div>
 
-          <h3 class="text-center col-xs-8 col-sm-8 col-md-12">Choose Your Final Bill Destination</h3>
+          <h3 class="text-center col-xs-10 col-sm-10 col-md-12">Choose Your Final Bill Destination</h3>
           <div class="hidden">
             <label class="radio-inline  col-sm-6">
               <input type="radio" formControlName="service_address" value="Current Address">
