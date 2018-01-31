@@ -68,6 +68,7 @@ module.exports = function ( grunt ) {
     grunt.config.set('version_suffix', version_suffix);
 
     grunt.log.writeln('version: ' + grunt.config.get('version_suffix'));
+
   });
 
   grunt.registerTask('build', ['copy:config', 'clean', 'gitinfo', 'generate_version', 'octo-pack']);
