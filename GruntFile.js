@@ -41,38 +41,43 @@ module.exports = function ( grunt ) {
     }
   } );
 
-  grunt.task.registerTask('generate_version', 'Create version based off branch name', function () {
+  grunt.task.registerTask( 'generate_version', 'Create version based off branch name', function () {
 
-    var branch_name = grunt.config.get('gitinfo.local.branch.current.name');
-    branch_name = branch_name.replace(/\\/g, "-").replace(/\//g, "-").replace(/_/g, "-");
+    var branch_name = grunt.config.get( 'gitinfo.local.branch.current.name' );
+    branch_name = branch_name.replace( /\\/g, "-" ).replace( /\//g, "-" ).replace( /_/g, "-" );
 
     var version_suffix = '';
-    var short_sha = grunt.config.get('gitinfo.local.branch.current.shortSHA');
+    var short_sha = grunt.config.get( 'gitinfo.local.branch.current.shortSHA' );
 
-    var date_stamp = grunt.template.today('yyyymmdd');
+    var date_stamp = grunt.template.today( 'yyyymmddHHmmss' );
 
-    if (branch_name) {
-      if (branch_name === 'dev')
+    if ( branch_name ) {
+      if ( branch_name === 'dev' )
         version_suffix += branch_name + '-' + date_stamp + '-' + short_sha;
-      else if (branch_name === 'master')
+      else if ( branch_name === 'master' )
         version_suffix += 'release';
-      else if (branch_name.startsWith('feature')){
-        var split = branch_name.split('-');
-        var feature_branch_name = split.slice(1,3).join('-');
+      else if ( branch_name.startsWith( 'feature' ) || branch_name.startsWith( 'bugfix' ) ) {
+        var split = branch_name.split( '-' )
+        grunt.log.writeln(split);
+        split = split.slice( 0, 3 );
+        grunt.log.writeln(split);
+        split.splice( 1, 0, date_stamp );
+        grunt.log.writeln(split);
+        var feature_branch_name = split.join( '-' );
         version_suffix += feature_branch_name;
       }
       else
         version_suffix += branch_name;
     }
 
-    grunt.log.writeln('branch: ' + branch_name);
-    grunt.log.writeln('sha: ' + short_sha);
+    grunt.log.writeln( 'branch: ' + branch_name );
+    grunt.log.writeln( 'sha: ' + short_sha );
 
-    grunt.config.set('version_suffix', version_suffix);
+    grunt.config.set( 'version_suffix', version_suffix );
 
-    grunt.log.writeln('version: ' + grunt.config.get('version_suffix'));
+    grunt.log.writeln( 'version: ' + grunt.config.get( 'version_suffix' ) );
 
-  });
+  } );
 
   grunt.registerTask('build', ['copy:config', 'clean', 'gitinfo', 'generate_version', 'octo-pack']);
 
