@@ -45,7 +45,8 @@ module.exports = function ( grunt ) {
 
     var branch_name = grunt.config.get('gitinfo.local.branch.current.name');
     branch_name = branch_name.replace(/\\/g, "-").replace(/\//g, "-").replace(/_/g, "-");
-    branch_name = branch_name.substring(0, 30);
+    var split = branch_name.split('-');
+    branch_name = split.slice(1,3).join('-');
 
     var version_suffix = '';
     var short_sha = grunt.config.get('gitinfo.local.branch.current.shortSHA');
