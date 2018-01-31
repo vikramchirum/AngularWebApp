@@ -3,12 +3,12 @@
   font-size:14px;
   border-radius:0;
   margin-bottom: 1px;
-  
+
   &.active{
        background:#ffffff;
-    border-color: #ddd; 
+    border-color: #ddd;
   }
-  
+
   &.active:before {
 
     content: "\F054";
@@ -20,4 +20,8 @@
 
 .account-menu {
   background-color: black;
+}
+.disableLink {
+  pointer-events: none;
+  color: lightgrey;
 }

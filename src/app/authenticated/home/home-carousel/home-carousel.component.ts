@@ -32,6 +32,7 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
   IsOnGexaLyric: boolean = null;
   IsPaperless: boolean = null;
   NotificationOptions: INotificationOption = null;
+  IsDisconnectedServiceAddress: boolean = null;
 
   constructor( private ServiceAccountService: ServiceAccountService,
                private renewalStore: RenewalStore,
@@ -42,6 +43,7 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
         if (this.ActiveServiceAccount) {
+          this.IsDisconnectedServiceAddress   = this.ActiveServiceAccount.Status === 'Disconnected' ? true : false;
         this.OfferStore.LoadLyricOfferDetails(this.ActiveServiceAccount.TDU_DUNS_Number);
           this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(renewalDetails => {
             if (renewalDetails) {

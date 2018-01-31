@@ -32,7 +32,6 @@ export class ReferFriendComponent implements OnInit, OnDestroy {
   flipButton: boolean = null;
   enrolled: boolean = null;
   isLoading = true;
-
   constructor(private serviceAccountService: ServiceAccountService, private customerAccountService: CustomerAccountService, private referralStore: ReferralStore) {
   }
 

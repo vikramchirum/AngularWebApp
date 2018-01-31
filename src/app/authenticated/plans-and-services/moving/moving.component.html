@@ -7,7 +7,7 @@
       service location. </h3>
       <br/>
     <div class="row">
-      <div class="col-xs-8">    
+      <div class="col-xs-8">
         <ul>
           <li>Schedule your service to start at your new address up to 30 days in advance
           </li>
@@ -15,7 +15,7 @@
         </ul>
       </div>
       <div class="col-xs-4">
-      <button class="btn btn-primary" routerLink="/plans-and-services/moving/moving-center">Get Started</button>
+      <button class="btn btn-primary" routerLink="/plans-and-services/moving/moving-center" [disabled]="IsDisconnectedServiceAddress">Get Started</button>
       </div>
     </div>
   </section>

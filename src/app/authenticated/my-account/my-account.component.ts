@@ -7,6 +7,7 @@ import { UserService } from '../../core/user.service';
 import { Subscription} from 'rxjs/Subscription';
 import { ReferralStore } from '../../core/store/referralstore';
 import { CustomerAccountService } from '../../core/CustomerAccount.service';
+import { ServiceAccountService } from '../../core/serviceaccount.service';
 
 @Component({
   selector: 'mygexa-my-account',

@@ -60,7 +60,7 @@
               <ul class="list-unstyled list-center list-rule">
                 <li><a (click)="doMouseleave()" routerLink="/account/profile">Profile and Preferences</a></li>
                 <li><a (click)="doMouseleave()" routerLink="/account/message-center">Message Center</a></li>
-                <li><a (click)="doMouseleave()" routerLink="/account/refer-a-friend/referral-options">Rewards and Referrals</a></li>
+                <li><a (click)="doMouseleave()" routerLink="/account/refer-a-friend/referral-options" [ngClass]="{'disableLink': IsDisconnectedServiceAddress }">Rewards and Referrals</a></li>
               </ul>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4">

@@ -32,8 +32,10 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
   hoverMenu: string = null;
   customerDetails: CustomerAccount = null;
   CustomerAccountServiceSubscription: Subscription = null;
+  ServiceAccountSubscription: Subscription = null;
   UserServiceSubscription: Subscription = null;
   SearchNotificationOptions = null;
+  IsDisconnectedServiceAddress: boolean = null;
   @ViewChild('homeMultiAccountsModal') homeMultiAccountsModal: HomeMultiAccountsModalComponent;
   @ViewChild('menuIcon') menuIcon;
   @ViewChild('menuDropdown') menuDropdown;
@@ -69,6 +71,13 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.ServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      ActiveServiceAccount => {
+        if (ActiveServiceAccount) {
+          this.IsDisconnectedServiceAddress = ActiveServiceAccount.Status === 'Disconnected' ? true : false;
+        }
+      }
+    );
     this.UserServiceSubscription = this.UserService.UserObservable.subscribe(
       result => { this.service_account_length = result.Account_permissions.length;
                   this.username = result.Profile.Username; }
@@ -123,6 +132,7 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     result(this.CustomerAccountServiceSubscription, 'unsubscribe');
     result(this.UserServiceSubscription, 'unsubscribe');
+    result(this.ServiceAccountSubscription, 'unsubscribe');
   }
 
 }
