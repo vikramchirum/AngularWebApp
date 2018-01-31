@@ -45,8 +45,6 @@ module.exports = function ( grunt ) {
 
     var branch_name = grunt.config.get('gitinfo.local.branch.current.name');
     branch_name = branch_name.replace(/\\/g, "-").replace(/\//g, "-").replace(/_/g, "-");
-    var split = branch_name.split('-');
-    branch_name = split.slice(1,3).join('-');
 
     var version_suffix = '';
     var short_sha = grunt.config.get('gitinfo.local.branch.current.shortSHA');
@@ -58,6 +56,11 @@ module.exports = function ( grunt ) {
         version_suffix += branch_name + '-' + date_stamp + '-' + short_sha;
       else if (branch_name === 'master')
         version_suffix += 'release';
+      else if (branch_name.startsWith('feature')){
+        var split = branch_name.split('-');
+        var feature_branch_name = split.slice(1,3).join('-');
+        version_suffix += feature_branch_name;
+      }
       else
         version_suffix += branch_name;
     }
