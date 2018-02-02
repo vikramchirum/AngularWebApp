@@ -47,6 +47,7 @@ export class UserService implements CanActivate {
   private getUsernameUrl = '/user/getUsername';
   private loginUrl = '/user/authenticate';
   private registerUrl = '/user/register';
+  private verifyRegisterUserUrl = '/user/verifyRegistration';
   private registerVerificationUrl = '/user/verifyID';
   private updateEmail = '/user/updateEmailAddress';
   private updateClaims = '/user/updateClaims';
@@ -209,6 +210,31 @@ export class UserService implements CanActivate {
       .catch(error => this.httpClient.handleHttpError(error));
   }
 
+  verifyRegisterUser(user: IUserSigningUp): Observable<string> {
+
+    const body = {
+      Credentials: {
+        Username: user.User_name,
+        Password: user.Password
+      },
+      Profile: {
+        Email_Address: user.Email_Address,
+        Username: user.User_name
+      },
+      Security_Question: {
+        Id: user.Security_Question_Id,
+        Question: user.Security_Question_Id.valueOf()
+      },
+      Security_Question_Answer: user.Security_Question_Answer,
+      Service_Account_Id: user.Service_Account_Id,
+      Zip_Code: user.Zip_Code
+    };
+
+    return this.httpClient.post(this.verifyRegisterUserUrl, body)
+      .map(res => res.json())
+      .catch(error => this.httpClient.handleHttpError(error));
+  }
+
   signup(user: IUserSigningUp): Observable<string> {
 
     const body = {
@@ -234,6 +260,7 @@ export class UserService implements CanActivate {
       .map(res => this.ApplyUserData(res))
       .catch(error => this.httpClient.handleHttpError(error));
   }
+
 
   getSecurityQuestions(): Observable<IUserSecurityQuestions[]> {
 
