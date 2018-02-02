@@ -3,8 +3,8 @@ import { NavigationEnd, Router } from '@angular/router';
 
 import { debounce, result } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
-import { ChannelStore } from './core/store/channelstore';
 
+declare let ga: any;
 @Component({
   selector: 'mygexa-app',
   templateUrl: './app.component.html',
@@ -21,6 +21,15 @@ export class AppComponent implements OnInit, OnDestroy {
     private Router: Router,
     private ChangeDetectorRef: ChangeDetectorRef
   ) {
+    this.Router.events.distinctUntilChanged((previous: any, current: any) => {
+      if (current instanceof NavigationEnd) {
+        return previous.url === current.url;
+      }
+      return true;
+    }).subscribe((x: any) => {
+      ga('set', 'page', x.url);
+      ga('send', 'pageview');
+    });
   }
 
   // Check when the window's size changes.

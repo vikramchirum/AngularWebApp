@@ -55,6 +55,7 @@
     "@angular/cli": "1.0.1",
     "@angular/compiler-cli": "^4.0.0",
     "@octopusdeploy/grunt-octo": "0.0.50",
+    "@types/google.analytics": "0.0.37",
     "@types/jasmine": "2.5.38",
     "@types/node": "~6.0.60",
     "codelyzer": "~2.0.0",
