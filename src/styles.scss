@@ -460,3 +460,12 @@ footer.fixedToBottom {
 .mg-bt-15 {
   margin-bottom: 15px;
 }
+
+.ng-tool-tip-content {
+    z-index: inherit!important;
+    padding: 0!important;
+    border:  none !important;
+    color: inherit!important;
+    background-color: none!important;
+    position: inherit!important;
+}

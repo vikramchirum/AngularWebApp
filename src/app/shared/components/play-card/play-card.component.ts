@@ -15,6 +15,7 @@ import { UserService } from 'app/core/user.service';
 import { ModalStore } from 'app/core/store/modalstore';
 
 import * as $ from 'jquery';
+import { DocumentsService } from '../../../core/documents.service';
 
 @Component({
   selector: 'mygexa-play-card',
@@ -40,13 +41,16 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
     userServiceSubscription: Subscription;
     activeServiceAccountSubscription: Subscription;
     handleOfferPopOversModalSubscription: Subscription;
-
+    public eflLink;
+    public tosLink;
+    public yraacLink;
     offerPassed: string;
 
     constructor(private userService: UserService,
                 private serviceAccount_service: ServiceAccountService,
                 private modalStore: ModalStore,
                 private formBuilder: FormBuilder,
+                private documentsService: DocumentsService,
                 private viewContainerRef: ViewContainerRef) {
       this.isMoving = false;
     }
@@ -68,7 +72,13 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
       this.activeServiceAccountSubscription = this.serviceAccount_service.ActiveServiceAccountObservable.filter(activeServiceAccount => activeServiceAccount != null)
         .subscribe(result => {
           this.activeServiceAccountDetails = result;
-        });      
+
+        });
+
+      this.eflLink = this.documentsService.getEFLLink(this.offer.Id);
+      this.tosLink = this.documentsService.getTOSLink(this.offer.Plan.Product.Fixed);
+      this.yraacLink = this.documentsService.getYRAACLink();
+
     }
 
     ngAfterViewInit() {
@@ -118,27 +128,30 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isOfferSelected = true;
       // this.modalStore.handleOfferPopOversModal(this.offer.Rate_Code);
       $('#planSelect_confirm_' + this.offer.Id).toggleClass('reveal');
+      if (this.isMoving) { $('#plan_' + this.offer.Id).removeClass('plan-background'); };
     }
 
     toggleButton() {
-      
+
       var offerCheckbox = $('input[name="isOfferAgreedBox"]');
-      
+
       $(offerCheckbox).on('change', function () {
         $(offerCheckbox).not(this).prop('checked', false);
         $(offerCheckbox).not(this).closest('.planSelect_confirm').find('.btn-final').attr('disabled', 'disabled');
-        
+
       });
-      
+
       this.isOfferAgreed = !this.isOfferAgreed;
-      
+
     }
 
     onCloseSelectOffer(event) {
+      this.isOfferAgreed = false;
       event.preventDefault();
       event.stopPropagation();
       this.isOfferSelected = false;
       $('#planSelect_confirm_' + this.offer.Id).toggleClass('reveal');
+      if (this.isMoving) { $('#plan_' + this.offer.Id).addClass('plan-background'); };
       // $('.planSelect_confirm').toggleClass('reveal');
     }
 
@@ -181,6 +194,7 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   applyFlip() {
     $('#plan_' + this.offer.Id).toggleClass('applyflip');
+    if (this.isMoving) { $('#plan_' + this.offer.Id).removeClass('plan-background'); };
     // $('.btn-select').removeClass('disabled');
     /* var $myPlan = $(this).parents('.plan');console.log($myPlan);
     $myPlan.toggleClass('applyflip');
@@ -190,9 +204,11 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.offerPassed = event;
     if (event.indexOf('#') > 0) {
       this.offerPassed = event.substr(0, (event.length - 1));
+      if (this.isMoving) { $('#plan_' + this.offer.Id).addClass('plan-background'); };
       $('#plan_' + this.offerPassed).toggleClass('applyflip');
     } else {
       $('#plan_' + this.offerPassed).toggleClass('applyflip');
+      if (this.isMoving) { $('#plan_' + this.offer.Id).removeClass('plan-background'); };
       this.isOfferSelected = true;
       $('#planSelect_confirm_' + this.offer.Id).toggleClass('reveal');
     }
@@ -203,6 +219,7 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log('select offer called on button click');
     $('#planSelect_confirm_' + this.offer.Id).toggleClass('reveal');
     $('#plan_' + this.offer.Id).removeClass('applyflip');
+    if (this.isMoving) { $('#plan_' + this.offer.Id).addClass('plan-background'); };
     // $('.planConfirm').show();
     // $('.btn-select').addClass('disabled');
   }

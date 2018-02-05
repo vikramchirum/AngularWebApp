@@ -1,45 +1,32 @@
-
 .confirmation-modal{
-  .modal-dialog {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 310px;
-  }
+
   .modal-content{
     text-align: center;
+    //width:550px; height: 850px;
+    //overflow-y: scroll;
   }
   .modal-header {
-    color: white;
     background-color: orange !important;
-    width: 100% !important;
-    padding-top:20px;
+    padding-top:10px;
     border-bottom: 0px white;
-    .btn:active, .btn:focus  {
-      background-color: #00b0ff;
-      color: white;
-      border-color: #0275d8;
-    }
-    .btn{
-      background-color: white !important;
-      color: black !important;
-      border-color: #cccccc !important;
-    }
-    //.btn:active{
-    //  background-color: #0275d8 !important;
-    //  color: black !important;
-    //  border-color: #0275d8 !important;
-    //}
     .modal-title{
-      float: left;
-      font-weight: bold;
-      color:white;
+      padding:2px 0px 5px 75px ;
+      font: bold;
+      padding: 10px 0;
+          color:#ffffff;
+
+      }
+    button.close {
+      margin-top:10px;
+      text-align: left;
     }
   }
-  //.control-label {
-  //  text-align: left;
-  //  display: block;
-  //}
+  .control-label {
+    text-align: left;
+    display: block;
+  }
+  .help-block {
+    // font-size:10px;
+    text-align: left;
+  }
 }
-

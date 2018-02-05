@@ -19,9 +19,9 @@ const routes: Route[] = [
       { path: 'view-my-bill', component: ViewMyBillComponent },
       { path: 'make-payment', component: MakePaymentComponent },
       { path: 'payment-accounts', component: PaymentAccountsComponent  },
-      { path: 'payment-options', loadChildren: loadPaymentOptionsModule },
+      { path: 'payment-options', loadChildren: './payment-options/payment-options.module#PaymentOptionsModule' },
       { path: 'payment-history', redirectTo: 'payment-history/bills', pathMatch: 'full' },
-      { path: 'payment-history', loadChildren: loadPaymentHistoryModule }
+      { path: 'payment-history', loadChildren: './payment-history/payments-history.module#PaymentsHistoryModule' }
     ]
   }
 ];

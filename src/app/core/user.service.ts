@@ -1,16 +1,17 @@
 /**
  * Created by patrick.purcell on 5/2/2017.
  */
-import {Injectable} from '@angular/core';
-import {Http, URLSearchParams, Response} from '@angular/http';
-import {CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
-
-import {environment} from 'environments/environment';
-import {Observable} from 'rxjs/Observable';
-import {Observer} from 'rxjs/Observer';
-import {clone, filter, find, forEach, get, map, pull, startsWith} from 'lodash';
-import {IUser, IUserSecurityQuestions, IUserSigningUp} from './models/user/User.model';
-import {HttpClient} from './httpclient';
+import { Injectable } from '@angular/core';
+import { Http, URLSearchParams, Response } from '@angular/http';
+import { CanActivate , Router, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+import { environment } from 'environments/environment';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
+import { clone, filter, find, forEach, get, map, pull, startsWith } from 'lodash';
+import { IUser, IUserSecurityQuestions, IUserSigningUp } from './models/user/User.model';
+import { HttpClient } from './httpclient';
+import { ServiceAccount } from './models/serviceaccount/serviceaccount.model';
+import { CustomerAccount } from './models/customeraccount/customeraccount.model';
 
 function getServiceAccountIds(user: IUser): string[] {
   return user
@@ -46,12 +47,14 @@ export class UserService implements CanActivate {
   private getUsernameUrl = '/user/getUsername';
   private loginUrl = '/user/authenticate';
   private registerUrl = '/user/register';
+  private registerVerificationUrl = '/user/verifyID';
   private updateEmail = '/user/updateEmailAddress';
   private updateClaims = '/user/updateClaims';
   private updateSecAnswer = '/user/updateSecurityAnswer';
   private updateSecQuestion = '/user/updateSecurityQuestion';
   private updateUsername = '/user/updateUsername';
   private updatePassword = '/user/updatePassword';
+  private getStates = '/Enums/States';
   get user_token(): string {
 
     // See if we already have it cached and return it.
@@ -181,6 +184,31 @@ export class UserService implements CanActivate {
       .catch(error => this.httpClient.handleHttpError(error));
   }
 
+  registerVerification(user: IUserSigningUp): Observable<CustomerAccount> {
+    const body = {
+      Credentials: {
+        Username: user.User_name,
+        Password: user.Password
+      },
+      Profile: {
+        Email_Address: user.Email_Address,
+        Username: user.User_name
+      },
+      Security_Question: {
+        Id: user.Security_Question_Id,
+        Question: user.Security_Question_Id.valueOf()
+      },
+      Security_Question_Answer: user.Security_Question_Answer,
+      Service_Account_Id: user.Service_Account_Id,
+      Zip_Code: user.Zip_Code
+    };
+
+    return this.httpClient.post(this.registerVerificationUrl, body)
+      .map(res => res.json())
+      .map(data => {new CustomerAccount(data); console.log('Customer account', data); return data; })
+      .catch(error => this.httpClient.handleHttpError(error));
+  }
+
   signup(user: IUserSigningUp): Observable<string> {
 
     const body = {
@@ -217,6 +245,11 @@ export class UserService implements CanActivate {
       .map(res => res.json())
       .map(res => this.getSecurityQuestionsCached = res)
       .catch(error => this.httpClient.handleHttpError(error));
+  }
+
+  getStatesAbb(): Observable<string[]> {
+    return this.httpClient.get(this.getStates)
+      .map(res => { return <string[]>res.json(); });
   }
 
   getSecQuesByUserName(user_name: string): Observable<string> {

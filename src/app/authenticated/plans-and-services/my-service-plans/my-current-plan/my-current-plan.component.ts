@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit, SimpleChanges, ViewChild } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -27,13 +27,13 @@ import { IOfferSelectionPayLoad } from 'app/shared/models/offerselectionpayload'
 import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-confirmation-modal.component';
 import { CustomerAccountService } from '../../../../core/CustomerAccount.service';
 import { CustomerAccount } from '../../../../core/models/customeraccount/customeraccount.model';
-
+import * as $ from 'jquery';
 @Component({
   selector: 'mygexa-my-current-plan',
   templateUrl: './my-current-plan.component.html',
   styleUrls: ['./my-current-plan.component.scss']
 })
-export class MyCurrentPlanComponent implements OnInit, OnDestroy {
+export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy {
   // @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
   @ViewChild('errorModal') errorModal: ErrorModalComponent;
   @ViewChild('planConfirmationModal') planConfirmationModal: PlanConfirmationModalComponent;
@@ -64,6 +64,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
   renewalUpgradeFormGroup: FormGroup;
   offerSelectionType = OfferSelectionType;
   offerSelectionPayLoad: IOfferSelectionPayLoad;
+  showViewMoreRenewals: boolean = false;
 
   constructor(private userService: UserService,
               private serviceAccountService: ServiceAccountService,
@@ -129,12 +130,21 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
 
     }
   }
-
+  ngAfterViewInit() {
+    var ele = $('#moreRenewal');
+    if (ele) {
+      this.showViewMoreRenewals = true;
+    } else {
+      this.showViewMoreRenewals = false;
+    }
+  }
   setFlags() {
     if (this.ActiveServiceAccount) {
       if (this.isRenewalPending) {
         this.currentView = 'PendingRenewalPlan';
-        this.RenewalAccount.Existing_Renewal.End_Date = this.utilityService.addMonths(new Date(this.RenewalAccount.Existing_Renewal.Start_Date), this.RenewalAccount.Existing_Renewal.Offer.Term);
+        if (this.RenewalAccount.Existing_Renewal) {
+          this.RenewalAccount.Existing_Renewal.End_Date = this.utilityService.addMonths(new Date(this.RenewalAccount.Existing_Renewal.Start_Date), this.RenewalAccount.Existing_Renewal.Offer.Term);
+        }
       } else if (this.isUpForRenewal && !this.ActiveServiceAccount.Current_Offer.IsHoldOverRate) {
         this.currentView = 'RenewalPlan';
       } else if (this.ActiveServiceAccount.Current_Offer.IsHoldOverRate) {
@@ -147,6 +157,7 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
 
   checkCurrentFeaturedUsageLevel(CurrentOffer: IServiceAccountPlanHistoryOffer) {
     if (CurrentOffer) {
+        this.Featured_Usage_Level = CurrentOffer.Featured_Usage_Level;
         switch (CurrentOffer.Featured_Usage_Level) {
           case  '500 kWh': {
             this.Price_atFeatured_Usage_Level_Current = CurrentOffer.RateAt500kwh;
@@ -296,5 +307,10 @@ export class MyCurrentPlanComponent implements OnInit, OnDestroy {
       this.renewalUpgradeFormGroup.get('rewardsNumber').setValue(this.offerSelectionPayLoad.Partner_Name_On_Account);
     }
     this.createRenewal();
+  }
+  scroll2renewalSection() {
+    var ele = $('#moreRenewal');
+    // console.log(ele.offset().left);
+    window.scrollTo({ left: ele.offset().left, top: ele.offset().top, behavior: 'smooth' });
   }
 }

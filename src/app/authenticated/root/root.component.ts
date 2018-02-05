@@ -24,7 +24,7 @@ import { InvoiceStore } from '../../core/store/invoicestore';
 })
 export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  startsWith = startsWith;
+  public startsWith = startsWith;
   service_account_length: number = null;
   env = environment.Name;
   username: string = null;
@@ -32,15 +32,17 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
   hoverMenu: string = null;
   customerDetails: CustomerAccount = null;
   CustomerAccountServiceSubscription: Subscription = null;
+  ServiceAccountSubscription: Subscription = null;
   UserServiceSubscription: Subscription = null;
   SearchNotificationOptions = null;
+  IsDisconnectedServiceAddress: boolean = null;
   @ViewChild('homeMultiAccountsModal') homeMultiAccountsModal: HomeMultiAccountsModalComponent;
   @ViewChild('menuIcon') menuIcon;
   @ViewChild('menuDropdown') menuDropdown;
   constructor(
     private UserService: UserService,
-    private Router: Router,
-    private ServiceAccountService: ServiceAccountService,
+    public Router: Router,
+    public ServiceAccountService: ServiceAccountService,
     private CustomerAccountService: CustomerAccountService,
     private NotificationOptionsStore: NotificationOptionsStore,
     private InvoiceStore: InvoiceStore
@@ -69,6 +71,13 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.ServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      ActiveServiceAccount => {
+        if (ActiveServiceAccount) {
+          this.IsDisconnectedServiceAddress = ActiveServiceAccount.Status === 'Disconnected' ? true : false;
+        }
+      }
+    );
     this.UserServiceSubscription = this.UserService.UserObservable.subscribe(
       result => { this.service_account_length = result.Account_permissions.length;
                   this.username = result.Profile.Username; }
@@ -97,12 +106,12 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
     this.accordionVisible = !this.accordionVisible;
   }
 
-  @HostListener('document:click', ['$event']) clickedOutside($event){
+  @HostListener('document:click', ['$event']) clickedOutside($event) {
     // here you can hide your menu
-    
-    if(!((this.menuIcon && this.menuIcon.nativeElement && this.menuIcon.nativeElement.contains($event.target)) || 
+
+    if (!((this.menuIcon && this.menuIcon.nativeElement && this.menuIcon.nativeElement.contains($event.target)) ||
     (this.menuDropdown && this.menuDropdown.nativeElement && this.menuDropdown.nativeElement.contains($event.target)))) {
-      if(this.accordionVisible) {
+      if (this.accordionVisible) {
         this.accordionVisible = false;
       }
     }
@@ -123,6 +132,7 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     result(this.CustomerAccountServiceSubscription, 'unsubscribe');
     result(this.UserServiceSubscription, 'unsubscribe');
+    result(this.ServiceAccountSubscription, 'unsubscribe');
   }
 
 }

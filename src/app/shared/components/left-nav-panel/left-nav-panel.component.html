@@ -1,4 +1,14 @@
-<h1>{{sideNavData.panelTitle}}</h1>
-       <ul class="sidenav list-group">
-        <li *ngFor="let item of sideNavData.items" class="list-group-item" [routerLinkActive]="['active']"><a  routerLink={{item.navUrl}}>{{item.title}} </a></li>
-</ul>
+<ng-template *ngIf="IsDisconnectedServiceAddress; then DisconnectedAccounts else ActiveAccounts;"></ng-template>
+<ng-template #ActiveAccounts>
+  <h1>{{sideNavData.panelTitle}}</h1>
+  <ul class="sidenav list-group">
+    <li *ngFor="let item of sideNavData.items" class="list-group-item" [routerLinkActive]="['active']"><a  routerLink={{item.navUrl}}>{{item.title}} </a></li>
+  </ul>
+</ng-template>
+<ng-template #DisconnectedAccounts>
+  <h1>{{sideNavData.panelTitle}}</h1>
+  <ul class="sidenav list-group">
+    <li *ngFor="let item of sideNavData.items" class="list-group-item" [routerLinkActive]="['active']">
+      <a  routerLink={{item.navUrl}} [ngClass]="{'disableLink': IsDisconnectedServiceAddress && item.title === 'My Rewards &amp; Referrals' }">{{item.title}} </a></li>
+  </ul>
+</ng-template>

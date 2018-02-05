@@ -69,7 +69,7 @@
               <ng-container>
                 <div class="row details" *ngFor="let item of bill_item_details_gexa_charges">
                   <div class="col-xs-8">
-                    <span>{{ item.Descripton }}</span><span class="bill-uasge" *ngIf="item.Quantity">{{ item.Quantity }}@{{item.Multiplier}} </span>
+                    <span>{{ item.Descripton }}</span>&nbsp;&nbsp;<span class="bill-uasge" *ngIf="item.Quantity">- {{ item.Quantity }}@{{item.Multiplier}} </span>
                   </div>
                   <div class="col-xs-4">
                     ${{ item.Amount | FloatToMoneyPipe }}

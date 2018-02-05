@@ -7,6 +7,7 @@ import { UserService } from '../../core/user.service';
 import { Subscription} from 'rxjs/Subscription';
 import { ReferralStore } from '../../core/store/referralstore';
 import { CustomerAccountService } from '../../core/CustomerAccount.service';
+import { ServiceAccountService } from '../../core/serviceaccount.service';
 
 @Component({
   selector: 'mygexa-my-account',
@@ -16,9 +17,9 @@ import { CustomerAccountService } from '../../core/CustomerAccount.service';
 })
 export class MyAccountComponent implements OnInit, OnDestroy {
   UserServiceSubscription: Subscription;
-  private startsWith = startsWith;
+  public startsWith = startsWith;
   constructor(
-    private Router: Router,
+    public Router: Router,
     private referralStore: ReferralStore,
     private UserService: UserService,
     private CustomerAccountStore: CustomerAccountStore,

@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ISecurityQuestions} from '../register';
-import {UserService} from '../../../core/user.service';
-import {Router} from '@angular/router';
+import { Form , FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { ISecurityQuestions } from '../register';
+import { UserService } from '../../../core/user.service';
+import { Router } from '@angular/router';
 import { equalCheck, validateEmail, validateInteger, validatePassword } from 'app/validators/validator';
-import {HttpClient} from '../../../core/httpclient';
-import {IRegUser} from '../../../core/models/register/register-user.model';
+import { HttpClient } from '../../../core/httpclient';
+import { IRegUser } from '../../../core/models/register/register-user.model';
+import { CustomerAccountStore } from '../../../core/store/CustomerAccountStore';
+import { CustomerAccount } from '../../../core/models/customeraccount/customeraccount.model';
 
 @Component({
   selector: 'mygexa-login-register-modal',
@@ -15,20 +17,29 @@ import {IRegUser} from '../../../core/models/register/register-user.model';
 })
 export class LoginRegisterModalComponent implements OnInit {
   @ViewChild('loginRegisterModal') public loginRegisterModal: ModalDirective;
+  Last_4: string = null;
+  DDL: string = null;
+  State: string = null;
+  Id: string = null;
   processing: boolean = null;
+  registerClicked: boolean = null;
   registerForm: FormGroup = null;
   formSubmitted: boolean = null;
   user: IRegUser = null;
   error: string = null;
   errorMsg: string = null;
+  statesArray: string[] = [];
   secQuesArray: ISecurityQuestions[] = [];
+  currentView: string = null;
+  customerDetails: CustomerAccount = null;
   constructor(
     private UserService: UserService,
     private Router: Router,
     private FormBuilder: FormBuilder,
+    private CustomerAccountStore: CustomerAccountStore,
     private _http: HttpClient
   ) {
-    this.processing = false; this.errorMsg = null;
+    this.processing = this.registerClicked = false; this.errorMsg = null;
     this.registerForm = this.registerFormInit();
   }
 
@@ -38,38 +49,75 @@ export class LoginRegisterModalComponent implements OnInit {
         response => this.secQuesArray = response,
         error => this.error = <any>error
       );
+    this.UserService.getStatesAbb().subscribe(
+      response => this.statesArray = response,
+      error => this.error = <any>error
+    );
   }
 
   ngOnInit() {
+  }
+
+  verifyForm(model: IRegUser) {
+    console.log('register model', model);
+    console.log('register verification model', this.Last_4);
+    console.log('DDL', this.DDL);
+    console.log('State', this.State);
+
+    if (this.currentView === 'ssn') {
+      if (this.Last_4 && this.Last_4 === String(this.customerDetails.Social_Security_Number).slice(-4)) {
+         this.resgister(model);
+      }
+    } else if (this.currentView === 'ddl/id') {
+       if (this.DDL && ((this.State + '-' + this.DDL) === this.customerDetails.Drivers_License.Number) && this.State === this.customerDetails.Drivers_License.State) {
+        this.resgister(model);
+      } else if (this.Id && this.Id === this.customerDetails.AlternateID.Number) {
+        this.resgister(model);
+      }
+    }
+  }
+
+  resgister(model: IRegUser) {
+    this.UserService.signup(model).subscribe(
+      () => this.Router.navigate([this.UserService.UserState || '/']),
+      error => {
+        let errorMessage: string;
+        errorMessage = error.Message;
+        if (errorMessage.includes('The Service Account Search request is invalid.')) {
+          this.registerForm.controls['Service_Account_Id'].setErrors({'incorrect': true});
+          // this.errorMsg = 'We are having trouble finding this service account number. Please check the number, or call 866-961-9399 for assistance.';
+        } else if (errorMessage.includes('User Exists')) {
+          this.registerForm.controls['User_name'].setErrors({'userExists': true});
+        } else if (errorMessage.includes('Username already created for CSP ID.')) {
+          this.registerForm.controls['User_name'].setErrors({'userNameInUse': true});
+        } else if (errorMessage.includes('We could not find the service account you supplied.')) {
+          this.errorMsg = 'Information provided does not match our records. Please check the details, or call 866-961-9399 for assistance.';
+        } else {
+          this.errorMsg = errorMessage;
+        }
+        this.processing = false;
+      }
+    );
   }
 
   save(model: IRegUser, isValid: boolean) {
     this.resetValidationErrors();
     // call API to save customer
     if (isValid) {
-      this.UserService.signup(model).subscribe(
-        () => this.Router.navigate([this.UserService.UserState || '/']),
-        error => {
-          let errorMessage: string;
-          errorMessage = error.Message;
-          if (errorMessage.includes('The Service Account Search request is invalid.')) {
-            this.registerForm.controls['Service_Account_Id'].setErrors({'incorrect': true});
-            // this.errorMsg = 'We are having trouble finding this service account number. Please check the number, or call 866-961-9399 for assistance.';
-          } else if (errorMessage.includes('User Exists')) {
-            this.registerForm.controls['User_name'].setErrors({'userExists': true});
-          } else if (errorMessage.includes('Username already created for CSP ID.')) {
-            this.registerForm.controls['User_name'].setErrors({'userNameInUse': true});
-          } else if (errorMessage.includes('We could not find the service account you supplied.')) {
-            this.errorMsg = 'Information provided does not match our records. Please check the details, or call 866-961-9399 for assistance.';
-          } else {
-            this.errorMsg = errorMessage;
+      this.registerClicked = true;
+      this.UserService.registerVerification(model).subscribe(
+        result => { this.customerDetails = result;
+          if (this.customerDetails.Social_Security_Number) {
+            this.currentView = 'ssn';
+          } else if (this.customerDetails.Drivers_License.Number) {
+            this.currentView = 'ddl/id';
           }
-          this.processing = false;
         }
       );
     } else {
-      console.log('Invalid form');
+      // console.log('Invalid form');
       this.processing = false;
+      this.registerClicked = false;
     }
   }
 
@@ -77,21 +125,11 @@ export class LoginRegisterModalComponent implements OnInit {
     this.processing = true;
     this.formSubmitted = true;
     this.errorMsg = null;
-    // if ( this.registerForm.controls['Service_Account_Id'].value !== '' && !this.registerForm.controls['Service_Account_Id'].valid) {
-    //   // this.registerForm.controls['Service_Account_Id'].setValue('', { onlySelf: true });
-    //   //  this.registerForm.controls['Service_Account_Id'].setErrors({'incorrect': null});
-    //   this.registerForm.controls['Service_Account_Id'].setErrors(null);
-    // }
-    // if ( this.registerForm.controls['User_name'].value !== '' && ! this.registerForm.controls['User_name'].valid ) {
-    //   // this.registerForm.controls['User_name'].setValue('', { onlySelf: true });
-    //   // this.registerForm.controls['User_name'].setErrors({'userExists': null});
-    //   // this.registerForm.controls['User_name'].setErrors({'userNameInUse': null});
-    //   this.registerForm.controls['User_name'].setErrors(null);
-    // // }
   }
 
   reset() {
     this.processing = false;
+    this.registerClicked = false;
     this.formSubmitted = false;
     this.errorMsg = null;
     this.registerForm = this.registerFormInit();
@@ -111,6 +149,7 @@ export class LoginRegisterModalComponent implements OnInit {
       validator: equalCheck('Password', 'ConfirmPassword')
     });
   }
+
   public showLoginRegisterModal(): void {
     this.loginRegisterModal.show();
   }

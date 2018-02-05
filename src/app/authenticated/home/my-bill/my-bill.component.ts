@@ -57,35 +57,35 @@ export class MyBillComponent implements OnInit, OnDestroy {
           this.totalDue = activeServiceAccount.Current_Due + activeServiceAccount.Past_Due;
           this.autoPay = activeServiceAccount.Is_Auto_Bill_Pay;
           this.pastDueExists = this.pastDue > 0 ? true : false;
-          this.paymentHistorySubscription = this.PaymentHistoryStore.PaymentHistory.subscribe(
-            PaymentsHistoryItems => {
-              if (PaymentsHistoryItems) {
-                this.Payments = PaymentsHistoryItems;
-                this.PaymentsLength = this.Payments.length;
-                if (this.Payments[0]) {
-                  this.paymentStatus = this.Payments[0].PaymentStatus;
-                  if (this.paymentStatus === 'In Progress' || this.paymentStatus === 'Cleared') {
-                    this.LatestBillAmount = this.Payments[0].PaymentAmount;
-                    this.LatestBillPaymentDate = this.Payments[0].PaymentDate;
-                    this.showDueDate = false;
-                  } else {
-                    this.showDueDate = true;
-                  }
-                }
-                this.latestInvoiceDetailsSubscription = this.InvoiceStore.LatestInvoiceDetails.subscribe(
-                  latestInvoice => {
-                    if (!latestInvoice) {
-                      return;
-                    }
-                    this.latestInvoice = latestInvoice;
-                    this.dueDate = new Date(latestInvoice.Due_Date);
-                    this.dueDate.setDate(this.dueDate.getDate() + 1);
-                    this.exceededDueDate = (this.dueDate < new Date()) ? true : false;
-                  }
-                );
-                this.setFlags();
+          this.latestInvoiceDetailsSubscription = this.InvoiceStore.LatestInvoiceDetails.subscribe(
+            latestInvoice => {
+              if (!latestInvoice) {
+                return;
               }
-            });
+              this.latestInvoice = latestInvoice;
+              this.dueDate = new Date(latestInvoice.Due_Date);
+              this.dueDate.setDate(this.dueDate.getDate() + 1);
+              this.exceededDueDate = (this.dueDate < new Date()) ? true : false;
+              this.paymentHistorySubscription = this.PaymentHistoryStore.PaymentHistory.subscribe(
+                PaymentsHistoryItems => {
+                  if (PaymentsHistoryItems) {
+                    this.Payments = PaymentsHistoryItems;
+                    this.PaymentsLength = this.Payments.length;
+                    if (this.Payments[0]) {
+                      this.paymentStatus = this.Payments[0].PaymentStatus;
+                      if (this.paymentStatus === 'In Progress' || this.paymentStatus === 'Cleared') {
+                        this.LatestBillAmount = this.Payments[0].PaymentAmount;
+                        this.LatestBillPaymentDate = this.Payments[0].PaymentDate;
+                        this.showDueDate = false;
+                      } else {
+                        this.showDueDate = true;
+                      }
+                    }
+                  }
+                  this.setFlags();
+                });
+            }
+          );
         }
       }
   );

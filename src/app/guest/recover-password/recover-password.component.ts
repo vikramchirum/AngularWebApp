@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {UserService} from '../../core/user.service';
-import {Router} from '@angular/router';
+import { UserService } from '../../core/user.service';
+import { Router } from '@angular/router';
 import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
-import {Http} from '@angular/http';
+import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { equalCheck, validatePassword } from 'app/validators/validator';

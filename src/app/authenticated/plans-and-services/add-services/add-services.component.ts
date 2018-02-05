@@ -26,6 +26,8 @@ import { forEach } from '@angular/router/src/utils/collection';
 import { CalendarService } from '../../../core/calendar.service';
 import { TDUStore } from '../../../core/store/tdustore';
 import { ITDU } from '../../../core/models/tdu/tdu.model';
+import { IAddress } from 'app/core/models/address/address.model';
+import { IMeterInfo } from 'app/core/models/serviceaddress/meterinfo.model';
 
 @Component( {
   selector: 'mygexa-add-services',
@@ -40,7 +42,8 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   availableOffers: IOffers[] = null;
   featuredOffers = null;
   serviceTypeSource = ServiceType;
-
+  featuredOffersLength: number = null;
+  showMorePlans: boolean = null;
   private customerAccountId: string;
   private channelId: string;
   private tokenRes: CustomerCheckToken;
@@ -54,20 +57,25 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   private TDUDunsServiceSubscription: Subscription = null;
   enableDates: boolean = null;
   private selectedOffers: string[];
-  addressNotServed: boolean = null;
+  addressServed: boolean = null;
   private customerDetails: CustomerAccount = null;
   private Waiver: string;
-  private serviceType?: ServiceType;
-  private selectedStartDate: IMyDateModel;
+  public serviceType?: ServiceType;
+  public selectedStartDate: IMyDateModel;
   private selectedOfferId: string;
-  private enrollErrorMsg: string;
-  private enrolled: boolean = false;
-  private showPlansFlag: boolean = false;
+  public enrollErrorMsg: string;
+  public enrolled = false;
+  public showPlansFlag = false;
   offerSelectionType = OfferSelectionType;
   selectedOffer: IOfferSelectionPayLoad;
+  offerSelected: boolean = null;
   pricingMessage: string;
   TDUDuns: ITDU[] = [];
   TDUDunsNumbers: string[] = [];
+  useBillAddress: boolean = true;
+  dynamicAddressForm: FormGroup;
+  enableSubmitEnroll: boolean = false;
+  dynamicUAN = null;
   constructor( private fb: FormBuilder,
                private offerService: OfferService, private UserService: UserService, private enrollService: EnrollService, private customerAccountService: CustomerAccountService,
                private modalStore: ModalStore, private channelStore: ChannelStore, private availableDateService: AvailableDateService, private calendarService: CalendarService,
@@ -96,9 +104,16 @@ export class AddServicesComponent implements OnInit, OnDestroy {
         // console.log('TDU duns number array', this.TDUDunsNumbers);
       }
     );
+    this.dynamicAddressForm = this.fb.group({
+      'Line1': [null, Validators.required],
+      'Line2': [null, Validators.required],
+      'City': [null, Validators.required],
+      'State': [null, Validators.required],
+      'Zip': [null, Validators.required]
+    });
   }
 
-  private ServiceStartDate: IMyOptions = {
+  public ServiceStartDate: IMyOptions = {
     // start date options here...
     disableDays: [],
     disableUntil: { year: 0, month: 0, day: 0 },
@@ -114,28 +129,35 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       var calendarData = this.calendarService.getCalendarData( this.tduAvailabilityResult, this.serviceType );
 
       // Set calendar options
-      console.log( calendarData );
-      this.ServiceStartDate = {
-        disableUntil: calendarData.startDate,
-        disableSince: calendarData.endDate,
-        disableDays: calendarData.unavailableDates,
-        markDates: [ { dates: calendarData.alertDates, color: 'Red' } ]
-      };
-
+      console.log( 'calendarData', calendarData );
+      if (calendarData) {
+        this.ServiceStartDate = {
+          disableUntil: calendarData.startDate,
+          disableSince: calendarData.endDate,
+          disableDays: calendarData.unavailableDates,
+          markDates: [ { dates: calendarData.alertDates, color: 'Red' } ]
+        };
+      }
       this.pricingMessage = calendarData.pricingMessage;
     }
   }
 
   disableFields( $event ) {
-    // console.log('h', $event);
+     // console.log('h', $event);
     this.isValidAddress = $event;
-    if (this.isValidAddress) {
-      this.enableDates = false;
-      this.ServiceStartDate.disableUntil = { year: 0, month: 0, day: 0 };
-      this.ServiceStartDate.disableSince = { year: 0, month: 0, day: 0 };
-      this.ServiceStartDate.disableDays = [];
-      this.ServiceStartDate = null;
+    if (!this.isValidAddress) {
+      // console.log('hellllloo');
+      this.clearFields();
     }
+  }
+
+  clearFields() {
+    this.enableDates = false;
+    this.ServiceStartDate.disableUntil = { year: 0, month: 0, day: 0 };
+    this.ServiceStartDate.disableSince = { year: 0, month: 0, day: 0 };
+    this.ServiceStartDate.disableDays = [];
+    this.selectedStartDate = this.serviceType = this.featuredOffers = this.featuredOffersLength = null;
+    this.showPlansFlag = false;
   }
 
   // Fetch Offers when users selects new address
@@ -143,7 +165,11 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     this.selectedServiceAddress = serviceLocation;
     console.log('selected address duns', this.selectedServiceAddress.Meter_Info.TDU_DUNS);
     // console.log('result', this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS));
-    this.addressNotServed = this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS);
+    this.addressServed = this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS);
+    if (!this.addressServed) {
+      this.clearFields();
+    }
+    // console.log('addressServed', this.addressServed);
     // Get Available dates
     if ( this.selectedServiceAddress.Meter_Info.UAN !== null && this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS)) {
       this.availableDateServiceSubscription = this.availableDateService.getAvailableDate( this.selectedServiceAddress.Meter_Info.UAN ).subscribe(
@@ -157,7 +183,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     this.enrollErrorMsg = '';
     this.tokenMsg = '';
     this.isTokenError = false;
-    if ( this.serviceType ) {
+    if ( this.serviceType && this.addServiceForm && this.addServiceForm.value.Service_Start_Date.jsdate ) {
       this.getFeaturedOffers( this.addServiceForm.value.Service_Start_Date.jsdate );
     }
     this.checkCustomerToken();
@@ -165,8 +191,8 @@ export class AddServicesComponent implements OnInit, OnDestroy {
 
   onChangeServiceType() {
     if ( this.serviceType ) {
-      this.enableDates = true;
       this.populateCalendar();
+      this.enableDates = true;
     } else {
       this.enableDates = false;
     }
@@ -182,7 +208,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   // Fetch Offers by passing start date and TDU_DUNS number of selected addresss
   getFeaturedOffers( ServiceStartDate ) {
     this.offerRequestParams = {
-      startDate: ServiceStartDate.toISOString(),
+      startDate: ServiceStartDate ? ServiceStartDate.toISOString() : '',
       dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS,
       approved: true,
       page_size: 100,
@@ -201,19 +227,30 @@ export class AddServicesComponent implements OnInit, OnDestroy {
             return this.availableOffers;
           }
         } );
+        this.featuredOffersLength = this.featuredOffers ? this.featuredOffers.length : 0;
         console.log( 'Featured Offers', this.featuredOffers );
 
       } );
+  }
+
+  morePlansClicked() {
+    this.showMorePlans = !this.showMorePlans;
   }
 
   scrollTop() {
     window.scrollTo( 0, 0 );
   }
 
-
-  onNotify( event: IOfferSelectionPayLoad ) {
+  onOfferSelected ( event: IOfferSelectionPayLoad ) {
+    this.offerSelected = true;
     this.selectedOffer = event;
+    console.log('Selected offer', this.selectedOffer);
     this.selectedOfferId = event.Offer.Id;
+    // this.formEnrollmentRequest();
+    this.enableSubmitMove();
+  }
+
+  onNotify() {
     if ( this.formEnrollmentRequest() ) {
       this.enrollService.createEnrollment( this.enrollmentRequest )
         .subscribe( result => {
@@ -276,21 +313,38 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     if ( this.isTokenError ) {
       return false;
     }
-
+    const dynamicAddress = {} as IAddress;
+    if (this.useBillAddress) {
+      dynamicAddress.City = this.selectedServiceAddress.Address.City;
+      dynamicAddress.State = this.selectedServiceAddress.Address.State;
+      dynamicAddress.Line1 = this.selectedServiceAddress.Address.Line1;
+      dynamicAddress.Line2 = this.selectedServiceAddress.Address.Line2;
+      dynamicAddress.Zip = this.selectedServiceAddress.Address.Zip;
+      dynamicAddress.Zip_4 = this.selectedServiceAddress.Address.Zip_4;
+      this.dynamicUAN = this.selectedServiceAddress.Meter_Info.UAN;
+    } else {
+      dynamicAddress.City = this.dynamicAddressForm.get('City').value;
+      dynamicAddress.State = this.dynamicAddressForm.get('State').value;
+      dynamicAddress.Line1 = this.dynamicAddressForm.get('Line1').value;
+      dynamicAddress.Line2 = this.dynamicAddressForm.get('Line2').value;
+      dynamicAddress.Zip = this.dynamicAddressForm.get('Zip').value;
+      dynamicAddress.Zip_4 = null;
+      this.dynamicUAN = null;
+    }
     this.enrollmentRequest = {
       Email_Address: environment.Client_Email_Addresses,
       Offer_Id: this.selectedOfferId,
-      UAN: this.selectedServiceAddress.Meter_Info.UAN,
+      UAN: this.dynamicUAN,
       Customer_Check_Token: this.tokenMsg,
       Waiver: this.Waiver,
       Service_Type: this.serviceType,
       Selected_Start_Date: this.selectedStartDate.jsdate,
       Language_Preference: this.customerDetails.Language,
       Contact_Info: {
-        Email_Address: environment.Client_Email_Addresses,
+        Email_Address: this.customerDetails.Email,
         Primary_Phone_Number: this.customerDetails.Primary_Phone
       },
-      Billing_Address: this.selectedServiceAddress.Address
+      Billing_Address: dynamicAddress
     };
     if ( this.selectedOffer.Offer.Has_Partner ) {
       this.enrollmentRequest.Partner_Account_Number = this.selectedOffer.Partner_Account_Number;
@@ -309,6 +363,21 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     }
     if (this.TDUDunsServiceSubscription) {
       this.TDUDunsServiceSubscription.unsubscribe();
+    }
+  }
+  toggleAddress() {
+    this.useBillAddress = !this.useBillAddress;
+    this.enableSubmitMove();
+  }
+  enableSubmitMove() {
+    if (!this.useBillAddress) {
+      if (this.dynamicAddressForm.valid) {
+        this.enableSubmitEnroll = true;
+      } else {
+        this.enableSubmitEnroll = false;
+      }
+    } else {
+      this.enableSubmitEnroll = true;
     }
   }
 }

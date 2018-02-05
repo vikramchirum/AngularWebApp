@@ -7,9 +7,15 @@
 
     </slide>
   <slide>
-    <img src="assets/home/gexa-share_2.jpg" class="hidden-xs" alt="Share and Save" routerLink="/account/refer-a-friend/referral-options" style="cursor: pointer">
-    <img src="assets/home/gexa-share_mobile.jpg" class="visible-xs" alt="Share and Save" routerLink="/account/refer-a-friend/referral-options" style="cursor: pointer">
+    <img src="assets/home/gexa-share_2.jpg" class="hidden-xs" alt="Share and Save" [ngClass]="{'disableLink': IsDisconnectedServiceAddress }"
+         routerLink="/account/refer-a-friend/referral-options" style="cursor: pointer">
+    <img src="assets/home/gexa-share_mobile.jpg" class="visible-xs" alt="Share and Save" [ngClass]="{'disableLink': IsDisconnectedServiceAddress }"
+         routerLink="/account/refer-a-friend/referral-options" style="cursor: pointer">
     </slide>
+  <slide *ngIf="IsUpForRenewal">
+    <img src="assets/home/gexa-share_desktop_renew.png" class="hidden-xs" alt="Renew" routerLink="/plans-and-services/my-services-plans" style="cursor: pointer">
+    <img src="assets/home/gexa-share_mobile_renew.png" class="visible-xs" alt="Renew" routerLink="/plans-and-services/my-services-plans" style="cursor: pointer">
+  </slide>
   <slide *ngIf="IsOnGexaLyric && !IsPaperless">
     <img src="assets/home/gexa-paperless.png" class="hidden-xs" alt="Go Paperless" routerLink="/account/profile" style="cursor: pointer">
     <img src="assets/home/gexa-paperless-mobile.png" class="visible-xs" alt="Share and Save" routerLink="/account/profile" style="cursor: pointer">

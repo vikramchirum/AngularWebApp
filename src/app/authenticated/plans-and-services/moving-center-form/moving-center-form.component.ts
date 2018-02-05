@@ -37,6 +37,10 @@ import { ServiceType } from '../../../core/models/enums/serviceType';
 import { CalendarService } from '../../../core/calendar.service';
 import { TDUStore } from '../../../core/store/tdustore';
 import { ITDU } from '../../../core/models/tdu/tdu.model';
+import { IAddress } from 'app/core/models/address/address.model';
+import { environment } from '../../../../environments/environment';
+import { IServiceAccountPlanHistoryOffer } from '../../../core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
+
 
 @Component( {
   selector: 'mygexa-moving-center-form',
@@ -60,6 +64,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   // selectedOffer: IOffers = null;
   selectedOffer: IOfferSelectionPayLoad = null;
   availableOffers = null;
+  availableOffersLength: number =null;
   isLoading: boolean = null;
   showNewPlans: boolean = null;
   isKeepCurrent: boolean = false;
@@ -81,7 +86,11 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   private availableDateServiceSubscription: Subscription = null;
   TDUDunsServiceSubscription: Subscription= null;
   TDUDuns: ITDU[];
-  private ActiveServiceAccount: ServiceAccount = null;
+  public ActiveServiceAccount: ServiceAccount = null;
+  public Featured_Usage_Level: string = null;
+  public Price_atFeatured_Usage_Level: number;
+  public Price_atFeatured_Usage_Level_Renewal: number;
+  public Price_atFeatured_Usage_Level_Current: number;
   private TDU_DUNS_Number: string = null;
   customerDetails: CustomerAccount = null;
   offerRequestParams: OfferRequest = null;
@@ -95,8 +104,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   isValidAddress: boolean = null;
   @ViewChild( 'selectPlanModal' ) selectPlanModal: SelectPlanModalDialogComponent;
   @ViewChild( 'errorModal' ) errorModal: ErrorModalComponent;
-
-
+  useOldAddress: boolean = true;
+  dynamicAddressForm: FormGroup;
+  enableSubmitMoveBtn: boolean = false;
+  dynamicUAN = null;
   constructor( private fb: FormBuilder,
                private viewContainerRef: ViewContainerRef,
                private ServiceAccountService: ServiceAccountService,
@@ -151,10 +162,16 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
         // 'agree_to_terms': [false, [Validators.pattern('true')]],
         'final_service_address': this.fb.array( [] )
       } );
+      this.dynamicAddressForm = this.fb.group({
+        'Line1': [null, Validators.required],
+        'Line2': [null, Validators.required],
+        'City': [null, Validators.required],
+        'State': [null, Validators.required],
+        'Zip': [null, Validators.required]
+      });
   }
 
   ngAfterViewInit() {
-
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       movingFromAccount => {
         // console.log("Active Service Account", movingFromAccount);
@@ -177,7 +194,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     );
   }
 
-  private newServiceStartDate: IMyOptions = {
+  public newServiceStartDate: IMyOptions = {
     // start date options here...
     disableDays: [],
     disableUntil: { year: 0, month: 0, day: 0 },
@@ -186,7 +203,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   };
 
 
-  private currentServiceEndDate: IMyOptions = {
+  public currentServiceEndDate: IMyOptions = {
     // other end date options here...;
     enableDays: [],
     disableDays: [],
@@ -221,6 +238,31 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     console.log( 'Offer selected', this.selectedOffer );
     // OfferId should only get passed when user wants to change their offer
     this.offerId = this.selectedOffer.Offer.Id;
+  }
+
+  checkCurrentFeaturedUsageLevel(CurrentOffer: IServiceAccountPlanHistoryOffer) {
+    if (CurrentOffer) {
+        this.Featured_Usage_Level = CurrentOffer.Featured_Usage_Level;
+        switch (CurrentOffer.Featured_Usage_Level) {
+          case  '500 kWh': {
+            this.Price_atFeatured_Usage_Level_Current = CurrentOffer.RateAt500kwh;
+            break;
+          }
+          case  '1000 kWh': {
+            this.Price_atFeatured_Usage_Level_Current = CurrentOffer.RateAt1000kwh;
+            break;
+          }
+          case  '2000 kWh': {
+            this.Price_atFeatured_Usage_Level_Current = CurrentOffer.RateAt2000kwh;
+            break;
+          }
+          default: {
+            CurrentOffer.Featured_Usage_Level = '2000 kWh';
+            this.Price_atFeatured_Usage_Level_Current = CurrentOffer.RateAt2000kwh;
+            break;
+          }
+        }
+    }
   }
 
   populateCalendar() {
@@ -288,6 +330,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.offerSubscription = this.offerService.getOffers( this.offerRequestParams )
       .subscribe( result => {
         this.availableOffers = result;
+        this.availableOffersLength = this.availableOffers ? this.availableOffers.length : 0;
         this.isLoading = false;
         console.log( 'this.available offers', this.availableOffers );
         // prevent user from navigating to plans page if we don't offer service in the moving address
@@ -330,12 +373,26 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.ServicePlanForm.get( 'service_plan' ).setValidators( [ Validators.required, tduCheck( this.ActiveServiceAccount.TDU_DUNS_Number, this.newServiceAddress.Meter_Info.TDU_DUNS ) ] );
 
   }
-
+  enableSubmitMove() {
+    if (this.ServicePlanForm && this.ServicePlanForm.valid) {
+      this.enableSubmitMoveBtn = true;
+      if (!this.useOldAddress) {
+        if (this.dynamicAddressForm && this.dynamicAddressForm.valid) {
+          this.enableSubmitMoveBtn = true;
+        } else {
+          this.enableSubmitMoveBtn = false;
+        }
+      }
+    } else {
+      this.enableSubmitMoveBtn = false;
+    }
+  }
   useCurrentAddress() {
     this.ServicePlanForm.controls[ 'service_address' ].setValue( 'Current Address' );
     this.finalBillAddress = 'Current Address';
     this.isUseNew = false;
     this.isUseCurrent = true;
+    this.enableSubmitMove();
   }
 
   useNewAddress() {
@@ -343,6 +400,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.finalBillAddress = 'New Address';
     this.isUseNew = true;
     this.isUseCurrent = false;
+    if (!this.useOldAddress) {
+      this.ServicePlanForm.controls['final_service_address'].setValue({});
+    }
+    this.enableSubmitMove();
   }
 
   onSubmitMove( addressForm, billSelector ) {
@@ -351,6 +412,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
     console.log( 'addressForm', addressForm );
     console.log( 'billSelector', billSelector );
+    const dynamicAddress = {} as IAddress;
 
     addressForm.current_bill_address = this.ActiveServiceAccount.Mailing_Address;
     // Address where the customer wants to send their final bill
@@ -361,6 +423,25 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       billSelector.final_service_address = this.newServiceAddress.Address;
       this.Final_Bill_To_Old_Service_Address = false;
     }
+    if (this.useOldAddress) {console.log(1);
+      dynamicAddress.City = this.newServiceAddress.Address.City;
+      dynamicAddress.State = this.newServiceAddress.Address.State;
+      dynamicAddress.Line1 = this.newServiceAddress.Address.Line1;
+      dynamicAddress.Line2 = this.newServiceAddress.Address.Line2;
+      dynamicAddress.Zip = this.newServiceAddress.Address.Zip;
+      dynamicAddress.Zip_4 = this.newServiceAddress.Address.Zip_4;
+      this.dynamicUAN = this.newServiceAddress.Meter_Info.UAN;
+    } else {console.log(2);
+      dynamicAddress.City = this.dynamicAddressForm.get('City').value;
+      dynamicAddress.State = this.dynamicAddressForm.get('State').value;
+      dynamicAddress.Line1 = this.dynamicAddressForm.get('Line1').value;
+      dynamicAddress.Line2 = this.dynamicAddressForm.get('Line2').value;
+      dynamicAddress.Zip = this.dynamicAddressForm.get('Zip').value;
+      dynamicAddress.Zip_4 = null;
+      this.dynamicUAN = null;
+      // billSelector.final_service_address = dynamicAddress;
+    }
+    console.log('dynamicAddress', dynamicAddress);
 
     // If user selects existing plan , set current offer as true
     if ( billSelector.service_plan === 'Current Plan' ) {
@@ -378,19 +459,19 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     // Request Parms to post data to Transfer service API
     this.transferRequest = {
       // The email must match an email that is attached to a channel.  It is hardcoded now
-      Email_Address: 'sirisha.gunupati@gexaenergy.com', // this.customerDetails.Email,
+      Email_Address: String(environment.Client_Email_Addresses),
       Service_Account_Id: this.ActiveServiceAccount.Id,
       Current_Service_End_Date: addressForm.Current_Service_End_Date.jsdate,
       Final_Bill_To_Old_Service_Address: this.Final_Bill_To_Old_Service_Address,
       Final_Bill_Address: billSelector.final_service_address,
-      UAN: this.newServiceAddress.Meter_Info.UAN,
-      Billing_Address: this.newServiceAddress.Address,
+      UAN: this.dynamicUAN,
+      Billing_Address: dynamicAddress,
       TDSP_Instructions: '',
       New_Service_Start_Date: addressForm.New_Service_Start_Date.jsdate,
       Keep_Current_Offer: this.Keep_Current_Offer,
       Offer_Id: this.offerId,
       Contact_Info: {
-        Email_Address: 'sirisha.gunupati@gexaenergy.com', // this.customerDetails.Email,
+        Email_Address: this.customerDetails.Email,
         Primary_Phone_Number: this.customerDetails.Primary_Phone
       },
       Language_Preference: this.customerDetails.Language,
@@ -425,5 +506,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
   }
 
+  toggleAddress() {
+    this.useOldAddress = !this.useOldAddress;
+    this.enableSubmitMove();
+  }
 
 }

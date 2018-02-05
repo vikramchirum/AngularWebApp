@@ -32,6 +32,7 @@
                       <h4>Service Address</h4>
                       <h5>{{ acct.Service_Address.Line1 + ',' }}</h5>
                       <h5>{{ acct.Service_Address.City }}, {{ acct.Service_Address.State + '. '+ acct.Service_Address.Zip }} </h5>
+                      <h5>{{ acct.Status === 'Disconnected' ? '(Closed Account)' : '' }}</h5>
                     </div>
                   </div>
                 </div>

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {UserService} from '../../core/user.service';
-import {environment} from 'environments/environment';
-import {Http} from '@angular/http';
-import {Router} from '@angular/router';
+import { FormBuilder , FormGroup, Validators} from '@angular/forms';
+import { UserService } from '../../core/user.service';
+import { environment } from 'environments/environment';
+import { Http } from '@angular/http';
+import { Router } from '@angular/router';
 import {  validateEmail } from 'app/validators/validator';
 
 @Component({

@@ -18,7 +18,7 @@ import { InvoiceStore } from '../../core/store/invoicestore';
 })
 export class PaymentsComponent implements OnInit, OnDestroy {
 
-  private startsWith = startsWith;
+  public startsWith = startsWith;
   private ActiveServiceAccountSubscription: Subscription = null;
   private InvoiceStoreSubscription: Subscription = null;
 
@@ -26,7 +26,7 @@ export class PaymentsComponent implements OnInit, OnDestroy {
   @ViewChild(ViewBillComponent) private viewBill: ViewBillComponent;
 
   constructor(
-    private Router: Router,
+    public  Router: Router,
     private ServiceAccountService: ServiceAccountService,
     private invoice_service: InvoiceService,
     private paymentsHistoryStore: PaymentsHistoryStore,

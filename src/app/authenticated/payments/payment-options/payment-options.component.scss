@@ -8,7 +8,7 @@
     display: block;
     text-decoration: none;
     margin-bottom: 2rem;
-    padding: 30px;
+    padding: 30px 10px;
     display: block;
     border: 1px solid transparent;
     opacity: .8;
@@ -18,6 +18,7 @@
     }
 
     &.payment-option-active {
+      
       border: 1px solid $payment-base;
       opacity: 1.0;
     }
@@ -35,6 +36,7 @@
 
     h4 {
       margin-top: 0;
+      min-height: 55px;
     }
     .payment-option-name {
       margin-top: 20px;

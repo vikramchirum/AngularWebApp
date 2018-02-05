@@ -7,6 +7,11 @@
 
 }
 
+.change-plans-grid {
+ background-color:  rgba(251,247,220,1.0);
+padding-top:30px;
+}
+
 .plans-bg {
   color: $plans-base;
 }
@@ -16,7 +21,6 @@
   border-radius:30px;
   background-color: $plans-base;
     text-align: center;
-    margin: 20px auto;
     padding-top: 6px;
     font-size: 32px;
     color: #fff;
@@ -150,7 +154,7 @@ small.alert {
 }
 
 .p-plans {
-  margin-left: 265px;
+  text-align: right;
 }
 
 .mat-card.current-plan-card {
@@ -211,6 +215,12 @@ small.alert {
   }
 }
 @media only screen and (max-width: 480px) {
+
+  .service-plan h3.text-center {
+    margin-top: 10px;
+    text-align: left;
+  }
+
   .filter-select,
   #keyword {
     width: 100%;
@@ -225,7 +235,7 @@ small.alert {
 
 .mat-card.current-plan-card {
   .mat-card-title h2 {
-    font-family: Oswald, "Open Sans", "sans-serif";
+        font-family: 'Oswald', 'Open Sans', 'AvenirNextCondensed-Bold', sans;
     font-size: 24px;
   }
 
@@ -233,17 +243,66 @@ small.alert {
     h2 {
     font-weight: 400;
     color: #000;
-    font-family: Oswald, "Open Sans", "sans-serif";
+        font-family: 'Oswald', 'Open Sans', 'AvenirNextCondensed-Bold', sans;
     font-size: 50px;
 
     }
-    
+
     small {
       font-size:20px;
       margin-left: -10px;
       color:#000;
-      
+
     }
   }
 
+}
+
+.checkbox label:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.checkbox .cr {
+  position: relative;
+  display: inline-block;
+  border: 1px solid #a9a9a9;
+  border-radius: .25em;
+  width: 1.5em;
+  height: 1.5em;
+  margin-left: -2.8em;
+  // background:#000;
+}
+.checkbox .cr .cr-icon {
+  position: absolute;
+  font-size: 1em;
+  line-height: 0;
+  top: 50%;
+  left: 20%;
+  //color:#fff;
+}
+.fa-check {
+  color: $payment-base;
+
+}
+
+.checkbox label input[type="checkbox"] {
+  display: none;
+  padding-left:1.4em;
+}
+
+.checkbox label input[type="checkbox"] + .cr > .cr-icon {
+  transform: scale(3) rotateZ(-20deg);
+  opacity: 0;
+  transition: all .3s ease-in;
+}
+
+.checkbox label input[type="checkbox"]:checked + .cr > .cr-icon {
+  transform: scale(1) rotateZ(0deg);
+  opacity: 1;
+}
+
+.checkbox label input[type="checkbox"]:disabled + .cr{
+  opacity: .5;
 }

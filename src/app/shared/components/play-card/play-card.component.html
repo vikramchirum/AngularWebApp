@@ -1,4 +1,4 @@
-<div id="plan_{{offer.Id}}" class="plan">
+<div id="plan_{{offer.Id}}" class="plan" [ngClass]="{'plan-background': isMoving}">
       <div class="content">
         <div class="planFront">
           <div class="planConfirm" style="display:none">
@@ -83,8 +83,6 @@
               </div>
             </div>
             </div>
-
-
             <div class="row">
               <div class="col-xs-1 col-xs-offset-1">
               <div class="checkbox">
@@ -94,12 +92,12 @@
                  </label>
                  </div>
               </div>
-              <div class="col-xs-9 agreement-text">
+              <div class="col-xs-9 agreement-text" [ngClass]="offer.Has_Partner ? 'has-partner' : 'no-partner'">
                 <p>By checking this box, I agree to this service plan and rate shown above with Gexa energy, LP.
                 </p>
                 <p>
 
-                  View your <a href="#stay">Terms Of Service</a>, <a href="#stay">Electricity Facts Label(EFL)</a> and <a href="#stay">Your Rights As a Customer</a> prior to enrollment.</p>
+                  View your <a href="{{tosLink}}" target="_blank">Terms Of Service</a>, <a href="{{eflLink}}" target="_blank">Electricity Facts Label(EFL)</a> and <a href="{{yraacLink}}" target="_blank">Your Rights As a Customer</a> prior to enrollment.</p>
               </div>
 
             </div>

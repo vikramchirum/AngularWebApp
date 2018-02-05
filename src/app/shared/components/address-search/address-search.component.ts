@@ -26,7 +26,7 @@ import { ServiceAddress } from 'app/core/models/serviceaddress/serviceaddress.mo
 })
 export class AddressSearchComponent implements OnInit {
 
-  private selectedAddress: string = '';
+  public selectedAddress: string = '';
   newAddressList: Observable<ServiceAddress[]>;
   private searchTerms = new Subject<string>();
   showAddressList: boolean = true;
@@ -45,8 +45,10 @@ export class AddressSearchComponent implements OnInit {
     this.searchTerms.next(term);
     if ( !term ) {
       this.isValidAddress = false;
-      this.onServiceAddressChanged.emit(this.isValidAddress);
+    } else {
+      this.isValidAddress = true;
     }
+    this.onServiceAddressChanged.emit(this.isValidAddress);
   }
 
   ngOnInit(): void {

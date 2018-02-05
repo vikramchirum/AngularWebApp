@@ -24,6 +24,7 @@ import { IInvoice } from '../../../core/models/invoices/invoice.model';
 import { PaymentsHistoryStore } from '../../../core/store/paymentsstore';
 import { InvoiceStore } from '../../../core/store/invoicestore';
 import { PaymentConfirmationModalComponent } from '../../../shared/components/payment-confirmation-modal/payment-confirmation-modal.component';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'mygexa-make-payment',
@@ -36,7 +37,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   paymentOneTimeValid: boolean = null;
   paymentSubmittedWithoutError: boolean = null;
   formGroup: FormGroup = null;
-
+  zeroAmountEntered: boolean = null;
   totalDue: number;
   pastDue: number;
   pastDueExists: boolean = null;
@@ -47,8 +48,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   dueDate: Date = null;
   LatestBillAmount: number;
   LatestBillPaymentDate: Date;
-
-
+  dollarAmountFormatter: string;
+  processing: boolean = null;
   PaymethodSelected: Paymethod = null;
 
   @ViewChild(PaymethodAddCcComponent) private addCreditCardComponent: PaymethodAddCcComponent;
@@ -139,6 +140,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.checkAmount();
+    this.dollarAmountFormatter = environment.DollarAmountFormatter;
     this.CustomerAccountSubscription = this.CustomerAccountService.CustomerAccountObservable.subscribe(
       CustomerAccount => this.CustomerAccount = CustomerAccount
     );
@@ -162,14 +165,15 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                     this.exceededDueDate = (this.dueDate < new Date()) ? true : false;
                     this.PaymentHistorySubscription = this.PaymentsHistoryStore.PaymentHistory.subscribe(
                       PaymentsHistoryItems => {
-                        if (PaymentsHistoryItems) {
+                        if (PaymentsHistoryItems && PaymentsHistoryItems.length > 0) {
                           this.paymentStatus = PaymentsHistoryItems[0].PaymentStatus;
                           if (this.paymentStatus === 'In Progress') {
                             this.LatestBillAmount = PaymentsHistoryItems[0].PaymentAmount;
                             this.LatestBillPaymentDate = PaymentsHistoryItems[0].PaymentDate;
                           }
-                          this.setFlags();
-                        }});
+                        }
+                        this.setFlags();
+                      });
                   }
                 );
                             }});
@@ -197,10 +201,18 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.CustomerAccountSubscription.unsubscribe();
-    this.PaymethodSubscription.unsubscribe();
-    this.ActiveServiceAccountSubscription.unsubscribe();
-    this.UserCustomerAccountSubscription.unsubscribe();
+    if (this.CustomerAccountSubscription) {
+      this.CustomerAccountSubscription.unsubscribe();
+    }
+    if (this.PaymethodSubscription) {
+      this.PaymethodSubscription.unsubscribe();
+    }
+    if (this.ActiveServiceAccountSubscription) {
+      this.ActiveServiceAccountSubscription.unsubscribe();
+    }
+    if (this.UserCustomerAccountSubscription) {
+      this.UserCustomerAccountSubscription.unsubscribe();
+    }
   }
 
   paymentOneTime($event, type): void {
@@ -235,8 +247,23 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
       this.formGroup.controls['payment_now'].setValue('');
     }
   }
-
+  checkAmount() {
+    console.log('hi');
+    let payment_entered: string;     let pay_entered: number;
+    payment_entered = String(get(this.formGroup.value, 'payment_now'));
+    if ( payment_entered.substring(0, 1)  === '$') {
+      pay_entered = Number(payment_entered.slice(1));
+    } else {
+      pay_entered = Number(payment_entered);
+    }
+    if (pay_entered === 0) {
+      this.zeroAmountEntered = true;
+    } else {
+      this.zeroAmountEntered = false;
+    }
+  }
   checkAmountBeforeSubmit() {
+    this.processing = true; this.zeroAmountEntered = false;
     let payment_entered: string;     let pay_entered: number; let errorMessage: string = null;
     payment_entered = String(get(this.formGroup.value, 'payment_now'));
     if ( payment_entered.substring(0, 1)  === '$') {
@@ -244,6 +271,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     } else {
       pay_entered = Number(payment_entered);
     }
+    console.log('payment', pay_entered);
     // console.log('first char', payment_entered.substring(0, 1) );
     // console.log('payment_entered', pay_entered);
     // pay_entered = Number((String(get(this.formGroup.value, 'payment_now')).slice(1)));
@@ -260,6 +288,9 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
         this.paymentConfirmationModal.hideConfirmationMessageModal();
         this.paymentSubmit();
       }
+    } else {
+      this.processing = false;
+      this.zeroAmountEntered = true;
     }
   }
 
@@ -352,6 +383,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
         console.log('An error occurred getting the Paymethod to charge. error = ', error);
         alert('An error occurred and needs to be handled.\nPlease view the console.');
         this.paymentLoadingMessage = null;
+        this.processing = false;
       })
 
       // Pass the Paymethod data to the Payments service.
@@ -377,19 +409,22 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             this.paymentLoadingMessage = null;
             this.PaymentsHistoryStore.LoadPaymentsHistory(this.ActiveServiceAccount);
             this.ServiceAccountService.UpdateServiceAccounts(true);
+            this.processing = false;
           },
           error => {
             this.paymentSubmittedWithoutError = false;
             console.log('An error occurred charging the paymethod!', error);
             this.paymentLoadingMessage = null;
+            this.processing = false;
           },
-          () => this.PaymentsHistoryService.AddNewPaymentToHistory({
+          () => { this.PaymentsHistoryService.AddNewPaymentToHistory({
             PaymentDate: new Date,
             PaymentAmount: AuthorizationAmount,
             PaymentStatus: 'Processing',
             PaymentMethod: PaymethodToCharge.CreditCard ? 'Credit Card' : 'eCheck',
-            PaymentAccount: PaymethodToCharge.CreditCard ? PaymethodToCharge.CreditCard.AccountNumber : PaymethodToCharge.BankAccount.AccountNumber
-      })
+            PaymentAccount: PaymethodToCharge.CreditCard ? (PaymethodToCharge.CreditCard.AccountNumber ? PaymethodToCharge.CreditCard.AccountNumber : ''  ) : PaymethodToCharge.BankAccount.AccountNumber
+      });
+          }
         );
 
       });

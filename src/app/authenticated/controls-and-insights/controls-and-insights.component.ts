@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 })
 export class ControlsAndInsightsComponent implements OnDestroy {
 
-  private startsWith = startsWith;
+  public startsWith = startsWith;
   private activeServiceAccount: ServiceAccount = null;
   private ServiceAccountsSubscription: Subscription = null;
   private isDataAvailable = false;
@@ -28,7 +28,7 @@ export class ControlsAndInsightsComponent implements OnDestroy {
   constructor(
     private usageHistoryService: UsageHistoryService,
     private ServiceAccountService: ServiceAccountService,
-    private Router: Router
+    public Router: Router
 
   ) {
     this.ServiceAccountsSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(

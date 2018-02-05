@@ -7,26 +7,35 @@ import { IOffers } from '../../../core/models/offers/offers.model';
 import { NotificationOptionsStore } from '../../../core/store/notificationoptionsstore';
 import { NotificationStatus } from '../../../core/models/enums/notificationstatus';
 import { INotificationOption } from '../../../core/models/notificationoptions/notificationoption.model';
+import { RenewalStore } from '../../../core/store/renewalstore';
+import { CarouselConfig } from 'ngx-bootstrap/carousel';
 
 @Component({
   selector: 'mygexa-home-carousel',
   templateUrl: './home-carousel.component.html',
+  providers: [
+    { provide: CarouselConfig, useValue: { interval: 10000, noPause: false } }
+  ],
   styleUrls: ['./home-carousel.component.scss']
 })
 export class HomeCarouselComponent implements OnInit, OnDestroy {
   serviceAccountServiceSubscription: Subscription = null;
   offersServiceSubscription: Subscription = null;
   notificationOptionsStoreSubscription: Subscription = null;
+  renewalStoreSubscription: Subscription = null;
   SearchNotificationOptions = null;
-
+  IsUpForRenewal: boolean = null;
+  IsRenewalPending: boolean = null;
   public promoCode: string = null;
   ActiveServiceAccount: ServiceAccount = null;
   GexaCarouselOffer: IOffers;
   IsOnGexaLyric: boolean = null;
   IsPaperless: boolean = null;
   NotificationOptions: INotificationOption = null;
+  IsDisconnectedServiceAddress: boolean = null;
 
   constructor( private ServiceAccountService: ServiceAccountService,
+               private renewalStore: RenewalStore,
                private NotificationOptionsStore: NotificationOptionsStore,
                private OfferStore: OffersStore) { }
   ngOnInit() {
@@ -34,7 +43,14 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
       ActiveServiceAccount => {
         this.ActiveServiceAccount = ActiveServiceAccount;
         if (this.ActiveServiceAccount) {
+          this.IsDisconnectedServiceAddress   = this.ActiveServiceAccount.Status === 'Disconnected' ? true : false;
         this.OfferStore.LoadLyricOfferDetails(this.ActiveServiceAccount.TDU_DUNS_Number);
+          this.renewalStoreSubscription = this.renewalStore.RenewalDetails.subscribe(renewalDetails => {
+            if (renewalDetails) {
+              this.IsUpForRenewal = renewalDetails.Is_Account_Eligible_Renewal;
+              this.IsRenewalPending = renewalDetails.Is_Pending_Renewal;
+            }
+          });
         this.offersServiceSubscription = this.OfferStore.GexaLyricOffer.subscribe(
           GexaOffer => {
             if (!GexaOffer) {
@@ -70,6 +86,9 @@ export class HomeCarouselComponent implements OnInit, OnDestroy {
     this.serviceAccountServiceSubscription.unsubscribe();
     if (this.offersServiceSubscription) {
       this.offersServiceSubscription.unsubscribe();
+    }
+    if (this.renewalStoreSubscription) {
+      this.renewalStoreSubscription.unsubscribe();
     }
   }
 }

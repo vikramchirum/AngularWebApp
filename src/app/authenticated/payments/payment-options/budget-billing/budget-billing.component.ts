@@ -31,9 +31,10 @@ export class BudgetBillingComponent implements OnInit, OnDestroy {
   budgetBillingInfo$: Observable<IBudgetBillingInfo>;
   budgetBillingEstimate$: Observable<IBudgetBillingEstimate>;
   cancelBudgetBillingObservable$: Observable<boolean>;
-
+  unableToProcess: boolean = null;
   private ActiveServiceAccountSubscription: Subscription = null;
   private UserServiceSubscription: Subscription = null;
+  private BudgetBillingSubscription: Subscription = null;
   private serviceAccountId: number;
 
   constructor(private budgetBillingService: BudgetBillingService,
@@ -68,6 +69,7 @@ export class BudgetBillingComponent implements OnInit, OnDestroy {
        this.budgetBillingInfo$.subscribe(res => {
           this.budgetBillingInfo = res;
         });
+       this.BudgetBillingSubscription = this.budgetBillingEstimate$.subscribe(res => { this.unableToProcess = (res.Variance > 0 && res.Amount > 0) ? true : false;  });
       }
     );
   }
@@ -135,6 +137,9 @@ export class BudgetBillingComponent implements OnInit, OnDestroy {
     this.ActiveServiceAccountSubscription.unsubscribe();
     if (this.UserServiceSubscription) {
       this.UserServiceSubscription.unsubscribe();
+    }
+    if (this.BudgetBillingSubscription) {
+      this.BudgetBillingSubscription.unsubscribe();
     }
   }
 }

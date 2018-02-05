@@ -5,52 +5,103 @@
         <h2>Add Service Location</h2>
       </div>
     </div>
-
-
     <!-- Enter New Service Address -->
     <div class="row">
-      <div class="col-sm-12 col-md-7 new-service-address">
+      <div class="col-sm-12 col-md-10 new-service-address">
         <h3>
           Enter New Service Address
         </h3>
-        <!-- <input type="text" class="form-control" placeholder="Enter New Address"> -->
         <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)" (onServiceAddressChanged) = "disableFields($event)"></mygexa-address-search>
-        <small *ngIf="!(isValidAddress === false) && addressNotServed === false" class="text-danger">   We're sorry, we don't offer electricity service at the location you specified. Please check the address, or contact Customer Service for assistance.   </small>
+        <small *ngIf="addressServed === false" class="text-danger">   We're sorry, we don't offer electricity service at the location you specified. Please check the address, or contact Customer Service for assistance.   </small>
       </div>
     </div>
+    <div *ngIf="true" class="row text-left">
+      <div class="col-xs-2 col-sm-1">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" [checked]="useBillAddress" (click)="toggleAddress()" class="checkbox">
+            <span class="cr"><i class="cr-icon fa fa-check"></i></span>
+          </label>
+        </div>
+      </div>
+      <div class="useAddressText col-xs-9">
+        My billing address is the same as my service address.
+      </div>
+     </div>
+     <div class="new-billing-form" *ngIf="!useBillAddress">
+      <form [formGroup]="dynamicAddressForm" novalidate>
+      <div class="row">
+        <div class="col-sm-8 col-md-6">
+          <label for="Line1" style="display:none">Street Address:</label>
+          <input (change)="enableSubmitMove()" type="text" placeholder="Street Address" class="form-control" formControlName="Line1" id="Line1">
+        </div>
+        <div class="form-group col-sm-4">
+          <label for="Line2" style="display:none">Apt or Suite #:</label>
+          <input (change)="enableSubmitMove()" type="text" placeholder="Apt or Suite #" class="form-control" formControlName="Line2" id="Line2">
+        </div>
 
+      </div>
+       <div class="row">
+        <div class="col-sm-7 col-md-6">
+          <label for="City" style="display:none">City:</label>
+          <input (change)="enableSubmitMove()" type="text" placeholder="City " class="form-control" formControlName="City" id="City">
+        </div>
+          <div class="col-sm-2 ">
+          <label for="State" style="display:none">State:</label>
+          <input (change)="enableSubmitMove()" type="text" placeholder="State " class="form-control" formControlName="State" id="State">
+        </div>
+        <div class="form-group col-sm-3 col-md-2">
+          <label for="Zip" style="display:none">Zip:</label>
+          <input (change)="enableSubmitMove()" type="text" placeholder="Zip" class="form-control" formControlName="Zip" id="Zip">
+        </div>
+
+      </div>
+    </form>
+  </div>
     <!-- Service Type Selection -->
     <div class="row">
-      <div class="col-sm-12 col-md-7  new-service-address">
+      <div class="col-sm-12 col-md-10  new-service-address">
         <h3>Service Type</h3>
         <div class="row">
           <div class="col-xs-6 col-sm-6 col-md-5">
             <div class="form-control">
               <label class="radio-inline">
-                <input type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.MoveIn">I'm Moving
+                <input style="cursor: pointer" type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.MoveIn" [disabled]="addressServed === false">I'm Moving
               </label>
             </div>
           </div>
-          <div class="col-xs-6 col-sm-6 col-md-5 col-md-offset-1">
+          <div class="col-xs-6 col-sm-6 col-md-5 col-md-offset-2">
             <div class="form-control">
               <label class="radio-inline">
-                <input type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.Switch">I'm Switching
+                <input style="cursor: pointer"  type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.Switch" [disabled]="addressServed === false">I'm Switching
               </label>
             </div>
           </div>
         </div>
       </div>
     </div>
-
     <!-- start service -->
     <div class="row">
-      <h3 class="start-service-text">When would you like to start service?      <small class="start-date-tooltip" tooltip="If you require service before 3 business days then call 855-639-8118."><i aria-hidden="true" class="fa fa-info-circle" ></i></small></h3>
-      <div class="col-md-6">
-        <my-date-picker name="Service_Start_Date" [(ngModel)]="selectedStartDate" [options]="ServiceStartDate" [disabled]="!enableDates"
+      <div class="col-sm-12 col-md-6">
+      <h3 class="start-service-text">When would you like to start service?
+              <!-- <button class="btn btn-link btn-xs start-date-tooltip visible-xs-inline-block" tooltip="If you require service before 3 business days then call 855-639-8118." triggers="mouseenter click"><i aria-hidden="true" class="fa fa-info-circle" ></i></button>        
+              <button class="btn btn-link btn-xs start-date-tooltip hidden-xs" tooltip="If you require service before 3 business days then call 855-639-8118." triggers="focus hover"><i aria-hidden="true" class="fa fa-info-circle" ></i></button> -->
+              <small><i aria-hidden="true" class="fa fa-info-circle" tooltip="If you require service before 3 business days then call 855-639-8118."></i></small>
+        </h3>    
+        <my-date-picker style="cursor: pointer" name="Service_Start_Date" [(ngModel)]="selectedStartDate" [options]="ServiceStartDate" [disabled]="!enableDates || addressServed === false"
           (dateChanged)="onStartDateChanged($event)"></my-date-picker>
         <small>{{pricingMessage}}</small>
       </div>
-
+      <div class="col-sm-6 col-md-6" *ngIf="offerSelected && showPlansFlag">
+        <h2 class="selectedPlanText text-center">Selected Plan</h2>
+          <div class="current-plan-card mat-card" *ngIf="offerSelected">
+            <h2 class="mat-card-title ">{{ selectedOffer?.Offer?.Plan?.Name}}</h2>
+            <div class="mat-card-content">
+              <h2>{{selectedOffer?.Offer?.Price_At_2000_kwh | DollarToCentsPipe | number : '1.1-1'}}<sup>&cent;</sup><small>per kWh</small></h2>
+              <p *ngIf="selectedOffer?.Offer?.End_Date" >Expires {{selectedOffer?.Offer?.End_Date| date:'d/M/yy'}}</p>
+            </div>
+          </div>
+      </div>
     </div>
 
     <!-- Select Plan -->
@@ -58,12 +109,9 @@
       <div *ngIf="showPlansFlag">
         <h2>Select a Plan</h2>
         <div class="row" class="featured-offers">
-          <div class="col-xs-12 col-sm-6 col-md-4" *ngFor="let featuredOffer of this.featuredOffers">
-            <!-- <mygexa-select-plan (selectedOffer)="onNotify($event)" [featuredOffer]="featuredOffer"></mygexa-select-plan> -->
-            <!-- <mygexa-plan-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
-            (onOfferSelectedEvent)="onNotify($event)"></mygexa-plan-card> -->
+          <div class="col-xs-12 col-sm-6 col-md-4" *ngFor="let featuredOffer of this.featuredOffers | slice:0:3; let i= index;">
             <mygexa-play-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
-            (onOfferSelectedEvent)="onNotify($event)"></mygexa-play-card>
+            (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-play-card>
           </div>
         </div>
       </div>
@@ -92,26 +140,28 @@
           </div>
         </div>
     </div>
+    <br>
+    <div class="row">
+      <div class="col-sm-6">
+      </div>
+      <div class="col-sm-6" *ngIf="showPlansFlag && featuredOffersLength > 3 " >
+        <p class="p-plans">View More Plans  <i class="fa"
+                                               (click)="morePlansClicked()"
+                                               [ngClass]="showMorePlans ? 'fa-chevron-up' : 'fa-chevron-down'">
+        </i></p>
+      </div><br>
+    </div>
+    <div class="row featured-offers" *ngIf="showPlansFlag && showMorePlans">
+      <div class="col-xs-12 col-sm-6 col-md-4" *ngFor="let featuredOffer of this.featuredOffers | slice:3: (featuredOffersLength); let i= index">
+
+        <mygexa-play-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
+                          (onOfferSelectedEvent)="onNotify($event)"></mygexa-play-card>
+      </div>
+    </div>
 
     <h2 *ngIf="enrollErrorMsg && enrollErrorMsg.length > 0">{{enrollErrorMsg}}</h2>
 
-
-    <!-- Credit Check -->
-    <!--<h4>Credit Check</h4>
-  <mygexa-credit-check></mygexa-credit-check>-->
-
     <div class="add-services-verify-info">
-      <!-- <div class="alert alert-info clearfix">
-        <div class="row">
-          <div class="col-md-9">
-            Please review all your information and make it is accurate before submitting
-          </div>
-          <div class="col-md-3">
-            <i class="fa fa-arrow-up pull-right" aria-hidden="true" (click)="scrollTop()"></i>
-          </div>
-        </div>
-      </div>
-      <br/> -->
       <br>
       <div class="row" *ngIf="this.featuredOffers && this.featuredOffers.length > 0 && !showPlansFlag">
         <div class="col-md-12 col-xs-12 text-right">
@@ -121,8 +171,10 @@
         </div>
       </div>
     </div>
+    <div class="text-center" *ngIf="offerSelected && showPlansFlag && enableSubmitEnroll">
+      <button class="btn btn-primary" [disabled]="(!offerSelected && !enableSubmitEnroll)" (click)="onNotify()">Submit Enrollment</button>
+    </div>
   </form>
-
  <!--Enrollment Services Confirmation Screen -->
  <div [hidden]="!enrolled" class="col-md-8">
     <h2>Success!</h2>

@@ -60,7 +60,7 @@ export class PaperlessSettingsComponent implements OnInit {
     this.SearchNotificationOptions = {
       Account_Info: {
         Account_Type: AccountType.GEMS_Residential_Customer_Account,
-        Account_Number: this.customerDetails.Id,
+        Account_Number: this.customerDetails.Id ? this.customerDetails.Id : null,
       },
       Type: NotificationType.Bill
     };

@@ -4,7 +4,7 @@
     <button
       class="btn btn-link new-button"
       [disabled]="addingCreditCard"
-      (click)="addingCreditCardToggle()"
+      (click)="addingCreditCardToggle(true)"
     ><i class="fa fa-fw fa-plus-circle"></i>ADD NEW CREDIT CARD</button>
     <ng-container *ngIf="addingCreditCard">
       <mygexa-payment-method-add-cc
@@ -33,8 +33,7 @@
     <button
       class="btn btn-link new-button"
       [disabled]="addingEcheck"
-      (click)="addingEcheckToggle()"
-    ><i class="fa fa-fw fa-plus-circle"></i>ADD NEW E-CHECK</button>
+      (click)="addingEcheckToggle(true)"><i class="fa fa-fw fa-plus-circle"></i>ADD NEW E-CHECK</button>
     <ng-container *ngIf="addingEcheck">
       <mygexa-payment-method-add-echeck
         (changed)="addingEcheckFormChanged($event)"
