@@ -1,19 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
-import { forEach, get, isNumber, map, now, random } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 
 import { CustomerAccountService } from 'app/core/CustomerAccount.service';
-import { ISearchNotificationOptionRequest } from 'app/core/models/notificationoptions/searchnotificationoptionrequest.model';
 import { AccountType } from 'app/core/models/enums/accounttype';
 import { NotificationType } from 'app/core/models/enums/notificationtype';
 import { NotificationStatus } from 'app/core/models/enums/notificationstatus';
 import { NotificationOptionsService } from 'app/core/notificationoptions.service';
-import { INotificationOption } from 'app/core/models/notificationoptions/notificationoption.model';
 import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
 import { ContactMethod } from 'app/core/models/enums/contactmethod';
 import { UserService } from 'app/core/user.service';
-import { NotificationOptionsStore } from '../../../../core/store/notificationoptionsstore';
+import { NotificationOptionsStore } from 'app/core/store/notificationoptionsstore';
+
+import {GoogleAnalyticsService} from 'app/core/googleanalytics.service';
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
 
 @Component({
   selector: 'mygexa-paperless-settings',
@@ -41,29 +44,34 @@ export class PaperlessSettingsComponent implements OnInit {
     private notificationService: NotificationOptionsService,
     private CustomerAccountService: CustomerAccountService,
     private UserService: UserService,
-    private NotificationOptionsStore: NotificationOptionsStore
+    private NotificationOptionsStore: NotificationOptionsStore,
+    private googleAnalyticsService: GoogleAnalyticsService
   ) { }
 
   ngOnInit() {
+
     this.CustomerAccountServiceSubscription = this.CustomerAccountService.CustomerAccountObservable.subscribe(
       result => {
         this.customerDetails = result;
+
+        this.notificationType = NotificationType;
+        this.SearchNotificationOptions = {
+          Account_Info: {
+            Account_Type: AccountType.GEMS_Residential_Customer_Account,
+            Account_Number: this.customerDetails.Id ? this.customerDetails.Id : null,
+          },
+          Type: NotificationType.Bill
+        };
+
         this.getNotificationOption(this.customerDetails.Id);
       }
     );
+
     this.UserServiceSubscription = this.UserService.UserObservable.subscribe(
       result => {
         this.emailAddress = result.Profile.Email_Address;
       }
     );
-    this.notificationType = NotificationType;
-    this.SearchNotificationOptions = {
-      Account_Info: {
-        Account_Type: AccountType.GEMS_Residential_Customer_Account,
-        Account_Number: this.customerDetails.Id ? this.customerDetails.Id : null,
-      },
-      Type: NotificationType.Bill
-    };
   }
 
   // fetch notification options for bills and Plans based on Notification Type(Bill, Contract_Expiration)
@@ -147,6 +155,52 @@ export class PaperlessSettingsComponent implements OnInit {
   }
 
   onCheckSelected(option: string, isChecked: boolean, CheckOptions: any, notificationResponse: any, notificationType) {
+
+    // set google analytics
+    if (notificationType === 0) {
+      if (option === 'Email') {
+        if (isChecked) {
+          this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SelectPaperlessBilling]
+            , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SelectPaperlessBilling]);
+        } else {
+          this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UnSelectPaperlessBilling]
+            , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UnSelectPaperlessBilling]);
+        }
+      }
+
+      if (option === 'Paper') {
+        if (isChecked) {
+          this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SelectPaperBilling]
+            , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SelectPaperBilling]);
+        } else {
+          this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UnSelectPaperBilling]
+            , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UnSelectPaperBilling]);
+        }
+      }
+    }
+
+    if (notificationType === 1) {
+      if (option === 'Email') {
+        if (isChecked) {
+          this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SelectPaperlessPlanDocuments]
+            , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SelectPaperlessPlanDocuments]);
+        } else {
+          this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UnSelectPaperlessPlanDocuments]
+            , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UnSelectPaperlessPlanDocuments]);
+        }
+      }
+
+      if (option === 'Paper') {
+        if (isChecked) {
+          this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SelectPaperPlanDocuments]
+            , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SelectPaperPlanDocuments]);
+        } else {
+          this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UnSelectPaperPlanDocuments]
+            , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UnSelectPaperPlanDocuments]);
+        }
+      }
+    }
+
     let newValue = isChecked;
     CheckOptions.forEach(checkbox => {
       if (checkbox.option === option) {
@@ -168,7 +222,6 @@ export class PaperlessSettingsComponent implements OnInit {
     } else {
       this.createNotification(notificationType, CheckOptions);
     }
-
   }
 
   // If there is no notification option, call create notification when user makes changes in UI
@@ -198,9 +251,9 @@ export class PaperlessSettingsComponent implements OnInit {
         console.log('create notification API error', error.Message);
       });
   }
+
   // If we have notification option already then call update notification(PUT request)
   updateNotificationOption(notificationResponse, selectedOptions) {
-
     let paperless = false;
     let status = notificationResponse[0].Status;
     if (selectedOptions[0].checked && !selectedOptions[1].checked) {

@@ -5,6 +5,12 @@ import { Subscription } from 'rxjs/Subscription';
 import { result } from 'lodash';
 import { UserService } from 'app/core/user.service';
 
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+
 @Component({
   selector: 'mygexa-security-question',
   templateUrl: './security-question.component.html',
@@ -23,7 +29,8 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
 
   constructor(
     private FormBuilder: FormBuilder,
-    private UserService: UserService
+    private UserService: UserService,
+    private googleAnalyticsService: GoogleAnalyticsService
   ) {
    this.securityQuestionForm = this.securityQuestionFormInit();
   }
@@ -58,6 +65,11 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
   }
   updateSecQuesResponse(Sec_Answer: string, isValid: boolean ) {
     this.submitAttempt = true;
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UpdateSecurityQuestion]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UpdateSecurityQuestion]);
+
+
     if (isValid) {
       this.UserService.updateSecurityAnswer(Sec_Answer).subscribe(
         res => {
