@@ -13,6 +13,12 @@ import { CustomerAccountService } from 'app/core/CustomerAccount.service';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ReferralStore } from 'app/core/store/referralstore';
 
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+
 @Component({
   selector: 'mygexa-refer-friend',
   templateUrl: './refer-friend.component.html',
@@ -32,7 +38,8 @@ export class ReferFriendComponent implements OnInit, OnDestroy {
   flipButton: boolean = null;
   enrolled: boolean = null;
   isLoading = true;
-  constructor(private serviceAccountService: ServiceAccountService, private customerAccountService: CustomerAccountService, private referralStore: ReferralStore) {
+  constructor(private serviceAccountService: ServiceAccountService, private customerAccountService: CustomerAccountService, private referralStore: ReferralStore
+  , private googleAnalyticsService: GoogleAnalyticsService) {
   }
 
   ngOnInit() {
@@ -65,6 +72,10 @@ export class ReferFriendComponent implements OnInit, OnDestroy {
   }
 
   onEnroll() {
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyRewardsAndReferrals], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.Enroll]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.Enroll]);
+
     const request = {} as   IEnrollReferralRequest;
     request.Customer_Account_Id = this.serviceAccount.Customer_Account_Id;
     request.Service_Account_Id = this.serviceAccount.Id;

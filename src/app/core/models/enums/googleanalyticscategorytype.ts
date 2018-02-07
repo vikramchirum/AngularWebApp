@@ -13,7 +13,8 @@ export enum GoogleAnalyticsCategoryType {
   ViewMyBill,
   MakeAPayment,
   PaymentAccounts,
-  PaymentOptions,
+  PaymentOptionsBudgetBilling,
+  PaymentOptionsAutoPay,
   PaymentHistory,
   EnergyUsage
 }
@@ -31,5 +32,9 @@ export enum GoogleAnalyticsEventAction {
   SelectPaperlessPlanDocuments,
   UnSelectPaperlessPlanDocuments,
   SelectPaperPlanDocuments,
-  UnSelectPaperPlanDocuments
+  UnSelectPaperPlanDocuments,
+  ContactUs,
+  Enroll,
+  SendReferral,
+  Cancel
 }

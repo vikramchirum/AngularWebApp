@@ -2,13 +2,19 @@ import { Component, OnInit, Input, OnDestroy} from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
-import { MessageCenterService } from '../../../../core/messagecenter.service';
-import { CustomerAccountService } from '../../../../core/CustomerAccount.service';
-import { CustomerAccount } from '../../../../core/models/customeraccount/customeraccount.model';
+import { MessageCenterService } from 'app/core/messagecenter.service';
+import { CustomerAccountService } from 'app/core/CustomerAccount.service';
+import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
-import { ServiceAccount } from '../../../../core/models/serviceaccount/serviceaccount.model';
-import { IContactUsRequest } from '../../../../core/models/messagecenter/contactusrequest.model';
-import { ICustomerAccountPrimaryPhone } from '../../../../core/models/customeraccount/customeraccountprimaryphone.model';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import { IContactUsRequest } from 'app/core/models/messagecenter/contactusrequest.model';
+import { ICustomerAccountPrimaryPhone } from 'app/core/models/customeraccount/customeraccountprimaryphone.model';
+
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
 
 @Component({
   selector: 'mygexa-contact-form',
@@ -29,7 +35,7 @@ export class ContactFormComponent implements OnInit, OnDestroy {
   message = '';
 
   constructor(private messageCenterService: MessageCenterService, private customerAccountService: CustomerAccountService
-    , private serviceAccountService: ServiceAccountService) {
+    , private serviceAccountService: ServiceAccountService, private googleAnalyticsService: GoogleAnalyticsService) {
   }
 
   ngOnInit() {
@@ -59,6 +65,9 @@ export class ContactFormComponent implements OnInit, OnDestroy {
     contactUsRequest.DaytimePhone.Number = this.phoneNumber;
 
     this.messageCenterService.contactus(contactUsRequest).subscribe(res => {
+
+      this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MessageCenter], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ContactUs]
+        , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ContactUs]);
 
       if (res) {
         console.log('message sent');

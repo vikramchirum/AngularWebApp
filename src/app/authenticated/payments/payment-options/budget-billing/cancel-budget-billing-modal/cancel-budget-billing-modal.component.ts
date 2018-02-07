@@ -7,6 +7,11 @@ import { ModalDirective } from 'ngx-bootstrap';
 import { environment } from 'environments/environment';
 
 import { IBudgetBillingInfo } from 'app/core/models/budgetbilling/budgetbillinginfo.model';
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import {GoogleAnalyticsService} from 'app/core/googleanalytics.service';
 
 @Component({
   selector: 'mygexa-cancel-budget-billing-modal',
@@ -21,7 +26,7 @@ export class CancelBudgetBillingModalComponent implements OnInit {
   dollarAmountFormatter: string;
   budgetBillingInfo: IBudgetBillingInfo;
 
-  constructor() {
+  constructor(private googleAnalyticsService: GoogleAnalyticsService) {
   }
 
   ngOnInit() {
@@ -38,6 +43,10 @@ export class CancelBudgetBillingModalComponent implements OnInit {
   }
 
   public cancelBudgetBilling(): void {
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.PaymentOptionsBudgetBilling], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.Cancel]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.Cancel]);
+
     this.cancelBudgetBillingModal.hide();
     this.onCancelBudgetBillingEvent.emit({
       IsCancel: true,
