@@ -9,6 +9,7 @@
   <h1>{{sideNavData.panelTitle}}</h1>
   <ul class="sidenav list-group">
     <li *ngFor="let item of sideNavData.items" class="list-group-item" [routerLinkActive]="['active']">
-      <a  routerLink={{item.navUrl}} [ngClass]="{'disableLink': IsDisconnectedServiceAddress && item.title === 'My Rewards &amp; Referrals' }">{{item.title}} </a></li>
+      <a  routerLink={{item.navUrl}} [ngClass]="{'disableLink': IsDisconnectedServiceAddress &&
+      (item.title === 'My Rewards &amp; Referrals' || item.title === 'My Service Plans' || item.title === 'My Service Plans \n &middot; Renewal Available &middot;') }">{{item.title}} </a></li>
   </ul>
 </ng-template>
