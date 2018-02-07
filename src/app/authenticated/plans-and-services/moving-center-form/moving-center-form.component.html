@@ -9,7 +9,8 @@
           <h3>You are Moving From</h3>
           <mygexa-service-account-selector
     [setActiveServiceAccount]="true" (changedServiceAccount)="serviceChanged($event)"></mygexa-service-account-selector>
-          <small class="text-danger" *ngIf="ActiveServiceAccount && ActiveServiceAccount?.Status !== 'Active'">This account has been disconnected and the move out can not be continued</small> </div>
+          <small class="text-danger" *ngIf="ActiveServiceAccount && ActiveServiceAccount?.Status !== 'Active'">This account has been disconnected and the move out can not be continued</small> 
+          <small class="text-danger" *ngIf="disableTransferForServiceLocation">There is already a transfer of service request in progress for this account. You cannot submit another request for the same account.</small> </div>
       </div>
 
       <!-- select date when customer wants their service turned off at the old home  -->
@@ -74,7 +75,7 @@
     </ng-container>
     <br/>
     <div class="text-right">
-      <button class="btn btn-primary" [disabled]="!movingAddressForm.valid" (click)="addressFormSubmit(movingAddressForm.value)">Next</button>
+      <button class="btn btn-primary" [disabled]="!movingAddressForm.valid || disableTransferForServiceLocation" (click)="addressFormSubmit(movingAddressForm.value)">Next</button>
     </div>
   </form>
   <form [hidden]="previousClicked || submitted" [formGroup]="ServicePlanForm" novalidate>
