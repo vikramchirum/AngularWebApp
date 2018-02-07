@@ -4,10 +4,16 @@ import { PopoverDirective } from 'ngx-bootstrap';
 import { IOffers} from 'app/core/models/offers/offers.model';
 import { ServiceAccount} from 'app/core/models/serviceaccount/serviceaccount.model';
 import { IRenewalDetails} from 'app/core/models/renewals/renewaldetails.model';
+import { IServiceAccountPlanHistoryOffer } from 'app/core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
+import { Offer } from 'app/core/models/offers/offer.model';
 import { DocumentsService} from 'app/core/documents.service';
-import { IServiceAccountPlanHistoryOffer } from '../../../core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
-import { Offer } from '../../../core/models/offers/offer.model';
 import { environment } from 'environments/environment';
+
+import {GoogleAnalyticsService} from 'app/core/googleanalytics.service';
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
 
 @Component({
   selector: 'mygexa-offer-details-popover',
@@ -33,7 +39,7 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
   kWhAmountFormatter: string;
   dollarAmountFormatter: string;
 
-  constructor(private documentsService: DocumentsService) {
+  constructor(private documentsService: DocumentsService, private googleAnalyticsService: GoogleAnalyticsService) {
   }
 
   ngOnInit() {
@@ -184,7 +190,36 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
       }
     }
   }
+
   revertBack(flag) {
     this.revertBackEvent.emit(this.OfferDetails.Id + flag);
+  }
+
+  public viewEFL(isRenewed: boolean = false, rateCode: string= null) {
+
+    if (isRenewed === null) {
+      const eventLabel = GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewEFL] + '-' +  rateCode;
+      this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyServicePlan], eventLabel,
+      rateCode);
+    } else if (!isRenewed) {
+      this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyServicePlan], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewCurrentPlanEFL]
+        , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewCurrentPlanEFL]);
+    } else if (isRenewed) {
+      this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyServicePlan], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewRenewedPlanEFL]
+        , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewRenewedPlanEFL]);
+    }
+    return true;
+  }
+
+  public viewYraac() {
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyServicePlan], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewYRAAC]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewYRAAC]);
+    return true;
+  }
+
+  public viewTos() {
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyServicePlan], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewTOS]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewTOS]);
+    return true;
   }
 }

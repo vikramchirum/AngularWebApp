@@ -16,7 +16,8 @@ export enum GoogleAnalyticsCategoryType {
   PaymentOptionsBudgetBilling,
   PaymentOptionsAutoPay,
   PaymentHistory,
-  EnergyUsage
+  EnergyUsage,
+  Home,
 }
 
 export enum GoogleAnalyticsEventAction {
@@ -36,5 +37,23 @@ export enum GoogleAnalyticsEventAction {
   ContactUs,
   Enroll,
   SendReferral,
-  Cancel
+  Cancel,
+  ViewCurrentPlan,
+  ViewCurrentPlanEFL,
+  ViewRenewedPlanEFL,
+  ViewEFL,
+  ViewYRAAC,
+  ViewTOS,
+  CreateRenewal,
+  CreateUpgrade,
+  SubmitTransfer,
+  CreateAdditionalService,
+  MakeAPaymentButton,
+  DownloadCurrentBill,
+  ViewGexaCharges,
+  ViewTDUCharges,
+  ViewTaxes,
+  ViewDonutGexaCharges,
+  ViewDonutTDUCharges,
+  ViewDonutTaxes,
 }

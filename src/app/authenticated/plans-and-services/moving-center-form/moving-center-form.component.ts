@@ -41,6 +41,11 @@ import { IAddress } from 'app/core/models/address/address.model';
 import { environment } from '../../../../environments/environment';
 import { IServiceAccountPlanHistoryOffer } from '../../../core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
 
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
 
 @Component( {
   selector: 'mygexa-moving-center-form',
@@ -118,7 +123,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
                private channelStore: ChannelStore,
                private availableDateService: AvailableDateService,
                private calendarService: CalendarService,
-               private tduStore: TDUStore ) {
+               private tduStore: TDUStore,
+               private googleAnalyticsService: GoogleAnalyticsService) {
     // start date and end date must be future date.
     this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId => {
       this.channelId = ChannelId;
@@ -407,6 +413,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   onSubmitMove( addressForm, billSelector ) {
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MovingCenter], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitTransfer]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitTransfer]);
+
     let Partner_Account_Number = null;
     let Partner_Name_On_Account = null;
 
@@ -441,6 +451,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       this.dynamicUAN = null;
       // billSelector.final_service_address = dynamicAddress;
     }
+    this.dynamicUAN = this.newServiceAddress.Meter_Info.UAN;
+
+
     console.log('dynamicAddress', dynamicAddress);
 
     // If user selects existing plan , set current offer as true

@@ -11,6 +11,12 @@ import { InvoiceStore } from '../../../core/store/invoicestore';
 import { ServiceAccount } from '../../../core/models/serviceaccount/serviceaccount.model';
 import { environment } from '../../../../environments/environment';
 
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+
 @Component({
   selector: 'mygexa-view-my-bill',
   templateUrl: './view-my-bill.component.html',
@@ -48,7 +54,8 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
               private InvoiceStore: InvoiceStore,
               private ServiceAccountService: ServiceAccountService,
               private PaymentsHistoryService: PaymentsHistoryService,
-              private PaymentsHistoryStore: PaymentsHistoryStore
+              private PaymentsHistoryStore: PaymentsHistoryStore,
+              private googleAnalyticsService: GoogleAnalyticsService
   ) {
   }
 
@@ -116,6 +123,12 @@ export class ViewMyBillComponent implements OnInit, OnDestroy {
     }
   }
 
+
+  public makeaPayment() {
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MakeAPayment], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.MakeAPaymentButton]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.MakeAPaymentButton]);
+    return true;
+  }
 
   ngOnDestroy() {
     if (this.ActiveServiceAccountSubscription) {

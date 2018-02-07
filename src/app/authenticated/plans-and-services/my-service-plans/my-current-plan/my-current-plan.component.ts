@@ -1,14 +1,9 @@
-import { Component, OnDestroy, OnInit, AfterViewInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { get, result, includes } from 'lodash';
-
-import { UserService } from 'app/core/user.service';
-import { ServiceAccountService } from 'app/core/serviceaccount.service';
-import { UtilityService } from 'app/core/utility.service';
-import { RenewalStore } from 'app/core/store/renewalstore';
-import { OffersStore } from 'app/core/store/offersstore';
+import * as $ from 'jquery';
 
 import { IUser } from 'app/core/models/user/User.model';
 import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
@@ -16,24 +11,35 @@ import { IOffers } from 'app/core/models/offers/offers.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { IRenewalDetails } from 'app/core/models/renewals/renewaldetails.model';
 import { ICreateRenewalRequest } from 'app/core/models/renewals/createrenewalrequest.model';
-
-import { PlanConfirmationPopoverComponent } from '../plan-confirmation-popover/plan-confirmation-popover.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ErrorModalComponent } from '../../../../shared/components/error-modal/error-modal.component';
-import { Offer } from '../../../../core/models/offers/offer.model';
-import { IServiceAccountPlanHistoryOffer } from '../../../../core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
+import { Offer } from 'app/core/models/offers/offer.model';
+import { IServiceAccountPlanHistoryOffer } from 'app/core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
 import { OfferSelectionType } from 'app/core/models/enums/offerselectiontype';
 import { IOfferSelectionPayLoad } from 'app/shared/models/offerselectionpayload';
+import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
+
+import { CustomerAccountService } from 'app/core/CustomerAccount.service';
+import { UserService } from 'app/core/user.service';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { UtilityService } from 'app/core/utility.service';
+import { RenewalStore } from 'app/core/store/renewalstore';
+import { OffersStore } from 'app/core/store/offersstore';
+
 import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-confirmation-modal.component';
-import { CustomerAccountService } from '../../../../core/CustomerAccount.service';
-import { CustomerAccount } from '../../../../core/models/customeraccount/customeraccount.model';
-import * as $ from 'jquery';
+import { ErrorModalComponent } from 'app/shared/components/error-modal/error-modal.component';
+
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+
 @Component({
   selector: 'mygexa-my-current-plan',
   templateUrl: './my-current-plan.component.html',
   styleUrls: ['./my-current-plan.component.scss']
 })
 export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy {
+
   // @ViewChild('planPopModal') public planPopModal: PlanConfirmationPopoverComponent;
   @ViewChild('errorModal') errorModal: ErrorModalComponent;
   @ViewChild('planConfirmationModal') planConfirmationModal: PlanConfirmationModalComponent;
@@ -72,6 +78,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
               private renewalStore: RenewalStore,
               private utilityService: UtilityService,
               private customerAccountService: CustomerAccountService,
+              private googleAnalyticsService: GoogleAnalyticsService,
               private formBuilder: FormBuilder) {
     this.isOffersReady = false;
   }
@@ -154,6 +161,13 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }
   }
+
+  public planPendingViewCurrentPlan() {
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyServicePlan], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewCurrentPlan]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewCurrentPlan]);
+    this.isRenewalPlan = false;
+  }
+
 
   checkCurrentFeaturedUsageLevel(CurrentOffer: IServiceAccountPlanHistoryOffer) {
     if (CurrentOffer) {
@@ -253,23 +267,26 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   createRenewal() {
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyServicePlan], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.CreateRenewal]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.CreateRenewal]);
+
     const request = {} as ICreateRenewalRequest;
     request.Service_Account_Id = this.ActiveServiceAccount.Id;
     request.Offering_Id = this.RenewalOffers.Id;
     request.User_Name = this.user.Profile.Username;
+
     if (this.RenewalOffers.Has_Partner) {
       request.Partner_Account_Number = this.renewalUpgradeFormGroup.get('accountName').value;
       request.Partner_Name_On_Account = this.renewalUpgradeFormGroup.get('rewardsNumber').value;
     }
-     console.log('request', request);
+
     this.renewalStore.createRenewal(request).subscribe(result => {
       if (result) {
-        console.log('Renewal Created');
         this.planConfirmationModal.showPlanConfirmationModal({
           isRenewalPlan: true,
           customerDetails: this.customerDetails
         });
-        // this.planPopModal.showPlanPopModal();
       }
     }, err => {
       this.errorModal.showErrorModal(err);

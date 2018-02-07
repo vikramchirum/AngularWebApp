@@ -16,6 +16,12 @@ import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { InvoiceService } from 'app/core/invoiceservice.service';
 import { UtilityService } from 'app/core/utility.service';
 
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+
 @Component( {
   selector: 'mygexa-view-bill',
   templateUrl: './view-bill.component.html',
@@ -88,7 +94,7 @@ export class ViewBillComponent implements OnInit {
   private tduName: string;
 
   constructor( private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService
-    , private utilityService: UtilityService, private decimalPipe: DecimalPipe ) {
+    , private utilityService: UtilityService, private decimalPipe: DecimalPipe, private googleAnalyticsService: GoogleAnalyticsService) {
     this.togg = false;
     this.collapse( '' );
     this.toggleGexa = this.toggleTDU = this.toggleTax = false;
@@ -146,16 +152,22 @@ export class ViewBillComponent implements OnInit {
   }
 
   expand( section: string ) {
-    switch ( section ) {
+    switch (section) {
       case 'GexaCharges': {
+        this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MakeAPayment], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewGexaCharges]
+          , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewGexaCharges]);
         this.GexaChargesState = 'expanded';
         break;
       }
       case 'TDUCharges': {
+        this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MakeAPayment], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewTDUCharges]
+          , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewTDUCharges]);
         this.TDUChargesState = 'expanded';
         break;
       }
       case 'TaxCharges': {
+        this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MakeAPayment], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewTaxes]
+          , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewTaxes]);
         this.TaxChargesState = 'expanded';
         break;
       }
@@ -267,16 +279,22 @@ export class ViewBillComponent implements OnInit {
       const index = $event.active[ 0 ]._index;
       switch ( index ) {
         case 0 :
+          this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MakeAPayment], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewDonutGexaCharges]
+            , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewDonutGexaCharges]);
           this.chargeToggle( this.bill_item_details_gexa_charges );
           this.toggle( 'GexaCharges' );
           break;
 
         case 1 :
+          this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MakeAPayment], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewDonutTDUCharges]
+            , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewDonutTDUCharges]);
           this.chargeToggle( this.bill_item_details_tax );
           this.toggle( 'TaxCharges' );
           break;
 
         case 2:
+          this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MakeAPayment], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewDonutTaxes]
+            , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewDonutTaxes]);
           this.chargeToggle( this.bill_item_details_TDU_charges );
           this.toggle( 'TDUCharges' );
           break;
@@ -288,6 +306,9 @@ export class ViewBillComponent implements OnInit {
 
     $event.preventDefault();
     $event.stopPropagation();
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MakeAPayment], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.DownloadCurrentBill]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.DownloadCurrentBill]);
 
     const invoiceId = this.bill_object.Invoice_Id;
     this.invoiceService.getInvoicePDF( invoiceId ).subscribe(
@@ -341,14 +362,14 @@ export class ViewBillComponent implements OnInit {
           gaugeText.fillText( `$    `, 500, 475 );
         }
         gaugeText.textAlign = 'end';
-        
-        
+
+
         gaugeText.textAlign = 'center';
         gaugeText.fillStyle = 'rgba(0,0,0,1.0)';
         gaugeText.font = 'bold 48pt sans-serif';
         gaugeText.fillText('Current Charges', 500, 325);
 
-        
+
       } catch ( e ) {
         // If thrown, the browser likely does not support the HTML5 canvas API/object.
         console.error( e );
