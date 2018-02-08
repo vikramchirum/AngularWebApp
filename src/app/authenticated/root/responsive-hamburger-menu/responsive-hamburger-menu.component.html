@@ -3,7 +3,7 @@
     <div class="dx-panel-heading clearfix">
         <a class="accordion-toggle col-xs-12" [ngClass]="startsWith(Router.url, '/account') ? 'open' : 'collapsed'"  data-toggle="collapse" data-parent="#accordion" href="#myAccountCollapse">My Account</a>
     </div>
-    <div id="myAccountCollapse" class="panel-collapse collapse"  [ngClass]="{ 'in': startsWith(Router.url, '/account')}" > 
+    <div id="myAccountCollapse" class="panel-collapse collapse"  [ngClass]="{ 'in': startsWith(Router.url, '/account')}" >
       <div class="panel-body">
               <ul class="list-unstyled list-center list-rule">
           <li><a (click)='routerOnClick()' routerLink="/account/profile">Profile &amp; Preferences</a></li>
@@ -46,10 +46,10 @@
       </div>
     </div>
 </div>
-   
+
     <div class="panel control-menu">
     <div class="dx-panel-heading clearfix">
-        <a class="accordion-toggle  col-xs-12" [ngClass]="startsWith(Router.url, '/controls-and-insights') ? 'open' : 'collapsed'"  data-toggle="collapse" data-parent="#accordion" href="#controlInsightsCollapse">Control &amp; Insights</a>
+        <a class="accordion-toggle  col-xs-12" [ngClass]="startsWith(Router.url, '/controls-and-insights') ? 'open' : 'collapsed'"  data-toggle="collapse" data-parent="#accordion" href="#controlInsightsCollapse">Energy Insights</a>
     </div>
     <div id="controlInsightsCollapse" class="panel-collapse collapse"  [ngClass]="{ 'in': startsWith(Router.url, '/controls-and-insights') }"
 
@@ -57,12 +57,12 @@
       <div class="panel-body">
         <ul class="list-unstyled list-center list-rule">
           <li><a (click)="routerOnClick()" routerLink="/controls-and-insights/usage-history">Usage History</a></li>
-          <li><a (click)="routerOnClick()" routerLink="/controls-and-insights/energy-savings-tips">Energy Savings Tips</a></li> 
+          <li><a (click)="routerOnClick()" routerLink="/controls-and-insights/energy-savings-tips">Energy Savings Tips</a></li>
        </ul>
       </div>
     </div>
   </div>
-  
+
   <!-- sign out is in top header bar, no need for it twice
 
   <div class="panel dx-panel-default" style="margin-top: 6rem;">

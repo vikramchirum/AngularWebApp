@@ -423,6 +423,7 @@ export class UserService implements CanActivate {
     this.UserCache = user || null;
 
     if (user) {
+      localStorage.setItem('user_email_address', this.UserCache.Profile.Email_Address);
       // Make date objects.
       this.UserCache.Creation_Time = new Date(this.UserCache.Creation_Time);
       this.UserCache.Date_Created = new Date(this.UserCache.Date_Created);

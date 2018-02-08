@@ -38,6 +38,7 @@ import { CalendarService } from '../../../core/calendar.service';
 import { TDUStore } from '../../../core/store/tdustore';
 import { ITDU } from '../../../core/models/tdu/tdu.model';
 import { IAddress } from 'app/core/models/address/address.model';
+import { ISearchTransferRequest } from 'app/core/models/transfers/searchtransferrequest.model';
 import { environment } from '../../../../environments/environment';
 import { IServiceAccountPlanHistoryOffer } from '../../../core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
 
@@ -113,6 +114,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   dynamicAddressForm: FormGroup;
   enableSubmitMoveBtn: boolean = false;
   dynamicUAN = null;
+  disableTransferForServiceLocation: boolean = false;
+  transferSearchParams: ISearchTransferRequest = null;
   constructor( private fb: FormBuilder,
                private viewContainerRef: ViewContainerRef,
                private ServiceAccountService: ServiceAccountService,
@@ -186,6 +189,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
           this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
         } else {
           this.pastDueErrorMessage = null;
+
+          // Check for pending transfers and display appropriate validation message
+          this.checkForPendingTransfers(this.ActiveServiceAccount.Id);
         }
       }
     );
@@ -236,6 +242,21 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
   serviceChanged( event ) {
     this.ActiveServiceAccount = event;
+  }
+
+  checkForPendingTransfers(serviceAccountId: string) {
+    this.transferSearchParams = {
+      Current_Service_Account_Id:  serviceAccountId
+    };
+    this.transferService.searchTransfers(this.transferSearchParams)
+      .subscribe(TransferRecordItems => {
+        if (TransferRecordItems && TransferRecordItems.length > 0) {
+          this.disableTransferForServiceLocation = true;
+        }
+        else {
+          this.disableTransferForServiceLocation = false;
+        }
+      });
   }
 
   getSelectedOffer( event ) {
