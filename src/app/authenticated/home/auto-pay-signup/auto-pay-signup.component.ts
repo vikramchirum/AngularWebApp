@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
 
 @Component({
   selector: 'mygexa-auto-pay-signup',
@@ -7,9 +13,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AutoPaySignupComponent implements OnInit {
 
-  constructor() { }
+  @Input('parentComponent')
+  public parentComponent: string = null;
+
+  constructor(private googleAnalyticsService: GoogleAnalyticsService) { }
 
   ngOnInit() {
   }
 
+  public handleClick() {
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[this.parentComponent], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SignupAutoPay]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SignupAutoPay]);
+  }
 }

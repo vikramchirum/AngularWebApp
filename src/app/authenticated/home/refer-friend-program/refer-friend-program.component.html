@@ -6,7 +6,7 @@
          <p>Make your great rates even greater
 when you help a friend discover GEXA savings.</p>
          <p>
-            <button class="btn btn-info col-md-offset-2 col-md-8" [disabled]="IsDisconnectedServiceAddress"
+            <button class="btn btn-info col-md-offset-2 col-md-8" (click)="handleClick()" [disabled]="IsDisconnectedServiceAddress"
                     routerLink="/account/refer-a-friend/referral-options">Get the Details</button>
          </p>
       </div>

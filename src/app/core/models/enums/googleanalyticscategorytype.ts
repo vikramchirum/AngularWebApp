@@ -56,4 +56,16 @@ export enum GoogleAnalyticsEventAction {
   ViewDonutGexaCharges,
   ViewDonutTDUCharges,
   ViewDonutTaxes,
+  SubmitNewCreditCard,
+  SubmitNewECheck,
+  SubmitPayment,
+  ReferaFriend,
+  EnergySavingTips,
+  SignupAutoPay,
+  SignupPaperlessBilling,
+  SignupBudgetBilling,
+  GexaConnectsHighSpeedInternet,
+  GexaConnectsDigitalTV,
+  GexaConnectsHomePhone,
+  GetStarted
 }

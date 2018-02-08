@@ -8,7 +8,7 @@
     </div>
     <!--My Bill Section -->
     <div class="col-md-4">
-      <mygexa-my-bill></mygexa-my-bill>
+      <mygexa-my-bill [parentComponent]="'Home'" ></mygexa-my-bill>
     </div>
   </div>
 </div>
@@ -24,25 +24,25 @@
         <div class="col-md-4">
           <div [ngSwitch]="currentView">
             <div *ngSwitchCase="'ShowAutoBillPay'">
-              <mygexa-auto-pay-signup></mygexa-auto-pay-signup>
+              <mygexa-auto-pay-signup [parentComponent]="'Home'" ></mygexa-auto-pay-signup>
             </div>
             <div *ngSwitchCase="'ShowPaperlessBilling'">
-              <mygexa-paperless-billing-signup></mygexa-paperless-billing-signup>
+              <mygexa-paperless-billing-signup [parentComponent]="'Home'"></mygexa-paperless-billing-signup>
             </div>
             <div *ngSwitchCase="'ShowBudgetBilling'">
-              <mygexa-budget-billing-signup></mygexa-budget-billing-signup>
+              <mygexa-budget-billing-signup [parentComponent]="'Home'"></mygexa-budget-billing-signup>
             </div>
             <div *ngSwitchCase="'ShowEnergySavingTips'">
-              <mygexa-energy-saving-tips></mygexa-energy-saving-tips>
+              <mygexa-energy-saving-tips [parentComponent]="'Home'" ></mygexa-energy-saving-tips>
             </div>
             <div *ngSwitchDefault>
-              <mygexa-energy-saving-tips></mygexa-energy-saving-tips>
+              <mygexa-energy-saving-tips [parentComponent]="'Home'"  ></mygexa-energy-saving-tips>
             </div>
           </div>
         </div>
         <!--Refer a friend Program -->
         <div class="col-md-4">
-        <mygexa-refer-friend-program></mygexa-refer-friend-program>
+        <mygexa-refer-friend-program [parentComponent]="'Home'"></mygexa-refer-friend-program>
         </div>
       </div>
     </div>

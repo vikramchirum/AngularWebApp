@@ -15,7 +15,7 @@
         </ul>
       </div>
       <div class="col-xs-4">
-      <button class="btn btn-primary" routerLink="/plans-and-services/moving/moving-center" [disabled]="IsDisconnectedServiceAddress">Get Started</button>
+      <button class="btn btn-primary" routerLink="/plans-and-services/moving/moving-center" (click)="handleGoogleAnalytics()" [disabled]="IsDisconnectedServiceAddress">Get Started</button>
       </div>
     </div>
   </section>

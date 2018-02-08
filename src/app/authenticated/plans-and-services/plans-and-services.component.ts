@@ -12,8 +12,14 @@ import { RenewalStore } from 'app//core/store/renewalstore';
 import { UpgradeStore } from 'app/core/store/upgradestore';
 import { OffersStore } from 'app//core/store/offersstore';
 import { ModalStore } from 'app//core/store/modalstore';
-import { TDUStore } from '../../core/store/tdustore';
-import { ChannelStore } from '../../core/store/channelstore';
+import { TDUStore } from 'app/core/store/tdustore';
+import { ChannelStore } from 'app/core/store/channelstore';
+
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import {GoogleAnalyticsService} from 'app/core/googleanalytics.service';
 
 @Component({
   selector: 'mygexa-plans-and-services',
@@ -39,7 +45,8 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
     private Router: Router,
     private Route: ActivatedRoute,
     private tduStore: TDUStore,
-    private channelStore: ChannelStore
+    private channelStore: ChannelStore,
+    private googleAnalyticsService: GoogleAnalyticsService
   ) {
   }
 
@@ -66,6 +73,12 @@ export class PlansAndServicesComponent implements OnInit, OnDestroy {
       }
     });
     this.tduStore.LoadTDUDetails();
+  }
+
+  public handleGoogleAnalytics(eventType: string) {
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MovingCenter], GoogleAnalyticsEventAction[eventType]
+      , GoogleAnalyticsEventAction[eventType]);
+    return true;
   }
 
   ngOnDestroy() {
