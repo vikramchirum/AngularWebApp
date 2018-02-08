@@ -430,7 +430,6 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       dynamicAddress.Line2 = this.newServiceAddress.Address.Line2;
       dynamicAddress.Zip = this.newServiceAddress.Address.Zip;
       dynamicAddress.Zip_4 = this.newServiceAddress.Address.Zip_4;
-      this.dynamicUAN = this.newServiceAddress.Meter_Info.UAN;
     } else {console.log(2);
       dynamicAddress.City = this.dynamicAddressForm.get('City').value;
       dynamicAddress.State = this.dynamicAddressForm.get('State').value;
@@ -438,10 +437,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       dynamicAddress.Line2 = this.dynamicAddressForm.get('Line2').value;
       dynamicAddress.Zip = this.dynamicAddressForm.get('Zip').value;
       dynamicAddress.Zip_4 = null;
-      this.dynamicUAN = null;
       // billSelector.final_service_address = dynamicAddress;
     }
     console.log('dynamicAddress', dynamicAddress);
+    this.dynamicUAN = this.newServiceAddress.Meter_Info.UAN;
 
     // If user selects existing plan , set current offer as true
     if ( billSelector.service_plan === 'Current Plan' ) {
