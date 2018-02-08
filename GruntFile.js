@@ -49,7 +49,7 @@ module.exports = function ( grunt ) {
     var version_suffix = '';
     var short_sha = grunt.config.get( 'gitinfo.local.branch.current.shortSHA' );
 
-    var date_stamp = grunt.template.today( 'yyyymmddHHmmss' );
+    var date_stamp = grunt.template.today( 'yyyymmddHHMMss' );
 
     if ( branch_name ) {
       if ( branch_name === 'dev' )
