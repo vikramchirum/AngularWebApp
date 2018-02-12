@@ -28,10 +28,12 @@ export class LoginRegisterModalComponent implements OnInit {
   user: IRegUser = null;
   error: string = null;
   errorMsg: string = null;
+  errorMsgLastStep: string = null;
   statesArray: string[] = [];
   secQuesArray: ISecurityQuestions[] = [];
   currentView: string = null;
   customerDetails: CustomerAccount = null;
+  processRegistration: boolean = null;
   constructor(
     private UserService: UserService,
     private Router: Router,
@@ -60,21 +62,28 @@ export class LoginRegisterModalComponent implements OnInit {
   }
 
   verifyForm(model: IRegUser) {
-    console.log('register model', model);
-    console.log('register verification model', this.Last_4);
-    console.log('DDL', this.DDL);
-    console.log('State', this.State);
-    if (this.currentView === 'ssn' && this.Last_4 != null) {
+    this.processRegistration = true;
+    if (this.currentView === 'ssn') {
       if (this.Last_4 && this.Last_4 === String(this.customerDetails.Social_Security_Number).slice(-4)) {
-         this.resgister(model);
-      }
-    } else if (this.currentView === 'ddl/id' && (this.DDL != null && this.State != null)) {
-       if (this.DDL && ((this.State + '-' + this.DDL) === this.customerDetails.Drivers_License.Number) && this.State === this.customerDetails.Drivers_License.State) {
         this.resgister(model);
-      } else if (this.Id && this.Id === this.customerDetails.AlternateID.Number) {
-        this.resgister(model);
+      }  else {
+        this.processRegistration = false;
+        let error = "SSN provided doesn't match our records.";
+        this.errorMsgLastStep = error;
       }
+    } else if (this.currentView === 'ddl/id') {
+      if (this.Id && this.Id === this.customerDetails.AlternateID.Number) {
+        this.resgister(model);
+      } else if (this.DDL && (this.DDL === this.customerDetails.Drivers_License.Number) && this.State === this.customerDetails.Drivers_License.State) {
+        this.resgister(model);
+      } else {
+         this.processRegistration = false;
+         let error = "ID provided doesn't match our records.";
+         this.errorMsgLastStep = error;
+       }
     } else {
+      this.processRegistration = false;
+      this.currentView = null;
     }
   }
 
@@ -110,15 +119,17 @@ export class LoginRegisterModalComponent implements OnInit {
           console.log('hello', result1);
           if (result1 === 'User Verified') {
             this.registerClicked = true;
-            this.UserService.registerVerification(model).subscribe(
+            this.UserService.getCustomerInfo(model).subscribe(
               result => { this.customerDetails = result;
                 if (this.customerDetails.Social_Security_Number) {
                   this.currentView = 'ssn';
-                } else if (this.customerDetails.Drivers_License.Number) {
+                } else if (this.customerDetails.AlternateID || this.customerDetails.Drivers_License.Number) {
                   this.currentView = 'ddl/id';
                 }
               }
             );
+          } else {
+            this.errorMsg = 'User verification failed';
           }
         } ,
         error => {
@@ -156,7 +167,7 @@ export class LoginRegisterModalComponent implements OnInit {
     this.processing = false;
     this.registerClicked = false;
     this.formSubmitted = false;
-    this.errorMsg = null;
+    this.errorMsg = this.errorMsgLastStep = null;
     this.registerForm = this.registerFormInit();
     this.hideLoginRegisterModal();
   }

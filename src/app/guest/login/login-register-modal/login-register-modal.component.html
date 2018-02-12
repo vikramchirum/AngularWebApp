@@ -213,16 +213,16 @@
                             <input [(ngModel)]="Id" name="Id" type="text" class="form-control" #id="ngModel"
                                    placeholder="Alternate ID Number">
                           </div>
-                      <div class="form-group" *ngIf="errorMsg">
-                        <div class="alert alert-danger"><b>{{errorMsg}}</b></div>
+                      <div class="form-group" *ngIf="errorMsgLastStep">
+                        <div class="alert alert-danger"><b>{{errorMsgLastStep}}</b></div>
                       </div>
                       <div class="text-right">
-                        <button type="submit"
+                        <button type="submit" *ngIf="!processRegistration"
                                 class="btn-block btn btn-primary"> VERIFY AND COMPLETE
                         </button>
-                        <!--<button type="submit" *ngIf="processing" disabled-->
-                        <!--class="btn-block btn btn-primary">-->
-                        <!--<i class="fa fa-spin fa-cog"></i> Registering... </button>-->
+                        <button type="submit" *ngIf="processRegistration" disabled
+                        class="btn-block btn btn-primary">
+                        <i class="fa fa-spin fa-cog"></i> Registering... </button>
                       </div>
                     </form>
                   </ng-template>

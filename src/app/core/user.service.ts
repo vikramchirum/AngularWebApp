@@ -48,7 +48,7 @@ export class UserService implements CanActivate {
   private loginUrl = '/user/authenticate';
   private registerUrl = '/user/register';
   private verifyRegisterUserUrl = '/user/verifyRegistration';
-  private registerVerificationUrl = '/user/verifyID';
+  private getCustomerInfoUrl = '/user/getCustomerInfo';
   private updateEmail = '/user/updateEmailAddress';
   private updateClaims = '/user/updateClaims';
   private updateSecAnswer = '/user/updateSecurityAnswer';
@@ -185,7 +185,7 @@ export class UserService implements CanActivate {
       .catch(error => this.httpClient.handleHttpError(error));
   }
 
-  registerVerification(user: IUserSigningUp): Observable<CustomerAccount> {
+  getCustomerInfo(user: IUserSigningUp): Observable<CustomerAccount> {
     const body = {
       Credentials: {
         Username: user.User_name,
@@ -204,7 +204,7 @@ export class UserService implements CanActivate {
       Zip_Code: user.Zip_Code
     };
 
-    return this.httpClient.post(this.registerVerificationUrl, body)
+    return this.httpClient.post(this.getCustomerInfoUrl, body)
       .map(res => res.json())
       .map(data => {new CustomerAccount(data); console.log('Customer account', data); return data; })
       .catch(error => this.httpClient.handleHttpError(error));
