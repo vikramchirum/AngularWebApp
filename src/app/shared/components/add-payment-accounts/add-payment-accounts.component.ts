@@ -6,6 +6,12 @@ import { PaymethodService } from 'app/core/Paymethod.service';
 import { PaymethodAddCcComponent } from '../payment-method-add-cc/payment-method-add-cc.component';
 import { PaymethodAddEcheckComponent } from '../payment-method-add-echeck/payment-method-add-echeck.component';
 
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+
 @Component({
   selector: 'mygexa-add-payment-accounts',
   templateUrl: './add-payment-accounts.component.html',
@@ -28,7 +34,7 @@ export class AddPaymentAccountsComponent implements OnInit {
 
   paymentMessage: IPaymentMessage = null;
 
-  constructor(private paymethodService: PaymethodService) {
+  constructor(private paymethodService: PaymethodService, private googleAnalyticsService: GoogleAnalyticsService) {
   }
 
   ngOnInit() {
@@ -46,6 +52,9 @@ export class AddPaymentAccountsComponent implements OnInit {
   }
 
   addingCreditCardSubmit() {
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.PaymentAccounts], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitNewCreditCard]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitNewCreditCard]);
 
     this.addingCreditCard = false;
     this.paymentMessage = {
@@ -96,6 +105,10 @@ export class AddPaymentAccountsComponent implements OnInit {
   }
 
   addingEcheckSubmit() {
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.PaymentAccounts], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitNewECheck]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitNewECheck]);
+
     this.addingEcheck = false;
     this.paymentMessage = {
       classes: ['alert', 'alert-info'],

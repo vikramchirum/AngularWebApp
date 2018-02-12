@@ -2,8 +2,13 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { equalityCheck } from 'app/validators/validator';
-import {UserService} from '../../../core/user.service';
-import {IUser} from '../../../core/models/user/User.model';
+import { UserService } from 'app/core/user.service';
+import { IUser } from 'app/core/models/user/User.model';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
 
 @Component({
   selector: 'mygexa-change-user-name',
@@ -19,9 +24,11 @@ export class ChangeUserNameComponent {
   changeUserNameForm: FormGroup = null;
   submitAttempt: boolean = null;
   updateUser: IUser;
+
    constructor(
      private FormBuilder: FormBuilder,
-     private UserService: UserService
+     private UserService: UserService,
+     private googleAnalyticsService: GoogleAnalyticsService
    ) {
      this.changeUserNameForm = this.changeUserNameFormInit();
    }
@@ -35,9 +42,11 @@ export class ChangeUserNameComponent {
        });
   }
    submitForm() {
+
      this.submitAttempt = true;
-     console.log('value', this.changeUserNameForm.value);
-     console.log('valid', this.changeUserNameForm.valid);
+     this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UpdateUsername]
+       , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UpdateUsername]);
+
      if (this.changeUserNameForm.valid) {
        this.UserService.updateUserName(this.changeUserNameForm.get('userName').value).subscribe(
          res => {  // console.log('Reset successful');

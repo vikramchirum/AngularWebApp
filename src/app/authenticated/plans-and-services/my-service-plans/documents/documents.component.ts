@@ -1,16 +1,22 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { get, result } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
+
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
-import { IOffers } from '../../../../core/models/offers/offers.model';
-import { AllOffersClass } from '../../../../core/models/offers/alloffers.model';
-import { OfferService } from '../../../../core/offer.service';
-import { DocumentsService } from '../../../../core/documents.service';
-import { RenewalStore } from '../../../../core/store/renewalstore';
-import { OffersStore } from '../../../../core/store/offersstore';
-import { ServiceAccountService } from '../../../../core/serviceaccount.service';
-import { Observable } from 'rxjs/Observable';
-import { IRenewalDetails } from '../../../../core/models/renewals/renewaldetails.model';
+import { IOffers } from 'app/core/models/offers/offers.model';
+import { AllOffersClass } from 'app/core/models/offers/alloffers.model';
+import { IRenewalDetails } from 'app/core/models/renewals/renewaldetails.model';
+
+import { DocumentsService } from 'app/core/documents.service';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { RenewalStore } from 'app/core/store/renewalstore';
+import { OffersStore } from 'app/core/store/offersstore';
+
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
 
 @Component({
   selector: 'mygexa-documents',
@@ -34,7 +40,8 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   constructor(private serviceAccountService: ServiceAccountService,
               private renewalStore: RenewalStore,
               private OfferStore: OffersStore,
-              private documentsService: DocumentsService) {
+              private documentsService: DocumentsService,
+              private googleAnalyticsService: GoogleAnalyticsService) {
     this.IsUpForRenewal = this.IsRenewalPending = null;
     this.RenewalOffers = null;
   }
@@ -69,6 +76,25 @@ export class DocumentsComponent implements OnInit, OnDestroy {
       this.eflLink = this.documentsService.getEFLLink(docId);
       this.yraacLink = this.documentsService.getYRAACLink();
     });
+  }
+
+  public viewEFL() {
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyServicePlan], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewCurrentPlanEFL]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewCurrentPlanEFL]);
+    return true;
+  }
+
+  public viewYraac() {
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyServicePlan], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewYRAAC]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewYRAAC]);
+    return true;
+  }
+
+  public viewTos() {
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyServicePlan], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewTOS]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewTOS]);
+
+    return true;
   }
 
   ngOnDestroy() {

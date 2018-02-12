@@ -49,7 +49,7 @@ module.exports = function ( grunt ) {
     var version_suffix = '';
     var short_sha = grunt.config.get( 'gitinfo.local.branch.current.shortSHA' );
 
-    var date_stamp = grunt.template.today( 'yyyymmddHHmmss' );
+    var date_stamp = grunt.template.today( 'yyyymmddHHMMss' );
 
     if ( branch_name ) {
       if ( branch_name === 'dev' )
@@ -57,7 +57,7 @@ module.exports = function ( grunt ) {
       else if ( branch_name === 'master' )
         version_suffix += 'release';
       else if ( branch_name.startsWith( 'feature' ) || branch_name.startsWith( 'bugfix' ) ) {
-        var split = branch_name.split( '-' )
+        var split = branch_name.split( '-' );
         grunt.log.writeln(split);
         split = split.slice( 0, 3 );
         grunt.log.writeln(split);

@@ -1,13 +1,20 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { validatePhone, equalCheck } from 'app/validators/validator';
-import { CustomerAccountService } from '../../../core/CustomerAccount.service';
-import { CustomerAccountStore } from '../../../core/store/CustomerAccountStore';
+
+import { CustomerAccountService } from 'app/core/CustomerAccount.service';
+import { CustomerAccountStore } from 'app/core/store/CustomerAccountStore';
 import { Subscription } from 'rxjs/Subscription';
-import { CustomerAccount } from '../../../core/models/customeraccount/customeraccount.model';
-import { IUser } from '../../../core/models/user/User.model';
-import { UserService } from '../../../core/user.service';
+import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
+import { IUser } from 'app/core/models/user/User.model';
+import { UserService } from 'app/core/user.service';
 import { PhoneNumberConfirmationModalComponent } from '../phone-number-confirmation-modal/phone-number-confirmation-modal.component';
+
+import {GoogleAnalyticsService} from 'app/core/googleanalytics.service';
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
 
 @Component({
   selector: 'mygexa-change-phone-number',
@@ -35,7 +42,8 @@ export class ChangePhoneNumberComponent implements OnInit {
     private FormBuilder: FormBuilder,
     private UserService: UserService,
     private CustomerAccountService: CustomerAccountService,
-    private CustomerAccountStore: CustomerAccountStore
+    private CustomerAccountStore: CustomerAccountStore,
+    private googleAnalyticsService: GoogleAnalyticsService
   ) {
     this.changePhoneNumberForm = this.changePhoneNumberFormInit();
   }
@@ -62,9 +70,11 @@ export class ChangePhoneNumberComponent implements OnInit {
   }
 
   submitForm() {
+
     this.submitAttempt = true;
-    // console.log('value', this.changePhoneNumberForm.value);
-    // console.log('valid', this.changePhoneNumberForm.valid);
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UpdatePhoneNumber]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UpdatePhoneNumber]);
+
     if (this.changePhoneNumberForm.valid) {
       /** send form data to api to update in database */
       if (this.IsMobileSelected && (this.checkboxChecked === null || this.checkboxChecked === false )) {

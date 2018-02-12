@@ -29,6 +29,12 @@ import { ITDU } from '../../../core/models/tdu/tdu.model';
 import { IAddress } from 'app/core/models/address/address.model';
 import { IMeterInfo } from 'app/core/models/serviceaddress/meterinfo.model';
 
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+
 @Component( {
   selector: 'mygexa-add-services',
   templateUrl: './add-services.component.html',
@@ -79,6 +85,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   constructor( private fb: FormBuilder,
                private offerService: OfferService, private UserService: UserService, private enrollService: EnrollService, private customerAccountService: CustomerAccountService,
                private modalStore: ModalStore, private channelStore: ChannelStore, private availableDateService: AvailableDateService, private calendarService: CalendarService,
+               private googleAnalyticsService: GoogleAnalyticsService,
                private tduStore: TDUStore ) {
 
 
@@ -251,6 +258,10 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   }
 
   onNotify() {
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.AddServiceLocation], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.CreateAdditionalService]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.CreateAdditionalService]);
+
     if ( this.formEnrollmentRequest() ) {
       this.enrollService.createEnrollment( this.enrollmentRequest )
         .subscribe( result => {

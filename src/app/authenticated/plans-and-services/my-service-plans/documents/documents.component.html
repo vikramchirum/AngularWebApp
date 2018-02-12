@@ -31,7 +31,7 @@
       <br>
       <div class="row">
           <div class="col-xs-2 col-sm-2 col-offset-1"><i class="fa fa-info fa-fw fa-in-circle"
-                                   
+
                                    tooltip="Don’t worry! Your electric service will continue on our month-to-month plan.
                                    You’ll receive the details for that plan in your contract expiration notice."></i></div>
         <div class="col-xs-9 col-sm-9">What happens if I don't renew?</div>
@@ -57,9 +57,9 @@
     <section>
       <b><p class="doc-title">Documents</p></b>
       <ul class="list-unstyled">
-        <li><a  href="{{tosLink}}"   target="_blank"><i class="fa fa-file-pdf-o"></i> Terms of Service</a></li>
-        <li><a  href="{{eflLink}}"   target="_blank"><i class="fa fa-file-pdf-o"></i> Electricity Facts Label</a></li>
-        <li><a  href="{{yraacLink}}" target="_blank"><i class="fa fa-file-pdf-o"></i> Your Rights as a Customer</a></li>
+        <li><a  href="{{tosLink}}" (click)="viewEFL()"   target="_blank"><i class="fa fa-file-pdf-o"></i> Terms of Service</a></li>
+        <li><a  href="{{eflLink}}" (click)="viewYraac()"  target="_blank"><i class="fa fa-file-pdf-o"></i> Electricity Facts Label</a></li>
+        <li><a  href="{{yraacLink}}" (click)="viewTos()" target="_blank"><i class="fa fa-file-pdf-o"></i> Your Rights as a Customer</a></li>
       </ul>
       <p><a href="https://get.adobe.com/reader/" target="_blank">Get Adobe Reader Free</a></p>
     </section>

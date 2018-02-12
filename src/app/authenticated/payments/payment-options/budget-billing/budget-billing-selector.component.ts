@@ -8,10 +8,16 @@ import { DecimalPipe } from '@angular/common';
 
 import { minimumValueValidator } from 'app/validators/validator';
 import { environment} from 'environments/environment';
-import { IBudgetBillingEstimate } from '../../../../core/models/budgetbilling/budgetbillingestimate.model';
-import { ICreateBudgetBillingRequest } from '../../../../core/models/budgetbilling/createbudgetbillingrequest.model';
-import { UserService } from '../../../../core/user.service';
+import { IBudgetBillingEstimate } from 'app/core/models/budgetbilling/budgetbillingestimate.model';
+import { ICreateBudgetBillingRequest } from 'app/core/models/budgetbilling/createbudgetbillingrequest.model';
+import { UserService } from 'app/core/user.service';
 import { Subscription } from 'rxjs/Subscription';
+
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
 
 @Component({
   selector: 'mygexa-budget-billing-selector',
@@ -29,8 +35,7 @@ export class BudgetBillingSelectorComponent implements OnInit, OnDestroy {
   @Output() public onBudgetBillingEvent = new EventEmitter();
   @Input() budgetBillingEstimate: IBudgetBillingEstimate;
 
-  constructor(private decimalPipe: DecimalPipe, private formBuilder: FormBuilder, private UserService: UserService
-) {
+  constructor(private decimalPipe: DecimalPipe, private formBuilder: FormBuilder, private UserService: UserService, private googleAnalyticsService: GoogleAnalyticsService) {
   }
 
   ngOnInit() {
@@ -48,7 +53,10 @@ export class BudgetBillingSelectorComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    // TODO
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.PaymentOptionsBudgetBilling], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.Enroll]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.Enroll]);
+
     this.createBudgetBillingRequest.User_Name = this.username;
     this.createBudgetBillingRequest.Service_Account_Id = this.budgetBillingEstimate.Service_Account_Id;
     this.createBudgetBillingRequest.Amount = this.budgetBillingFormGroup.get('amount').value;

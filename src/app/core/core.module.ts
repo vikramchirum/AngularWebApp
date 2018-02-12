@@ -43,7 +43,7 @@ import { NotificationOptionsStore } from './store/notificationoptionsstore';
 import { InvoiceStore } from './store/invoicestore';
 import { TDUService } from './tdu.service';
 import { TDUStore } from './store/tdustore';
-
+import { GoogleAnalyticsService } from './googleanalytics.service';
 
 @NgModule({
   imports: [
@@ -89,7 +89,8 @@ import { TDUStore } from './store/tdustore';
     AvailableDateService,
     CalendarService,
     TDUService,
-    TDUStore
+    TDUStore,
+    GoogleAnalyticsService
   ]
 })
 export class CoreModule { }

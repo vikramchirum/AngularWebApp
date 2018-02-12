@@ -4,7 +4,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { debounce, result } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 
-declare let ga: any;
+declare const ga: any;
 @Component({
   selector: 'mygexa-app',
   templateUrl: './app.component.html',

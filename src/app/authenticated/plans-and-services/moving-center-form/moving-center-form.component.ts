@@ -38,9 +38,15 @@ import { CalendarService } from '../../../core/calendar.service';
 import { TDUStore } from '../../../core/store/tdustore';
 import { ITDU } from '../../../core/models/tdu/tdu.model';
 import { IAddress } from 'app/core/models/address/address.model';
+import { ISearchTransferRequest } from 'app/core/models/transfers/searchtransferrequest.model';
 import { environment } from '../../../../environments/environment';
 import { IServiceAccountPlanHistoryOffer } from '../../../core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
 
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
 
 @Component( {
   selector: 'mygexa-moving-center-form',
@@ -108,6 +114,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   dynamicAddressForm: FormGroup;
   enableSubmitMoveBtn: boolean = false;
   dynamicUAN = null;
+  disableTransferForServiceLocation: boolean = false;
+  transferSearchParams: ISearchTransferRequest = null;
   constructor( private fb: FormBuilder,
                private viewContainerRef: ViewContainerRef,
                private ServiceAccountService: ServiceAccountService,
@@ -118,7 +126,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
                private channelStore: ChannelStore,
                private availableDateService: AvailableDateService,
                private calendarService: CalendarService,
-               private tduStore: TDUStore ) {
+               private tduStore: TDUStore,
+               private googleAnalyticsService: GoogleAnalyticsService) {
     // start date and end date must be future date.
     this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId => {
       this.channelId = ChannelId;
@@ -180,6 +189,9 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
           this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
         } else {
           this.pastDueErrorMessage = null;
+
+          // Check for pending transfers and display appropriate validation message
+          this.checkForPendingTransfers(this.ActiveServiceAccount.Id);
         }
       }
     );
@@ -230,6 +242,21 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
   serviceChanged( event ) {
     this.ActiveServiceAccount = event;
+  }
+
+  checkForPendingTransfers(serviceAccountId: string) {
+    this.transferSearchParams = {
+      Current_Service_Account_Id:  serviceAccountId
+    };
+    this.transferService.searchTransfers(this.transferSearchParams)
+      .subscribe(TransferRecordItems => {
+        if (TransferRecordItems && TransferRecordItems.length > 0) {
+          this.disableTransferForServiceLocation = true;
+        }
+        else {
+          this.disableTransferForServiceLocation = false;
+        }
+      });
   }
 
   getSelectedOffer( event ) {
@@ -407,6 +434,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   onSubmitMove( addressForm, billSelector ) {
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MovingCenter], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitTransfer]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitTransfer]);
+
     let Partner_Account_Number = null;
     let Partner_Name_On_Account = null;
 
@@ -430,7 +461,6 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       dynamicAddress.Line2 = this.newServiceAddress.Address.Line2;
       dynamicAddress.Zip = this.newServiceAddress.Address.Zip;
       dynamicAddress.Zip_4 = this.newServiceAddress.Address.Zip_4;
-      this.dynamicUAN = this.newServiceAddress.Meter_Info.UAN;
     } else {console.log(2);
       dynamicAddress.City = this.dynamicAddressForm.get('City').value;
       dynamicAddress.State = this.dynamicAddressForm.get('State').value;
@@ -438,10 +468,13 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       dynamicAddress.Line2 = this.dynamicAddressForm.get('Line2').value;
       dynamicAddress.Zip = this.dynamicAddressForm.get('Zip').value;
       dynamicAddress.Zip_4 = null;
-      this.dynamicUAN = null;
       // billSelector.final_service_address = dynamicAddress;
     }
+    this.dynamicUAN = this.newServiceAddress.Meter_Info.UAN;
+
+
     console.log('dynamicAddress', dynamicAddress);
+    this.dynamicUAN = this.newServiceAddress.Meter_Info.UAN;
 
     // If user selects existing plan , set current offer as true
     if ( billSelector.service_plan === 'Current Plan' ) {

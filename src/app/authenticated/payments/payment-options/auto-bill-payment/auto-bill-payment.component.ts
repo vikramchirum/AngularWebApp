@@ -8,6 +8,12 @@ import { PaymethodService } from 'app/core/Paymethod.service';
 import { AutoPaymentConfigService } from 'app/core/auto-payment-config.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+
 @Component({
   selector: 'mygexa-auto-bill-payment',
   templateUrl: './auto-bill-payment.component.html',
@@ -50,6 +56,7 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
     private ServiceAccountService: ServiceAccountService,
     private AutoPaymentConfigService: AutoPaymentConfigService,
     private PaymethodService: PaymethodService,
+    private googleAnalyticsService: GoogleAnalyticsService,
     private ChangeDetectorRef: ChangeDetectorRef
   ) { }
 
@@ -74,6 +81,10 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
   }
 
   enrollInAutoBillPaySelected(selectedPaymethod: Paymethod): void {
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.PaymentOptionsAutoPay], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.Enroll]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.Enroll]);
+
     this.enrollingToAutoBillPay = true;
     this.AutoPaymentConfigService.EnrollAutoPayment({
       PayMethodId: selectedPaymethod.PayMethodId,
@@ -103,6 +114,10 @@ export class AutoBillPaymentComponent implements OnInit, OnDestroy {
   }
 
   unenrollInAutoBillPaySelected(): void {
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.PaymentOptionsAutoPay], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.Cancel]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.Cancel]);
+
     this.unenrollingFromAutoBillPay = true;
     this.AutoPaymentConfigService.CancelAutoPayment(this.ActiveServiceAccount.AutoPayConfigId)
       .subscribe(

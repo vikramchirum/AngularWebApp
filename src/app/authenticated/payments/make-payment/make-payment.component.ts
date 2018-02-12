@@ -25,6 +25,11 @@ import { PaymentsHistoryStore } from '../../../core/store/paymentsstore';
 import { InvoiceStore } from '../../../core/store/invoicestore';
 import { PaymentConfirmationModalComponent } from '../../../shared/components/payment-confirmation-modal/payment-confirmation-modal.component';
 import { environment } from '../../../../environments/environment';
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
 
 @Component({
   selector: 'mygexa-make-payment',
@@ -132,7 +137,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
               private ServiceAccountService: ServiceAccountService,
               private InvoiceService: InvoiceService,
               private InvoiceStore: InvoiceStore,
-              private UserService: UserService) {
+              private UserService: UserService,
+              private googleAnalyticsService: GoogleAnalyticsService) {
     this.formGroup = FormBuilder.group({
       payment_now: ['', Validators.compose([Validators.required, validMoneyAmount])],
       payment_save: ['']
@@ -263,6 +269,10 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     }
   }
   checkAmountBeforeSubmit() {
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MakeAPayment], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitPayment]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitPayment]);
+
     this.processing = true; this.zeroAmountEntered = false;
     let payment_entered: string;     let pay_entered: number; let errorMessage: string = null;
     payment_entered = String(get(this.formGroup.value, 'payment_now'));

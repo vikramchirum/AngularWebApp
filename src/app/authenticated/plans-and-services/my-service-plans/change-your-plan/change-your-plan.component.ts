@@ -19,7 +19,6 @@ import { UtilityService } from 'app/core/utility.service';
 import { OffersStore} from 'app/core/store/offersstore';
 import { RenewalStore } from 'app/core/store/renewalstore';
 import { UpgradeStore } from 'app/core/store/upgradestore';
-import { ModalStore } from 'app/core/store/modalstore';
 
 import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-confirmation-modal.component';
 import { ErrorModalComponent } from 'app/shared/components/error-modal/error-modal.component';
@@ -27,6 +26,12 @@ import { IOfferSelectionPayLoad } from 'app/shared/models/offerselectionpayload'
 import { ICreateRenewalRequest } from 'app/core/models/renewals/createrenewalrequest.model';
 import { ICreateUpgradeRequest } from 'app/core/models/upgrades/createupgraderequest.model';
 import { CustomerAccountService } from 'app/core/CustomerAccount.service';
+
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
 
 @Component({
   selector: 'mygexa-change-your-plan',
@@ -67,8 +72,9 @@ export class ChangeYourPlanComponent implements OnInit, OnChanges, OnDestroy {
   customerAccountServiceSubscription: Subscription;
 
   constructor(private serviceAccount_service: ServiceAccountService, private customerAccountService: CustomerAccountService, private OfferStore: OffersStore
-    , private offerService: OfferService, private renewalStore: RenewalStore, private upgradeStore: UpgradeStore, private modalStore: ModalStore
-    ,  private utilityService: UtilityService) {
+    , private offerService: OfferService, private renewalStore: RenewalStore, private upgradeStore: UpgradeStore
+    , private googleAnalyticsService: GoogleAnalyticsService
+    , private utilityService: UtilityService) {
   }
 
   ngOnInit() {
@@ -237,6 +243,9 @@ export class ChangeYourPlanComponent implements OnInit, OnChanges, OnDestroy {
 
   private createRenewal(offerSelectionPayLoad: IOfferSelectionPayLoad) {
 
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyServicePlan], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.CreateRenewal]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.CreateRenewal]);
+
     const request = {} as ICreateRenewalRequest;
     request.Service_Account_Id = offerSelectionPayLoad.Service_Account_Id;
     request.Offering_Id = offerSelectionPayLoad.Offer.Id;
@@ -260,6 +269,10 @@ export class ChangeYourPlanComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private createUpgrade(offerSelectionPayLoad: IOfferSelectionPayLoad) {
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyServicePlan], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.CreateUpgrade]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.CreateUpgrade]);
+
     const request = {} as ICreateUpgradeRequest;
     request.Service_Account_Id = offerSelectionPayLoad.Service_Account_Id;
     request.Offering_Id = offerSelectionPayLoad.Offer.Id;

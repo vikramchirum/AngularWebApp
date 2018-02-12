@@ -85,11 +85,9 @@
                   </ul>
                 </div>
               </div>
-
-
             </div>
             <div *ngSwitchCase="'MakePayment'">
-              <button class="btn btn-block btn-success btn-lg" routerLink="/payments/make-payment" type="button">
+              <button class="btn btn-block btn-success btn-lg" (click)="makeaPayment()" routerLink="/payments/make-payment" type="button">
                 Make a Payment</button>
             </div>
           </div>

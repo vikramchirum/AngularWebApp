@@ -1,8 +1,14 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-import {equalityCheck, validatePassword} from 'app/validators/validator';
-import {UserService} from '../../../core/user.service';
+import { equalityCheck, validatePassword} from 'app/validators/validator';
+import { UserService } from 'app/core/user.service';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
 
 @Component({
   selector: 'mygexa-change-password',
@@ -19,10 +25,12 @@ export class ChangePasswordComponent {
   IsError: boolean = null;
   constructor(
     private FormBuilder: FormBuilder,
-    private UserService: UserService
+    private UserService: UserService,
+    private googleAnalyticsService: GoogleAnalyticsService
   ) {
     this.changePasswordForm = this.changePasswordFormInit();
   }
+
   changePasswordFormInit(): FormGroup {
     return this.FormBuilder.group(
       {
@@ -36,9 +44,11 @@ export class ChangePasswordComponent {
     );
   }
   submitForm() {
+
     this.submitAttempt = true;
-    console.log('value', this.changePasswordForm.value);
-    console.log('valid', this.changePasswordForm.valid);
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UpdatePassword]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UpdatePassword]);
+
     if (this.changePasswordForm.valid) {
       /** send form data to api to update in database */
       this.UserService.updateUserPassword(this.changePasswordForm.get('password').value).subscribe(

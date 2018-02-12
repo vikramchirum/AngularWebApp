@@ -1,7 +1,7 @@
 /**
  * Created by vikram.chirumamilla on 7/31/2017.
  */
-import { Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 import { environment } from 'environments/environment';
@@ -10,9 +10,15 @@ import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 
 import { IInvoice } from 'app/core/models/invoices/invoice.model';
-import { InvoiceStore } from '../../../core/store/invoicestore';
-import { PaymentsHistoryStore } from '../../../core/store/paymentsstore';
-import { PaymentsHistory } from '../../../core/models/payments/payments-history.model';
+import { InvoiceStore } from 'app/core/store/invoicestore';
+import { PaymentsHistoryStore } from 'app/core/store/paymentsstore';
+import { PaymentsHistory } from 'app/core/models/payments/payments-history.model';
+
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
 
 @Component({
   selector: 'mygexa-my-bill',
@@ -21,30 +27,33 @@ import { PaymentsHistory } from '../../../core/models/payments/payments-history.
 })
 export class MyBillComponent implements OnInit, OnDestroy {
 
-   dollarAmountFormatter: string;
-   totalDue: number;
-   pastDue: number;
-   exceededDueDate: boolean = null;
-   pastDueExists: boolean = null;
-   activeServiceAccount: ServiceAccount;
-   latestInvoice: IInvoice;
-   autoPay: boolean;
-   paymentStatus: string = null;
-   currentView: string = null;
-   dueDate: Date = null;
-    public Payments: PaymentsHistory[] = null;
-    LatestBillAmount: number;
-    LatestBillPaymentDate: Date;
-    showDueDate: boolean = null;
-    PaymentsLength: number = null;
+  @Input('parentComponent')
+  public parentComponent: string = null;
+
+  dollarAmountFormatter: string;
+  totalDue: number;
+  pastDue: number;
+  exceededDueDate: boolean = null;
+  pastDueExists: boolean = null;
+  activeServiceAccount: ServiceAccount;
+  latestInvoice: IInvoice;
+  autoPay: boolean;
+  paymentStatus: string = null;
+  currentView: string = null;
+  dueDate: Date = null;
+  public Payments: PaymentsHistory[] = null;
+  LatestBillAmount: number;
+  LatestBillPaymentDate: Date;
+  showDueDate: boolean = null;
+  PaymentsLength: number = null;
   private activeServiceAccountSubscription: Subscription = null;
   private latestInvoiceDetailsSubscription: Subscription = null;
   private paymentHistorySubscription: Subscription = null;
 
   constructor(private ServiceAccountService: ServiceAccountService,
               private InvoiceStore: InvoiceStore,
-              private PaymentHistoryStore: PaymentsHistoryStore
-  ) {
+              private PaymentHistoryStore: PaymentsHistoryStore,
+              private googleAnalyticsService: GoogleAnalyticsService) {
   }
 
   ngOnInit() {
@@ -88,7 +97,7 @@ export class MyBillComponent implements OnInit, OnDestroy {
           );
         }
       }
-  );
+    );
   }
 
   setFlags() {
@@ -103,10 +112,15 @@ export class MyBillComponent implements OnInit, OnDestroy {
             this.currentView = 'MakePayment';
           }
         } else {
-            this.currentView = 'AutoPay';
+          this.currentView = 'AutoPay';
         }
       }
     }
+  }
+
+  public handleClick() {
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[this.parentComponent], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.MakeAPaymentButton]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.MakeAPaymentButton]);
   }
 
   ngOnDestroy() {

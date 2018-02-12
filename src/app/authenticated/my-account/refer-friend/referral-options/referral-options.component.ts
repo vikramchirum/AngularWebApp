@@ -10,6 +10,12 @@ import { IInviteRefereeRequest } from 'app/core/models/referrals/inviterefereesr
 import { CustomerAccountService } from 'app/core/CustomerAccount.service';
 import { ReferralStore } from 'app/core/store/referralstore';
 
+import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+import {
+  GoogleAnalyticsCategoryType,
+  GoogleAnalyticsEventAction
+} from 'app/core/models/enums/googleanalyticscategorytype';
+
 @Component({
   selector: 'mygexa-referral-options',
   templateUrl: './referral-options.component.html',
@@ -24,7 +30,8 @@ export class ReferralOptionsComponent implements OnInit {
   isSubmitted = false;
   get FriendsList() { return <FormArray>this.friendsForm.get('FriendsList'); }
 
-  constructor(private FormBuilder: FormBuilder, private customerAccountService: CustomerAccountService, private referralStore: ReferralStore) {
+  constructor(private FormBuilder: FormBuilder, private customerAccountService: CustomerAccountService, private referralStore: ReferralStore,
+  private googleAnalyticsService: GoogleAnalyticsService) {
   }
 
   ngOnInit() {
@@ -61,6 +68,9 @@ export class ReferralOptionsComponent implements OnInit {
   }
 
   onSubmit(friendsForm: FormGroup) {
+
+    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyRewardsAndReferrals], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SendReferral]
+      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SendReferral]);
 
     this.isSubmitted = false;
 
