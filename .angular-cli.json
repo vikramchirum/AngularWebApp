@@ -25,7 +25,9 @@
       ],
       "scripts": [
         "../node_modules/jquery/dist/jquery.js",
-        "../styles/bootstrap/javascripts/bootstrap.js"
+        "../styles/bootstrap/javascripts/bootstrap.js",
+        "../src/assets/javascript/mcrypt.js",
+        "../src/assets/javascript/rijndael.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

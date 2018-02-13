@@ -1,5 +1,5 @@
-import {Component, OnInit, ViewEncapsulation, ViewChild} from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { get } from 'lodash';
 import { UserService } from 'app/core/user.service';
@@ -10,6 +10,10 @@ import { LoginAddClaimsModalComponent } from './login-add-claims-modal/login-add
 import { IUser } from '../../core/models/user/User.model';
 import { IRegUser } from '../../core/models/register/register-user.model';
 import { ChannelStore } from '../../core/store/channelstore';
+// import { AES, enc } from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
+
+declare var mcrypt: any;
 
 @Component({
   templateUrl: './login.component.html',
@@ -35,7 +39,8 @@ export class LoginComponent implements OnInit {
     private UserService: UserService,
     private Router: Router,
     private FormBuilder: FormBuilder,
-    private channelStore: ChannelStore
+    private channelStore: ChannelStore,
+    private activatedRoute: ActivatedRoute
   ) {
     this.processing = false;
     this.registerForm = this.registerFormInit();
@@ -104,6 +109,29 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // If redirected from website
+    this.activatedRoute.queryParams.subscribe(
+      (queryParams: Params) => {
+        let username = queryParams['xyu'];
+        let password = queryParams['yxp'];
+
+        // Decode  base64 encoded username
+        username = atob(username);
+        console.log('Username: ', username);
+        console.log('Password from query string: ', password);
+        var key = CryptoJS.enc.Utf8.parse('GEXA0323        ');
+        var parsedStr = key.toString(CryptoJS.enc.Utf8);
+        var iv = CryptoJS.enc.Utf8.parse('GEXA0323        ');
+        console.log('Key : ' + parsedStr + ' ,Key len:' + parsedStr.length);
+        console.log('Key: ' + key + ' ,' + 'Key size: ' + key.length + ' ,' + 'iv: ' + iv);
+        // var decrypted = CryptoJS.AES.decrypt(password, key, {iv: iv});
+        var decrypted1 = mcrypt.Decrypt(password, iv, key, 'rijndael-128');
+        // console.log('Decrypted : ' + decrypted);
+        console.log('Decrypted : ' + decrypted1);
+
+        // console.log('utf8 = ' + decrypted.toString(CryptoJS.enc.Utf8));
+      }
+    );
 
     // Mute the video if the "muted" video tag does not (a supposed FireFox bug.)
     document.getElementById('login-video-player')['muted'] = 'muted';

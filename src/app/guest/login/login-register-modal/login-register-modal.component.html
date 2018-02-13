@@ -177,13 +177,21 @@
                   <ng-template *ngIf="currentView; then verificationForm else Loading;"></ng-template>
                   <ng-template #verificationForm>
                     <form id="verification" #verificationForm = "ngForm" (ngSubmit)="verifyForm(registerForm.value)">
-                      <div class="alert alert-warning">Please verify one of the following so we can complete your registration.</div>
+                      <div class="alert alert-warning"> Just one more step! </div>
 
                           <div class="form-group" *ngIf="currentView === 'ssn'">
                             <label class="control-label">Last 4 Digits of SSN Number</label>
-                            <input  [(ngModel)]="Last_4" name="Last_4" type="text" class="form-control"  #last4="ngModel"
+                            <input  [(ngModel)]="Last_4" name="Last_4" required type="text" class="form-control"  #last4="ngModel"  minlength="4" maxlength="4" pattern="[0-9]*"
                                    placeholder="XXXX">
+                            <div class="has-error" *ngIf="last4.hasError('minlength') || last4.hasError('required') || last4.hasError('pattern')">
+                              <div class="help-block">
+                                <span *ngIf="last4.hasError('required')"> Last 4 of ssn is required. </span>
+                                <span *ngIf="last4.hasError('pattern') && last4.touched">Should be only numbers. </span>
+                                <span *ngIf="last4.hasError('minlength') && last4.touched">Should be 4 digits.. </span>
+                              </div>
+                            </div>
                           </div>
+
                           <div class="form-group" *ngIf="currentView === 'ddl/id'">
                             <label class="control-label">Drivers License Number and State Issued</label>
                             <input  [(ngModel)]="DDL"  name="DDL" type="text" class="form-control" #ddl="ngModel"
@@ -205,16 +213,16 @@
                             <input [(ngModel)]="Id" name="Id" type="text" class="form-control" #id="ngModel"
                                    placeholder="Alternate ID Number">
                           </div>
-                      <div class="form-group" *ngIf="errorMsg">
-                        <div class="alert alert-danger"><b>{{errorMsg}}</b></div>
+                      <div class="form-group" *ngIf="errorMsgLastStep">
+                        <div class="alert alert-danger"><b>{{errorMsgLastStep}}</b></div>
                       </div>
                       <div class="text-right">
-                        <button type="submit"
+                        <button type="submit" *ngIf="!processRegistration"
                                 class="btn-block btn btn-primary"> VERIFY AND COMPLETE
                         </button>
-                        <!--<button type="submit" *ngIf="processing" disabled-->
-                        <!--class="btn-block btn btn-primary">-->
-                        <!--<i class="fa fa-spin fa-cog"></i> Registering... </button>-->
+                        <button type="submit" *ngIf="processRegistration" disabled
+                        class="btn-block btn btn-primary">
+                        <i class="fa fa-spin fa-cog"></i> Registering... </button>
                       </div>
                     </form>
                   </ng-template>

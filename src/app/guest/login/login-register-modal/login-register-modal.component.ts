@@ -28,10 +28,12 @@ export class LoginRegisterModalComponent implements OnInit {
   user: IRegUser = null;
   error: string = null;
   errorMsg: string = null;
+  errorMsgLastStep: string = null;
   statesArray: string[] = [];
   secQuesArray: ISecurityQuestions[] = [];
   currentView: string = null;
   customerDetails: CustomerAccount = null;
+  processRegistration: boolean = null;
   constructor(
     private UserService: UserService,
     private Router: Router,
@@ -56,24 +58,32 @@ export class LoginRegisterModalComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.currentView = 'ssn';
   }
 
   verifyForm(model: IRegUser) {
-    console.log('register model', model);
-    console.log('register verification model', this.Last_4);
-    console.log('DDL', this.DDL);
-    console.log('State', this.State);
-
+    this.processRegistration = true;
     if (this.currentView === 'ssn') {
       if (this.Last_4 && this.Last_4 === String(this.customerDetails.Social_Security_Number).slice(-4)) {
-         this.resgister(model);
+        this.resgister(model);
+      }  else {
+        this.processRegistration = false;
+        let error = "SSN provided doesn't match our records.";
+        this.errorMsgLastStep = error;
       }
     } else if (this.currentView === 'ddl/id') {
-       if (this.DDL && ((this.State + '-' + this.DDL) === this.customerDetails.Drivers_License.Number) && this.State === this.customerDetails.Drivers_License.State) {
+      if (this.Id && this.Id === this.customerDetails.AlternateID.Number) {
         this.resgister(model);
-      } else if (this.Id && this.Id === this.customerDetails.AlternateID.Number) {
+      } else if (this.DDL && (this.DDL === this.customerDetails.Drivers_License.Number) && this.State === this.customerDetails.Drivers_License.State) {
         this.resgister(model);
-      }
+      } else {
+         this.processRegistration = false;
+         let error = "ID provided doesn't match our records.";
+         this.errorMsgLastStep = error;
+       }
+    } else {
+      this.processRegistration = false;
+      this.currentView = null;
     }
   }
 
@@ -104,14 +114,40 @@ export class LoginRegisterModalComponent implements OnInit {
     this.resetValidationErrors();
     // call API to save customer
     if (isValid) {
-      this.registerClicked = true;
-      this.UserService.registerVerification(model).subscribe(
-        result => { this.customerDetails = result;
-          if (this.customerDetails.Social_Security_Number) {
-            this.currentView = 'ssn';
-          } else if (this.customerDetails.Drivers_License.Number) {
-            this.currentView = 'ddl/id';
+      this.UserService.verifyRegisterUser(model).subscribe(
+        (result1) => {
+          console.log('hello', result1);
+          if (result1 === 'User Verified') {
+            this.registerClicked = true;
+            this.UserService.getCustomerInfo(model).subscribe(
+              result => { this.customerDetails = result;
+                if (this.customerDetails.Social_Security_Number) {
+                  this.currentView = 'ssn';
+                } else if (this.customerDetails.AlternateID || this.customerDetails.Drivers_License.Number) {
+                  this.currentView = 'ddl/id';
+                }
+              }
+            );
+          } else {
+            this.errorMsg = 'User verification failed';
           }
+        } ,
+        error => {
+          let errorMessage: string;
+          errorMessage = error.Message;
+          if (errorMessage.includes('The Service Account Search request is invalid.')) {
+            this.registerForm.controls['Service_Account_Id'].setErrors({'incorrect': true});
+            // this.errorMsg = 'We are having trouble finding this service account number. Please check the number, or call 866-961-9399 for assistance.';
+          } else if (errorMessage.includes('User Exists')) {
+            this.registerForm.controls['User_name'].setErrors({'userExists': true});
+          } else if (errorMessage.includes('Username already created for CSP ID.')) {
+            this.registerForm.controls['User_name'].setErrors({'userNameInUse': true});
+          } else if (errorMessage.includes('We could not find the service account you supplied.')) {
+            this.errorMsg = 'Information provided does not match our records. Please check the details, or call 866-961-9399 for assistance.';
+          } else {
+            this.errorMsg = errorMessage;
+          }
+          this.processing = false;
         }
       );
     } else {
@@ -131,7 +167,7 @@ export class LoginRegisterModalComponent implements OnInit {
     this.processing = false;
     this.registerClicked = false;
     this.formSubmitted = false;
-    this.errorMsg = null;
+    this.errorMsg = this.errorMsgLastStep = null;
     this.registerForm = this.registerFormInit();
     this.hideLoginRegisterModal();
   }
