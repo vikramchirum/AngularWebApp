@@ -110,28 +110,28 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     // If redirected from website
-    this.activatedRoute.queryParams.subscribe(
-      (queryParams: Params) => {
-        let username = queryParams['xyu'];
-        let password = queryParams['yxp'];
-
-        // Decode  base64 encoded username
-        username = atob(username);
-        console.log('Username: ', username);
-        console.log('Password from query string: ', password);
-        var key = CryptoJS.enc.Utf8.parse('GEXA0323        ');
-        var parsedStr = key.toString(CryptoJS.enc.Utf8);
-        var iv = CryptoJS.enc.Utf8.parse('GEXA0323        ');
-        console.log('Key : ' + parsedStr + ' ,Key len:' + parsedStr.length);
-        console.log('Key: ' + key + ' ,' + 'Key size: ' + key.length + ' ,' + 'iv: ' + iv);
-        // var decrypted = CryptoJS.AES.decrypt(password, key, {iv: iv});
-        var decrypted1 = mcrypt.Decrypt(password, iv, key, 'rijndael-128');
-        // console.log('Decrypted : ' + decrypted);
-        console.log('Decrypted : ' + decrypted1);
-
-        // console.log('utf8 = ' + decrypted.toString(CryptoJS.enc.Utf8));
-      }
-    );
+    // this.activatedRoute.queryParams.subscribe(
+    //   (queryParams: Params) => {
+    //     let username = queryParams['xyu'];
+    //     let password = queryParams['yxp'];
+    //
+    //     // Decode  base64 encoded username
+    //     username = atob(username);
+    //     console.log('Username: ', username);
+    //     console.log('Password from query string: ', password);
+    //     var key = CryptoJS.enc.Utf8.parse('GEXA0323        ');
+    //     var parsedStr = key.toString(CryptoJS.enc.Utf8);
+    //     var iv = CryptoJS.enc.Utf8.parse('GEXA0323        ');
+    //     console.log('Key : ' + parsedStr + ' ,Key len:' + parsedStr.length);
+    //     console.log('Key: ' + key + ' ,' + 'Key size: ' + key.length + ' ,' + 'iv: ' + iv);
+    //     // var decrypted = CryptoJS.AES.decrypt(password, key, {iv: iv});
+    //     var decrypted1 = mcrypt.Decrypt(password, iv, key, 'rijndael-128');
+    //     // console.log('Decrypted : ' + decrypted);
+    //     console.log('Decrypted : ' + decrypted1);
+    //
+    //     // console.log('utf8 = ' + decrypted.toString(CryptoJS.enc.Utf8));
+    //   }
+    // );
 
     // Mute the video if the "muted" video tag does not (a supposed FireFox bug.)
     document.getElementById('login-video-player')['muted'] = 'muted';
