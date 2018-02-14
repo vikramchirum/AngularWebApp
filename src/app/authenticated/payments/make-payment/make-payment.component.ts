@@ -124,6 +124,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             return;
           }
           this.LatestInvoice = latestInvoice;
+          this.checkAmount();
         });
     }
   }
