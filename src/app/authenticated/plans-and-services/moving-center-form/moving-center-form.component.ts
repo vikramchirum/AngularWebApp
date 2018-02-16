@@ -173,7 +173,6 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       } );
       this.dynamicAddressForm = this.fb.group({
         'Line1': [null, Validators.required],
-        'Line2': [null, Validators.required],
         'City': [null, Validators.required],
         'State': [null, Validators.required],
         'Zip': [null, Validators.required]
