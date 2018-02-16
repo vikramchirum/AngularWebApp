@@ -1,9 +1,8 @@
 <div class="gexa-home-carousel">
 <carousel>
   <slide *ngIf="!IsOnGexaLyric">
-    <img src="assets/home/gexa-lyric_2.png" class="hidden-xs" alt="The Gexa Lyric" routerLink="/plans-and-services/my-services-plans"
-         [queryParams]="promoCode && promoCode != 'null'? {pCode: promoCode} : {}" style="cursor: pointer">
-    <img src="assets/home/gexa-lyric_mobile.jpg" class="visible-xs" alt="The Gexa Lyric" routerLink="plans-and-services/my-services-plans" style="cursor: pointer">
+    <a href="https://www.gexaenergy.com/about-us/community/community-heroes/" target="_blank"><img src="assets/home/gexa-community_heros.png" class="hidden-xs" alt="Gexa Community Heros" routerLink="https://www.gexaenergy.com/about-us/community/community-heroes/"></a>
+    <a href="https://www.gexaenergy.com/about-us/community/community-heroes/" target="_blank"><img src="assets/home/gexa-community_heros_mobile.png" class="visible-xs" alt="Gexa Community Heros"></a>
 
     </slide>
   <slide>
