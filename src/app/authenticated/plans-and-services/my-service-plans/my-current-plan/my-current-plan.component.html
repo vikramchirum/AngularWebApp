@@ -39,7 +39,7 @@
               <p class="bg-default">TERM: {{RenewalAccount?.Existing_Renewal?.Offer?.Term}} Months</p>
               <p style="color:orange"><i class="fa fa-chevron-right" style="color:orange"></i> START: {{RenewalAccount?.Existing_Renewal?.Start_Date | date: 'MM/dd/yyyy'}}</p>
               <p class="bg-default">END: {{RenewalAccount.Existing_Renewal.End_Date | date:'MM/dd/yyyy'}}</p>
-              <p><br/><a (click)="planPendingViewCurrentPlan()" style="color:orange"> *Plan Pending: View Your Current Plan</a></p>
+              <p  style="color:orange"><br/> *Plan Pending <a (click)="isRenewalPlan=false;" style="color:orange">(View Your Current Plan)</a></p>
               <br>
               <div *ngIf="isRenewalPlan ===false;">
                 {{ pop.show()}}
