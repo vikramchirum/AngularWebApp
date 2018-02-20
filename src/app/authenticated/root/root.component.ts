@@ -13,6 +13,7 @@ import { NotificationOptionsStore } from '../../core/store/notificationoptionsst
 import { AccountType } from '../../core/models/enums/accounttype';
 import { NotificationType } from '../../core/models/enums/notificationtype';
 import { InvoiceStore } from '../../core/store/invoicestore';
+import { AnnouncementsService } from '../../core/announcementservice.service';
 
 @Component({
   selector: 'mygexa-root',
@@ -23,7 +24,7 @@ import { InvoiceStore } from '../../core/store/invoicestore';
 
 })
 export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
-
+  openNotification: boolean = null;
   public startsWith = startsWith;
   service_account_length: number = null;
   env = environment.Name;
@@ -31,6 +32,7 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
   accordionVisible: boolean = null;
   hoverMenu: string = null;
   customerDetails: CustomerAccount = null;
+  AnnouncememtsServiceSubscription: Subscription = null;
   CustomerAccountServiceSubscription: Subscription = null;
   ServiceAccountSubscription: Subscription = null;
   UserServiceSubscription: Subscription = null;
@@ -45,7 +47,8 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
     public ServiceAccountService: ServiceAccountService,
     private CustomerAccountService: CustomerAccountService,
     private NotificationOptionsStore: NotificationOptionsStore,
-    private InvoiceStore: InvoiceStore
+    private InvoiceStore: InvoiceStore,
+    private AnnouncememtsService: AnnouncementsService
   ) {}
 
   showHomeMultiAccountsModal() {
@@ -71,10 +74,12 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.openNotification = (document.readyState === 'complete') ? true : false;
     this.ServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       ActiveServiceAccount => {
         if (ActiveServiceAccount) {
           this.IsDisconnectedServiceAddress = ActiveServiceAccount.Status === 'Disconnected' ? true : false;
+          // TODO: Get notifications for using announcements service.
         }
       }
     );

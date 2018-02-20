@@ -12,6 +12,7 @@ import { IRegUser } from '../../core/models/register/register-user.model';
 import { ChannelStore } from '../../core/store/channelstore';
 // import { AES, enc } from 'crypto-js';
 import * as CryptoJS from 'crypto-js';
+import {environment} from "../../../environments/environment";
 
 declare var mcrypt: any;
 
@@ -110,28 +111,40 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     // If redirected from website
-    // this.activatedRoute.queryParams.subscribe(
-    //   (queryParams: Params) => {
-    //     let username = queryParams['xyu'];
-    //     let password = queryParams['yxp'];
-    //
-    //     // Decode  base64 encoded username
-    //     username = atob(username);
-    //     console.log('Username: ', username);
-    //     console.log('Password from query string: ', password);
-    //     var key = CryptoJS.enc.Utf8.parse('GEXA0323        ');
-    //     var parsedStr = key.toString(CryptoJS.enc.Utf8);
-    //     var iv = CryptoJS.enc.Utf8.parse('GEXA0323        ');
-    //     console.log('Key : ' + parsedStr + ' ,Key len:' + parsedStr.length);
-    //     console.log('Key: ' + key + ' ,' + 'Key size: ' + key.length + ' ,' + 'iv: ' + iv);
-    //     // var decrypted = CryptoJS.AES.decrypt(password, key, {iv: iv});
-    //     var decrypted1 = mcrypt.Decrypt(password, iv, key, 'rijndael-128');
-    //     // console.log('Decrypted : ' + decrypted);
-    //     console.log('Decrypted : ' + decrypted1);
-    //
-    //     // console.log('utf8 = ' + decrypted.toString(CryptoJS.enc.Utf8));
-    //   }
-    // );
+    var getUrlParameter = function getUrlParameter(sParam) {
+      var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        sParameterName1,
+        i;
+      // console.log('sURLVariables', sURLVariables);
+      // console.log('sParameterName', sParameterName);
+
+      for (i = 0; i < sURLVariables.length; i++) {
+        if (sURLVariables[i].indexOf('?') > -1) {
+          sParameterName = sURLVariables[i].split('?');
+          sParameterName = sParameterName[1].split('=');
+        } else {
+          sParameterName = sURLVariables[i].split('=');
+        }
+        // console.log('sParameterName', sParameterName);
+
+        if (sParameterName[0] === sParam) {
+          return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+      }
+    };
+
+    var username = getUrlParameter('xyu').toString();
+    var password = getUrlParameter('yxp').toString();
+    console.log('xyu:' + username + ' yxp:' + password);
+    username = atob(username);
+    console.log('Username: ', username);
+    var key = CryptoJS.enc.Base64.parse(environment.crypto_key);
+    var iv =  CryptoJS.enc.Base64.parse(environment.crypto_iv);
+    var decrypted = CryptoJS.AES.decrypt(password, key, { iv: iv });
+    decrypted = decrypted.toString(CryptoJS.enc.Utf8)
+    console.log('Decrypted : ' + decrypted);
 
     // Mute the video if the "muted" video tag does not (a supposed FireFox bug.)
     document.getElementById('login-video-player')['muted'] = 'muted';

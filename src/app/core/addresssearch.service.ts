@@ -11,6 +11,7 @@ import {map} from 'lodash';
 
 import {HttpClient} from './httpclient';
 import {ServiceAddress} from './models/serviceaddress/serviceaddress.model';
+import {ISearchAnnouncements} from './models/announcements/searchannouncementsrequest.model';
 import {ISearchAddressRequest} from './models/serviceaddress/searchaddressrequest.model';
 
 @Injectable()

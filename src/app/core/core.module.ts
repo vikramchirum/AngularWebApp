@@ -44,6 +44,7 @@ import { InvoiceStore } from './store/invoicestore';
 import { TDUService } from './tdu.service';
 import { TDUStore } from './store/tdustore';
 import { GoogleAnalyticsService } from './googleanalytics.service';
+import { AnnouncementsService } from './announcementservice.service';
 
 @NgModule({
   imports: [
@@ -90,7 +91,8 @@ import { GoogleAnalyticsService } from './googleanalytics.service';
     CalendarService,
     TDUService,
     TDUStore,
-    GoogleAnalyticsService
+    GoogleAnalyticsService,
+    AnnouncementsService
   ]
 })
 export class CoreModule { }

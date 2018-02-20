@@ -14,7 +14,35 @@
         <!--</form>-->
       <!--<li>-->
       <li><a routerLink="/account/profile"><small><span class="fa fa-user-circle fa-white"></span> <span class="hidden-xs">Hi,  {{ customerDetails?.First_Name.charAt(0).toUpperCase() +  customerDetails?.First_Name.slice(1).toLowerCase()  }}!</span></small></a></li>
-      <li class="hidden"><a href="#"><small><span class="fa fa-bell fa-white"></span> <span class="hidden-xs">Notifications</span></small></a></li>
+      <li
+        class="dropdown-full"
+        [ngClass]="{ open: hoverMenu === 'notification' || openNotification}"
+        (mouseenter)="doMouseenter('notification')"
+       >
+        <a>
+          <small><span class="fa fa-bell fa-white"></span> <span class="hidden-xs">Notifications</span></small>
+        </a>
+
+        <div class="dropdown-menu" style="border-left: 10px solid #3b73af;">
+          <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" style="color: #3b73af; width:900px;">
+            <div class="">
+              <h3>Notification <span class="fa fa-bell"></span><span class="fa fa-times pull-right" style="color: black;" (click)="doMouseleave();"></span></h3>
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+              </p><br>
+              <p>
+                It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+              <br><p>For more information please visit our website at www.gexaenergy.com</p>
+              <br><p><a  style="color: black; text-decoration: underline;" (click)="doMouseleave()">Close</a></p>
+            </div>
+            <!--<b>Announcement!</b>{{'Announcement_body'}}-->
+            <!--For more information please visit our website at www.gexaenergy.com-->
+            <!--<ul>Close</ul>-->
+          </div>
+        </div>
+
+      </li>
       <li><a href="#" (click)="logout($event)"><small><span class="fa fa-sign-out fa-white"></span> <span class="hidden-xs">Logout</span></small></a></li>
       <li><a href="https://www.gexaenergy.com/for-home/support/contact-us/"><small><span class="fa fa-phone fa-white"></span> <span class="hidden-xs">866-961-9399</span></small></a></li>
     </ul>

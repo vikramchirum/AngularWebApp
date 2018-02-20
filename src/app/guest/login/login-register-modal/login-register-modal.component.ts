@@ -120,11 +120,16 @@ export class LoginRegisterModalComponent implements OnInit {
           if (result1 === 'User Verified') {
             this.registerClicked = true;
             this.UserService.getCustomerInfo(model).subscribe(
-              result => { this.customerDetails = result;
-                if (this.customerDetails.Social_Security_Number) {
-                  this.currentView = 'ssn';
-                } else if (this.customerDetails.AlternateID || this.customerDetails.Drivers_License.Number) {
-                  this.currentView = 'ddl/id';
+              result => {
+                if (result) {
+                  this.customerDetails = result;
+                  if (this.customerDetails.Social_Security_Number) {
+                    this.currentView = 'ssn';
+                  } else if (this.customerDetails.AlternateID || this.customerDetails.Drivers_License.Number) {
+                    this.currentView = 'ddl/id';
+                  }
+                } else {
+                  this.errorMsg = 'User verification failed';
                 }
               }
             );

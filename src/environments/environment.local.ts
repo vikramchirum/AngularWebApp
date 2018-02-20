@@ -12,5 +12,7 @@ export const environment = {
   GexaShare_Url: 'http://qa2.gexaenergy.com/oef/refereeenrollment.aspx?referralid=',
   Client_Email_Addresses: 'mygexa.azure@gexaenergy.com',
   kWhAmountFormatter: '1.4-4',
-  forte_api_url: 'https://sandbox.forte.net/api/js/v1'
+  forte_api_url: 'https://sandbox.forte.net/api/js/v1',
+  crypto_key: '6REr6UFXjjmw0+W0NhMP7asI9y54FDrJdE/LlIz/YME=',
+  crypto_iv: 'hDRokaLfaRzJSaivlL7KlQ=='
 };
