@@ -158,7 +158,7 @@
               <p class="text-center bg-default">AT {{ActiveServiceAccount.Current_Offer.Featured_Usage_Level}}</p>
               <p >TERM: {{ActiveServiceAccount.Current_Offer.Term}} Months</p>
               <p class="bg-default">START: {{ActiveServiceAccount.Contract_Start_Date | date: 'MM/dd/yyyy'}}</p>
-              <p>END: {{ActiveServiceAccount.Calculated_Contract_End_Date | date:'MM/dd/yyyy'}}</p>
+              <p>END: {{ (ActiveServiceAccount.Contract_End_Date ? ActiveServiceAccount.Contract_End_Date : ActiveServiceAccount.Calculated_Contract_End_Date) | date: 'MM/dd/yyyy'}}</p>
             </md-card-content>
           </md-card>
         </div>
