@@ -8,4 +8,6 @@ export interface ICreateRenewalRequest {
   Offering_Id: string;
   Partner_Account_Number: string;
   Partner_Name_On_Account: string;
+  Channel_Id: string;
+  Current_Rate_Code: string;
 }

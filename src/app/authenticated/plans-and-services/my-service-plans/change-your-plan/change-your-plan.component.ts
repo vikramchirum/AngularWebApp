@@ -19,6 +19,7 @@ import { UtilityService } from 'app/core/utility.service';
 import { OffersStore} from 'app/core/store/offersstore';
 import { RenewalStore } from 'app/core/store/renewalstore';
 import { UpgradeStore } from 'app/core/store/upgradestore';
+import { ChannelStore } from 'app/core/store/channelstore';
 
 import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-confirmation-modal.component';
 import { ErrorModalComponent } from 'app/shared/components/error-modal/error-modal.component';
@@ -48,6 +49,7 @@ export class ChangeYourPlanComponent implements OnInit, OnChanges, OnDestroy {
   isLoadingUpgrades = false;
   isLoadingRenewals = false;
 
+  private channelId: string;
   customerDetails: CustomerAccount;
   activeServiceAccountDetails: ServiceAccount;
   renewalDetails: IRenewalDetails = null;
@@ -70,19 +72,23 @@ export class ChangeYourPlanComponent implements OnInit, OnChanges, OnDestroy {
   offersServiceSubscription: Subscription;
   plansServicesSubscription: Subscription;
   customerAccountServiceSubscription: Subscription;
+  private channelStoreSubscription: Subscription = null;
 
   constructor(private serviceAccount_service: ServiceAccountService, private customerAccountService: CustomerAccountService, private OfferStore: OffersStore
     , private offerService: OfferService, private renewalStore: RenewalStore, private upgradeStore: UpgradeStore
+    , private channelStore: ChannelStore
     , private googleAnalyticsService: GoogleAnalyticsService
     , private utilityService: UtilityService) {
   }
 
   ngOnInit() {
-
     this.customerAccountServiceSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(result => {
       this.customerDetails = result;
     });
 
+    this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe(channelId => {
+      this.channelId = channelId;
+    });
   }
 
   private initialize() {
@@ -250,6 +256,8 @@ export class ChangeYourPlanComponent implements OnInit, OnChanges, OnDestroy {
     request.Service_Account_Id = offerSelectionPayLoad.Service_Account_Id;
     request.Offering_Id = offerSelectionPayLoad.Offer.Id;
     request.User_Name = offerSelectionPayLoad.User_Name;
+    request.Channel_Id = this.channelId;
+    request.Current_Rate_Code = this.activeServiceAccountDetails.Current_Offer.Rate_Code;
 
     if (offerSelectionPayLoad.Has_Partner) {
       request.Partner_Name_On_Account = offerSelectionPayLoad.Partner_Name_On_Account;
@@ -277,6 +285,8 @@ export class ChangeYourPlanComponent implements OnInit, OnChanges, OnDestroy {
     request.Service_Account_Id = offerSelectionPayLoad.Service_Account_Id;
     request.Offering_Id = offerSelectionPayLoad.Offer.Id;
     request.User_Name = offerSelectionPayLoad.User_Name;
+    request.Channel_Id = this.channelId;
+    request.Current_Rate_Code = this.activeServiceAccountDetails.Current_Offer.Rate_Code;
 
     if (offerSelectionPayLoad.Has_Partner) {
       request.Partner_Name_On_Account = offerSelectionPayLoad.Partner_Name_On_Account;
@@ -306,5 +316,6 @@ export class ChangeYourPlanComponent implements OnInit, OnChanges, OnDestroy {
     }
     this.customerAccountServiceSubscription.unsubscribe();
     this.plansServicesSubscription.unsubscribe();
+    this.channelStoreSubscription.unsubscribe();
   }
 }
