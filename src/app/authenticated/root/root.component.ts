@@ -14,6 +14,8 @@ import { AccountType } from '../../core/models/enums/accounttype';
 import { NotificationType } from '../../core/models/enums/notificationtype';
 import { InvoiceStore } from '../../core/store/invoicestore';
 import { AnnouncementsService } from '../../core/announcementservice.service';
+import { IAnnouncement } from "../../core/models/announcements/announcement.model";
+import { ISearchAnnouncements } from "../../core/models/announcements/searchannouncementsrequest.model";
 
 @Component({
   selector: 'mygexa-root',
@@ -32,6 +34,7 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
   accordionVisible: boolean = null;
   hoverMenu: string = null;
   customerDetails: CustomerAccount = null;
+  announcements: IAnnouncement[] = null;
   AnnouncememtsServiceSubscription: Subscription = null;
   CustomerAccountServiceSubscription: Subscription = null;
   ServiceAccountSubscription: Subscription = null;
@@ -79,7 +82,12 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
       ActiveServiceAccount => {
         if (ActiveServiceAccount) {
           this.IsDisconnectedServiceAddress = ActiveServiceAccount.Status === 'Disconnected' ? true : false;
-          // TODO: Get notifications for using announcements service.
+          const search_options = {} as ISearchAnnouncements;
+          search_options.Active = true;
+          this.AnnouncememtsService.searchAnnouncements( search_options ).subscribe(
+            result => {
+              this.announcements = result;
+            });
         }
       }
     );
@@ -132,6 +140,11 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
 
   doMouseleave() {
     this.hoverMenu = null;
+  }
+
+  close_announcement(announcement: IAnnouncement){
+    var index = this.announcements.indexOf(announcement);
+    this.announcements.splice(index, 1);
   }
 
   ngOnDestroy() {

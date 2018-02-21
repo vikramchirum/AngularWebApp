@@ -1,4 +1,4 @@
-export interface IAnnouncements {
+export interface IAnnouncement {
   Title: string ;
   Body: string ;
   Start_Date: Date;

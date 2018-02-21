@@ -23,22 +23,13 @@
           <small><span class="fa fa-bell fa-white"></span> <span class="hidden-xs">Notifications</span></small>
         </a>
 
-        <div class="dropdown-menu" style="border-left: 10px solid #3b73af;">
-          <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" style="color: #3b73af; width:900px;">
-            <div class="">
-              <h3>Notification <span class="fa fa-bell"></span><span class="fa fa-times pull-right" style="color: black;" (click)="doMouseleave();"></span></h3>
-              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-              </p><br>
-              <p>
-                It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-              <br><p>For more information please visit our website at www.gexaenergy.com</p>
-              <br><p><a  style="color: black; text-decoration: underline;" (click)="doMouseleave()">Close</a></p>
+        <div *ngIf="announcements && announcements.length" class="dropdown-menu" style="border-left: 10px solid #3b73af; padding: 0px;">
+          <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" style="color: #3b73af; width:900px; padding: 0px">
+            <div *ngFor="let announcement of announcements" style="border-bottom: solid 2px #3b73af; padding: 0px 20px;">
+              <h3>{{announcement.Title}} <span class="fa fa-bell"></span><span class="fa fa-times pull-right" style="color: black; cursor: pointer" (click)="close_announcement(announcement)"></span></h3>
+              <div [innerHtml]="announcement.Body"></div>
+              <br><p><a  style="color: black; text-decoration: underline; cursor: pointer;" (click)="close_announcement(announcement)">Close</a></p>
             </div>
-            <!--<b>Announcement!</b>{{'Announcement_body'}}-->
-            <!--For more information please visit our website at www.gexaenergy.com-->
-            <!--<ul>Close</ul>-->
           </div>
         </div>
 
