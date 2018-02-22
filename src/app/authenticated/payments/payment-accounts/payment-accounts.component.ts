@@ -21,6 +21,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
   ActiveServiceAccountSubscription: Subscription = null;
   ServiceAccountsSubscription: Subscription = null;
   PaymethodBeingEdited: Paymethod = null;
+  editingCreditCardFormValid: boolean = null;
 
   PaymentEdittingIsUsedForAutoPaymentTimestamp: number = null;
   PaymentMessage: IPaymentMessage = null;
@@ -105,6 +106,15 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
   editingCreditCardToggle(): void {
     this.PaymethodBeingEdited = null;
+    this.editingCreditCardFormValid = false;
+  }
+
+  editingCreditCardFormChanged($event: string): void {
+    this.editingCreditCardFormValid = $event === 'valid';
+  }
+
+  editingCreditCardSubmit() {
+    
   }
 
   removePaymethod(paymentMethod: Paymethod): void {

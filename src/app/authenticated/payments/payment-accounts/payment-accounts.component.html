@@ -61,12 +61,14 @@
           </tbody>
         </table>
         <div class="card-prompt" *ngIf="PaymethodBeingEdited === paymentMethod">
-          <mygexa-payment-method-edit-cc></mygexa-payment-method-edit-cc>
+          <mygexa-payment-method-edit-cc (changed)="editingCreditCardFormChanged($event)"></mygexa-payment-method-edit-cc>
           <br/>
           <div class="text-right">
             <button
               type="button"
               class="btn btn-primary"
+              [disabled]="!editingCreditCardFormValid"
+              (click)="editingCreditCardSubmit()"
             >Edit Now</button>
             <button
               type="button"
