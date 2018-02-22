@@ -1,6 +1,6 @@
 <form novalidate #f="ngForm">
   <div id="search-component">
-    <input #searchBox id="search-box" required class="form-control"  name="newAddressField" placeholder="Enter New Address" [(ngModel)]="selectedAddress"
+    <input #searchBox id="search-box" required class="form-control"  name="newAddressField" placeholder="Enter New Address" [(ngModel)]="selectedAddress" [disabled] = "IsDisabled"
       #newAddress="ngModel" (keyup)="search(searchBox.value)" autocomplete="off"/>
     <div>
       <ng-container *ngIf="newAddressList && showAddressList">

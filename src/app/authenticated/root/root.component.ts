@@ -59,12 +59,13 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    // this.homeMultiAccountsModal.show();
+    this.homeMultiAccountsModal.hideServiceUpgradeModal();
     if (!this.ServiceAccountService.ActiveServiceAccountId) {
-      this.homeMultiAccountsModal.show();
-     this.UserServiceSubscription =  this.UserService.UserObservable.subscribe(
-        result => { this.service_account_length = result.Account_permissions.length;
-                    this.username = result.Profile.Username; }
+      this.UserServiceSubscription = this.UserService.UserObservable.subscribe(
+        result => {
+          this.service_account_length = result.Account_permissions.length;
+          this.username = result.Profile.Username;
+        }
       );
       if (!this.ServiceAccountService.ActiveServiceAccountId) {
         if (this.service_account_length != null && this.service_account_length === 2) {

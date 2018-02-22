@@ -136,25 +136,38 @@ export class LoginComponent implements OnInit {
       }
     };
 
-    var username = getUrlParameter('xyu').toString();
-    var password = getUrlParameter('yxp').toString();
-    // console.log('xyu:' + username + ' yxp:' + password);
-    if (username != null && password != null) {
-      // Decrypt the username
-      username = atob(username);
-      // console.log('Username: ', username);
-      // Decrypt the password
-      var key = CryptoJS.enc.Base64.parse(environment.crypto_key);
-      var iv =  CryptoJS.enc.Base64.parse(environment.crypto_iv);
-      var decrypted = CryptoJS.AES.decrypt(password, key, { iv: iv });
-      decrypted = decrypted.toString(CryptoJS.enc.Utf8);
-      // console.log('Decrypted : ' + decrypted);
-      this.user_name = username;
-      this.password = decrypted.toString();
-      if (this.user_name && this.password) {
-        this.login();
+    var username = getUrlParameter('xyu');
+    var password = getUrlParameter('yxp');
+
+
+    if(username && password) {
+
+
+      username = getUrlParameter('xyu').toString();
+      password = getUrlParameter('yxp').toString();
+
+      // console.log('xyu:' + username + ' yxp:' + password);
+      if (username != null && password != null) {
+        // Decrypt the username
+        username = atob(username);
+        // console.log('Username: ', username);
+        // Decrypt the password
+        var key = CryptoJS.enc.Base64.parse(environment.crypto_key);
+        var iv = CryptoJS.enc.Base64.parse(environment.crypto_iv);
+        var decrypted = CryptoJS.AES.decrypt(password, key, {iv: iv});
+        decrypted = decrypted.toString(CryptoJS.enc.Utf8);
+        // console.log('Decrypted : ' + decrypted);
+        this.user_name = username;
+        this.password = decrypted.toString();
+        if (this.user_name && this.password) {
+          this.login();
+        }
       }
+
     }
+
+
+
     // Mute the video if the "muted" video tag does not (a supposed FireFox bug.)
     document.getElementById('login-video-player')['muted'] = 'muted';
   }

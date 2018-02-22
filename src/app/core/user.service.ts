@@ -81,6 +81,8 @@ export class UserService implements CanActivate {
     // TODO: Use cross-browser capable storage solution here.
     localStorage.removeItem('gexa_auth_token');
     localStorage.removeItem('gexa_auth_token_expire');
+    localStorage.removeItem('gexa_active_Service_account_id');
+    localStorage.removeItem('user_email_address');
     return null;
 
   };

@@ -32,6 +32,8 @@ export class AddressSearchComponent implements OnInit {
   showAddressList: boolean = true;
   isValidAddress: boolean = null;
 
+  @Input() public IsDisabled = false;
+
   @Output() public onSelectedServiceAddress = new EventEmitter();
   @Output() public onServiceAddressChanged = new EventEmitter();
 

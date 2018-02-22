@@ -1,9 +1,12 @@
-import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy, AfterViewInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IMyOptions, IMyDateModel, IMyDate } from 'mydatepicker';
-import { clone, sortBy } from 'lodash';
+
+import {forEach} from 'lodash';
+
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+import { environment } from '../../../../environments/environment';
 
 import {
   checkIfSunday,
@@ -12,35 +15,36 @@ import {
   checkIfChristmasEve,
   checkIfChristmasDay,
   checkIfJuly4th,
-  tduCheck
+  tduCheck, isTduDifferent
 } from 'app/validators/moving-form.validator';
+
 import { SelectPlanModalDialogComponent } from './select-plan-modal-dialog/select-plan-modal-dialog.component';
+import { ErrorModalComponent } from 'app/shared/components/error-modal/error-modal.component';
+
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { CustomerAccountService } from 'app/core/CustomerAccount.service';
-import { TransferRequest } from 'app/core/models/transfers/transfer-request.model';
 import { TransferService } from 'app/core/transfer.service';
+import { CalendarService } from 'app/core/calendar.service';
 import { OfferService } from 'app/core/offer.service';
-import { AddressSearchService } from 'app/core/addresssearch.service';
-import { ISearchAddressRequest } from 'app/core/models/serviceaddress/searchaddressrequest.model';
+import { AvailableDateService } from 'app/core/availabledate.service';
+
+import { ChannelStore } from 'app/core/store/channelstore';
+import { TDUStore } from 'app/core/store/tdustore';
+
+import { ITDU } from 'app/core/models/tdu/tdu.model';
+import { IAddress } from 'app/core/models/address/address.model';
+import { OfferRequest } from 'app/core/models/offers/offerrequest.model';
 import { ServiceAddress } from 'app/core/models/serviceaddress/serviceaddress.model';
 import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
-import { OfferRequest } from 'app/core/models/offers/offerrequest.model';
-import { ChannelStore } from '../../../core/store/channelstore';
-import { OfferSelectionType } from '../../../core/models/enums/offerselectiontype';
-import { IOffers } from '../../../core/models/offers/offers.model';
-import { ServiceAccount } from '../../../core/models/serviceaccount/serviceaccount.model';
-import { IOfferSelectionPayLoad } from '../../../shared/models/offerselectionpayload';
-import { ErrorModalComponent } from '../../../shared/components/error-modal/error-modal.component';
-import { AvailableDateService } from '../../../core/availabledate.service';
-import { ITduAvailabilityResult } from '../../../core/models/availabledate/tduAvailabilityResult.model';
-import { ServiceType } from '../../../core/models/enums/serviceType';
-import { CalendarService } from '../../../core/calendar.service';
-import { TDUStore } from '../../../core/store/tdustore';
-import { ITDU } from '../../../core/models/tdu/tdu.model';
-import { IAddress } from 'app/core/models/address/address.model';
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+
 import { ISearchTransferRequest } from 'app/core/models/transfers/searchtransferrequest.model';
-import { environment } from '../../../../environments/environment';
-import { IServiceAccountPlanHistoryOffer } from '../../../core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
+import { TransferRequest } from 'app/core/models/transfers/transfer-request.model';
+import { IOfferSelectionPayLoad } from 'app/shared/models/offerselectionpayload';
+import { ITduAvailabilityResult } from 'app/core/models/availabledate/tduAvailabilityResult.model';
+import { ServiceType } from 'app/core/models/enums/serviceType';
+import { IServiceAccountPlanHistoryOffer } from 'app/core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
+import { OfferSelectionType } from 'app/core/models/enums/offerselectiontype';
 
 import {
   GoogleAnalyticsCategoryType,
@@ -55,15 +59,24 @@ import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
   providers: [ TransferService, OfferService ]
 } )
 export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestroy {
+
+
+  public isTduDifferent: boolean;
+  public hasPastDue = false;
+  public hasPendingTransfer = false;
+  pastDue: number;
+  TDUDuns: ITDU[];
+  TDUDunsNumbers: string[] = [];
+  public ActiveServiceAccount: ServiceAccount = null;
+  customerDetails: CustomerAccount = null;
+
+
   enableDates: boolean = null;
   tduAvailabilityResult: ITduAvailabilityResult;
   trimmedAvailableDates: Date[];
   missingDates: Array<IMyDate> = null;
   nextClicked: boolean = false;
   previousClicked: boolean = true;
-  movingCenterForm: FormGroup;
-  movingAddressForm: FormGroup;
-  ServicePlanForm: FormGroup;
   submitted: boolean = false;
   Final_Bill_To_Old_Service_Address: boolean;
   Keep_Current_Offer: boolean;
@@ -73,7 +86,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   availableOffersLength: number =null;
   isLoading: boolean = null;
   showNewPlans: boolean = null;
-  isKeepCurrent: boolean = false;
+  isKeepCurrent: boolean = true;
   isSelectNew: boolean = false;
   isUseCurrent: boolean = false;
   isUseNew: boolean = false;
@@ -85,125 +98,36 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   offerSelectionType = OfferSelectionType;
   finalBillAddress: string = null;
   convertedDates: Array<IMyDate> = null;
+
+
   private ActiveServiceAccountSubscription: Subscription = null;
   private CustomerAccountSubscription: Subscription = null;
   private channelStoreSubscription: Subscription = null;
   private offerSubscription: Subscription = null;
   private availableDateServiceSubscription: Subscription = null;
   TDUDunsServiceSubscription: Subscription= null;
-  TDUDuns: ITDU[];
-  public ActiveServiceAccount: ServiceAccount = null;
   public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
   public Price_atFeatured_Usage_Level_Renewal: number;
   public Price_atFeatured_Usage_Level_Current: number;
   private TDU_DUNS_Number: string = null;
-  customerDetails: CustomerAccount = null;
   offerRequestParams: OfferRequest = null;
   results: ServiceAddress[] = null;
   newServiceAddress: ServiceAddress = null;
   notSameTDU: boolean = null;
   showMorePlans: boolean = null;
   pricingMessage: string;
-  TDUDunsNumbers: string[] = [];
   addressNotServed: boolean = null;
   isValidAddress: boolean = null;
   @ViewChild( 'selectPlanModal' ) selectPlanModal: SelectPlanModalDialogComponent;
   @ViewChild( 'errorModal' ) errorModal: ErrorModalComponent;
   useOldAddress: boolean = true;
-  dynamicAddressForm: FormGroup;
   enableSubmitMoveBtn: boolean = false;
   dynamicUAN = null;
-  disableTransferForServiceLocation: boolean = false;
-  transferSearchParams: ISearchTransferRequest = null;
-  constructor( private fb: FormBuilder,
-               private viewContainerRef: ViewContainerRef,
-               private ServiceAccountService: ServiceAccountService,
-               private customerAccountService: CustomerAccountService,
-               private transferService: TransferService,
-               private offerService: OfferService,
-               private addressSearchService: AddressSearchService,
-               private channelStore: ChannelStore,
-               private availableDateService: AvailableDateService,
-               private calendarService: CalendarService,
-               private tduStore: TDUStore,
-               private googleAnalyticsService: GoogleAnalyticsService) {
-    // start date and end date must be future date.
-    this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId => {
-      this.channelId = ChannelId;
-      console.log('Channel Id', this.channelId);
-    } );
-  }
 
-
-  ngOnInit() {
-    this.TDUDunsServiceSubscription = this.tduStore.TDUDetails.subscribe(
-      TDUDuns => {
-        this.TDUDuns = TDUDuns;
-        let DunsNumber: string[] = [];
-        this.TDUDuns.forEach(
-          item => DunsNumber.push(item.Duns_Number)
-        );
-        this.TDUDunsNumbers = DunsNumber;
-      }
-    );
-    this.movingAddressForm = this.fb.group( {
-      'Current_Service_End_Date': [ null, Validators.compose( [
-        Validators.required,
-        checkIfSunday,
-        checkIfNewYear,
-        checkIfChristmasEve,
-        checkIfChristmasDay,
-        checkIfJuly4th ] ) ],
-      'New_Service_Start_Date': [ null, Validators.compose( [
-        Validators.required,
-        checkIfSunday,
-        checkIfNewYear,
-        checkIfChristmasEve,
-        checkIfChristmasDay,
-        checkIfJuly4th ] ) ],
-      'current_bill_address': this.fb.array( [] )
-    }, { validator: validateMoveInDate( 'Current_Service_End_Date', 'New_Service_Start_Date' ) } ),
-
-      this.ServicePlanForm = this.fb.group( {
-        'service_address': [ null, Validators.required ],
-        'service_plan': [ null, Validators.required ],
-        // 'agree_to_terms': [false, [Validators.pattern('true')]],
-        'final_service_address': this.fb.array( [] )
-      } );
-      this.dynamicAddressForm = this.fb.group({
-        'Line1': [null, Validators.required],
-        'City': [null, Validators.required],
-        'State': [null, Validators.required],
-        'Zip': [null, Validators.required]
-      });
-  }
-
-  ngAfterViewInit() {
-    this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
-      movingFromAccount => {
-        // console.log("Active Service Account", movingFromAccount);
-        this.ActiveServiceAccount = movingFromAccount;
-        if ( this.ActiveServiceAccount.Past_Due > 49 ) {
-          this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
-        } else {
-          this.pastDueErrorMessage = null;
-
-          // Check for pending transfers and display appropriate validation message
-          this.checkForPendingTransfers(this.ActiveServiceAccount.Id);
-        }
-      }
-    );
-    this.CustomerAccountSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(
-      result => {
-        this.customerDetails = result;
-        // console.log('Customer Account**************************', result);
-        // if ( this.customerDetails.Past_Due > 49 ) {
-        //   this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
-        // }
-      }
-    );
-  }
+  movingAddressForm: FormGroup;
+  ServicePlanForm: FormGroup;
+  dynamicAddressForm: FormGroup;
 
   public newServiceStartDate: IMyOptions = {
     // start date options here...
@@ -213,7 +137,6 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     dateFormat: 'mm-dd-yyyy'
   };
 
-
   public currentServiceEndDate: IMyOptions = {
     // other end date options here...;
     enableDays: [],
@@ -221,10 +144,101 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     disableUntil: {
       year: new Date().getFullYear(),
       month: new Date().getUTCMonth() + 1,
-      day: new Date().getDate() - 1
+      day: new Date().getDate()-1
     },
     dateFormat: 'mm-dd-yyyy'
   };
+
+  constructor( private fb: FormBuilder,
+               private ServiceAccountService: ServiceAccountService,
+               private customerAccountService: CustomerAccountService,
+               private transferService: TransferService,
+               private offerService: OfferService,
+               private availableDateService: AvailableDateService,
+               private calendarService: CalendarService,
+               private channelStore: ChannelStore,
+               private tduStore: TDUStore,
+               private googleAnalyticsService: GoogleAnalyticsService) {
+    this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe(channelId => {
+      this.channelId = channelId;
+    });
+  }
+
+  ngOnInit() {
+
+    this.TDUDunsServiceSubscription = this.tduStore.TDUDetails.subscribe(
+      tduDuns => {
+        this.TDUDuns = tduDuns;
+        const dunsNumber: string[] = [];
+        forEach(this.TDUDuns, item => dunsNumber.push(item.Duns_Number));
+        this.TDUDunsNumbers = dunsNumber;
+      }
+    );
+
+    this.movingAddressForm = this.fb.group({
+      'Current_Service_End_Date': [null, Validators.compose([
+        Validators.required,
+        checkIfSunday,
+        checkIfNewYear,
+        checkIfChristmasEve,
+        checkIfChristmasDay,
+        checkIfJuly4th])],
+      'New_Service_Start_Date': [null, Validators.compose([
+        Validators.required,
+        checkIfSunday,
+        checkIfNewYear,
+        checkIfChristmasEve,
+        checkIfChristmasDay,
+        checkIfJuly4th])],
+      'current_bill_address': this.fb.array([])
+    }, {validator: validateMoveInDate('Current_Service_End_Date', 'New_Service_Start_Date')});
+
+    this.ServicePlanForm = this.fb.group({
+      'service_address': [null, Validators.required],
+      'service_plan': [null, Validators.required],
+      'final_service_address': this.fb.array([])
+    });
+
+    this.dynamicAddressForm = this.fb.group({
+      'Line1': [null, Validators.required],
+      'Line2': [null],
+      'City': [null, Validators.required],
+      'State': [null, [Validators.required, Validators.maxLength(2)]],
+      'Zip': [null, Validators.required, Validators.maxLength(5)]
+    });
+  }
+
+  ngAfterViewInit() {
+
+    this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
+      movingFromAccount => {
+        this.ActiveServiceAccount = movingFromAccount;
+        this.ServiceAccountService.getPastDue(this.ActiveServiceAccount.Id).subscribe(pastDue => {
+          this.pastDue = pastDue;
+          if (this.pastDue > 40) {
+            this.hasPastDue = true;
+            this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
+          } else {
+            this.pastDueErrorMessage = null;
+            this.checkForPendingTransfers(this.ActiveServiceAccount.Id);
+          }
+        });
+      });
+
+    this.CustomerAccountSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(
+      result => {
+        this.customerDetails = result;
+      });
+  }
+
+  checkForPendingTransfers(serviceAccountId: string) {
+    const transferSearchParams = {} as ISearchTransferRequest
+    transferSearchParams.Current_Service_Account_Id = serviceAccountId;
+    this.transferService.searchTransfers(transferSearchParams)
+      .subscribe(transferRecords => {
+        this.hasPendingTransfer = (transferRecords && transferRecords.length > 0);
+      });
+  }
 
   onStartDateChanged( event: IMyDateModel ) {
     // date selected
@@ -243,25 +257,28 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.ActiveServiceAccount = event;
   }
 
-  checkForPendingTransfers(serviceAccountId: string) {
-    this.transferSearchParams = {
-      Current_Service_Account_Id:  serviceAccountId
-    };
-    this.transferService.searchTransfers(this.transferSearchParams)
-      .subscribe(TransferRecordItems => {
-        if (TransferRecordItems && TransferRecordItems.length > 0) {
-          this.disableTransferForServiceLocation = true;
-        }
-        else {
-          this.disableTransferForServiceLocation = false;
-        }
-      });
+  // Get Address from the emitter when users selects new address
+  getSelectedAddress( event ) {
+    this.newServiceAddress = event;
+    this.addressNotServed = this.TDUDunsNumbers.includes(this.newServiceAddress.Meter_Info.TDU_DUNS);
+    if (this.newServiceAddress.Meter_Info.UAN !== null && this.TDUDunsNumbers.includes(this.newServiceAddress.Meter_Info.TDU_DUNS)) {
+      this.isTduDifferent = isTduDifferent(this.ActiveServiceAccount.TDU_DUNS_Number, this.newServiceAddress.Meter_Info.TDU_DUNS);
+      this.ServicePlanForm.get('service_plan').setValidators([Validators.required,]);
+      this.availableDateServiceSubscription = this.availableDateService.getAvailableDate(this.newServiceAddress.Meter_Info.UAN).subscribe(
+        availableDates => {
+          this.tduAvailabilityResult = availableDates;
+          this.populateCalendar();
+          this.enableDates = true;
+        });
+    } else {
+      this.enableDates = false;
+    }
   }
+
 
   getSelectedOffer( event ) {
     this.showNewPlans = false; // hide all offers
     this.selectedOffer = event;
-    console.log( 'Offer selected', this.selectedOffer );
     // OfferId should only get passed when user wants to change their offer
     this.offerId = this.selectedOffer.Offer.Id;
   }
@@ -318,29 +335,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.movingAddressForm.controls[ 'New_Service_Start_Date' ].setValue( '' );
   }
 
-  // Get Address from the emitter when users selects new address
-  getSelectedAddress( event ) {
-    this.newServiceAddress = event;
-    // if ( this.newServiceAddress === null) {
-    //   this.enableDates = false;
-    // }
-    this.addressNotServed = this.TDUDunsNumbers.includes(this.newServiceAddress.Meter_Info.TDU_DUNS);
-    if ( this.newServiceAddress.Meter_Info.UAN !== null && this.TDUDunsNumbers.includes(this.newServiceAddress.Meter_Info.TDU_DUNS )) {
-      this.availableDateServiceSubscription = this.availableDateService.getAvailableDate( this.newServiceAddress.Meter_Info.UAN ).subscribe(
-        availableDates => {
-          this.tduAvailabilityResult = availableDates;
-          this.populateCalendar();
-          this.enableDates = true;
-        } );
-    } else {
-      this.enableDates = false;
-    }
-    // console.log('event',  this.newServiceAddress);
-  }
 
   addressFormSubmit( addressForm ) {
-    this.pastDueErrorMessage = ( this.ActiveServiceAccount && this.ActiveServiceAccount.Past_Due > 40 ) ? 'We are unable to process your request due to Past due Balance' : null;
-
     // start date - when the customer wants to turn on their service.
     // dunsNumber - TDU_DNS number from New Address Search API
     this.offerRequestParams = {
@@ -350,23 +346,28 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       page_size: 100,
       channelId: this.channelId
     };
-    console.log( 'Offer params', this.offerRequestParams );
+    console.log('Offer params', this.offerRequestParams);
     // send start date and TDU_DUNS_Number to get offers available.
     this.isLoading = true;
-    this.offerSubscription = this.offerService.getOffers( this.offerRequestParams )
-      .subscribe( result => {
+    this.offerSubscription = this.offerService.getOffers(this.offerRequestParams)
+      .subscribe(result => {
         this.availableOffers = result;
         this.availableOffersLength = this.availableOffers ? this.availableOffers.length : 0;
         this.isLoading = false;
-        console.log( 'this.available offers', this.availableOffers );
+        console.log('this.available offers', this.availableOffers);
         // prevent user from navigating to plans page if we don't offer service in the moving address
         // prevent user from submitting the form if past due balance over 40
-        if ( this.availableOffers.length > 0 && this.ActiveServiceAccount.Past_Due < 40 ) {
+        if (this.availableOffers.length > 0) {
           this.nextClicked = true;
           this.previousClicked = !this.previousClicked;
           this.selectedOffer = null;
+
+          // if tdu is different show plans by default.
+          if(this.isTduDifferent) {
+            this.showPlans();
+          }
         }
-      } );
+      });
   }
 
   // New Service Plans Modal

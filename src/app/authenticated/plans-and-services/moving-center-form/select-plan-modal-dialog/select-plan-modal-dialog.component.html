@@ -3,10 +3,10 @@
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
-        <div class="modal-body"> 
+        <div class="modal-body">
           <!--<button type="button" class="close text-right" aria-label="Close" (click)="hideMovingServiceModal()">
           <span class="close-btn" aria-hidden="true">&times;</span></button><br>-->
-          
+
           <div class="row plan-info">
             <div class="col-md-4 col-xs-12"  *ngFor="let offers of newPlans">
               <div class="plan-card-container">
@@ -16,7 +16,6 @@
                   </div>
                   <div class="select-plan-card">
                     <h2>{{offers.Price_At_1000_kwh | number : '1.1-1'}}<sup>&cent;</sup><small> pkw/hr</small></h2>
-                    <p class="bg-defau;t">{{offers.End_Date | date:'d/M/yy'}}</p>
                   </div>
                   <div align="center">
                     <button class="btn btn-success" (click)="selectPlan(offers)">Select Plan</button>
@@ -24,7 +23,7 @@
                 </div>
               </div>
             </div>
-            <!--Plan information --> 
+            <!--Plan information -->
           </div>
         </div>
         <div class="modal-footer">

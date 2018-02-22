@@ -4,7 +4,7 @@
 export const environment = {
   Production: true,
   Name: 'DEV',
-  Api_Url: 'http://azureapidev/api',
+  Api_Url: 'http://azureapiqa/api',
   Api_Token: '2f74b90f975e4dc4a93283c6075ebf67',
   Forte_Api_Key: 'GwnI15Vj36',
   DollarAmountFormatter: '1.2-2',

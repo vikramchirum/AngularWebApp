@@ -116,6 +116,9 @@ export function validateMoveInDate(endDate, startDate) {
           }
         }
       }
-    }
-
+    };
   }
+
+export function isTduDifferent(currentTDU, newTDU) {
+  return (currentTDU !== newTDU);
+}

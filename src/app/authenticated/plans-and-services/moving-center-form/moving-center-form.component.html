@@ -2,50 +2,85 @@
   <form [hidden]="nextClicked || submitted" [formGroup]="movingAddressForm" novalidate class="moving-address-form">
     <h2>Moving Center</h2>
     <p>Let's start with finding out where you are moving to, so we know which options are available to you</p>
-    <div class="row">
-      <!--Present Service Account Address -->
-      <div class="col-md-6">
-        <div class="form-group" >
-          <h3>You are Moving From</h3>
-          <mygexa-service-account-selector
-    [setActiveServiceAccount]="true" (changedServiceAccount)="serviceChanged($event)"></mygexa-service-account-selector>
-          <small class="text-danger" *ngIf="ActiveServiceAccount && ActiveServiceAccount?.Status !== 'Active'">This account has been disconnected and the move out can not be continued</small> 
-          <small class="text-danger" *ngIf="disableTransferForServiceLocation">There is already a transfer of service request in progress for this account. You cannot submit another request for the same account.</small> </div>
-      </div>
 
-      <!-- select date when customer wants their service turned off at the old home  -->
-      <div class="col-md-6">
-        <div class="form-group">
-          <h3>Shut Off Date</h3>
-          <my-date-picker class="noSymbol" name="Current_Service_End_Date" [options]="currentServiceEndDate" formControlName="Current_Service_End_Date"
-            (dateChanged)="onEndDateChanged($event)"></my-date-picker>
-          <small class="text-danger" *ngIf="movingAddressForm.get('Current_Service_End_Date').touched  && movingAddressForm.controls?.Current_Service_End_Date.errors?.required">You must enter stop date</small> <small class="text-danger" *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday">You cannot pick a sunday for a stop date</small> <small class="text-danger" *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfNewYear">New Year day is not a valid stop date</small> <small class="text-danger" *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasEve">Christmas Eve is not a valid stop date</small> <small class="text-danger" *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasDay">Christmas Day is not a valid stop date</small> </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-        <h3>You are Moving To</h3>
-        <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)" (onServiceAddressChanged) = "disableFields($event)"></mygexa-address-search>
-        <small *ngIf="!(isValidAddress === false) && addressNotServed === false" class="text-danger">   We're sorry, we don't offer electricity service at the location you specified. Please check the address, or contact Customer Service for assistance.   </small>
-      </div>
-
-      <!-- select date when customer wants their service turned on at the new home  -->
-      <div class="col-md-6">
-        <div class="form-group">
-          <h3>Turn On Date</h3>
-          <my-date-picker name="New_Service_Start_Date" [disabled]="!enableDates" [options]="newServiceStartDate" formControlName="New_Service_Start_Date"
-                          (dateChanged)="onStartDateChanged($event)"></my-date-picker>
-          <small>{{pricingMessage}}</small>
+      <div class="row">
+        <!--Present Service Account Address -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <h3>You are Moving From</h3>
+            <mygexa-service-account-selector
+              [setActiveServiceAccount]="true"
+              (changedServiceAccount)="serviceChanged($event)"></mygexa-service-account-selector>
+            <small class="text-danger" *ngIf="ActiveServiceAccount && ActiveServiceAccount?.Status !== 'Active'">This
+              account has been disconnected and the move out can not be continued
+            </small>
+            <small class="text-danger" *ngIf="hasPendingTransfer">There is already a transfer of service
+              request in progress for this account. You cannot submit another request for the same account.
+            </small>
+          </div>
+        </div>
+        <!-- select date when customer wants their service turned off at the old home  -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <h3>Shut Off Date</h3>
+            <my-date-picker class="noSymbol" name="Current_Service_End_Date" [options]="currentServiceEndDate" [disabled]="hasPastDue || hasPendingTransfer"
+                            formControlName="Current_Service_End_Date"
+                            (dateChanged)="onEndDateChanged($event)"></my-date-picker>
+            <small class="text-danger"
+                   *ngIf="movingAddressForm.get('Current_Service_End_Date').touched  && movingAddressForm.controls?.Current_Service_End_Date.errors?.required">
+              You must enter stop date
+            </small>
+            <small class="text-danger"
+                   *ngIf="movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday">
+              You cannot pick a sunday for a stop date
+            </small>
+            <small class="text-danger"
+                   *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfNewYear">
+              New Year day is not a valid stop date
+            </small>
+            <small class="text-danger"
+                   *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasEve">
+              Christmas Eve is not a valid stop date
+            </small>
+            <small class="text-danger"
+                   *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasDay">
+              Christmas Day is not a valid stop date
+            </small>
+          </div>
         </div>
       </div>
-    </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <h3>You are Moving To</h3>
+          <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)" [IsDisabled] = "hasPastDue || hasPendingTransfer"
+                                 (onServiceAddressChanged)="disableFields($event)"></mygexa-address-search>
+          <small *ngIf="!(isValidAddress === false) && addressNotServed === false" class="text-danger"> We're sorry, we
+            don't offer electricity service at the location you specified. Please check the address, or contact Customer
+            Service for assistance.
+          </small>
+        </div>
+
+        <!-- select date when customer wants their service turned on at the new home  -->
+        <div class="col-md-6">
+          <div class="form-group">
+            <h3>Turn On Date</h3>
+            <my-date-picker name="New_Service_Start_Date" [disabled]="!enableDates" [options]="newServiceStartDate"
+                            formControlName="New_Service_Start_Date" [disabled]="hasPastDue || hasPendingTransfer"
+                            (dateChanged)="onStartDateChanged($event)"></my-date-picker>
+            <small>{{pricingMessage}}</small>
+          </div>
+        </div>
+      </div>
+
     <br/>
 
     <!--If we don't offer service in the moving address, we should show the message-->
     <ng-container *ngIf="availableOffers">
       <div *ngIf="availableOffersLength === 0" class="alert alert-info fade in alert-dismissable">
         <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-        <strong>We're Sorry!</strong> We cannot register your move online, please call 866-961-9399 for assistance. </div>
+        <strong>We're Sorry!</strong> We cannot register your move online, please call 866-961-9399 for assistance.
+      </div>
 
       <!-- If user has past due balance, show hte message -->
       <!--<small class="text-danger" *ngIf="pastDueErrorMessage && availableOffers.length > 0">-->
@@ -53,94 +88,106 @@
       <!--</small>-->
       <!--<br>-->
       <!--<div class="row" *ngIf="pastDueErrorMessage && availableOffers.length > 0">-->
-        <!--<div class="col-md-6">-->
-          <!--<div class="text-right">-->
-            <!--<button class="btn btn-primary btn-success" routerLink="/payments/make-payment" type="button">Make a Payment</button>-->
-          <!--</div>-->
-        <!--</div>-->
+      <!--<div class="col-md-6">-->
+      <!--<div class="text-right">-->
+      <!--<button class="btn btn-primary btn-success" routerLink="/payments/make-payment" type="button">Make a Payment</button>-->
+      <!--</div>-->
+      <!--</div>-->
       <!--</div>-->
     </ng-container>
     <ng-container *ngIf="pastDueErrorMessage">
       <small class="text-danger" *ngIf="pastDueErrorMessage">
-        <p>{{pastDueErrorMessage}} <b>${{ActiveServiceAccount?.Past_Due | number : dollarAmountFormatter}}</b> </p>
+        <p>{{pastDueErrorMessage}} <b>${{pastDue | number : dollarAmountFormatter}}</b></p>
       </small>
       <br>
       <div class="row" *ngIf="pastDueErrorMessage">
         <div class="col-md-6">
           <div class="text-right">
-            <button class="btn btn-primary btn-success" routerLink="/payments/make-payment" type="button">Make a Payment</button>
+            <button class="btn btn-primary btn-success" routerLink="/payments/make-payment" type="button">Make a
+              Payment
+            </button>
           </div>
         </div>
       </div>
     </ng-container>
     <br/>
     <div class="text-right">
-      <button class="btn btn-primary" [disabled]="!movingAddressForm.valid || disableTransferForServiceLocation" (click)="addressFormSubmit(movingAddressForm.value)">Next</button>
+      <button class="btn btn-primary" [disabled]="!movingAddressForm.valid || hasPendingTransfer || hasPastDue"
+              (click)="addressFormSubmit(movingAddressForm.value)">Next
+      </button>
     </div>
   </form>
+
+
+
   <form [hidden]="previousClicked || submitted" [formGroup]="ServicePlanForm" novalidate>
     <h2 class="plans-bg">Moving Center</h2>
     <p>A few more items and we can finalize your order</p>
     <br/>
     <div class="row service-plan">
       <div class="col-md-3 col-sm-12">
-          <div class="bg-plans-round col-xs-2  col-sm-2 col-md-8 col-md-offset-4 ">
-            1
+        <div class="bg-plans-round col-xs-2  col-sm-2 col-md-8 col-md-offset-4 ">
+          1
         </div>
         <h3 class="text-center col-xs-10 col-sm-10 col-md-12">Select Your Service Plan</h3>
         <!--<p> Would you like to keep your existing service plan?</p>-->
         <div class="row hidden">
-            <div class="hidden">
-              <label class="radio-inline col-sm-6">
-                <input type="radio" formControlName="service_plan" value="Current Plan" checked="checked" >
-                Keep <span class="hidden-sm hidden-xs">Current</span> Plan</label>
-              <label class="radio-inline col-sm-6">
-                <input type="radio" formControlName="service_plan" value="New Plan">
-                Select New Plan</label>
-            </div>
+          <div class="hidden">
+            <label class="radio-inline col-sm-6">
+              <input type="radio" formControlName="service_plan" value="Current Plan" checked="checked">
+              Keep <span class="hidden-sm hidden-xs">Current</span> Plan</label>
+            <label class="radio-inline col-sm-6">
+              <input type="radio" formControlName="service_plan" value="New Plan">
+              Select New Plan</label>
+          </div>
         </div>
-          <!--<mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>-->
-        </div>
+        <!--<mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>-->
+      </div>
       <div class="hidden-xs hidden-sm col-md-1">
         <i class="fa fa-chevron-right fa-3x"></i>
       </div>
+
+
       <div class="col-md-8 col-xs-12">
+
+
         <div class="current-plan-card mat-card" *ngIf="selectedOffer">
           <h2 class="mat-card-title ">{{selectedOffer?.Offer?.Plan?.Name}}</h2>
           <div class="mat-card-content">
-            <h2>{{selectedOffer?.Offer?.Price_At_2000_kwh | DollarToCentsPipe | number : '1.1-1'}}<sup>&cent;</sup><small>per kWh</small></h2>
-            <p >Expires {{selectedOffer?.Offer?.End_Date| date:'d/M/yy'}}</p>
+            <h2>{{selectedOffer?.Offer?.Price_At_2000_kwh | DollarToCentsPipe | number : '1.1-1'}}<sup>&cent;</sup>
+              <small>per kWh</small>
+            </h2>
+
           </div>
         </div>
-        <div *ngIf="ActiveServiceAccount" [hidden]="selectedOffer" class="current-plan-card mat-card">          
+
+
+        <div *ngIf="ActiveServiceAccount" [hidden]="selectedOffer || isTduDifferent " class="current-plan-card mat-card">
           <h2 class="mat-card-title ">{{ActiveServiceAccount.Current_Offer.Product_Name}}</h2>
           <div class="mat-card-content">{{checkCurrentFeaturedUsageLevel(ActiveServiceAccount?.Current_Offer)}}
-            <h2>{{ActiveServiceAccount.Current_Offer.RateAt2000kwh | DollarToCentsPipe | number : '1.1-1'}}<sup>&cent;</sup><small>per kWh</small></h2>
-             <p class="text-center bg-default">AT {{ActiveServiceAccount.Current_Offer.Featured_Usage_Level}}</p>
-            <p>Expires {{ActiveServiceAccount.Current_Offer.End_Date | date:'d/M/yy'}}</p>
-          </div> 
-        
-        </div>
- <div class="row text-center">
-          <div class="container-fluid">
-            <div class="col-sm-12">
-
-              <small class="alert alert-warning" [ngClass]="{'alert-danger' : ServicePlanForm.controls?.service_plan.errors?.tduCheck }" > Review Service Plan Options<span class="alert alert-danger" *ngIf="ServicePlanForm.controls?.service_plan.errors?.tduCheck">. Moving address is not in same TDU. Please select New Plan. </span></small>
-            </div>
+            <h2>{{ActiveServiceAccount.Current_Offer.RateAt2000kwh | DollarToCentsPipe | number :
+              '1.1-1'}}<sup>&cent;</sup>
+              <small>per kWh</small>
+            </h2>
+            <p class="text-center bg-default">AT {{ActiveServiceAccount.Current_Offer.Featured_Usage_Level}}</p>
+            <p>Expires {{ (ActiveServiceAccount.Contract_End_Date ? ActiveServiceAccount.Contract_End_Date :
+              ActiveServiceAccount.Calculated_Contract_End_Date) | date: 'MM/dd/yyyy'}}</p>
           </div>
         </div>
 
-
-         <div class="row text-center">
-           <div class="col-xs-6 col-sm-6 col-md-6">
-             <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isKeepCurrent }" (click)="getCurrentPlan()"><i class="fa fa-check" style="visibility: hidden" ></i> Keep <span class="hidden-sm hidden-xs">Current</span> Plan
-</button>
-           </div>
-           <div class="hidden-sm col-md-1"></div>
+        <div class="row text-center">
+          <div class="col-xs-6 col-sm-6 col-md-6">
+            <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isKeepCurrent }" *ngIf="!isTduDifferent"
+                    (click)="getCurrentPlan()"><i class="fa fa-check" style="visibility: hidden"></i> Keep <span
+              class="hidden-sm hidden-xs">Current</span> Plan
+            </button>
+          </div>
+          <div class="hidden-sm col-md-1"></div>
           <div class="col-xs-6 col-sm-6 col-md-5">
-            <button class="btn btn-default btn-block"  [ngClass]="{ 'btn-primary': isSelectNew }"
-             (click)="showPlans()"><i class="fa fa-check" style="visibility: hidden"  ></i> CHANGE PLAN</button>
-           </div>
+            <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isSelectNew }"
+                    (click)="showPlans()"><i class="fa fa-check" style="visibility: hidden"></i> CHANGE PLAN
+            </button>
+          </div>
         </div>
 
       </div>
@@ -149,12 +196,60 @@
 
 
     <div class="container-fluid plans">
+      <div class="row service-plan">
+        <div class="col-sm-12" *ngIf="showNewPlans">
+          <ng-container *ngIf="!isLoading; else showLoadingOffers">
+            <div class="row change-plans-grid">
+              <ng-container *ngIf="(availableOffers && (availableOffersLength > 0)); else noOffers">
+                <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-offset-0 col-md-4 plan-card"
+                     *ngFor="let offer of availableOffers | slice:0:3; let i= index;">
+                  <!-- <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
+                                    (onOfferSelectedEvent)="getSelectedOffer($event)"></mygexa-plan-card> -->
+                  <mygexa-play-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
+                                    (onOfferSelectedEvent)="getSelectedOffer($event)"></mygexa-play-card>
+                </div>
+              </ng-container>
+              <ng-template #noOffers>
+                <div class="row">
+                  <div class="col-sm-24">
+                    <h2>No offers available for this service account.</h2>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+          </ng-container>
+          <ng-template #showLoadingOffers>
+            <div class="text-center">
+              <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
+              <h2>
+                <small class="text-muted">Loading more offers...</small>
+              </h2>
+            </div>
+          </ng-template>
+          <!--<mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>-->
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="hidden-sm col-md-6">
+      </div>
+      <div class="col-sm-12 col-md-6" *ngIf="showNewPlans">
+        <p class="p-plans">View More Plans <i class="fa"
+                                              (click)="morePlansClicked()"
+                                              [ngClass]="showMorePlans ? 'fa-chevron-down' : 'fa-chevron-up'">
+        </i></p>
+      </div>
+      <br>
+    </div>
+    <div class="row" *ngIf="showNewPlans && showMorePlans">
+      <div class="container-fluid plans" *ngIf="showMorePlans">
         <div class="row service-plan">
           <div class="col-sm-12" *ngIf="showNewPlans">
             <ng-container *ngIf="!isLoading; else showLoadingOffers">
               <div class="row change-plans-grid">
                 <ng-container *ngIf="(availableOffers && (availableOffersLength > 0)); else noOffers">
-                  <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-offset-0 col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:0:3; let i= index;">
+                  <div class="col-md-4 plan-card"
+                       *ngFor="let offer of availableOffers | slice:3:(availableOffersLength); let i= index;">
                     <!-- <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
                                       (onOfferSelectedEvent)="getSelectedOffer($event)"></mygexa-plan-card> -->
                     <mygexa-play-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
@@ -181,92 +276,50 @@
             <!--<mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>-->
           </div>
         </div>
-    </div>
-    <div class="row">
-      <div class="hidden-sm col-md-6">
       </div>
-      <div class="col-sm-12 col-md-6" *ngIf="showNewPlans" >
-        <p class="p-plans">View More Plans  <i class="fa"
-                                               (click)="morePlansClicked()"
-                                               [ngClass]="showMorePlans ? 'fa-chevron-down' : 'fa-chevron-up'">
-        </i></p>
-      </div><br>
     </div>
-    <div class="row" *ngIf="showNewPlans && showMorePlans">
-        <div class="container-fluid plans" *ngIf="showMorePlans">
-          <div class="row service-plan">
-            <div class="col-sm-12" *ngIf="showNewPlans">
-              <ng-container *ngIf="!isLoading; else showLoadingOffers">
-                <div class="row change-plans-grid">
-                  <ng-container *ngIf="(availableOffers && (availableOffersLength > 0)); else noOffers">
-                    <div class="col-md-4 plan-card" *ngFor="let offer of availableOffers | slice:3:(availableOffersLength); let i= index;">
-                      <!-- <mygexa-plan-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
-                                        (onOfferSelectedEvent)="getSelectedOffer($event)"></mygexa-plan-card> -->
-                      <mygexa-play-card [offer]="offer" [offerSelectionType]="offerSelectionType.Moving"
-                                        (onOfferSelectedEvent)="getSelectedOffer($event)"></mygexa-play-card>
-                    </div>
-                  </ng-container>
-                  <ng-template #noOffers>
-                    <div class="row">
-                      <div class="col-sm-24">
-                        <h2>No offers available for this service account.</h2>
-                      </div>
-                    </div>
-                  </ng-template>
-                </div>
-              </ng-container>
-              <ng-template #showLoadingOffers>
-                <div class="text-center">
-                  <h1><i class="fa fa-spin fa-circle-o-notch"></i></h1>
-                  <h2>
-                    <small class="text-muted">Loading more offers...</small>
-                  </h2>
-                </div>
-              </ng-template>
-              <!--<mygexa-select-plan-modal-dialog *ngIf="availableOffers" #selectPlanModal (selectedPlan)="getSelectedOffer($event)" [newPlans]="availableOffers"></mygexa-select-plan-modal-dialog>-->
-            </div>
-          </div>
-        </div>
-    </div>
-   <hr>
+    <hr>
     <div class="row">
-         <div class="col-md-3 col-sm-12 clearfix">
-          <div class="bg-plans-round col-xs-2 col-sm-2 col-md-8 col-md-offset-4">
-            2
+      <div class="col-md-3 col-sm-12 clearfix">
+        <div class="bg-plans-round col-xs-2 col-sm-2 col-md-8 col-md-offset-4">
+          2
         </div>
 
-          <h3 class="text-center col-xs-10 col-sm-10 col-md-12">Choose Your Final Bill Destination</h3>
-          <div class="hidden">
-            <label class="radio-inline  col-sm-6">
-              <input type="radio" formControlName="service_address" value="Current Address">
-              Your Current Address </label>
-            <label class="radio-inline  col-sm-6">
-              <input type="radio" formControlName="service_address" value="New Address" >
-              Your New Address </label>
-          </div>
+        <h3 class="text-center col-xs-10 col-sm-10 col-md-12">Choose Your Final Bill Destination</h3>
+        <div class="hidden">
+          <label class="radio-inline  col-sm-6">
+            <input type="radio" formControlName="service_address" value="Current Address">
+            Your Current Address </label>
+          <label class="radio-inline  col-sm-6">
+            <input type="radio" formControlName="service_address" value="New Address">
+            Your New Address </label>
         </div>
+      </div>
       <div class="hidden-xs hidden-sm col-md-1">
         <i class="fa fa-chevron-right fa-3x"></i>
       </div>
       <div class="col-sm-12 col-md-8">
 
-         <div class="row text-center">
+        <div class="row text-center">
           <div class="container-fluid">
             <div class="col-sm-12">
-             <small class="alert alert-warning"> Please select an address</small>
+              <small class="alert alert-warning"> Please select an address</small>
             </div>
           </div>
         </div>
 
-         <div class="row text-center">
-           <div class="col-xs-6 col-md-6">
-             <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isUseCurrent }"  (click)="useCurrentAddress()"><i class="fa fa-check" style="visibility: hidden" ></i> CURRENT <span class="hidden-xs">ADDRESS</span></button>
-           </div>
-           <div class="col-md-1 hidden-sm"></div>
+        <div class="row text-center">
+          <div class="col-xs-6 col-md-6">
+            <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isUseCurrent }"
+                    (click)="useCurrentAddress()"><i class="fa fa-check" style="visibility: hidden"></i> CURRENT <span
+              class="hidden-xs">ADDRESS</span></button>
+          </div>
+          <div class="col-md-1 hidden-sm"></div>
           <div class="col-xs-6 col-md-5">
-            <button class="btn btn-default btn-block"  [ngClass]="{ 'btn-primary': isUseNew }"
-                    (click)="useNewAddress()"><i class="fa fa-check" style="visibility: hidden"  ></i> NEW <span class="hidden-xs">ADDRESS</span></button>
-             <div class="row checkbox text-left">
+            <button class="btn btn-default btn-block" [ngClass]="{ 'btn-primary': isUseNew }"
+                    (click)="useNewAddress()"><i class="fa fa-check" style="visibility: hidden"></i> NEW <span
+              class="hidden-xs">ADDRESS</span></button>
+            <div class="row checkbox text-left">
               <div class="col-xs-1 col-xs-offset-1">
                 <div class="checkbox">
                   <label>
@@ -278,61 +331,73 @@
               <div class="col-xs-9">
                 My billing address is the same as my service address.
               </div>
-             </div>
             </div>
+          </div>
         </div>
         <div *ngIf="!useOldAddress">
-        <form [formGroup]="dynamicAddressForm" novalidate>
-        <div class="row">
-          <div class="col-sm-6 col-sm-offset-2">
-            <label for="Line1" style="display:none">Street Address:</label>
-            <input (change)="enableSubmitMove()" type="text" placeholder="Street Address" class="form-control" formControlName="Line1" id="Line1">
-          </div>
-          <div class="form-group col-sm-2">
-            <label for="Line2" style="display:none">Apt or Suite #:</label>
-            <input (change)="enableSubmitMove()" type="text" placeholder="Apt" class="form-control" formControlName="Line2" id="Line2">
-          </div>
+          <form [formGroup]="dynamicAddressForm" novalidate>
+            <div class="row">
+              <div class="col-sm-6 col-sm-offset-2">
+                <label for="Line1" style="display:none">Street Address:</label>
+                <input (change)="enableSubmitMove()" type="text" placeholder="Street Address" class="form-control"
+                       formControlName="Line1" id="Line1">
+              </div>
+              <div class="form-group col-sm-2">
+                <label for="Line2" style="display:none">Apt or Suite #:</label>
+                <input (change)="enableSubmitMove()" type="text" placeholder="Apt" class="form-control"
+                       formControlName="Line2" id="Line2">
+              </div>
 
-        </div>
-         <div class="row">
-          <div class="col-sm-4 col-sm-offset-2">
-            <label for="City" style="display:none">City:</label>
-            <input (change)="enableSubmitMove()" type="text" placeholder="City " class="form-control" formControlName="City" id="City">
-          </div>
-            <div class="col-sm-2 ">
-            <label for="State" style="display:none">State:</label>
-            <input (change)="enableSubmitMove()" type="text" placeholder="State " class="form-control" formControlName="State" id="State">
-          </div>
-          <div class="form-group col-sm-2">
-            <label for="Zip" style="display:none">Zip:</label>
-            <input (change)="enableSubmitMove()" type="text" placeholder="Zip" class="form-control" formControlName="Zip" id="Zip">
-          </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4 col-sm-offset-2">
+                <label for="City" style="display:none">City:</label>
+                <input (change)="enableSubmitMove()" type="text" placeholder="City " class="form-control"
+                       formControlName="City" id="City">
+              </div>
+              <div class="col-sm-2 ">
+                <label for="State" style="display:none">State:</label>
+                <input (change)="enableSubmitMove()" type="text" placeholder="State " class="form-control"
+                       formControlName="State" id="State">
+              </div>
+              <div class="form-group col-sm-2">
+                <label for="Zip" style="display:none">Zip:</label>
+                <input (change)="enableSubmitMove()" type="text" placeholder="Zip" class="form-control"
+                       formControlName="Zip" id="Zip">
+              </div>
 
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
       </div>
     </div>
-      <br/>
+    <br/>
     <br/>
     <!--<input type="checkbox" formControlName="agree_to_terms" value="check" id="agree" />-->
     <!--I Agree to the Terms and Conditions,-->
     <!--click <a>here</a><br>-->
     <!--<small class="text-danger" *ngIf="(ServicePlanForm.get('agree_to_terms').touched ||-->
-                                                         <!--ServicePlanForm.get('agree_to_terms').dirty) &&-->
-                                                         <!--ServicePlanForm.get('agree_to_terms').errors && ServicePlanForm.get('agree_to_terms').errors.pattern"> Please Agree to Terms and Conditions </small>-->
+    <!--ServicePlanForm.get('agree_to_terms').dirty) &&-->
+    <!--ServicePlanForm.get('agree_to_terms').errors && ServicePlanForm.get('agree_to_terms').errors.pattern"> Please Agree to Terms and Conditions </small>-->
     <div class="row">
       <div class="text-center">
         <!--<button class="btn btn-link" (click)="previousButtonClicked()">Previous</button>-->
-        <button class="btn btn-primary" [disabled]="!enableSubmitMoveBtn" (click)="onSubmitMove(movingAddressForm.value, ServicePlanForm.value)">Submit Move</button>
+        <button class="btn btn-primary" [disabled]="!enableSubmitMoveBtn"
+                (click)="onSubmitMove(movingAddressForm.value, ServicePlanForm.value)">Submit Move
+        </button>
       </div>
     </div>
   </form>
+
+
+
+
   <!--Moving Form Confirmation Screen -->
-  <div  [hidden]="!submitted" class="moving-confirmation"> <br/>
+  <div [hidden]="!submitted" class="moving-confirmation"><br/>
     <div>
       <h1 style="color: #fea220">Success!</h1>
-      <p>Your order has been submitted. A confirmation email will be sent to the email address we have on your account.</p>
+      <p>Your order has been submitted. A confirmation email will be sent to the email address we have on your
+        account.</p>
       <p>Thank you for choosing Gexa Energy!</p>
     </div>
     <!--<div class="alert alert-info fade in alert-dismissable"> <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a> <strong>Thanks!</strong> Your Move Center Order has been placed </div>-->

@@ -195,4 +195,10 @@ export class ServiceAccountService {
       }
     });
   }
+
+  getPastDue(serviceAccountId: string): Observable<number> {
+    return this.HttpClient.get(`/service_accounts/${serviceAccountId}/past_due`)
+      .map(res => res.json())
+      .catch(err => this.HttpClient.handleHttpError(err));
+  }
 }

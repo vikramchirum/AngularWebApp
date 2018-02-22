@@ -45,9 +45,12 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
               this.paymentExtensionStatus = PaymentExtensionStatus;
             }
           );
-        this.pastDueAmount = ActiveServiceAccountDetails.Past_Due;
-        this.paymentExtensionRequired = (!this.paymentExtensionStatus && this.pastDueAmount <= 0) ? false : true;
-        this.pastDueSet = true;
+
+        this.activeServiceAccount.getPastDue(this.serviceAccountDetails.Id).subscribe(pastDue => {
+          this.pastDueAmount = pastDue;
+          this.paymentExtensionRequired = (!this.paymentExtensionStatus && this.pastDueAmount <= 0) ? false : true;
+          this.pastDueSet = true;
+        });
       }
     );
   }
