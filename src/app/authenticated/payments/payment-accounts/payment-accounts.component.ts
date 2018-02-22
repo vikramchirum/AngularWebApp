@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 import { forEach, get, isNumber, map, now, random } from 'lodash';
@@ -7,6 +7,7 @@ import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { PaymethodService } from 'app/core/Paymethod.service';
 import { Paymethod } from 'app/core/models/paymethod/Paymethod.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import { PaymentMethodEditCcComponent } from '../../../shared/components/payment-method-edit-cc/payment-method-edit-cc.component';
 
 @Component({
   selector: 'mygexa-payment-accounts',
@@ -14,6 +15,9 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
   styleUrls: ['./payment-accounts.component.scss']
 })
 export class PaymentAccountsComponent implements OnInit, OnDestroy {
+
+  @ViewChild(PaymentMethodEditCcComponent)
+  private editCreditCardComponent: PaymentMethodEditCcComponent;
 
   ActiveServiceAccount: ServiceAccount = null;
   ServiceAccounts: ServiceAccount[] = null;
@@ -114,6 +118,14 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
   }
 
   editingCreditCardSubmit() {
+    // TODO: Do we need to add Google analytics stuff here?
+
+    this.PaymentMessage = {
+      classes: ['alert', 'alert-info'],
+      innerHTML: `<i class="fa fa-fw fa-spinner fa-spin"></i> <b>Please wait</b> we're updating your payment method now.`,
+      isCompleted: false
+    };
+
     
   }
 
