@@ -20,6 +20,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
   ActiveServiceAccountSubscription: Subscription = null;
   ServiceAccountsSubscription: Subscription = null;
+  PaymethodBeingEdited: Paymethod = null;
 
   PaymentEdittingIsUsedForAutoPaymentTimestamp: number = null;
   PaymentMessage: IPaymentMessage = null;
@@ -91,6 +92,19 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     this.ActiveServiceAccountSubscription.unsubscribe();
     this.ServiceAccountsSubscription.unsubscribe();
     this.PaymethodSubscription.unsubscribe();
+  }
+
+  editPaymethod(paymentMethod: Paymethod): void {
+    if (!paymentMethod || this.PaymethodBeingEdited === paymentMethod) {
+      this.PaymethodBeingEdited = null;
+    }
+    else if (paymentMethod) {
+      this.PaymethodBeingEdited = paymentMethod;
+    }
+  }
+
+  editingCreditCardToggle(): void {
+    this.PaymethodBeingEdited = null;
   }
 
   removePaymethod(paymentMethod: Paymethod): void {

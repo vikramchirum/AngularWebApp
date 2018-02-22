@@ -16,11 +16,19 @@ table.card-table {
     }
   }
   td.card-expires {
-    text-align: left;
-    width: 23%;
+    text-align: center;
+    width: 13%;
+  }
+  td.card-edit {
+    text-align: center;
+    width:10%;
+
+    button {
+      outline: none;
+    }
   }
   td.card-remove,  td.card-abp {
-    text-align: left;
+    text-align: center;
     width:13%;
 
     button {
@@ -33,6 +41,12 @@ table.card-table {
   td.card-remove-active,
   td.card-remove-active * {
     width:13%;
+    background: orange;
+    color: white !important;
+  }
+  td.card-edit-active,
+  td.card-edit-active * {
+    width:10%;
     background: orange;
     color: white !important;
   }
