@@ -204,7 +204,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       'Line2': [null],
       'City': [null, Validators.required],
       'State': [null, [Validators.required, Validators.maxLength(2)]],
-      'Zip': [null, Validators.required, Validators.maxLength(5)]
+      'Zip': [null,  [Validators.required, Validators.maxLength(5)]]
     });
   }
 
