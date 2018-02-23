@@ -21,5 +21,42 @@
   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
   ga('create', gaTracking, 'auto');
 </script>
+<style>
+  /* CSS for standard-resolution devices */
+  .oo_inline {
+    padding: 0 0 0 13px;
+  }
+  .oo_inline_icon {
+    background-image: url(./onlineopinionV5/oo_icon.gif);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    display: block;
+    float: left;
+    height: 9px;
+    width: 9px;
+    top: 13px;
+    position: absolute;
+  }
+  /* CSS for high-resolution retina devices */
+  @media only screen and (-Webkit-min-device-pixel-ratio: 1.5), only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-device-pixel-ratio: 1.5) {
+    .oo_inline_icon {
+      background-image: url(./onlineopinionV5/oo_icon_retina.gif);
+      background-size: 100%;
+    }
+  }
+</style>
+<a href="#" class="oo_inline" onClick="OOo.oo_launch(event, 'oo_feedback')"><span class="oo_inline_icon" /></span> Feedback</a>
+<!-- End: INLINE FEEDBACK LINK EXAMPLE -->
+
+
+<!-- MAIN OL STYLESHEET JS -->
+<script language="javascript" type="text/javascript" charset="windows-1252" src="./onlineopinionV5/oo_style.js"></script>
+
+<!-- MAIN OL ENGINE MINI-->
+<script language="javascript" type="text/javascript" charset="windows-1252" src="./onlineopinionV5/oo_engine.min.js"></script>
+
+<!-- FEEDBACK CONFIGURATION -->
+<script language="javascript" type="text/javascript" charset="windows-1252" src="./onlineopinionV5/oo_conf_tab.js"></script>
+<script language="javascript" type="text/javascript" charset="windows-1252" src="./onlineopinionV5/oo_conf_inline.js"></script>
 </body>
 </html>
