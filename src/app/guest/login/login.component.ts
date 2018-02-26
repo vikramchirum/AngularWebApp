@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
   login() {
     this.processing = true;
     this.error = null;
-    this.UserService.login(this.user_name, this.password).subscribe(
+    this.UserService.login(this.user_name.trim(), this.password.trim()).subscribe(
       (result) => {
         if ( get(result, 'Account_permissions.length', 0 ) <= 0 ) {
           ///this.processing = false;
@@ -135,6 +135,8 @@ export class LoginComponent implements OnInit {
         }
       }
     };
+
+
 
     var username = getUrlParameter('xyu');
     var password = getUrlParameter('yxp');

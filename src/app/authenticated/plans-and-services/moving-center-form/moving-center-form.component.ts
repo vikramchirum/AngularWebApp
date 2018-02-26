@@ -361,10 +361,11 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
           this.nextClicked = true;
           this.previousClicked = !this.previousClicked;
           this.selectedOffer = null;
-
           // if tdu is different show plans by default.
-          if(this.isTduDifferent) {
+          if (this.isTduDifferent) {
             this.showPlans();
+          } else {
+            this.getCurrentPlan();
           }
         }
       });
@@ -415,6 +416,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
   useCurrentAddress() {
+
     this.ServicePlanForm.controls[ 'service_address' ].setValue( 'Current Address' );
     this.finalBillAddress = 'Current Address';
     this.isUseNew = false;

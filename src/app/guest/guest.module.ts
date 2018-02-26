@@ -10,6 +10,7 @@ import { RecoverUsernameComponent } from './recover-username/recover-username.co
 import { guest_routes } from './guest-routing.module';
 import { LoginRegisterModalComponent } from './login/login-register-modal/login-register-modal.component';
 import { LoginAddClaimsModalComponent } from './login/login-add-claims-modal/login-add-claims-modal.component';
+import { AutoLoginComponent } from './auto-login/auto-login.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { LoginAddClaimsModalComponent } from './login/login-add-claims-modal/log
     RecoverPasswordComponent,
     RecoverUsernameComponent,
     LoginRegisterModalComponent,
-    LoginAddClaimsModalComponent
+    LoginAddClaimsModalComponent,
+    AutoLoginComponent
   ],
   exports: [
     RouterModule
