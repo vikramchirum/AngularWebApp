@@ -496,8 +496,13 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       Partner_Account_Number = this.ActiveServiceAccount.Current_Offer.Partner_Info.Code;
       Partner_Name_On_Account = this.ActiveServiceAccount.Current_Offer.Partner_Info.Partner.Name;
     } else {
-      Partner_Account_Number = null;
-      Partner_Name_On_Account = null;
+      if (this.selectedOffer.Has_Partner) {
+        Partner_Account_Number = this.selectedOffer.Partner_Account_Number;
+        Partner_Name_On_Account = this.selectedOffer.Partner_Name_On_Account;
+      } else {
+        Partner_Account_Number = null;
+        Partner_Name_On_Account = null;
+      }
     }
 
     // Request Parms to post data to Transfer service API
