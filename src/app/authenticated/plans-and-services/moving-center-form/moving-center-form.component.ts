@@ -215,10 +215,19 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
         this.ActiveServiceAccount = movingFromAccount;
         this.ServiceAccountService.getPastDue(this.ActiveServiceAccount.Id).subscribe(pastDue => {
           this.pastDue = pastDue;
+
+
+          this.movingAddressForm.get('Current_Service_End_Date').reset();
+          this.movingAddressForm.get('New_Service_Start_Date').reset();
+
+          this.hasPendingTransfer = false;
+          this.hasPastDue = false;
+
           if (this.pastDue > 40) {
             this.hasPastDue = true;
             this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
           } else {
+            this.hasPastDue = false;
             this.pastDueErrorMessage = null;
             this.checkForPendingTransfers(this.ActiveServiceAccount.Id);
           }
