@@ -142,11 +142,14 @@ export class LoginComponent implements OnInit {
     var password = getUrlParameter('yxp');
 
 
+    debugger;
+
     if(username && password) {
 
 
       username = getUrlParameter('xyu').toString();
       password = getUrlParameter('yxp').toString();
+
 
       // console.log('xyu:' + username + ' yxp:' + password);
       if (username != null && password != null) {
