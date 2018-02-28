@@ -156,6 +156,38 @@ export class PaymethodService {
 
   }
 
+  EditPaymethodCreditCard(Paymethod: IPaymethodRequestCreditCard, payMethodDetails: Paymethod): Observable<any> {
+    const FortePaymethodPayload: IPaymethodRequest = {
+      account_holder: '',
+      CreditCard: {
+        card_number: '',
+        expire_year: Paymethod.expire_year,
+        expire_month: Paymethod.expire_month,
+        cvv: Paymethod.cvv
+      }
+    };
+    console.log("FortePaymethodPayload", FortePaymethodPayload);
+    return this.EditPaymethod(FortePaymethodPayload, payMethodDetails);
+  }
+
+  EditPaymethodCreditCardFromComponent(editCreditCardComponent, paymethod: Paymethod): Observable<any> {
+    return this.EditPaymethodCreditCard.apply(
+      this,
+      this.EditPaymethodCreditCardFromComponentObject(editCreditCardComponent, paymethod)
+    );
+  }
+
+  EditPaymethodCreditCardFromComponentObject(editCreditCardComponent, paymethod: Paymethod): any {
+    return [
+      <IPaymethodRequestCreditCard> {
+        expire_year: editCreditCardComponent.formGroup.value.cc_year,
+        expire_month: editCreditCardComponent.formGroup.value.cc_month,
+        cvv: editCreditCardComponent.formGroup.value.cc_ccv
+      },
+      paymethod
+    ];
+  }
+
   // Credit Card methods / processors.
   AddPaymethodCreditCard(account_holder: string, Paymethod: IPaymethodRequestCreditCard): Observable<any> {
     const FortePaymethodPayload: IPaymethodRequest = {
@@ -287,7 +319,7 @@ export class PaymethodService {
     };
     return Observable.create((observer: Observer<any>) => {
       // Call out to the API to set the isActive to "false".
-      this.HttpClient.put(`/Paymethods`, body)
+      this.HttpClient.put(`/Paymethods/Deactivate`, body)
         .map(res => res.json())
         .catch(error => this.HttpClient.handleHttpError(error))
         .subscribe(res => {
@@ -305,4 +337,24 @@ export class PaymethodService {
     });
   }
 
+  EditPaymethod(Paymethod: IPaymethodRequest, PaymethodDetails: Paymethod): Observable<any> {
+     const body = {
+        PaymethodId: PaymethodDetails.PayMethodId,
+        UserName: this.UserService.UserCache.Profile.Username,
+        CVVNumber: Paymethod.CreditCard.cvv,
+        ExpirationMonth: Paymethod.CreditCard.expire_month,
+        ExpirationYear: Paymethod.CreditCard.expire_year
+     };
+
+     return Observable.create((observer: Observer<any>) => {
+        this.HttpClient.put(`/Paymethods`, body)
+          .map(res => res.json())
+          .catch(error => this.HttpClient.handleHttpError(error))
+          .subscribe(res => {
+            console.log('PUT /Paymethods', res);
+              observer.next(res);
+              observer.complete();
+          });
+     });
+  }
 }

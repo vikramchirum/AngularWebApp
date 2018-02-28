@@ -120,13 +120,31 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
   editingCreditCardSubmit() {
     // TODO: Do we need to add Google analytics stuff here?
 
+    const PayMethodToUpdate = this.PaymethodBeingEdited;
+
     this.PaymentMessage = {
       classes: ['alert', 'alert-info'],
       innerHTML: `<i class="fa fa-fw fa-spinner fa-spin"></i> <b>Please wait</b> we're updating your payment method now.`,
       isCompleted: false
     };
 
-    
+    this.PaymethodService.EditPaymethodCreditCardFromComponent(this.editCreditCardComponent, this.PaymethodBeingEdited).subscribe(
+      result => this.PaymentMessage = {
+        classes: ['alert', 'alert-success'],
+        innerHTML: `<b>Ok!</b> your payment account, ending in <b>${ PayMethodToUpdate.getLast() }</b> was updated!`,
+        isCompleted: true
+      },
+      error => {
+        this.PaymentMessage = {
+          classes: ['alert', 'alert-danger'],
+          innerHTML: [
+            `<b>We're sorry, it looks like there was an issue with this payment method. Please contact Customer Service at 866-691-9399.</b>`
+          ].join(''),
+          isCompleted: true
+        };
+        console.log('updatePaymethodConfirmError => ', error);
+      }
+    );
   }
 
   removePaymethod(paymentMethod: Paymethod): void {
