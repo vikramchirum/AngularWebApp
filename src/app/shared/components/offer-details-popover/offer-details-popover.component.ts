@@ -14,6 +14,7 @@ import {
   GoogleAnalyticsCategoryType,
   GoogleAnalyticsEventAction
 } from 'app/core/models/enums/googleanalyticscategorytype';
+import { ICostComponent } from '../../../core/models/serviceaccount/costcomponent.model';
 
 @Component({
   selector: 'mygexa-offer-details-popover',
@@ -140,6 +141,8 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
         docId = this.ActiveOfferDetails.Current_Offer.Client_Key;
       }
 
+      console.log("ActiveOfferDetails", this.ActiveOfferDetails);
+
       this.eflLink = this.documentsService.getEFLLink(docId);
       this.tosLink = this.documentsService.getTOSLink(this.ActiveOfferDetails.Current_Offer.IsFixed);
       this.yraacLink = this.documentsService.getYRAACLink();
@@ -221,5 +224,26 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
     this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MyServicePlan], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewTOS]
       , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.ViewTOS]);
     return true;
+  }
+
+  determineCostComponentType(costComponent: ICostComponent): string {
+    if (costComponent.Amount > 0 && costComponent.Operation_Type == "Multiplicative" && costComponent.IsCompound == true)
+      return "Energy Charges";
+    else if (costComponent.Amount > 0 && costComponent.Operation_Type == "Additive" && costComponent.IsCompound == true)
+      return "Energy Charges";
+    else if (costComponent.Amount > 0 && costComponent.Operation_Type == "Multiplicative" && costComponent.IsCompound == false)
+      return "Energy Charges";
+    else if (costComponent.Amount > 0 && costComponent.Operation_Type == "Additive" && costComponent.IsCompound == false)
+      return "Monthly Usage Charges";
+    else if (costComponent.Amount < 0 && costComponent.Operation_Type == "Additive" && costComponent.IsCompound == true)
+      return "Monthly Usage Credits";
+    else if (costComponent.Amount < 0 && costComponent.Operation_Type == "Additive" && costComponent.IsCompound == false)
+      return "Monthly Usage Credits";
+    else if (costComponent.Amount < 0 && costComponent.Operation_Type == "Multiplicative" && costComponent.IsCompound == true)
+      return "Placeholder #1";
+    else if (costComponent.Amount < 0 && costComponent.Operation_Type == "Multiplicative" && costComponent.IsCompound == false)
+      return "Placeholder #2";
+    else
+      return "Unknown";
   }
 }
