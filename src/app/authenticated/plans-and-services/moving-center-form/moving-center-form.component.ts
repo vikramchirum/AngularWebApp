@@ -496,7 +496,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       Partner_Account_Number = this.ActiveServiceAccount.Current_Offer.Partner_Info.Code;
       Partner_Name_On_Account = this.ActiveServiceAccount.Current_Offer.Partner_Info.Partner.Name;
     } else {
-      if (this.selectedOffer.Has_Partner) {
+      if (this.selectedOffer && this.selectedOffer.Has_Partner) {
         Partner_Account_Number = this.selectedOffer.Partner_Account_Number;
         Partner_Name_On_Account = this.selectedOffer.Partner_Name_On_Account;
       } else {

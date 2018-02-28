@@ -64,7 +64,7 @@ export class LoginRegisterModalComponent implements OnInit {
   verifyForm(model: IRegUser) {
     this.processRegistration = true;
     if (this.currentView === 'ssn') {
-      if (this.Last_4 && this.Last_4 === String(this.customerDetails.Social_Security_Number).slice(-4)) {
+      if (this.Last_4 && this.Last_4 === String(this.customerDetails.Masked_Social_Security_Number).slice(-4)) {
         this.resgister(model);
       }  else {
         this.processRegistration = false;
@@ -123,7 +123,7 @@ export class LoginRegisterModalComponent implements OnInit {
               result => {
                 if (result) {
                   this.customerDetails = result;
-                  if (this.customerDetails.Social_Security_Number) {
+                  if (this.customerDetails.Masked_Social_Security_Number) {
                     this.currentView = 'ssn';
                   } else if (this.customerDetails.AlternateID || this.customerDetails.Drivers_License.Number) {
                     this.currentView = 'ddl/id';
