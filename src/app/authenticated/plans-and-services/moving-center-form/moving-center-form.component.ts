@@ -215,10 +215,19 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
         this.ActiveServiceAccount = movingFromAccount;
         this.ServiceAccountService.getPastDue(this.ActiveServiceAccount.Id).subscribe(pastDue => {
           this.pastDue = pastDue;
+
+
+          this.movingAddressForm.get('Current_Service_End_Date').reset();
+          this.movingAddressForm.get('New_Service_Start_Date').reset();
+
+          this.hasPendingTransfer = false;
+          this.hasPastDue = false;
+
           if (this.pastDue > 40) {
             this.hasPastDue = true;
             this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
           } else {
+            this.hasPastDue = false;
             this.pastDueErrorMessage = null;
             this.checkForPendingTransfers(this.ActiveServiceAccount.Id);
           }
@@ -361,10 +370,11 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
           this.nextClicked = true;
           this.previousClicked = !this.previousClicked;
           this.selectedOffer = null;
-
           // if tdu is different show plans by default.
-          if(this.isTduDifferent) {
+          if (this.isTduDifferent) {
             this.showPlans();
+          } else {
+            this.getCurrentPlan();
           }
         }
       });
@@ -415,6 +425,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
   useCurrentAddress() {
+
     this.ServicePlanForm.controls[ 'service_address' ].setValue( 'Current Address' );
     this.finalBillAddress = 'Current Address';
     this.isUseNew = false;
@@ -485,8 +496,13 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       Partner_Account_Number = this.ActiveServiceAccount.Current_Offer.Partner_Info.Code;
       Partner_Name_On_Account = this.ActiveServiceAccount.Current_Offer.Partner_Info.Partner.Name;
     } else {
-      Partner_Account_Number = null;
-      Partner_Name_On_Account = null;
+      if (this.selectedOffer.Has_Partner) {
+        Partner_Account_Number = this.selectedOffer.Partner_Account_Number;
+        Partner_Name_On_Account = this.selectedOffer.Partner_Name_On_Account;
+      } else {
+        Partner_Account_Number = null;
+        Partner_Name_On_Account = null;
+      }
     }
 
     // Request Parms to post data to Transfer service API

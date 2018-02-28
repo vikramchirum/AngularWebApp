@@ -274,7 +274,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MakeAPayment], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitPayment]
       , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitPayment]);
 
-    this.processing = true; this.zeroAmountEntered = false;
+    this.zeroAmountEntered = false;
     let payment_entered: string;     let pay_entered: number; let errorMessage: string = null;
     payment_entered = String(get(this.formGroup.value, 'payment_now'));
     if ( payment_entered.substring(0, 1)  === '$') {
@@ -296,6 +296,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
         // console.log('total Due', Number(this.totalDue));
         // console.log('payment_entered', pay_entered);
       } else {
+        this.processing = true;
         this.paymentConfirmationModal.hideConfirmationMessageModal();
         this.paymentSubmit();
       }

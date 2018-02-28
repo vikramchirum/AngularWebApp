@@ -5,8 +5,12 @@ import { RedirectLoggedInUserToHome } from 'app/core/user.service';
 import { LoginComponent } from './login/login.component';
 import { RecoverPasswordComponent } from './recover-password/recover-password.component';
 import { RecoverUsernameComponent } from './recover-username/recover-username.component';
+import {AutoLoginComponent } from './auto-login/auto-login.component';
 
 const routes: Route[] = [
+  {
+    path: 'auto-login', component: AutoLoginComponent,
+  },
   {
     path: 'login', component: LoginComponent,
     canActivate: [RedirectLoggedInUserToHome]
