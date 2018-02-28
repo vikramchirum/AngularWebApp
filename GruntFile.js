@@ -52,7 +52,7 @@ module.exports = function ( grunt ) {
     var date_stamp = grunt.template.today( 'yyyymmddHHMMss' );
 
     if ( branch_name ) {
-      if ( branch_name === 'dev' )
+      if ( branch_name === 'dev' || branch_name.startsWith('release'))
         version_suffix += branch_name + '-' + date_stamp + '-' + short_sha;
       else if ( branch_name === 'master' )
         version_suffix += 'release';
