@@ -9,6 +9,7 @@
       "outDir": "dist",
       "assets": [
         "assets",
+        "onlineopinionV5",
         "favicon.ico"
       ],
       "index": "index.html",
