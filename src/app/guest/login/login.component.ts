@@ -142,8 +142,6 @@ export class LoginComponent implements OnInit {
     var password = getUrlParameter('yxp');
 
 
-    debugger;
-
     if(username && password) {
 
 
