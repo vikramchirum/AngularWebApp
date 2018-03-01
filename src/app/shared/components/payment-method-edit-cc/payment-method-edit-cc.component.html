@@ -11,7 +11,7 @@
       <select 
         class="form-control"
         id="payment-horizontal-cc-month"
-        formcontrolname="cc_month">
+        formControlName="cc_month">
         <option *ngFor="let month of months" [value]="month[0]">{{ month[0] }} - {{ month[1] }}</option>
       </select>
       <small class="text-danger" *ngIf="formGroup.controls?.cc_month.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
@@ -21,7 +21,7 @@
       <select
         class="form-control"
         id="payment-horizontal-cc-year"
-        formcontrolname="cc_year">
+        formControlName="cc_year">
         <option *ngFor="let year of years" [value]="year">{{ year }}</option>
       </select>
       <small class="text-danger" *ngIf="formGroup.controls?.cc_year.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>

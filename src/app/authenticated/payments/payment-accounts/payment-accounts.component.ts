@@ -129,11 +129,13 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     };
 
     this.PaymethodService.EditPaymethodCreditCardFromComponent(this.editCreditCardComponent, this.PaymethodBeingEdited).subscribe(
-      result => this.PaymentMessage = {
+      result =>  {this.PaymentMessage = {
         classes: ['alert', 'alert-success'],
         innerHTML: `<b>Ok!</b> your payment account, ending in <b>${ PayMethodToUpdate.getLast() }</b> was updated!`,
         isCompleted: true
-      },
+      };
+      setTimeout(() => { this.PaymethodService.UpdatePaymethods(); }, 2000);
+    },
       error => {
         this.PaymentMessage = {
           classes: ['alert', 'alert-danger'],
@@ -145,6 +147,7 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
         console.log('updatePaymethodConfirmError => ', error);
       }
     );
+    this.editingCreditCardToggle();
   }
 
   removePaymethod(paymentMethod: Paymethod): void {
