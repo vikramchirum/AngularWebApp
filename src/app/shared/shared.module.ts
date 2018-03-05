@@ -36,6 +36,7 @@ import { ErrorModalComponent } from './components/error-modal/error-modal.compon
 import { ViewBillDetailsComponent } from './components/view-bill-details/view-bill-details.component';
 import { PlayCardComponent } from './components/play-card/play-card.component';
 import { PaymentConfirmationModalComponent } from './components/payment-confirmation-modal/payment-confirmation-modal.component';
+import { PaymentMethodEditCcComponent } from './components/payment-method-edit-cc/payment-method-edit-cc.component';
 
 @NgModule({
   imports: [
@@ -75,7 +76,8 @@ import { PaymentConfirmationModalComponent } from './components/payment-confirma
     ErrorModalComponent,
     ViewBillDetailsComponent,
     PaymentConfirmationModalComponent,
-    PlayCardComponent
+    PlayCardComponent,
+    PaymentMethodEditCcComponent
   ],
   exports: [
     ChangeUserNameComponent,
@@ -103,7 +105,8 @@ import { PaymentConfirmationModalComponent } from './components/payment-confirma
     ErrorModalComponent,
     ViewBillDetailsComponent,
     PaymentConfirmationModalComponent,
-    PlayCardComponent
+    PlayCardComponent,
+    PaymentMethodEditCcComponent
   ]
 })
 export class SharedModule { }

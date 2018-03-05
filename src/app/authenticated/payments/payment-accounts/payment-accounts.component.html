@@ -22,8 +22,9 @@
         <tr>
           <td width="64%"><h4><span class="hidden-xs">Your Payment</span> Accounts</h4></td>
           <td width="13%"><h4 class="text-center">Exp<span class="hidden-xs">ires</span></h4></td>
-          <td width="23%" *ngIf="!PaymentAbpSelecting"><h4 class="text-center">Remove</h4></td>
-          <td width="23%" *ngIf="PaymentAbpSelecting" class="card-abp"><h4 class="text-center">Select</h4></td>
+          <td width="10%"><h4 class="text-center">Edit</h4></td>
+          <td width="13%" *ngIf="!PaymentAbpSelecting"><h4 class="text-center">Remove</h4></td>
+          <td width="13%" *ngIf="PaymentAbpSelecting" class="card-abp"><h4 class="text-center">Select</h4></td>
         </tr>
         </tbody>
       </table>
@@ -34,6 +35,15 @@
             <td class="card-brand"><i class="fa fa-fw" [ngClass]="paymentMethod.getFontAwesomeTag()"></i>{{ paymentMethod.getBrand() }}</td>
             <td class="card-ending">ENDING IN <br class="visible-xs"> <b>{{ paymentMethod.getLast() }}</b></td>
             <td class="card-expires">{{ paymentMethod.getExpiration() }}</td>
+            <ng-template *ngIf="paymentMethod.PaymethodType === 'CreditCard' then ShowEditButton else HideEditButton"></ng-template>
+            <ng-template #ShowEditButton>
+              <td class="card-edit" width="10%" [ngClass]="{ 'card-edit-active': PaymethodBeingEdited === paymentMethod }">
+                  <button class="btn btn-link" (click)="editPaymethod(paymentMethod)"><i class="fa fa-fw fa-pencil"></i></button>
+              </td>
+            </ng-template>
+            <ng-template #HideEditButton>
+              <td class="card-edit" width="10%"></td>
+            </ng-template>
             <ng-template *ngIf="PaymentAbpSelecting; then ShowAbpSelection else ShowRemovalButton"></ng-template>
             <ng-template #ShowAbpSelection>
               <td class="card-abp">
@@ -50,6 +60,23 @@
           </tr>
           </tbody>
         </table>
+        <div class="card-prompt" *ngIf="PaymethodBeingEdited === paymentMethod">
+          <mygexa-payment-method-edit-cc (changed)="editingCreditCardFormChanged($event)"></mygexa-payment-method-edit-cc>
+          <br/>
+          <div class="text-right">
+            <button
+              type="button"
+              class="btn btn-primary"
+              [disabled]="!editingCreditCardFormValid"
+              (click)="editingCreditCardSubmit()"
+            >Edit Now</button>
+            <button
+              type="button"
+              class="btn btn-link"
+              (click)="editingCreditCardToggle()"
+            >Cancel</button>
+          </div>
+        </div>
         <div class="card-prompt" *ngIf="PaymentEditting === paymentMethod">
           <ng-template *ngIf="PaymentEdittingIsUsedForAutoPayment === null; then PreparingToRemove else ReadyToRemove"></ng-template>
           <ng-template #PreparingToRemove>

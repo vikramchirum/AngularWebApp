@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 import { forEach, get, isNumber, map, now, random } from 'lodash';
@@ -7,6 +7,7 @@ import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { PaymethodService } from 'app/core/Paymethod.service';
 import { Paymethod } from 'app/core/models/paymethod/Paymethod.model';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import { PaymentMethodEditCcComponent } from '../../../shared/components/payment-method-edit-cc/payment-method-edit-cc.component';
 
 @Component({
   selector: 'mygexa-payment-accounts',
@@ -15,11 +16,16 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
 })
 export class PaymentAccountsComponent implements OnInit, OnDestroy {
 
+  @ViewChild(PaymentMethodEditCcComponent)
+  private editCreditCardComponent: PaymentMethodEditCcComponent;
+
   ActiveServiceAccount: ServiceAccount = null;
   ServiceAccounts: ServiceAccount[] = null;
 
   ActiveServiceAccountSubscription: Subscription = null;
   ServiceAccountsSubscription: Subscription = null;
+  PaymethodBeingEdited: Paymethod = null;
+  editingCreditCardFormValid: boolean = null;
 
   PaymentEdittingIsUsedForAutoPaymentTimestamp: number = null;
   PaymentMessage: IPaymentMessage = null;
@@ -91,6 +97,57 @@ export class PaymentAccountsComponent implements OnInit, OnDestroy {
     this.ActiveServiceAccountSubscription.unsubscribe();
     this.ServiceAccountsSubscription.unsubscribe();
     this.PaymethodSubscription.unsubscribe();
+  }
+
+  editPaymethod(paymentMethod: Paymethod): void {
+    if (!paymentMethod || this.PaymethodBeingEdited === paymentMethod) {
+      this.PaymethodBeingEdited = null;
+    }
+    else if (paymentMethod) {
+      this.PaymethodBeingEdited = paymentMethod;
+    }
+  }
+
+  editingCreditCardToggle(): void {
+    this.PaymethodBeingEdited = null;
+    this.editingCreditCardFormValid = false;
+  }
+
+  editingCreditCardFormChanged($event: string): void {
+    this.editingCreditCardFormValid = $event === 'valid';
+  }
+
+  editingCreditCardSubmit() {
+    // TODO: Do we need to add Google analytics stuff here?
+
+    const PayMethodToUpdate = this.PaymethodBeingEdited;
+
+    this.PaymentMessage = {
+      classes: ['alert', 'alert-info'],
+      innerHTML: `<i class="fa fa-fw fa-spinner fa-spin"></i> <b>Please wait</b> we're updating your payment method now.`,
+      isCompleted: false
+    };
+
+    this.PaymethodService.EditPaymethodCreditCardFromComponent(this.editCreditCardComponent, this.PaymethodBeingEdited).subscribe(
+      result =>  {this.PaymentMessage = {
+        classes: ['alert', 'alert-success'],
+        innerHTML: `<b>Ok!</b> your payment account, ending in <b>${ PayMethodToUpdate.getLast() }</b> was updated!`,
+        isCompleted: true
+      };
+      setTimeout(() => { this.PaymethodService.UpdatePaymethods(); }, 2000);
+    },
+      error => {
+        this.PaymentMessage = {
+          classes: ['alert', 'alert-danger'],
+          innerHTML: [
+            `<b>We're sorry, it looks like there was an issue with this payment method. Please contact Customer Service at 866-691-9399.</b>`
+          ].join(''),
+          isCompleted: true
+        };
+        console.log('updatePaymethodConfirmError => ', error);
+      }
+    );
+    this.editingCreditCardToggle();
   }
 
   removePaymethod(paymentMethod: Paymethod): void {
