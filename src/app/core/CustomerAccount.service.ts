@@ -110,4 +110,9 @@ export class CustomerAccountService {
       .catch(error => this.HttpClient.handleHttpError(error));
   }
 
+  getPastDue(customerAccountId: string): Observable<number> {
+    return this.HttpClient.get(`/customer_accounts/${customerAccountId}/past_due`)
+      .map(res => res.json())
+      .catch(err => this.HttpClient.handleHttpError(err));
+  }
 }

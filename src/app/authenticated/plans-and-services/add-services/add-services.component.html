@@ -11,7 +11,7 @@
         <h3>
           Enter New Service Address
         </h3>
-        <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)" (onServiceAddressChanged) = "disableFields($event)"></mygexa-address-search>
+        <mygexa-address-search (onSelectedServiceAddress)="getSelectedAddress($event)"  [IsDisabled] = "hasPastDue"  (onServiceAddressChanged) = "disableFields($event)"></mygexa-address-search>
         <small *ngIf="addressServed === false" class="text-danger">   We're sorry, we don't offer electricity service at the location you specified. Please check the address, or contact Customer Service for assistance.   </small>
       </div>
     </div>
@@ -19,7 +19,7 @@
       <div class="col-xs-2 col-sm-1">
         <div class="checkbox">
           <label>
-            <input type="checkbox" [checked]="useBillAddress" (click)="toggleAddress()" class="checkbox">
+            <input type="checkbox" [attr.disabled] = "hasPastDue" [checked]="useBillAddress" (click)="toggleAddress()" class="checkbox">
             <span class="cr"><i class="cr-icon fa fa-check"></i></span>
           </label>
         </div>
@@ -66,14 +66,14 @@
           <div class="col-xs-6 col-sm-6 col-md-5">
             <div class="form-control">
               <label class="radio-inline">
-                <input style="cursor: pointer" type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.MoveIn" [disabled]="addressServed === false">I'm Moving
+                <input [attr.disabled] = "hasPastDue"  style="cursor: pointer" type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.MoveIn" [disabled]="addressServed === false">I'm Moving
               </label>
             </div>
           </div>
           <div class="col-xs-6 col-sm-6 col-md-5 col-md-offset-2">
             <div class="form-control">
               <label class="radio-inline">
-                <input style="cursor: pointer"  type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.Switch" [disabled]="addressServed === false">I'm Switching
+                <input [attr.disabled] = "hasPastDue"  style="cursor: pointer"  type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.Switch" [disabled]="addressServed === false">I'm Switching
               </label>
             </div>
           </div>
@@ -84,11 +84,11 @@
     <div class="row">
       <div class="col-sm-12 col-md-6">
       <h3 class="start-service-text">When would you like to start service?
-              <!-- <button class="btn btn-link btn-xs start-date-tooltip visible-xs-inline-block" tooltip="If you require service before 3 business days then call 855-639-8118." triggers="mouseenter click"><i aria-hidden="true" class="fa fa-info-circle" ></i></button>        
+              <!-- <button class="btn btn-link btn-xs start-date-tooltip visible-xs-inline-block" tooltip="If you require service before 3 business days then call 855-639-8118." triggers="mouseenter click"><i aria-hidden="true" class="fa fa-info-circle" ></i></button>
               <button class="btn btn-link btn-xs start-date-tooltip hidden-xs" tooltip="If you require service before 3 business days then call 855-639-8118." triggers="focus hover"><i aria-hidden="true" class="fa fa-info-circle" ></i></button> -->
               <small><i aria-hidden="true" class="fa fa-info-circle" tooltip="If you require service before 3 business days then call 855-639-8118."></i></small>
-        </h3>    
-        <my-date-picker style="cursor: pointer" name="Service_Start_Date" [(ngModel)]="selectedStartDate" [options]="ServiceStartDate" [disabled]="!enableDates || addressServed === false"
+        </h3>
+        <my-date-picker style="cursor: pointer" name="Service_Start_Date" [(ngModel)]="selectedStartDate" [options]="ServiceStartDate" [disabled]="!enableDates || addressServed === false || hasPastDue"
           (dateChanged)="onStartDateChanged($event)"></my-date-picker>
         <small>{{pricingMessage}}</small>
       </div>
@@ -103,6 +103,22 @@
           </div>
       </div>
     </div>
+
+    <ng-container *ngIf="pastDueErrorMessage">
+      <small class="text-danger" *ngIf="pastDueErrorMessage">
+        <p>{{pastDueErrorMessage}} <b>${{pastDue | number : dollarAmountFormatter}}</b></p>
+      </small>
+      <br>
+      <div class="row" *ngIf="pastDueErrorMessage">
+        <div class="col-md-6">
+          <div class="text-right">
+            <button class="btn btn-primary btn-success" routerLink="/payments/make-payment" type="button">Make a
+              Payment
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
 
     <!-- Select Plan -->
     <div *ngIf="this.featuredOffers">

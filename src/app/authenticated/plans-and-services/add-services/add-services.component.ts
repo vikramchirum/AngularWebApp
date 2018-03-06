@@ -78,25 +78,41 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   pricingMessage: string;
   TDUDuns: ITDU[] = [];
   TDUDunsNumbers: string[] = [];
-  useBillAddress: boolean = true;
+  useBillAddress = true;
   dynamicAddressForm: FormGroup;
-  enableSubmitEnroll: boolean = false;
+  enableSubmitEnroll = false;
   dynamicUAN = null;
+  pastDue: number;
+  hasPastDue: boolean;
+  pastDueErrorMessage: string;
+
   constructor( private fb: FormBuilder,
                private offerService: OfferService, private UserService: UserService, private enrollService: EnrollService, private customerAccountService: CustomerAccountService,
                private modalStore: ModalStore, private channelStore: ChannelStore, private availableDateService: AvailableDateService, private calendarService: CalendarService,
                private googleAnalyticsService: GoogleAnalyticsService,
                private tduStore: TDUStore ) {
 
-
     // Keep our customer account id up-to-date.
     this.UserService.UserCustomerAccountObservable.subscribe(
-      CustomerAccountId => this.customerAccountId = CustomerAccountId
+      customerAccountId => {
+        this.customerAccountId = customerAccountId;
+        this.customerAccountService.getPastDue(this.customerAccountId).subscribe(pastDue => {
+          this.pastDue = pastDue;
+
+          if (this.pastDue > 40) {
+            this.hasPastDue = true;
+            this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
+          } else {
+            this.hasPastDue = false;
+            this.pastDueErrorMessage = null;
+          }
+        });
+      }
     );
 
-    this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId => {
+    this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe(ChannelId => {
       this.channelId = ChannelId;
-    } );
+    });
   }
 
   ngOnInit() {
