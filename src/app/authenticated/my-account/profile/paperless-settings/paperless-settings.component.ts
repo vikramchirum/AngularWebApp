@@ -109,13 +109,14 @@ export class PaperlessSettingsComponent implements OnInit {
       this.togglePaperless(this.billingOptions, this.plansOptions);
     });
   }
+
   selectedPreference(preference, preferenceOptions) {
     if (preference[0].Status === 'Active') {
       if (preference[0].Paperless) {
         preferenceOptions[0].checked = preference[0].Paperless;
       } else {
-        preferenceOptions[0].checked = true;
-        preferenceOptions[1].checked = true;
+        preferenceOptions[0].checked = false;
+        preferenceOptions[1].checked = false;
       }
     } else {
       preferenceOptions[1].checked = true;
@@ -181,6 +182,9 @@ export class PaperlessSettingsComponent implements OnInit {
 
     if (notificationType === 1) {
       if (option === 'Email') {
+
+        this.plansOptions[1].checked =  !isChecked;
+
         if (isChecked) {
           this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SelectPaperlessPlanDocuments]
             , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SelectPaperlessPlanDocuments]);
@@ -191,6 +195,9 @@ export class PaperlessSettingsComponent implements OnInit {
       }
 
       if (option === 'Paper') {
+
+        this.plansOptions[0].checked =  !isChecked;
+
         if (isChecked) {
           this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SelectPaperPlanDocuments]
             , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SelectPaperPlanDocuments]);
