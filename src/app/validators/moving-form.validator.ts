@@ -102,6 +102,18 @@ export function validateMoveInDate(endDate, startDate) {
                     }
                 };
             }
+
+            // Let's check the case when end date is more than 30 days past start date
+            serviceEndDate = group.controls[endDate].value;
+            serviceEndDate = clone(serviceEndDate.jsdate);
+            serviceEndDate = serviceEndDate.setDate(serviceEndDate.getDate() - 30);
+            if (serviceEndDate > serviceStartDate) {
+                return {
+                    validateMoveInDate: {
+                        valid: false
+                    }
+                };
+            }
         }
     };
 }

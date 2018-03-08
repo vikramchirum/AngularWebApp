@@ -46,6 +46,10 @@
                    *ngIf="!movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfSunday && movingAddressForm.controls?.Current_Service_End_Date.errors?.checkIfChristmasDay">
               Christmas Day is not a valid stop date
             </small>
+            <small class="text-danger"
+                    *ngIf="movingAddressForm.hasError('validateMoveInDate')">
+              Stop date must be within 30 days of start date.
+            </small>
           </div>
         </div>
       </div>
