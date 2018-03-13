@@ -21,13 +21,11 @@ import { environment } from 'environments/environment';
 import { AvailableDateService } from 'app/core/availabledate.service';
 import { ITduAvailabilityResult } from 'app/core/models/availabledate/tduAvailabilityResult.model';
 import { ServiceType } from 'app/core/models/enums/serviceType';
-import { TduAction } from '../../../core/models/enums/tduAction';
-import { forEach } from '@angular/router/src/utils/collection';
 import { CalendarService } from '../../../core/calendar.service';
 import { TDUStore } from '../../../core/store/tdustore';
 import { ITDU } from '../../../core/models/tdu/tdu.model';
 import { IAddress } from 'app/core/models/address/address.model';
-import { IMeterInfo } from 'app/core/models/serviceaddress/meterinfo.model';
+import { UtilityService } from 'app/core/utility.service';
 
 import {
   GoogleAnalyticsCategoryType,
@@ -89,7 +87,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   constructor( private fb: FormBuilder,
                private offerService: OfferService, private UserService: UserService, private enrollService: EnrollService, private customerAccountService: CustomerAccountService,
                private modalStore: ModalStore, private channelStore: ChannelStore, private availableDateService: AvailableDateService, private calendarService: CalendarService,
-               private googleAnalyticsService: GoogleAnalyticsService,
+               private googleAnalyticsService: GoogleAnalyticsService, private utilityService: UtilityService,
                private tduStore: TDUStore ) {
 
     // Keep our customer account id up-to-date.
@@ -338,8 +336,14 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       return false;
     }
     if ( this.isTokenError ) {
+      this.enrollErrorMsg = 'Additional Service Request is not valid';
       return false;
     }
+    if (this.utilityService.isNullOrWhitespace(this.tokenMsg)) {
+      this.enrollErrorMsg = 'Additional Service Request is not valid';
+      return false;
+    }
+
     const dynamicAddress = {} as IAddress;
     if (this.useBillAddress) {
       dynamicAddress.City = this.selectedServiceAddress.Address.City;

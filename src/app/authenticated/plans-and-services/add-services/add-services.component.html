@@ -66,14 +66,14 @@
           <div class="col-xs-6 col-sm-6 col-md-5">
             <div class="form-control">
               <label class="radio-inline">
-                <input [attr.disabled] = "hasPastDue"  style="cursor: pointer" type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.MoveIn" [disabled]="addressServed === false">I'm Moving
+                <input style="cursor: pointer" type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.MoveIn" [disabled]="addressServed === false || hasPastDue">I'm Moving
               </label>
             </div>
           </div>
           <div class="col-xs-6 col-sm-6 col-md-5 col-md-offset-2">
             <div class="form-control">
               <label class="radio-inline">
-                <input [attr.disabled] = "hasPastDue"  style="cursor: pointer"  type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.Switch" [disabled]="addressServed === false">I'm Switching
+                <input  style="cursor: pointer"  type="radio" name="serviceType" (change)="onChangeServiceType()" [(ngModel)]="serviceType" [value]="serviceTypeSource.Switch" [disabled]="addressServed === false || hasPastDue">I'm Switching
               </label>
             </div>
           </div>
