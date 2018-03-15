@@ -30,6 +30,7 @@ export class MyRewardsComponent implements OnInit, OnDestroy {
   serviceAccount: ServiceAccount;
   totalSavingsToDate: number;
   dollarAmountFormatter: string;
+  rewardDollarAmmount = 5;
 
   constructor(private customerAccountService: CustomerAccountService, private serviceAccountService: ServiceAccountService, private referralStore: ReferralStore) {
   }
@@ -49,10 +50,8 @@ export class MyRewardsComponent implements OnInit, OnDestroy {
     this.referralSubscription = referral$.subscribe(result => {
       this.referral = result;
       this.isLoading = false;
-      if (this.referral) {
-        this.totalSavingsToDate = (sumBy(this.referral.RefereeList, function (r) {
-          return r.Total_Amount_Credited;
-        }));
+      if (this.referral && this.referral.RefereeList && this.referral.RefereeList.length > 0) {
+        this.totalSavingsToDate = this.referral.RefereeList[0].Total_Amount_Credited;
       }
     });
   }
