@@ -255,7 +255,7 @@ export class ChangeYourPlanComponent implements OnInit, OnChanges, OnDestroy {
     const request = {} as ICreateRenewalRequest;
     request.Service_Account_Id = offerSelectionPayLoad.Service_Account_Id;
     request.Offering_Id = offerSelectionPayLoad.Offer.Id;
-    request.User_Name = offerSelectionPayLoad.User_Name;
+    request.User_Name = 'myGexa/' +  offerSelectionPayLoad.User_Name;
     request.Channel_Id = this.channelId;
     request.Current_Rate_Code = this.activeServiceAccountDetails.Current_Offer.Rate_Code;
 
@@ -284,7 +284,7 @@ export class ChangeYourPlanComponent implements OnInit, OnChanges, OnDestroy {
     const request = {} as ICreateUpgradeRequest;
     request.Service_Account_Id = offerSelectionPayLoad.Service_Account_Id;
     request.Offering_Id = offerSelectionPayLoad.Offer.Id;
-    request.User_Name = offerSelectionPayLoad.User_Name;
+    request.User_Name = 'myGexa/' +  offerSelectionPayLoad.User_Name;
     request.Channel_Id = this.channelId;
     request.Current_Rate_Code = this.activeServiceAccountDetails.Current_Offer.Rate_Code;
 

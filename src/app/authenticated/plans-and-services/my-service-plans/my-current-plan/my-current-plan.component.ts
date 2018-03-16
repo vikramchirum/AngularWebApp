@@ -22,6 +22,7 @@ import { UserService } from 'app/core/user.service';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { UtilityService } from 'app/core/utility.service';
 import { RenewalStore } from 'app/core/store/renewalstore';
+import { ChannelStore } from 'app/core/store/channelstore';
 import { OffersStore } from 'app/core/store/offersstore';
 
 import { PlanConfirmationModalComponent } from '../plan-confirmation-modal/plan-confirmation-modal.component';
@@ -44,6 +45,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   @ViewChild('errorModal') errorModal: ErrorModalComponent;
   @ViewChild('planConfirmationModal') planConfirmationModal: PlanConfirmationModalComponent;
 
+  private channelId: string;
   user: IUser;
   customerDetails: CustomerAccount;
   ActiveServiceAccount: ServiceAccount;
@@ -70,12 +72,14 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   renewalUpgradeFormGroup: FormGroup;
   offerSelectionType = OfferSelectionType;
   offerSelectionPayLoad: IOfferSelectionPayLoad;
-  showViewMoreRenewals: boolean = false;
+  showViewMoreRenewals = false;
+  private channelStoreSubscription: Subscription = null;
 
   constructor(private userService: UserService,
               private serviceAccountService: ServiceAccountService,
               private OfferStore: OffersStore,
               private renewalStore: RenewalStore,
+              private channelStore: ChannelStore,
               private utilityService: UtilityService,
               private customerAccountService: CustomerAccountService,
               private googleAnalyticsService: GoogleAnalyticsService,
@@ -88,6 +92,11 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
     this.userService.UserObservable.subscribe(user => {
       this.user = user;
     });
+
+    this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe(channelId => {
+      this.channelId = channelId;
+    });
+
     this.customerAccountServiceSubscription = this.customerAccountService.CustomerAccountObservable.subscribe(result => {
       this.customerDetails = result;
     });
@@ -274,7 +283,9 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
     const request = {} as ICreateRenewalRequest;
     request.Service_Account_Id = this.ActiveServiceAccount.Id;
     request.Offering_Id = this.RenewalOffers.Id;
-    request.User_Name = this.user.Profile.Username;
+    request.User_Name = 'myGexa/' + this.user.Profile.Username;
+    request.Channel_Id = this.channelId;
+    request.Current_Rate_Code = this.ActiveServiceAccount.Current_Offer.Rate_Code;
 
     if (this.RenewalOffers.Has_Partner) {
       request.Partner_Account_Number = this.renewalUpgradeFormGroup.get('accountName').value;
@@ -307,7 +318,7 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy() {
-    if ( this.plansServicesSubscription) {
+    if (this.plansServicesSubscription) {
       this.plansServicesSubscription.unsubscribe();
     }
     if (this.isUpForRenewal) {
@@ -316,7 +327,11 @@ export class MyCurrentPlanComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.customerAccountServiceSubscription) {
       this.customerAccountServiceSubscription.unsubscribe();
     }
+    if (this.channelStoreSubscription) {
+      this.channelStoreSubscription.unsubscribe();
+    }
   }
+
   onOfferSelected(event) {
     this.offerSelectionPayLoad = event;
     if (this.offerSelectionPayLoad.Has_Partner) {
