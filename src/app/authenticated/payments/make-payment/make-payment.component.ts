@@ -52,7 +52,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   currentView: string = null;
   dueDate: Date = null;
   LatestBillAmount: number;
-  LatestBillPaymentDate: Date;
+  ScheduledAutoBillPaymentDate: Date;
   dollarAmountFormatter: string;
   processing: boolean = null;
   PaymethodSelected: Paymethod = null;
@@ -176,7 +176,12 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                           this.paymentStatus = PaymentsHistoryItems[0].PaymentStatus;
                           if (this.paymentStatus === 'In Progress') {
                             this.LatestBillAmount = PaymentsHistoryItems[0].PaymentAmount;
-                            this.LatestBillPaymentDate = PaymentsHistoryItems[0].PaymentDate;
+                            this.ScheduledAutoBillPaymentDate = PaymentsHistoryItems[0].PaymentDate;
+                          }
+                          if (this.autoPay) {
+                            if (this.paymentStatus === 'Scheduled') {
+                              this.ScheduledAutoBillPaymentDate = PaymentsHistoryItems[0].PaymentDate;
+                            }
                           }
                         }
                         this.setFlags();

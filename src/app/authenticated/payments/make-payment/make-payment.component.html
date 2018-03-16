@@ -175,9 +175,14 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu pull-right"  role="menu">
-              <li class="linkLabel" *ngIf="autoPay">
-                Auto Pay is scheduled for {{LatestBillPaymentDate| date:'MM/dd/yyyy'}}
+              <li class="linkLabel" *ngIf="ScheduledAutoBillPaymentDate; else NoScheduledDate">
+                Auto Pay is scheduled for {{ScheduledAutoBillPaymentDate| date:'MM/dd/yyyy'}}
               </li>
+              <ng-template>
+                <li class="linkLabel" #NoScheduledDate>
+                  Auto Pay is scheduled for your next payment date
+                </li>
+              </ng-template>
               <hr>
               <li>
                 <a (click)="checkAmountBeforeSubmit()" class="btn btn-link btn-small btn-success btn-payment" >
