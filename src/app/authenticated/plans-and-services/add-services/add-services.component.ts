@@ -1,31 +1,35 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { IMyDpOptions, IMyDate, IMyOptions, IMyDateModel, IMyMarkedDate, IMyMarkedDates } from 'mydatepicker';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { IMyOptions, IMyDateModel } from 'mydatepicker';
 import { Subscription } from 'rxjs/Subscription';
 
+import { environment } from 'environments/environment';
+
 import { OfferRequest } from 'app/core/models/offers/offerrequest.model';
-import { OfferService } from 'app/core/offer.service';
+import { EnrollmentRequest } from 'app/core/models/enrolladditionalservices/enrollment-request.model';
+import { ITDU } from 'app/core/models/tdu/tdu.model';
+import { IAddress } from 'app/core/models/address/address.model';
 import { ServiceAddress } from 'app/core/models/serviceaddress/serviceaddress.model';
 import { IOffers } from 'app/core/models/offers/offers.model';
-import { UserService } from 'app/core/user.service';
-import { EnrollService } from 'app/core/enroll.service';
 import { CustomerCheckToken } from 'app/core/models/customercheckstoken/customer-checks.model';
-import { EnrollmentRequest } from 'app/core/models/enrolladditionalservices/enrollment-request.model';
-import { CustomerAccountService } from 'app/core/CustomerAccount.service';
 import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount.model';
-import { ModalStore } from 'app/core/store/modalstore';
-import { ChannelStore } from 'app/core/store/channelstore';
 import { OfferSelectionType } from 'app/core/models/enums/offerselectiontype';
 import { IOfferSelectionPayLoad } from 'app/shared/models/offerselectionpayload';
-import { environment } from 'environments/environment';
-import { AvailableDateService } from 'app/core/availabledate.service';
 import { ITduAvailabilityResult } from 'app/core/models/availabledate/tduAvailabilityResult.model';
 import { ServiceType } from 'app/core/models/enums/serviceType';
-import { CalendarService } from '../../../core/calendar.service';
-import { TDUStore } from '../../../core/store/tdustore';
-import { ITDU } from '../../../core/models/tdu/tdu.model';
-import { IAddress } from 'app/core/models/address/address.model';
+
+import { UserService } from 'app/core/user.service';
+import { EnrollService } from 'app/core/enroll.service';
+import { OfferService } from 'app/core/offer.service';
+import { CustomerAccountService } from 'app/core/CustomerAccount.service';
+import { CalendarService } from 'app/core/calendar.service';
+import { AvailableDateService } from 'app/core/availabledate.service';
 import { UtilityService } from 'app/core/utility.service';
+
+import { TDUStore } from 'app/core/store/tdustore';
+import { ChannelStore } from 'app/core/store/channelstore';
+
+import { validateInteger } from 'app/validators/validator';
 
 import {
   GoogleAnalyticsCategoryType,
@@ -39,6 +43,7 @@ import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
   styleUrls: [ './add-services.component.scss' ]
 } )
 export class AddServicesComponent implements OnInit, OnDestroy {
+  formGroupSubscriber: Subscription = null;
   tduAvailabilityResult: ITduAvailabilityResult;
   addServiceForm: FormGroup;
   offerRequestParams: OfferRequest = null;
@@ -53,14 +58,13 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   private tokenRes: CustomerCheckToken;
   private tokenMsg: string;
   private isTokenError = false;
-  isValidAddress: boolean = null;
+  isValidAddress: boolean = false;
   private enrollmentRequest: EnrollmentRequest = null;
   private CustomerAccountSubscription: Subscription = null;
   private channelStoreSubscription: Subscription = null;
   private availableDateServiceSubscription: Subscription = null;
   private TDUDunsServiceSubscription: Subscription = null;
   enableDates: boolean = null;
-  private selectedOffers: string[];
   addressServed: boolean = null;
   private customerDetails: CustomerAccount = null;
   private Waiver: string;
@@ -84,19 +88,26 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   hasPastDue: boolean;
   pastDueErrorMessage: string;
 
+  public ServiceStartDate: IMyOptions = {
+    // start date options here...
+    disableDays: [],
+    disableUntil: { year: 0, month: 0, day: 0 },
+    disableSince: { year: 0, month: 0, day: 0 },
+    dateFormat: 'mm-dd-yyyy'
+  };
+
   constructor( private fb: FormBuilder,
                private offerService: OfferService, private UserService: UserService, private enrollService: EnrollService, private customerAccountService: CustomerAccountService,
-               private modalStore: ModalStore, private channelStore: ChannelStore, private availableDateService: AvailableDateService, private calendarService: CalendarService,
-               private googleAnalyticsService: GoogleAnalyticsService, private utilityService: UtilityService,
-               private tduStore: TDUStore ) {
+               private availableDateService: AvailableDateService, private calendarService: CalendarService,
+               private channelStore: ChannelStore, private tduStore: TDUStore,
+               private utilityService: UtilityService,
+               private googleAnalyticsService: GoogleAnalyticsService) {
 
-    // Keep our customer account id up-to-date.
     this.UserService.UserCustomerAccountObservable.subscribe(
       customerAccountId => {
         this.customerAccountId = customerAccountId;
         this.customerAccountService.getPastDue(this.customerAccountId).subscribe(pastDue => {
           this.pastDue = pastDue;
-
           if (this.pastDue > 40) {
             this.hasPastDue = true;
             this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
@@ -114,6 +125,8 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+    let formGroupStatus = 'INVALID';
     this.TDUDunsServiceSubscription = this.tduStore.TDUDetails.subscribe(
       TDUDuns => {
         this.TDUDuns = TDUDuns;
@@ -122,41 +135,37 @@ export class AddServicesComponent implements OnInit, OnDestroy {
           item => DunsNumber.push(item.Duns_Number)
         );
         this.TDUDunsNumbers = DunsNumber;
-        // console.log('TDU duns number array', this.TDUDunsNumbers);
       }
     );
+
     this.dynamicAddressForm = this.fb.group({
       'Line1': [null, Validators.required],
-      'Line2': [null, Validators.required],
+      'Line2': [null],
       'City': [null, Validators.required],
-      'State': [null, Validators.required],
-      'Zip': [null, Validators.required]
+      'State': [null, Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(2)])],
+      'Zip': [null, Validators.compose([Validators.required, validateInteger, Validators.minLength(5), Validators.maxLength(5)])]
+    });
+
+    this.formGroupSubscriber = this.dynamicAddressForm.statusChanges.subscribe((data: string) => {
+      if (data !== formGroupStatus) {
+        formGroupStatus = data;
+        this.enableSubmitMove();
+      }
     });
   }
 
-  public ServiceStartDate: IMyOptions = {
-    // start date options here...
-    disableDays: [],
-    disableUntil: { year: 0, month: 0, day: 0 },
-    disableSince: { year: 0, month: 0, day: 0 },
-    dateFormat: 'mm-dd-yyyy'
-  };
-
   populateCalendar() {
-    if ( this.serviceType && this.tduAvailabilityResult ) {
+    if (this.serviceType && this.tduAvailabilityResult) {
       // Clear the selected date
       this.selectedStartDate = null;
       // Filter the dates
-      var calendarData = this.calendarService.getCalendarData( this.tduAvailabilityResult, this.serviceType );
-
-      // Set calendar options
-      console.log( 'calendarData', calendarData );
+      var calendarData = this.calendarService.getCalendarData(this.tduAvailabilityResult, this.serviceType);
       if (calendarData) {
         this.ServiceStartDate = {
           disableUntil: calendarData.startDate,
           disableSince: calendarData.endDate,
           disableDays: calendarData.unavailableDates,
-          markDates: [ { dates: calendarData.alertDates, color: 'Red' } ]
+          markDates: [{dates: calendarData.alertDates, color: 'Red'}]
         };
       }
       this.pricingMessage = calendarData.pricingMessage;
@@ -164,10 +173,8 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   }
 
   disableFields( $event ) {
-     // console.log('h', $event);
     this.isValidAddress = $event;
     if (!this.isValidAddress) {
-      // console.log('hellllloo');
       this.clearFields();
     }
   }
@@ -184,16 +191,13 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   // Fetch Offers when users selects new address
   getSelectedAddress( serviceLocation ) {
     this.selectedServiceAddress = serviceLocation;
-    console.log('selected address duns', this.selectedServiceAddress.Meter_Info.TDU_DUNS);
-    // console.log('result', this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS));
     this.addressServed = this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS);
     if (!this.addressServed) {
       this.clearFields();
     }
-    // console.log('addressServed', this.addressServed);
     // Get Available dates
-    if ( this.selectedServiceAddress.Meter_Info.UAN !== null && this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS)) {
-      this.availableDateServiceSubscription = this.availableDateService.getAvailableDate( this.selectedServiceAddress.Meter_Info.UAN ).subscribe(
+    if (this.selectedServiceAddress.Meter_Info.UAN !== null && this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS)) {
+      this.availableDateServiceSubscription = this.availableDateService.getAvailableDate(this.selectedServiceAddress.Meter_Info.UAN).subscribe(
         availableDates => {
           this.tduAvailabilityResult = availableDates;
           this.populateCalendar();
@@ -204,8 +208,8 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     this.enrollErrorMsg = '';
     this.tokenMsg = '';
     this.isTokenError = false;
-    if ( this.serviceType && this.addServiceForm && this.addServiceForm.value.Service_Start_Date.jsdate ) {
-      this.getFeaturedOffers( this.addServiceForm.value.Service_Start_Date.jsdate );
+    if (this.serviceType && this.addServiceForm && this.addServiceForm.value.Service_Start_Date.jsdate) {
+      this.getFeaturedOffers(this.addServiceForm.value.Service_Start_Date.jsdate);
     }
     this.checkCustomerToken();
   }
@@ -228,6 +232,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
 
   // Fetch Offers by passing start date and TDU_DUNS number of selected addresss
   getFeaturedOffers( ServiceStartDate ) {
+
     this.offerRequestParams = {
       startDate: ServiceStartDate ? ServiceStartDate.toISOString() : '',
       dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS,
@@ -235,23 +240,19 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       page_size: 100,
       channelId: this.channelId ? this.channelId : ''
     };
-    console.log( 'Offer params', this.offerRequestParams );
 
     // send start date and TDU_DUNS_Number to get offers available.
-    this.offerService.getOffers( this.offerRequestParams )
-      .subscribe( result => {
+    this.offerService.getOffers(this.offerRequestParams)
+      .subscribe(result => {
         this.availableOffers = result;
-        console.log( 'Available Offers', this.availableOffers );
         // filter featured offers based on Featured Channel property
-        this.featuredOffers = this.availableOffers.filter( x => {
-          if ( x.Plan.Featured_Channels.length > 0 ) {
+        this.featuredOffers = this.availableOffers.filter(x => {
+          if (x.Plan.Featured_Channels.length > 0) {
             return this.availableOffers;
           }
-        } );
+        });
         this.featuredOffersLength = this.featuredOffers ? this.featuredOffers.length : 0;
-        console.log( 'Featured Offers', this.featuredOffers );
-
-      } );
+      });
   }
 
   morePlansClicked() {
@@ -395,11 +396,17 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     if (this.TDUDunsServiceSubscription) {
       this.TDUDunsServiceSubscription.unsubscribe();
     }
+
+    if (this.formGroupSubscriber) {
+      this.formGroupSubscriber.unsubscribe();
+    }
   }
+
   toggleAddress() {
     this.useBillAddress = !this.useBillAddress;
     this.enableSubmitMove();
   }
+
   enableSubmitMove() {
     if (!this.useBillAddress) {
       if (this.dynamicAddressForm.valid) {
