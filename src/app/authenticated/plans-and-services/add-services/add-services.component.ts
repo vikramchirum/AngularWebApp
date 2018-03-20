@@ -353,7 +353,6 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       dynamicAddress.Line2 = this.selectedServiceAddress.Address.Line2;
       dynamicAddress.Zip = this.selectedServiceAddress.Address.Zip;
       dynamicAddress.Zip_4 = this.selectedServiceAddress.Address.Zip_4;
-      this.dynamicUAN = this.selectedServiceAddress.Meter_Info.UAN;
     } else {
       dynamicAddress.City = this.dynamicAddressForm.get('City').value;
       dynamicAddress.State = this.dynamicAddressForm.get('State').value;
@@ -361,8 +360,9 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       dynamicAddress.Line2 = this.dynamicAddressForm.get('Line2').value;
       dynamicAddress.Zip = this.dynamicAddressForm.get('Zip').value;
       dynamicAddress.Zip_4 = null;
-      this.dynamicUAN = null;
     }
+
+    this.dynamicUAN = this.selectedServiceAddress.Meter_Info.UAN;
     this.enrollmentRequest = {
       Email_Address: environment.Client_Email_Addresses,
       Offer_Id: this.selectedOfferId,
