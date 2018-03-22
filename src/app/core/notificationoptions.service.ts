@@ -37,7 +37,11 @@ export class NotificationOptionsService {
     // return this.http.get(relativePath, params)
     //   .map((response: Response) => { return <INotificationOption[]> response.json(); })
     //   .catch(error => this.http.handleHttpError(error));
-    const relativePath = `/Notification_Options?option.account_Info.account_Type=${searchRequest.Account_Info.Account_Type}&option.account_Info.account_Number=${searchRequest.Account_Info.Account_Number}&option.type=${searchRequest.Type}&option.status=${searchRequest.Status}`;
+    let relativePath = `/Notification_Options?option.account_Info.account_Type=${searchRequest.Account_Info.Account_Type}&option.account_Info.account_Number=${searchRequest.Account_Info.Account_Number}&option.type=${searchRequest.Type}`;
+    if (searchRequest.Status) {
+      relativePath = `/Notification_Options?option.account_Info.account_Type=${searchRequest.Account_Info.Account_Type}&option.account_Info.account_Number=${searchRequest.Account_Info.Account_Number}&option.type=${searchRequest.Type}&option.status=${searchRequest.Status}`;
+    }
+
     return this.http.get(relativePath)
       .map((response: Response) => { return <INotificationOption[]>response.json(); })
       .catch(error => this.http.handleHttpError(error));
