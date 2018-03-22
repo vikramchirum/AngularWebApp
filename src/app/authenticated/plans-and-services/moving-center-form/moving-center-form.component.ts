@@ -51,6 +51,7 @@ import {
   GoogleAnalyticsEventAction
 } from 'app/core/models/enums/googleanalyticscategorytype';
 import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+import {validateInteger} from "app/validators/validator";
 
 @Component( {
   selector: 'mygexa-moving-center-form',
@@ -60,7 +61,7 @@ import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
 } )
 export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-
+  formGroupSubscriber: Subscription = null;
   public isTduDifferent: boolean;
   public hasPastDue = false;
   public hasPendingTransfer = false;
@@ -208,8 +209,16 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       'Line1': [null, Validators.required],
       'Line2': [null],
       'City': [null, Validators.required],
-      'State': [null, [Validators.required, Validators.maxLength(2)]],
-      'Zip': [null,  [Validators.required, Validators.maxLength(5)]]
+      'State': [null, [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
+      'Zip': [null,  [Validators.required, validateInteger, Validators.minLength(5), Validators.maxLength(5)]]
+    });
+
+    let formGroupStatus = 'INVALID';
+    this.formGroupSubscriber = this.dynamicAddressForm.statusChanges.subscribe((data: string) => {
+      if (data !== formGroupStatus) {
+        formGroupStatus = data;
+        this.enableSubmitMove();
+      }
     });
   }
 
@@ -416,6 +425,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
   }
   enableSubmitMove() {
+
     if (this.ServicePlanForm && this.ServicePlanForm.valid) {
       this.enableSubmitMoveBtn = true;
       if (!this.useOldAddress) {
@@ -439,12 +449,12 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   useNewAddress() {
-    this.ServicePlanForm.controls[ 'service_address' ].setValue( 'New Address' );
+
+    this.ServicePlanForm.controls['service_address'].setValue('New Address');
     this.finalBillAddress = 'New Address';
     this.isUseNew = true;
     this.isUseCurrent = false;
     if (!this.useOldAddress) {
-      this.ServicePlanForm.controls['final_service_address'].setValue({});
     }
     this.enableSubmitMove();
   }
@@ -545,19 +555,21 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   ngOnDestroy() {
     this.ActiveServiceAccountSubscription.unsubscribe();
     this.CustomerAccountSubscription.unsubscribe();
-    if ( this.channelStoreSubscription ) {
+    if (this.channelStoreSubscription) {
       this.channelStoreSubscription.unsubscribe();
     }
-    if ( this.offerSubscription ) {
+    if (this.offerSubscription) {
       this.offerSubscription.unsubscribe();
     }
-    if ( this.availableDateServiceSubscription ) {
+    if (this.availableDateServiceSubscription) {
       this.availableDateServiceSubscription.unsubscribe();
     }
     if (this.TDUDunsServiceSubscription) {
       this.TDUDunsServiceSubscription.unsubscribe();
     }
-
+    if (this.formGroupSubscriber) {
+      this.formGroupSubscriber.unsubscribe();
+    }
   }
 
   toggleAddress() {
