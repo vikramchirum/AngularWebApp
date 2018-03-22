@@ -45,13 +45,14 @@ import { ITduAvailabilityResult } from 'app/core/models/availabledate/tduAvailab
 import { ServiceType } from 'app/core/models/enums/serviceType';
 import { IServiceAccountPlanHistoryOffer } from 'app/core/models/serviceaccount/serviceaccountplanhistoryoffer.model';
 import { OfferSelectionType } from 'app/core/models/enums/offerselectiontype';
+import { validateInteger } from 'app/validators/validator';
+
 
 import {
   GoogleAnalyticsCategoryType,
   GoogleAnalyticsEventAction
 } from 'app/core/models/enums/googleanalyticscategorytype';
 import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
-import {validateInteger} from "app/validators/validator";
 
 @Component( {
   selector: 'mygexa-moving-center-form',
@@ -363,11 +364,11 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     // start date - when the customer wants to turn on their service.
     // dunsNumber - TDU_DNS number from New Address Search API
     this.offerRequestParams = {
-      startDate: addressForm.New_Service_Start_Date.jsdate.toISOString(),
+      startDate: new Date().toISOString(),
       dunsNumber: this.newServiceAddress.Meter_Info.TDU_DUNS,
       approved: true,
       page_size: 100,
-      channelId: this.channelId
+      channelId: this.channelId,
     };
     console.log('Offer params', this.offerRequestParams);
     // send start date and TDU_DUNS_Number to get offers available.
@@ -542,7 +543,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       Promotion_Code_Used: '',
       Date_Sent: new Date().toISOString(),
       Partner_Account_Number: Partner_Account_Number,
-      Partner_Name_On_Account: Partner_Name_On_Account
+      Partner_Name_On_Account: Partner_Name_On_Account,
+      Agrees_To_Priority_Move_In_Charge: true
     };
     this.transferService.submitMove( this.transferRequest ).subscribe(
       () => this.submitted = true,

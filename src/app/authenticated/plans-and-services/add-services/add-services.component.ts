@@ -225,6 +225,12 @@ export class AddServicesComponent implements OnInit, OnDestroy {
 
   onStartDateChanged( event: IMyDateModel ) {
     // date selected
+    if (!event.jsdate) {
+      this.enableSubmitEnroll = false;
+    } else {
+      this.enableSubmitEnroll = true;
+    }
+
     if ( this.selectedServiceAddress ) {
       this.getFeaturedOffers( event.jsdate );
     }
@@ -234,7 +240,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   getFeaturedOffers( ServiceStartDate ) {
 
     this.offerRequestParams = {
-      startDate: ServiceStartDate ? ServiceStartDate.toISOString() : '',
+      startDate: new Date().toISOString(),
       dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS,
       approved: true,
       page_size: 100,
@@ -372,6 +378,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       Service_Type: this.serviceType,
       Selected_Start_Date: this.selectedStartDate.jsdate,
       Language_Preference: this.customerDetails.Language,
+      Agrees_To_Priority_Move_In_Charge: true,
       Contact_Info: {
         Email_Address: this.customerDetails.Email,
         Primary_Phone_Number: this.customerDetails.Primary_Phone
