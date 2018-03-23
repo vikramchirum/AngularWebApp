@@ -112,7 +112,7 @@
         <div class="current-plan-card mat-card" *ngIf="offerSelected">
           <h2 class="mat-card-title ">{{ selectedOffer?.Offer?.Plan?.Name}}</h2>
           <div class="mat-card-content">
-            <h2>{{selectedOffer?.Offer?.Price_At_500_kwh | DollarToCentsPipe | number : '1.1-1'}}<sup>&cent;</sup>
+            <h2>{{priceAtFeaturedUsageLevel | DollarToCentsPipe | number: '1.1-1'}}<sup>&cent;</sup>
               <small>per kWh</small>
             </h2>
             <p *ngIf="selectedOffer?.Offer?.End_Date">Expires {{selectedOffer?.Offer?.End_Date| date:'d/M/yy'}}</p>

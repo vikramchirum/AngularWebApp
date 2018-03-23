@@ -87,6 +87,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   pastDue: number;
   hasPastDue: boolean;
   pastDueErrorMessage: string;
+  priceAtFeaturedUsageLevel: number;
 
   public ServiceStartDate: IMyOptions = {
     // start date options here...
@@ -279,7 +280,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   onOfferSelected( event: IOfferSelectionPayLoad ) {
     this.offerSelected = true;
     this.selectedOffer = event;
-    console.log( 'Selected offer', this.selectedOffer );
+    this.checkFeaturedUsageLevel(this.selectedOffer.Offer)
     this.selectedOfferId = event.Offer.Id;
     // this.formEnrollmentRequest();
     this.enableSubmitMove();
@@ -430,6 +431,30 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       }
     } else {
       this.enableSubmitEnroll = true;
+    }
+  }
+
+  checkFeaturedUsageLevel(offer: IOffers) {
+    const renewalOfferFeaturedUsageLevel = offer.Plan.Product.Featured_Usage_Level;
+    if (renewalOfferFeaturedUsageLevel) {
+      switch (renewalOfferFeaturedUsageLevel) {
+        case  '500 kWh': {
+          this.priceAtFeaturedUsageLevel = offer.Price_At_500_kwh;
+          break;
+        }
+        case  '1000 kWh': {
+          this.priceAtFeaturedUsageLevel = offer.Price_At_1000_kwh;
+          break;
+        }
+        case  '2000 kWh': {
+          this.priceAtFeaturedUsageLevel = offer.Price_At_2000_kwh;
+          break;
+        }
+        default: {
+          this.priceAtFeaturedUsageLevel = offer.Price_At_2000_kwh;
+          break;
+        }
+      }
     }
   }
 }
