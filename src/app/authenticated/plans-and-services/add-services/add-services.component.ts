@@ -101,27 +101,27 @@ export class AddServicesComponent implements OnInit, OnDestroy {
                private availableDateService: AvailableDateService, private calendarService: CalendarService,
                private channelStore: ChannelStore, private tduStore: TDUStore,
                private utilityService: UtilityService,
-               private googleAnalyticsService: GoogleAnalyticsService) {
+               private googleAnalyticsService: GoogleAnalyticsService ) {
 
     this.UserService.UserCustomerAccountObservable.subscribe(
       customerAccountId => {
         this.customerAccountId = customerAccountId;
-        this.customerAccountService.getPastDue(this.customerAccountId).subscribe(pastDue => {
+        this.customerAccountService.getPastDue( this.customerAccountId ).subscribe( pastDue => {
           this.pastDue = pastDue;
-          if (this.pastDue > 40) {
+          if ( this.pastDue > 40 ) {
             this.hasPastDue = true;
             this.pastDueErrorMessage = 'We are unable to process your request due to Past due Balance';
           } else {
             this.hasPastDue = false;
             this.pastDueErrorMessage = null;
           }
-        });
+        } );
       }
     );
 
-    this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe(ChannelId => {
+    this.channelStoreSubscription = this.channelStore.Channel_Id.subscribe( ChannelId => {
       this.channelId = ChannelId;
-    });
+    } );
   }
 
   ngOnInit() {
@@ -132,40 +132,40 @@ export class AddServicesComponent implements OnInit, OnDestroy {
         this.TDUDuns = TDUDuns;
         let DunsNumber: string[] = [];
         this.TDUDuns.forEach(
-          item => DunsNumber.push(item.Duns_Number)
+          item => DunsNumber.push( item.Duns_Number )
         );
         this.TDUDunsNumbers = DunsNumber;
       }
     );
 
-    this.dynamicAddressForm = this.fb.group({
-      'Line1': [null, Validators.required],
-      'Line2': [null],
-      'City': [null, Validators.required],
-      'State': [null, Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(2)])],
-      'Zip': [null, Validators.compose([Validators.required, validateInteger, Validators.minLength(5), Validators.maxLength(5)])]
-    });
+    this.dynamicAddressForm = this.fb.group( {
+      'Line1': [ null, Validators.required ],
+      'Line2': [ null ],
+      'City': [ null, Validators.required ],
+      'State': [ null, Validators.compose( [ Validators.required, Validators.minLength( 2 ), Validators.maxLength( 2 ) ] ) ],
+      'Zip': [ null, Validators.compose( [ Validators.required, validateInteger, Validators.minLength( 5 ), Validators.maxLength( 5 ) ] ) ]
+    } );
 
-    this.formGroupSubscriber = this.dynamicAddressForm.statusChanges.subscribe((data: string) => {
-      if (data !== formGroupStatus) {
+    this.formGroupSubscriber = this.dynamicAddressForm.statusChanges.subscribe( ( data: string ) => {
+      if ( data !== formGroupStatus ) {
         formGroupStatus = data;
         this.enableSubmitMove();
       }
-    });
+    } );
   }
 
   populateCalendar() {
-    if (this.serviceType && this.tduAvailabilityResult) {
+    if ( this.serviceType && this.tduAvailabilityResult ) {
       // Clear the selected date
       this.selectedStartDate = null;
       // Filter the dates
-      var calendarData = this.calendarService.getCalendarData(this.tduAvailabilityResult, this.serviceType);
-      if (calendarData) {
+      var calendarData = this.calendarService.getCalendarData( this.tduAvailabilityResult, this.serviceType );
+      if ( calendarData ) {
         this.ServiceStartDate = {
           disableUntil: calendarData.startDate,
           disableSince: calendarData.endDate,
           disableDays: calendarData.unavailableDates,
-          markDates: [{dates: calendarData.alertDates, color: 'Red'}]
+          markDates: [ { dates: calendarData.alertDates, color: 'Red' } ]
         };
       }
       this.pricingMessage = calendarData.pricingMessage;
@@ -174,7 +174,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
 
   disableFields( $event ) {
     this.isValidAddress = $event;
-    if (!this.isValidAddress) {
+    if ( !this.isValidAddress ) {
       this.clearFields();
     }
   }
@@ -191,13 +191,13 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   // Fetch Offers when users selects new address
   getSelectedAddress( serviceLocation ) {
     this.selectedServiceAddress = serviceLocation;
-    this.addressServed = this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS);
-    if (!this.addressServed) {
+    this.addressServed = this.TDUDunsNumbers.includes( this.selectedServiceAddress.Meter_Info.TDU_DUNS );
+    if ( !this.addressServed ) {
       this.clearFields();
     }
     // Get Available dates
-    if (this.selectedServiceAddress.Meter_Info.UAN !== null && this.TDUDunsNumbers.includes(this.selectedServiceAddress.Meter_Info.TDU_DUNS)) {
-      this.availableDateServiceSubscription = this.availableDateService.getAvailableDate(this.selectedServiceAddress.Meter_Info.UAN).subscribe(
+    if ( this.selectedServiceAddress.Meter_Info.UAN !== null && this.TDUDunsNumbers.includes( this.selectedServiceAddress.Meter_Info.TDU_DUNS ) ) {
+      this.availableDateServiceSubscription = this.availableDateService.getAvailableDate( this.selectedServiceAddress.Meter_Info.UAN ).subscribe(
         availableDates => {
           this.tduAvailabilityResult = availableDates;
           this.populateCalendar();
@@ -208,8 +208,8 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     this.enrollErrorMsg = '';
     this.tokenMsg = '';
     this.isTokenError = false;
-    if (this.serviceType && this.addServiceForm && this.addServiceForm.value.Service_Start_Date.jsdate) {
-      this.getFeaturedOffers(this.addServiceForm.value.Service_Start_Date.jsdate);
+    if ( this.serviceType ) {
+      this.getFeaturedOffers( new Date().toISOString() );
     }
     this.checkCustomerToken();
   }
@@ -218,6 +218,13 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     if ( this.serviceType ) {
       this.populateCalendar();
       this.enableDates = true;
+      if ( this.serviceType === ServiceType.MoveIn && !this.selectedStartDate ) {
+        this.featuredOffers = null;
+        this.enableSubmitEnroll = false;
+      } else {
+        this.getFeaturedOffers( new Date().toISOString() );
+        this.enableSubmitEnroll = true;
+      }
     } else {
       this.enableDates = false;
     }
@@ -225,7 +232,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
 
   onStartDateChanged( event: IMyDateModel ) {
     // date selected
-    if (!event.jsdate) {
+    if ( !event.jsdate && this.serviceType === ServiceType.MoveIn ) {
       this.enableSubmitEnroll = false;
     } else {
       this.enableSubmitEnroll = true;
@@ -237,10 +244,10 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   }
 
   // Fetch Offers by passing start date and TDU_DUNS number of selected addresss
-  getFeaturedOffers( ServiceStartDate ) {
+  getFeaturedOffers( Today ) {
 
     this.offerRequestParams = {
-      startDate: new Date().toISOString(),
+      startDate: Today,
       dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS,
       approved: true,
       page_size: 100,
@@ -248,17 +255,17 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     };
 
     // send start date and TDU_DUNS_Number to get offers available.
-    this.offerService.getOffers(this.offerRequestParams)
-      .subscribe(result => {
+    this.offerService.getOffers( this.offerRequestParams )
+      .subscribe( result => {
         this.availableOffers = result;
         // filter featured offers based on Featured Channel property
-        this.featuredOffers = this.availableOffers.filter(x => {
-          if (x.Plan.Featured_Channels.length > 0) {
+        this.featuredOffers = this.availableOffers.filter( x => {
+          if ( x.Plan.Featured_Channels.length > 0 ) {
             return this.availableOffers;
           }
-        });
+        } );
         this.featuredOffersLength = this.featuredOffers ? this.featuredOffers.length : 0;
-      });
+      } );
   }
 
   morePlansClicked() {
@@ -269,10 +276,10 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     window.scrollTo( 0, 0 );
   }
 
-  onOfferSelected ( event: IOfferSelectionPayLoad ) {
+  onOfferSelected( event: IOfferSelectionPayLoad ) {
     this.offerSelected = true;
     this.selectedOffer = event;
-    console.log('Selected offer', this.selectedOffer);
+    console.log( 'Selected offer', this.selectedOffer );
     this.selectedOfferId = event.Offer.Id;
     // this.formEnrollmentRequest();
     this.enableSubmitMove();
@@ -280,8 +287,8 @@ export class AddServicesComponent implements OnInit, OnDestroy {
 
   onNotify() {
 
-    this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.AddServiceLocation], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.CreateAdditionalService]
-      , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.CreateAdditionalService]);
+    this.googleAnalyticsService.postEvent( GoogleAnalyticsCategoryType[ GoogleAnalyticsCategoryType.AddServiceLocation ], GoogleAnalyticsEventAction[ GoogleAnalyticsEventAction.CreateAdditionalService ]
+      , GoogleAnalyticsEventAction[ GoogleAnalyticsEventAction.CreateAdditionalService ] );
 
     if ( this.formEnrollmentRequest() ) {
       this.enrollService.createEnrollment( this.enrollmentRequest )
@@ -334,7 +341,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     if ( !(this.selectedServiceAddress) ) {
       this.enrollErrorMsg = 'Please select Service Address to Continue';
       return false;
-    } else if ( !(this.selectedStartDate) ) {
+    } else if ( !this.selectedStartDate && this.serviceType === ServiceType.MoveIn ) {
       this.enrollErrorMsg = 'Please select Service Start date to Continue';
       return false;
     }
@@ -346,13 +353,13 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       this.enrollErrorMsg = 'Additional Service Request is not valid';
       return false;
     }
-    if (this.utilityService.isNullOrWhitespace(this.tokenMsg)) {
+    if ( this.utilityService.isNullOrWhitespace( this.tokenMsg ) ) {
       this.enrollErrorMsg = 'Additional Service Request is not valid';
       return false;
     }
 
     const dynamicAddress = {} as IAddress;
-    if (this.useBillAddress) {
+    if ( this.useBillAddress ) {
       dynamicAddress.City = this.selectedServiceAddress.Address.City;
       dynamicAddress.State = this.selectedServiceAddress.Address.State;
       dynamicAddress.Line1 = this.selectedServiceAddress.Address.Line1;
@@ -360,11 +367,11 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       dynamicAddress.Zip = this.selectedServiceAddress.Address.Zip;
       dynamicAddress.Zip_4 = this.selectedServiceAddress.Address.Zip_4;
     } else {
-      dynamicAddress.City = this.dynamicAddressForm.get('City').value;
-      dynamicAddress.State = this.dynamicAddressForm.get('State').value;
-      dynamicAddress.Line1 = this.dynamicAddressForm.get('Line1').value;
-      dynamicAddress.Line2 = this.dynamicAddressForm.get('Line2').value;
-      dynamicAddress.Zip = this.dynamicAddressForm.get('Zip').value;
+      dynamicAddress.City = this.dynamicAddressForm.get( 'City' ).value;
+      dynamicAddress.State = this.dynamicAddressForm.get( 'State' ).value;
+      dynamicAddress.Line1 = this.dynamicAddressForm.get( 'Line1' ).value;
+      dynamicAddress.Line2 = this.dynamicAddressForm.get( 'Line2' ).value;
+      dynamicAddress.Zip = this.dynamicAddressForm.get( 'Zip' ).value;
       dynamicAddress.Zip_4 = null;
     }
 
@@ -376,7 +383,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
       Customer_Check_Token: this.tokenMsg,
       Waiver: this.Waiver,
       Service_Type: this.serviceType,
-      Selected_Start_Date: this.selectedStartDate.jsdate,
+      Selected_Start_Date: this.selectedStartDate ? this.selectedStartDate.jsdate : null,
       Language_Preference: this.customerDetails.Language,
       Agrees_To_Priority_Move_In_Charge: true,
       Contact_Info: {
@@ -400,11 +407,11 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     if ( this.availableDateServiceSubscription ) {
       this.availableDateServiceSubscription.unsubscribe();
     }
-    if (this.TDUDunsServiceSubscription) {
+    if ( this.TDUDunsServiceSubscription ) {
       this.TDUDunsServiceSubscription.unsubscribe();
     }
 
-    if (this.formGroupSubscriber) {
+    if ( this.formGroupSubscriber ) {
       this.formGroupSubscriber.unsubscribe();
     }
   }
@@ -415,8 +422,8 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   }
 
   enableSubmitMove() {
-    if (!this.useBillAddress) {
-      if (this.dynamicAddressForm.valid) {
+    if ( !this.useBillAddress ) {
+      if ( this.dynamicAddressForm.valid ) {
         this.enableSubmitEnroll = true;
       } else {
         this.enableSubmitEnroll = false;
