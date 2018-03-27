@@ -52,7 +52,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   currentView: string = null;
   dueDate: Date = null;
   LatestBillAmount: number;
-  ScheduledAutoBillPaymentDate: Date;
+  ScheduledAutoBillPaymentDate: Date = null;
   dollarAmountFormatter: string;
   processing: boolean = null;
   PaymethodSelected: Paymethod = null;

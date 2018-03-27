@@ -166,7 +166,7 @@
       <div *ngSwitchCase="'AutoPay'" class="form-group">
         <div class="col-md-offset-3 col-md-8 col-lg-offset-3 col-lg-6">
           <div class="btn-group btn-block">
-            <button  type="button" class="btn btn-success btn-lg " data-label-placement>
+            <button  type="button" class="btn btn-success btn-lg " data-label-placement routerLink="/payments/payment-options/auto-bill-payment">
               <span *ngIf="!processing" class="fa fa-clock-o"></span>
               <span *ngIf="processing" class="fa fa-spin fa-spinner"></span>
               <span class="small">{{processing ? 'Submitting your payment....' : 'AUTO PAY IS SCHEDULED'}}</span>
@@ -178,8 +178,8 @@
               <li class="linkLabel" *ngIf="ScheduledAutoBillPaymentDate; else NoScheduledDate">
                 Auto Pay is scheduled for {{ScheduledAutoBillPaymentDate| date:'MM/dd/yyyy'}}
               </li>
-              <ng-template>
-                <li class="linkLabel" #NoScheduledDate>
+              <ng-template #NoScheduledDate>
+                <li class="linkLabel">
                   Auto Pay is scheduled for your next payment date
                 </li>
               </ng-template>
