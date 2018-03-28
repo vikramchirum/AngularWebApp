@@ -38,13 +38,15 @@ export class CalendarService {
             if ( action === TduAction.Priority_Move_In ) {
               has_valid_action = true;
               has_alert_action = true;
-            }
-            else if ( action === TduAction.Standard_Move_In ) {
+            } else if ( action === TduAction.Standard_Move_In ) {
               has_valid_action = true;
             }
-          }
-          else {
-            if ( action === TduAction.Self_Selected_Switch ) {
+          } else if (serviceType === ServiceType.Move_Out) {
+            if ( action === TduAction.Move_Out) {
+              has_valid_action = true;
+            }
+          } else {
+            if ( action === TduAction.Self_Selected_Switch) {
               has_valid_action = true;
             }
           }
@@ -60,20 +62,17 @@ export class CalendarService {
           var next = new Date( currentDate.Date );
           next.setDate( next.getDate() + 1 );
           result.endDate = this.formatCalendarDate( next );
-        }
-        else {
+        } else {
           result.unavailableDates.push( this.formatCalendarDate( currentDate.Date ) );
         }
         if ( has_alert_action ) {
           result.alertDates.push( this.formatCalendarDate( currentDate.Date ) );
         }
 
-      }
-      else {
+      } else {
         result.unavailableDates.push( this.formatCalendarDate( currentDate.Date ) );
       }
     }
-
 
     var priority_price = null;
     var standard_price = null;
