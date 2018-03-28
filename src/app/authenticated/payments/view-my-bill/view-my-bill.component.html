@@ -65,7 +65,7 @@
 
               <div class="input-group text-center">
                 <div class="input-group-btn">
-                  <button type="button" class="btn btn-success btn-round-lg btn-lg custom" data-label-placement>
+                  <button type="button" class="btn btn-success btn-round-lg btn-lg custom" data-label-placement routerLink="/payments/payment-options/auto-bill-payment">
                     <span class="fa fa-clock-o"></span>
                     <span class="small">AUTO PAY IS SCHEDULED</span>
                   </button>
@@ -76,8 +76,8 @@
                     <li class="linkLabel" *ngIf="ScheduledAutoBillPaymentDate; else NoScheduledDate">
                       Auto Pay is scheduled for <br/> {{ScheduledAutoBillPaymentDate| date:'MM/dd/yyyy'}}
                     </li>
-                    <ng-template>
-                      <li class="linkLabel" #NoScheduledDate>
+                    <ng-template #NoScheduledDate>
+                      <li class="linkLabel">
                         Auto Pay is scheduled for your next payment date
                       </li>
                     </ng-template>
