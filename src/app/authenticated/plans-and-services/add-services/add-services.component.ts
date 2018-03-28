@@ -210,7 +210,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     this.tokenMsg = '';
     this.isTokenError = false;
     if ( this.serviceType ) {
-      this.getFeaturedOffers( new Date().toISOString() );
+      this.getFeaturedOffers( new Date() );
     }
     this.checkCustomerToken();
   }
@@ -223,7 +223,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
         this.featuredOffers = null;
         this.enableSubmitEnroll = false;
       } else {
-        this.getFeaturedOffers( new Date().toISOString() );
+        this.getFeaturedOffers( new Date() );
         this.enableSubmitEnroll = true;
       }
     } else {
@@ -248,7 +248,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
   getFeaturedOffers( Today ) {
 
     this.offerRequestParams = {
-      startDate: Today,
+      startDate: Today.toISOString(),
       dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS,
       approved: true,
       page_size: 100,
