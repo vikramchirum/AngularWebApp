@@ -176,7 +176,6 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                           this.paymentStatus = PaymentsHistoryItems[0].PaymentStatus;
                           if (this.paymentStatus === 'In Progress') {
                             this.LatestBillAmount = PaymentsHistoryItems[0].PaymentAmount;
-                            this.ScheduledAutoBillPaymentDate = PaymentsHistoryItems[0].PaymentDate;
                           }
                           if (this.autoPay) {
                             if (this.paymentStatus === 'Scheduled') {
