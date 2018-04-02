@@ -92,6 +92,7 @@ export class ViewBillComponent implements OnInit {
   private openCharges = [];
   private ActiveServiceAccountSubscription: Subscription = null;
   private tduName: string;
+  public isDownloading = false;
 
   constructor( private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService
     , private utilityService: UtilityService, private decimalPipe: DecimalPipe, private googleAnalyticsService: GoogleAnalyticsService) {
@@ -304,6 +305,7 @@ export class ViewBillComponent implements OnInit {
 
   public downloadInvoice( $event ) {
 
+    this.isDownloading = true;
     $event.preventDefault();
     $event.stopPropagation();
 
@@ -312,7 +314,7 @@ export class ViewBillComponent implements OnInit {
 
     const invoiceId = this.bill_object.Invoice_Id;
     this.invoiceService.getInvoicePDF( invoiceId ).subscribe(
-      data => this.utilityService.downloadFile( data )
+      data => { this.isDownloading = false; this.utilityService.downloadFile( data, invoiceId ); }
     );
   }
 

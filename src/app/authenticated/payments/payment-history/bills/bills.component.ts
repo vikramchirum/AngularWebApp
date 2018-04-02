@@ -80,16 +80,9 @@ export class BillsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const invoiceId = this.getInvoiceId(row);
     this.invoiceService.getInvoicePDF(invoiceId).subscribe(
-      data => this.utilityService.downloadFile(data)
+      data => this.utilityService.downloadFile(data, invoiceId)
     );
   }
-
-  /*
-  downloadFile1(data: Response) {
-    const blob = new Blob([data.blob()], {type: 'application/pdf'});
-    const url = window.URL.createObjectURL(blob);
-    window.open(url);
-  }*/
 
   public getData(row: any, columnHeader: ColumnHeader): any {
     if (!row) {

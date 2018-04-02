@@ -24,9 +24,13 @@ export class UtilityService {
     return date;
   }
 
-  downloadFile(data: Response) {
+  downloadFile(data: Response, fileId: number | string) {
 
-    const fileName = this.parseFilenameFromContentDisposition(data.headers.get('Content-Disposition'));
+    let fileName = this.parseFilenameFromContentDisposition(data.headers.get('Content-Disposition'));
+    if (this.isNullOrWhitespace(fileName)) {
+      fileName = 'invoice_' + fileId;
+    }
+
     const blob = new Blob([data.blob()], {type: 'application/pdf'});
     const objectUrl = window.URL.createObjectURL(blob);
 
@@ -35,18 +39,23 @@ export class UtilityService {
       window.navigator.msSaveOrOpenBlob(blob, 'invoice');
     } else if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
       // for firefox
-      const a = document.createElement('a');
-      a.href = objectUrl;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
+      const downloadLink = document.createElement('a');
+      downloadLink.href = objectUrl;
+      downloadLink.download = fileName;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
       setTimeout(function () {
-        document.body.removeChild(a);
+        document.body.removeChild(downloadLink);
         window.URL.revokeObjectURL(objectUrl);
       }, 10);
     } else {
-      // for chrome and other browsers
-      window.open(objectUrl, '_blank');
+      const downloadLink = document.createElement('a');
+      downloadLink.href = objectUrl;
+      downloadLink.download = fileName;
+      downloadLink.click();
+      setTimeout(function () {
+        window.URL.revokeObjectURL(objectUrl);
+      }, 10);
     }
   }
 
