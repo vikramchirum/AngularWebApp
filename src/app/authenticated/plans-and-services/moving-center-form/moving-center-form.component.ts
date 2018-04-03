@@ -74,6 +74,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
 
 
   enableDates: boolean = null;
+  tduMoveOutAvailabilityResult: ITduAvailabilityResult;
   tduAvailabilityResult: ITduAvailabilityResult;
   trimmedAvailableDates: Date[];
   missingDates: Array<IMyDate> = null;
@@ -107,6 +108,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   private channelStoreSubscription: Subscription = null;
   private offerSubscription: Subscription = null;
   private availableDateServiceSubscription: Subscription = null;
+  private availableMoveOutDateServiceSubscription: Subscription = null;
   TDUDunsServiceSubscription: Subscription= null;
   public Featured_Usage_Level: string = null;
   public Price_atFeatured_Usage_Level: number;
@@ -228,6 +230,13 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     this.ActiveServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       movingFromAccount => {
         this.ActiveServiceAccount = movingFromAccount;
+
+        this.availableMoveOutDateServiceSubscription = this.availableDateService.getAvailableDate(this.ActiveServiceAccount.UAN).subscribe(
+          availableDates => {
+            this.tduMoveOutAvailabilityResult = availableDates;
+            this.populateMoveOutCalendar();
+          });
+
         this.ServiceAccountService.getPastDue(this.ActiveServiceAccount.Id).subscribe(pastDue => {
           this.pastDue = pastDue;
 
@@ -329,6 +338,24 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
             break;
           }
         }
+    }
+  }
+
+  populateMoveOutCalendar() {
+
+    if ( this.tduMoveOutAvailabilityResult ) {
+      // Clear the selected date
+      this.currentServiceEndDate = null;
+      // Filter the dates
+      var calendarData = this.calendarService.getCalendarData( this.tduMoveOutAvailabilityResult, ServiceType.Move_Out);
+      // Set calendar options
+      // Color code the dates
+      this.currentServiceEndDate = {
+        disableUntil: calendarData.startDate,
+        disableSince: calendarData.endDate,
+        disableDays: calendarData.unavailableDates,
+        markDates: [ { dates: calendarData.alertDates, color: 'Red' } ]
+      };
     }
   }
 
@@ -571,6 +598,10 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
     }
     if (this.formGroupSubscriber) {
       this.formGroupSubscriber.unsubscribe();
+    }
+
+    if (this.availableMoveOutDateServiceSubscription) {
+      this.availableMoveOutDateServiceSubscription.unsubscribe();
     }
   }
 

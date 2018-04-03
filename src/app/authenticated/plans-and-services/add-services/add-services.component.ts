@@ -210,7 +210,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     this.tokenMsg = '';
     this.isTokenError = false;
     if ( this.serviceType ) {
-      this.getFeaturedOffers( new Date().toISOString() );
+      this.getFeaturedOffers();
     }
     this.checkCustomerToken();
   }
@@ -223,7 +223,7 @@ export class AddServicesComponent implements OnInit, OnDestroy {
         this.featuredOffers = null;
         this.enableSubmitEnroll = false;
       } else {
-        this.getFeaturedOffers( new Date().toISOString() );
+        this.getFeaturedOffers();
         this.enableSubmitEnroll = true;
       }
     } else {
@@ -240,15 +240,16 @@ export class AddServicesComponent implements OnInit, OnDestroy {
     }
 
     if ( this.selectedServiceAddress ) {
-      this.getFeaturedOffers( event.jsdate );
+      this.getFeaturedOffers();
     }
   }
 
   // Fetch Offers by passing start date and TDU_DUNS number of selected addresss
-  getFeaturedOffers( Today ) {
+  getFeaturedOffers( ) {
+    let today_string = new Date().toISOString();
 
     this.offerRequestParams = {
-      startDate: Today,
+      startDate: today_string,
       dunsNumber: this.selectedServiceAddress.Meter_Info.TDU_DUNS,
       approved: true,
       page_size: 100,

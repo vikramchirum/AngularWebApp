@@ -192,7 +192,7 @@
            *ngFor="let featuredOffer of this.featuredOffers | slice:3: (featuredOffersLength); let i= index">
 
         <mygexa-play-card [offer]="featuredOffer" [offerSelectionType]="offerSelectionType.Moving"
-                          (onOfferSelectedEvent)="onNotify($event)"></mygexa-play-card>
+                          (onOfferSelectedEvent)="onOfferSelected($event)"></mygexa-play-card>
       </div>
     </div>
 

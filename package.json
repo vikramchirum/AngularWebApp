@@ -1,6 +1,6 @@
 {
   "name": "mygexa.gexaenergy.com",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -15,7 +15,7 @@
     "serve-qa": "ng serve -o --environment=qa",
     "build-dev": "npm install && ng build --aot=true --target=production --environment=dev --output-hashing all",
     "build-qa": "npm install && ng build --aot=true --target=production --environment=qa --output-hashing all",
-    "build-stg": "npm install && ng build --aot=true --target=production --environment=stg --output-hashing all",
+    "build-stg": "npm install && ng build --aot=true --target=production --environment=staging --output-hashing all",
     "build-prd": "npm install && ng build --aot=true --target=production --environment=prod --output-hashing all",
     "deploy-local": "npm install && ng build --aot=true --target=production --environment=dev --output-path C:\\inetpub\\wwwroot\\DEV\\test --output-hashing all"
   },

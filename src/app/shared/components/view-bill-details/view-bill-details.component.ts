@@ -119,7 +119,7 @@ export class ViewBillDetailsComponent implements OnInit {
 
     const invoiceId = this.bill_object.Invoice_Id;
     this.invoiceService.getInvoicePDF(invoiceId).subscribe(
-      data => this.utilityService.downloadFile(data)
+      data => this.utilityService.downloadFile(data, invoiceId)
     );
   }
 }
