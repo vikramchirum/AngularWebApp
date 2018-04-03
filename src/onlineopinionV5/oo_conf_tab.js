@@ -30,8 +30,8 @@ The following code is Copyright 1998-2016 Opinionlab, Inc. All rights reserved. 
             mobileTouches: 1,
             customVariables: {
                 feedbackType: "tab",
-                gexa_active_Service_account_id: typeof localStorage.gexa_active_Service_account_id !== "undefined" ? localStorage.gexa_active_Service_account_id : "",
-                user_email_address: typeof localStorage.user_email_address !== "undefined" ? localStorage.user_email_address : ""
+                gexa_active_Service_account_id: function() { return typeof localStorage.gexa_active_Service_account_id !== "undefined" ? localStorage.gexa_active_Service_account_id : ""; },
+                user_email_address: function() { return typeof localStorage.user_email_address !== "undefined" ? localStorage.user_email_address : ""; }
             }
         });
 

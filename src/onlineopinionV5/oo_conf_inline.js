@@ -27,8 +27,8 @@ OOo.oo_launch(event, 'oo_feedback1')
         o.oo_feedback = new o.Ocode({
             customVariables: {
                 feedbackType: 'inline',
-                gexa_active_Service_account_id: typeof localStorage.gexa_active_Service_account_id !== "undefined" ? localStorage.gexa_active_Service_account_id : '',
-                user_email_address: typeof localStorage.user_email_address !== "undefined" ? localStorage.user_email_address : ''
+                gexa_active_Service_account_id: function() { return typeof localStorage.gexa_active_Service_account_id !== "undefined" ? localStorage.gexa_active_Service_account_id : ''},
+                user_email_address: function() { return typeof localStorage.user_email_address !== "undefined" ? localStorage.user_email_address : ''; }
             }
         });
 
