@@ -7,7 +7,10 @@
     <br/><br/>
     <p><a class="btn btn-default" routerLink="/payments/view-my-bill">Back to View My Bill</a></p>
   </div>
-  <div class="alert alert-danger" *ngIf="paymentSubmittedWithoutError === false">
+  <div class="alert alert-danger" *ngIf="paymentSubmittedWithoutError === false && forteErrorMessage">
+    <i class="fa fa-fw fa-exclamation-circle"></i> <b>Sorry</b> {{forteErrorMessage}}!
+  </div>
+  <div class="alert alert-danger" *ngIf="paymentSubmittedWithoutError === false && !forteErrorMessage">
     <i class="fa fa-fw fa-exclamation-circle"></i> <b>Sorry</b> an error occurred when submitting your payment!
   </div>
 
@@ -16,7 +19,6 @@
   <ng-container *ngIf="!LatestInvoice" >
     <h4 class="text-muted"><i class="fa fa-fw fa-circle-o-notch fa-spin"></i> Loading your current bill.</h4>
   </ng-container>
-
 
   <form
     class="form-horizontal"

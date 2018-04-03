@@ -41,6 +41,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   paymentOneTimeType: string = null;
   paymentOneTimeValid: boolean = null;
   paymentSubmittedWithoutError: boolean = null;
+  forteErrorMessage: string = null;
   formGroup: FormGroup = null;
   zeroAmountEntered: boolean = null;
   totalDue: number;
@@ -287,9 +288,6 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
       pay_entered = Number(payment_entered);
     }
     console.log('payment', pay_entered);
-    // console.log('first char', payment_entered.substring(0, 1) );
-    // console.log('payment_entered', pay_entered);
-    // pay_entered = Number((String(get(this.formGroup.value, 'payment_now')).slice(1)));
     if (pay_entered !== 0) {
       if ( Number(this.totalDue) < pay_entered ) {
         errorMessage = 'This payment entered is greater than the total amount due, are you sure you want to continue?';
@@ -297,8 +295,6 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
       } else if (Number(this.totalDue) > 10 && (pay_entered < 10)) {
         errorMessage = 'Sorry you must make a minimum payment of $10.00';
         this.paymentConfirmationModal.showConfirmationMessageModal(errorMessage, true);
-        // console.log('total Due', Number(this.totalDue));
-        // console.log('payment_entered', pay_entered);
       } else {
         this.processing = true;
         this.paymentConfirmationModal.hideConfirmationMessageModal();
@@ -397,9 +393,22 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     // Catch any errors from getting the Paymethod.
       .catch(error => {
         console.log('An error occurred getting the Paymethod to charge. error = ', error);
-        alert('An error occurred and needs to be handled.\nPlease view the console.');
         this.paymentLoadingMessage = null;
         this.processing = false;
+        this.paymentSubmittedWithoutError = false;
+
+        if (error.response_description === 'The card_number is invalid.') {
+          this.forteErrorMessage =  'it looks like this card number is invalid';
+        } else if (error.response_description === 'The expire_month and expire_year are invalid.') {
+          this.forteErrorMessage =  'the expiration date is invalid';
+        } else if (error.response_description === 'The cvv is invalid.') {
+          this.forteErrorMessage =  'it looks like this cvv is invalid';
+        } else if (error.response_description === 'The routing_number is invalid.') {
+          this.forteErrorMessage =  'it looks like this routing number is invalid';
+        } else {
+          this.forteErrorMessage = error.response_description.replace('_', ' ').replace('.', '');
+        }
+        throw new Error(error);
       })
 
       // Pass the Paymethod data to the Payments service.
