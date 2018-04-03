@@ -89,7 +89,7 @@
             <li class="text-muted" *ngIf="!Paymethods">Payment Accounts (none)</li>
             <ng-container *ngIf="Paymethods">
               <li class="text-muted">Payment Accounts</li>
-              <li *ngFor="let Paymethod of Paymethods">
+              <li *ngFor="let Paymethod of filterActivePaymethods()">
                 <a href="#" (click)="paymentSelectMethod($event, Paymethod)"><i class="fa fa-fw" [ngClass]="Paymethod.getFontAwesomeTag()"></i> ending {{ Paymethod.getLast() }}</a>
               </li>
             </ng-container>

@@ -91,8 +91,9 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
   set Paymethods(Paymethods: Paymethod[]) {
     this._Paymethods = Paymethods;
-    if (Paymethods.length > 0) {
-      this.paymentSelectMethod(null, Paymethods[0]);
+    const active_pay_methods = this.filterActivePaymethods();
+    if (active_pay_methods.length > 0) {
+      this.paymentSelectMethod(null, active_pay_methods[0]);
     } else {
       this.paymentOneTime(null, 'CreditCard');
     }
@@ -454,6 +455,10 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
       });
 
+  }
+
+  filterActivePaymethods() {
+    return this.Paymethods.filter(x => x.IsActive);
   }
 
 }
