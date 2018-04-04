@@ -144,7 +144,7 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
       console.log("ActiveOfferDetails", this.ActiveOfferDetails);
 
       this.eflLink = this.documentsService.getEFLLink(docId);
-      this.tosLink = this.documentsService.getTOSLink(this.ActiveOfferDetails.Current_Offer.IsFixed);
+      this.tosLink = this.documentsService.getTOSLinkWithFeeId(this.ActiveOfferDetails.Current_Offer.IsFixed, this.ActiveOfferDetails.Tos_Fee_Id);
       this.yraacLink = this.documentsService.getYRAACLink();
 
     } else if (changes['OfferDetails']) {

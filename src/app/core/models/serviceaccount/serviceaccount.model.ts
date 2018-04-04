@@ -41,6 +41,7 @@ export class ServiceAccount {
   Current_Offer: IServiceAccountPlanHistoryOffer;
   Offering_Name: string;
   Calculated_Contract_End_Date: Date;
+  Tos_Fee_Id: string;
 
   constructor(opts: any) {
     assign(this, opts);

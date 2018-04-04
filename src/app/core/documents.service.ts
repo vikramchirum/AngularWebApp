@@ -30,6 +30,16 @@ export class DocumentsService {
     return environment.Documents_Url.concat(tosPath);
   }
 
+  getTOSLinkWithFeeId(isFixed: boolean, feeId: string): string {
+    let tosPath = '';
+    if (isFixed) {
+      tosPath = `/get/type/${DocumentType[DocumentType.FTOS]}/feeId/${feeId}`;
+    } else {
+      tosPath = `/get/type/${DocumentType[DocumentType.VTOS]}/feeId/${feeId}`;
+    }
+    return environment.Documents_Url.concat(tosPath);
+  }
+
   getYRAACLink() {
     const yraacPath = `/get/type/${DocumentType[DocumentType.YRAAC]}`;
     return environment.Documents_Url.concat(yraacPath);
