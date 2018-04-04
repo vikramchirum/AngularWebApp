@@ -341,7 +341,7 @@
         <div *ngIf="!useOldAddress">
           <form [formGroup]="dynamicAddressForm" novalidate>
             <div class="row">
-              <div class="col-sm-6 col-sm-offset-2">
+              <div class="col-sm-6 col-sm-offset-2" [ngClass]="{'has-error':!dynamicAddressForm.controls['Line1'].valid}">
                 <label for="Line1" style="display:none">Street Address:</label>
                 <input (change)="enableSubmitMove()" type="text" placeholder="Street Address" class="form-control"
                        formControlName="Line1" id="Line1">
@@ -354,19 +354,19 @@
 
             </div>
             <div class="row">
-              <div class="col-sm-4 col-sm-offset-2">
+              <div class="col-sm-4 col-sm-offset-2" [ngClass]="{'has-error':!dynamicAddressForm.controls['City'].valid}">
                 <label for="City" style="display:none">City:</label>
                 <input (change)="enableSubmitMove()" type="text" placeholder="City " class="form-control"
                        formControlName="City" id="City">
               </div>
-              <div class="col-sm-2 ">
+              <div class="col-sm-2 "  [ngClass]="{'has-error':!dynamicAddressForm.controls['State'].valid}">
                 <label for="State" style="display:none">State:</label>
-                <input (change)="enableSubmitMove()" type="text" placeholder="State " class="form-control"
+                <input (change)="enableSubmitMove()" type="text" placeholder="State " class="form-control" [maxlength]="2"
                        formControlName="State" id="State">
               </div>
-              <div class="form-group col-sm-2">
+              <div class="col-sm-3" [ngClass]="{'has-error':!dynamicAddressForm.controls['Zip'].valid}">
                 <label for="Zip" style="display:none">Zip:</label>
-                <input (change)="enableSubmitMove()" type="text" placeholder="Zip" class="form-control"
+                <input (change)="enableSubmitMove()" type="text" placeholder="Zip" class="form-control" [maxlength]="5"
                        formControlName="Zip" id="Zip">
               </div>
 

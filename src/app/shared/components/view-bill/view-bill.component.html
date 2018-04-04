@@ -26,12 +26,12 @@
       </div>
     </div>
 
-    <div class="col-sm-6 col-md-8">
+    <div class="col-sm-6 col-md-8" *ngIf="bill_object && bill_item_details">
       <div class="row">
         <div class="col-sm-12 col-md-6">
           <h2>Understand Your Bill</h2>
         </div>
-        <div *ngIf="bill_object && bill_item_details" class="col-sm-6 col-md-3 text-right">
+        <div class="col-sm-6 col-md-3 text-right">
           <p>
             Invoice #{{ invoice_num }}
           </p>
@@ -42,13 +42,13 @@
         <div class="col-sm-6 col-md-3">
           <button class="btn btn-success btn-block" (click)="downloadInvoice($event)">
             <i class="fa fa-file-o"></i> Download
+            <span *ngIf="isDownloading" class="fa fa-spin fa-circle-o-notch"></span>
           </button>
         </div>
       </div>
       <br/>
 
-      <div *ngIf="bill_object && bill_item_details">
-
+      <div>
         <div>
           <div *ngIf="bill_item_details_gexa_charges.length > 0; then listCharges else noChargesToList"></div>
           <ng-template #listCharges>

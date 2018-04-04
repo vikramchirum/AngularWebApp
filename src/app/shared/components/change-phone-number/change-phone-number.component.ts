@@ -102,6 +102,10 @@ export class ChangePhoneNumberComponent implements OnInit {
       this.Exiting_CustomerDetails.Primary_Phone.Type = this.IsMobileSelected ? 'Mobile' : 'Landline';
       this.Exiting_CustomerDetails.Primary_Phone.Agree_To_Marketing = this.checkboxChecked ? 'true' : 'false';
 
+      if (this.Exiting_CustomerDetails.Primary_Phone.Type === 'Landline') {
+        this.Exiting_CustomerDetails.Primary_Phone.Agree_To_Marketing = 'true';
+      }
+
       // Update user details in weasi
       this.CustomerAccountStore.UpdateCustomerDetails(this.Exiting_CustomerDetails);
       this.updateUser = this.UserService.UserCache;

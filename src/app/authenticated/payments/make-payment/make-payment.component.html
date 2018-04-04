@@ -7,7 +7,10 @@
     <br/><br/>
     <p><a class="btn btn-default" routerLink="/payments/view-my-bill">Back to View My Bill</a></p>
   </div>
-  <div class="alert alert-danger" *ngIf="paymentSubmittedWithoutError === false">
+  <div class="alert alert-danger" *ngIf="paymentSubmittedWithoutError === false && forteErrorMessage">
+    <i class="fa fa-fw fa-exclamation-circle"></i> <b>Sorry</b> {{forteErrorMessage}}!
+  </div>
+  <div class="alert alert-danger" *ngIf="paymentSubmittedWithoutError === false && !forteErrorMessage">
     <i class="fa fa-fw fa-exclamation-circle"></i> <b>Sorry</b> an error occurred when submitting your payment!
   </div>
 
@@ -16,7 +19,6 @@
   <ng-container *ngIf="!LatestInvoice" >
     <h4 class="text-muted"><i class="fa fa-fw fa-circle-o-notch fa-spin"></i> Loading your current bill.</h4>
   </ng-container>
-
 
   <form
     class="form-horizontal"
@@ -87,7 +89,7 @@
             <li class="text-muted" *ngIf="!Paymethods">Payment Accounts (none)</li>
             <ng-container *ngIf="Paymethods">
               <li class="text-muted">Payment Accounts</li>
-              <li *ngFor="let Paymethod of Paymethods">
+              <li *ngFor="let Paymethod of filterActivePaymethods()">
                 <a href="#" (click)="paymentSelectMethod($event, Paymethod)"><i class="fa fa-fw" [ngClass]="Paymethod.getFontAwesomeTag()"></i> ending {{ Paymethod.getLast() }}</a>
               </li>
             </ng-container>
@@ -166,7 +168,7 @@
       <div *ngSwitchCase="'AutoPay'" class="form-group">
         <div class="col-md-offset-3 col-md-8 col-lg-offset-3 col-lg-6">
           <div class="btn-group btn-block">
-            <button  type="button" class="btn btn-success btn-lg " data-label-placement>
+            <button  type="button" class="btn btn-success btn-lg " data-label-placement routerLink="/payments/payment-options/auto-bill-payment">
               <span *ngIf="!processing" class="fa fa-clock-o"></span>
               <span *ngIf="processing" class="fa fa-spin fa-spinner"></span>
               <span class="small">{{processing ? 'Submitting your payment....' : 'AUTO PAY IS SCHEDULED'}}</span>
@@ -175,9 +177,14 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu pull-right"  role="menu">
-              <li class="linkLabel" *ngIf="autoPay">
-                Auto Pay is scheduled for {{LatestBillPaymentDate| date:'MM/dd/yyyy'}}
+              <li class="linkLabel" *ngIf="ScheduledAutoBillPaymentDate; else NoScheduledDate">
+                Auto Pay is scheduled for {{ScheduledAutoBillPaymentDate| date:'MM/dd/yyyy'}}
               </li>
+              <ng-template #NoScheduledDate>
+                <li class="linkLabel">
+                  Auto Pay is scheduled for your next payment date
+                </li>
+              </ng-template>
               <hr>
               <li>
                 <a (click)="checkAmountBeforeSubmit()" class="btn btn-link btn-small btn-success btn-payment" >

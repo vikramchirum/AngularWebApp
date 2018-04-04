@@ -25,6 +25,7 @@ import {
 })
 export class PaperlessSettingsComponent implements OnInit {
 
+  public isLoading = false;
   billingOptions = [{ option: 'Email', checked: false }, { option: 'Paper', checked: false }];
   plansOptions = [{ option: 'Email', checked: false }, { option: 'Paper', checked: false }];
   paperlessSettings: boolean;
@@ -115,8 +116,8 @@ export class PaperlessSettingsComponent implements OnInit {
       if (preference[0].Paperless) {
         preferenceOptions[0].checked = preference[0].Paperless;
       } else {
-        preferenceOptions[0].checked = false;
-        preferenceOptions[1].checked = false;
+        preferenceOptions[0].checked = true;
+        preferenceOptions[1].checked = true;
       }
     } else {
       preferenceOptions[1].checked = true;
@@ -249,12 +250,15 @@ export class PaperlessSettingsComponent implements OnInit {
       Phone_Number: this.customerDetails.Primary_Phone,
       Status: NotificationStatus.Active
     };
+
+    this.isLoading = true;
     this.notificationService.createNotificationOption(notificationRequest).subscribe(
       () => {
-        console.log();
+        this.isLoading = false;
         this.NotificationOptionsStore.LoadNotificationOptions(this.SearchNotificationOptions);
       },
       error => {
+        this.isLoading = false;
         console.log('create notification API error', error.Message);
       });
   }
@@ -283,12 +287,15 @@ export class PaperlessSettingsComponent implements OnInit {
       Account_Info: notificationResponse[0].Account_Info,
       Id: notificationResponse[0].Id
     };
+
+    this.isLoading = true;
     this.notificationService.updateNotificationOption(this.updateNotification).subscribe(
       () => {
-        console.log();
+        this.isLoading = false;
         this.NotificationOptionsStore.LoadNotificationOptions(this.SearchNotificationOptions);
       },
       error => {
+        this.isLoading = false;
         console.log('update notification API error', error.Message);
       });
   }

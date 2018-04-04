@@ -44,6 +44,7 @@ export class MyBillComponent implements OnInit, OnDestroy {
   public Payments: PaymentsHistory[] = null;
   LatestBillAmount: number;
   LatestBillPaymentDate: Date;
+  ScheduledAutoBillPaymentDate: Date = null;
   showDueDate: boolean = null;
   PaymentsLength: number = null;
   private activeServiceAccountSubscription: Subscription = null;
@@ -88,6 +89,11 @@ export class MyBillComponent implements OnInit, OnDestroy {
                         this.showDueDate = false;
                       } else {
                         this.showDueDate = true;
+                      }
+                      if (this.autoPay) {
+                        if (this.paymentStatus === 'Scheduled') {
+                          this.ScheduledAutoBillPaymentDate = this.Payments[0].PaymentDate;
+                        }
                       }
                     }
                   }

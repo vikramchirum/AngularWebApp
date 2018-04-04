@@ -22,6 +22,7 @@ export class TransferRequest {
     Date_Sent: string;
     Partner_Account_Number?: string;
     Partner_Name_On_Account?: string;
+    Agrees_To_Priority_Move_In_Charge: boolean;
 }
 
 export interface ContactInfo {

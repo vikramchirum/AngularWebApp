@@ -37,7 +37,7 @@
           <ng-container *ngFor='let data of plansOptions'>
             <div class="col-xs-6 col-sm-3">
               <div class="input-group"> <span class="input-group-addon">
-                <input type="checkbox"  [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, plansOptions, notificationOptionsForPlans, notificationType.Contract_Expiration)">
+                <input type="checkbox"  [disabled] = "isLoading"  [checked]="data.checked" (change)="onCheckSelected(data.option, $event.target.checked, plansOptions, notificationOptionsForPlans, notificationType.Contract_Expiration)">
                 </span>
                 <div class="form-control"> {{data.option}} </div>
               </div>
