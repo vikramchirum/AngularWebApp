@@ -458,7 +458,19 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   }
 
   filterActivePaymethods() {
-    return this.Paymethods.filter(x => x.IsActive);
+    return this.Paymethods.filter(x => {
+
+      const currentDate = new Date;
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth();
+      if (x.IsActive && x.CreditCard.ExpirationYear < currentYear) {
+        return false;
+      }
+      if (x.IsActive && x.CreditCard.ExpirationMonth < currentMonth) {
+        return false;
+      }
+      return x.IsActive;
+    });
   }
 
 }
