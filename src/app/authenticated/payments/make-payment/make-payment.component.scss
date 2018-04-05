@@ -5,8 +5,15 @@
 }
 
 #payment-accounts-container {
+        position: static;
+
   .dropdown-menu {
-    width: 50%;
+    width: 80%;
+        position: static;
+
+  .dropdown-item {
+    position: relative;
+  }
 
     .text-muted {
       padding: 10px 20px 5px 20px;
