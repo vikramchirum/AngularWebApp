@@ -38,6 +38,7 @@ import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
 })
 export class MakePaymentComponent implements OnInit, OnDestroy {
 
+  paymentConfirmationNumber: string = null;
   paymentOneTimeType: string = null;
   paymentOneTimeValid: boolean = null;
   paymentSubmittedWithoutError: boolean = null;
@@ -430,6 +431,12 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
           PaymethodToCharge
         ).subscribe(
           res => {
+
+            let paymentTransactionId = res.PaymentTransactionId;
+            if (!paymentTransactionId) {
+              paymentTransactionId = 0;
+            }
+            this.paymentConfirmationNumber = (paymentTransactionId) + '-' + res.AuthorizationCode;
             this.paymentSubmittedWithoutError = true;
             console.log('The paymethod was charged!', res);
             this.paymentLoadingMessage = null;
@@ -463,10 +470,10 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
       const currentDate = new Date;
       const currentYear = currentDate.getFullYear();
       const currentMonth = currentDate.getMonth();
-      if (x.IsActive && x.CreditCard.ExpirationYear < currentYear) {
+      if (x.IsActive && x.CreditCard && x.CreditCard.ExpirationYear < currentYear) {
         return false;
       }
-      if (x.IsActive && x.CreditCard.ExpirationMonth < currentMonth) {
+      if (x.IsActive && x.CreditCard && x.CreditCard.ExpirationMonth < currentMonth) {
         return false;
       }
       return x.IsActive;
