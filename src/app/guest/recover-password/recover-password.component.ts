@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../core/user.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Validators, FormGroup, FormControl, FormArray, FormBuilder } from '@angular/forms';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+
+import { UserService } from 'app/core/user.service';
 import { equalCheck, validatePassword } from 'app/validators/validator';
+import { LoginRegisterModalComponent } from 'app/guest/login/login-register-modal/login-register-modal.component';
 
 @Component({
   selector: 'mygexa-recover-password',
@@ -14,6 +16,8 @@ import { equalCheck, validatePassword } from 'app/validators/validator';
 })
 
 export class RecoverPasswordComponent implements OnInit {
+
+  @ViewChild('loginRegisterModal') loginRegisterModal: LoginRegisterModalComponent;
   resetPassForm: FormGroup;
   IsResetSucessfull: boolean;
   public question: string;  error: string = null; public token: string;
@@ -83,6 +87,12 @@ export class RecoverPasswordComponent implements OnInit {
         this.error = error.Message;
       });
     }
+  }
+
+  showRegisterModal() {
+    // Call to get security questions fro registration.
+    this.loginRegisterModal.getSecurityQuestions();
+    this.loginRegisterModal.showLoginRegisterModal();
   }
 
   ngOnInit() {

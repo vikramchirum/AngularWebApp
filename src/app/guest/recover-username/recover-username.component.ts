@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { FormBuilder , FormGroup, Validators} from '@angular/forms';
-import { UserService } from '../../core/user.service';
-import { environment } from 'environments/environment';
 import { Http } from '@angular/http';
 import { Router } from '@angular/router';
+
 import {  validateEmail } from 'app/validators/validator';
+import { UserService } from 'app/core/user.service';
+import {LoginRegisterModalComponent} from '../login/login-register-modal/login-register-modal.component';
 
 @Component({
   selector: 'mygexa-recover-username',
@@ -13,6 +14,7 @@ import {  validateEmail } from 'app/validators/validator';
 })
 export class RecoverUsernameComponent implements OnInit {
 
+  @ViewChild('loginRegisterModal') loginRegisterModal: LoginRegisterModalComponent;
   recoverUsernameForm: FormGroup; userExists: boolean;
   public IsValidEmail: boolean;
   formSubmitted: boolean = null;
@@ -47,6 +49,12 @@ export class RecoverUsernameComponent implements OnInit {
     }
   }
   ngOnInit() {
+  }
+
+  showRegisterModal() {
+    // Call to get security questions fro registration.
+    this.loginRegisterModal.getSecurityQuestions();
+    this.loginRegisterModal.showLoginRegisterModal();
   }
 
 }
