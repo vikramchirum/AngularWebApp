@@ -4,6 +4,8 @@
 
   <div class="alert alert-success" *ngIf="paymentSubmittedWithoutError === true" >
     <i class="fa fa-fw fa-check"></i> <b>Thanks!</b> your payment was submitted and is now pending!
+    <br/>
+    <i class="fa fa-fw fa-check"></i> <b>Your confirmation number:</b> {{paymentConfirmationNumber}}
     <br/><br/>
     <p><a class="btn btn-default" routerLink="/payments/view-my-bill">Back to View My Bill</a></p>
   </div>
@@ -90,13 +92,13 @@
             <ng-container *ngIf="Paymethods">
               <li class="text-muted">Payment Accounts</li>
               <li *ngFor="let Paymethod of filterActivePaymethods()">
-                <a href="#" (click)="paymentSelectMethod($event, Paymethod)"><i class="fa fa-fw" [ngClass]="Paymethod.getFontAwesomeTag()"></i> ending {{ Paymethod.getLast() }}</a>
+                <a class="dropdown-item"  href="#" (click)="paymentSelectMethod($event, Paymethod)"><i class="fa fa-fw" [ngClass]="Paymethod.getFontAwesomeTag()"></i> ending {{ Paymethod.getLast() }}</a>
               </li>
             </ng-container>
             <li role="separator" class="divider"></li>
             <li class="text-muted">One Time Payment</li>
-            <li><a href="#" (click)="paymentOneTime($event, 'CreditCard')">Credit Card</a></li>
-            <li><a href="#" (click)="paymentOneTime($event, 'eCheck')">e-Check</a></li>
+            <li><a class="dropdown-item" href="#stay"  (click)="paymentOneTime($event, 'CreditCard');">Credit Card</a></li>
+            <li><a class="dropdown-item" href="#stay" (click)="paymentOneTime($event, 'eCheck');">e-Check</a></li>
           </ul>
         </div>
       </div>
