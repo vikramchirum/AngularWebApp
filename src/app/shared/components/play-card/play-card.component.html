@@ -102,12 +102,22 @@
 
             </div>
             <div class="row buttons">
-              <button *ngIf="!isMoving" type="submit" (click)="btnSubmit()" class="btn btn-success btn-final" [disabled]='isCreateOfferEnabled()'>
+              <span *ngIf="!isMoving"> 
+              <button *ngIf="!processing" type="submit" (click)="btnSubmit()" class="btn btn-success btn-final" [disabled]='isCreateOfferEnabled()'>
                 SUBMIT
               </button>
-              <button *ngIf="isMoving" type="submit" (click)="btnSubmit()" class="btn btn-success btn-final" [disabled]='isCreateOfferEnabled()'>
+                <button *ngIf="processing" type="submit"  class="btn btn-success btn-final" disabled="disabled">
+                  <i class="fa fa-spin fa-circle-o-notch"></i> SUBMIT
+                </button>
+              </span>
+              <span *ngIf="isMoving"> 
+                <button *ngIf="!processing"  type="submit" (click)="btnSubmit()" class="btn btn-success btn-final" [disabled]='isCreateOfferEnabled()'>
                   OK
                 </button>
+                <button *ngIf="processing" type="submit"  class="btn btn-success btn-final" disabled="disabled">
+                  <i class="fa fa-spin fa-circle-o-notch"></i> OK
+                </button>
+              </span>   
               <button (click)="onCloseSelectOffer($event)" aria-hidden="true" class="btn btn-link btn-cancel">
                 CANCEL
               </button>

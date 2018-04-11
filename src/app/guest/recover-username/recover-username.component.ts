@@ -15,6 +15,7 @@ export class RecoverUsernameComponent implements OnInit {
 
   recoverUsernameForm: FormGroup; userExists: boolean;
   public IsValidEmail: boolean;
+  processing: boolean = null;
   formSubmitted: boolean = null;
   error: string = null;
   RecoveredUsername: string = null;
@@ -31,6 +32,7 @@ export class RecoverUsernameComponent implements OnInit {
   recoverUsername(email_address: string, isValid: boolean) {
     this.formSubmitted = true;
     if (isValid) {
+    this.processing = true;
       if (email_address && email_address.length) {
         this.user_service.recoverUsername(email_address).subscribe(
           result => {
@@ -38,10 +40,15 @@ export class RecoverUsernameComponent implements OnInit {
             this.RecoveredUsername = sessionStorage.getItem('User_Name');
             console.log('IsValidEmail', this.IsValidEmail);
             console.log('Username', result);
+            this.processing = false;
+
+
           },
           error => {
             this.error = error.Message;
             this.IsValidEmail = false;
+            this.processing = false;
+
           });
       }
     }
