@@ -68,10 +68,10 @@ export class DocumentsComponent implements OnInit, OnDestroy {
       let docId = '';
       if (this.IsRenewalPending) {
         docId = this.RenewalDetails.Existing_Renewal.Offer.IsLegacyOffer ? this.RenewalDetails.Existing_Renewal.Offer.Rate_Code : this.RenewalDetails.Existing_Renewal.Offer.Client_Key;
-        this.tosLink = this.documentsService.getTOSLink(this.RenewalDetails.Existing_Renewal.Offer.IsFixed);
+        this.tosLink = this.documentsService.getTOSLinkWithFeeId(this.RenewalDetails.Existing_Renewal.Offer.IsFixed, this.RenewalDetails.Existing_Renewal.Tos_Fee_Id);
       } else {
         docId = this.ActiveServiceAccount.Current_Offer.IsLegacyOffer ? this.ActiveServiceAccount.Current_Offer.Rate_Code : this.ActiveServiceAccount.Current_Offer.Client_Key;
-        this.tosLink = this.documentsService.getTOSLink(this.ActiveServiceAccount.Current_Offer.IsFixed);
+        this.tosLink = this.documentsService.getTOSLinkWithFeeId(this.ActiveServiceAccount.Current_Offer.IsFixed, this.ActiveServiceAccount.Tos_Fee_Id);
       }
       this.eflLink = this.documentsService.getEFLLink(docId);
       this.yraacLink = this.documentsService.getYRAACLink();

@@ -13,5 +13,6 @@ export interface IRenewal {
   Execution_Date: Date;
   Is_Pending: boolean;
   End_Date: Date;
+  Tos_Fee_Id: string;
 }
 
