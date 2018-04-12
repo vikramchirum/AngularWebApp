@@ -106,8 +106,6 @@ export class HttpClient extends Http {
 
   handleHttpError(error: Response | any) {
 
-    debugger;
-
     // In a real world app, you might use a remote logging infrastructure
     console.log('Error', error);
     let errMsg: string;

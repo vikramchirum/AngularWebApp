@@ -15,19 +15,21 @@ import {LoginRegisterModalComponent} from '../login/login-register-modal/login-r
 export class RecoverUsernameComponent implements OnInit {
 
   @ViewChild('loginRegisterModal') loginRegisterModal: LoginRegisterModalComponent;
-  recoverUsernameForm: FormGroup; userExists: boolean;
+  recoverUsernameForm: FormGroup;
+  userExists: boolean;
   public IsValidEmail: boolean;
   formSubmitted: boolean = null;
   error: string = null;
   RecoveredUsername: string = null;
+
   constructor(private user_service: UserService, private router: Router, private fb: FormBuilder, private _http: Http) {
     this.recoverUsernameForm = this.recoverUsernameFormInit();
   }
 
   recoverUsernameFormInit(): FormGroup {
     return this.fb.group({
-        Email_Address: ['', validateEmail ]
-      });
+      Email_Address: ['', validateEmail]
+    });
   }
 
   recoverUsername(email_address: string, isValid: boolean) {
@@ -48,6 +50,7 @@ export class RecoverUsernameComponent implements OnInit {
       }
     }
   }
+
   ngOnInit() {
   }
 
@@ -56,5 +59,4 @@ export class RecoverUsernameComponent implements OnInit {
     this.loginRegisterModal.getSecurityQuestions();
     this.loginRegisterModal.showLoginRegisterModal();
   }
-
 }
