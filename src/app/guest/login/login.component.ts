@@ -53,6 +53,7 @@ export class LoginComponent implements OnInit {
     this.loginRegisterModal.showLoginRegisterModal();
   }
   login() {
+    this.invalidCreds = false;
     this.processing = true;
     this.error = null;
     this.UserService.login(this.user_name.trim(), this.password.trim()).subscribe(
