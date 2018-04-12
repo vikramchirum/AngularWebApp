@@ -136,7 +136,9 @@
     <div [ngSwitch]="currentView">
       <div class="form-group">
         <div class="col-md-offset-3 col-md-8 col-lg-offset-3 col-lg-6" *ngSwitchCase="'PastDuePayNow'">
-          <button class="btn btn-warning exceededDueDatebtn btn-lg btn-block "(click)="checkAmountBeforeSubmit()"  type="button">
+          <button class="btn btn-warning exceededDueDatebtn btn-lg btn-block "(click)="checkAmountBeforeSubmit()"
+                  [disabled]="!paymentReady || processing"
+                  type="button">
             <span *ngIf="processing" class="fa fa-spin fa-circle-o-notch"></span>
             <span class="small">{{processing ? 'Submitting your payment' : 'SUBMIT PAYMENT'}}</span></button>
         </div>
