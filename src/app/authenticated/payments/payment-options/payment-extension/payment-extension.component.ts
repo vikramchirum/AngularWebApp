@@ -1,10 +1,14 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import { ServiceAccount } from '../../../../core/models/serviceaccount/serviceaccount.model';
-import { ServiceAccountService } from '../../../../core/serviceaccount.service';
-import { PaymentExtensionService } from '../../../../core/payment-extension.service';
-import { IPaymentExtension } from '../../../../core/models/paymentextension/payment-extension.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import { ExtensionStatus } from '../../../../core/models/enums/extensionstatus';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+
+import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import { IPaymentExtension } from 'app/core/models/paymentextension/payment-extension.model';
+import { ExtensionStatus } from 'app/core/models/enums/extensionstatus';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
+import { PaymentExtensionService } from 'app/core/payment-extension.service';
 
 @Component({
   selector: 'mygexa-payment-extension',
@@ -12,22 +16,26 @@ import { ExtensionStatus } from '../../../../core/models/enums/extensionstatus';
   styleUrls: ['./payment-extension.component.scss']
 })
 export class PaymentExtensionComponent implements OnInit, OnDestroy {
-  PaymentExtensionResponseStatus: ExtensionStatus;
-  customer_On_Payment_Extension: boolean = null;
+
+  paymentExtensionServiceObservable: Observable<any> = null;
+  serviceAccountDetailsObservable: Observable<any> = null;
+  pastDueObservable: Observable<any> = null;
+
+  paymentExtensionServiceSubscription: Subscription = null;
+  paymentExtensionSubscription: Subscription = null;
+
   paymentExtensionStatus: boolean = null;
   paymentExtension: IPaymentExtension = null;
   paymentExtensionRequired: boolean = null;
-  paymentExtensionServiceSubscription: Subscription = null;
-  serviceAccountDetailsSubscription: Subscription = null;
+
   serviceAccountDetails: ServiceAccount;
   pastDueAmount: number = null;
   requestedExtension: boolean = null;
   extensionSuccessfull: boolean = null;
-  pastDueSet: boolean = null;
+  pastDueSet = false;
+
   constructor(private activeServiceAccount: ServiceAccountService,
-              private paymentExtensionService: PaymentExtensionService
-  ) {
-    this.pastDueSet = false;
+              private paymentExtensionService: PaymentExtensionService) {
   }
 
   ngOnInit() {
@@ -35,24 +43,20 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
   }
 
   setPastDue() {
-    this.serviceAccountDetailsSubscription  = this.activeServiceAccount.ActiveServiceAccountObservable.subscribe(
-      ActiveServiceAccountDetails => {
-        this.cancelExtension();
-        this.serviceAccountDetails = ActiveServiceAccountDetails;
-        this.paymentExtensionServiceSubscription = this.paymentExtensionService.checkPaymentExtensionStatus(this.serviceAccountDetails.Id)
-          .subscribe(
-            PaymentExtensionStatus => {
-              this.paymentExtensionStatus = PaymentExtensionStatus;
-            }
-          );
 
-        this.activeServiceAccount.getPastDue(this.serviceAccountDetails.Id).subscribe(pastDue => {
-          this.pastDueAmount = pastDue;
-          this.paymentExtensionRequired = (!this.paymentExtensionStatus && this.pastDueAmount <= 0) ? false : true;
-          this.pastDueSet = true;
-        });
-      }
-    );
+    this.serviceAccountDetailsObservable = this.activeServiceAccount.ActiveServiceAccountObservable;
+    this.serviceAccountDetailsObservable.subscribe(serviceAccount => {
+      this.serviceAccountDetails = serviceAccount;
+      this.paymentExtensionServiceObservable = this.paymentExtensionService.checkPaymentExtensionStatus(this.serviceAccountDetails.Id);
+      this.pastDueObservable = this.activeServiceAccount.getPastDue(this.serviceAccountDetails.Id);
+      this.paymentExtensionSubscription = forkJoin(this.paymentExtensionServiceObservable, this.pastDueObservable).subscribe(results => {
+        this.resetExtension();
+        this.paymentExtensionStatus = results[0];
+        this.pastDueAmount = results[1];
+        this.paymentExtensionRequired = (!this.paymentExtensionStatus && this.pastDueAmount <= 0) ? false : true;
+        this.pastDueSet = true;
+      });
+    });
   }
 
   requestExtension(): void {
@@ -60,17 +64,18 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
     this.paymentExtensionServiceSubscription = this.paymentExtensionService.getPaymentExtensionStatus(this.serviceAccountDetails.Id).subscribe(
       paymentExtensionStatus => {
         this.paymentExtension = paymentExtensionStatus;
-        if (paymentExtensionStatus.Status === String(ExtensionStatus.SUCCESSFUL)) {
+        if (paymentExtensionStatus.Status === ExtensionStatus[ExtensionStatus.SUCCESSFUL]) {
           this.extensionSuccessfull = true;
-        } else if (paymentExtensionStatus.Status === String(ExtensionStatus.NO_PASS_DUE_FOUND)) {
-          this.cancelExtension();
+        } else if (paymentExtensionStatus.Status === ExtensionStatus[ExtensionStatus.NO_PASS_DUE_FOUND]) {
+          this.resetExtension();
         } else {
           this.extensionSuccessfull = false;
         }
       }
     );
   }
-  cancelExtension() {
+
+  resetExtension() {
     this.requestedExtension = null;
     this.paymentExtension = null;
     this.extensionSuccessfull = null;
@@ -79,12 +84,13 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.serviceAccountDetailsSubscription.unsubscribe();
+
+    if (this.paymentExtensionSubscription) {
+      this.paymentExtensionSubscription.unsubscribe();
+    }
+
     if (this.paymentExtensionServiceSubscription) {
       this.paymentExtensionServiceSubscription.unsubscribe();
     }
   }
-
-  // TODo: Add date and check if user is already on payment extension.
-
 }
