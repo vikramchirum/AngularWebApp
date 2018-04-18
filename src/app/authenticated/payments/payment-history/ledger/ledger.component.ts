@@ -19,6 +19,7 @@ interface IHistoryLedger {
   type: string;
   amount: number;
   balance: number;
+  paymentMethod: string;
 }
 
 @Component({
@@ -64,7 +65,6 @@ export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
 
   constructor(
     private ServiceAccountService: ServiceAccountService,
-    private PaymentsHistoryService: PaymentsHistoryService,
     private PaymentsHistoryStore: PaymentsHistoryStore,
     private InvoiceService: InvoiceService
   ) { }
@@ -128,7 +128,8 @@ export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
         date: Invoice.Invoice_Date,
         type: 'invoice',
         amount: Invoice.Current_Charges,
-        balance: 0
+        balance: 0,
+        paymentMethod: null
       });
     };
     const addPayment = (Payment: PaymentsHistory) => {
@@ -138,7 +139,8 @@ export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
         date: Payment.PaymentDate,
         type: 'payment',
         amount: Payment.PaymentAmount,
-        balance: 0
+        balance: 0,
+        paymentMethod: Payment.PaymentMethod
       });
     };
 
@@ -188,4 +190,26 @@ export class LedgerComponent implements OnDestroy, OnInit, AfterViewInit {
     this.viewMyBillModal.show(find(this.Invoices, { Invoice_Id: Number(invoice.Id) }));
   }
 
+  getPaymentMehtodIcon(paymentMethod: string) {
+    paymentMethod = paymentMethod.toUpperCase();
+    if (paymentMethod === 'MASTERCARD') {
+      return 'fa fa-cc-mastercard';
+    } else if (paymentMethod === 'DISCOVER') {
+      return 'fa fa-cc-discover';
+    } else if (paymentMethod === 'AMERICANEXPRESS') {
+      return 'fa fa-cc-amex';
+    } else if (paymentMethod === 'CHECKING') {
+      return 'fa fa-pencil-square-o';
+    } else if (paymentMethod === 'SAVINGS') {
+      return 'fa fa-line-chart';
+    } else if (paymentMethod === 'MONEYMARKET') {
+      return 'fa fa-institution';
+    } else if (paymentMethod === 'VISA') {
+      return 'fa fa-cc-visa';
+    } else if (paymentMethod === 'CASH') {
+      return 'fa fa-money';
+    } else {
+      return 'fa fa-credit-card';
+    }
+  }
 }
