@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { CustomValidators } from 'ng2-validation';
 import { Subscription } from 'rxjs/Subscription';
+import { validateCardName, validateName, validateNameOnCard } from 'app/validators/validator';
 
 @Component({
   selector: 'mygexa-payment-method-add-echeck',
@@ -40,7 +41,7 @@ export class PaymethodAddEcheckComponent implements OnInit, OnDestroy {
 
   formGroupInit(): FormGroup {
     return this.FormBuilder.group({
-      echeck_name: ['', Validators.required],
+      echeck_name: ['', Validators.compose([Validators.required, validateCardName, validateName, validateNameOnCard])],
       echeck_routing: ['', Validators.compose([Validators.required, Validators.minLength(9), CustomValidators.digits])],
       echeck_accounting: ['', Validators.compose([Validators.required, Validators.minLength(9), CustomValidators.digits])],
       echeck_info: ['']
@@ -50,5 +51,4 @@ export class PaymethodAddEcheckComponent implements OnInit, OnDestroy {
   formGroupSubmit(): void {
     this.submitted.emit();
   }
-
 }
