@@ -4,6 +4,8 @@
 
   <div class="alert alert-success" *ngIf="paymentSubmittedWithoutError === true" >
     <i class="fa fa-fw fa-check"></i> <b>Thanks!</b> your payment was submitted and is now pending!
+    <br/>
+    <i class="fa fa-fw fa-check"></i> <b>Your confirmation number:</b> {{paymentConfirmationNumber}}
     <br/><br/>
     <p><a class="btn btn-default" routerLink="/payments/view-my-bill">Back to View My Bill</a></p>
   </div>
@@ -90,13 +92,13 @@
             <ng-container *ngIf="Paymethods">
               <li class="text-muted">Payment Accounts</li>
               <li *ngFor="let Paymethod of filterActivePaymethods()">
-                <a href="#" (click)="paymentSelectMethod($event, Paymethod)"><i class="fa fa-fw" [ngClass]="Paymethod.getFontAwesomeTag()"></i> ending {{ Paymethod.getLast() }}</a>
+                <a class="dropdown-item"  href="#" (click)="paymentSelectMethod($event, Paymethod)"><i class="fa fa-fw" [ngClass]="Paymethod.getFontAwesomeTag()"></i> ending {{ Paymethod.getLast() }}</a>
               </li>
             </ng-container>
             <li role="separator" class="divider"></li>
             <li class="text-muted">One Time Payment</li>
-            <li><a class="dropdown-item" href="#"  (click)="paymentOneTime($event, 'CreditCard');">Credit Card</a></li>
-            <li><a class="dropdown-item" href="#" (click)="paymentOneTime($event, 'eCheck');">e-Check</a></li>
+            <li><a class="dropdown-item" href="#stay"  (click)="paymentOneTime($event, 'CreditCard');">Credit Card</a></li>
+            <li><a class="dropdown-item" href="#stay" (click)="paymentOneTime($event, 'eCheck');">e-Check</a></li>
           </ul>
         </div>
       </div>
@@ -134,7 +136,9 @@
     <div [ngSwitch]="currentView">
       <div class="form-group">
         <div class="col-md-offset-3 col-md-8 col-lg-offset-3 col-lg-6" *ngSwitchCase="'PastDuePayNow'">
-          <button class="btn btn-warning exceededDueDatebtn btn-lg btn-block" (click)="checkAmountBeforeSubmit()"  type="button">
+          <button class="btn btn-warning exceededDueDatebtn btn-lg btn-block "(click)="checkAmountBeforeSubmit()"
+                  [disabled]="!paymentReady || processing"
+                  type="button">
             <span *ngIf="processing" class="fa fa-spin fa-circle-o-notch"></span>
             <span class="small">{{processing ? 'Submitting your payment' : 'SUBMIT PAYMENT'}}</span></button>
         </div>

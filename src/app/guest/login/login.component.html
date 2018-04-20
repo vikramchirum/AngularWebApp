@@ -17,7 +17,8 @@
 </nav>
 <div class="homepage-hero-wrapper">
   <div class="homepage-hero-module">
-     <div class="video-container">
+    <div class=" visible-xs visible-sm"> <img src="/assets/home/Snapshots/aerial_houston_xs.jpg" alt=""> </div>
+     <div class="video-container hidden-xs hidden-sm">
       <div class="filter"></div>
         <video autoplay loop class="fillWidth" id="login-video-player" poster="/assets/home/Snapshots/aerial_houston_xs.jpg">
         <source src="/assets/home/MP4/aerial_houston_xs.mp4" type="video/mp4" />
@@ -65,7 +66,13 @@
                   #em="ngModel"
                 />
             <small [hidden]="em.valid || em.pristine || processing" class="text-danger">Password is required</small> </div>
-          <div class="text-danger" *ngIf="invalidCreds && !error">Either username or password is wrong </div>
+
+          <ng-container *ngIf="invalidCreds && !error">
+            <div class="text-danger" >Either username or password is wrong</div>
+          </ng-container>
+
+
+
           <div class="text-danger" *ngIf="error">{{error}}</div>
           <br>
           <div class="row">
