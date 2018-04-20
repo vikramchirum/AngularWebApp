@@ -51,7 +51,7 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
       this.pastDueObservable = this.activeServiceAccount.getPastDue(this.serviceAccountDetails.Id);
       this.paymentExtensionSubscription = forkJoin(this.paymentExtensionServiceObservable, this.pastDueObservable).subscribe(results => {
         this.resetExtension();
-        this.paymentExtensionStatus = results[0];
+        this.paymentExtensionStatus = (results[0] && results[0].Status === ExtensionStatus[ExtensionStatus.ALREADY_APPROED]);
         this.pastDueAmount = results[1];
         this.paymentExtensionRequired = (!this.paymentExtensionStatus && this.pastDueAmount <= 0) ? false : true;
         this.pastDueSet = true;
