@@ -40,7 +40,15 @@
           <div class="alert alert-danger" *ngIf="IsValidEmail === false && recoverUsernameForm.valid && formSubmitted"> No user is registered with the given email address. </div>
           <br>
           <div class="btn-toolbar">
-            <button type="submit" class="btn btn-primary" [disabled] = "!recoverUsernameForm.get('Email_Address').value" *ngIf = "!IsValidEmail">Continue</button>
+            <span *ngIf = "!IsValidEmail">
+            <button  *ngIf="!processing"  type="submit" class="btn btn-primary" [disabled] = "!recoverUsernameForm.get('Email_Address').value" >Continue</button>
+              
+            <button *ngIf="processing"  type="submit" class="btn btn-primary" disabled="disabled">
+                <i class="fa fa-spin fa-circle-o-notch"></i>  Continue
+            </button>
+            
+              
+            </span>
             <button class="btn btn-primary"  *ngIf="!IsValidEmail && !recoverUsernameForm.valid" routerLink="/login">Cancel</button>
           </div>
           <button class="btn btn-primary pull-left"  *ngIf="IsValidEmail" routerLink="/login">Back to Sign In</button>

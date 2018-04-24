@@ -20,6 +20,7 @@ export class RecoverPasswordComponent implements OnInit {
   @ViewChild('loginRegisterModal') loginRegisterModal: LoginRegisterModalComponent;
   resetPassForm: FormGroup;
   IsResetSucessfull: boolean;
+  processing: boolean = null;
   public question: string;  error: string = null; public token: string;
   IsUserNameValid: boolean; IsResNull: boolean; IsResNull1: boolean;
   public IsSecurityQuestionValid: boolean;
@@ -41,6 +42,7 @@ export class RecoverPasswordComponent implements OnInit {
   }
 
   validateUsername(user_name: string) {
+        this.processing = true;
     if (user_name && user_name.length) {
       this.user_service.getSecQuesByUserName(user_name).subscribe(
         result => {
@@ -48,43 +50,59 @@ export class RecoverPasswordComponent implements OnInit {
             this.question = result;
             console.log( 'Question', this.question);
             this.IsUserNameValid = true;
+            this.processing = false;
           } else {
             this.IsResNull = true;
+            this.processing = false;
           }
         },
         error => {
+          this.processing = false;
           this.error = error.Message;
           this.IsUserNameValid = false;
+
         });
     }
   }
 
   validateSecurityQuestion(user_name: string, SecQues_Answer: string) {
+    this.processing = true;
     if ((user_name && user_name.length) && (SecQues_Answer && SecQues_Answer.length)) {
       this.user_service.checkSecQuesByUserName(user_name, SecQues_Answer).subscribe(
         result => {
           if (result) {
             this.token = result;
             this.IsSecurityQuestionValid = true;
+            this.processing = false;
+
           } else {
             this.IsResNull1 = true;
+            this.processing = false;
           }
         },
         error => {
           this.error = error.Message;
           this.IsSecurityQuestionValid = false;
+          this.processing = false;
+
         });
     }
   }
 
   resetPassword(user_name: string, New_Password: string) {
+    this.processing = true;
+
     if ((user_name && user_name.length) && (New_Password && New_Password.length)) {
       this.user_service.resetPassword(user_name, New_Password).subscribe(
         result => {
           this.IsResetSucessfull = result;
+          this.processing = false;
+
         },
       error => {
         this.error = error.Message;
+        this.processing = false;
+
       });
     }
   }
