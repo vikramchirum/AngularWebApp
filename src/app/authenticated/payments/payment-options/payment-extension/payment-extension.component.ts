@@ -33,6 +33,7 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
   requestedExtension: boolean = null;
   extensionSuccessfull: boolean = null;
   pastDueSet = false;
+  followupDate: Date = null;
 
   constructor(private activeServiceAccount: ServiceAccountService,
               private paymentExtensionService: PaymentExtensionService) {
@@ -51,7 +52,10 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
       this.pastDueObservable = this.activeServiceAccount.getPastDue(this.serviceAccountDetails.Id);
       this.paymentExtensionSubscription = forkJoin(this.paymentExtensionServiceObservable, this.pastDueObservable).subscribe(results => {
         this.resetExtension();
-        this.paymentExtensionStatus = results[0];
+        this.paymentExtensionStatus = (results[0] && results[0].Status === ExtensionStatus[ExtensionStatus.ALREADY_APPROED]);
+        if (this.paymentExtensionStatus) {
+          this.followupDate = results[0].FollowupDate;
+        }
         this.pastDueAmount = results[1];
         this.paymentExtensionRequired = (!this.paymentExtensionStatus && this.pastDueAmount <= 0) ? false : true;
         this.pastDueSet = true;
