@@ -1,3 +1,6 @@
+@import '../../../basecolors';
+
+
 form {
   padding:25px 0px 0px 0px;
 }
@@ -16,3 +19,14 @@ form {
   padding-right: 0;
   
 }
+
+h5 {
+  color: #8b8b8b; 
+  width: 250px;
+  line-height:19px
+}
+
+.note {
+  color: $payment-base;
+}
+

@@ -16,6 +16,7 @@ module.exports = function ( grunt ) {
     'octo-pack': {
       prod: {
         options: {
+          type: 'zip',
           dst: './pkg',
           version: pkg.version + '-<%= version_suffix %>'
         },

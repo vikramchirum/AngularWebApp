@@ -105,6 +105,7 @@ export class HttpClient extends Http {
   }
 
   handleHttpError(error: Response | any) {
+
     // In a real world app, you might use a remote logging infrastructure
     console.log('Error', error);
     let errMsg: string;
@@ -130,12 +131,14 @@ export class HttpClient extends Http {
       console.log(DisplayErrMsg);
       return Observable.throw(errorResponse);
     } else if (error.status === 500) {
-      const internalServerErrorMessage = {Message: "We're sorry, something didn't work. Please try again"};
+      const internalServerErrorMessage = { Message: 'We\'re sorry, something didn\'t work. Please try again' };
       console.log(DisplayErrMsg);
       return Observable.throw(internalServerErrorMessage);
     } else if (error.status === 503) {
-      console.log(DisplayErrMsg);
-      return Observable.throw(DisplayErrMsg);
+      if (DisplayErrMsg === 'User locked out') {
+        return Observable.throw({Message: 'Account has been locked. You may reset your password if you have forgotten it.'});
+      }
+      return Observable.throw({Message: DisplayErrMsg});
     } else {
       console.log(errMsg);
       return Observable.throw(errMsg);

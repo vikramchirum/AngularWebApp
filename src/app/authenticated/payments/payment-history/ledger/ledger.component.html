@@ -19,7 +19,7 @@
         <td class="payment"></td>
       </ng-template>
       <ng-template #TransactionPayment>
-        <td class="ref"><i class="fa fa-fw fa-cc-visa"></i></td>
+        <td class="ref"><i [ngClass]="getPaymentMehtodIcon(row.paymentMethod)"></i></td>
         <td class="charge"></td>
         <td class="payment">{{ row.amount | currency : 'USD' : true  }}</td>
       </ng-template>

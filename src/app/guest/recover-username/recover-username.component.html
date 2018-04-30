@@ -23,7 +23,7 @@
       <div id="ResetUsername" class="form-group formPadding">
         <h2><b>Recover Username</b></h2>
         <form  id="Recover_username" novalidate [formGroup]="recoverUsernameForm"  (ngSubmit)="recoverUsername(recoverUsernameForm.get('Email_Address').value, recoverUsernameForm.valid)">
-          <h5 style="color: #595959; width: 250px">Send the email address you used to register for MyGexa and we will send your username to that address.</h5>
+          <h5>Send the email address you used to register for MyGexa and we will send your username to that address.</h5>
           <div class="form-group">
             <label for="Email_Address" class="col-xs-12 cols-sm-2 control-label">Email Address</label>
             <div class="col-xs-10 input-group">
@@ -31,11 +31,8 @@
                        placeholder="Type your Email Address"/>
             </div>
           </div>
-
           <div class="has-error" *ngIf="recoverUsernameForm.controls['Email_Address'].hasError('validateEmail') && formSubmitted">
-            <div class="help-block">
-              <span *ngIf="recoverUsernameForm.controls['Email_Address'].hasError('validateEmail') && formSubmitted"> Enter a valid email. Email format should be <i>john@doe.com</i>. </span>
-            </div>
+            <div class="help-block"> <span *ngIf="recoverUsernameForm.controls['Email_Address'].hasError('validateEmail') && formSubmitted"> Enter a valid email. Email format should be <i>john@doe.com</i>. </span> </div>
           </div>
 
           <!--<div class="help-block" *ngIf="recoverUsernameForm.controls['Email_Address'].hasError('validateEmail') && formSubmitted"> Enter a valid email. Email format should be <i>john@doe.com</i>. </div>-->
@@ -43,7 +40,15 @@
           <div class="alert alert-danger" *ngIf="IsValidEmail === false && recoverUsernameForm.valid && formSubmitted"> No user is registered with the given email address. </div>
           <br>
           <div class="btn-toolbar">
-            <button type="submit" class="btn btn-primary" [disabled] = "!recoverUsernameForm.get('Email_Address').value" *ngIf = "!IsValidEmail">Continue</button>
+            <span *ngIf = "!IsValidEmail">
+            <button  *ngIf="!processing"  type="submit" class="btn btn-primary" [disabled] = "!recoverUsernameForm.get('Email_Address').value" >Continue</button>
+              
+            <button *ngIf="processing"  type="submit" class="btn btn-primary" disabled="disabled">
+                <i class="fa fa-spin fa-circle-o-notch"></i>  Continue
+            </button>
+            
+              
+            </span>
             <button class="btn btn-primary"  *ngIf="!IsValidEmail && !recoverUsernameForm.valid" routerLink="/login">Cancel</button>
           </div>
           <button class="btn btn-primary pull-left"  *ngIf="IsValidEmail" routerLink="/login">Back to Sign In</button>
@@ -51,4 +56,12 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-xs-12 col-md-6"> <br>
+      <div class="note"> <b>Note: </b> If you do not remember your username or password, and you have not accessed your account since the launch of our redesigned website on March 29th, you will need to <a (click)="showRegisterModal()">register</a> for online account access. </div>
+    </div>
+  </div>
+  <br/>
+  <br/>
 </div>
+<mygexa-login-register-modal #loginRegisterModal></mygexa-login-register-modal>

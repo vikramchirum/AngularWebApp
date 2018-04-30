@@ -24,10 +24,17 @@
           formControlName="echeck_name"
           maxlength="32"
         />
-        <small class="text-danger" *ngIf="formGroup.controls?.echeck_name.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
-        <small class="text-success" *ngIf="formGroup.controls?.echeck_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
-
-            </div>
+        <div>
+        <small class="text-danger" *ngIf="formGroup.controls?.echeck_name.errors?.required"><i class="fa fa-fw fa-asterisk"></i>
+          required
+        </small></div>
+        <div><small class="text-danger"
+               *ngIf="formGroup.get('echeck_name').touched  && ( formGroup.controls?.echeck_name.errors?.validateName || formGroup.controls?.echeck_name.errors?.validateCardName || formGroup.controls?.echeck_name.errors?.validateNameOnCard )">
+          <i class="fa fa-fw fa-asterisk"></i> requires a valid name (pattern eg: John Doe)
+        </small></div>
+        <div><small class="text-success" *ngIf="formGroup.controls?.echeck_name.valid"><i class="fa fa-fw fa-check"></i> Ok
+        </small></div>
+      </div>
     </div>
 
     <div class="form-group ">
@@ -40,10 +47,14 @@
           formControlName="echeck_routing"
           maxlength="17"
         />
-        <small class="text-danger" *ngIf="formGroup.controls?.echeck_routing.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
-        <small class="text-success" *ngIf="formGroup.controls?.echeck_routing.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
-   
-                         </div>
+        <small class="text-danger" *ngIf="formGroup.controls?.echeck_routing.errors"><i
+          class="fa fa-fw fa-asterisk"></i> required
+        </small>
+        <small class="text-success" *ngIf="formGroup.controls?.echeck_routing.valid"><i class="fa fa-fw fa-check"></i>
+          Ok
+        </small>
+
+      </div>
     </div>
 
     <div class="form-group ">
@@ -56,10 +67,14 @@
           formControlName="echeck_accounting"
           maxlength="17"
         />
-        <small class="text-danger" *ngIf="formGroup.controls?.echeck_accounting.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
-        <small class="text-success" *ngIf="formGroup.controls?.echeck_accounting.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
-  
-                          </div>
+        <small class="text-danger" *ngIf="formGroup.controls?.echeck_accounting.errors"><i
+          class="fa fa-fw fa-asterisk"></i> required
+        </small>
+        <small class="text-success" *ngIf="formGroup.controls?.echeck_accounting.valid"><i
+          class="fa fa-fw fa-check"></i> Ok
+        </small>
+
+      </div>
     </div>
 
     <div class="form-group ">
@@ -91,8 +106,17 @@
             formControlName="echeck_name"
             maxlength="32"
           />
-          <small class="text-danger" *ngIf="formGroup.controls?.echeck_name.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
-          <small class="text-success" *ngIf="formGroup.controls?.echeck_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+          <div>
+          <small class="text-danger" *ngIf="formGroup.controls?.echeck_name.errors?.required"><i class="fa fa-fw fa-asterisk"></i>
+            required
+          </small></div>
+          <div>
+          <small class="text-danger"
+                 *ngIf="formGroup.get('echeck_name').touched  && ( formGroup.controls?.echeck_name.errors?.validateName || formGroup.controls?.echeck_name.errors?.validateCardName || formGroup.controls?.echeck_name.errors?.validateNameOnCard )">
+            <i class="fa fa-fw fa-asterisk"></i> requires a valid name (pattern eg: John Doe)
+          </small></div>
+          <div><small class="text-success" *ngIf="formGroup.controls?.echeck_name.valid"><i class="fa fa-fw fa-check"></i> Ok
+          </small></div>
         </div>
       </div>
 
@@ -106,8 +130,12 @@
             formControlName="echeck_routing"
             maxlength="17"
           />
-          <small class="text-danger" *ngIf="formGroup.controls?.echeck_routing.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
-          <small class="text-success" *ngIf="formGroup.controls?.echeck_routing.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+          <small class="text-danger" *ngIf="formGroup.controls?.echeck_routing.errors"><i
+            class="fa fa-fw fa-asterisk"></i> required
+          </small>
+          <small class="text-success" *ngIf="formGroup.controls?.echeck_routing.valid"><i class="fa fa-fw fa-check"></i>
+            Ok
+          </small>
         </div>
       </div>
 
@@ -121,13 +149,17 @@
             formControlName="echeck_accounting"
             maxlength="17"
           />
-          <small class="text-danger" *ngIf="formGroup.controls?.echeck_accounting.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
-          <small class="text-success" *ngIf="formGroup.controls?.echeck_accounting.valid"><i class="fa fa-fw fa-check"></i> Ok</small>
+          <small class="text-danger" *ngIf="formGroup.controls?.echeck_accounting.errors"><i
+            class="fa fa-fw fa-asterisk"></i> required
+          </small>
+          <small class="text-success" *ngIf="formGroup.controls?.echeck_accounting.valid"><i
+            class="fa fa-fw fa-check"></i> Ok
+          </small>
         </div>
       </div>
 
     </div>
-<hr/>
+    <hr/>
     <div class="row">
       <label for="payment-normal-echeck-info">Other info?</label>
       <input

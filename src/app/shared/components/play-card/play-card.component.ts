@@ -29,7 +29,9 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input('offerSelectionType') offerSelectionType: OfferSelectionType;
     @Output() public onOfferSelectedEvent: EventEmitter<IOfferSelectionPayLoad> = new EventEmitter();
     isMoving: boolean = null;
-    renewalUpgradeFormGroup: FormGroup;
+    processing: boolean = null;
+
+  renewalUpgradeFormGroup: FormGroup;
 
     activeServiceAccountDetails: ServiceAccount = null;
     user: IUser;
@@ -147,6 +149,7 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
 
     onCloseSelectOffer(event) {
       this.isOfferAgreed = false;
+      this.processing = false;
       event.preventDefault();
       event.stopPropagation();
       this.isOfferSelected = false;
@@ -215,11 +218,13 @@ export class PlayCardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   btnSubmit() {
-      this.selectOffer();
-      console.log('select offer called on button click');
-    $('#planSelect_confirm_' + this.offer.Id).toggleClass('reveal');
-    $('#plan_' + this.offer.Id).removeClass('applyflip');
-    if (this.isMoving) { $('#plan_' + this.offer.Id).addClass('plan-background'); };
+    this.selectOffer();
+    console.log('select offer called on button click');
+    this.processing = true;
+    $(this).attr('disabled', 'disabled');
+   // $('#planSelect_confirm_' + this.offer.Id).toggleClass('reveal');
+   // $('#plan_' + this.offer.Id).removeClass('applyflip');
+    //if (this.isMoving) { $('#plan_' + this.offer.Id).addClass('plan-background'); };
     // $('.planConfirm').show();
     // $('.btn-select').addClass('disabled');
   }
