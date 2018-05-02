@@ -450,13 +450,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             this.paymentLoadingMessage = null;
             this.processing = false;
           },
-          () => { this.PaymentsHistoryService.AddNewPaymentToHistory({
-            PaymentDate: new Date,
-            PaymentAmount: AuthorizationAmount,
-            PaymentStatus: 'Processing',
-            PaymentMethod: PaymethodToCharge.CreditCard ? 'Credit Card' : 'eCheck',
-            PaymentAccount: PaymethodToCharge.CreditCard ? (PaymethodToCharge.CreditCard.AccountNumber ? PaymethodToCharge.CreditCard.AccountNumber : ''  ) : PaymethodToCharge.BankAccount.AccountNumber
-      });
+          () => {
+            console.log('Payment made Successfully.');
           }
         );
 
