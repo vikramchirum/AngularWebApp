@@ -336,14 +336,20 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
           // Add a credit card type paymethod.
           this.PaymethodService.AddPaymethodCreditCardFromComponent(this.addCreditCardComponent).subscribe(
             newPaymethod => resolve(newPaymethod),
-            error => console.log('Better handle the error', error),
+            error => {
+              console.log('Better handle the error', error);
+              reject(error);
+            },
             () => this.PaymethodService.UpdatePaymethods()
           );
         } else {
           // Add an eCheck type paymethod.
           this.PaymethodService.AddPaymethodEcheckFromComponent(this.addEcheckComponent).subscribe(
             newPaymethod => resolve(newPaymethod),
-            error => console.log('Better handle the error', error),
+            error => {
+              console.log('Better handle the error', error);
+              reject(error);
+            },
             () => this.PaymethodService.UpdatePaymethods()
           );
         }

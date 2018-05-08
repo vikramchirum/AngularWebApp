@@ -56,7 +56,6 @@ export class AddPaymentAccountsComponent implements OnInit {
     this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.PaymentAccounts], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitNewCreditCard]
       , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitNewCreditCard]);
 
-    this.addingCreditCard = false;
     this.paymentMessage = {
       classes: ['alert', 'alert-info'],
       innerHTML: `<i class="fa fa-fw fa-spinner fa-spin"></i> <b>Please wait</b> we're adding your new payment method now.`,
@@ -66,6 +65,7 @@ export class AddPaymentAccountsComponent implements OnInit {
 
     this.paymethodService.AddPaymethodCreditCardFromComponent(this.addCreditCardComponent).subscribe(
       result => {
+        this.addingCreditCard = false;
         const accountNumber = get(result, 'CreditCard.AccountNumber');
         if (accountNumber) {
 
@@ -80,15 +80,26 @@ export class AddPaymentAccountsComponent implements OnInit {
         this.paymethodService.UpdatePaymethods();
       },
       error => {
-          console.log('Error', error.response_description);
-          const errorMessage = String(error.response_description);
-          this.errorFromForte = String(error.response_description);
-          this.paymentMessage = {
-            classes: ['alert', 'alert-danger'],
-            innerHTML: `<b>Error occurred!</b> ${ errorMessage }`,
-            isCompleted: true
-          };
-          this.onAddPaymentAccountSubmittedEvent.emit(this.paymentMessage);
+        console.log('Error', error.response_description);
+        this.errorFromForte = String(error.response_description);
+        let forteErrorMessage = 'it looks like your payment account details are incorrect';
+        if (error.response_description === 'The card_number is invalid.') {
+          forteErrorMessage = 'it looks like this card number is invalid';
+        } else if (error.response_description === 'The expire_month and expire_year are invalid.') {
+          forteErrorMessage = 'the expiration date is invalid';
+        } else if (error.response_description === 'The cvv is invalid.') {
+          forteErrorMessage = 'it looks like this cvv is invalid';
+        } else if (error.response_description === 'The routing_number is invalid.') {
+          forteErrorMessage = 'it looks like this routing number is invalid';
+        } else {
+          forteErrorMessage = error.response_description.replace('_', ' ').replace('.', '');
+        }
+        this.paymentMessage = {
+          classes: ['alert', 'alert-danger'],
+          innerHTML: `<b>Error occurred!</b> ${ forteErrorMessage }`,
+          isCompleted: true
+        };
+        this.onAddPaymentAccountSubmittedEvent.emit(this.paymentMessage);
       }
     );
   }
@@ -109,7 +120,6 @@ export class AddPaymentAccountsComponent implements OnInit {
     this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.PaymentAccounts], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitNewECheck]
       , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitNewECheck]);
 
-    this.addingEcheck = false;
     this.paymentMessage = {
       classes: ['alert', 'alert-info'],
       innerHTML: `<i class="fa fa-fw fa-spinner fa-spin"></i> <b>Please wait</b> we're adding your new payment method now.`,
@@ -120,6 +130,7 @@ export class AddPaymentAccountsComponent implements OnInit {
 
     this.paymethodService.AddPaymethodEcheckFromComponent(this.addEcheckComponent).subscribe(
       result => {
+        this.addingEcheck = false;
         const accountNumber = get(result, 'BankAccount.AccountNumber');
         if (accountNumber) {
           this.paymentMessage = {
@@ -130,6 +141,29 @@ export class AddPaymentAccountsComponent implements OnInit {
           this.onAddPaymentAccountSubmittedEvent.emit(this.paymentMessage);
         }
         this.paymethodService.UpdatePaymethods();
+      }, error => {
+
+        this.errorFromForte = String(error.response_description);
+        let forteErrorMessage = 'it looks like your payment account details are incorrect';
+        if (error.response_description === 'The card_number is invalid.') {
+           forteErrorMessage =  'it looks like this card number is invalid';
+        } else if (error.response_description === 'The expire_month and expire_year are invalid.') {
+           forteErrorMessage =  'the expiration date is invalid';
+        } else if (error.response_description === 'The cvv is invalid.') {
+           forteErrorMessage =  'it looks like this cvv is invalid';
+        } else if (error.response_description === 'The routing_number is invalid.') {
+           forteErrorMessage =  'it looks like this routing number is invalid';
+        } else {
+          forteErrorMessage = error.response_description.replace('_', ' ').replace('.', '');
+        }
+
+        this.paymentMessage = {
+          classes: ['alert', 'alert-danger'],
+          innerHTML: `<b>Error occurred!</b> ${ forteErrorMessage }`,
+          isCompleted: true
+        };
+
+        this.onAddPaymentAccountSubmittedEvent.emit(this.paymentMessage);
       }
     );
   }
