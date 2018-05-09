@@ -1,9 +1,12 @@
 <div class="usage-summary " *ngIf="barChartData.length < 1">
   <p class="text-center"><i class='fa fa-circle-o-notch fa-spin'></i> Loading...</p>
 </div>
+<div *ngIf="isDataAvailable === false">
+  <div class="alert alert-info"> <strong>Thank you for choosing Gexa Energy!</strong> Your electricity usage will display here as soon as your meter has been read for your new plan. </div>
+</div>
 <div class="usage-history container-fluid usage-history" *ngIf="isDataAvailable">
-  <h1>Usage History</h1>
-  <br/>
+<h1>Usage History</h1>
+<br/>
   <div class="col position-relative col-sm-scroll">
     <div class="bar-chart">
       <h3>Select a Month for Detail</h3>
@@ -22,7 +25,6 @@
         ></canvas>
       </div>
     </div>
-
     <!--
     <div class="line-chart">
       <br/><br/><br/>
@@ -42,7 +44,6 @@
         ></canvas>
       </div>
     </div>
-    -->
-
-  </div>
+    --> 
+    </div>
 </div>
