@@ -1,11 +1,14 @@
-<div class="usage-summary " *ngIf="barChartData.length < 1">
+<div class="usage-summary " *ngIf="isDataAvailable === false" >
   <p class="text-center"><i class='fa fa-circle-o-notch fa-spin'></i> Loading...</p>
 </div>
-<div *ngIf="isDataAvailable === false">
+<div class="usage-summary " *ngIf="isDataAvailable" >
+  <h1>Usage History</h1>
+
+<div *ngIf="barChartData.length < 1">
   <div class="alert alert-info"> <strong>Thank you for choosing Gexa Energy!</strong> Your electricity usage will display here as soon as your meter has been read for your new plan. </div>
 </div>
-<div class="usage-history container-fluid usage-history" *ngIf="isDataAvailable">
-<h1>Usage History</h1>
+
+<div class="usage-history container-fluid usage-history" *ngIf="barChartData.length">
 <br/>
   <div class="col position-relative col-sm-scroll">
     <div class="bar-chart">
@@ -47,3 +50,4 @@
     --> 
     </div>
 </div>
+  </div>
