@@ -1,10 +1,13 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
+
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
+import { INotificationOption } from 'app/core/models/notificationoptions/notificationoption.model';
+import { NotificationStatus } from 'app/core/models/enums/notificationstatus';
+
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
-import { NotificationOptionsStore } from '../../../../core/store/notificationoptionsstore';
-import { INotificationOption } from '../../../../core/models/notificationoptions/notificationoption.model';
-import { NotificationStatus } from '../../../../core/models/enums/notificationstatus';
+import { BudgetBillingService } from 'app/core/budgetbilling.service';
+import { NotificationOptionsStore } from 'app/core/store/notificationoptionsstore';
 
 @Component({
   selector: 'mygexa-view-my-bill-preference',
@@ -18,10 +21,13 @@ export class PreferenceComponent implements OnInit, OnDestroy {
   NotificationOptionsStoreSubscription: Subscription = null;
   NotificationOptions: INotificationOption = null;
   Paperless_Billing: boolean = null;
+  budgetBillingInfo = null;
 
   constructor(private ServiceAccountService: ServiceAccountService,
+              private budgetBillingService: BudgetBillingService,
               private NotificationOptionsStore: NotificationOptionsStore,
   ) {
+
   }
 
   ngOnInit() {
@@ -40,6 +46,10 @@ export class PreferenceComponent implements OnInit, OnDestroy {
               }
             }
           );
+
+          this.budgetBillingService.getBudgetBillingInfo(+this.serviceAccountDetails.Id).subscribe(budgetBillingInfo => {
+            this.budgetBillingInfo = budgetBillingInfo;
+          });
         }
       });
   }

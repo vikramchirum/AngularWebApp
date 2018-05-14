@@ -1,16 +1,26 @@
 <div *ngIf="serviceAccountDetails">
-<button class="billing-payment-preference" routerLink="/payments/payment-options/auto-bill-payment">
-  <i class="fa fa-fw" [ngClass]="{ 'fa-check fa-green active': serviceAccountDetails.Is_Auto_Bill_Pay}"></i>
- Automatic Payments
-</button>
+  <button class="billing-payment-preference" routerLink="/payments/payment-options/auto-bill-payment">
+    <i class="fa fa-fw" [ngClass]="{ 'fa-check fa-green active': serviceAccountDetails.Is_Auto_Bill_Pay}"></i>
+    Automatic Payments
+  </button>
 
-<button class="billing-payment-preference" routerLink="/payments/payment-options/budget-billing">
-  <i class="fa fa-fw" [ngClass]="{ 'fa-check fa-green active': serviceAccountDetails.Budget_Billing }"></i>
- Budget Billing
-</button>
 
-<button class="billing-payment-preference" routerLink="/account/profile">
-  <i class="fa fa-fw" [ngClass]="{ 'fa-check fa-green active' : Paperless_Billing}"></i>
- eBill (Paperless)
-</button>
+  <button class="billing-payment-preference" routerLink="/account/profile">
+    <i class="fa fa-fw" [ngClass]="{ 'fa-check fa-green active' : Paperless_Billing}"></i>
+    eBill (Paperless)
+  </button>
+
+  <button class="billing-payment-preference" routerLink="/payments/payment-options/budget-billing">
+    <i class="fa fa-fw" [ngClass]="{ 'fa-check fa-green active': serviceAccountDetails.Budget_Billing }"></i>
+    Budget Billing
+  </button>
+
+  <ng-container *ngIf="budgetBillingInfo && budgetBillingInfo.Indicator && budgetBillingInfo.Variance > 0">
+    <h5 class="text-center bg-danger" tooltip="Your budget billing true-up amount shows the balance due or credit based on your actual electricity usage charges."><i class="fa fa-info-circle"></i> Budget Billing Balance              ${{ budgetBillingInfo.Variance | FloatToMoneyPipe}} </h5>
+  </ng-container>
+
+  <ng-container *ngIf="budgetBillingInfo && budgetBillingInfo.Indicator && budgetBillingInfo.Variance < 0">
+    <h5 class="text-center bg-success" tooltip="Your budget billing true-up amount shows the balance due or credit based on your actual electricity usage charges."><i class="fa fa-info-circle"></i> Budget Billing Credit              ${{ budgetBillingInfo.Variance | FloatToMoneyPipe}} </h5>
+  </ng-container>
+
 </div>

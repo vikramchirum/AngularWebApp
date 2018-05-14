@@ -12,6 +12,7 @@ import { PaymentOptionsModule } from './payment-options/payment-options.module';
 import { MakePaymentComponent } from './make-payment/make-payment.component';
 import { SharedModule } from 'app/shared/shared.module';
 import { ModalModule } from 'ngx-bootstrap';
+import { TooltipModule } from 'ngx-bootstrap';
 
 @NgModule({
   imports: [
@@ -22,6 +23,8 @@ import { ModalModule } from 'ngx-bootstrap';
     PaymentOptionsModule,
     SharedModule,
     ModalModule.forRoot(),
+    TooltipModule.forRoot(),
+
   ],
   declarations: [
     PaymentsComponent,

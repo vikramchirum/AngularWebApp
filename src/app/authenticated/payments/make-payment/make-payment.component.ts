@@ -336,14 +336,20 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
           // Add a credit card type paymethod.
           this.PaymethodService.AddPaymethodCreditCardFromComponent(this.addCreditCardComponent).subscribe(
             newPaymethod => resolve(newPaymethod),
-            error => console.log('Better handle the error', error),
+            error => {
+              console.log('Better handle the error', error);
+              reject(error);
+            },
             () => this.PaymethodService.UpdatePaymethods()
           );
         } else {
           // Add an eCheck type paymethod.
           this.PaymethodService.AddPaymethodEcheckFromComponent(this.addEcheckComponent).subscribe(
             newPaymethod => resolve(newPaymethod),
-            error => console.log('Better handle the error', error),
+            error => {
+              console.log('Better handle the error', error);
+              reject(error);
+            },
             () => this.PaymethodService.UpdatePaymethods()
           );
         }
@@ -450,13 +456,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             this.paymentLoadingMessage = null;
             this.processing = false;
           },
-          () => { this.PaymentsHistoryService.AddNewPaymentToHistory({
-            PaymentDate: new Date,
-            PaymentAmount: AuthorizationAmount,
-            PaymentStatus: 'Processing',
-            PaymentMethod: PaymethodToCharge.CreditCard ? 'Credit Card' : 'eCheck',
-            PaymentAccount: PaymethodToCharge.CreditCard ? (PaymethodToCharge.CreditCard.AccountNumber ? PaymethodToCharge.CreditCard.AccountNumber : ''  ) : PaymethodToCharge.BankAccount.AccountNumber
-      });
+          () => {
+            console.log('Payment made Successfully.');
           }
         );
 
