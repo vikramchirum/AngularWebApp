@@ -470,7 +470,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
       const currentDate = new Date;
       const currentYear = currentDate.getFullYear();
-      const currentMonth = currentDate.getMonth();
+      const currentMonth = currentDate.getMonth() + 1;
 
       if (x.IsActive && x.CreditCard && x.CreditCard.ExpirationYear < currentYear) {
         return false;
