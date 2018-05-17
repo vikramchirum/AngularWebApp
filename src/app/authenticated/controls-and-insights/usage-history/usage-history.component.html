@@ -8,7 +8,7 @@
   <div class="alert alert-info"> <strong>Thank you for choosing Gexa Energy!</strong> Your electricity usage will display here as soon as your meter has been read for your new plan. </div>
 </div>
 
-<div class="usage-history container-fluid usage-history" *ngIf="barChartData.length">
+<div class="usage-history container-fluid usage-history" *ngIf="barChartData.length > 0">
 <br/>
   <div class="col position-relative col-sm-scroll">
     <div class="bar-chart">
@@ -47,7 +47,7 @@
         ></canvas>
       </div>
     </div>
-    --> 
+    -->
     </div>
 </div>
   </div>
