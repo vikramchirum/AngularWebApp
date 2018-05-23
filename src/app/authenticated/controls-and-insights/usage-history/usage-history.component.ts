@@ -125,12 +125,12 @@ export class UsageHistoryComponent implements OnDestroy {
     usageHistory.sort((a, b) => b.date - a.date);
 
     // Put data from api into array
-    for (let i = 0; i < usageHistory.length ; i++) {
+    for (let i = 0; i < usageHistory.length; i++) {
       tempYear = usageHistory[i].date.getFullYear().toString();
       tempMonth = usageHistory[i].date.getMonth();
 
       if (!datagroups[tempYear]) {
-        datagroups[tempYear] = { data: [], label: tempYear };
+        datagroups[tempYear] = {data: [], label: tempYear};
       }
       datagroups[tempYear].data.push(usageHistory[i].usage);
     }
@@ -149,11 +149,17 @@ export class UsageHistoryComponent implements OnDestroy {
 
     const dataToDisplay = takeRight(values(datagroups), 4);
 
-    while (this.barChartData.length) { this.barChartData.pop(); }
-    while (this.lineChartData.length) { this.lineChartData.pop(); }
+    while (this.barChartData.length) {
+      this.barChartData.pop();
+    }
+    while (this.lineChartData.length) {
+      this.lineChartData.pop();
+    }
 
-    this.barChartData.push(dataToDisplay);
-    this.lineChartData.push(dataToDisplay);
+    if (dataToDisplay && dataToDisplay.length > 0) {
+      this.barChartData.push(dataToDisplay);
+      this.lineChartData.push(dataToDisplay);
+    }
 
     this.isDataAvailable = true;
   }
