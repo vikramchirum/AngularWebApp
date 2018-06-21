@@ -1,0 +1,119 @@
+hr {
+  margin:10px 3px;
+  border-color:#fff
+}
+h2 {margin-top:0}
+p { margin-bottom:0; font-size:12px}
+
+h3 { color: #555; }
+h4 { color: #fff; }
+
+.details {
+  display:none;
+  padding: 5px 10px; 
+}
+
+hr {    border-color: #ccc;}
+
+.bar {
+  background-color: rgb(46, 178, 52);
+    width: 100%;
+    font-size: 28px;
+    padding:5px 10px;
+    letter-spacing: .06em;
+    line-height: 16px;
+    color: #fff;
+    letter-spacing: 1px;
+    font-family: "Open Sans Bold", sans-serif;
+}
+.bar.current { 
+width:55%;}
+
+.bar.previous { 
+background-color: rgba(103, 183, 220,1.0);
+width:85%;
+}
+
+.gexstimate {
+    border: 1px solid rgba(46,177,52,1.0);
+    display: inline-block;
+    width: auto;
+    padding: 15px 40px 10px 40px;
+    background-color:#fff;
+
+}
+
+.gexstimate:before {
+  content: "";
+  border:1px solid rgba(46,177,52,1.0);
+  display:inline-block;
+  height: 250px;
+  width: 305px;
+  position:absolute;
+  right:8%;
+  top:-220px;
+  border-width: 0 1px 1px 0 ;
+  z-index:-1;
+}
+
+
+
+.progress {
+  height:auto;
+  margin-bottom:0;
+  background-color: transparent;
+  border:none;
+  box-shadow:none;
+  text-align:left !important;
+}
+
+.bar {
+  background-color: rgba(46,177,52,1.0);
+    width: 100%;
+    font-size: 28px;
+    padding:5px 10px;
+    letter-spacing: .06em;
+    line-height: 16px;
+    color: #fff;
+    letter-spacing: 1px;
+    font-family: "Open Sans Bold", sans-serif;
+    text-align:left;
+}
+.bar.current { 
+width:55%;}
+
+
+
+.gexstimate {
+    border: 1px solid rgba(46,177,52,1.0);
+    display: inline-block;
+    width: auto;
+    padding: 15px 40px 10px 40px;
+    background-color:#fff;
+
+}
+
+.gexstimate:before {
+  content: "";
+  border:1px solid rgba(46,177,52,1.0);
+  display:inline-block;
+  height: 250px;
+  width: 305px;
+  position:absolute;
+  right:8%;
+  top:-220px;
+  border-width: 0 1px 1px 0 ;
+  z-index:-1;
+}
+
+.bar, .bar small  {
+  color: #fff;
+  text-shadow:1px 2px 2px rgba(0,0,0,.5)
+  
+}
+
+.current-cycle-usage {
+  h3 {
+    margin-bottom: 0;
+  }
+}

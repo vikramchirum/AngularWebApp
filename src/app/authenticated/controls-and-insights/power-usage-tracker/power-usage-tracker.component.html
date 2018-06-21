@@ -1,0 +1,58 @@
+<div class="current-trends">
+  <h1>
+    Current Trends <span *ngIf="usagePrediction" [style.color]="getStyle(percentageDifference)">{{ percentageDifference >= 0 ? '+' : '-' }}{{ percentageDifference }}%</span> <small>Compared to Previous Cycle*</small>
+  </h1>
+</div>
+<br />
+<div class="row current-cycle-usage">
+  <div class="col-sm-3">
+    <h3>
+      So Far This Cycle
+    </h3>
+
+  </div>
+  <div class="col-sm-9 progress">
+    <div *ngIf="usageComparison" [style.width]="getWidth(1)" class="bar current progress-bar progress-bar-striped progress-bar-animated" [style.background-color]="getBgColor()">
+      <h4>
+        {{ usageComparison.Meter_Read_Cycles[1].Usage }} kWh <small>in {{ usageComparison.Days_InTo_Current_Cycle }} days</small>
+      </h4>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-3">
+    <h3>
+      Previous Cycle
+    </h3>
+
+  </div>
+  <div class="col-sm-9">
+    <div *ngIf="usageComparison" [style.width]="getWidth(0)" class="bar previous">
+      <h4>
+        {{ usageComparison.Meter_Read_Cycles[0].Usage }} kWh
+      </h4>
+    </div>
+  </div>
+</div>
+<br />
+<div class="row ">
+  <div class="col-sm-12 text-center">
+    <div class="gexstimate">
+
+      <h2 class="text-center ">
+
+        <span *ngIf="usageComparison">{{ usageComparison.Meter_Read_Cycles[1].Usage_Month | date:'LLLL' }}</span> Usage Gexstimate ** <span *ngIf="usagePrediction" [style.color]="getStyle(usagePrediction.Meter_Read_Cycles[0].Usage)">{{ usagePrediction.Meter_Read_Cycles[0].Usage }} kWh</span> </h2>
+
+    </div>
+  </div>
+</div>
+<br />
+<div class="row">
+  <div class="col-sm-12"></div>
+  <div *ngIf="usageComparison" class="text-center">
+
+    * Percentage Comparison to Previous Cycle {{ usageComparison.Meter_Read_Cycles[0].Start_Date | date:'shortDate' }} thru {{ usageComparison.Meter_Read_Cycles[0].End_Date | date:'shortDate' }}</div>
+</div>
+<br />
+<hr>

@@ -4,10 +4,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { sortBy, values } from 'lodash';
 import { HttpClient } from './httpclient';
-import { UsageHistory } from './models/usage-history.model';
+import { UsageHistory } from './models/usage/usage-history.model';
+import { UsageComparison } from './models/usage/usage-comparison.model';
 import { ServiceAccount } from './models/serviceaccount/serviceaccount.model';
 import { ServiceAccountService } from './serviceaccount.service';
 import * as moment from 'moment';
+
 @Injectable()
 export class UsageHistoryService {
 
@@ -25,6 +27,20 @@ export class UsageHistoryService {
       .map(res => res.json())
       .map(res => this.processApiData(res))
       .catch(error => this.HttpClient.handleHttpError(error));
+  }
+
+  getUsageComparison(UAN: string): Observable<UsageComparison> {
+    return this.HttpClient
+      .get(`/usage/ercot_detailed_usage`, { params: { uan: UAN, meter_read_cycles: 2 } })
+      .map(res => res.json())
+      .catch(error => this.HttpClient.handleHttpError(error));
+  }
+
+  getUsagePrediction(UAN: string, endDate: Date): Observable<UsageComparison> {
+    return this.HttpClient
+    .get(`/usage/ercot_detailed_usage`, { params: { uan: UAN, meter_read_cycles: 1, as_of_date: endDate  } })
+    .map(res => res.json())
+    .catch(error => this.HttpClient.handleHttpError(error));
   }
 
   private processApiData(data) {
