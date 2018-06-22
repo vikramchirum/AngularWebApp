@@ -1,7 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
-import { toNumber } from 'lodash';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { UsageHistoryService } from '../../../core/usage-history.service';
@@ -95,7 +94,11 @@ export class PowerUsageTrackerComponent implements OnDestroy {
     if (isNaN(diff)) {
       this.percentageDifference = 0;
     } else {
-      this.percentageDifference = diff * 100;
+      if (diff < 100) {
+        this.percentageDifference = Math.round(diff * 100);
+      } else {
+        this.percentageDifference = Math.round(-Math.abs(diff * 100 - 100));
+      }
     }
   }
 

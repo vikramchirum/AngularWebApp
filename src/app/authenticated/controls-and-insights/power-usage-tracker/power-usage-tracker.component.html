@@ -1,6 +1,6 @@
 <div class="current-trends">
   <h1>
-    Current Trends <span *ngIf="usagePrediction" [style.color]="getStyle(percentageDifference)">{{ percentageDifference >= 0 ? '+' : '-' }}{{ percentageDifference }}%</span> <small>Compared to Previous Cycle*</small>
+    Current Trends <span *ngIf="usagePrediction" [style.color]="getStyle(percentageDifference)">{{ percentageDifference >= 0 ? '+' : '' }}{{ percentageDifference }}%</span> <small>Compared to Previous Cycle*</small>
   </h1>
 </div>
 <br />
