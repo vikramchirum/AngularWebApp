@@ -13,7 +13,7 @@
     </div>
     <div class="col-sm-9 control-profile">
       <mygexa-service-account-selector
-        [setActiveServiceAccount]="true" *ngIf="startsWith(Router.url, '/controls-and-insights/usage-history')"
+        [setActiveServiceAccount]="true" *ngIf="startsWith(Router.url, '/controls-and-insights/usage-history') || startsWith(Router.url, '/controls-and-insights/power-usage-tracker')"
       ></mygexa-service-account-selector>
       <mygexa-status-bar></mygexa-status-bar>
       <router-outlet></router-outlet>

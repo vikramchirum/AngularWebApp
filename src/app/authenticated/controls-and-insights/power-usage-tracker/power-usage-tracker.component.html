@@ -1,3 +1,6 @@
+<div *ngIf="isDataAvailable === false" >
+  <p class="text-center"><i class='fa fa-circle-o-notch fa-spin'></i> Loading...</p>
+</div>
 <div class="current-trends">
   <h1>
     Current Trends <span *ngIf="usagePrediction" [style.color]="getStyle(percentageDifference)">{{ percentageDifference >= 0 ? '+' : '' }}{{ percentageDifference }}%</span> <small>Compared to Previous Cycle*</small>

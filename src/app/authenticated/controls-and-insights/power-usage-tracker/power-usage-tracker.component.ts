@@ -20,6 +20,7 @@ export class PowerUsageTrackerComponent implements OnDestroy {
   public usagePrediction: UsageComparison;
 
   public percentageDifference: number;
+  public isDataAvailable: boolean = false;
   
   constructor(
     private ServiceAccountService: ServiceAccountService,
@@ -39,6 +40,7 @@ export class PowerUsageTrackerComponent implements OnDestroy {
         .subscribe(usageComparison => {
           this.usageComparison = usageComparison;
           this.getUsagePredictionForCurrentMonth(usageComparison.Meter_Read_Cycles[1].End_Date);
+          this.isDataAvailable = true;
         });
     }
   }
