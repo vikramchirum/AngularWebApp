@@ -21,6 +21,7 @@ export class PowerUsageTrackerComponent implements OnDestroy {
 
   public percentageDifference: number;
   public isDataAvailable: boolean = false;
+  public daysInLastCycle: number;
   
   constructor(
     private ServiceAccountService: ServiceAccountService,
@@ -40,6 +41,7 @@ export class PowerUsageTrackerComponent implements OnDestroy {
         .subscribe(usageComparison => {
           this.usageComparison = usageComparison;
           this.getUsagePredictionForCurrentMonth(usageComparison.Meter_Read_Cycles[1].End_Date);
+          this.calculateDaysInLastCycle();
           this.isDataAvailable = true;
         });
     }
@@ -102,6 +104,13 @@ export class PowerUsageTrackerComponent implements OnDestroy {
         this.percentageDifference = Math.round(-Math.abs(diff * 100 - 100));
       }
     }
+  }
+
+  private calculateDaysInLastCycle(): void {
+    const date2 = new Date(this.usageComparison.Meter_Read_Cycles[0].End_Date);
+    const date1 = new Date(this.usageComparison.Meter_Read_Cycles[0].Start_Date);
+    const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    this.daysInLastCycle = Math.ceil(timeDiff / (1000 * 3600 * 24));
   }
 
 }
