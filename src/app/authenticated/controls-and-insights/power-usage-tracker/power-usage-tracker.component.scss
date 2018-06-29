@@ -5,7 +5,7 @@ hr {
 h2 {margin-top:0}
 p { margin-bottom:0; font-size:12px}
 
-h3 { color: #555; }
+h1, h2, h3 { color: #555; }
 h4 { color: #fff; }
 
 .details {
@@ -82,6 +82,9 @@ width:85%;
 .bar.current { 
 width:55%;}
 
+.remaining-days {
+  background-color: rgba(46,177,52,0.6);
+}
 
 
 .gexstimate {

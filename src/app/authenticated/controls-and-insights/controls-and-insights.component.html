@@ -60,3 +60,45 @@
     </div>
   </div>
 </div>
+
+
+<div class="container-fluid container-breakout bg-info"  *ngIf="startsWith(Router.url, '/controls-and-insights/power-usage-tracker')">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3 hidden-xs  hidden-sm">
+        <!--<button-->
+          <!--class="btn btn-primary btn-block btn-round"-->
+        <!--&gt;<i class="fa fa-fw fa-3x fa-file-excel-o"></i><br/>Insight History <span class="boxed">Download</span>-->
+        <!--</button>-->
+      </div>
+      <div class="col-sm-12 col-md-9 col-md-offset-3" style="margin-bottom: 10px;">
+        <div *ngIf="lineChartData.length < 1">
+          <div class="alert alert-info"> <strong>Thank you for choosing Gexa Energy!</strong> <br />Your daily usage will display here as soon as your meter has been read for this cycle. </div>
+        </div>
+        <ng-container *ngIf="isDataAvailable && lineChartData && lineChartData.length > 0">
+          <div class="line-chart">
+            <br/>
+            <h1>
+              Usage Tracker <small>Daily Usage for this cycle</small>
+            </h1>
+            <div *ngFor='let index of lineChartData'>
+              <canvas
+                baseChart
+                legend="true"
+                chartType="line"
+                height="200px"
+                [datasets]="index"
+                [labels]="cycleDates"
+                [options]="lineChartOptions"
+                [colors]="lineChartColors"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"
+              ></canvas>
+            </div>
+          </div>
+          <br /><br /><br />
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
