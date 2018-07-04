@@ -2,6 +2,14 @@
   
   .ui-show-service-number {
     
+    position:relative;
+    
+    .fa-remove {
+      position:absolute;
+      top:13px;
+      right:25px;
+    }
+    
     img {
       border: 1px solid rgba(0,0,0,.5);
       margin-bottom: 10px;

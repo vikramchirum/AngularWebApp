@@ -207,7 +207,7 @@ export class LoginRegisterModalComponent implements OnInit {
   
   ServiceNumberEBillToggle(state) {
     
-    this.showServiceNumberEBill = !this.showServiceNumberEBill;
+    this.showServiceNumberEBill = state;
   }
   
 }

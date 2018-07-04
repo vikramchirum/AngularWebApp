@@ -21,6 +21,7 @@
                  <div class="col-xs-12">  <h5>Locate <b>Service Number</b> on Page 1 of <button class="btn btn-xs btn-link" (click)="ServiceNumberEBillToggle(false)">Your Bill</button> or <button class="btn btn-xs btn-link" (click)="ServiceNumberEBillToggle(true)"> On Your E-Bill</button></h5>
                       <img src="../../../../assets/home/gexa-service_numer.png" alt="Gexa Service Number" width="100%" *ngIf="!showServiceNumberEBill">
                       <img src="../../../../assets/home/gexa-service_numer-ebill.png" alt="Gexa Service Number" width="100%" *ngIf="showServiceNumberEBill">
+                   <i class="fa fa-remove" (click)="ServiceNumberHelpToggle(true)"></i>
                  </div>
 
                     </div>
