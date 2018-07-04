@@ -25,6 +25,8 @@ export class LoginRegisterModalComponent implements OnInit {
   registerClicked: boolean = null;
   registerForm: FormGroup = null;
   formSubmitted: boolean = null;
+  showServiceNumberHelp: boolean = null;
+  showServiceNumberEBill: boolean = null;
   user: IRegUser = null;
   error: string = null;
   errorMsg: string = null;
@@ -198,5 +200,14 @@ export class LoginRegisterModalComponent implements OnInit {
   public hideLoginRegisterModal(): void {
     this.loginRegisterModal.hide();
   }
-
+    
+  ServiceNumberHelpToggle() {
+    this.showServiceNumberHelp = !this.showServiceNumberHelp;
+  }
+  
+  ServiceNumberEBillToggle(state) {
+    
+    this.showServiceNumberEBill = !this.showServiceNumberEBill;
+  }
+  
 }
