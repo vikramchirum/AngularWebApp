@@ -4,6 +4,7 @@
       <mygexa-left-nav-panel [sideNavData] = "{
         'panelTitle': 'Energy Insights',
         'items': [
+          { 'title': 'Power Usage Tracker', 'navUrl': 'power-usage-tracker'},
           { 'title': 'Usage History', 'navUrl': 'usage-history'},
           { 'title': 'Energy Savings Tips', 'navUrl': 'energy-savings-tips'}
 
@@ -12,7 +13,7 @@
     </div>
     <div class="col-sm-9 control-profile">
       <mygexa-service-account-selector
-        [setActiveServiceAccount]="true" *ngIf="startsWith(Router.url, '/controls-and-insights/usage-history')"
+        [setActiveServiceAccount]="true" *ngIf="startsWith(Router.url, '/controls-and-insights/usage-history') || startsWith(Router.url, '/controls-and-insights/power-usage-tracker')"
       ></mygexa-service-account-selector>
       <mygexa-status-bar></mygexa-status-bar>
       <router-outlet></router-outlet>
@@ -54,6 +55,51 @@
             firstText="&laquo;"
             lastText="&raquo;"
           ></pagination>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid container-breakout bg-info"  *ngIf="startsWith(Router.url, '/controls-and-insights/power-usage-tracker')">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3 hidden-xs  hidden-sm">
+      </div>
+      <div class="col-sm-12 col-md-9 col-md-offset-3" style="margin-bottom: 10px;">
+        <div *ngIf="lineChartData.length < 1">
+          <div class="alert alert-info"> <strong>Thank you for choosing Gexa Energy!</strong> <br />Your daily usage will display here as soon as your meter has been read for this cycle. </div>
+        </div>
+        <ng-container *ngIf="isDataAvailable && lineChartData && lineChartData.length > 0">
+          <div class="line-chart">
+            <br/>
+            <h1>
+              Usage Tracker <small>Daily Usage for this cycle</small>
+            </h1><br />
+            <div *ngFor='let index of lineChartData'>
+              <canvas
+                baseChart
+                chartType="line"
+                height="150px"
+                [datasets]="index"
+                [labels]="cycleDates"
+                [options]="lineChartOptions"
+                [colors]="lineChartColors"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"
+              ></canvas>
+            </div>
+          </div>
+          <br />
+          <div class="chart-controls text-center">
+            <div class="btn-group">
+              <button (click)="showPrevCycleDailyUsage()" type="button" class="btn btn-info"><i class="fa fa-arrow-left"></i> Prev</button>
+              <button (click)="showCurrentDailyUsage()" type="button" class="btn btn-info">Current</button>
+              <button (click)="showNextCycleDailyUsage()" type="button" class="btn btn-info">Next <i class="fa fa-arrow-right"></i></button>
+            </div>
+          </div>
+          <br /><br />
         </ng-container>
       </div>
     </div>

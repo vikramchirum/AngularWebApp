@@ -101,7 +101,16 @@ export class UsageHistoryComponent implements OnDestroy {
   }
 
   public chartClicked(e: any): void {
-    console.log(e);
+    if (e.active.length > 0) {
+      const chart = e.active[0]._chart;
+      const activePoints = chart.getElementAtEvent(e.event);
+      if (activePoints.length > 0) {
+        const clickedElementIndex = activePoints[0]._index;
+        const label = chart.data.labels[clickedElementIndex];
+        const value = chart.data.datasets[0].data[clickedElementIndex];
+        alert(`Label: ${label}, Value: ${value}`);
+      }
+    }
   }
 
   public chartHovered(e: any): void {

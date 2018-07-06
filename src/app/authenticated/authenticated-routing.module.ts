@@ -40,7 +40,7 @@ const routes: Route[] = [
       { path: 'payments', loadChildren: './payments/payments.module#PaymentsModule' },
       { path: 'plans-and-services', redirectTo: 'plans-and-services/my-services-plans', pathMatch: 'full' },
       { path: 'plans-and-services', loadChildren: './plans-and-services/plans-and-services.module#PlansAndServicesModule' },
-      { path: 'controls-and-insights', redirectTo: 'controls-and-insights/usage-history', pathMatch: 'full' },
+      { path: 'controls-and-insights', redirectTo: 'controls-and-insights/power-usage-tracker', pathMatch: 'full' },
       { path: 'controls-and-insights', loadChildren: './controls-and-insights/controls-and-insights.module#ControlsAndInsightsModule' }
     ]
   }

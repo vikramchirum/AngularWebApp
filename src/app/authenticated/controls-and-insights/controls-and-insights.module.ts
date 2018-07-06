@@ -9,6 +9,7 @@ import { ControlsAndInsightsComponent } from './controls-and-insights.component'
 import { controls_insights_routes } from './controls-and-insights-routing.module';
 import { UsageHistoryComponent } from './usage-history/usage-history.component';
 import { EnergySavingsTipsComponent } from './energy-savings-tips/energy-savings-tips.component';
+import { PowerUsageTrackerComponent } from './power-usage-tracker/power-usage-tracker.component';
 
 
 
@@ -23,7 +24,8 @@ import { EnergySavingsTipsComponent } from './energy-savings-tips/energy-savings
   declarations: [
     ControlsAndInsightsComponent,
     UsageHistoryComponent,
-    EnergySavingsTipsComponent
+    EnergySavingsTipsComponent,
+    PowerUsageTrackerComponent
   ]
 })
 export class ControlsAndInsightsModule { }
