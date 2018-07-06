@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 
 import { reverse, toNumber } from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { UsageComparison } from '../../core/models/usage/usage-comparison.model';
 
 import * as moment from 'moment';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'mygexa-controls-and-insights',
@@ -17,6 +18,8 @@ import * as moment from 'moment';
   styleUrls: ['./controls-and-insights.component.scss']
 })
 export class ControlsAndInsightsComponent implements OnDestroy {
+
+  @ViewChild("baseChart") chart: BaseChartDirective;
 
   public startsWith = startsWith;
   private activeServiceAccount: ServiceAccount = null;
@@ -28,6 +31,7 @@ export class ControlsAndInsightsComponent implements OnDestroy {
   public tableData: any[] = [];
 
   /* Usage Tracker line chart */
+  public currentDailyUsage: UsageComparison;
   public dailyUsage: UsageComparison;
   public cycleDates = [];
 
@@ -38,9 +42,12 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     responsive: true,
     elements: {
       line: {
-        tension: 0.1,
+        tension: 0.5,
         fill: true
       }
+    },
+    legend: {
+      display: false
     },
     tooltips: {
       callbacks: {
@@ -127,35 +134,46 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     if (this.activeServiceAccount) {
       this.usageHistoryService.getUsageComparison(this.activeServiceAccount.UAN)
         .subscribe(dailyUsage => {
+          if (!this.currentDailyUsage)
+            this.currentDailyUsage = dailyUsage;
+          
           this.dailyUsage = dailyUsage;
-          this.populateChart(dailyUsage.Daily_Usage_List);
+          const cycleStart = new Date(dailyUsage.Meter_Read_Cycles[1].Start_Date);
+          const cycleEnd = new Date(dailyUsage.Meter_Read_Cycles[1].End_Date)
+          this.populateChart(dailyUsage.Daily_Usage_List, cycleStart, cycleEnd);
         });
     }
   }
 
-  populateChart(usageHistory: any[]): void {
+  getPastUsageHistory(cycleMonth: number, cycleYear: number) {
+    if (this.activeServiceAccount) {
+      this.usageHistoryService.getPastUsageHistory(this.activeServiceAccount.UAN, cycleMonth, cycleYear)
+        .subscribe(dailyUsage => {
+          this.dailyUsage = dailyUsage;
+          const cycleStart = new Date(dailyUsage.Meter_Read_Cycles[0].Start_Date);
+          const cycleEnd = new Date(dailyUsage.Meter_Read_Cycles[0].End_Date);
+          this.populateChart(dailyUsage.Daily_Usage_List, cycleStart, cycleEnd);
+        });
+    }
+  }
+
+  populateChart(usageHistory: any[], cycleStartDate: Date, cycleEndDate: Date): void {
 
     const datagroups = {};
     let tempMonth: number;
 
     const currentMonthUsageData = usageHistory.filter(day => {
-      const cycleStart = new Date(this.dailyUsage.Meter_Read_Cycles[1].Start_Date);
-      const cycleEnd = new Date(this.dailyUsage.Meter_Read_Cycles[1].End_Date);
       const usageDay = new Date(day.Date);
-      if (usageDay >= cycleStart && usageDay <= cycleEnd) {
-        this.cycleDates.push(`${usageDay.getMonth() + 1}/${usageDay.getDate()}`);
+      if (usageDay >= cycleStartDate && usageDay <= cycleEndDate) {
         return day;
       }
     });
     
     for (let i = 0; i < currentMonthUsageData.length; i++) {
-      const usageDate = new Date(currentMonthUsageData[i].Date);
-      tempMonth = usageDate.getMonth();
-
-      if (!datagroups[tempMonth]) {
-        datagroups[tempMonth] = { data: [], label: this.monthNames[tempMonth] };
+      if (!datagroups[1]) {
+        datagroups[1] = { data: [], label: "Daily Usage" };
       }
-      datagroups[tempMonth].data.push(currentMonthUsageData[i].Usage);
+      datagroups[1].data.push(currentMonthUsageData[i].Usage);
     }
 
     const dataToDisplay = takeRight(values(datagroups));
@@ -168,12 +186,43 @@ export class ControlsAndInsightsComponent implements OnDestroy {
       this.lineChartData.push(dataToDisplay);
     }
 
-    const cycleStart = new Date(this.dailyUsage.Meter_Read_Cycles[1].Start_Date);
-    const cycleEnd = new Date(this.dailyUsage.Meter_Read_Cycles[1].End_Date);
-    this.getDates(cycleStart, cycleEnd);
+    this.getDates(cycleStartDate, cycleEndDate);
+
+    if (this.chart !== undefined) {
+      this.chart.chart.destroy();
+      this.chart.ngOnInit();
+    }
 
     this.isDataAvailable = true;
+  }
 
+  showPrevCycleDailyUsage(): void {
+    let cycleDate;
+    if (this.dailyUsage == this.currentDailyUsage) {
+      cycleDate = moment(this.currentDailyUsage.Meter_Read_Cycles[1].Usage_Month);
+    } else {
+      cycleDate = moment(this.dailyUsage.Meter_Read_Cycles[0].Usage_Month);
+    } 
+    const prevCycleDate = cycleDate.subtract(1, 'month').toDate();
+    this.getPastUsageHistory(prevCycleDate.getMonth()+1, prevCycleDate.getFullYear());
+  }
+
+  showCurrentDailyUsage(): void {
+    const cycleStart = new Date(this.currentDailyUsage.Meter_Read_Cycles[1].Start_Date);
+    const cycleEnd = new Date(this.currentDailyUsage.Meter_Read_Cycles[1].End_Date);
+    this.dailyUsage = this.currentDailyUsage;
+    this.populateChart(this.currentDailyUsage.Daily_Usage_List, cycleStart, cycleEnd);
+  }
+
+  showNextCycleDailyUsage(): void {
+    let cycleDate;
+    if (this.dailyUsage == this.currentDailyUsage) {
+      cycleDate = moment(this.currentDailyUsage.Meter_Read_Cycles[1].Usage_Month);
+    } else {
+      cycleDate = moment(this.dailyUsage.Meter_Read_Cycles[0].Usage_Month);
+    } 
+    const prevCycleDate = cycleDate.add(1, 'month').toDate();
+    this.getPastUsageHistory(prevCycleDate.getMonth()+1, prevCycleDate.getFullYear());
   }
 
   private getDates(startDate: Date, endDate: Date): void {
@@ -182,7 +231,7 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     let stopDate = moment(endDate);
     
     while (currentDate <= stopDate) {
-      dates.push(`${currentDate.format("M/DD")}`);
+      dates.push(currentDate.format("M/DD"));
       currentDate = moment(currentDate).add(1, 'days');
     }
 

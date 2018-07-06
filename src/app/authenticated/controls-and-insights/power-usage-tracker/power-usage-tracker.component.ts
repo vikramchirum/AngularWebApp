@@ -25,6 +25,7 @@ export class PowerUsageTrackerComponent implements OnDestroy {
   public usagePrediction: UsageComparison;
 
   public percentageIncrease: number;
+  public absolutePercentage: number;
   public daysInLastCycle: number;
   public remainingCycleDays: number;
   public isDataAvailable: boolean = false;
@@ -123,6 +124,8 @@ export class PowerUsageTrackerComponent implements OnDestroy {
     } else {
       this.percentageIncrease = increaseRatio * 100;
     }
+
+    this.absolutePercentage = Math.abs(this.percentageIncrease);
   }
 
   private completeCalculations(): void {

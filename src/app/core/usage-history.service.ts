@@ -38,9 +38,16 @@ export class UsageHistoryService {
 
   getUsagePrediction(UAN: string, endDate: Date): Observable<UsageComparison> {
     return this.HttpClient
-    .get(`/usage/ercot_detailed_usage`, { params: { uan: UAN, meter_read_cycles: 1, as_of_date: endDate  } })
-    .map(res => res.json())
-    .catch(error => this.HttpClient.handleHttpError(error));
+      .get(`/usage/ercot_detailed_usage`, { params: { uan: UAN, meter_read_cycles: 1, as_of_date: endDate  } })
+      .map(res => res.json())
+      .catch(error => this.HttpClient.handleHttpError(error));
+  }
+
+  getPastUsageHistory(UAN: string, cycleMonth: number, cycleYear: number): Observable<UsageComparison> {
+    return this.HttpClient
+      .get(`/usage/ercot_metercycle_daily_usage`, { params: { uan: UAN, month: cycleMonth, year: cycleYear } })
+      .map(res => res.json())
+      .catch(error => this.HttpClient.handleHttpError(error));
   }
 
   private processApiData(data) {

@@ -4,7 +4,10 @@
 
 <div class="current-trends">
   <h1>
-    Current Trends <span *ngIf="usagePrediction" [style.color]="getPercentStyle(percentageIncrease)">{{ percentageIncrease >= 0 ? '+' : '' }}{{ percentageIncrease | number:'1.0-0' }}%</span> <small>Compared to Previous Cycle*</small>
+    Current Trends 
+    <span *ngIf="usagePrediction" [style.color]="getPercentStyle(percentageIncrease)">
+      <i *ngIf="percentageIncrease > 0" class="fa fa-long-arrow-up"></i><i *ngIf="percentageIncrease < 0" class="fa fa-long-arrow-down"></i>{{ absolutePercentage | number:'1.0-0' }}%
+    </span> <small>Compared to Previous Cycle<sup class="asterick">*</sup></small>
   </h1>
 </div>
 <br />
@@ -51,7 +54,7 @@
 
       <h2 class="text-center ">
 
-        <span *ngIf="usageComparison">{{ usageComparison.Meter_Read_Cycles[1].Usage_Month | date:'LLLL' }}</span> Usage Gexstimate ** <span *ngIf="usagePrediction" [style.color]="getKwhStyle()">{{ usagePrediction.Meter_Read_Cycles[0].Usage | number:'1.0-0' }} kWh</span> </h2>
+        <span *ngIf="usageComparison">{{ usageComparison.Meter_Read_Cycles[1].Usage_Month | date:'LLLL' }}</span> Usage Gexstimate<sup class="asterick">**</sup> <span *ngIf="usagePrediction" [style.color]="getKwhStyle()">{{ usagePrediction.Meter_Read_Cycles[0].Usage | number:'1.0-0' }} kWh</span> </h2>
 
     </div>
   </div>
