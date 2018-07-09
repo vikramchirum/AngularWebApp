@@ -76,7 +76,7 @@
           <h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion" href="#collapse2"> Where does my usage estimate come from? </a></h4>
         </div>
         <div id="collapse2" class="panel-collapse collapse">
-          <div class="panel-body">We multiply your average daily usage by the number of days in your current cycle. This estimate can change if there are changes in your average daily usage, or if <span *ngIf="activeServiceAccount">{{ activeServiceAccount.TDU_Name }}</span> changes the date on which your meter is read. </div>
+          <div class="panel-body">We multiply your average daily usage by the number of days in your current cycle. This estimate can change if there are changes in your average daily usage, or if <span *ngIf="activeServiceAccount">{{ TDU_Name }}</span> changes the date on which your meter is read. </div>
         </div>
       </div>
     </div>

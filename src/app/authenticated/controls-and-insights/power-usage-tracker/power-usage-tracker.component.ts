@@ -29,6 +29,7 @@ export class PowerUsageTrackerComponent implements OnDestroy {
   public daysInLastCycle: number;
   public remainingCycleDays: number;
   public isDataAvailable: boolean = false;
+  public TDU_Name: String;
   
   constructor(
     private ServiceAccountService: ServiceAccountService,
@@ -37,6 +38,7 @@ export class PowerUsageTrackerComponent implements OnDestroy {
     this.ServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       activeServiceAccount => {
         this.activeServiceAccount = activeServiceAccount;
+        this.TDU_Name = activeServiceAccount.TDU_Name;
         this.getUsageComparisonByUAN();
         this.isDataAvailable = true;
       }
