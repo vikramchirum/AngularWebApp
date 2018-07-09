@@ -7,7 +7,7 @@
     Current Trends 
     <span *ngIf="usagePrediction" [style.color]="getPercentStyle(percentageIncrease)">
       <i *ngIf="percentageIncrease > 0" class="fa fa-long-arrow-up"></i><i *ngIf="percentageIncrease < 0" class="fa fa-long-arrow-down"></i>{{ absolutePercentage | number:'1.0-0' }}%
-    </span> <small>Compared to Previous Cycle<sup class="asterick">*</sup></small>
+    </span> <small>Compared to Previous Cycle</small>
   </h1>
 </div>
 <br />
@@ -54,20 +54,32 @@
 
       <h2 class="text-center ">
 
-        <span *ngIf="usageComparison">{{ usageComparison.Meter_Read_Cycles[1].Usage_Month | date:'LLLL' }}</span> Usage Gexstimate<sup class="asterick">**</sup> <span *ngIf="usagePrediction" [style.color]="getKwhStyle()">{{ usagePrediction.Meter_Read_Cycles[0].Usage | number:'1.0-0' }} kWh</span> </h2>
+        <span *ngIf="usageComparison">{{ usageComparison.Meter_Read_Cycles[1].Usage_Month | date:'LLLL' }}</span> Usage Gexstimate <span *ngIf="usagePrediction" [style.color]="getKwhStyle()">{{ usagePrediction.Meter_Read_Cycles[0].Usage | number:'1.0-0' }} kWh</span> </h2>
 
     </div>
   </div>
 </div>
 <br />
 <div class="row">
-  <div class="col-sm-12"></div>
-  <div *ngIf="usageComparison" class="text-center">
-
-    * Percentage Comparison to Previous Cycle {{ usageComparison.Meter_Read_Cycles[0].Start_Date | date:'shortDate' }} thru {{ comparisonEndDate | date:'shortDate' }}</div>
-  
-  <div *ngIf="usagePrediction" class="text-center">
-
-    ** Average daily usage of {{ usagePrediction.Meter_Read_Cycles[0].Usage / usagePrediction.Days_InTo_Current_Cycle | number:'1.0-0' }} kWh times the number of days in your cycle.</div>
+  <div class="col-sm-8 col-sm-offset-2 col-xs-12">
+    <div class="panel-group" id="accordion">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion" href="#collapse1"> How is my current usage trend calculated?</a> </h4>
+        </div>
+        <div id="collapse1" class="panel-collapse collapse">
+          <div class="panel-body">Your current usage trend is based on your electricity usage for the number of days in your current cycle compared with the same number of days in your previous cycle. </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion" href="#collapse2"> Where does my usage estimate come from? </a></h4>
+        </div>
+        <div id="collapse2" class="panel-collapse collapse">
+          <div class="panel-body">We multiply your average daily usage by the number of days in your current cycle. This estimate can change if there are changes in your average daily usage, or if <span *ngIf="activeServiceAccount">{{ activeServiceAccount.TDU_Name }}</span> changes the date on which your meter is read. </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <br /><br />
