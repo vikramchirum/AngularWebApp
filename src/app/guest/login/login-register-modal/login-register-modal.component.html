@@ -16,11 +16,25 @@
         </div>
         <div class="modal-body container-fluid">
             <div class="row">
+              
+               <div class="ui-show-service-number" *ngIf="showServiceNumberHelp">
+                 <div class="col-xs-12">  <h5>Locate <b>Service Number</b> on Page 1 of <button class="btn btn-xs btn-link" (click)="ServiceNumberEBillToggle(false)">Your Bill</button> or <button class="btn btn-xs btn-link" (click)="ServiceNumberEBillToggle(true)"> On Your E-Bill</button></h5>
+                      <img src="../../../../assets/home/gexa-service_numer.png" alt="Gexa Service Number" width="100%" *ngIf="!showServiceNumberEBill">
+                      <img src="../../../../assets/home/gexa-service_numer-ebill.png" alt="Gexa Service Number" width="100%" *ngIf="showServiceNumberEBill">
+                   <i class="fa fa-remove" (click)="ServiceNumberHelpToggle(true)"></i>
+                 </div>
+
+                    </div>
               <div class="col-xs-12 col-md-8 col-md-offset-2">
+                 <button class="btn btn-link btn-xs pull-right" (click)="ServiceNumberHelpToggle(true)"><i class="fa fa-life-ring"></i> Help Me Find This</button>
                 <ng-template *ngIf="!registerClicked; then registrationFields else verificationFields;"></ng-template>
                 <ng-template #registrationFields>
                   <form id="registration" novalidate [formGroup]="registerForm"
                         (ngSubmit)="save(registerForm.value, registerForm.valid)">
+                    
+                    
+                 
+                    
                     <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Service_Account_Id'].valid
                   && formSubmitted}">
                       <label class="control-label">Service Number</label>
