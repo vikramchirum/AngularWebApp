@@ -6,7 +6,7 @@
   <h1>
     Current Trends 
     <span *ngIf="usagePrediction" [style.color]="getPercentStyle(percentageIncrease)">
-      <i *ngIf="percentageIncrease > 0" class="fa fa-long-arrow-up"></i><i *ngIf="percentageIncrease < 0" class="fa fa-long-arrow-down"></i>{{ absolutePercentage | number:'1.0-0' }}%
+      <i *ngIf="percentageIncrease > 0" class="fa fa-arrow-up"></i><i *ngIf="percentageIncrease < 0" class="fa fa-arrow-down"></i>{{ absolutePercentage | number:'1.0-0' }}%
     </span> <small>Compared to Previous Cycle</small>
   </h1>
 </div>
