@@ -112,8 +112,12 @@ export class LoginRegisterModalComponent implements OnInit {
 
   save(model: IRegUser, isValid: boolean) {
     this.resetValidationErrors();
-    // call API to save customer
     if (isValid) {
+      // Strip dash and any following digits from service account number
+      // in case customer copied and pasted from confirmation email
+      const strippedServiceAccountId = model.Service_Account_Id.split("-")[0];
+      model.Service_Account_Id = strippedServiceAccountId;
+      // call API to save customer
       this.UserService.verifyRegisterUser(model).subscribe(
         (result1) => {
           console.log('hello', result1);
