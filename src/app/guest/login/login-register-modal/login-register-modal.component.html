@@ -26,9 +26,9 @@
 
                     </div>
               <div class="col-xs-12 col-md-8 col-md-offset-2">
-                 <button class="btn btn-link btn-xs pull-right" (click)="ServiceNumberHelpToggle()"><i class="fa fa-life-ring"></i> Help Me Find This</button>
                 <ng-template *ngIf="!registerClicked; then registrationFields else verificationFields;"></ng-template>
                 <ng-template #registrationFields>
+                     <button class="btn btn-link btn-xs pull-right" (click)="ServiceNumberHelpToggle()"><i class="fa fa-life-ring"></i> Help Me Find This</button>
                   <form id="registration" novalidate [formGroup]="registerForm"
                         (ngSubmit)="save(registerForm.value, registerForm.valid)">
                     
