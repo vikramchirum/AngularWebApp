@@ -37,6 +37,24 @@ width:55%;}
 background-color: rgba(103, 183, 220,1.0);
 width:85%;
 }
+.current-cycle-usage {
+  .col-sm-3 h3 {
+    
+    margin-top:13px;
+    
+  }
+  
+  .days_remaining {
+    text-align: right;
+    
+    small {
+          margin-right: 115px;
+          font-weight: 600;
+    }
+    
+  }
+  
+}
 
 .gexstimate {
     border: 1px solid rgba(46,177,52,1.0);
@@ -141,3 +159,12 @@ width:55%;}
   background-color: transparent;
   border-color: transparent;
 }
+
+.fa-arrow-up, .fa-arrow-down {
+
+  -webkit-transform: scale(.8,.9);
+  -moz-transform: scale(.8,.9);
+  -ms-transform: scale(.8,.9);
+
+  transform: scale(.8,.9);
+} 

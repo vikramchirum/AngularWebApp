@@ -24,12 +24,14 @@
         {{ usageComparison.Meter_Read_Cycles[1].Usage | number:'1.0-0' }} kWh <small>in {{ usageComparison.Days_InTo_Current_Cycle }} days</small>
       </h4>
     </div>
-    <div *ngIf="usagePrediction" class="bar progress-bar progress-bar-striped progress-bar-animated remaining-days" style="width: 30%;" [style.width]="getRemainingDaysWidth()">
-      <h4 class="pull-right">
+    <div *ngIf="usagePrediction" class="bar progress-bar progress-bar-striped progress-bar-animated remaining-days"  [style.width]="getRemainingDaysWidth()">
+      <h4>&nbsp;</h4>
+    </div>
+     
+  </div>
+   <h4 class="days_remaining">
         <small>{{ remainingCycleDays }} day{{ remainingCycleDays === 1 ? '' : 's' }} remaining</small>
       </h4>
-    </div>
-  </div>
 </div>
 
 <div class="row">
@@ -54,7 +56,7 @@
 
       <h2 class="text-center ">
 
-        <span *ngIf="usageComparison">{{ usageComparison.Meter_Read_Cycles[1].Usage_Month | date:'LLLL' }}</span> Usage Gexstimate <span *ngIf="usagePrediction" [style.color]="getKwhStyle()">{{ usagePrediction.Meter_Read_Cycles[0].Usage | number:'1.0-0' }} kWh</span> </h2>
+        <span *ngIf="usageComparison">{{ usageComparison.Meter_Read_Cycles[1].Usage_Month | date:'LLLL' }}</span> Usage Gexstimate &nbsp; <span *ngIf="usagePrediction" [style.color]="getKwhStyle()">{{ usagePrediction.Meter_Read_Cycles[0].Usage | number:'1.0-0' }} kWh</span> </h2>
 
     </div>
   </div>
