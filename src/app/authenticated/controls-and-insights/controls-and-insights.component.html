@@ -75,11 +75,7 @@
           <div class="line-chart">
             <br/>
             <h1>
-<<<<<<< HEAD
-              Daily Usage Tracker
-=======
-             Daily Usage Tracker <small> Usage for this cycle</small>
->>>>>>> dev
+             Daily Usage Tracker <small> {{ dailyUsage.Meter_Read_Cycles[dailyUsage.Meter_Read_Cycles.length-1].Usage_Month | date:'LLLL' }} cycle <span style="color: #2eb134;"> {{ dailyUsage.Meter_Read_Cycles[dailyUsage.Meter_Read_Cycles.length-1].Usage | number:'1.0-0' }} kWh</span></small>
             </h1><br />
             <div *ngFor='let index of lineChartData'>
               <canvas

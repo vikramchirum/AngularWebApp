@@ -5,7 +5,7 @@
 <div class="current-trends">
   <h1>
     Current Trends 
-    <span *ngIf="usagePrediction" [style.color]="getPercentStyle(percentageIncrease)">
+    <span *ngIf="usageComparison" [style.color]="getPercentStyle(percentageIncrease)">
       <i *ngIf="percentageIncrease > 0" class="fa fa-arrow-up"></i><i *ngIf="percentageIncrease < 0" class="fa fa-arrow-down"></i>{{ absolutePercentage | number:'1.0-0' }}%
     </span> <small>Compared to Previous Cycle</small>
   </h1>
@@ -21,10 +21,10 @@
   <div class="col-sm-9 progress">
     <div *ngIf="usageComparison" class="bar current progress-bar progress-bar-striped progress-bar-animated">
       <h4>
-        {{ usageComparison.Meter_Read_Cycles[1].Usage | number:'1.0-0' }} kWh <small>in {{ usageComparison.Days_InTo_Current_Cycle }} days</small>
+        {{ usageThisCycle | number:'1.0-0' }} kWh <small>in {{ usageComparison.Days_InTo_Current_Cycle }} days</small>
       </h4>
     </div>
-    <div *ngIf="usagePrediction" class="bar progress-bar progress-bar-striped progress-bar-animated remaining-days"  [style.width]="getRemainingDaysWidth()">
+    <div *ngIf="usageComparison" class="bar progress-bar progress-bar-striped progress-bar-animated remaining-days"  [style.width]="getRemainingDaysWidth()">
       <h4>&nbsp;</h4>
     </div>
      
@@ -56,9 +56,15 @@
 
       <h2 class="text-center ">
 
-        <span *ngIf="usageComparison">{{ usageComparison.Meter_Read_Cycles[1].Usage_Month | date:'LLLL' }}</span> Usage Gexstimate &nbsp; <span *ngIf="usagePrediction" [style.color]="getKwhStyle()">{{ usagePrediction.Meter_Read_Cycles[0].Usage | number:'1.0-0' }} kWh</span> </h2>
+        <span *ngIf="usageComparison">{{ usageComparison.Meter_Read_Cycles[1].Usage_Month | date:'LLLL' }}</span> Usage Estimate &nbsp; <span *ngIf="usageComparison" [style.color]="getKwhStyle()">{{ usageComparison.Meter_Read_Cycles[1].Usage | number:'1.0-0' }} kWh</span> </h2>
 
     </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2 col-xs-12">
+    <br />
+    <p><em>Based on usage data available as of <span *ngIf="usageComparison">{{ usageComparison.Daily_Usage_List[usageComparison.Daily_Usage_List.length-1].Date | date:'MM/dd/yyyy'}}</span> from Smart Meter Texas and <span *ngIf="TDU_Name">{{ TDU_Name }}</span>. Your monthly bill is the official record of your actual usage.</em></p>
   </div>
 </div>
 <br />
