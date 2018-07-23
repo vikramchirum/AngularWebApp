@@ -25,6 +25,8 @@ export class LoginRegisterModalComponent implements OnInit {
   registerClicked: boolean = null;
   registerForm: FormGroup = null;
   formSubmitted: boolean = null;
+  showServiceNumberHelp: boolean = null;
+  showServiceNumberEBill: boolean = null;
   user: IRegUser = null;
   error: string = null;
   errorMsg: string = null;
@@ -112,8 +114,12 @@ export class LoginRegisterModalComponent implements OnInit {
 
   save(model: IRegUser, isValid: boolean) {
     this.resetValidationErrors();
-    // call API to save customer
     if (isValid) {
+      // Strip dash and any following digits from service account number
+      // in case customer copied and pasted from confirmation email
+      const strippedServiceAccountId = model.Service_Account_Id.split("-")[0];
+      model.Service_Account_Id = strippedServiceAccountId;
+      // call API to save customer
       this.UserService.verifyRegisterUser(model).subscribe(
         (result1) => {
           console.log('hello', result1);
@@ -198,5 +204,14 @@ export class LoginRegisterModalComponent implements OnInit {
   public hideLoginRegisterModal(): void {
     this.loginRegisterModal.hide();
   }
-
+    
+  ServiceNumberHelpToggle() {
+    this.showServiceNumberHelp = !this.showServiceNumberHelp;
+  }
+  
+  ServiceNumberEBillToggle(state) {
+    
+    this.showServiceNumberEBill = state;
+  }
+  
 }
