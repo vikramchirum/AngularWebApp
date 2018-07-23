@@ -5,7 +5,7 @@ import { takeRight, values } from 'lodash';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { UsageHistoryService } from '../../../core/usage-history.service';
-import { UsageComparison } from '../../../core/models/usage/usage-comparison.model';
+import { UsageComparison, DailyUsage } from '../../../core/models/usage/usage-comparison.model';
 import { ValueTransformer } from '@angular/compiler/src/util';
 
 @Component({
@@ -18,15 +18,13 @@ export class PowerUsageTrackerComponent implements OnDestroy {
   private activeServiceAccount: ServiceAccount = null;
   private ServiceAccountSubscription: Subscription = null;
 
-  private comparisonStartDate: Date;
-  private comparisonEndDate: Date;
-
   public usageComparison: UsageComparison;
-  public usagePrediction: UsageComparison;
+  public usageThisCycle: number;
 
   public percentageIncrease: number;
   public absolutePercentage: number;
   public daysInLastCycle: number;
+  public daysInThisCycle: number;
   public remainingCycleDays: number;
   public isDataAvailable: boolean = false;
   public TDU_Name: String;
@@ -54,19 +52,8 @@ export class PowerUsageTrackerComponent implements OnDestroy {
       this.usageHistoryService.getUsageComparison(this.activeServiceAccount.UAN)
         .subscribe(usageComparison => {
           this.usageComparison = usageComparison;
-          this.getUsagePredictionForCurrentMonth(usageComparison.Meter_Read_Cycles[1].End_Date);
-          this.completeCalculations();
+          this.doCalculations();
         });
-    }
-  }
-
-  getUsagePredictionForCurrentMonth(endDate: Date) {
-    if (this.activeServiceAccount) {
-      this.usageHistoryService.getUsagePrediction(this.activeServiceAccount.UAN, endDate).subscribe(usagePreduction => {
-        this.usagePrediction = usagePreduction;
-        this.calculatePercentDifference();
-        this.remainingCycleDays = this.usagePrediction.Days_InTo_Current_Cycle - this.usageComparison.Days_InTo_Current_Cycle;
-      });
     }
   }
 
@@ -80,7 +67,7 @@ export class PowerUsageTrackerComponent implements OnDestroy {
 
   getKwhStyle(): string {
     const pastUsage = this.usageComparison.Meter_Read_Cycles[0].Usage;
-    const estimatedUsage = this.usagePrediction.Meter_Read_Cycles[0].Usage;
+    const estimatedUsage = this.usageComparison.Meter_Read_Cycles[1].Usage;
     if (pastUsage > estimatedUsage) {
       return '#2eb134';
     } else {
@@ -89,7 +76,7 @@ export class PowerUsageTrackerComponent implements OnDestroy {
   }
 
   getRemainingDaysWidth(): string {
-    const daysInCurrentCycle = this.usagePrediction.Days_InTo_Current_Cycle;
+    const daysInCurrentCycle = this.usageComparison.Days_InTo_Current_Cycle;
     if (daysInCurrentCycle < this.daysInLastCycle) {
       return '28%';
     } else if (daysInCurrentCycle > this.daysInLastCycle) {
@@ -106,19 +93,48 @@ export class PowerUsageTrackerComponent implements OnDestroy {
   public chartHovered(e: any): void {
     console.log(e);
   }
+  
+  private doCalculations() {
+    const startDate = new Date(this.usageComparison.Meter_Read_Cycles[1].Start_Date);
+    const endDate = new Date(this.usageComparison.Meter_Read_Cycles[1].End_Date);
+    const timeDiffThisCycle = Math.abs(startDate.getTime() - endDate.getTime());
+
+    this.daysInThisCycle = Math.ceil(timeDiffThisCycle / (1000 * 3600 * 24));
+    this.remainingCycleDays = this.daysInThisCycle - this.usageComparison.Days_InTo_Current_Cycle;
+
+    const date2 = new Date(this.usageComparison.Meter_Read_Cycles[0].End_Date);
+    const date1 = new Date(this.usageComparison.Meter_Read_Cycles[0].Start_Date);
+    const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    this.daysInLastCycle = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    
+    const currentUsageWithinRange = this.usageComparison.Daily_Usage_List.filter(day => {
+      let firstDayOfCycle = this.usageComparison.Meter_Read_Cycles[1].Start_Date;
+      if (day.Date >= firstDayOfCycle) {
+        return day;
+      }
+    });
+
+    this.usageThisCycle = currentUsageWithinRange.map(day => day.Usage)
+    .reduce((prevValue, currentValue) => prevValue + currentValue, 0);
+
+    this.calculatePercentDifference();
+  }
 
   private calculatePercentDifference(): void {
+    const startDate = new Date(this.usageComparison.Meter_Read_Cycles[0].Start_Date);
+    let endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + this.usageComparison.Days_InTo_Current_Cycle);
+
     let previousUsageWithinComparisonRange = this.usageComparison.Daily_Usage_List.filter(day => {
       let date = new Date(day.Date);
-      if (date >= this.comparisonStartDate && date < this.comparisonEndDate)
+      if (date >= startDate && date < endDate)
         return day;
     });
     let previousUsageInComparisonTotal = previousUsageWithinComparisonRange.map(day => {
       return day.Usage;
     }).reduce((a, b) => a + b, 0);
-
-    const currentUsage = this.usageComparison.Meter_Read_Cycles[1].Usage;
-    const increase = currentUsage - previousUsageInComparisonTotal;
+;
+    const increase = this.usageThisCycle - previousUsageInComparisonTotal;
     const increaseRatio = increase / previousUsageInComparisonTotal;
 
     if (isNaN(increaseRatio)) {
@@ -128,19 +144,6 @@ export class PowerUsageTrackerComponent implements OnDestroy {
     }
 
     this.absolutePercentage = Math.abs(this.percentageIncrease);
-  }
-
-  private completeCalculations(): void {
-    const date2 = new Date(this.usageComparison.Meter_Read_Cycles[0].End_Date);
-    const date1 = new Date(this.usageComparison.Meter_Read_Cycles[0].Start_Date);
-    const timeDiff = Math.abs(date2.getTime() - date1.getTime());
-    this.daysInLastCycle = Math.ceil(timeDiff / (1000 * 3600 * 24));
-
-    const daysIntoCycle = this.usageComparison.Days_InTo_Current_Cycle;
-    let endDate = new Date(date1);
-    endDate.setDate(endDate.getDate() + daysIntoCycle);
-    this.comparisonEndDate = endDate;
-    this.comparisonStartDate = date1;
   }
 
 }

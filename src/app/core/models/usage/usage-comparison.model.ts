@@ -5,7 +5,7 @@ export interface UsageComparison {
     Daily_Usage_List: DailyUsage[]
 }
 
-interface MeterReadCycle {
+export interface MeterReadCycle {
     Usage_Month: Date,
     Start_Date: Date,
     End_Date: Date,
@@ -13,7 +13,7 @@ interface MeterReadCycle {
     Usage_Type: string
 }
 
-interface DailyUsage {
+export interface DailyUsage {
     Date: Date,
     Usage: number,
     Source: string
