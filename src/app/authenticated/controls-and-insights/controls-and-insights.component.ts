@@ -33,6 +33,7 @@ export class ControlsAndInsightsComponent implements OnDestroy {
   /* Usage Tracker line chart */
   public currentDailyUsage: UsageComparison;
   public dailyUsage: UsageComparison;
+  public usageThisCycle: number;
   public cycleDates = [];
 
   private monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
@@ -134,8 +135,10 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     if (this.activeServiceAccount) {
       this.usageHistoryService.getUsageComparison(this.activeServiceAccount.UAN)
         .subscribe(dailyUsage => {
-          if (!this.currentDailyUsage)
+          if (!this.currentDailyUsage) {
             this.currentDailyUsage = dailyUsage;
+            this.getCurrentMonthUsageTotal();
+          }
           
           this.dailyUsage = dailyUsage;
           const cycleStart = new Date(dailyUsage.Meter_Read_Cycles[1].Start_Date);
@@ -236,6 +239,17 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     }
 
     this.cycleDates = dates;
+  }
+
+  getCurrentMonthUsageTotal(): void {
+    const currentUsageWithinRange = this.currentDailyUsage.Daily_Usage_List.filter(day => {
+      let firstDayOfCycle = this.currentDailyUsage.Meter_Read_Cycles[1].Start_Date;
+      if (day.Date >= firstDayOfCycle) {
+        return day;
+      }
+    });
+    this.usageThisCycle = currentUsageWithinRange.map(day => day.Usage)
+    .reduce((prevValue, currentValue) => prevValue + currentValue, 0);
   }
 
 }
