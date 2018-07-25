@@ -3,12 +3,17 @@
 </div>
 
 <div class="current-trends">
-  <h1>
+  <h1 *ngIf="usageThisCycle != 0">
     Current Trends 
     <span *ngIf="usageComparison" [style.color]="getPercentStyle(percentageIncrease)">
       <i *ngIf="percentageIncrease > 0" class="fa fa-arrow-up"></i><i *ngIf="percentageIncrease < 0" class="fa fa-arrow-down"></i>{{ absolutePercentage | number:'1.0-0' }}%
     </span> <small>Compared to Previous Cycle</small>
   </h1>
+  <h1 *ngIf="usageThisCycle == 0">
+    <span style="color: #2eb134;">Sorry!</span>
+    <small class="no_usage_data">We haven't received any electricity usage data for your current cycle.</small>
+  </h1>
+  <p>We'll have your current trend and usage estimate as soon as your usage data is available, typically within a few days.</p>
 </div>
 <br />
 <div class="row current-cycle-usage">
@@ -19,19 +24,24 @@
 
   </div>
   <div class="col-sm-9 progress">
-    <div *ngIf="usageComparison" class="bar current progress-bar progress-bar-striped progress-bar-animated">
+    <div *ngIf="usageComparison && usageThisCycle != 0" class="bar current progress-bar progress-bar-striped progress-bar-animated">
       <h4>
         {{ usageThisCycle | number:'1.0-0' }} kWh <small>in {{ usageComparison.Days_InTo_Current_Cycle }} days</small>
       </h4>
     </div>
-    <div *ngIf="usageComparison" class="bar progress-bar progress-bar-striped progress-bar-animated remaining-days"  [style.width]="getRemainingDaysWidth()">
+    <div *ngIf="usageThisCycle == 0" class="bar current progress-bar progress-bar-striped progress-bar-animated" style="width: auto;">
+      <h4>
+        ?
+      </h4>
+    </div>
+    <div *ngIf="usageComparison && usageThisCycle != 0" class="bar progress-bar progress-bar-striped progress-bar-animated remaining-days"  [style.width]="getRemainingDaysWidth()">
       <h4>&nbsp;</h4>
     </div>
-     
   </div>
-   <h4 class="days_remaining">
-        <small>{{ remainingCycleDays }} day{{ remainingCycleDays === 1 ? '' : 's' }} remaining</small>
-      </h4>
+  <h4 class="days_remaining">
+    <small *ngIf="usageThisCycle !=0">{{ remainingCycleDays }} day{{ remainingCycleDays === 1 ? '' : 's' }} remaining</small>
+    <span *ngIf="usageThisCycle == 0">&nbsp;</span>
+  </h4>
 </div>
 
 <div class="row">
@@ -54,10 +64,13 @@
   <div class="col-sm-12 text-center">
     <div class="gexstimate">
 
-      <h2 class="text-center ">
+      <h2 *ngIf="usageThisCycle != 0" class="text-center ">
 
         <span *ngIf="usageComparison">{{ usageComparison.Meter_Read_Cycles[1].Usage_Month | date:'LLLL' }}</span> Usage Estimate &nbsp; <span *ngIf="usageComparison" [style.color]="getKwhStyle()">{{ usageComparison.Meter_Read_Cycles[1].Usage | number:'1.0-0' }} kWh</span> </h2>
 
+      <h2 *ngIf="usageThisCycle == 0" class="text-center">
+        Check Back Soon<span style="color: #2eb134;">...</span>
+      </h2>
     </div>
   </div>
 </div>
