@@ -250,6 +250,14 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     });
     this.usageThisCycle = currentUsageWithinRange.map(day => day.Usage)
     .reduce((prevValue, currentValue) => prevValue + currentValue, 0);
+
+    // If no usage then show last month's daily usage
+    if (isNaN(this.usageThisCycle) || this.usageThisCycle == 0) {
+      const cycleDate = new Date(this.currentDailyUsage.Meter_Read_Cycles[0].Usage_Month);
+      const cycleMonth = cycleDate.getMonth() + 1;
+      const cycleYear = cycleDate.getFullYear();
+      this.getPastUsageHistory(cycleMonth, cycleYear);
+    }
   }
 
 }

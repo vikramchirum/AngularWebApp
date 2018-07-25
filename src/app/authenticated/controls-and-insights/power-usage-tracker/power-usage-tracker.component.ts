@@ -8,6 +8,8 @@ import { UsageHistoryService } from '../../../core/usage-history.service';
 import { UsageComparison, DailyUsage } from '../../../core/models/usage/usage-comparison.model';
 import { ValueTransformer } from '@angular/compiler/src/util';
 
+import * as moment from 'moment';
+
 @Component({
   selector: 'mygexa-power-usage-tracker',
   templateUrl: './power-usage-tracker.component.html',
@@ -95,17 +97,19 @@ export class PowerUsageTrackerComponent implements OnDestroy {
   }
   
   private doCalculations() {
-    const startDate = new Date(this.usageComparison.Meter_Read_Cycles[1].Start_Date);
-    const endDate = new Date(this.usageComparison.Meter_Read_Cycles[1].End_Date);
-    const timeDiffThisCycle = Math.abs(startDate.getTime() - endDate.getTime());
+    const startDate = moment(this.usageComparison.Meter_Read_Cycles[1].Start_Date);
+    const endDate = moment(this.usageComparison.Meter_Read_Cycles[1].End_Date);
+    startDate.startOf('day');
+    endDate.endOf('day');
+    this.daysInThisCycle = endDate.diff(startDate, 'days', true);
 
-    this.daysInThisCycle = Math.ceil(timeDiffThisCycle / (1000 * 3600 * 24));
+    const date2 = moment(this.usageComparison.Meter_Read_Cycles[0].End_Date);
+    const date1 = moment(this.usageComparison.Meter_Read_Cycles[0].Start_Date);
+    date2.endOf('day');
+    date1.startOf('day');
+    this.daysInLastCycle = date2.diff(date1, 'days', true);
+
     this.remainingCycleDays = this.daysInThisCycle - this.usageComparison.Days_InTo_Current_Cycle;
-
-    const date2 = new Date(this.usageComparison.Meter_Read_Cycles[0].End_Date);
-    const date1 = new Date(this.usageComparison.Meter_Read_Cycles[0].Start_Date);
-    const timeDiff = Math.abs(date2.getTime() - date1.getTime());
-    this.daysInLastCycle = Math.ceil(timeDiff / (1000 * 3600 * 24));
     
     const currentUsageWithinRange = this.usageComparison.Daily_Usage_List.filter(day => {
       let firstDayOfCycle = this.usageComparison.Meter_Read_Cycles[1].Start_Date;

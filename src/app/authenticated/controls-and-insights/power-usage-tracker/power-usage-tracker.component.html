@@ -39,7 +39,7 @@
     </div>
   </div>
   <h4 class="days_remaining">
-    <small *ngIf="usageThisCycle !=0">{{ remainingCycleDays }} day{{ remainingCycleDays === 1 ? '' : 's' }} remaining</small>
+    <small *ngIf="usageThisCycle !=0">{{ remainingCycleDays | number:'1.0-0' }} day{{ remainingCycleDays === 1 ? '' : 's' }} remaining</small>
     <span *ngIf="usageThisCycle == 0">&nbsp;</span>
   </h4>
 </div>
@@ -54,7 +54,7 @@
   <div class="col-sm-9">
     <div *ngIf="usageComparison" class="bar previous">
       <h4>
-        {{ usageComparison.Meter_Read_Cycles[0].Usage | number:'1.0-0' }} kWh <small>in {{ daysInLastCycle }} days</small>
+        {{ usageComparison.Meter_Read_Cycles[0].Usage | number:'1.0-0' }} kWh <small>in {{ daysInLastCycle | number:'1.0-0' }} days</small>
       </h4>
     </div>
   </div>

@@ -68,15 +68,15 @@
       <div class="col-md-3 hidden-xs  hidden-sm">
       </div>
       <div class="col-sm-12 col-md-9 col-md-offset-3" style="margin-bottom: 10px;">
-        <div *ngIf="lineChartData.length < 1">
+        <div *ngIf="!isDataAvailable">
           <div class="alert alert-info"> <strong>Thank you for choosing Gexa Energy!</strong> <br />Your daily usage will display here as soon as your usage data is available for this cycle. </div>
         </div>
-        <ng-container *ngIf="isDataAvailable && lineChartData && lineChartData.length > 0">
+        <ng-container *ngIf="isDataAvailable && lineChartData">
           <div class="line-chart">
             <br/>
             <h1>
               Daily Usage Tracker 
-              <small> {{ dailyUsage.Meter_Read_Cycles[dailyUsage.Meter_Read_Cycles.length-1].Usage_Month | date:'LLLL' }} cycle 
+              <small *ngIf="dailyUsage"> {{ dailyUsage.Meter_Read_Cycles[dailyUsage.Meter_Read_Cycles.length-1].Usage_Month | date:'LLLL' }} cycle 
                 <span *ngIf="dailyUsage.Meter_Read_Cycles.length > 1" style="color: #2eb134;"> {{ usageThisCycle | number:'1.0-0' }} kWh</span>
                 <span *ngIf="dailyUsage.Meter_Read_Cycles.length == 1" style="color: #2eb134;"> {{ dailyUsage.Meter_Read_Cycles[0].Usage | number:'1.0-0' }} kWh</span>
               </small>
