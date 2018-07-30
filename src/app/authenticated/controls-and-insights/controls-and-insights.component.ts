@@ -53,7 +53,7 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     tooltips: {
       callbacks: {
         label: (tooltipItem) => {
-          return Math.round(tooltipItem.yLabel) + ' kWh';
+          return Math.round(tooltipItem.yLabel * 10) / 10 + ' kWh';
         }
       }
     },
@@ -88,6 +88,9 @@ export class ControlsAndInsightsComponent implements OnDestroy {
   ) {
     this.ServiceAccountsSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       activeServiceAccount => {
+        if (activeServiceAccount != this.activeServiceAccount) {
+          this.currentDailyUsage = null;
+        }
         this.activeServiceAccount = activeServiceAccount;
         this.getUsageHistoryByServiceAccountId();
         this.getUsageComparisonByUAN();
