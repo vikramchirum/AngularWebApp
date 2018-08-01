@@ -37,8 +37,24 @@ width:55%;}
 background-color: rgba(103, 183, 220,1.0);
 width:85%;
 }
+
+ .previous-cycle-usage {
+   h3 {
+    
+    margin-top:13px;
+    
+  }
+}
+
+.current-trends {
+  small {
+    white-space:nowrap;
+    
+  }
+}
+
 .current-cycle-usage {
-  .col-sm-3 h3 {
+   h3 {
     
     margin-top:13px;
     
@@ -171,4 +187,42 @@ width:55%;}
 
 .no_usage_data {
   font-size: 55%;
+}
+
+
+
+@media only screen and (max-width:768px) {
+  
+  
+.col-sm-pull-9 {
+  
+  h3 { 
+    margin-top: 3px;
+  }
+
+}
+
+.gexstimate {
+  
+  padding:10px 20px;
+  
+  span {
+    white-space:nowrap;
+    font-size: 20px;
+  }
+}
+  
+}
+
+
+.gexstimate {
+  span {
+    white-space:nowrap;
+    min-width:450px
+  }
+}
+
+.basedon {
+    max-width: 475px;
+    margin: 0 auto;
 }
