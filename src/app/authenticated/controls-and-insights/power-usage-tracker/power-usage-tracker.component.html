@@ -13,7 +13,7 @@
     <span style="color: #2eb134;">Sorry!</span>
     <small class="no_usage_data">We haven't received any electricity usage data for your current cycle.</small>
   </h1>
-  <p>We'll have your current trend and usage estimate as soon as your usage data is available, typically within a few days.</p>
+  <p *ngIf="usageThisCycle == 0">We'll have your current trend and usage estimate as soon as your usage data is available, typically within a few days.</p>
 </div>
 <br />
 <div class="row current-cycle-usage">
@@ -76,7 +76,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="basedon">
+  <div class="disclaimer">
     <br />
     <p><em>Based on usage data available as of <span *ngIf="usageComparison">{{ usageComparison.Daily_Usage_List[usageComparison.Daily_Usage_List.length-1].Date | date:'MM/dd/yyyy'}}</span> from Smart Meter Texas and <span *ngIf="TDU_Name">{{ TDU_Name }}</span>. Your monthly bill is the official record of your actual usage.</em></p>
   </div>
