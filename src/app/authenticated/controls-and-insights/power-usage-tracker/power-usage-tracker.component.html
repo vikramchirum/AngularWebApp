@@ -17,13 +17,13 @@
 </div>
 <br />
 <div class="row current-cycle-usage">
-  <div class="col-sm-3">
+  <div class="col-s-12 col-md-3">
     <h3>
       So Far This Cycle
     </h3>
 
   </div>
-  <div class="col-sm-9 progress">
+  <div class="col-sm-12 col-md-9 progress">
     <div *ngIf="usageComparison && usageThisCycle != 0" class="bar current progress-bar progress-bar-striped progress-bar-animated">
       <h4>
         {{ usageThisCycle | number:'1.0-0' }} kWh <small>in {{ usageComparison.Days_InTo_Current_Cycle }} days</small>
@@ -44,19 +44,20 @@
   </h4>
 </div>
 
-<div class="row">
-  <div class="col-sm-3">
-    <h3>
-      Previous Cycle
-    </h3>
-
-  </div>
-  <div class="col-sm-9">
+<div class="row previous-cycle-usage">
+ 
+  <div class="col-sm-12 col-md-push-3 col-md-9">
     <div *ngIf="usageComparison" class="bar previous">
       <h4>
         {{ usageComparison.Meter_Read_Cycles[0].Usage | number:'1.0-0' }} kWh <small>in {{ daysInLastCycle | number:'1.0-0' }} days</small>
       </h4>
     </div>
+  </div>
+   <div class="col-sm-12  col-md-pull-9 col-md-3">
+    <h3>
+      Previous Cycle
+    </h3>
+
   </div>
 </div>
 <br />
@@ -66,7 +67,7 @@
 
       <h2 *ngIf="usageThisCycle != 0" class="text-center ">
 
-        <span *ngIf="usageComparison">{{ usageComparison.Meter_Read_Cycles[1].Usage_Month | date:'LLLL' }}</span> Usage Estimate &nbsp; <span *ngIf="usageComparison" [style.color]="getKwhStyle()">{{ usageComparison.Meter_Read_Cycles[1].Usage | number:'1.0-0' }} kWh</span> </h2>
+        <span *ngIf="usageComparison">{{ usageComparison.Meter_Read_Cycles[1].Usage_Month | date:'LLLL' }}</span> <span>Usage Estimate</span> <span *ngIf="usageComparison" [style.color]="getKwhStyle()">{{ usageComparison.Meter_Read_Cycles[1].Usage | number:'1.0-0' }} kWh</span> </h2>
 
       <h2 *ngIf="usageThisCycle == 0" class="text-center">
         Check Back Soon<span style="color: #2eb134;">...</span>
@@ -75,9 +76,9 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-sm-8 col-sm-offset-2 col-xs-12">
+  <div class="disclaimer">
     <br />
-    <p class="disclaimer"><em>Based on usage data available as of <span *ngIf="usageComparison">{{ usageComparison.Daily_Usage_List[usageComparison.Daily_Usage_List.length-1].Date | date:'MM/dd/yyyy'}}</span> from Smart Meter Texas and <span *ngIf="TDU_Name">{{ TDU_Name }}</span>. Your monthly bill is the official record of your actual usage.</em></p>
+    <p><em>Based on usage data available as of <span *ngIf="usageComparison">{{ usageComparison.Daily_Usage_List[usageComparison.Daily_Usage_List.length-1].Date | date:'MM/dd/yyyy'}}</span> from Smart Meter Texas and <span *ngIf="TDU_Name">{{ TDU_Name }}</span>. Your monthly bill is the official record of your actual usage.</em></p>
   </div>
 </div>
 <br />
