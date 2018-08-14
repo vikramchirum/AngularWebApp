@@ -1,11 +1,11 @@
 {
   "name": "mygexa.gexaenergy.com",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve -o",
-    "build": "ng build --aot=true --target=production --environment=publish --output-hashing all",
+    "build": "ng build --aot=true --target=production --environment=publish --sourcemaps --output-hashing all",
     "review": "npm install && ng build --aot=false --target=production --environment=publish --output-hashing all",
     "approve": "npm version patch && git push --tags",
     "test": "ng test",
