@@ -76,7 +76,7 @@
             <br/>
             <h1>
               Daily Usage Tracker 
-              <small *ngIf="dailyUsage"> {{ dailyUsage.Meter_Read_Cycles[dailyUsage.Meter_Read_Cycles.length-1].Usage_Month | date:'LLLL' }} cycle 
+              <small *ngIf="dailyUsage && currentDailyUsage"> {{ dailyUsage.Meter_Read_Cycles[dailyUsage.Meter_Read_Cycles.length-1].Usage_Month | date:'LLLL' }} cycle 
                 <span *ngIf="dailyUsage.Meter_Read_Cycles.length > 1" style="color: #2eb134;"> {{ usageThisCycle | number:'1.0-0' }} kWh</span>
                 <span *ngIf="dailyUsage.Meter_Read_Cycles.length == 1" style="color: #2eb134;">
                   <span *ngIf="dailyUsage.Meter_Read_Cycles[0].Usage_Month != currentDailyUsage.Meter_Read_Cycles[0].Usage_Month">{{ dailyUsage.Meter_Read_Cycles[0].Usage | number:'1.0-0' }} kWh</span>
