@@ -14,5 +14,6 @@ export const environment = {
   kWhAmountFormatter: '1.4-4',
   forte_api_url: 'https://api.forte.net/js/v1',
   crypto_key: '6REr6UFXjjmw0+W0NhMP7asI9y54FDrJdE/LlIz/YME=',
-  crypto_iv: 'hDRokaLfaRzJSaivlL7KlQ=='
+  crypto_iv: 'hDRokaLfaRzJSaivlL7KlQ==',
+  payment_extension_days: 7
 };

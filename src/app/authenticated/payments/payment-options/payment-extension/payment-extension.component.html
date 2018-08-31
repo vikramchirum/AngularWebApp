@@ -46,11 +46,12 @@
               <div class="alert alert-warning">
                 <div class="row">
                   <div class="col-sm-12">
-                    <p class="pull-left">You have a past-due balance of <b>${{pastDueAmount | number :
+                    <p class="pull-left">{{paymentExtensionScript}}</p>
+                    <!-- <p class="pull-left">You have a past-due balance of <b>${{pastDueAmount | number :
                       dollarAmountFormatter}}</b><br>
-                      Would you like to request an extension?</p>
+                      Would you like to request an extension?</p> -->
                     <div style="float: right;">
-                      <button class="btn btn-primary center pull-right" (click)="requestExtension()"><i
+                      <button class="btn btn-primary center pull-right" *ngIf="(paymentExtensionEligibilityResult == 'ELIGIBLE' || paymentExtensionEligibilityResult == 'SOFT_STOP')" (click)="requestExtension()"><i
                         class="fa fa-handshake-o"></i> Request Extension
                       </button>
                     </div>
@@ -76,7 +77,7 @@
                         dollarAmountFormatter}}</b><br>
                         Would you like to request an extension?</p>
                       <div style="float: right;">
-                        <button class="btn btn-secondary btn-default center pull-right" (click)="requestExtension()"><i
+                        <button class="btn btn-secondary btn-default center pull-right"><i
                           class="fa fa-circle-o-notch fa-spin"></i> Processing Request
                         </button>
                       </div>
@@ -101,11 +102,11 @@
                       <div class="col-sm-12">
                         <p class="pull-left">A payment extension has been approved!<br>
                           Your account has been updated. No further action required! Followup date:
-                          {{paymentExtension.FollowupDate | date: 'MM/dd/yyyy'}}</p>
+                          {{newDueDate}}</p>
                         <div style="float: right;">
-                          <button class="btn btn-primary center pull-right"><i class="fa fa-thumbs-up"></i> Request
+                          <!-- <button class="btn btn-primary center pull-right"><i class="fa fa-thumbs-up"></i> Request
                             Approved
-                          </button>
+                          </button> -->
                         </div>
                       </div>
                     </div>
