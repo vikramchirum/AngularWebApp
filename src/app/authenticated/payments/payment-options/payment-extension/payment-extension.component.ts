@@ -112,7 +112,11 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
 
   setPaymentExtensionScript(result: IPaymentExtensionV1) {
     const customerName = `${this.customerDetails.First_Name.charAt(0).toUpperCase()}${this.customerDetails.First_Name.slice(1).toLowerCase()} ${this.customerDetails.Last_Name.charAt(0).toUpperCase()}${this.customerDetails.Last_Name.slice(1).toLowerCase()}`;
-    this.newDueDate = moment(new Date(result.DisconnectletterInfo.DisconnectActionDate), "MM/DD/YYYY").add(environment.payment_extension_days, "days").format("MM/DD/YYYY");
+    if(result.DisconnectletterInfo != null)
+    {
+        this.newDueDate = moment(new Date(result.DisconnectletterInfo.DisconnectActionDate), "MM/DD/YYYY").add(environment.payment_extension_days, "days").format("MM/DD/YYYY");
+    }      
+    
     switch(result.Status) {
       case ExtensionStatus[ExtensionStatus.ALREADY_APPROED]:
           this.paymentExtensionScript = `A Payment Extension has already been placed on this account. Another Extension is not available at this time.`;          
