@@ -2,30 +2,27 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from './httpclient';
 import { Observable } from 'rxjs/Observable';
 import { IPaymentExtension } from './models/paymentextension/payment-extension.model';
-import { IPaymentExtensionV1 } from './models/paymentextension/payment-extension-v1.model';
-import { IPaymentExtensionGrantRequest } from './models/paymentextension/payment-extention-grant-request.model';
-import { IPaymentExtensionGrantResponse } from './models/paymentextension/payment-extention-grant-response.model';
 
 @Injectable()
 export class PaymentExtensionService {
   constructor(private http: HttpClient) {
   }
-  getPaymentExtensionStatus(grantRequest: IPaymentExtensionGrantRequest): Observable<IPaymentExtensionGrantResponse> {
-    const body = grantRequest;
-    // const relativePath = `/PaymentExtension`;
-    const relativePath = `/PaymentExtension/V1`;
+  getPaymentExtensionStatus(serviceAccountId: string): Observable<IPaymentExtension> {
+    const body = {
+      ServiceAccountId: serviceAccountId
+    };
+    const relativePath = `/PaymentExtension`;
     return this.http.post(relativePath, body)
       .map(data => { data.json(); return data.json(); })
-      .map(data => <IPaymentExtensionGrantResponse>data)
+      .map(data => <IPaymentExtension>data)
       .catch(error => this.http.handleHttpError(error));
   }
 
-  checkPaymentExtensionStatus(serviceAccountId: string): Observable<IPaymentExtensionV1> {
-    // const relativePath = `/PaymentExtension?service_account_id=` + serviceAccountId;
-    const relativePath = `/PaymentExtension/V1?request.serviceAccountId=` + serviceAccountId;
+  checkPaymentExtensionStatus(serviceAccountId: string): Observable<IPaymentExtension> {
+    const relativePath = `/PaymentExtension?service_account_id=` + serviceAccountId;
     return this.http.get(relativePath)
       .map(data => { return data.json(); })
-      .map(data => <IPaymentExtensionV1>data)
+      .map(data => <IPaymentExtension>data)
       .catch(error => this.http.handleHttpError(error));
   }
 }
