@@ -121,6 +121,8 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
       case ExtensionStatus[ExtensionStatus.ALREADY_APPROED]:
           this.paymentExtensionScript = `A Payment Extension has already been placed on this account. Another Extension is not available at this time.`;          
           break;
+      case ExtensionStatus[ExtensionStatus.CSP_NOT_ACTIVE]:
+          this.paymentExtensionScript = `A Payment Extension is not available at this time. Your Gexa Energy account is not active.`;
       case ExtensionStatus[ExtensionStatus.NO_ACTION_DATE_FOUND]:
           this.paymentExtensionScript = `At this time, a Payment Extension is not available. A Disconnection Letter has not generated for this account. You may resubmit this request in the future.`;           
           break;
