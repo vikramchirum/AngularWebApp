@@ -29,7 +29,9 @@ export class PowerUsageTrackerComponent implements OnDestroy {
   public daysInThisCycle: number;
   public remainingCycleDays: number;
   public isDataAvailable: boolean = false;
+  public lastUsageDay: Date;
   public TDU_Name: String;
+  public lastReadDate: Date;
   
   constructor(
     private ServiceAccountService: ServiceAccountService,
@@ -42,7 +44,9 @@ export class PowerUsageTrackerComponent implements OnDestroy {
         this.getUsageComparisonByUAN();
         this.isDataAvailable = true;
       }
-    )
+    );
+
+    this.loadFeedbackForm();
   }
 
   ngOnDestroy() {
@@ -121,20 +125,26 @@ export class PowerUsageTrackerComponent implements OnDestroy {
     this.usageThisCycle = currentUsageWithinRange.map(day => day.Usage)
     .reduce((prevValue, currentValue) => prevValue + currentValue, 0);
 
+    if (this.usageComparison.Daily_Usage_List.length > 0) {
+      this.lastReadDate = this.usageComparison.Daily_Usage_List[this.usageComparison.Daily_Usage_List.length-1].Date;
+    } else {
+      this.lastReadDate = new Date();
+    }
+
     this.calculatePercentDifference();
   }
 
   private calculatePercentDifference(): void {
     const startDate = new Date(this.usageComparison.Meter_Read_Cycles[0].Start_Date);
-    let endDate = new Date(startDate);
+    const endDate = new Date(startDate);
     endDate.setDate(endDate.getDate() + this.usageComparison.Days_InTo_Current_Cycle);
 
-    let previousUsageWithinComparisonRange = this.usageComparison.Daily_Usage_List.filter(day => {
-      let date = new Date(day.Date);
+    const previousUsageWithinComparisonRange = this.usageComparison.Daily_Usage_List.filter(day => {
+      const date = new Date(day.Date);
       if (date >= startDate && date < endDate)
         return day;
     });
-    let previousUsageInComparisonTotal = previousUsageWithinComparisonRange.map(day => {
+    const previousUsageInComparisonTotal = previousUsageWithinComparisonRange.map(day => {
       return day.Usage;
     }).reduce((a, b) => a + b, 0);
 ;
@@ -150,4 +160,15 @@ export class PowerUsageTrackerComponent implements OnDestroy {
     this.absolutePercentage = Math.abs(this.percentageIncrease);
   }
 
+  loadFeedbackForm(): void {
+    const opinionlabScripts = ['./onlineopinionV5/oo_conf_entry.js'];
+    for (let i = 0; i < opinionlabScripts.length; i++) {
+      const node = document.createElement('script');
+      node.src = opinionlabScripts[i];
+      node.type = 'text/javascript';
+      node.async = false;
+      node.charset = 'windows-1252';
+      document.getElementsByTagName('body')[0].appendChild(node);
+    }
+  }
 }
