@@ -17,12 +17,12 @@ export class PaymentsService {
     );
   }
 
-  MakePayment(username: string, amount: number, serviceAccount: ServiceAccount, Paymethod: IPaymethod) {
+  MakePayment(username: string, amount: number, serviceAccount: ServiceAccount, Paymethod: IPaymethod, requestedDate: Date) {
     const body = {
       UserName: username,
       AuthorizationAmount: amount,
       ServiceAccountId: serviceAccount.Id,
-      RequestedDate: new Date().toLocaleString(),
+      RequestedDate: requestedDate,
       Source: 'azureAPI',
       Paymethod
     };

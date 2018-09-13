@@ -8,8 +8,8 @@
   <ng-template *ngIf="!!form_horizontal; then FormHorizontal else FormNormal"></ng-template>
   <ng-template #FormHorizontal>
     <div class="form-group">
-      <label for="payment-horizontal-cc-name-on-card" class="col-md-3 control-label">Name on Card</label>
-      <div class="col-md-8 col-lg-6">
+      <label for="payment-horizontal-cc-name-on-card" class="col-md-4 control-label">Name on Card</label>
+      <div class="col-md-8">
         <input
           type="text"
           class="form-control "
@@ -26,8 +26,8 @@
 
     </div>
     <div class="form-group">
-      <label for="payment-horizontal-cc-number" class="col-md-3 control-label">Number</label>
-      <div class="col-md-8 col-lg-6">
+      <label for="payment-horizontal-cc-number" class="col-md-4 control-label">Number</label>
+      <div class="col-md-8">
         <input
           type="text"
           class="form-control "
@@ -40,8 +40,8 @@
         <small class="text-success" *ngIf="formGroup.controls?.cc_number.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
     </div>
     <div class="form-group">
-      <label for="payment-horizontal-cc-month" class="col-md-3 control-label">Expiration</label>
-      <div class="col-md-3 col-lg-3">
+      <label for="payment-horizontal-cc-month" class="col-md-4 control-label">Expiration</label>
+      <div class="col-md-4 col-lg-4">
         <select
           class="form-control "
           id="payment-horizontal-cc-month"
@@ -51,7 +51,7 @@
         </select>
         <small class="text-danger" *ngIf="formGroup.controls?.cc_month.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
         <small class="text-success" *ngIf="formGroup.controls?.cc_month.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
-      <div class="col-md-3 col-lg-3">
+      <div class="col-md-4 col-lg-4">
         <select
           class="form-control "
           id="payment-horizontal-cc-year"
@@ -63,8 +63,8 @@
         <small class="text-success" *ngIf="formGroup.controls?.cc_year.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
     </div>
     <div class="form-group">
-      <label for="payment-horizontal-cc-cvv" class="col-md-3 control-label">CVV</label>
-      <div class="col-md-8 col-lg-6">
+      <label for="payment-horizontal-cc-cvv" class="col-md-4 control-label">CVV</label>
+      <div class="col-md-8">
         <input
           type="text"
           class="form-control"
