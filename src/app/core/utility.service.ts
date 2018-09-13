@@ -36,7 +36,7 @@ export class UtilityService {
 
     // for IE
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-      window.navigator.msSaveOrOpenBlob(blob, 'invoice');
+      window.navigator.msSaveOrOpenBlob(blob, 'invoice.pdf');
     } else if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
       // for firefox
       const downloadLink = document.createElement('a');

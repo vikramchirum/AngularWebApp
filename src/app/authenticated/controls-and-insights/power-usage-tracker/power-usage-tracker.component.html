@@ -78,7 +78,7 @@
 <div class="row">
   <div class="disclaimer">
     <br />
-    <p><em>Based on usage data available as of <span *ngIf="usageComparison">{{ usageComparison.Daily_Usage_List[usageComparison.Daily_Usage_List.length-1].Date | date:'MM/dd/yyyy'}}</span> from Smart Meter Texas and <span *ngIf="TDU_Name">{{ TDU_Name }}</span>. Your monthly bill is the official record of your actual usage.</em></p>
+    <p><em>Based on usage data available as of <span *ngIf="usageComparison">{{ lastUsageDay | date:'MM/dd/yyyy'}}</span> from Smart Meter Texas and <span *ngIf="TDU_Name">{{ TDU_Name }}</span>. Your monthly bill is the official record of your actual usage.</em></p>
   </div>
 </div>
 <br />

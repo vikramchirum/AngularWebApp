@@ -29,6 +29,7 @@ export class PowerUsageTrackerComponent implements OnDestroy {
   public daysInThisCycle: number;
   public remainingCycleDays: number;
   public isDataAvailable: boolean = false;
+  public lastUsageDay: Date;
   public TDU_Name: String;
   
   constructor(
@@ -120,6 +121,12 @@ export class PowerUsageTrackerComponent implements OnDestroy {
 
     this.usageThisCycle = currentUsageWithinRange.map(day => day.Usage)
     .reduce((prevValue, currentValue) => prevValue + currentValue, 0);
+
+    if (this.usageComparison.Daily_Usage_List.length > 0) {
+      this.lastUsageDay = this.usageComparison.Daily_Usage_List[this.usageComparison.Daily_Usage_List.length-1].Date;
+    } else {
+      this.lastUsageDay = new Date();
+    }
 
     this.calculatePercentDifference();
   }
