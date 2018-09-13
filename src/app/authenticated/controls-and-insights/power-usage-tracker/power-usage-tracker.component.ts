@@ -29,6 +29,7 @@ export class PowerUsageTrackerComponent implements OnDestroy {
   public daysInThisCycle: number;
   public remainingCycleDays: number;
   public isDataAvailable: boolean = false;
+  public lastUsageDay: Date;
   public TDU_Name: String;
   public lastReadDate: Date;
   
