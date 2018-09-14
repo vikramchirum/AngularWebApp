@@ -51,4 +51,12 @@ export class PaymethodAddEcheckComponent implements OnInit, OnDestroy {
   formGroupSubmit(): void {
     this.submitted.emit();
   }
+
+  hideSensitiveInfo(): void {
+    const maskedCheckingNumber = this.formGroup.controls['echeck_accounting'].value.toString().replace(/\d(?=\d{4})/g, 'X');
+    this.formGroup.patchValue({
+      'echeck_accounting': maskedCheckingNumber,
+      'echeck_routing': '*********'
+    });
+  }
 }
