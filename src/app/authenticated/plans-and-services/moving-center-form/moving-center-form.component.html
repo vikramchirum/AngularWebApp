@@ -387,7 +387,8 @@
       <div class="text-center">
         <!--<button class="btn btn-link" (click)="previousButtonClicked()">Previous</button>-->
         <button class="btn btn-primary" [disabled]="!enableSubmitMoveBtn"
-                (click)="onSubmitMove(movingAddressForm.value, ServicePlanForm.value)">Submit Move
+                (click)="onSubmitMove(movingAddressForm.value, ServicePlanForm.value)">
+          <i *ngIf="showLoadingSpinnerOnButton" class="fa fa-circle-o-notch fa-spin"></i> Submit Move
         </button>
       </div>
     </div>
