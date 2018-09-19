@@ -581,6 +581,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       err => {
         Observable.throw( err );
         this.errorModal.showErrorModal( err );
+        this.showLoadingSpinnerOnButton = false;
       } );
   }
 
