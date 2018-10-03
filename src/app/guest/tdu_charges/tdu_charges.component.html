@@ -1,0 +1,47 @@
+<nav class="navbar navbar-inverse">
+  <div class="container">
+  </div>
+</nav>
+
+<nav class="navbar custom-nav" id="custom-nav">
+  <div class="container container-relaxed">
+    <div class="navbar-header">
+      <div class="navbar-logo">
+        <a routerLink="/" href="/" class="active">
+          <img alt="Gexa Energy" src="/assets/global/gexa-lq.png"/>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="row">
+    <div class="col=xs-12">
+      <h2>
+        <strong>TDU Delivery Charges / Cargos de Suministro de la TDU</strong>
+      </h2>
+      <br/>
+      <br/>
+      <table>
+        <thead>
+        <th colspan="3" style="text-align:center">
+          Total TDU Delivery Charges<br/>Cargos del TDU por suministro<br/>&nbsp;
+        </th>
+        <tr>
+          <th>Updated: {{last_updated.toLocaleDateString()}}</th>
+          <th style="text-align:center">Charges Per Month<br/>Cargos mensuales por suministro</th>
+          <th style="text-align:center">Charges Per kWh<br/>Cargos por suministro por kWh</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let tdu of TDUs">
+          <td>{{tdu.Name}}</td>
+          <td style="text-align:center">{{tdu.Meter_Charge | currency:'USD':'symbol-narrow'}}</td>
+          <td style="text-align:center">{{tdu.Delivery_Charge | currency: 'USD': 'symbol-narrow': '1.6-8'}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
