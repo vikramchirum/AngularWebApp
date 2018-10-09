@@ -1,0 +1,69 @@
+<nav class="navbar navbar-inverse">
+  <div class="container">
+  </div>
+</nav>
+
+<nav class="navbar custom-nav" id="custom-nav">
+  <div class="container container-relaxed">
+    <div class="navbar-header">
+      <div class="navbar-logo">
+        <a routerLink="/" href="/" class="active">
+          <img alt="Gexa Energy" src="/assets/global/gexa-lq.png"/>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="row">
+    <div class="col=xs-12">
+      <h2>
+        <strong>TDU Delivery Charges / Cargos de Suministro de la TDU</strong>
+      </h2>
+      <br/>
+      <br/>
+      <table>
+        <thead>
+        <th colspan="3" style="text-align:center">
+          Total TDU Delivery Charges<br/>Cargos del TDU por suministro<br/>&nbsp;
+        </th>
+        <tr>
+          <th>Updated: {{last_updated.toLocaleDateString()}}</th>
+          <th style="text-align:center">TDU Delivery Charges Per Billing Cycle<br/>TDU Cargosde entrega por cada cicio
+            de facturación
+          </th>
+          <th style="text-align:center">TDU Delivery Charges Per kWh<br/>TDU Cargos de entrega por kWh</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let tdu of TDUs">
+          <td>{{tdu.Name}}</td>
+          <td style="text-align:center">{{tdu.Meter_Charge | currency:'USD':'symbol-narrow'}}</td>
+          <td style="text-align:center">{{tdu.Delivery_Charge | currency: 'USD': 'symbol-narrow': '1.6-8'}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <br/>
+      <br/>
+      <p>
+        TDU Delivery Charges include monthly recurring charges that are passed through to you without markup or may be
+        bundled with your Energy Charge or Base Charge, depending on your plan. The charges displayed here reflect the
+        overall monthly recurring TDU service area standard charges used for price calculation. The “TDU Delivery
+        Charges per kWh” amount will vary each month depending on your monthly kilowatt-hour usage. TDU Delivery Charges
+        are subject to change. For more information, including about TDU nonrecurring charges and TDU special charges,
+        see the “TDU Delivery Charges,” “Pricing” and “Change in Law or Regulation” sections of the Terms of Service.
+      </p>
+      <br/>
+      <p>
+        Los cargos de entrega del TDU incluyen cargos mensuales recurrentes que se transfieren a usted sin recargo, o
+        pueden sumarse a su Cargo por energía o Cargo base, según su plan. Los cargos que se muestran aquí reflejan los
+        cargos estándar mensuales generales del área de servicio del TDU utilizados para el cálculo del precio. El monto
+        de "Cargos de entrega del TDU por kWh" variará cada mes según su uso mensual de kilovatios-hora. Los cargos de
+        entrega del TDU están sujetos a cambios. Para obtener más información, incluidos los cargos no recurrentes del
+        TDU y los cargos especiales del TDU, consulte las secciones "Cargos de entrega del TDU", "Precios" y "Cambio en
+        la ley o la regulación" de los Términos de Servicio.
+      </p>
+    </div>
+  </div>
+</div>
