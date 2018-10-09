@@ -11,6 +11,7 @@ import { guest_routes } from './guest-routing.module';
 import { LoginRegisterModalComponent } from './login/login-register-modal/login-register-modal.component';
 import { LoginAddClaimsModalComponent } from './login/login-add-claims-modal/login-add-claims-modal.component';
 import { AutoLoginComponent } from './auto-login/auto-login.component';
+import { TduChargesComponent } from "./tdu_charges/tdu_charges.component";
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { AutoLoginComponent } from './auto-login/auto-login.component';
     RecoverUsernameComponent,
     LoginRegisterModalComponent,
     LoginAddClaimsModalComponent,
-    AutoLoginComponent
+    AutoLoginComponent,
+    TduChargesComponent
   ],
   exports: [
     RouterModule
