@@ -43,7 +43,7 @@ export class PaymethodAddEcheckComponent implements OnInit, OnDestroy {
     return this.FormBuilder.group({
       echeck_name: ['', Validators.compose([Validators.required, validateCardName, validateName, validateNameOnCard])],
       echeck_routing: ['', Validators.compose([Validators.required, Validators.minLength(9), CustomValidators.digits])],
-      echeck_accounting: ['', Validators.compose([Validators.required, Validators.minLength(9), CustomValidators.digits])],
+      echeck_accounting: ['', Validators.compose([Validators.required, Validators.minLength(5), CustomValidators.digits])],
       echeck_info: ['']
     });
   }
