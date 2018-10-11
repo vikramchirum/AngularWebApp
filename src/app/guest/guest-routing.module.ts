@@ -6,6 +6,7 @@ import { LoginComponent } from './login/login.component';
 import { RecoverPasswordComponent } from './recover-password/recover-password.component';
 import { RecoverUsernameComponent } from './recover-username/recover-username.component';
 import {AutoLoginComponent } from './auto-login/auto-login.component';
+import { TduChargesComponent } from "./tdu_charges/tdu_charges.component";
 
 const routes: Route[] = [
   {
@@ -22,6 +23,9 @@ const routes: Route[] = [
   {
     path: 'login/recover-username', component: RecoverUsernameComponent,
     canActivate: [RedirectLoggedInUserToHome]
+  },
+  {
+    path: 'tdu-charges', component: TduChargesComponent
   },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
