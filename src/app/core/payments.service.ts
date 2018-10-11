@@ -22,7 +22,7 @@ export class PaymentsService {
       UserName: username,
       AuthorizationAmount: amount,
       ServiceAccountId: serviceAccount.Id,
-      RequestedDate: requestedDate,
+      RequestedDate: requestedDate.toLocaleString(),
       Source: 'azureAPI',
       Paymethod
     };
