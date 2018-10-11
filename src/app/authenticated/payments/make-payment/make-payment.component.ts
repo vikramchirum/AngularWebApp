@@ -119,6 +119,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   get ActiveServiceAccount(): ServiceAccount {
     return this._ActiveServiceAccount;
   }
+
   set ActiveServiceAccount(ActiveServiceAccount: ServiceAccount) {
     this._ActiveServiceAccount = ActiveServiceAccount;
     if (ActiveServiceAccount) {
@@ -464,6 +465,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             this.paymentConfirmationNumber = (paymentTransactionId) + '-' + res.AuthorizationCode;
             this.paymentSubmittedWithoutError = true;
             console.log('The paymethod was charged!', res);
+            this.hideAnySensitiveData();
             this.paymentLoadingMessage = null;
             this.PaymentsHistoryStore.LoadPaymentsHistory(this.ActiveServiceAccount);
             this.ServiceAccountService.UpdateServiceAccounts(true);
@@ -501,6 +503,14 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
       return x.IsActive;
     });
+  }
+
+  private hideAnySensitiveData(): void {
+    if (this.paymentOneTimeType === 'CreditCard') {
+      this.addCreditCardComponent.hideSensitiveInfo();
+    } else if (this.paymentOneTimeType === 'eCheck') {
+      this.addEcheckComponent.hideSensitiveInfo();
+    }
   }
 
   onDraftDateChanged(event: IMyDateModel) {
