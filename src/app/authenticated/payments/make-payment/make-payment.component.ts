@@ -25,6 +25,7 @@ import { PaymentsHistoryStore } from '../../../core/store/paymentsstore';
 import { InvoiceStore } from '../../../core/store/invoicestore';
 import { PaymentConfirmationModalComponent } from '../../../shared/components/payment-confirmation-modal/payment-confirmation-modal.component';
 import { environment } from '../../../../environments/environment';
+import { IMyOptions, IMyDateModel, IMyDate } from 'mydatepicker';
 import {
   GoogleAnalyticsCategoryType,
   GoogleAnalyticsEventAction
@@ -58,6 +59,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   dollarAmountFormatter: string;
   processing: boolean = null;
   PaymethodSelected: Paymethod = null;
+  paymentDraftDate: Date = new Date();
 
   @ViewChild(PaymethodAddCcComponent) private addCreditCardComponent: PaymethodAddCcComponent;
   @ViewChild(PaymethodAddEcheckComponent) private addEcheckComponent: PaymethodAddEcheckComponent;
@@ -131,6 +133,21 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
         });
     }
   }
+  public paymentDraftDateOptions: IMyOptions = {
+    enableDays: [],
+    disableDays: [],
+    disableUntil: {
+      year: new Date().getFullYear(),
+      month: new Date().getUTCMonth() + 1,
+      day: new Date().getDate() - 1
+    },
+    disableSince: {
+      year: new Date().getFullYear(),
+      month: new Date().getUTCMonth() + 1,
+      day: new Date().getDate() + 30
+    },
+    dateFormat: 'mm-dd-yyyy'
+  };
 
   constructor(private CustomerAccountService: CustomerAccountService,
               private PaymentsHistoryService: PaymentsHistoryService,
@@ -145,12 +162,14 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
               private googleAnalyticsService: GoogleAnalyticsService) {
     this.formGroup = FormBuilder.group({
       payment_now: ['', Validators.compose([Validators.required, validMoneyAmount])],
-      payment_save: ['']
+      payment_save: [''],
+      payment_draft_date: [null, Validators.compose([Validators.required])]
     });
   }
 
   ngOnInit() {
     this.checkAmount();
+    this.setPaymentDraftDate();
     this.dollarAmountFormatter = environment.DollarAmountFormatter;
     this.CustomerAccountSubscription = this.CustomerAccountService.CustomerAccountObservable.subscribe(
       CustomerAccount => this.CustomerAccount = CustomerAccount
@@ -258,7 +277,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
       this.paymentSubmit();
     } else {
       this.paymentConfirmationModal.hideConfirmationMessageModal();
-      this.formGroup.controls['payment_now'].setValue('');
+      // this.formGroup.controls['payment_now'].setValue('');
     }
   }
   checkAmount() {
@@ -434,7 +453,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
           UserName,
           AuthorizationAmount,
           this.ActiveServiceAccount,
-          PaymethodToCharge
+          PaymethodToCharge,
+          this.paymentDraftDate
         ).subscribe(
           res => {
 
@@ -445,6 +465,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             this.paymentConfirmationNumber = (paymentTransactionId) + '-' + res.AuthorizationCode;
             this.paymentSubmittedWithoutError = true;
             console.log('The paymethod was charged!', res);
+            this.hideAnySensitiveData();
             this.paymentLoadingMessage = null;
             this.PaymentsHistoryStore.LoadPaymentsHistory(this.ActiveServiceAccount);
             this.ServiceAccountService.UpdateServiceAccounts(true);
@@ -484,4 +505,28 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     });
   }
 
+  private hideAnySensitiveData(): void {
+    if (this.paymentOneTimeType === 'CreditCard') {
+      this.addCreditCardComponent.hideSensitiveInfo();
+    } else if (this.paymentOneTimeType === 'eCheck') {
+      this.addEcheckComponent.hideSensitiveInfo();
+    }
+  }
+
+  onDraftDateChanged(event: IMyDateModel) {
+    if (new Date(event.jsdate) > this.dueDate) {
+      const errorMessage = `This date is after the payment due date, which will cause a late payment fee.`;
+      this.paymentConfirmationModal.showConfirmationMessageModal(errorMessage, true);
+      this.paymentDraftDate = new Date(event.jsdate);
+    }
+  }
+
+  private setPaymentDraftDate() {
+    const formattedDate = {
+      year: this.paymentDraftDate.getFullYear(),
+      month: this.paymentDraftDate.getUTCMonth() + 1,
+      day: this.paymentDraftDate.getDate()
+    };
+    this.formGroup.patchValue({ payment_draft_date: { date: formattedDate } });
+  }
 }
