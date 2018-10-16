@@ -173,13 +173,6 @@ export class ControlsAndInsightsComponent implements OnDestroy {
         return day;
       }
     });
-    
-    for (let i = 0; i < currentMonthUsageData.length; i++) {
-      if (!datagroups[1]) {
-        datagroups[1] = { data: [], label: "Daily Usage" };
-      }
-      datagroups[1].data.push(currentMonthUsageData[i].Usage);
-    }
 
     this.getDates(cycleStartDate, cycleEndDate);
     
