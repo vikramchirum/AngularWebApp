@@ -166,7 +166,6 @@ export class ControlsAndInsightsComponent implements OnDestroy {
   populateChart(usageHistory: any[], cycleStartDate: Date, cycleEndDate: Date): void {
 
     const datagroups = {};
-    let tempMonth: number;
 
     const currentMonthUsageData = usageHistory.filter(day => {
       const usageDay = new Date(day.Date);
@@ -174,12 +173,28 @@ export class ControlsAndInsightsComponent implements OnDestroy {
         return day;
       }
     });
+
+    this.getDates(cycleStartDate, cycleEndDate);
     
-    for (let i = 0; i < currentMonthUsageData.length; i++) {
+    let usageDayCounter = 0;
+    for (let i = 0; i < this.cycleDates.length; i++) {
       if (!datagroups[1]) {
         datagroups[1] = { data: [], label: "Daily Usage" };
       }
-      datagroups[1].data.push(currentMonthUsageData[i].Usage);
+
+      if (this.cycleDates.length === currentMonthUsageData.length) {
+        datagroups[1].data.push(currentMonthUsageData[i].Usage);
+      } else {
+        const diff = (this.cycleDates.length - currentMonthUsageData.length) - 1;
+        if (usageDayCounter < currentMonthUsageData.length) {
+          if (i >= diff) {
+            datagroups[1].data.push(currentMonthUsageData[usageDayCounter].Usage);
+            usageDayCounter++;
+          } else {
+            datagroups[1].data.push(0);
+          }
+        }
+      }
     }
 
     const dataToDisplay = takeRight(values(datagroups));
@@ -191,8 +206,6 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     if (dataToDisplay && dataToDisplay.length > 0) {
       this.lineChartData.push(dataToDisplay);
     }
-
-    this.getDates(cycleStartDate, cycleEndDate);
 
     if (this.chart !== undefined) {
       this.chart.chart.destroy();
