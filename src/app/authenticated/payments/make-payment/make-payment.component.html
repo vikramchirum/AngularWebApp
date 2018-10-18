@@ -78,6 +78,15 @@
         </div>
 
         <div class="form-group">
+          <div class="col-md-4">
+          </div>
+          <div class="col-md-8">
+            <small class="text-danger" *ngIf="formGroup.controls?.payment_draft_date.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
+            <small class="text-success" *ngIf="formGroup.controls?.payment_draft_date.valid && !(zeroAmountEntered === true)"><i class="fa fa-fw fa-check"></i> Ok</small>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label for="payment-accounts" class="col-md-4 control-label">Payment Account</label>
           <div class="col-md-8">
             <p class="form-control-static" *ngIf="Paymethods === null"><i class="fa fa-fw fa-circle-o-notch fa-spin"></i> Loading your payment accounts...</p>
