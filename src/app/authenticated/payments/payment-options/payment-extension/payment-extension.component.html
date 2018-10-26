@@ -27,10 +27,22 @@
                 dollarAmountFormatter}}</b><br>
                 Would you like to request an extension?</p> -->
               <div style="float: right;">
-                <button class="btn btn-primary center pull-right" *ngIf="(paymentExtensionEligibilityResult == 'ELIGIBLE' || paymentExtensionEligibilityResult == 'SOFT_STOP')" (click)="requestExtension()"><i
+                <button class="btn btn-primary center pull-right" *ngIf="(paymentExtensionEligibilityResult == 'ELIGIBLE' || paymentExtensionEligibilityResult == 'SOFT_STOP') && !extensionSuccessfull" (click)="requestExtension()"><i
                   class="fa fa-handshake-o"></i> Request Extension
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+
+      </ng-container>
+
+      <ng-container *ngIf="paymentExtensionStatus!==null && extensionSuccessfull">
+
+        <div class="alert alert-warning">
+          <div class="row">
+            <div class="col-sm-12">
+              <p class="pull-left">Payment Extension Saved Successfully.</p>
             </div>
           </div>
         </div>
