@@ -45,7 +45,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" *ngIf="!paymentSubmittedWithoutError">
           <label for="payment-amount" class="col-md-4 control-label">Payment Amount</label>
           <div class="col-md-8">
             <input
@@ -59,7 +59,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" *ngIf="!paymentSubmittedWithoutError">
           <div class="col-md-4">
           </div>
           <div class="col-md-8">
@@ -69,7 +69,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" *ngIf="!paymentSubmittedWithoutError">
           <label class="payment_draft_date" class="col-md-4 control-label">Pay On</label>
           <div class="col-md-8">
             <my-date-picker class="noSymbol" name="payment-draft-date" [options]="paymentDraftDateOptions"
@@ -77,7 +77,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" *ngIf="!paymentSubmittedWithoutError">
           <div class="col-md-4">
           </div>
           <div class="col-md-8">
@@ -86,7 +86,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" *ngIf="!paymentSubmittedWithoutError">
           <label for="payment-accounts" class="col-md-4 control-label">Payment Account</label>
           <div class="col-md-8">
             <p class="form-control-static" *ngIf="Paymethods === null"><i class="fa fa-fw fa-circle-o-notch fa-spin"></i> Loading your payment accounts...</p>
@@ -126,18 +126,18 @@
         <ng-container *ngIf="paymentOneTimeType !== null">
 
           <mygexa-payment-method-add-cc
-            *ngIf="paymentOneTimeType === 'CreditCard'"
+            *ngIf="paymentOneTimeType === 'CreditCard' && !paymentSubmittedWithoutError"
             (changed)="paymentOneTimeChanged($event)"
             form_horizontal="true"
           ></mygexa-payment-method-add-cc>
 
           <mygexa-payment-method-add-echeck
-            *ngIf="paymentOneTimeType === 'eCheck'"
+            *ngIf="paymentOneTimeType === 'eCheck' && !paymentSubmittedWithoutError"
             (changed)="paymentOneTimeChanged($event)"
             form_horizontal="true"
           ></mygexa-payment-method-add-echeck>
 
-          <div class="form-group">
+          <div class="form-group" *ngIf="!paymentSubmittedWithoutError">
             <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
               <div class="checkbox">
                 <label>
