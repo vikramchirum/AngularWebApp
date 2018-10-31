@@ -514,7 +514,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   }
 
   onDraftDateChanged(event: IMyDateModel) {
-    if (new Date(event.jsdate) > this.dueDate) {
+    if ((new Date(event.jsdate) > this.dueDate) && (this.pastDue > 0 || this.totalDue > 0)) {
       const errorMessage = `This date is after the payment due date, which will cause a late payment fee.`;
       this.paymentConfirmationModal.showConfirmationMessageModal(errorMessage, true);
       this.paymentDraftDate = new Date(event.jsdate);
