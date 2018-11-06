@@ -451,7 +451,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
         const UserName = String(this.UserService.UserCache.Profile.Username);
 
         // Check if payment is scheduled to draft today
-        if (moment().diff(this.paymentDraftDate, 'days') === 0){
+        if (moment(this.paymentDraftDate).isSame(new Date(), 'day')){
           // Run payment immediately
           this.PaymentsService.MakePayment(
             UserName,
