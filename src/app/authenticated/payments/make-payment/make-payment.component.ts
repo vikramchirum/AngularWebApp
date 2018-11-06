@@ -31,6 +31,7 @@ import {
   GoogleAnalyticsEventAction
 } from 'app/core/models/enums/googleanalyticscategorytype';
 import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'mygexa-make-payment',
@@ -449,38 +450,75 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
         const UserName = String(this.UserService.UserCache.Profile.Username);
 
-        this.PaymentsService.MakePayment(
-          UserName,
-          AuthorizationAmount,
-          this.ActiveServiceAccount,
-          PaymethodToCharge,
-          this.paymentDraftDate
-        ).subscribe(
-          res => {
-
-            let paymentTransactionId = res.PaymentTransactionId;
-            if (!paymentTransactionId) {
-              paymentTransactionId = 0;
+        // Check if payment is scheduled to draft today
+        if (moment().diff(this.paymentDraftDate, 'days') === 0){
+          // Run payment immediately
+          this.PaymentsService.MakePayment(
+            UserName,
+            AuthorizationAmount,
+            this.ActiveServiceAccount,
+            PaymethodToCharge
+          ).subscribe(
+            res => {
+  
+              let paymentTransactionId = res.PaymentTransactionId;
+              if (!paymentTransactionId) {
+                paymentTransactionId = 0;
+              }
+              this.paymentConfirmationNumber = (paymentTransactionId) + '-' + res.AuthorizationCode;
+              this.paymentSubmittedWithoutError = true;
+              console.log('The paymethod was charged!', res);
+              this.hideAnySensitiveData();
+              this.paymentLoadingMessage = null;
+              this.PaymentsHistoryStore.LoadPaymentsHistory(this.ActiveServiceAccount);
+              this.ServiceAccountService.UpdateServiceAccounts(true);
+              this.processing = false;
+            },
+            error => {
+              this.paymentSubmittedWithoutError = false;
+              console.log('An error occurred charging the paymethod!', error);
+              this.paymentLoadingMessage = null;
+              this.processing = false;
+            },
+            () => {
+              console.log('Payment made Successfully.');
             }
-            this.paymentConfirmationNumber = (paymentTransactionId) + '-' + res.AuthorizationCode;
-            this.paymentSubmittedWithoutError = true;
-            console.log('The paymethod was charged!', res);
-            this.hideAnySensitiveData();
-            this.paymentLoadingMessage = null;
-            this.PaymentsHistoryStore.LoadPaymentsHistory(this.ActiveServiceAccount);
-            this.ServiceAccountService.UpdateServiceAccounts(true);
-            this.processing = false;
-          },
-          error => {
-            this.paymentSubmittedWithoutError = false;
-            console.log('An error occurred charging the paymethod!', error);
-            this.paymentLoadingMessage = null;
-            this.processing = false;
-          },
-          () => {
-            console.log('Payment made Successfully.');
-          }
-        );
+          );
+        } else {
+          // Schedule Payment
+          this.PaymentsService.SchedulePayment(
+            UserName,
+            AuthorizationAmount,
+            this.ActiveServiceAccount,
+            PaymethodToCharge,
+            this.paymentDraftDate
+          ).subscribe(
+            res => {
+  
+              let paymentTransactionId = res.PaymentTransactionId;
+              if (!paymentTransactionId) {
+                paymentTransactionId = 0;
+              }
+              this.paymentConfirmationNumber = (paymentTransactionId) + '-' + res.AuthorizationCode;
+              this.paymentSubmittedWithoutError = true;
+              console.log('The paymethod was scheduled!', res);
+              this.hideAnySensitiveData();
+              this.paymentLoadingMessage = null;
+              this.PaymentsHistoryStore.LoadPaymentsHistory(this.ActiveServiceAccount);
+              this.ServiceAccountService.UpdateServiceAccounts(true);
+              this.processing = false;
+            },
+            error => {
+              this.paymentSubmittedWithoutError = false;
+              console.log('An error occurred scheduling the paymethod!', error);
+              this.paymentLoadingMessage = null;
+              this.processing = false;
+            },
+            () => {
+              console.log('Payment scheduled Successfully.');
+            }
+          );
+        }
 
       });
 
