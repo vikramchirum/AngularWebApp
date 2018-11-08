@@ -43,7 +43,7 @@ export class PaymentsService {
       DraftDate: requestedDate.toLocaleString()
     };
 
-    return this.HttpClient.post(`/Payments?convertPayMethod=false`, JSON.stringify(body))
+    return this.HttpClient.post(`/Payments/Schedule?convertPayMethod=false`, JSON.stringify(body))
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err));
   }
