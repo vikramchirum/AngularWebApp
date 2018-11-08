@@ -89,7 +89,7 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
 
   requestExtension(): void {
     this.requestedExtension = true;
-    
+
     let grantRequest: IPaymentExtensionGrantRequest = {
       ServiceAccountId: this.serviceAccountDetails.Id,
       CSRName: "MyGexa",
@@ -115,8 +115,8 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
     if(result.DisconnectletterInfo != null)
     {
         this.newDueDate = moment(new Date(result.DisconnectletterInfo.DisconnectActionDate), "MM/DD/YYYY").add(environment.payment_extension_days, "days").format("MM/DD/YYYY");
-    }      
-    
+    }
+
     if(result.EligibilityResult === 'SOFT_STOP') {
       this.paymentExtensionScript = `An Extension Payment Arrangement has been granted for the account. If this arrangement is not satisfied as agreed upon by paying $${result.PastDue.toString()} by ${this.newDueDate}, it will be deemed as a broken and voided payment arrangement. If this occurs, the account can be subject to Suspension activity and will not be eligible for another extension for the next 6 months.`;
     } else {
@@ -125,19 +125,19 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
             this.paymentExtensionScript = `A Payment Extension is not available at this time. Your Gexa Energy account is not active.`;
             break;
         case ExtensionStatus[ExtensionStatus.NO_PASS_DUE_FOUND]:
-            this.paymentExtensionScript = `There is currently no past due amount on this account at this time.`; 
+            this.paymentExtensionScript = `There is currently no past due amount on this account at this time.`;
             break;
         case ExtensionStatus[ExtensionStatus.CSP_STOP_REQUEST_FOUND]:
-          this.paymentExtensionScript = `A Payment Extension is not available on this account. A Service Stop Date exist. Payments can be made by selecting “Make a Payment” here in your MyGexa online account.`; 
+          this.paymentExtensionScript = `A Payment Extension is not available on this account. A Service Stop Date exist. Payments can be made by selecting “Make a Payment” here in your MyGexa online account.`;
           break;
         case ExtensionStatus[ExtensionStatus.ALREADY_APPROED]:
-            this.paymentExtensionScript = `A Payment Extension has already been placed on this account. Another Extension is not available at this time.`;          
+            this.paymentExtensionScript = `A Payment Extension has already been placed on this account. Another Extension is not available at this time.`;
             break;
         case ExtensionStatus[ExtensionStatus.NO_SUSPENSION_LETTER_ISSUED]:
-            this.paymentExtensionScript = `At this time, a Payment Extension is not available. A Disconnection Letter has not generated for this account. You may resubmit this request in the future.`;          
+            this.paymentExtensionScript = `At this time, a Payment Extension is not available. A Disconnection Letter has not generated for this account. You may resubmit this request in the future.`;
             break;
         case ExtensionStatus[ExtensionStatus.NO_ACTION_DATE_FOUND]:
-            this.paymentExtensionScript = `At this time, a Payment Extension is not available. A Disconnection Letter has not generated for this account. You may resubmit this request in the future.`;           
+            this.paymentExtensionScript = `At this time, a Payment Extension is not available. A Disconnection Letter has not generated for this account. You may resubmit this request in the future.`;
             break;
         case ExtensionStatus[ExtensionStatus.EXPIRED_DISCONNECT_DATE]:
             this.paymentExtensionScript = `A Payment Extension is not available at this time. The Disconnection Letter has expired. Please make your payment immediately by selecting “Make a Payment” here in your MyGexa online account.`;
@@ -167,7 +167,7 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
         case ExtensionStatus[ExtensionStatus.NON_PAYMENT_ORDER_FOUND_IN_LAST_SIX_MONTHS]:
             this.paymentExtensionScript = `A Payment Extension is not available at this time. This option may be available in the future after satisfactory payment history has been established.`;
             break;
-        case ExtensionStatus[ExtensionStatus.SUCCESSFUL]:          
+        case ExtensionStatus[ExtensionStatus.SUCCESSFUL]:
             this.paymentExtensionScript = `An Extension Payment Arrangement has been granted for the account. If this arrangement is not satisfied as agreed upon by paying $${result.PastDue.toString()} by ${this.newDueDate}, it will be deemed as a broken and voided payment arrangement. If this occurs, the account can be subject to Suspension activity and will not be eligible for another extension for the next 6 months.`;
             break;
         default:
