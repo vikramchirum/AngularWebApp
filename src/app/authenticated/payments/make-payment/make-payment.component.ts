@@ -329,96 +329,100 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   }
 
   paymentSubmit(): void {
+    const today = new Date();
+    if (!moment(this.paymentDraftDate).isSame(today, "days") && this.PaymethodSelected === null) {
+      this.showPaymentDateErrorMessage();
+      this.processing = false;
+    } else {
+      // Remove any previous message.
+      this.paymentSubmittedWithoutError = null;
 
-    // Remove any previous message.
-    this.paymentSubmittedWithoutError = null;
+      // Determine the Paymethod Data to pass.
+      new Promise((resolve, reject) => {
+        // If we're selecting a saved method, use it.
+        if (this.PaymethodSelected) {
+          return resolve({
+            PaymethodId: this.PaymethodSelected.PayMethodId,
+            Paymethod_Customer: {
+              Id: `${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`,
+              FirstName: this.CustomerAccount.First_Name,
+              LastName: this.CustomerAccount.Last_Name
+            }
+          });
+        }
 
-    // Determine the Paymethod Data to pass.
-    new Promise((resolve, reject) => {
-      // If we're selecting a saved method, use it.
-      if (this.PaymethodSelected) {
-        return resolve({
-          PaymethodId: this.PaymethodSelected.PayMethodId,
-          Paymethod_Customer: {
-            Id: `${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`,
-            FirstName: this.CustomerAccount.First_Name,
-            LastName: this.CustomerAccount.Last_Name
+        this.paymentLoadingMessage = 'Preparing your payment...';
+
+        // Otherwise we're using a new paymethod.
+        if (this.formGroup.value.payment_save === true) {
+          // We are saving the new paymethod.
+          if (this.paymentOneTimeType === 'CreditCard') {
+            // Add a credit card type paymethod.
+            this.PaymethodService.AddPaymethodCreditCardFromComponent(this.addCreditCardComponent).subscribe(
+              newPaymethod => resolve(newPaymethod),
+              error => {
+                console.log('Better handle the error', error);
+                reject(error);
+              },
+              () => this.PaymethodService.UpdatePaymethods()
+            );
+          } else {
+            // Add an eCheck type paymethod.
+            this.PaymethodService.AddPaymethodEcheckFromComponent(this.addEcheckComponent).subscribe(
+              newPaymethod => resolve(newPaymethod),
+              error => {
+                console.log('Better handle the error', error);
+                reject(error);
+              },
+              () => this.PaymethodService.UpdatePaymethods()
+            );
           }
-        });
-      }
-
-      this.paymentLoadingMessage = 'Preparing your payment...';
-
-      // Otherwise we're using a new paymethod.
-      if (this.formGroup.value.payment_save === true) {
-        // We are saving the new paymethod.
-        if (this.paymentOneTimeType === 'CreditCard') {
-          // Add a credit card type paymethod.
-          this.PaymethodService.AddPaymethodCreditCardFromComponent(this.addCreditCardComponent).subscribe(
-            newPaymethod => resolve(newPaymethod),
-            error => {
-              console.log('Better handle the error', error);
-              reject(error);
-            },
-            () => this.PaymethodService.UpdatePaymethods()
-          );
         } else {
-          // Add an eCheck type paymethod.
-          this.PaymethodService.AddPaymethodEcheckFromComponent(this.addEcheckComponent).subscribe(
-            newPaymethod => resolve(newPaymethod),
-            error => {
-              console.log('Better handle the error', error);
-              reject(error);
-            },
-            () => this.PaymethodService.UpdatePaymethods()
+          // This is a one-time paymethod - get a forte one-time token.
+          const onetimePaymethod = this.paymentOneTimeType === 'CreditCard'
+            ? {
+              CreditCard: <IPaymethodRequestCreditCard> {
+                card_number: this.addCreditCardComponent.formGroup.value.cc_number,
+                expire_year: this.addCreditCardComponent.formGroup.value.cc_year,
+                expire_month: this.addCreditCardComponent.formGroup.value.cc_month,
+                cvv: this.addCreditCardComponent.formGroup.value.cc_ccv
+              }
+            } : {
+              Echeck: <IPaymethodRequestEcheck> {
+                account_number: this.addEcheckComponent.formGroup.value.echeck_accounting,
+                account_type: 'c',
+                routing_number: this.addEcheckComponent.formGroup.value.echeck_routing,
+                other_info: this.addEcheckComponent.formGroup.value.echeck_info
+              }
+            };
+          this.PaymethodService.GetForteOneTimeToken(<IPaymethodRequest>onetimePaymethod).subscribe(
+            ForteData => resolve(assign({
+                Token: ForteData.onetime_token,
+                Paymethod_Customer: {
+                  Id: `${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`,
+                  FirstName: this.CustomerAccount.First_Name,
+                  LastName: this.CustomerAccount.Last_Name
+                },
+                PaymethodName: 'TEMP: My one-time payment paymethod',
+                AccountNumber: ForteData.last_4
+              }, this.paymentOneTimeType === 'CreditCard'
+                ? {
+                  PaymethodType: 'CreditCard',
+                  AccountHolder: this.addCreditCardComponent.formGroup.value.cc_name.toUpperCase(),
+                  CreditCardType: replace(get(CardBrands, ForteData.card_type, 'Unknown'), ' ', '')
+                } : {
+                  PaymethodType: 'eCheck',
+                  AccountHolder: this.addEcheckComponent.formGroup.value.echeck_name.toUpperCase(),
+                  RoutingNumber: get(onetimePaymethod, 'Echeck.routing_number')
+                }
+            )),
+            error => reject(error)
           );
         }
-      } else {
-        // This is a one-time paymethod - get a forte one-time token.
-        const onetimePaymethod = this.paymentOneTimeType === 'CreditCard'
-          ? {
-            CreditCard: <IPaymethodRequestCreditCard> {
-              card_number: this.addCreditCardComponent.formGroup.value.cc_number,
-              expire_year: this.addCreditCardComponent.formGroup.value.cc_year,
-              expire_month: this.addCreditCardComponent.formGroup.value.cc_month,
-              cvv: this.addCreditCardComponent.formGroup.value.cc_ccv
-            }
-          } : {
-            Echeck: <IPaymethodRequestEcheck> {
-              account_number: this.addEcheckComponent.formGroup.value.echeck_accounting,
-              account_type: 'c',
-              routing_number: this.addEcheckComponent.formGroup.value.echeck_routing,
-              other_info: this.addEcheckComponent.formGroup.value.echeck_info
-            }
-          };
-        this.PaymethodService.GetForteOneTimeToken(<IPaymethodRequest>onetimePaymethod).subscribe(
-          ForteData => resolve(assign({
-              Token: ForteData.onetime_token,
-              Paymethod_Customer: {
-                Id: `${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`,
-                FirstName: this.CustomerAccount.First_Name,
-                LastName: this.CustomerAccount.Last_Name
-              },
-              PaymethodName: 'TEMP: My one-time payment paymethod',
-              AccountNumber: ForteData.last_4
-            }, this.paymentOneTimeType === 'CreditCard'
-              ? {
-                PaymethodType: 'CreditCard',
-                AccountHolder: this.addCreditCardComponent.formGroup.value.cc_name.toUpperCase(),
-                CreditCardType: replace(get(CardBrands, ForteData.card_type, 'Unknown'), ' ', '')
-              } : {
-                PaymethodType: 'eCheck',
-                AccountHolder: this.addEcheckComponent.formGroup.value.echeck_name.toUpperCase(),
-                RoutingNumber: get(onetimePaymethod, 'Echeck.routing_number')
-              }
-          )),
-          error => reject(error)
-        );
-      }
 
-    })
+      })
 
-    // Catch any errors from getting the Paymethod.
+      // Catch any errors from getting the Paymethod.
       .catch(error => {
         console.log('An error occurred getting the Paymethod to charge. error = ', error);
         this.paymentLoadingMessage = null;
@@ -460,7 +464,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             PaymethodToCharge
           ).subscribe(
             res => {
-  
+
               let paymentTransactionId = res.PaymentTransactionId;
               if (!paymentTransactionId) {
                 paymentTransactionId = 0;
@@ -494,7 +498,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             this.paymentDraftDate
           ).subscribe(
             res => {
-  
+
               let paymentTransactionId = res.PaymentTransactionId;
               if (!paymentTransactionId) {
                 paymentTransactionId = 0;
@@ -521,7 +525,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
         }
 
       });
-
+    }
   }
 
   filterActivePaymethods() {
@@ -551,11 +555,18 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDraftDateChanged(event: IMyDateModel) {
+  draftDateValidation(event: IMyDateModel) {
     if ((new Date(event.jsdate) > this.dueDate) && (this.pastDue > 0 || this.totalDue > 0)) {
       const errorMessage = `This date is after the payment due date, which will cause a late payment fee.`;
       this.paymentConfirmationModal.showConfirmationMessageModal(errorMessage, true);
       this.paymentDraftDate = new Date(event.jsdate);
+    }
+  }
+
+  scheduledPaymentValidation(event: number) {
+    if (event === 1 && this.PaymethodSelected === null) {
+      this.setPaymentDateToToday();
+      this.showPaymentDateErrorMessage();
     }
   }
 
@@ -565,6 +576,21 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
       month: this.paymentDraftDate.getUTCMonth() + 1,
       day: this.paymentDraftDate.getDate()
     };
-    this.formGroup.patchValue({ payment_draft_date: { date: formattedDate } });
+    this.formGroup.patchValue({ "payment_draft_date": { date: formattedDate } });
+  }
+
+  private setPaymentDateToToday() {
+    const today = new Date();
+    this.paymentDraftDate = today;
+    this.formGroup.patchValue({ "payment_draft_date": { date: {
+      year: today.getFullYear(),
+      month: today.getUTCMonth() + 1,
+      day: today.getDate()
+    }}});
+  }
+
+  private showPaymentDateErrorMessage() {
+    const errorMessage = `You must use a saved payment account in order to select a different payment date.`;
+    this.paymentConfirmationModal.showConfirmationMessageModal(errorMessage, true);
   }
 }

@@ -72,8 +72,8 @@
         <div class="form-group" *ngIf="!paymentSubmittedWithoutError">
           <label class="payment_draft_date" class="col-md-4 control-label">Pay On</label>
           <div class="col-md-8">
-            <my-date-picker class="noSymbol" name="payment-draft-date" [options]="paymentDraftDateOptions"
-                            (dateChanged)="onDraftDateChanged($event)" formControlName="payment_draft_date"></my-date-picker>
+            <my-date-picker class="noSymbol" name="payment-draft-date" [options]="paymentDraftDateOptions" (inputFocusBlur)="scheduledPaymentValidation(1)"
+                            (dateChanged)="draftDateValidation($event)" (calendarToggle)="scheduledPaymentValidation($event)" formControlName="payment_draft_date"></my-date-picker>
           </div>
         </div>
 
