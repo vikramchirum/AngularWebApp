@@ -44,6 +44,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   paymentOneTimeType: string = null;
   paymentOneTimeValid: boolean = null;
   paymentSubmittedWithoutError: boolean = null;
+  paymentScheduledWithoutError: boolean = null;
+  paymentCancelledWithoutError: boolean = null;
   forteErrorMessage: string = null;
   formGroup: FormGroup = null;
   zeroAmountEntered: boolean = null;
@@ -61,6 +63,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   processing: boolean = null;
   PaymethodSelected: Paymethod = null;
   paymentDraftDate: Date = new Date();
+  ScheduledPaymentAmount: number = null;
 
   @ViewChild(PaymethodAddCcComponent) private addCreditCardComponent: PaymethodAddCcComponent;
   @ViewChild(PaymethodAddEcheckComponent) private addEcheckComponent: PaymethodAddEcheckComponent;
@@ -199,11 +202,9 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                           this.paymentStatus = PaymentsHistoryItems[0].PaymentStatus;
                           if (this.paymentStatus === 'In Progress') {
                             this.LatestBillAmount = PaymentsHistoryItems[0].PaymentAmount;
-                          }
-                          if (this.autoPay) {
-                            if (this.paymentStatus === 'Scheduled') {
-                              this.ScheduledAutoBillPaymentDate = PaymentsHistoryItems[0].PaymentDate;
-                            }
+                          } else if (this.paymentStatus === 'Scheduled') {
+                            this.ScheduledPaymentAmount = PaymentsHistoryItems[0].PaymentAmount;
+                            this.ScheduledAutoBillPaymentDate = PaymentsHistoryItems[0].PaymentDate;
                           }
                         }
                         this.setFlags();
@@ -218,7 +219,9 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
   setFlags() {
     if (this.ActiveServiceAccount) {
-      if (this.pastDueExists) {
+      if (this.paymentStatus === 'Scheduled') {
+        this.currentView = 'PaymentScheduled';
+      } else if (this.pastDueExists) {
         this.currentView = 'PastDuePayNow';
       } else {
         if (!this.autoPay) {
@@ -335,6 +338,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
       this.processing = false;
     } else {
       // Remove any previous message.
+      this.paymentScheduledWithoutError = null;
+      this.paymentCancelledWithoutError = null;
       this.paymentSubmittedWithoutError = null;
 
       // Determine the Paymethod Data to pass.
@@ -489,6 +494,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             }
           );
         } else {
+          
           // Schedule Payment
           this.PaymentsService.SchedulePayment(
             UserName,
@@ -498,14 +504,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             this.paymentDraftDate
           ).subscribe(
             res => {
-
-              let paymentTransactionId = res.PaymentTransactionId;
-              if (!paymentTransactionId) {
-                paymentTransactionId = 0;
-              }
-              this.paymentConfirmationNumber = (paymentTransactionId) + '-' + res.AuthorizationCode;
-              this.paymentSubmittedWithoutError = true;
-              console.log('The paymethod was scheduled!', res);
+              this.paymentScheduledWithoutError = true;
+              console.log('The payment was scheduled!', res);
               this.hideAnySensitiveData();
               this.paymentLoadingMessage = null;
               this.PaymentsHistoryStore.LoadPaymentsHistory(this.ActiveServiceAccount);
@@ -514,7 +514,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             },
             error => {
               this.paymentSubmittedWithoutError = false;
-              console.log('An error occurred scheduling the paymethod!', error);
+              console.log('An error occurred scheduling the payment!', error);
               this.paymentLoadingMessage = null;
               this.processing = false;
             },
@@ -523,9 +523,63 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             }
           );
         }
-
       });
     }
+  }
+
+  cancelScheduledPayment() {
+    
+    // Remove any previous message.
+    this.paymentScheduledWithoutError = null;
+    this.paymentCancelledWithoutError = null;
+    this.paymentSubmittedWithoutError = null;
+
+    const Paymethod = {
+      PayMethodId: this.PaymethodSelected.PayMethodId,
+      Paymethod_Customer: {
+        Id: `${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`,
+        FirstName: this.CustomerAccount.First_Name,
+        LastName: this.CustomerAccount.Last_Name
+      },
+      PaymethodName: null,
+      PaymethodType: null,
+      IsActive: null,
+      Used_For_Auto_Pay: null,
+      BankAccount: null,
+      CreditCard: null
+    };
+
+    this.processing = true;
+
+    this.paymentLoadingMessage = 'Cancelling your payment...';
+
+    const UserName = String(this.UserService.UserCache.Profile.Username);
+    
+    this.PaymentsService.CancelScheduledPayment(
+      UserName,
+      this.ScheduledPaymentAmount,
+      this.ActiveServiceAccount,
+      Paymethod,
+      this.ScheduledAutoBillPaymentDate
+    ).subscribe(
+      res => {
+        this.paymentCancelledWithoutError = true;
+        console.log('The payment was cancelled!', res);
+        this.paymentLoadingMessage = null;
+        this.PaymentsHistoryStore.LoadPaymentsHistory(this.ActiveServiceAccount);
+        this.ServiceAccountService.UpdateServiceAccounts(true);
+        this.processing = false;
+      },
+      error => {
+        this.paymentCancelledWithoutError = false;
+        console.log('An error occurred cancelling the scheduled the payment!', error);
+        this.paymentLoadingMessage = null;
+        this.processing = false;
+      },
+      () => {
+        console.log('Payment Cancelled Successfully.');
+      }
+    );
   }
 
   filterActivePaymethods() {

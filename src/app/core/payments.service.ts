@@ -47,4 +47,18 @@ export class PaymentsService {
       .map(res => res.json())
       .catch(err => this.HttpClient.handleHttpError(err));
   }
+
+  CancelScheduledPayment(username: string, amount: number, serviceAccount: ServiceAccount, Paymethod: IPaymethod, dueDate: Date) {
+    const body = {
+      UserName: username,
+      AuthorizationAmount: amount,
+      ServiceAccountId: serviceAccount.Id,
+      Paymethod,
+      DraftDate: dueDate.toLocaleDateString()
+    };
+
+    return this.HttpClient.post(`/Payments/Schedule/Cancel`, JSON.stringify(body))
+      .map(res => res.json())
+      .catch(err => this.HttpClient.handleHttpError(err));
+  }
 }
