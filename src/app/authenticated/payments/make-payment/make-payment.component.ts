@@ -193,7 +193,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                     if (!latestInvoice) {
                       return;
                     }
-                    this.dueDate = new Date();
+                    this.dueDate = new Date(latestInvoice.Due_Date);
                     this.dueDate.setDate(this.dueDate.getDate() + 1);
                     this.disableDraftDateSince(this.dueDate);
                     this.exceededDueDate = (this.dueDate < new Date()) ? true : false;
