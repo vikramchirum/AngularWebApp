@@ -146,9 +146,9 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
       day: new Date().getDate() - 1
     },
     disableSince: {
-      year: new Date().getFullYear(),
-      month: new Date().getUTCMonth() + 1,
-      day: new Date().getDate() + 30
+      year: 0,
+      month: 0,
+      day: 0
     },
     dateFormat: 'mm-dd-yyyy'
   };
@@ -193,8 +193,9 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                     if (!latestInvoice) {
                       return;
                     }
-                    this.dueDate = new Date(latestInvoice.Due_Date);
+                    this.dueDate = new Date();
                     this.dueDate.setDate(this.dueDate.getDate() + 1);
+                    this.disableDraftDateSince(this.dueDate);
                     this.exceededDueDate = (this.dueDate < new Date()) ? true : false;
                     this.PaymentHistorySubscription = this.PaymentsHistoryStore.PaymentHistory.subscribe(
                       PaymentsHistoryItems => {
@@ -534,21 +535,6 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     this.paymentCancelledWithoutError = null;
     this.paymentSubmittedWithoutError = null;
 
-    const Paymethod = {
-      PayMethodId: this.PaymethodSelected.PayMethodId,
-      Paymethod_Customer: {
-        Id: `${this.CustomerAccountId}${endsWith(this.CustomerAccountId, '-1') ? '' : '-1'}`,
-        FirstName: this.CustomerAccount.First_Name,
-        LastName: this.CustomerAccount.Last_Name
-      },
-      PaymethodName: null,
-      PaymethodType: null,
-      IsActive: null,
-      Used_For_Auto_Pay: null,
-      BankAccount: null,
-      CreditCard: null
-    };
-
     this.processing = true;
 
     this.paymentLoadingMessage = 'Cancelling your payment...';
@@ -559,7 +545,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
       UserName,
       this.ScheduledPaymentAmount,
       this.ActiveServiceAccount,
-      Paymethod,
+      this.PaymethodSelected,
       this.ScheduledAutoBillPaymentDate
     ).subscribe(
       res => {
@@ -622,6 +608,16 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
       this.setPaymentDateToToday();
       this.showPaymentDateErrorMessage();
     }
+  }
+
+  private disableDraftDateSince(dueDate: Date) {
+    let optionsCopy = JSON.parse(JSON.stringify(this.paymentDraftDateOptions));
+    optionsCopy.disableSince = {
+      year: dueDate.getFullYear(),
+      month: dueDate.getMonth() + 1,
+      day: dueDate.getDate() + 1 + 10 // Only allow scheduled payment 10 days past due date
+    };
+    this.paymentDraftDateOptions = optionsCopy;
   }
 
   private setPaymentDraftDate() {
