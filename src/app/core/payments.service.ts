@@ -55,7 +55,7 @@ export class PaymentsService {
       ServiceAccountId: serviceAccount.Id,
       Paymethod,
       DraftDate: dueDate.toLocaleDateString(),
-      ScheduledPaymentId: `${serviceAccount.Id}-3`
+      BillingSystemAccountKey: `${serviceAccount.Id}-3`
     };
 
     return this.HttpClient.post(`/Payments/Schedule/Cancel`, JSON.stringify(body))
