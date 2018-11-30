@@ -52,9 +52,10 @@ export class PaymentsService {
     const body = {
       UserName: username,
       AuthorizationAmount: amount,
-      ServiceAccountId: `${serviceAccount.Id}-3`,
+      ServiceAccountId: serviceAccount.Id,
       Paymethod,
-      DraftDate: dueDate.toLocaleDateString()
+      DraftDate: dueDate.toLocaleDateString(),
+      ScheduledPaymentId: `${serviceAccount.Id}-3`
     };
 
     return this.HttpClient.post(`/Payments/Schedule/Cancel`, JSON.stringify(body))
