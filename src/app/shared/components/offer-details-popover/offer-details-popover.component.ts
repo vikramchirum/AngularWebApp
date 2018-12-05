@@ -227,6 +227,8 @@ export class OfferDetailsPopoverComponent implements OnInit, OnChanges {
   }
 
   determineCostComponentType(costComponent: ICostComponent): string {
+    if (costComponent.Amount >= 0 && costComponent.TimeOfUseInterval)
+      return "Energy Charges";
     if (costComponent.Amount > 0 && costComponent.Operation_Type == "Multiplicative" && costComponent.IsCompound == true)
       return "Energy Charges";
     else if (costComponent.Amount > 0 && costComponent.Operation_Type == "Additive" && costComponent.IsCompound == true)

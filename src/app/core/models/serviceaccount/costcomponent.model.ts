@@ -5,4 +5,6 @@ export interface ICostComponent {
     Amount: number;
     Operation_Type: string;
     IsCompound: boolean;
+    TimeOfUseInterval: string;
+    DisplayContent: string;
 }
