@@ -496,7 +496,6 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             }
           );
         } else {
-          alert("tommorrow");
           // Schedule Payment
           this.PaymentsService.SchedulePayment(
             UserName,
