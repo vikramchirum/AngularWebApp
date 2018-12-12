@@ -462,7 +462,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
         const UserName = String(this.UserService.UserCache.Profile.Username);
 
         // Check if payment is scheduled to draft today
-        if (moment(this.paymentDraftDate).isSame(moment(new Date()), 'day')) {
+        if (moment(this.paymentDraftDate).isSame(moment(new Date()), 'days')) {
           // Run payment immediately
           this.PaymentsService.MakePayment(
             UserName,
@@ -599,6 +599,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     if ((new Date(event.jsdate) > this.dueDate) && (this.pastDue > 0 || this.totalDue > 0)) {
       const errorMessage = `This date is after the payment due date, which will cause a late payment fee.`;
       this.paymentConfirmationModal.showConfirmationMessageModal(errorMessage, true);
+      this.paymentDraftDate = new Date(event.jsdate);
+    } else {
       this.paymentDraftDate = new Date(event.jsdate);
     }
   }
