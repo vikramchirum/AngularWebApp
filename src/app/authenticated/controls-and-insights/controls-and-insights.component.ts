@@ -166,7 +166,6 @@ export class ControlsAndInsightsComponent implements OnDestroy {
   populateChart(usageHistory: any[], cycleStartDate: Date, cycleEndDate: Date): void {
 
     const datagroups = {};
-    let tempMonth: number;
 
     const currentMonthUsageData = usageHistory.filter(day => {
       const usageDay = new Date(day.Date);
@@ -174,7 +173,9 @@ export class ControlsAndInsightsComponent implements OnDestroy {
         return day;
       }
     });
-    
+
+    this.getDates(cycleStartDate, cycleEndDate);
+
     for (let i = 0; i < currentMonthUsageData.length; i++) {
       if (!datagroups[1]) {
         datagroups[1] = { data: [], label: "Daily Usage" };
@@ -191,8 +192,6 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     if (dataToDisplay && dataToDisplay.length > 0) {
       this.lineChartData.push(dataToDisplay);
     }
-
-    this.getDates(cycleStartDate, cycleEndDate);
 
     if (this.chart !== undefined) {
       this.chart.chart.destroy();

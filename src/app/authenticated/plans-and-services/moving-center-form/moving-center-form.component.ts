@@ -128,6 +128,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   useOldAddress: boolean = true;
   enableSubmitMoveBtn: boolean = false;
   dynamicUAN = null;
+  showLoadingSpinnerOnButton: boolean = false;
 
   movingAddressForm: FormGroup;
   ServicePlanForm: FormGroup;
@@ -488,6 +489,8 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   onSubmitMove( addressForm, billSelector ) {
+    this.enableSubmitMoveBtn = false;
+    this.showLoadingSpinnerOnButton = true;
 
     this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.MovingCenter], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitTransfer]
       , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.SubmitTransfer]);
@@ -578,6 +581,7 @@ export class MovingCenterFormComponent implements OnInit, AfterViewInit, OnDestr
       err => {
         Observable.throw( err );
         this.errorModal.showErrorModal( err );
+        this.showLoadingSpinnerOnButton = false;
       } );
   }
 
