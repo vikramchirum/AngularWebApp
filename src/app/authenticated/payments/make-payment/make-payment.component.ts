@@ -191,6 +191,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                 this.LatestInvoiceDetailsSubscription = this.InvoiceStore.LatestInvoiceDetails.subscribe(
                   latestInvoice => {
                     if (!latestInvoice) {
+                      this.disableDraftDateSince(new Date());
                       return;
                     }
                     this.dueDate = new Date(latestInvoice.Due_Date);
@@ -461,7 +462,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
         const UserName = String(this.UserService.UserCache.Profile.Username);
 
         // Check if payment is scheduled to draft today
-        if (moment(this.paymentDraftDate).isSame(new Date(), 'day')){
+        if (moment(this.paymentDraftDate).isSame(moment(new Date()), 'days')) {
           // Run payment immediately
           this.PaymentsService.MakePayment(
             UserName,
@@ -495,7 +496,6 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
             }
           );
         } else {
-          
           // Schedule Payment
           this.PaymentsService.SchedulePayment(
             UserName,
@@ -600,6 +600,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
       const errorMessage = `This date is after the payment due date, which will cause a late payment fee.`;
       this.paymentConfirmationModal.showConfirmationMessageModal(errorMessage, true);
       this.paymentDraftDate = new Date(event.jsdate);
+    } else {
+      this.paymentDraftDate = new Date(event.jsdate);
     }
   }
 
@@ -612,19 +614,11 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
 
   private disableDraftDateSince(dueDate: Date) {
     let optionsCopy = JSON.parse(JSON.stringify(this.paymentDraftDateOptions));
-    if (this.pastDue > 0) {
-      optionsCopy.disableSince = {
-        year: dueDate.getFullYear(),
-        month: dueDate.getMonth() + 1,
-        day: dueDate.getDate() + 1 + 10 // Only allow scheduled payment 10 days past due date
-      };
-    } else {
-      optionsCopy.disableSince = {
-        year: new Date().getFullYear(),
-        month: new Date().getMonth() + 1,
-        day: new Date().getDate() + 1 + 10
-      };
-    }
+    optionsCopy.disableSince = {
+      year: dueDate.getFullYear(),
+      month: dueDate.getMonth() + 1,
+      day: dueDate.getDate() + 1 + 10 // Only allow scheduled payment 10 days past due date
+    };
     this.paymentDraftDateOptions = optionsCopy;
   }
 
