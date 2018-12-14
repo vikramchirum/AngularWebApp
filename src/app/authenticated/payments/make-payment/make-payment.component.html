@@ -11,13 +11,28 @@
         <br/><br/>
         <p><a class="btn btn-default" routerLink="/payments/view-my-bill">Back to View My Bill</a></p>
       </div>
+      <div class="alert alert-success" *ngIf="paymentScheduledWithoutError === true" >
+        <i class="fa fa-fw fa-check"></i> <b>Thanks!</b> your payment was submitted and is now scheduled!
+        <br/>
+        <i class="fa fa-fw fa-check"></i> <b>Your payment draft date:</b> {{ScheduledAutoBillPaymentDate | date: 'shortDate'}}
+        <br/><br/>
+        <p><a class="btn btn-default" routerLink="/payments/view-my-bill">Back to View My Bill</a></p>
+      </div>
+      <div class="alert alert-success" *ngIf="paymentCancelledWithoutError === true" >
+        <i class="fa fa-fw fa-check"></i> Your scheduled payment has been cancelled.
+      </div>
       <div class="alert alert-danger" *ngIf="paymentSubmittedWithoutError === false && forteErrorMessage">
         <i class="fa fa-fw fa-exclamation-circle"></i> <b>Sorry</b> {{forteErrorMessage}}!
       </div>
       <div class="alert alert-danger" *ngIf="paymentSubmittedWithoutError === false && !forteErrorMessage">
         <i class="fa fa-fw fa-exclamation-circle"></i> <b>Sorry</b> an error occurred when submitting your payment!
       </div>
-
+      <div class="alert alert-danger" *ngIf="paymentScheduledWithoutError === false">
+        <i class="fa fa-fw fa-exclamation-circle"></i> <b>Sorry</b> an error occurred when scheduling your payment!
+      </div>
+      <div class="alert alert-danger" *ngIf="paymentCancelledWithoutError === false">
+        <i class="fa fa-fw fa-exclamation-circle"></i> <b>Sorry</b> an error occurred when cancelling your scheduled payment!
+      </div>
       <br/>
 
       <ng-container *ngIf="!LatestInvoice" >
@@ -45,7 +60,7 @@
           </div>
         </div>
 
-        <div class="form-group" *ngIf="!paymentSubmittedWithoutError">
+        <div class="form-group" *ngIf="!paymentSubmittedWithoutError && !paymentScheduledWithoutError">
           <label for="payment-amount" class="col-md-4 control-label">Payment Amount</label>
           <div class="col-md-8">
             <input
@@ -59,7 +74,7 @@
           </div>
         </div>
 
-        <div class="form-group" *ngIf="!paymentSubmittedWithoutError">
+        <div class="form-group" *ngIf="!paymentSubmittedWithoutError && !paymentScheduledWithoutError">
           <div class="col-md-4">
           </div>
           <div class="col-md-8">
@@ -69,15 +84,15 @@
           </div>
         </div>
 
-        <div class="form-group" *ngIf="!paymentSubmittedWithoutError">
+        <div class="form-group" *ngIf="!paymentSubmittedWithoutError && !paymentScheduledWithoutError">
           <label class="payment_draft_date" class="col-md-4 control-label">Pay On</label>
           <div class="col-md-8">
-            <my-date-picker class="noSymbol" name="payment-draft-date" [options]="paymentDraftDateOptions"
-                            (dateChanged)="onDraftDateChanged($event)" formControlName="payment_draft_date"></my-date-picker>
+            <my-date-picker class="noSymbol" name="payment-draft-date" [options]="paymentDraftDateOptions" (inputFocusBlur)="scheduledPaymentValidation(1)"
+                            (dateChanged)="draftDateValidation($event)" (calendarToggle)="scheduledPaymentValidation($event)" formControlName="payment_draft_date"></my-date-picker>
           </div>
         </div>
 
-        <div class="form-group" *ngIf="!paymentSubmittedWithoutError">
+        <div class="form-group" *ngIf="!paymentSubmittedWithoutError && !paymentScheduledWithoutError">
           <div class="col-md-4">
           </div>
           <div class="col-md-8">
@@ -86,7 +101,7 @@
           </div>
         </div>
 
-        <div class="form-group" *ngIf="!paymentSubmittedWithoutError">
+        <div class="form-group" *ngIf="!paymentSubmittedWithoutError && !paymentScheduledWithoutError">
           <label for="payment-accounts" class="col-md-4 control-label">Payment Account</label>
           <div class="col-md-8">
             <p class="form-control-static" *ngIf="Paymethods === null"><i class="fa fa-fw fa-circle-o-notch fa-spin"></i> Loading your payment accounts...</p>
@@ -126,18 +141,18 @@
         <ng-container *ngIf="paymentOneTimeType !== null">
 
           <mygexa-payment-method-add-cc
-            *ngIf="paymentOneTimeType === 'CreditCard' && !paymentSubmittedWithoutError"
+            *ngIf="paymentOneTimeType === 'CreditCard' && !paymentSubmittedWithoutError && !paymentScheduledWithoutError"
             (changed)="paymentOneTimeChanged($event)"
             form_horizontal="true"
           ></mygexa-payment-method-add-cc>
 
           <mygexa-payment-method-add-echeck
-            *ngIf="paymentOneTimeType === 'eCheck' && !paymentSubmittedWithoutError"
+            *ngIf="paymentOneTimeType === 'eCheck' && !paymentSubmittedWithoutError && !paymentScheduledWithoutError"
             (changed)="paymentOneTimeChanged($event)"
             form_horizontal="true"
           ></mygexa-payment-method-add-echeck>
 
-          <div class="form-group" *ngIf="!paymentSubmittedWithoutError">
+          <div class="form-group" *ngIf="!paymentSubmittedWithoutError && !paymentScheduledWithoutError">
             <div class="col-md-offset-4 col-md-8 col-lg-offset-3 col-lg-9">
               <div class="checkbox">
                 <label>
@@ -188,6 +203,31 @@
             </div>
           </div>
 
+          <div *ngSwitchCase="'PaymentScheduled'" class="form-group">
+            <div class="col-md-offset-3 col-md-9 col-lg-offset-3 col-lg-8">
+              <div class="btn-group btn-block">
+                <button type="button" class="btn btn-success btn-lg " data-label-placement>
+                  <span *ngIf="processing" class="fa fa-spin fa-circle-o-notch"></span>
+                  <span class="small">{{processing ? 'Cancelling your payment' : 'PAYMENT SCHEDULED'}}</span>
+                </button>
+                <button type="button" class="btn btn-success dropdown-toggle btn-lg active" [disabled]="!paymentReady || paymentLoadingMessage" data-toggle="dropdown">
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu pull-right" role="menu">
+                  <li class="linkLabel">
+                    Your payment of ${{ ScheduledPaymentAmount | number: dollarAmountFormatter }} is scheduled for {{ ScheduledAutoBillPaymentDate | date: 'shortDate' }}
+                  </li>
+                  <hr>
+                  <li>
+                    <a (click)="cancelScheduledPayment()" class="btn btn-link btn-small btn-success btn-payment" >
+                      CANCEL PAYMENT
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
           <div *ngSwitchCase="'AutoPay'" class="form-group">
             <div class="col-md-offset-3 col-md-8 col-lg-offset-3 col-lg-6">
               <div class="btn-group btn-block">
@@ -220,7 +260,7 @@
           </div>
 
           <div *ngSwitchCase="'MakePayment'" class="form-group">
-            <div class="form-group text-center" *ngIf="paymentSubmittedWithoutError != true">
+            <div class="form-group text-center" *ngIf="paymentSubmittedWithoutError != true || paymentScheduledWithoutError != true">
               <div class="col-md-offset-3 col-md-8 col-lg-offset-3 col-lg-6" >
                 <button
                   type="submit"

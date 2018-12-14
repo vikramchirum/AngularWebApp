@@ -3,4 +3,3 @@ export interface IPaymentExtensionGrantRequest {
     CSRName: string,
     paymentExtensionDate: Date
 }
-  

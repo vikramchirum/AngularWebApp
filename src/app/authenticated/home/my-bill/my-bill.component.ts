@@ -89,12 +89,11 @@ export class MyBillComponent implements OnInit, OnDestroy {
                         this.showDueDate = false;
                       } else {
                         this.showDueDate = true;
+                        
                       }
-                      if (this.autoPay) {
-                        if (this.paymentStatus === 'Scheduled') {
-                          this.ScheduledAutoBillPaymentDate = this.Payments[0].PaymentDate;
-                          this.LatestBillAmount = this.Payments[0].PaymentAmount;
-                        }
+                      if (this.paymentStatus === 'Scheduled') {
+                        this.ScheduledAutoBillPaymentDate = this.Payments[0].PaymentDate;
+                        this.LatestBillAmount = this.Payments[0].PaymentAmount;
                       }
                     }
                   }
@@ -121,6 +120,9 @@ export class MyBillComponent implements OnInit, OnDestroy {
         } else {
           this.currentView = 'AutoPay';
         }
+      }
+      if (this.paymentStatus == 'Scheduled') {
+        this.currentView = 'PaymentScheduled';
       }
     }
   }
