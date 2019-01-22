@@ -2,7 +2,7 @@
  * Created by patrick.purcell on 4/26/2017.
  */
 export const environment = {
-  Production: true,
+  Production: false,
   Name: 'DEV',
   Api_Url: 'http://azureapiqa/api',
   Api_Token: '2f74b90f975e4dc4a93283c6075ebf67',

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import {CommonModule, CurrencyPipe, DecimalPipe} from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { MyDatePickerModule } from 'mydatepicker';
 
 import { payment_routes } from './payments-routing.module';
 import { ViewMyBillComponent } from './view-my-bill/view-my-bill.component';
@@ -22,6 +23,7 @@ import { TooltipModule } from 'ngx-bootstrap';
     payment_routes,
     PaymentOptionsModule,
     SharedModule,
+    MyDatePickerModule,
     ModalModule.forRoot(),
     TooltipModule.forRoot(),
 

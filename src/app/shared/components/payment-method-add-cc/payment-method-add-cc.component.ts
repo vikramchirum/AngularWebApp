@@ -79,4 +79,12 @@ export class PaymethodAddCcComponent implements OnInit, OnDestroy {
     this.submitted.emit();
   }
 
+  hideSensitiveInfo(): void {
+    const maskedCCNumber = this.formGroup.controls['cc_number'].value.toString().replace(/\d(?=\d{4})/g, 'X');
+    this.formGroup.patchValue({
+      'cc_number': maskedCCNumber,
+      'cc_ccv': '***'
+    });
+  }
+
 }

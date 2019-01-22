@@ -28,8 +28,8 @@ export class InvoiceService {
     return this.HttpClient.search(`/invoice`, invoiceSearchRequest)
       .map(res => res.json())
       .map(invoices => forEach(invoices, invoice => {
-        invoice.Invoice_Date = new Date(invoice.Invoice_Date);
-        invoice.Due_Date = new Date(invoice.Due_Date);
+        invoice.Invoice_Date = new Date(invoice.Invoice_Date).setDate(new Date(invoice.Invoice_Date).getDate()+1); // Add day to match GEMS
+        invoice.Due_Date = new Date(invoice.Due_Date).setDate(new Date(invoice.Due_Date).getDate()+1); // Add day to match GEMS
       }))
       .map(invoices => this.cachedInvoices = invoices)
       .catch(error => this.HttpClient.handleHttpError(error));

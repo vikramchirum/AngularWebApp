@@ -86,6 +86,30 @@
       </div>
 
     </div>
+    <div *ngSwitchCase="'PaymentScheduled'">
+      <div class="col-md-offset-1 col-md-10">
+        <div class="btn-group btn-block">
+          <button type="button" class="btn btn-success btn-lg " data-label-placement>
+            <span *ngIf="processing" class="fa fa-spin fa-circle-o-notch"></span>
+            <span class="small">{{processing ? 'Cancelling your payment' : 'PAYMENT SCHEDULED'}}</span>
+          </button>
+          <button type="button" class="btn btn-success dropdown-toggle btn-lg active" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu pull-right" role="menu">
+            <li class="linkLabel">
+              Your payment of ${{ LatestBillAmount | number: dollarAmountFormatter }} is scheduled for {{ ScheduledAutoBillPaymentDate | date: 'shortDate' }}
+            </li>
+            <hr>
+            <li>
+              <a routerLink="/payments/make-payment" class="btn btn-link btn-small btn-success btn-payment" >
+                CANCEL PAYMENT
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
     <div *ngSwitchCase="'MakePayment'">
       <button class="btn btn-block btn-success btn-lg" (click)="handleClick()" routerLink="/payments/make-payment" type="button">
         Make a Payment</button>
