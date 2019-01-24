@@ -175,12 +175,31 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     });
 
     this.getDates(cycleStartDate, cycleEndDate);
-
-    for (let i = 0; i < currentMonthUsageData.length; i++) {
+    
+    let blankDays = 0;
+    for (let i = 0; i < this.cycleDates.length; i++) {
       if (!datagroups[1]) {
         datagroups[1] = { data: [], label: "Daily Usage" };
       }
-      datagroups[1].data.push(currentMonthUsageData[i].Usage);
+
+      if (i < currentMonthUsageData.length+blankDays) {
+        const currentCycleDate = new Date(this.cycleDates[i]);
+        currentCycleDate.setFullYear(new Date().getFullYear());
+
+        let usageForCycleDate = 0;
+
+        currentMonthUsageData.forEach(ud => {
+          if (moment(new Date(ud.Date)).isSame(currentCycleDate, 'day')) {
+            usageForCycleDate = ud.Usage;
+          }
+        });
+
+        if (usageForCycleDate === 0) {
+          blankDays++;
+        }
+
+        datagroups[1].data.push(usageForCycleDate);
+      }
     }
 
     const dataToDisplay = takeRight(values(datagroups));
