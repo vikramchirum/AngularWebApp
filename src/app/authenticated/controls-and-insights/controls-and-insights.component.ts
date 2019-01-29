@@ -59,7 +59,12 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     },
     scales: {
       xAxes: [{
-        display: true
+        display: true,
+        ticks: {
+          callback: function(value, index, values) {
+            return `${value.slice(0,value.length-5)}`;
+          }
+        }
       }],
       yAxes: [{
         display: true,
@@ -184,7 +189,6 @@ export class ControlsAndInsightsComponent implements OnDestroy {
 
       if (i < currentMonthUsageData.length+blankDays) {
         const currentCycleDate = new Date(this.cycleDates[i]);
-        currentCycleDate.setFullYear(new Date().getFullYear());
 
         let usageForCycleDate = 0;
 
@@ -255,7 +259,7 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     let stopDate = moment(endDate);
     
     while (currentDate <= stopDate) {
-      dates.push(currentDate.format("M/DD"));
+      dates.push(currentDate.format("M/DD/YYYY"));
       currentDate = moment(currentDate).add(1, 'days');
     }
 
