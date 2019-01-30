@@ -42,17 +42,25 @@
           <tbody>
           <tr *ngFor="let component of ActiveOfferDetails.Current_Offer.Cost_Components">
             <ng-container *ngIf="determineCostComponentType(component) === 'Energy Charges'">
-              <td class="bill-name">Energy Charges<small>
-                <ng-template *ngIf="component.Min === 0 && component.Max === null; then OnlyMin"></ng-template>
-                <ng-template *ngIf="component.Min > 0 && component.Max === null; then NonZeroMin"></ng-template>
-                <!--<ng-template *ngIf="charge.Max >= 0 && charge.Min === ''; then OnlyMax"></ng-template>-->
-                <ng-template *ngIf="component.Min >= 0 && component.Max > 0; then MinMax"></ng-template>
-              </small></td>
-              <ng-template #OnlyMin></ng-template>
-              <ng-template #NonZeroMin> ( >= {{component.Min}} kWh)</ng-template>
-              <!--<ng-template #OnlyMax> ( >= {{charge.Max}} kWh)</ng-template>-->
-              <ng-template #MinMax> ({{component.Min}} - {{component.Max}} kWh) </ng-template>
-              <td class="bill-amount">${{component.Amount | number: kWhAmountFormatter }}  per kWh</td>
+              <ng-template *ngIf="component.TimeOfUseInterval !== null then TouTemplate"></ng-template>
+              <ng-template *ngIf="component.TimeOfUseInterval === null then NonTouTemplate"></ng-template>             
+              <ng-template #TouTemplate>
+                  <td class="bill-name">Energy Charges</td>
+                  <td class="bill-amount">${{component.Amount | number: kWhAmountFormatter }}  {{ component.DisplayContent }}</td>
+              </ng-template>
+              <ng-template #NonTouTemplate>
+                  <td class="bill-name">Energy Charges<small>
+                      <ng-template *ngIf="component.Min === 0 && component.Max === null; then OnlyMin"></ng-template>
+                      <ng-template *ngIf="component.Min > 0 && component.Max === null; then NonZeroMin"></ng-template>
+                      <!--<ng-template *ngIf="charge.Max >= 0 && charge.Min === ''; then OnlyMax"></ng-template>-->
+                      <ng-template *ngIf="component.Min >= 0 && component.Max > 0; then MinMax"></ng-template>
+                    </small></td>
+                    <ng-template #OnlyMin></ng-template>
+                    <ng-template #NonZeroMin> ( >= {{component.Min}} kWh)</ng-template>
+                    <!--<ng-template #OnlyMax> ( >= {{charge.Max}} kWh)</ng-template>-->
+                    <ng-template #MinMax> ({{component.Min}} - {{component.Max}} kWh) </ng-template>
+                    <td class="bill-amount">${{component.Amount | number: kWhAmountFormatter }}  per kWh</td>
+              </ng-template>
             </ng-container>
             <ng-container *ngIf="determineCostComponentType(component) === 'Monthly Usage Charges'">
               <td class="bill-name">Monthly Usage Charges<small>
