@@ -59,7 +59,12 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     },
     scales: {
       xAxes: [{
-        display: true
+        display: true,
+        ticks: {
+          callback: function(value, index, values) {
+            return `${value.slice(0,value.length-5)}`;
+          }
+        }
       }],
       yAxes: [{
         display: true,
@@ -175,12 +180,30 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     });
 
     this.getDates(cycleStartDate, cycleEndDate);
-
-    for (let i = 0; i < currentMonthUsageData.length; i++) {
+    
+    let blankDays = 0;
+    for (let i = 0; i < this.cycleDates.length; i++) {
       if (!datagroups[1]) {
         datagroups[1] = { data: [], label: "Daily Usage" };
       }
-      datagroups[1].data.push(currentMonthUsageData[i].Usage);
+
+      if (i < currentMonthUsageData.length+blankDays) {
+        const currentCycleDate = new Date(this.cycleDates[i]);
+
+        let usageForCycleDate = 0;
+
+        currentMonthUsageData.forEach(ud => {
+          if (moment(new Date(ud.Date)).isSame(currentCycleDate, 'day')) {
+            usageForCycleDate = ud.Usage;
+          }
+        });
+
+        if (usageForCycleDate === 0) {
+          blankDays++;
+        }
+
+        datagroups[1].data.push(usageForCycleDate);
+      }
     }
 
     const dataToDisplay = takeRight(values(datagroups));
@@ -236,7 +259,7 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     let stopDate = moment(endDate);
     
     while (currentDate <= stopDate) {
-      dates.push(currentDate.format("M/DD"));
+      dates.push(currentDate.format("M/DD/YYYY"));
       currentDate = moment(currentDate).add(1, 'days');
     }
 
