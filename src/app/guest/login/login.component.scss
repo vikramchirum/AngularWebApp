@@ -322,7 +322,7 @@ body {
     background: #000;
 }
 
-.login-container > .row {
+  .login-container > .row {
   display:flex;
 }
 
@@ -336,6 +336,15 @@ body {
 
 }
 
+.ui-subhead {
+  font-size:20px;
+}
+
+h4.media-heading {
+  font-size:21px;
+  
+}
+
 /* Small Devices, Tablets */
 @media only screen and (max-width : 768px) {
  
@@ -343,13 +352,30 @@ body {
         background-color: rgba(251,248,249,0.85);
 }
   .login-container {
-    margin-top: 25px;
+    margin-top: -25px;
   }
   input:focus {
     background-color: #fff;
     border: 1px solid #fff;
   }
+  
+  
+h2 {
+  margin-top:0;    
 }
+  
+  .login-container > .row {
+  display:block;
+}
+
+h1 {
+  font-size:24px;
+}
+.ui-subhead {
+  font-size:16px;
+}
+}
+
 
 .ui-dark {
   background-color: rgba(46,177,52,0.9);
@@ -372,7 +398,6 @@ body {
       height: 32px;
   }
 }
-
 container.login-container, .hero-wrapper{
   min-height: 650px;
 }
