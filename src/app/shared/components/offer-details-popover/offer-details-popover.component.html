@@ -59,8 +59,7 @@
                     <ng-template #NonZeroMin> ( >= {{component.Min}} kWh)</ng-template>
                     <!--<ng-template #OnlyMax> ( >= {{charge.Max}} kWh)</ng-template>-->
                     <ng-template #MinMax> ({{component.Min}} - {{component.Max}} kWh) </ng-template>
-                    <td class="bill-amount" *ngIf="component.Operation_Type !== 'Additive'">${{component.Amount | number: kWhAmountFormatter }}  per kWh</td>
-                    <td class="bill-amount" *ngIf="component.Operation_Type === 'Additive'">${{component.Amount | number: dollarAmountFormatter }}</td>
+                    <td class="bill-amount">${{component.Amount | number: kWhAmountFormatter }}  per kWh</td>
               </ng-template>
             </ng-container>
             <ng-container *ngIf="determineCostComponentType(component) === 'Monthly Usage Charges'">
