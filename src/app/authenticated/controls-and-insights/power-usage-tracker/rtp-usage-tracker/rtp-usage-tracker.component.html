@@ -1,3 +1,82 @@
-<p>
-  rtp-usage-tracker works!
-</p>
+<div class="container">
+  <div class="row">
+    <div class="col-md-3 hidden-xs  hidden-sm">
+    </div>
+    <div class="col-sm-12 col-md-9 col-md-offset-3" style="margin-bottom: 10px;">
+      <div class="row">
+        <div class="col-xs-3 col-sm-2">
+          <div class="ui-graph-controller">
+            <button (click)="showMonthlyUsage()" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isMonthlyView, 'btn-default': !isMonthlyView }">Monthly</button>
+            <div class="ui-graph-controller-spacer" [ngClass]="{ 'ui-active': isMonthlyView }">
+              &nbsp;
+            </div>
+            <button (click)="showDailyUsage()" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isDailyView, 'btn-default': !isDailyView }">Daily</button>
+            <div class="ui-graph-controller-spacer" [ngClass]="{ 'ui-active': isMonthlyView || isDailyView }">
+              &nbsp;
+            </div>
+            <button (click)="showHourlyUsage()" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isHourlyView, 'btn-default': !isHourlyView }">Hourly
+            </button>
+          </div>
+        </div>
+        <div class="col-xs-9 col-sm-10">
+          <h2 class="ui-graph-type">
+            <span *ngIf="isMonthlyView">Monthly </span>
+            <span *ngIf="isDailyView">Daily </span>
+            <span *ngIf="isHourlyView">Hourly </span>
+            Energy Usage
+          </h2>
+          <div *ngIf="barChartData.length > 0">
+            <div *ngFor='let index of barChartData'>
+              <div id="canvasWrapper">
+                <canvas width="400" height="200"
+                  baseChart
+                  [datasets]="index"
+                  [labels]="chartLabels"
+                  [options]="barChartOptions"
+                  [colors]="barChartColors"
+                  legend="false"
+                  chartType="bar"
+                  (chartHover)="chartHovered($event)"
+                  (chartClick)="chartClicked($event)">
+                </canvas>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="isDataAvailable" class="ui-pricing-summary">
+            <div class="ui-price-inline-block">
+              <h1>35</h1>
+                <div class="ui-price-caption">
+                  kWh
+                </div>
+            </div>
+            <div class="ui-price-inline-block">
+              <h1><sup>@</sup></h1>
+            </div>
+            <div class="ui-price-inline-block">
+              <h1>21<sup>¢</sup></h1>
+            <div class="ui-price-caption">
+              Avg Price
+            </div>
+          </div>
+          <div class="ui-price-inline-block">
+            <h1>=</h1>
+          </div>
+          <div class="ui-price-inline-block">
+            <h1>
+              <sup>$</sup>7<sup>35</sup>
+            </h1>
+            <div class="ui-price-caption">
+              Your Cost
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <div class="ui-button-slider">
+            <button (click)="showWholesalePricing()" class="btn" [ngClass]="{ 'btn-primary': isWholesalePricing, 'btn-link': !isWholesalePricing }">Wholesale</button>
+            <button (click)="showAllInPricing()" class="btn" [ngClass]="{ 'btn-primary': isAllInPricing, 'btn-link': !isAllInPricing }">All-in</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

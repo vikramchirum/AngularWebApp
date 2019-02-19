@@ -1,0 +1,124 @@
+$account-base:  rgb(6, 81, 128) !default;
+$plans-base:    rgb(254, 162, 32) !default;
+$payment-base:  rgb(46, 177, 52)      !default;
+$control-base:  rgb(27, 141, 205)     !default;
+$dark-base:     rgb(10, 10, 10)       !default;
+$alpha: 0.1;
+$alpha5: 0.5;
+
+.ui-graph-type {
+	color: $payment-base;
+	text-align:center;
+	font-family: "Open Sans", sans-serif;
+	text-transform: uppercase;
+	margin-top: 0;
+}
+
+.ui-graph-controller {
+	height: 300px;
+	width: 55px;
+
+		.btn-sm {
+			font-family: Oswald, sans-serif;
+			text-transform: uppercase;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+			padding-left: 5px;
+
+		&.btn-default {
+			border: 0px solid rgba($dark-base, $alpha5);
+			color: #ffffff;
+			background: #e0e0e0; /* Old browsers */
+			background: -moz-linear-gradient(top, #e0e0e0 0%, #b2b2b2 100%); /* FF3.6-15 */
+			background: -webkit-linear-gradient(top, #e0e0e0 0%, #b2b2b2 100%); /* Chrome10-25,Safari5.1-6 */
+			background: linear-gradient(to bottom, #e0e0e0 0%, #b2b2b2 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e0e0e0', endColorstr='#b2b2b2', GradientType=0); /* IE6-9 */
+		}
+
+			&.btn-primary {
+			background-color: $payment-base;
+			border: 1px solid $payment-base;
+		}
+}
+
+.ui-graph-controller-spacer {
+	width: 45px;
+	height: 150px;
+	background-color: rgba($dark-base, $alpha);
+  background-image: radial-gradient(circle, #aaa 10%, transparent 10%), radial-gradient(circle, #ccc 10%, transparent 10%);
+  background-size: 45px 15px;
+  background-position: 0 0, 0 0;
+
+	&.ui-active {
+		background-color: rgba($payment-base, $alpha);
+  	background-image: radial-gradient(circle, $payment-base 10%, transparent 10%), radial-gradient(circle, $payment-base 10%, transparent 10%);
+  	background-size: 45px 15px;
+  	background-position: 0 0, 0 0;
+		}
+	}
+}
+
+.ui-pricing-summary {
+	color: $payment-base;
+	text-align: center;
+
+	.ui-price-inline-block {
+		width: auto;
+		display: inline-block;
+		vertical-align: top;
+
+		h1 {
+		font-weight: 700;
+		font-family: Oswald, sans-serif;
+
+		sup {
+			font-weight: 500;
+			font-size: 24px;
+			vertical-align: sub;
+		}
+	}
+}
+
+	.ui-price-caption {
+		text-align: center;
+		color: $account-base;
+		font-family: Oswald, sans-serif;
+		margin-top: -10px;
+		text-transform: uppercase;
+	}
+}
+
+.ui-button-slider {
+	border: 1px solid $payment-base;
+	padding: 2px;
+	display: inline-block;
+	border-radius: 9px;
+	text-align: center;
+	margin-top: 20px;
+
+	.btn {
+		width: 140px;
+		font-family: 'Open Sans', sans-serif;
+		border-radius: 6px;
+
+		&.btn-primary {
+			background-color: $payment-base;
+			border-color: #fff;
+		}
+
+		&.btn-link {
+			color: $payment-base;
+
+			&:hover {
+			background-color: rgba($payment-base, $alpha);
+			text-decoration: none;
+			}
+		}
+	}
+}
+
+#canvasWrapper {
+	overflow-x: auto;
+	min-width: 500px;
+	min-height: 300px;
+}

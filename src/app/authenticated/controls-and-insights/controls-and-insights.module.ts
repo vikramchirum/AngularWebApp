@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartsModule } from 'ng2-charts';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { SharedModule } from '../../shared/shared.module';
 import { ControlsAndInsightsComponent } from './controls-and-insights.component';
@@ -22,7 +22,8 @@ import { EnergyUsageTableComponent } from './usage-history/energy-usage-table/en
     controls_insights_routes,
     SharedModule,
     ChartsModule,
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    NgxChartsModule
   ],
   declarations: [
     ControlsAndInsightsComponent,
