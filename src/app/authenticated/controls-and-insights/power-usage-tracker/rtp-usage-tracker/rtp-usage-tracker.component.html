@@ -36,15 +36,14 @@
                   [colors]="barChartColors"
                   legend="false"
                   chartType="bar"
-                  (chartHover)="chartHovered($event)"
-                  (chartClick)="chartClicked($event)">
+                  (chartClick)="chartClicked($event, $elements)">
                 </canvas>
               </div>
             </div>
           </div>
-          <div *ngIf="isDataAvailable" class="ui-pricing-summary">
-            <div class="ui-price-inline-block">
-              <h1>35</h1>
+          <div *ngIf="usageInfo" class="ui-pricing-summary">
+            <div  class="ui-price-inline-block">
+              <h1>{{usageInfo.kwh | number}}</h1>
                 <div class="ui-price-caption">
                   kWh
                 </div>
@@ -53,7 +52,7 @@
               <h1><sup>@</sup></h1>
             </div>
             <div class="ui-price-inline-block">
-              <h1>21<sup>¢</sup></h1>
+              <h1>{{usageInfo.avgPrice | number}}<sup>¢</sup></h1>
             <div class="ui-price-caption">
               Avg Price
             </div>
@@ -63,7 +62,7 @@
           </div>
           <div class="ui-price-inline-block">
             <h1>
-              <sup>$</sup>7<sup>35</sup>
+              <sup>$</sup>{{usageInfo.totalCostDollars}}<sup>{{usageInfo.totalCostCents}}</sup>
             </h1>
             <div class="ui-price-caption">
               Your Cost
