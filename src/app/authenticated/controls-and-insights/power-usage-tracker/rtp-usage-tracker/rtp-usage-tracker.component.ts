@@ -86,7 +86,11 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         ticks: {
           beginAtZero: true,
           callback: function(value, index, values) {
-            return `${value} kWh`;
+            if (Number(value) > 0 && Number(value) < 1) {
+              return `${value.toString().substring(0, 4)} kWh`;
+            } else {
+              return `${value} kWh`;
+            }
           }
         }
       }]
@@ -222,8 +226,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       datagroups[0].data.push(monthsUsage);
     }
 
-    this.chartLabels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG',
-    'SEP', 'OCT', 'NOV', 'DEC'];
+    this.chartLabels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
     
     this.populateChart(takeRight(values(datagroups)));
 

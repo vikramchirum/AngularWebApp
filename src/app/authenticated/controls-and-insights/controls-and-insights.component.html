@@ -27,5 +27,11 @@
 
 
 <div class="container-fluid container-breakout bg-info"  *ngIf="startsWith(Router.url, '/controls-and-insights/power-usage-tracker')">
+  <!-- <div *ngIf="activeServiceAccount.Current_Offer.Is_RTP">
+    <mygexa-rtp-usage-tracker></mygexa-rtp-usage-tracker>
+  </div>
+  <div *ngIf="!activeServiceAccount.Current_Offer.Is_RTP">
+    <mygexa-daily-usage-tracker></mygexa-daily-usage-tracker>
+  </div> -->
   <mygexa-rtp-usage-tracker></mygexa-rtp-usage-tracker>
 </div>
