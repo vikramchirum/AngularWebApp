@@ -40,6 +40,10 @@
         <h5>Gexa Energy</h5>
         <table border="0" width="100%" class="table-condensed table-striped">
           <tbody>
+          <tr *ngIf="ActiveOfferDetails.Current_Offer.Is_RTP === true">
+              <td class="bill-name">Wholesale Energy Charge</td>
+              <td class="bill-amount">Real-Time price per kWh</td>
+          </tr>
           <tr *ngFor="let component of ActiveOfferDetails.Current_Offer.Cost_Components">
             <ng-container *ngIf="determineCostComponentType(component) === 'Energy Charges'">
               <ng-template *ngIf="component.TimeOfUseInterval !== null then TouTemplate"></ng-template>
@@ -64,17 +68,25 @@
               </ng-template>
             </ng-container>
             <ng-container *ngIf="determineCostComponentType(component) === 'Monthly Usage Charges'">
-              <td class="bill-name">Monthly Usage Charges<small>
-                  <ng-template *ngIf="component.Min === 0 && component.Max === null; then OnlyMin"></ng-template>
-                  <ng-template *ngIf="component.Min > 0 && component.Max === null; then NonZeroMin"></ng-template>
-                  <!--<ng-template *ngIf="charge.Max >= 0 && charge.Min === ''; then OnlyMax"></ng-template>-->
-                  <ng-template *ngIf="component.Min >= 0 && component.Max > 0; then MinMax"></ng-template>
-                </small></td>
-                <ng-template #OnlyMin></ng-template>
-                <ng-template #NonZeroMin> ( >= {{component.Min}})</ng-template>
-                <!--<ng-template #OnlyMax> ( >= {{charge.Max}})</ng-template>-->
-                <ng-template #MinMax> ({{component.Min}} - {{component.Max}}) </ng-template>
-                <td class="bill-amount">${{component.Amount | number: dollarAmountFormatter }}</td>
+                <ng-template *ngIf="ActiveOfferDetails.Current_Offer.Is_RTP === true then RtpTemplate"></ng-template>
+                <ng-template *ngIf="ActiveOfferDetails.Current_Offer.Is_RTP === false then NonRtpTemplate"></ng-template>
+                <ng-template #RtpTemplate>
+                    <td class="bill-name">Energy Optimizer</td>
+                    <td class="bill-amount">${{component.Amount | number: dollarAmountFormatter }}</td>
+                </ng-template>
+                <ng-template #NonRtpTemplate>
+                    <td class="bill-name">Monthly Usage Charges<small>
+                        <ng-template *ngIf="component.Min === 0 && component.Max === null; then OnlyMin"></ng-template>
+                        <ng-template *ngIf="component.Min > 0 && component.Max === null; then NonZeroMin"></ng-template>
+                        <!--<ng-template *ngIf="charge.Max >= 0 && charge.Min === ''; then OnlyMax"></ng-template>-->
+                        <ng-template *ngIf="component.Min >= 0 && component.Max > 0; then MinMax"></ng-template>
+                      </small></td>
+                      <ng-template #OnlyMin></ng-template>
+                      <ng-template #NonZeroMin> ( >= {{component.Min}})</ng-template>
+                      <!--<ng-template #OnlyMax> ( >= {{charge.Max}})</ng-template>-->
+                      <ng-template #MinMax> ({{component.Min}} - {{component.Max}}) </ng-template>
+                      <td class="bill-amount">${{component.Amount | number: dollarAmountFormatter }}</td>
+                </ng-template>
             </ng-container>
             <ng-container *ngIf="determineCostComponentType(component) === 'Monthly Usage Credits'">
               <td class="bill-name">Monthly Usage Credits<small>
@@ -95,7 +107,8 @@
               <td class="bill-amount">50%</td>
           </tr>
           <tr *ngIf="ActiveOfferDetails.Current_Offer.Base_Charge">
-            <td class="bill-name">Base Charge <small>(per month)</small></td>
+            <td class="bill-name" *ngIf="ActiveOfferDetails.Current_Offer.Is_RTP === false">Base Charge <small>(per month)</small></td>
+            <td class="bill-name" *ngIf="ActiveOfferDetails.Current_Offer.Is_RTP === true">Membership Fee <small>(per month)</small></td>
             <td class="bill-amount">${{ActiveOfferDetails.Current_Offer.Base_Charge | number: dollarAmountFormatter }}*</td>
           </tr>
           </tbody>
