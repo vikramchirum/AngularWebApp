@@ -176,35 +176,26 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   private showMonthlyUsage() {
     const firstMonth = moment().startOf("year").toDate();
     const lastMonth = moment().endOf("year").toDate();
-    // this.UsageHistoryService.getMonthlyProfiledBill(this.activeServiceAccount.UAN, firstMonth, lastMonth).subscribe(monthlyUsage => {
-    //  let usage: [MonthlyProfiledBill] = this.getTempMonthlyUsage();
-    //  this.processMonthlyUsage(usage);
-    // });
-    let usage: [MonthlyProfiledBill] = this.getTempMonthlyUsage();
-    this.monthlyUsageData = usage;
-    this.processMonthlyUsage(usage);
+    this.UsageHistoryService.getMonthlyProfiledBill(this.activeServiceAccount.UAN, firstMonth, lastMonth).subscribe(monthlyUsage => {
+     let usage: [MonthlyProfiledBill] = this.getTempMonthlyUsage();
+     this.processMonthlyUsage(usage);
+    });
   }
 
   private showDailyUsage() {
     let usageMonth = moment().startOf("month");
-    // this.UsageHistoryService.getDailyProfiledBill(this.activeServiceAccount.UAN, monthStart.toDate()).subscribe(dailyUsage => {
-    //   let usage: [DailyProfiledBill] = dailyUsage;
-    //   this.processDailyUsage(usage);
-    // });
-    let usage: [DailyProfiledBill] = this.getTempDailyUsage();
-    this.dailyUsageData = usage;
-    this.processDailyUsage(usage);
+    this.UsageHistoryService.getDailyProfiledBill(this.activeServiceAccount.UAN, usageMonth.toDate()).subscribe(dailyUsage => {
+      let usage: [DailyProfiledBill] = dailyUsage;
+      this.processDailyUsage(usage);
+    });
   }
 
   private showHourlyUsage() {
     let date = moment().startOf("day").toDate();
-    // this.UsageHistoryService.getHourlyProfiledBill(this.activeServiceAccount.UAN, date).subscribe(hourlyUsage => {
-    //   let usage: [HourlyProfiledBill] = hourlyUsage;
-    //   this.processHourlyUsage(usage);
-    // });
-    let usage: [HourlyProfiledBill] = this.getTempHourlyUsage();
-    this.hourlyUsageData = usage;
-    this.processHourlyUsage(usage);
+    this.UsageHistoryService.getHourlyProfiledBill(this.activeServiceAccount.UAN, date).subscribe(hourlyUsage => {
+      let usage: [HourlyProfiledBill] = hourlyUsage;
+      this.processHourlyUsage(usage);
+    });
   }
 
   private processMonthlyUsage(usage: [MonthlyProfiledBill]) {
