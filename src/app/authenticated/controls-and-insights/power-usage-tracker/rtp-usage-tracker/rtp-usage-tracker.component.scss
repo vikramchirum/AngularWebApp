@@ -119,6 +119,9 @@ $alpha5: 0.5;
 
 #canvasWrapper {
 	overflow-x: auto;
-	min-width: 500px;
-	min-height: 300px;
+
+	canvas {
+		min-width: 500px;
+		min-height: 300px;
+	}
 }
