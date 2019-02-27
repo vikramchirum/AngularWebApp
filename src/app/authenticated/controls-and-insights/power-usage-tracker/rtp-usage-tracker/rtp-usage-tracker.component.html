@@ -6,15 +6,15 @@
       <div class="row">
         <div class="col-xs-3 col-sm-2">
           <div class="ui-graph-controller">
-            <button (click)="showMonthlyUsage()" [disabled]="!barChartData.length > 0" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isMonthlyView, 'btn-default': !isMonthlyView }">Monthly</button>
+            <button (click)="showMonthlyUsage()" [disabled]="!(barChartData.length > 0)" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isMonthlyView, 'btn-default': !isMonthlyView }">Monthly</button>
             <div class="ui-graph-controller-spacer" [ngClass]="{ 'ui-active': isMonthlyView }">
               &nbsp;
             </div>
-            <button (click)="showDailyUsage()" [disabled]="!barChartData.length > 0" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isDailyView, 'btn-default': !isDailyView }">Daily</button>
+            <button (click)="showDailyUsage()" [disabled]="!(barChartData.length > 0)" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isDailyView, 'btn-default': !isDailyView }">Daily</button>
             <div class="ui-graph-controller-spacer" [ngClass]="{ 'ui-active': isMonthlyView || isDailyView }">
               &nbsp;
             </div>
-            <button (click)="showHourlyUsage()" [disabled]="!barChartData.length > 0" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isHourlyView, 'btn-default': !isHourlyView }">Hourly
+            <button (click)="showHourlyUsage()" [disabled]="!(barChartData.length > 0)" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isHourlyView, 'btn-default': !isHourlyView }">Hourly
             </button>
           </div>
         </div>
@@ -77,8 +77,8 @@
         </div>
         <div class="text-center">
           <div class="ui-button-slider">
-            <button (click)="showWholesalePricing()"  [disabled]="!barChartData.length > 0" class="btn" [ngClass]="{ 'btn-primary': isWholesalePricing, 'btn-link': !isWholesalePricing }">Wholesale</button>
-            <button (click)="showAllInPricing()"  [disabled]="!barChartData.length > 0" class="btn" [ngClass]="{ 'btn-primary': isAllInPricing, 'btn-link': !isAllInPricing }">All-in</button>
+            <button (click)="showWholesalePricing()"  [disabled]="!(barChartData.length > 0)" class="btn" [ngClass]="{ 'btn-primary': isWholesalePricing, 'btn-link': !isWholesalePricing }">Wholesale</button>
+            <button (click)="showAllInPricing()"  [disabled]="!(barChartData.length > 0)" class="btn" [ngClass]="{ 'btn-primary': isAllInPricing, 'btn-link': !isAllInPricing }">All-in</button>
           </div>
         </div>
       </div>

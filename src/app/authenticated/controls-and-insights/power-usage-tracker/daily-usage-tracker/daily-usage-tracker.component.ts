@@ -24,7 +24,7 @@ export class DailyUsageTrackerComponent implements OnDestroy {
 
   private activeServiceAccount: ServiceAccount = null;
   private ServiceAccountsSubscription: Subscription = null;
-  private isDataAvailable = false;
+  public isDataAvailable = false;
 
   /* Table and Pagination Data */
   public tablePage = 1;

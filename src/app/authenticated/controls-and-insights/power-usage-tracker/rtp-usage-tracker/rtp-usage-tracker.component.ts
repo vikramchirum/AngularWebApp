@@ -175,7 +175,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isAllInPricing = true;
   }
 
-  private showMonthlyUsage() {
+  showMonthlyUsage() {
     const firstMonth = moment().startOf("year").toDate();
     const lastMonth = moment().endOf("year").toDate();
     this.UsageHistoryService.getMonthlyProfiledBill(this.activeServiceAccount.UAN, firstMonth, lastMonth).subscribe(monthlyUsage => {
@@ -185,7 +185,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     });
   }
 
-  private showDailyUsage() {
+  showDailyUsage() {
     let usageMonth = moment().startOf("month");
     this.UsageHistoryService.getDailyProfiledBill(this.activeServiceAccount.UAN, usageMonth.toDate()).subscribe(dailyUsage => {
       let usage: [DailyProfiledBill] = dailyUsage;
@@ -194,7 +194,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     });
   }
 
-  private showHourlyUsage() {
+  showHourlyUsage() {
     let date = moment().startOf("day").toDate();
     this.UsageHistoryService.getHourlyProfiledBill(this.activeServiceAccount.UAN, date).subscribe(hourlyUsage => {
       let usage: [HourlyProfiledBill] = hourlyUsage;
