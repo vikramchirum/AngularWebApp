@@ -75,6 +75,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
                 // Is monthly view. 
                 // Show correct date label format (MM/DD)
                 return value.substring(0, value.length-5);
+              } else {
+                return value;
               }
             } else {
               return value;
@@ -176,35 +178,29 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   private showMonthlyUsage() {
     const firstMonth = moment().startOf("year").toDate();
     const lastMonth = moment().endOf("year").toDate();
-    // this.UsageHistoryService.getMonthlyProfiledBill(this.activeServiceAccount.UAN, firstMonth, lastMonth).subscribe(monthlyUsage => {
-    //  let usage: [MonthlyProfiledBill] = this.getTempMonthlyUsage();
-    //  this.processMonthlyUsage(usage);
-    // });
-    let usage: [MonthlyProfiledBill] = this.getTempMonthlyUsage();
-    this.processMonthlyUsage(usage);
-    this.monthlyUsageData = usage;
+    this.UsageHistoryService.getMonthlyProfiledBill(this.activeServiceAccount.UAN, firstMonth, lastMonth).subscribe(monthlyUsage => {
+     let usage: [MonthlyProfiledBill] = monthlyUsage;
+     this.monthlyUsageData = usage;
+     this.processMonthlyUsage(usage);
+    });
   }
 
   private showDailyUsage() {
     let usageMonth = moment().startOf("month");
-    // this.UsageHistoryService.getDailyProfiledBill(this.activeServiceAccount.UAN, usageMonth.toDate()).subscribe(dailyUsage => {
-    //   let usage: [DailyProfiledBill] = dailyUsage;
-    //   this.processDailyUsage(usage);
-    // });
-    let usage: [DailyProfiledBill] = this.getTempDailyUsage();
-    this.processDailyUsage(usage);
-    this.dailyUsageData = usage;
+    this.UsageHistoryService.getDailyProfiledBill(this.activeServiceAccount.UAN, usageMonth.toDate()).subscribe(dailyUsage => {
+      let usage: [DailyProfiledBill] = dailyUsage;
+      this.dailyUsageData = usage;
+      this.processDailyUsage(usage);
+    });
   }
 
   private showHourlyUsage() {
     let date = moment().startOf("day").toDate();
-    // this.UsageHistoryService.getHourlyProfiledBill(this.activeServiceAccount.UAN, date).subscribe(hourlyUsage => {
-    //   let usage: [HourlyProfiledBill] = hourlyUsage;
-    //   this.processHourlyUsage(usage);
-    // });
-    let usage: [HourlyProfiledBill] = this.getTempHourlyUsage();
-    this.processHourlyUsage(usage);
-    this.hourlyUsageData = usage;
+    this.UsageHistoryService.getHourlyProfiledBill(this.activeServiceAccount.UAN, date).subscribe(hourlyUsage => {
+      let usage: [HourlyProfiledBill] = hourlyUsage;
+      this.hourlyUsageData = usage;
+      this.processHourlyUsage(usage);
+    });
   }
 
   private processMonthlyUsage(usage: [MonthlyProfiledBill]) {
@@ -298,206 +294,5 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isDataAvailable = true;
 
     this.usageInfo = null;
-  }
-
-  getTempMonthlyUsage(): [MonthlyProfiledBill] {
-    let monthlyUsage = [];
-    monthlyUsage.push({
-      UsageMonth: moment("2015-02-01", "YYYY-MM-DD").toDate(),
-      StartDate: moment("2015-02-09", "YYYY-MM-DD").toDate(),
-      EndDate: moment("2015-03-08", "YYYY-MM-DD").toDate(),
-      KwHours: 373,
-      TotalCharge: 19.38,
-      EnergyCharge: 16.14
-    });
-    monthlyUsage.push({
-      UsageMonth: moment("2015-03-01", "YYYY-MM-DD").toDate(),
-      StartDate: moment("2015-03-09", "YYYY-MM-DD").toDate(),
-      EndDate: moment("2015-04-09", "YYYY-MM-DD").toDate(),
-      KwHours: 346,
-      TotalCharge: 20.48,
-      EnergyCharge: 15.39
-    });
-    monthlyUsage.push({
-      UsageMonth: moment("2015-04-01", "YYYY-MM-DD").toDate(),
-      StartDate: moment("2015-04-10", "YYYY-MM-DD").toDate(),
-      EndDate: moment("2015-05-10", "YYYY-MM-DD").toDate(),
-      KwHours: 364,
-      TotalCharge: 19.96,
-      EnergyCharge: 15.75
-    });
-    return monthlyUsage as [MonthlyProfiledBill];
-  }
-
-  getTempDailyUsage(): [DailyProfiledBill] {
-    let dailyUsage = [];
-    dailyUsage.push({
-      UsageDate: moment("2015-02-09", "YYYY-MM-DD").toDate(),
-      KwHours: 11.883614109228128,
-      TotalCharge: 0.70340000490086476,
-      EnergyCharge: 0.5285804079220257
-    });
-    dailyUsage.push({
-      UsageDate: moment("2015-02-10", "YYYY-MM-DD").toDate(),
-      KwHours: 14.131564132156213,
-      TotalCharge: 0.8316131321645135,
-      EnergyCharge: 0.5285804079220257
-    });
-    dailyUsage.push({
-      UsageDate: moment("2015-02-11", "YYYY-MM-DD").toDate(),
-      KwHours: 11.883614109228128,
-      TotalCharge: 0.70340000490086476,
-      EnergyCharge: 0.5285804079220257
-    });
-    dailyUsage.push({
-      UsageDate: moment("2015-02-12", "YYYY-MM-DD").toDate(),
-      KwHours: 11.883614109228128,
-      TotalCharge: 0.70340000490086476,
-      EnergyCharge: 0.5285804079220257
-    });
-    dailyUsage.push({
-      UsageDate: moment("2015-02-13", "YYYY-MM-DD").toDate(),
-      KwHours: 11.883614109228128,
-      TotalCharge: 0.70340000490086476,
-      EnergyCharge: 0.5285804079220257
-    });
-    dailyUsage.push({
-      UsageDate: moment("2015-02-14", "YYYY-MM-DD").toDate(),
-      KwHours: 11.883614109228128,
-      TotalCharge: 0.70340000490086476,
-      EnergyCharge: 0.5285804079220257
-    });
-    dailyUsage.push({
-      UsageDate: moment("2015-02-15", "YYYY-MM-DD").toDate(),
-      KwHours: 11.883614109228128,
-      TotalCharge: 0.70340000490086476,
-      EnergyCharge: 0.5285804079220257
-    });
-    dailyUsage.push({
-      UsageDate: moment("2015-02-16", "YYYY-MM-DD").toDate(),
-      KwHours: 11.883614109228128,
-      TotalCharge: 0.70340000490086476,
-      EnergyCharge: 0.5285804079220257
-    });
-    dailyUsage.push({
-      UsageDate: moment("2015-02-17", "YYYY-MM-DD").toDate(),
-      KwHours: 11.883614109228128,
-      TotalCharge: 0.70340000490086476,
-      EnergyCharge: 0.5285804079220257
-    });
-    dailyUsage.push({
-      UsageDate: moment("2015-02-18", "YYYY-MM-DD").toDate(),
-      KwHours: 11.883614109228128,
-      TotalCharge: 0.70340000490086476,
-      EnergyCharge: 0.5285804079220257
-    });
-    dailyUsage.push({
-      UsageDate: moment("2015-02-19", "YYYY-MM-DD").toDate(),
-      KwHours: 11.883614109228128,
-      TotalCharge: 0.70340000490086476,
-      EnergyCharge: 0.5285804079220257
-    });
-    return dailyUsage as [DailyProfiledBill];
-  }
-
-  getTempHourlyUsage(): [HourlyProfiledBill] {
-    let hourlyUsage = [];
-    hourlyUsage.push({
-      Hour: 0,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 1,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 2,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 3,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 4,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 5,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 6,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 7,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 8,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 9,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 10,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 11,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 12,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 13,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 14,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    hourlyUsage.push({
-      Hour: 15,
-      KwHours: 0.4945396139745626,
-      TotalCharge: 0.02875706869571697,
-      EnergyCharge: 0.02176247526473973
-    });
-    return hourlyUsage as [HourlyProfiledBill];
   }
 }
