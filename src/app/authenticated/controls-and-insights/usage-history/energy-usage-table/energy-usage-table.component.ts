@@ -21,7 +21,7 @@ export class EnergyUsageTableComponent implements OnDestroy {
   public startsWith = startsWith;
   private activeServiceAccount: ServiceAccount = null;
   private ServiceAccountsSubscription: Subscription = null;
-  private isDataAvailable = false;
+  public isDataAvailable = false;
 
   /* Table and Pagination Data */
   public tablePage = 1;
