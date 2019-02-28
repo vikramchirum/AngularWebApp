@@ -30,10 +30,12 @@ export class PaymentExtensionService {
       .catch(error => this.http.handleHttpError(error));
   }
 
-  savePaymentExtensionIneligibleNote(ineligibleNote: IPaymentExtensionIneligibleNote) {
+  savePaymentExtensionIneligibleNote(ineligibleNote: IPaymentExtensionIneligibleNote): Observable<String> {
+    const body = ineligibleNote;
     const relativePath = `/PaymentExtension/IneligiblePaymentExtension`;
-    this.http.post(relativePath, ineligibleNote)
-    .map(data => console.log(data.toString()))
+    console.log(body);
+    return this.http.post(relativePath, body)
+    .map(data => data.toString())
     .catch(error => this.http.handleHttpError(error));
   }
 }

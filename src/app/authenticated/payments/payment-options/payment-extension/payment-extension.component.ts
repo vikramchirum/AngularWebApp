@@ -32,6 +32,7 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
 
   paymentExtensionServiceSubscription: Subscription = null;
   paymentExtensionSubscription: Subscription = null;
+  paymentExtensionIneligibleSubscription: Subscription = null;
 
   paymentExtensionStatus: boolean = null;
   paymentExtension: IPaymentExtensionGrantResponse = null;
@@ -187,7 +188,9 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
   }
 
   sendIneligibilityNote(ineligibleNote: IPaymentExtensionIneligibleNote) {
-    this.paymentExtensionService.savePaymentExtensionIneligibleNote(ineligibleNote);
+    this.paymentExtensionIneligibleSubscription = this.paymentExtensionService
+      .savePaymentExtensionIneligibleNote(ineligibleNote)
+      .subscribe(success => console.log(success));
   }
 
   resetExtension() {
