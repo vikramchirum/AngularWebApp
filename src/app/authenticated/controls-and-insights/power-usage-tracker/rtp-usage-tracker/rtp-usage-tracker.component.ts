@@ -152,12 +152,12 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       const selectedDate = elements[0]._model.label;
       if (this.isMonthlyView) {
         const monthIndex = this.chartLabels.indexOf(selectedDate);
-        const usageMonth = this.monthlyUsageData.find(m => m.UsageMonth.getMonth() === monthIndex);
+        const usageMonth = this.monthlyUsageData.find(m => new Date(m.UsageMonth).getMonth() === monthIndex);
         this.usageInfo = {
           kwh: Math.round(10*usageMonth.KwHours)/10,
           avgPrice: (usageMonth.TotalCharge / usageMonth.KwHours) * 100,
           totalCostDollars: Math.trunc(usageMonth.TotalCharge),
-          totalCostCents: usageMonth.TotalCharge.toString().split(".")[1].substring(0, 2)
+          totalCostCents: usageMonth.TotalCharge.toString().split(".")[1] ? usageMonth.TotalCharge.toString().split(".")[1].substring(0, 2) : usageMonth.TotalCharge.toString()
         };
       } else if (this.isDailyView) {
         const dateToFind = new Date(selectedDate);
