@@ -90,6 +90,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
               // Show readable hourly values
               if (value === 0) {
                 return "12 AM";
+              } else if (value == 12) {
+                return `${value} PM`;
               } else if (value > 12) {
                 return `${value - 12} PM`;
               } else {
