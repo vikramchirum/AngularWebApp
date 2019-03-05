@@ -30,6 +30,11 @@ export class RtpUsageTrackerComponent implements OnDestroy {
 
   private chartLabels = [];
 
+  private currentMonthlyStartMonth: Date = moment().startOf("year").toDate();
+  private currentMonthlyEndMonth: Date = moment().endOf("year").toDate();
+  private currentDailyUsageMonth: Date = moment().subtract(1, "month").startOf("month").toDate();
+  private currentHourlyDate: Date;
+
   isDataAvailable: Boolean;
   isMonthlyView: boolean;
   isDailyView: boolean;
@@ -82,7 +87,14 @@ export class RtpUsageTrackerComponent implements OnDestroy {
                 return value;
               }
             } else {
-              return value;
+              // Show readable hourly values
+              if (value === 0) {
+                return "12 AM";
+              } else if (value > 12) {
+                return `${value - 12} PM`;
+              } else {
+                return `${value} AM`;
+              }
             }
           }
         }
@@ -111,7 +123,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.ServiceAccountsSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       activeServiceAccount => {
         this.activeServiceAccount = activeServiceAccount;
-        this.showDailyUsage();
+        this.isDailyView = true;
+        this.showCurrentIntervalUsage();
       }
     );
    }
@@ -168,6 +181,74 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     }
   }
 
+  getMonthlyUsage() {
+    this.UsageHistoryService.getMonthlyProfiledBill(this.activeServiceAccount.UAN, this.currentMonthlyStartMonth, this.currentMonthlyEndMonth).subscribe(monthlyUsage => {
+      let usage: [MonthlyProfiledBill] = monthlyUsage;
+      this.monthlyUsageData = usage;
+      this.processMonthlyUsage(usage);
+    });
+  }
+
+  getDailyUsage() {
+    this.UsageHistoryService.getDailyProfiledBill(this.activeServiceAccount.UAN, this.currentDailyUsageMonth).subscribe(dailyUsage => {
+      let usage: [DailyProfiledBill] = dailyUsage;
+      this.dailyUsageData = usage;
+      this.processDailyUsage(usage);
+    });
+  }
+
+  getHourlyUsage() {
+    if (!this.currentHourlyDate)
+      this.currentHourlyDate = new Date(this.dailyUsageData[this.dailyUsageData.length-1].UsageDate);
+    this.UsageHistoryService.getHourlyProfiledBill(this.activeServiceAccount.UAN, this.currentHourlyDate).subscribe(hourlyUsage => {
+      let usage: [HourlyProfiledBill] = hourlyUsage;
+      this.hourlyUsageData = usage;
+      this.processHourlyUsage(usage);
+    });
+  }
+
+  showPrevIntervalUsage() {
+    if (this.isMonthlyView) {
+      this.currentMonthlyStartMonth = moment(this.currentMonthlyStartMonth).subtract(1, "year").toDate();
+      this.currentMonthlyEndMonth = moment(this.currentMonthlyEndMonth).subtract(1, "year").toDate();
+      this.getMonthlyUsage();
+    } else if (this.isDailyView) {
+      this.currentDailyUsageMonth = moment(this.currentDailyUsageMonth).subtract(1, "month").toDate();
+      this.getDailyUsage();
+    } else if (this.isHourlyView) {
+      this.currentHourlyDate = moment(this.currentHourlyDate).subtract(1, "day").toDate();
+      this.getHourlyUsage();
+    }
+  }
+
+  showCurrentIntervalUsage() {
+    if (this.isMonthlyView) {
+      this.currentMonthlyStartMonth = moment().startOf("year").toDate();
+      this.currentMonthlyEndMonth = moment().endOf("year").toDate();
+      this.getMonthlyUsage();
+    } else if (this.isDailyView) {
+      this.currentDailyUsageMonth = moment().subtract(1, "month").startOf("month").toDate();
+      this.getDailyUsage();
+    } else if (this.isHourlyView) {
+      this.currentHourlyDate = new Date(this.dailyUsageData[this.dailyUsageData.length-1].UsageDate);
+      this.getHourlyUsage();
+    }
+  }
+
+  showNextIntervalUsage() {
+    if (this.isMonthlyView) {
+      this.currentMonthlyStartMonth = moment(this.currentMonthlyStartMonth).add(1, "year").toDate();
+      this.currentMonthlyEndMonth = moment(this.currentMonthlyEndMonth).add(1, "year").toDate();
+      this.getMonthlyUsage();
+    } else if (this.isDailyView) {
+      this.currentDailyUsageMonth = moment(this.currentDailyUsageMonth).add(1, "month").toDate();
+      this.getDailyUsage();
+    } else if (this.isHourlyView) {
+      this.currentHourlyDate = moment(this.currentHourlyDate).add(1, "day").toDate();
+      this.getHourlyUsage();
+    }
+  }
+
   showWholesalePricing() {
     this.isWholesalePricing = true;
     this.isAllInPricing = false;
@@ -178,38 +259,34 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isAllInPricing = true;
   }
 
-  showMonthlyUsage() {
-    const firstMonth = moment().startOf("year").toDate();
-    const lastMonth = moment().endOf("year").toDate();
-    this.UsageHistoryService.getMonthlyProfiledBill(this.activeServiceAccount.UAN, firstMonth, lastMonth).subscribe(monthlyUsage => {
-    let usage: [MonthlyProfiledBill] = monthlyUsage;
-    this.monthlyUsageData = usage;
-    this.processMonthlyUsage(usage);
-    this.usageIntervalLabel = moment(firstMonth).format("YYYY");
-    this.usageIntervalTotal = Math.round(usage.map(u => u.KwHours).reduce((a, b) => a + b, 0)); 
-    });
+  private showMonthlyView() {
+    this.usageIntervalLabel = moment(this.currentMonthlyStartMonth).format("YYYY");
+    this.usageIntervalTotal = Math.round(this.monthlyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0)); 
+
+    this.isMonthlyView = true;
+    this.isDailyView = false;
+    this.isHourlyView = false;
+    this.lastActiveBar = null;
   }
 
-  showDailyUsage() {
-    let usageMonth = moment().startOf("month").subtract(1, "month");
-    this.UsageHistoryService.getDailyProfiledBill(this.activeServiceAccount.UAN, usageMonth.toDate()).subscribe(dailyUsage => {
-      let usage: [DailyProfiledBill] = dailyUsage;
-      this.dailyUsageData = usage;
-      this.processDailyUsage(usage);
-      this.usageIntervalLabel = moment(usageMonth).format("MMMM");
-      this.usageIntervalTotal = Math.round(usage.map(u => u.KwHours).reduce((a, b) => a + b, 0));
-    });
+  private showDailyView() {
+    this.usageIntervalLabel = moment(this.currentDailyUsageMonth).format("MMMM");
+    this.usageIntervalTotal = Math.round(this.dailyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0));
+
+    this.isMonthlyView = false;
+    this.isDailyView = true;
+    this.isHourlyView = false;
+    this.lastActiveBar = null;
   }
 
-  showHourlyUsage() {
-    let date = moment().startOf("day").subtract(1, "month").toDate();
-    this.UsageHistoryService.getHourlyProfiledBill(this.activeServiceAccount.UAN, date).subscribe(hourlyUsage => {
-      let usage: [HourlyProfiledBill] = hourlyUsage;
-      this.hourlyUsageData = usage;
-      this.processHourlyUsage(usage);
-      this.usageIntervalLabel = moment(date).format("M/DD");
-      this.usageIntervalTotal = Math.round(usage.map(u => u.KwHours).reduce((a, b) => a + b, 0));
-    });
+  private showHourlyView() {
+    this.usageIntervalLabel = moment(this.currentHourlyDate).format("M/DD");
+    this.usageIntervalTotal = Math.round(this.hourlyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0));
+
+    this.isMonthlyView = false;
+    this.isDailyView = false;
+    this.isHourlyView = true;
+    this.lastActiveBar = null;
   }
 
   private processMonthlyUsage(usage: [MonthlyProfiledBill]) {
@@ -234,11 +311,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.chartLabels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
     
     this.populateChart(takeRight(values(datagroups)));
-
-    this.isMonthlyView = true;
-    this.isDailyView = false;
-    this.isHourlyView = false;
-    this.lastActiveBar = null;
+    this.showMonthlyView();
   }
 
   private processDailyUsage(usage: [DailyProfiledBill]) {
@@ -256,11 +329,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.populateChart(takeRight(values(datagroups)));
 
     this.chartLabels = usage.map(ud => new Date(ud.UsageDate).toLocaleDateString('us-EN', { month: 'numeric', day: 'numeric', year: 'numeric' }));
-
-    this.isMonthlyView = false;
-    this.isDailyView = true;
-    this.isHourlyView = false;
-    this.lastActiveBar = null;
+    this.showDailyView();
   }
 
   private processHourlyUsage(usage: [HourlyProfiledBill]) {
@@ -279,11 +348,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.populateChart(takeRight(values(datagroups)))
 
     this.chartLabels = usage.map(uh => uh.Hour);
-
-    this.isMonthlyView = false;
-    this.isDailyView = false;
-    this.isHourlyView = true;
-    this.lastActiveBar = null;
+    this.showHourlyView();
   }
 
   private populateChart(dataToDisplay: any) {
