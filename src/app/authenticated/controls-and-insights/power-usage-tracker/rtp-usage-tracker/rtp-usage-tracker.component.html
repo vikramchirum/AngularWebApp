@@ -24,6 +24,9 @@
             <span *ngIf="isDailyView">Daily </span>
             <span *ngIf="isHourlyView">Hourly </span>
             Energy Usage
+            <small class="usage-label">
+              {{ usageIntervalLabel }} <span>{{ usageIntervalTotal }} kWh</span>
+            </small>
           </h2>
           <div [hidden]="barChartData.length > 0">
             <br />

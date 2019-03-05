@@ -37,6 +37,9 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   isWholesalePricing = true;
   isAllInPricing = false;
 
+  usageIntervalLabel: string;
+  usageIntervalTotal: number;
+
   lastActiveBar: any;
 
   usageInfo: { 
@@ -138,8 +141,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         const monthIndex = this.chartLabels.indexOf(selectedDate);
         const usageMonth = this.monthlyUsageData.find(m => m.UsageMonth.getMonth() === monthIndex);
         this.usageInfo = {
-          kwh: usageMonth.KwHours,
-          avgPrice: (usageMonth.TotalCharge / usageMonth.KwHours),
+          kwh: Math.round(10*usageMonth.KwHours)/10,
+          avgPrice: (usageMonth.TotalCharge / usageMonth.KwHours) * 100,
           totalCostDollars: Math.trunc(usageMonth.TotalCharge),
           totalCostCents: usageMonth.TotalCharge.toString().split(".")[1].substring(0, 2)
         };
@@ -147,8 +150,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         const dateToFind = new Date(selectedDate);
         const usageDay = this.dailyUsageData.find(d => moment(d.UsageDate).isSame(dateToFind, "day"));
         this.usageInfo = {
-          kwh: usageDay.KwHours,
-          avgPrice: (usageDay.TotalCharge / usageDay.KwHours),
+          kwh: Math.round(10*usageDay.KwHours)/10,
+          avgPrice: (usageDay.TotalCharge / usageDay.KwHours) * 100,
           totalCostDollars: Math.trunc(usageDay.TotalCharge),
           totalCostCents: usageDay.TotalCharge.toString().split(".")[1].substring(0, 2)
         };
@@ -156,8 +159,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         const hourToFind = selectedDate;
         const usageHour = this.hourlyUsageData.find(h => h.Hour === hourToFind);
         this.usageInfo = {
-          kwh: usageHour.KwHours,
-          avgPrice: (usageHour.TotalCharge / usageHour.KwHours),
+          kwh: Math.round(10*usageHour.KwHours)/10,
+          avgPrice: (usageHour.TotalCharge / usageHour.KwHours) * 100,
           totalCostDollars: 1,
           totalCostCents: usageHour.TotalCharge.toString().split(".")[1].substring(0, 2)
         };
@@ -179,9 +182,11 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     const firstMonth = moment().startOf("year").toDate();
     const lastMonth = moment().endOf("year").toDate();
     this.UsageHistoryService.getMonthlyProfiledBill(this.activeServiceAccount.UAN, firstMonth, lastMonth).subscribe(monthlyUsage => {
-     let usage: [MonthlyProfiledBill] = monthlyUsage;
-     this.monthlyUsageData = usage;
-     this.processMonthlyUsage(usage);
+    let usage: [MonthlyProfiledBill] = monthlyUsage;
+    this.monthlyUsageData = usage;
+    this.processMonthlyUsage(usage);
+    this.usageIntervalLabel = moment(firstMonth).format("YYYY");
+    this.usageIntervalTotal = Math.round(usage.map(u => u.KwHours).reduce((a, b) => a + b, 0)); 
     });
   }
 
@@ -191,6 +196,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       let usage: [DailyProfiledBill] = dailyUsage;
       this.dailyUsageData = usage;
       this.processDailyUsage(usage);
+      this.usageIntervalLabel = moment(usageMonth).format("MMMM");
+      this.usageIntervalTotal = Math.round(usage.map(u => u.KwHours).reduce((a, b) => a + b, 0));
     });
   }
 
@@ -200,6 +207,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       let usage: [HourlyProfiledBill] = hourlyUsage;
       this.hourlyUsageData = usage;
       this.processHourlyUsage(usage);
+      this.usageIntervalLabel = moment(date).format("M/DD");
+      this.usageIntervalTotal = Math.round(usage.map(u => u.KwHours).reduce((a, b) => a + b, 0));
     });
   }
 
