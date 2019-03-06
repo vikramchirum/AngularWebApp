@@ -5,7 +5,7 @@
       <p *ngIf="paymentSubmittedWithoutError == null">Let's get this over quickly.</p>
       <div class="alert alert-danger visible-xs visible-sm visible-md" *ngIf="pastDue > 0 || totalDue > 0">Due Date: {{ dueDate | date:'MM/dd/yyyy' }}</div>
       <div class="alert alert-success" *ngIf="paymentSubmittedWithoutError === true" >
-        <i class="fa fa-fw fa-check"></i> <b>Thanks!</b> your payment was submitted!
+        <i class="fa fa-fw fa-check"></i> <b>Thank you for your payment
         <br/>
         <i class="fa fa-fw fa-check"></i> <b>Your confirmation number:</b> {{paymentConfirmationNumber}}
         <br/><br/>
@@ -181,7 +181,7 @@
               <div class="btn-group btn-block">
                 <button type="button" class="btn btn-success btn-lg " data-label-placement>
                   <span *ngIf="processing" class="fa fa-spin fa-circle-o-notch"></span>
-                  <span class="small">{{processing ? 'Submitting your payment' : 'PAYMENT SUBMITTED'}}</span>
+                  <span class="small">{{processing ? 'Submitting your payment' : 'PAYMENT RECEIVED'}}</span>
                 </button>
                 <button type="button" class="btn btn-success dropdown-toggle btn-lg active" [disabled]="!paymentReady || paymentLoadingMessage" data-toggle="dropdown">
                   <span class="caret"></span>
