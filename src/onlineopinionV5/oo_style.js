@@ -9,36 +9,36 @@ The following code is Copyright 1998-2016 Opinionlab, Inc. All rights reserved. 
 /* Define Paths to Image Assets */
 
 var checkOOEngine = setInterval(function() {
-  if(typeof OOo !== 'undefined') {
-      clearInterval(checkOOEngine);
-      if (typeof OOo !== 'undefined' && typeof OOo.releaseDetails !== 'object') { OOo.releaseDetails = []; }
-      OOo.releaseDetails.push({
-          author: 'KS',
-          timeStamp: '8/14/2018, 4:00:56 PM',
-          fileName: 'oo_style.js',
-          fileVersion: '1.0',
-          ticketNumber: 'IMP-3427',
-          gitDiff: 'N/A'
-      });
-  }
+    if(typeof OOo !== 'undefined') {
+        clearInterval(checkOOEngine);
+        if (typeof OOo !== 'undefined' && typeof OOo.releaseDetails !== 'object') { OOo.releaseDetails = []; }
+        OOo.releaseDetails.push({
+            author: 'KS',
+            timeStamp: '8/14/2018, 4:00:56 PM',
+            fileName: 'oo_style.js',
+            fileVersion: '1.0',
+            ticketNumber: 'IMP-3427',
+            gitDiff: 'N/A'
+        });
+    }
 },5000);
 
 var
-pathToAssets = 'onlineopinionV5/',
-bar_gif = pathToAssets + 'oo_bar_icon.gif',
-float_gif = pathToAssets + 'oo_float_icon.gif',
-loading_gif = pathToAssets + 'oo_loading.gif',
-tab_1_gif = pathToAssets + 'oo_tab_icon_1.gif',
-bar_gif_retina = pathToAssets + 'oo_bar_icon_retina.gif',
-float_gif_retina = pathToAssets + 'oo_float_icon_retina.gif',
-tab_1_gif_retina = pathToAssets + 'oo_tab_icon_1_retina.gif';
+  pathToAssets = 'onlineopinionV5/',
+  bar_gif = pathToAssets + 'oo_bar_icon.gif',
+  float_gif = pathToAssets + 'oo_float_icon.gif',
+  loading_gif = pathToAssets + 'oo_loading.gif',
+  tab_1_gif = pathToAssets + 'oo_tab_icon_1.gif',
+  bar_gif_retina = pathToAssets + 'oo_bar_icon_retina.gif',
+  float_gif_retina = pathToAssets + 'oo_float_icon_retina.gif',
+  tab_1_gif_retina = pathToAssets + 'oo_tab_icon_1_retina.gif';
 
 /* Create and Append Style Element */
 var css = document.createElement("style");
 css.setAttribute('type', 'text/css');
 document.getElementsByTagName('head')[0].appendChild(css);
 
-cssText = "\n#oo_invitation_company_logo img#oo_waypoint_company_logo img { max-height: 100%; max-width: 100%; height: 80px; width: auto; /* ie8 */ }";
+cssText = "\n#oo_invitation_company_logo img#oo_waypoint_company_logo img { max-height: 100%; max-width: 100%; height: auto; width: auto; /* ie8 */ }";
 
 cssText += "\n#oo_feedback_fl_spacer { display: block; height: 1px; position: absolute; top: 0; width: 100px; }";
 
@@ -97,8 +97,8 @@ cssText += "\n#oo_tab_1.oo_tab_left_1.small:hover { left: -9px; }";
 cssText += "\n#oo_container { position: fixed; height: 100%; width: 100%; top: 0; left: 0; z-index: 999999; }";
 
 cssText += "\n#oo_invitation_prompt { background: #fff; box-shadow: 0px 1px 3px 0px rgba(102, 102, 102, 0.3); -moz-box-shadow: 0px 1px 3px 0px rgba(102, 102, 102, 0.3); -webkit-box-shadow: 0px 1px 3px 0px rgba(102, 102, 102, 0.3); margin: 5% auto; text-align: left; position: relative; width: 500px; z-index: 999999; }";
-cssText += "\n#oo_invitation_prompt #oo_invitation_company_logo { width: 100%; height: 60px; background: black; }";
-cssText += "\n#oo_invitation_prompt #oo_invitation_company_logo img { height: 100%; margin-top: 20px; }";
+cssText += "\n#oo_invitation_prompt #oo_invitation_company_logo { width: 100%; height: 120px; background: black; }";
+cssText += "\n#oo_invitation_prompt #oo_invitation_company_logo img { height: 100%; }";
 cssText += "\n#oo_invitation_prompt #oo_invite_content { width: 80%; padding: 40px 10% 20px 10%; box-shadow: inset 0px 0px 0px 1px #ccc; -webkit-box-shadow: inset 0px 0px 0px 1px #ccc; -moz-box-shadow: inset 0px 0px 0px 1px #ccc; }";
 cssText += "\n#oo_invitation_prompt #oo_invite_content p { color: black; font: 1em/1.5em 'HelveticaNeue-Medium', Helvetica, Arial, sans-serif; margin: 0; padding: 0 0 20px 0; }";
 cssText += "\n#oo_invitation_prompt #oo_invite_content p.prompt_button a { text-align: center; color: white; text-decoration: none; font-size: 1.5em; line-height: 1.2em; padding: 12px 0 13px 0; display: block; height: 25px; }";
@@ -116,10 +116,10 @@ cssText += "\n#oo_invitation_prompt .screen_reader { position: absolute; clip: r
 
 /* Android, iPhone 6 ----------- */
 cssText += "\n@media only screen and (max-device-width: 480px), screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) { #oo_invitation_prompt { width: 90%; }";
-cssText += "\n#oo_invitation_prompt #oo_invitation_company_logo { height: 40px; } }";
+cssText += "\n#oo_invitation_prompt #oo_invitation_company_logo { height: 80px; } }";
 /* iPhone 5, 4 ----------- */
 cssText += "\n@media only screen and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2), screen and (device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2) { #oo_invitation_prompt { width: 90%; height: 90%; overflow-y: scroll; overflow-x: hidden; }";
-cssText += "\n#oo_invitation_prompt #oo_invitation_company_logo { height: 40px; }";
+cssText += "\n#oo_invitation_prompt #oo_invitation_company_logo { height: 80px; }";
 cssText += "\n#oo_invitation_prompt #oo_invite_content { padding: 20px 10% 20px 10%; }";
 cssText += "\n#oo_invitation_prompt #oo_invite_content #ol_invite_brand_logo { margin: 0 0 0 0; } }";
 /* iPhone 4 only ----------- */
@@ -155,11 +155,11 @@ cssText += "\n#oo_waypoint_prompt #oo_waypoint_content #ol_waypoint_brand_logo {
 /* iPhone 4 only ----------- */
 cssText += "\n@media screen and (device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2) { #oo_waypoint_promp #oo_waypoint_close_prompt { right: -70px; } }";
 cssText += "\n#oo_entry_prompt { background: #fff; box-shadow: 0px 1px 3px 0px rgba(102, 102, 102, 0.3); -moz-box-shadow: 0px 1px 3px 0px rgba(102, 102, 102, 0.3); -webkit-box-shadow: 0px 1px 3px 0px rgba(102, 102, 102, 0.3); margin: 5% auto; text-align: left; position: relative; width: 500px; z-index: 999999; }";
-cssText += "\n#oo_entry_prompt #oo_entry_company_logo { width: 100%; height: 60px; background: white; text-align: center;}";
-cssText += "\n#oo_entry_prompt #oo_entry_company_logo img { height: 100%; margin-top: 20px; }";
-cssText += "\n#oo_entry_prompt #oo_entry_content { width: 80%; padding: 40px 10% 20px 10%; margin: auto; }";
+cssText += "\n#oo_entry_prompt #oo_entry_company_logo { width: 100%; height: 120px; background: white; text-align: center;}";
+cssText += "\n#oo_entry_prompt #oo_entry_company_logo img { height: 100%; }";
+cssText += "\n#oo_entry_prompt #oo_entry_content { width: 80%; padding: 40px 10% 20px 10%; }";
 cssText += "\n#oo_entry_prompt #oo_entry_content p { color: black; font: 1em/1.5em 'HelveticaNeue-Medium', Helvetica, Arial, sans-serif; margin: 0; padding: 0 0 20px 0; }";
-cssText += "\n#oo_entry_prompt #oo_entry_content p.entry_prompt_button a { text-align: center; color: white; text-decoration: none; font-size: 1em; line-height: 1.2em; padding: 12px 0 13px 0; display: block; height: 45px; }";
+cssText += "\n#oo_entry_prompt #oo_entry_content p.entry_prompt_button a { text-align: center; color: white; text-decoration: none; font-size: 1.5em; line-height: 1.2em; padding: 12px 0 13px 0; display: block; height: 25px; }";
 cssText += "\n#oo_entry_prompt #oo_entry_content a { cursor: pointer; }";
 cssText += "\n#oo_entry_prompt #oo_entry_content a:focus { outline: 3px solid #51ace9; }";
 cssText += "\n#oo_entry_prompt #oo_entry_content a#oo_launch_entry_prompt { background: #2eb134; }";
@@ -167,17 +167,17 @@ cssText += "\n#oo_entry_prompt #oo_entry_content a#oo_entry_no_thanks { backgrou
 cssText += "\n#oo_entry_prompt #oo_entry_content #ol_entry_brand_logo { text-align: center; border-top: 1px solid #ccc; line-height: 1.5em; margin: 20px 0 0 0; padding: 20px 0 0 0; }";
 cssText += "\n#oo_entry_prompt #oo_entry_content #ol_entry_brand_logo img { height: 25px; width: 146px; border: 0px; }";
 cssText += "\n#oo_entry_prompt #oo_entry_content #ol_entry_brand_logo a { display: block; height: 25px; }";
-cssText += "\n#oo_entry_prompt #oo_entry_close_prompt { font-family: 'Zapf Dingbats'; position: absolute; display: block; right: 13px; top: 13px; line-height: 1em; font-size: 1em; color: white; text-decoration: none; }";
+cssText += "\n#oo_entry_prompt #oo_entry_close_prompt { font-family: 'Zapf Dingbats'; position: absolute; display: block; right: 13px; top: 13px; line-height: 1em; font-size: 1em; color: black; text-decoration: none; }";
 cssText += "\n#oo_entry_prompt #oo_entry_close_prompt:focus { outline: none; }";
 cssText += "\n#oo_entry_prompt #oo_entry_close_prompt:focus span { outline: 3px solid #51ace9; }";
 cssText += "\n#oo_entry_prompt .screen_reader { position: absolute; clip: rect(1px 1px 1px 1px); /* for Internet Explorer */ clip: rect(1px, 1px, 1px, 1px); padding: 0; border: 0; height: 1px; width: 1px; overflow: hidden; }";
 
 /* Android, iPhone 6 ----------- */
 cssText += "\n@media only screen and (max-device-width: 480px), screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) { #oo_entry_prompt { width: 90%; }";
-cssText += "\n#oo_entry_prompt #oo_entry_company_logo { height: 60px; } }";
+cssText += "\n#oo_entry_prompt #oo_entry_company_logo { height: 80px; } }";
 /* iPhone 5, 4 ----------- */
 cssText += "\n@media only screen and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2), screen and (device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2) { #oo_entry_prompt { width: 90%; height: 90%; overflow-y: scroll; overflow-x: hidden; }";
-cssText += "\n#oo_entry_prompt #oo_entry_company_logo { height: 60px; }";
+cssText += "\n#oo_entry_prompt #oo_entry_company_logo { height: 80px; }";
 cssText += "\n#oo_entry_prompt #oo_entry_content { padding: 20px 10% 20px 10%; }";
 cssText += "\n#oo_entry_prompt #oo_entry_content #ol_entry_brand_logo { margin: 0 0 0 0; } }";
 /* iPhone 4 only ----------- */
@@ -198,7 +198,7 @@ cssText += "\n#oo_tab_1 span.icon { background-image: url(" + tab_1_gif_retina +
 
 /* Detect if browser is IE */
 if (navigator.appName && navigator.appName == 'Microsoft Internet Explorer'){
-css.styleSheet.cssText = cssText;
+  css.styleSheet.cssText = cssText;
 }else{
-css.innerHTML = cssText;
+  css.innerHTML = cssText;
 }
