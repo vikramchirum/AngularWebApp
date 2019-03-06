@@ -28,7 +28,7 @@
               {{ usageIntervalLabel }} <span>{{ usageIntervalTotal }} kWh</span>
             </small>
           </h2>
-          <div [hidden]="barChartData.length > 0">
+          <div *ngIf="!isDataAvailable">
             <br />
             <div class="alert alert-info"> 
               <strong>Thank you for choosing Gexa Energy!</strong> <br />Your usage will display here as soon as your usage data is available for this cycle. 

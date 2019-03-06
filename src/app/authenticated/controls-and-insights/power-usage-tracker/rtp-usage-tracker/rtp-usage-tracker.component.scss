@@ -68,8 +68,9 @@ $alpha5: 0.5;
 		vertical-align: top;
 
 		h1 {
-		font-weight: 700;
-		font-family: Oswald, sans-serif;
+			font-size: 32px;
+			font-weight: 500;
+		// font-family: Oswald, sans-serif;
 
 		sup {
 			font-weight: 500;
@@ -82,7 +83,7 @@ $alpha5: 0.5;
 	.ui-price-caption {
 		text-align: center;
 		color: $account-base;
-		font-family: Oswald, sans-serif;
+		// font-family: Oswald, sans-serif;
 		margin-top: -10px;
 		text-transform: uppercase;
 	}

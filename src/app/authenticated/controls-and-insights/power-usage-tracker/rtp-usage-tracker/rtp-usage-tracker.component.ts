@@ -2,14 +2,13 @@ import { Component, OnDestroy, ViewChild } from '@angular/core';
 
 import { MonthlyProfiledBill, DailyProfiledBill, HourlyProfiledBill } from '../../../../core/models/profiledbills/profiled-bills.model';
 import { UsageHistoryService } from 'app/core/usage-history.service';
+import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { Subscription } from 'rxjs/Subscription';
-
-import * as moment from 'moment';
-import { ServiceAccountService } from 'app/core/serviceaccount.service';
-import { takeRight, values } from 'lodash';
 import { BaseChartDirective } from 'ng2-charts';
 
+import * as moment from 'moment';
+import { takeRight, values } from 'lodash';
 @Component({
   selector: 'mygexa-rtp-usage-tracker',
   templateUrl: './rtp-usage-tracker.component.html',
@@ -38,12 +37,12 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   private currentDailyUsageMonth: Date = moment().subtract(1, "month").startOf("month").toDate();
   private currentHourlyDate: Date;
 
-  isDataAvailable: Boolean;
+  isDataAvailable = false;
+  isWholesalePricing = true;
+  isAllInPricing = false;
   isMonthlyView: boolean;
   isDailyView: boolean;
   isHourlyView: boolean;
-  isWholesalePricing = true;
-  isAllInPricing = false;
 
   usageIntervalLabel: string;
   usageIntervalTotal: number;
@@ -57,10 +56,13 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     totalCostCents: string
   };
 
+  private defaultBarBackground = "rgba(10, 10, 10, 0.1)";
+  private activeBarBackground = "rgba(46, 177, 52, 1)";
+
   /* Bar Graph Properties */
   public barChartColors = [
     {
-      backgroundColor: "rgba(10, 10, 10, 0.1)",
+      backgroundColor: [],
       borderColor: "rgba(10, 10, 10, 0.3)",
       borderWidth: 1,
       hoverBackgroundColor: "rgba(46, 177, 52,0.9)",
@@ -84,7 +86,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
             if (typeof value === "string") {
               if (value.length > 3) {
                 // Is daily view. 
-                // Show correct date label format (MM/DD)
+                // Show correct date label format (M/DD)
                 return value.substring(0, value.length-5);
               } else {
                 return value;
@@ -153,12 +155,17 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     if (elements.length) {
       if (this.lastActiveBar) {
         // Reset background of the last bar that was clicked
-        this.lastActiveBar.custom.backgroundColor = "rgba(10, 10, 10, 0.1)";
+        this.lastActiveBar.custom.backgroundColor = this.defaultBarBackground;
         this.lastActiveBar._chart.update();
+      } else {
+        // Clear default active bar
+        const lastBarColorIndex = this.barChartColors[0].backgroundColor.length-1;
+        this.barChartColors[0].backgroundColor[lastBarColorIndex] = this.defaultBarBackground;
+        elements[0]._chart.update();
       }
       // Set the background of the new bar that was clicked
       elements[0].custom = elements[0].custom || {};
-      elements[0].custom.backgroundColor = "#2eb134";
+      elements[0].custom.backgroundColor = this.activeBarBackground;
 
       // Store new active bar to reset background later
       this.lastActiveBar = elements[0];
@@ -168,30 +175,15 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       if (this.isMonthlyView) {
         const monthIndex = this.chartLabels.indexOf(selectedDate);
         const usageMonth = this.monthlyUsageData.find(m => new Date(m.UsageMonth).getMonth() === monthIndex);
-        this.usageInfo = {
-          kwh: Math.round(10*usageMonth.KwHours)/10,
-          avgPrice: (usageMonth.TotalCharge / usageMonth.KwHours) * 100,
-          totalCostDollars: Math.trunc(usageMonth.TotalCharge),
-          totalCostCents: usageMonth.TotalCharge.toString().split(".")[1] ? usageMonth.TotalCharge.toString().split(".")[1].substring(0, 2) : usageMonth.TotalCharge.toString()
-        };
+        this.setUsageInfo(usageMonth)
       } else if (this.isDailyView) {
         const dateToFind = new Date(selectedDate);
         const usageDay = this.dailyUsageData.find(d => moment(d.UsageDate).isSame(dateToFind, "day"));
-        this.usageInfo = {
-          kwh: Math.round(10*usageDay.KwHours)/10,
-          avgPrice: (usageDay.TotalCharge / usageDay.KwHours) * 100,
-          totalCostDollars: Math.trunc(usageDay.TotalCharge),
-          totalCostCents: usageDay.TotalCharge.toString().split(".")[1].substring(0, 2)
-        };
+        this.setUsageInfo(usageDay);
       } else if (this.isHourlyView) {
         const hourToFind = selectedDate;
         const usageHour = this.hourlyUsageData.find(h => h.Hour === hourToFind);
-        this.usageInfo = {
-          kwh: Math.round(10*usageHour.KwHours)/10,
-          avgPrice: (usageHour.TotalCharge / usageHour.KwHours) * 100,
-          totalCostDollars: 1,
-          totalCostCents: usageHour.TotalCharge.toString().split(".")[1].substring(0, 2)
-        };
+        this.setUsageInfo(usageHour);
       }
     }
   }
@@ -201,9 +193,11 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       let usage: [MonthlyProfiledBill] = monthlyUsage;
       this.monthlyUsageData = usage;
       this.processMonthlyUsage(usage);
-      console.log(usage);
-      console.log(this.currentMonthlyStartMonth);
-      console.log(this.currentMonthlyEndMonth);
+      // Set active usage bar
+      if (usage.length > 0) {
+        const defaultActiveUsageMonth = usage[usage.length-1];
+        this.setUsageInfo(defaultActiveUsageMonth);
+      }
     },
     (error) => {
       this.showCurrentIntervalUsage();
@@ -216,6 +210,11 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       let usage: [DailyProfiledBill] = dailyUsage;
       this.dailyUsageData = usage;
       this.processDailyUsage(usage);
+      // Set active usage bar
+      if (usage.length > 0) {
+        const defaultActiveUsageDay = usage[usage.length-1];
+        this.setUsageInfo(defaultActiveUsageDay);
+      }
     },
     (error) => {
       this.showCurrentIntervalUsage();
@@ -230,6 +229,11 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       let usage: [HourlyProfiledBill] = hourlyUsage;
       this.hourlyUsageData = usage;
       this.processHourlyUsage(usage);
+      // Set active usage bar
+      if (usage.length > 0) {
+        const defaultActiveUsageHour = usage[usage.length-1];
+        this.setUsageInfo(defaultActiveUsageHour);
+      }
     },
     (error) => {
       this.showCurrentIntervalUsage();
@@ -297,8 +301,6 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isDailyView = false;
     this.isHourlyView = false;
     this.lastActiveBar = null;
-
-    this.setActiveBar();
   }
 
   private showDailyView() {
@@ -309,8 +311,6 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isDailyView = true;
     this.isHourlyView = false;
     this.lastActiveBar = null;
-
-    this.setActiveBar();
   }
 
   private showHourlyView() {
@@ -321,8 +321,6 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isDailyView = false;
     this.isHourlyView = true;
     this.lastActiveBar = null;
-
-    this.setActiveBar();
   }
 
   private processMonthlyUsage(usage: [MonthlyProfiledBill]) {
@@ -333,6 +331,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       };
     }
 
+    this.barChartColors[0].backgroundColor = [];
+
     // Cycle through months to match usage
     for (let m = 0; m < 12; m++) {
       let monthsUsage = 0;
@@ -342,6 +342,13 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         }
       });
       datagroups[0].data.push(monthsUsage);
+
+      if (m < 11) {
+        this.barChartColors[0].backgroundColor.push(this.defaultBarBackground);
+      } else {
+        // Make last bar active color
+        this.barChartColors[0].backgroundColor.push(this.activeBarBackground);
+      }
     }
 
     this.chartLabels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
@@ -362,6 +369,17 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       datagroups[0].data.push(ud.KwHours);
     });
 
+    this.barChartColors[0].backgroundColor = [];
+
+    for (let i = 0; i < usage.length; i++) {
+      if (i < usage.length-1) {
+        this.barChartColors[0].backgroundColor.push(this.defaultBarBackground);
+      } else {
+        // Make last bar active color
+        this.barChartColors[0].backgroundColor.push(this.activeBarBackground);
+      }
+    }
+
     this.populateChart(takeRight(values(datagroups)));
 
     this.chartLabels = usage.map(ud => new Date(ud.UsageDate).toLocaleDateString('us-EN', { month: 'numeric', day: 'numeric', year: 'numeric' }));
@@ -377,6 +395,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       };
     }
 
+    this.barChartColors[0].backgroundColor = [];
+
     // Cycle through hours to find match
     for (let h = 0; h < 24; h++) {
       let hoursUsage = 0;
@@ -386,9 +406,16 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         }
       });
       datagroups[0].data.push(hoursUsage);
+      
+      if (h < 23) {
+        this.barChartColors[0].backgroundColor.push(this.defaultBarBackground);
+      } else {
+        // Make last bar active color
+        this.barChartColors[0].backgroundColor.push(this.activeBarBackground);
+      }
     }
 
-    this.populateChart(takeRight(values(datagroups)))
+    this.populateChart(takeRight(values(datagroups)));
 
     this.chartLabels = usage.map(uh => uh.Hour);
     this.showHourlyView();
@@ -409,10 +436,23 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     }
 
     this.isDataAvailable = true;
-    this.usageInfo = null;
   }
 
-  private setActiveBar() {
-    
+  private setUsageInfo(usageToShow: MonthlyProfiledBill | DailyProfiledBill | HourlyProfiledBill) {
+    this.usageInfo = {
+      kwh: Math.round(10*usageToShow.KwHours)/10, 
+      avgPrice: (usageToShow.TotalCharge / usageToShow.KwHours) * 100,
+      totalCostDollars:  Math.trunc(usageToShow.TotalCharge),
+      totalCostCents: usageToShow.TotalCharge.toString().split(".")[1] ? this.getTotalCostCents(usageToShow.TotalCharge) : usageToShow.TotalCharge.toString()
+    };
+  }
+
+  private getTotalCostCents(usageCost: Number) {
+    let cents = usageCost.toString().split(".")[1].substring(0, 2);
+    if (cents.length == 1) {
+      return `${cents}0`;
+    } else {
+      return cents;
+    }
   }
 }
