@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 
 import { MonthlyProfiledBill, DailyProfiledBill, HourlyProfiledBill } from '../../../../core/models/profiledbills/profiled-bills.model';
 import { UsageHistoryService } from 'app/core/usage-history.service';
@@ -7,8 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import * as moment from 'moment';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
-import { Observable } from 'rxjs';
-import { takeRight, values, reverse } from 'lodash';
+import { takeRight, values } from 'lodash';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
@@ -19,7 +18,7 @@ import { BaseChartDirective } from 'ng2-charts';
 
 export class RtpUsageTrackerComponent implements OnDestroy {
   
-  @ViewChild("baseChart") chart: BaseChartDirective;
+  @ViewChild("rtpChart") public chart: BaseChartDirective;
   
   private activeServiceAccount: ServiceAccount = null;
   private ServiceAccountsSubscription: Subscription = null;
@@ -27,6 +26,10 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   private monthlyUsageData: [MonthlyProfiledBill];
   private dailyUsageData: [DailyProfiledBill];
   private hourlyUsageData: [HourlyProfiledBill];
+
+  private monthlyUsageSubscription: Subscription = null;
+  private dailyUsageSubscription: Subscription = null;
+  private hourlyUsageSubscription: Subscription = null;
 
   private chartLabels = [];
 
@@ -80,7 +83,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
           callback: function(value, index, values) {
             if (typeof value === "string") {
               if (value.length > 3) {
-                // Is monthly view. 
+                // Is daily view. 
                 // Show correct date label format (MM/DD)
                 return value.substring(0, value.length-5);
               } else {
@@ -129,10 +132,20 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         this.showCurrentIntervalUsage();
       }
     );
-   }
+  }
 
   ngOnDestroy() {
     this.ServiceAccountsSubscription.unsubscribe();
+
+    if (this.monthlyUsageSubscription) {
+      this.monthlyUsageSubscription.unsubscribe();
+    }
+    if (this.dailyUsageSubscription) {
+      this.dailyUsageSubscription.unsubscribe();
+    }
+    if (this.hourlyUsageSubscription) {
+      this.hourlyUsageSubscription.unsubscribe();
+    }
   }
 
   chartClicked(event) {
@@ -184,28 +197,43 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   }
 
   getMonthlyUsage() {
-    this.UsageHistoryService.getMonthlyProfiledBill(this.activeServiceAccount.UAN, this.currentMonthlyStartMonth, this.currentMonthlyEndMonth).subscribe(monthlyUsage => {
+    this.monthlyUsageSubscription = this.UsageHistoryService.getMonthlyProfiledBill(this.activeServiceAccount.UAN, this.currentMonthlyStartMonth, this.currentMonthlyEndMonth).subscribe(monthlyUsage => {
       let usage: [MonthlyProfiledBill] = monthlyUsage;
       this.monthlyUsageData = usage;
       this.processMonthlyUsage(usage);
+      console.log(usage);
+      console.log(this.currentMonthlyStartMonth);
+      console.log(this.currentMonthlyEndMonth);
+    },
+    (error) => {
+      this.showCurrentIntervalUsage();
+      this.isDataAvailable = true;
     });
   }
 
   getDailyUsage() {
-    this.UsageHistoryService.getDailyProfiledBill(this.activeServiceAccount.UAN, this.currentDailyUsageMonth).subscribe(dailyUsage => {
+    this.dailyUsageSubscription = this.UsageHistoryService.getDailyProfiledBill(this.activeServiceAccount.UAN, this.currentDailyUsageMonth).subscribe(dailyUsage => {
       let usage: [DailyProfiledBill] = dailyUsage;
       this.dailyUsageData = usage;
       this.processDailyUsage(usage);
+    },
+    (error) => {
+      this.showCurrentIntervalUsage();
+      this.isDataAvailable = true;
     });
   }
 
   getHourlyUsage() {
     if (!this.currentHourlyDate)
       this.currentHourlyDate = new Date(this.dailyUsageData[this.dailyUsageData.length-1].UsageDate);
-    this.UsageHistoryService.getHourlyProfiledBill(this.activeServiceAccount.UAN, this.currentHourlyDate).subscribe(hourlyUsage => {
+    this.hourlyUsageSubscription = this.UsageHistoryService.getHourlyProfiledBill(this.activeServiceAccount.UAN, this.currentHourlyDate).subscribe(hourlyUsage => {
       let usage: [HourlyProfiledBill] = hourlyUsage;
       this.hourlyUsageData = usage;
       this.processHourlyUsage(usage);
+    },
+    (error) => {
+      this.showCurrentIntervalUsage();
+      this.isDataAvailable = true;
     });
   }
 
@@ -269,6 +297,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isDailyView = false;
     this.isHourlyView = false;
     this.lastActiveBar = null;
+
+    this.setActiveBar();
   }
 
   private showDailyView() {
@@ -279,6 +309,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isDailyView = true;
     this.isHourlyView = false;
     this.lastActiveBar = null;
+
+    this.setActiveBar();
   }
 
   private showHourlyView() {
@@ -289,6 +321,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isDailyView = false;
     this.isHourlyView = true;
     this.lastActiveBar = null;
+
+    this.setActiveBar();
   }
 
   private processMonthlyUsage(usage: [MonthlyProfiledBill]) {
@@ -303,7 +337,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     for (let m = 0; m < 12; m++) {
       let monthsUsage = 0;
       usage.forEach(um => {
-        if (new Date(um.UsageMonth).getMonth() === m) {
+        if (new Date(um.UsageMonth).getMonth() === m && um.KwHours > 0) {
           monthsUsage = um.KwHours;
         }
       });
@@ -343,9 +377,16 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       };
     }
 
-    usage.forEach(uh => {
-      datagroups[0].data.push(uh.KwHours);
-    });
+    // Cycle through hours to find match
+    for (let h = 0; h < 24; h++) {
+      let hoursUsage = 0;
+      usage.forEach(uh => {
+        if (uh.Hour === h) {
+          hoursUsage = uh.KwHours;
+        }
+      });
+      datagroups[0].data.push(hoursUsage);
+    }
 
     this.populateChart(takeRight(values(datagroups)))
 
@@ -368,7 +409,10 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     }
 
     this.isDataAvailable = true;
-
     this.usageInfo = null;
+  }
+
+  private setActiveBar() {
+    
   }
 }
