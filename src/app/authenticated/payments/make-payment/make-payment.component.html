@@ -5,7 +5,7 @@
       <p *ngIf="paymentSubmittedWithoutError == null">Let's get this over quickly.</p>
       <div class="alert alert-danger visible-xs visible-sm visible-md" *ngIf="pastDue > 0 || totalDue > 0">Due Date: {{ dueDate | date:'MM/dd/yyyy' }}</div>
       <div class="alert alert-success" *ngIf="paymentSubmittedWithoutError === true" >
-        <i class="fa fa-fw fa-check"></i> <b>Thank you for your payment
+        <i class="fa fa-fw fa-check"></i> Thank you for your payment
         <br/>
         <i class="fa fa-fw fa-check"></i> <b>Your confirmation number:</b> {{paymentConfirmationNumber}}
         <br/><br/>
