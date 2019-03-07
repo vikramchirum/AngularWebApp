@@ -110,8 +110,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         ticks: {
           beginAtZero: true,
           callback: function(value, index, values) {
-            if (Number(value) > 0 && Number(value) < 1) {
-              return `${value.toString().substring(0, 4)} kWh`;
+            if ((Number(value) - Math.trunc(Number(value)) > 0) && value.toString().length > 3) {
+              return `${value.toString().substring(0, 3)} kWh`;
             } else {
               return `${value} kWh`;
             }
