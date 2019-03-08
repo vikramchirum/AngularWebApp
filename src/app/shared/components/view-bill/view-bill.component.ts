@@ -92,6 +92,7 @@ export class ViewBillComponent implements OnInit {
   private openCharges = [];
   private ActiveServiceAccountSubscription: Subscription = null;
   private tduName: string;
+  private isRTP: boolean;
   public isDownloading = false;
 
   constructor( private invoiceService: InvoiceService, private serviceAccountService: ServiceAccountService
@@ -208,6 +209,7 @@ export class ViewBillComponent implements OnInit {
     this.ActiveServiceAccountSubscription = this.serviceAccountService.ActiveServiceAccountObservable.subscribe(
       result => {
         this.tduName = result.TDU_Name;
+        this.isRTP = result.Current_Offer.Is_RTP;
         this.serviceAccountId = result.Id;
         if ( this.bill_object ) {
           this.PopulateItemizedBill( this.bill_object );
@@ -233,6 +235,7 @@ export class ViewBillComponent implements OnInit {
           this.bill_item_details_TDU_charges = filter( this.bill_item_details, item => (item.Bill_Line_Item_Type === 'TDSP') );
           this.bill_item_details_gexa_charges = filter( this.bill_item_details, item => (item.Bill_Line_Item_Type === 'GEXA'
           && item.Bill_Line_Item_Sub_Type === 'Energy') );
+          if (this.isRTP) this.bill_item_details_gexa_charges = filter(this.bill_item_details_gexa_charges, item => !item.Descripton.includes("Residential"));
           this.bill_item_details_other_charges = filter( this.bill_item_details, item => (item.Bill_Line_Item_Type === 'GEXA'
           && item.Bill_Line_Item_Sub_Type === 'None') );
           this.bill_item_details_tax = filter( this.bill_item_details, item => (item.Bill_Line_Item_Type === 'TAX') );
