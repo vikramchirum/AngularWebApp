@@ -17,6 +17,7 @@ import { CustomerAccount } from 'app/core/models/customeraccount/customeraccount
 import { PaymentExtensionService } from 'app/core/payment-extension.service';
 import { IPaymentExtensionGrantRequest } from '../../../../core/models/paymentextension/payment-extention-grant-request.model';
 import { IPaymentExtensionGrantResponse } from '../../../../core/models/paymentextension/payment-extention-grant-response.model';
+import { IPaymentExtensionIneligibleNote } from 'app/core/models/paymentextension/payment-extension-ineligible-note.model';
 
 @Component({
   selector: 'mygexa-payment-extension',
@@ -31,6 +32,7 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
 
   paymentExtensionServiceSubscription: Subscription = null;
   paymentExtensionSubscription: Subscription = null;
+  paymentExtensionIneligibleSubscription: Subscription = null;
 
   paymentExtensionStatus: boolean = null;
   paymentExtension: IPaymentExtensionGrantResponse = null;
@@ -76,6 +78,14 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
         this.resetExtension();
         this.paymentExtensionEligibilityResult = results[0].EligibilityResult;
         this.setPaymentExtensionScript(results[0] as IPaymentExtensionV1);
+        if (results[0].Status !== ExtensionStatus[ExtensionStatus.SUCCESSFUL]){
+          const ineligibleNote: IPaymentExtensionIneligibleNote = {
+            ServiceAccountId: this.serviceAccountDetails.Id,
+            CSRName: "MyGexa",
+            Notes: this.paymentExtensionScript
+          };
+          this.sendIneligibilityNote(ineligibleNote);
+        }
         this.paymentExtensionStatus = (results[0] && results[0].Status === ExtensionStatus[ExtensionStatus.ALREADY_APPROED]);
         if (this.paymentExtensionStatus) {
           this.followupDate = results[0].FollowupDate;
@@ -175,6 +185,12 @@ export class PaymentExtensionComponent implements OnInit, OnDestroy {
             break;
       }
     }
+  }
+
+  sendIneligibilityNote(ineligibleNote: IPaymentExtensionIneligibleNote) {
+    this.paymentExtensionIneligibleSubscription = this.paymentExtensionService
+      .savePaymentExtensionIneligibleNote(ineligibleNote)
+      .subscribe(success => console.log(success));
   }
 
   resetExtension() {
