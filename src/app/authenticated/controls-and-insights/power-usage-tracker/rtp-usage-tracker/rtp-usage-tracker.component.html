@@ -4,21 +4,31 @@
     </div>
     <div class="col-sm-12 col-md-9 col-md-offset-3" style="margin-bottom: 10px;">
       <div class="row">
-        <div class="col-xs-3 col-sm-2">
-          <div class="ui-graph-controller">
-            <button (click)="getMonthlyUsage()" [disabled]="!(barChartData.length > 0)" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isMonthlyView, 'btn-default': !isMonthlyView }">Monthly</button>
+        <div class="col-xs-1 col-sm-2">
+          <div class="ui-graph-controller hidden-xs">
+            <button (click)="getMonthlyUsage()" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isMonthlyView, 'btn-default': !isMonthlyView }">Monthly</button>
             <div class="ui-graph-controller-spacer" [ngClass]="{ 'ui-active': isMonthlyView }">
               &nbsp;
             </div>
-            <button (click)="getDailyUsage()" [disabled]="!(barChartData.length > 0)" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isDailyView, 'btn-default': !isDailyView }">Daily</button>
+            <button (click)="getDailyUsage()" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isDailyView, 'btn-default': !isDailyView }">Daily</button>
             <div class="ui-graph-controller-spacer" [ngClass]="{ 'ui-active': isMonthlyView || isDailyView }">
               &nbsp;
             </div>
-            <button (click)="getHourlyUsage()" [disabled]="!(barChartData.length > 0)" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isHourlyView, 'btn-default': !isHourlyView }">Hourly
+            <button (click)="getHourlyUsage()" class="btn btn-sm btn-block" [ngClass]="{ 'btn-primary': isHourlyView, 'btn-default': !isHourlyView }">Hourly
             </button>
           </div>
+          <div *ngIf="isDataAvailable" class="y-label">
+            Usage (kWh)
+          </div>
         </div>
-        <div class="col-xs-9 col-sm-10">
+        <div class="col-xs-11 col-sm-10">
+          <div class="chart-controls text-center visible-xs">
+            <div class="btn-group">
+              <button (click)="getMonthlyUsage()" type="button" class="btn btn-info">Monthly</button>
+              <button (click)="getDailyUsage()" type="button" class="btn btn-info">Daily</button>
+              <button (click)="getHourlyUsage()" type="button" class="btn btn-info">Hourly</button>
+            </div>
+          </div><br class="visible-xs" />
           <h2 class="ui-graph-type">
             <span *ngIf="isMonthlyView">Monthly </span>
             <span *ngIf="isDailyView">Daily </span>
@@ -34,25 +44,11 @@
               <strong>Thank you for choosing Gexa Energy!</strong> <br />Your usage will display here as soon as your usage data is available for this cycle. 
             </div><br/><br/><br/><br/><br/><br/><br/><br/>
           </div>
-          <div *ngIf="barChartData.length > 0">
-            <div *ngFor='let index of barChartData'>
-              <div id="canvasWrapper">
-                <canvas width="400" height="200"
-                  baseChart
-                  #rtpChart="base-chart"
-                  [datasets]="index"
-                  [labels]="chartLabels"
-                  [options]="barChartOptions"
-                  [colors]="barChartColors"
-                  legend="false"
-                  chartType="bar"
-                  (chartClick)="chartClicked($event, $elements)">
-                </canvas>
-              </div>
-            </div>
+          <div id="canvasWrapper">
+            <div #chart id="rtp-usage-chart"></div>
           </div>
           <div *ngIf="usageInfo" class="ui-pricing-summary">
-            <div  class="ui-price-inline-block">
+            <div class="ui-price-inline-block">
               <h1>{{usageInfo.kwh | number}}</h1>
                 <div class="ui-price-caption">
                   kWh
@@ -62,7 +58,8 @@
               <h1><sup>@</sup></h1>
             </div>
             <div class="ui-price-inline-block">
-              <h1>{{usageInfo.avgPrice | number}}<sup>¢</sup></h1>
+              <h1 [hidden]="!isAllInPricing">{{usageInfo.avgPriceAllIn | number}}<sup>¢</sup></h1>
+              <h1 [hidden]="!isWholesalePricing">{{usageInfo.avgPrice | number}}<sup>¢</sup></h1>
             <div class="ui-price-caption">
               Avg Price
             </div>
@@ -71,8 +68,11 @@
             <h1>=</h1>
           </div>
           <div class="ui-price-inline-block">
-            <h1>
-              <sup>$</sup>{{usageInfo.totalCostDollars}}<sup>{{usageInfo.totalCostCents}}</sup>
+            <h1 [hidden]="!isWholesalePricing">
+              <sup>$</sup>{{ usageInfo.costDollars }}<sup>{{usageInfo.costCents}}</sup>
+            </h1>
+            <h1 [hidden]="!isAllInPricing">
+              <sup>$</sup>{{ usageInfo.allInDollars }}<sup>{{usageInfo.allInCents }}</sup>
             </h1>
             <div class="ui-price-caption">
               Your Cost
@@ -81,8 +81,8 @@
         </div>
         <div class="text-center">
           <div class="ui-button-slider">
-            <button (click)="showWholesalePricing()"  [disabled]="!(barChartData.length > 0)" class="btn" [ngClass]="{ 'btn-primary': isWholesalePricing, 'btn-link': !isWholesalePricing }">Wholesale</button>
-            <button (click)="showAllInPricing()"  [disabled]="!(barChartData.length > 0)" class="btn" [ngClass]="{ 'btn-primary': isAllInPricing, 'btn-link': !isAllInPricing }">All-in</button>
+            <button (click)="showWholesalePricing()" class="btn" [ngClass]="{ 'btn-primary': isWholesalePricing, 'btn-link': !isWholesalePricing }">Wholesale</button>
+            <button (click)="showAllInPricing()" class="btn" [ngClass]="{ 'btn-primary': isAllInPricing, 'btn-link': !isAllInPricing }">All-in</button>
           </div>
         </div><br /><br />
         <div class="chart-controls text-center">

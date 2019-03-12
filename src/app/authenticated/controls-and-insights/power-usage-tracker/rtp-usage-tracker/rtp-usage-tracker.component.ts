@@ -1,14 +1,14 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 
 import { MonthlyProfiledBill, DailyProfiledBill, HourlyProfiledBill } from '../../../../core/models/profiledbills/profiled-bills.model';
 import { UsageHistoryService } from 'app/core/usage-history.service';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { Subscription } from 'rxjs/Subscription';
-import { BaseChartDirective } from 'ng2-charts';
 
 import * as moment from 'moment';
-import { takeRight, values } from 'lodash';
+import * as d3 from 'd3';
+
 @Component({
   selector: 'mygexa-rtp-usage-tracker',
   templateUrl: './rtp-usage-tracker.component.html',
@@ -16,8 +16,9 @@ import { takeRight, values } from 'lodash';
 })
 
 export class RtpUsageTrackerComponent implements OnDestroy {
-  
-  @ViewChild("rtpChart") public chart: BaseChartDirective;
+
+  @ViewChild('chart')
+  private chartContainer: ElementRef;
   
   private activeServiceAccount: ServiceAccount = null;
   private ServiceAccountsSubscription: Subscription = null;
@@ -29,8 +30,6 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   private monthlyUsageSubscription: Subscription = null;
   private dailyUsageSubscription: Subscription = null;
   private hourlyUsageSubscription: Subscription = null;
-
-  private chartLabels = [];
 
   private currentMonthlyStartMonth: Date = moment().startOf("year").toDate();
   private currentMonthlyEndMonth: Date = moment().endOf("year").toDate();
@@ -47,81 +46,15 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   usageIntervalLabel: string;
   usageIntervalTotal: number;
 
-  lastActiveBar: any;
-
   usageInfo: { 
     kwh: number, 
-    avgPrice: number, 
-    totalCostDollars: number,
-    totalCostCents: string
+    avgPrice: number,
+    avgPriceAllIn: number,
+    costDollars: number,
+    costCents: string,
+    allInDollars: number,
+    allInCents: string
   };
-
-  private defaultBarBackground = "rgba(10, 10, 10, 0.1)";
-  private activeBarBackground = "rgba(46, 177, 52, 1)";
-
-  /* Bar Graph Properties */
-  public barChartColors = [
-    {
-      backgroundColor: [],
-      borderColor: "rgba(10, 10, 10, 0.3)",
-      borderWidth: 1,
-      hoverBackgroundColor: "rgba(46, 177, 52,0.9)",
-      hoverBorderColor: "rgba(46, 177, 52,1)",
-    }
-  ];
-  public barChartOptions: any = {
-    legend: {
-      display: false
-    },
-    tooltips: {
-      enabled: false
-    },
-    scales: {
-      xAxes: [{
-        gridLines: {
-          display: false
-        },
-        ticks: {
-          callback: function(value, index, values) {
-            if (typeof value === "string") {
-              if (value.length > 3) {
-                // Is daily view. 
-                // Show correct date label format (M/DD)
-                return value.substring(0, value.length-5);
-              } else {
-                return value;
-              }
-            } else {
-              // Show readable hourly values
-              if (value === 0) {
-                return "12 AM";
-              } else if (value == 12) {
-                return `${value} PM`;
-              } else if (value > 12) {
-                return `${value - 12} PM`;
-              } else {
-                return `${value} AM`;
-              }
-            }
-          }
-        }
-      }],
-      yAxes: [{
-        ticks: {
-          beginAtZero: true,
-          callback: function(value, index, values) {
-            if ((Number(value) - Math.trunc(Number(value)) > 0) && value.toString().length > 3) {
-              return `${value.toString().substring(0, 3)} kWh`;
-            } else {
-              return `${value} kWh`;
-            }
-          }
-        }
-      }]
-    },
-    min: 0
-  };
-  public barChartData = [];
 
   constructor(
     private UsageHistoryService: UsageHistoryService,
@@ -138,7 +71,6 @@ export class RtpUsageTrackerComponent implements OnDestroy {
 
   ngOnDestroy() {
     this.ServiceAccountsSubscription.unsubscribe();
-
     if (this.monthlyUsageSubscription) {
       this.monthlyUsageSubscription.unsubscribe();
     }
@@ -150,54 +82,12 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     }
   }
 
-  chartClicked(event) {
-    const elements = event.active;
-    if (elements.length) {
-      if (this.lastActiveBar) {
-        // Reset background of the last bar that was clicked
-        this.lastActiveBar.custom.backgroundColor = this.defaultBarBackground;
-        this.lastActiveBar._chart.update();
-      } else {
-        // Clear default active bar
-        const lastBarColorIndex = this.barChartColors[0].backgroundColor.length-1;
-        this.barChartColors[0].backgroundColor[lastBarColorIndex] = this.defaultBarBackground;
-        elements[0]._chart.update();
-      }
-      // Set the background of the new bar that was clicked
-      elements[0].custom = elements[0].custom || {};
-      elements[0].custom.backgroundColor = this.activeBarBackground;
-
-      // Store new active bar to reset background later
-      this.lastActiveBar = elements[0];
-
-      // Display usage info for the new bar that was clicked
-      const selectedDate = elements[0]._model.label;
-      if (this.isMonthlyView) {
-        const monthIndex = this.chartLabels.indexOf(selectedDate);
-        const usageMonth = this.monthlyUsageData.find(m => new Date(m.UsageMonth).getMonth() === monthIndex);
-        this.setUsageInfo(usageMonth)
-      } else if (this.isDailyView) {
-        const dateToFind = new Date(selectedDate);
-        const usageDay = this.dailyUsageData.find(d => moment(d.UsageDate).isSame(dateToFind, "day"));
-        this.setUsageInfo(usageDay);
-      } else if (this.isHourlyView) {
-        const hourToFind = selectedDate;
-        const usageHour = this.hourlyUsageData.find(h => h.Hour === hourToFind);
-        this.setUsageInfo(usageHour);
-      }
-    }
-  }
-
   getMonthlyUsage() {
+    this.usageInfo = null;
     this.monthlyUsageSubscription = this.UsageHistoryService.getMonthlyProfiledBill(this.activeServiceAccount.UAN, this.currentMonthlyStartMonth, this.currentMonthlyEndMonth).subscribe(monthlyUsage => {
       let usage: [MonthlyProfiledBill] = monthlyUsage;
       this.monthlyUsageData = usage;
-      this.processMonthlyUsage(usage);
-      // Set active usage bar
-      if (usage.length > 0) {
-        const defaultActiveUsageMonth = usage[usage.length-1];
-        this.setUsageInfo(defaultActiveUsageMonth);
-      }
+      this.showMonthlyView();
     },
     (error) => {
       this.showCurrentIntervalUsage();
@@ -206,15 +96,11 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   }
 
   getDailyUsage() {
+    this.usageInfo = null;
     this.dailyUsageSubscription = this.UsageHistoryService.getDailyProfiledBill(this.activeServiceAccount.UAN, this.currentDailyUsageMonth).subscribe(dailyUsage => {
       let usage: [DailyProfiledBill] = dailyUsage;
       this.dailyUsageData = usage;
-      this.processDailyUsage(usage);
-      // Set active usage bar
-      if (usage.length > 0) {
-        const defaultActiveUsageDay = usage[usage.length-1];
-        this.setUsageInfo(defaultActiveUsageDay);
-      }
+      this.showDailyView();
     },
     (error) => {
       this.showCurrentIntervalUsage();
@@ -223,17 +109,13 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   }
 
   getHourlyUsage() {
+    this.usageInfo = null;
     if (!this.currentHourlyDate)
       this.currentHourlyDate = new Date(this.dailyUsageData[this.dailyUsageData.length-1].UsageDate);
     this.hourlyUsageSubscription = this.UsageHistoryService.getHourlyProfiledBill(this.activeServiceAccount.UAN, this.currentHourlyDate).subscribe(hourlyUsage => {
       let usage: [HourlyProfiledBill] = hourlyUsage;
       this.hourlyUsageData = usage;
-      this.processHourlyUsage(usage);
-      // Set active usage bar
-      if (usage.length > 0) {
-        const defaultActiveUsageHour = usage[usage.length-1];
-        this.setUsageInfo(defaultActiveUsageHour);
-      }
+      this.showHourlyView();
     },
     (error) => {
       this.showCurrentIntervalUsage();
@@ -297,154 +179,35 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.usageIntervalLabel = moment(this.currentMonthlyStartMonth).format("YYYY");
     this.usageIntervalTotal = Math.round(this.monthlyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0)); 
 
+    this.createMonthlyChart();
+
     this.isMonthlyView = true;
     this.isDailyView = false;
     this.isHourlyView = false;
-    this.lastActiveBar = null;
   }
 
   private showDailyView() {
     this.usageIntervalLabel = moment(this.currentDailyUsageMonth).format("MMMM");
     this.usageIntervalTotal = Math.round(this.dailyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0));
 
+    this.createDailyChart();
+
     this.isMonthlyView = false;
     this.isDailyView = true;
     this.isHourlyView = false;
-    this.lastActiveBar = null;
+
+    this.isDataAvailable = true;
   }
 
   private showHourlyView() {
     this.usageIntervalLabel = moment(this.currentHourlyDate).format("M/DD");
     this.usageIntervalTotal = Math.round(this.hourlyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0));
 
+    this.createHourlyChart();
+
     this.isMonthlyView = false;
     this.isDailyView = false;
     this.isHourlyView = true;
-    this.lastActiveBar = null;
-  }
-
-  private processMonthlyUsage(usage: [MonthlyProfiledBill]) {
-    const datagroups = {};
-    if (!datagroups[0]) {
-      datagroups[0] = {
-        data: []
-      };
-    }
-
-    this.barChartColors[0].backgroundColor = [];
-
-    // Cycle through months to match usage
-    for (let m = 0; m < 12; m++) {
-      let monthsUsage = 0;
-      usage.forEach(um => {
-        if (new Date(um.UsageMonth).getMonth() === m && um.KwHours > 0) {
-          monthsUsage = um.KwHours;
-        }
-      });
-      datagroups[0].data.push(monthsUsage);
-
-      if (m < 11) {
-        this.barChartColors[0].backgroundColor.push(this.defaultBarBackground);
-      } else {
-        // Make last bar active color
-        this.barChartColors[0].backgroundColor.push(this.activeBarBackground);
-      }
-    }
-
-    this.chartLabels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-    
-    this.populateChart(takeRight(values(datagroups)));
-    this.showMonthlyView();
-  }
-
-  private processDailyUsage(usage: [DailyProfiledBill]) {
-    const datagroups = {};
-    if (!datagroups[0]) {
-      datagroups[0] = {
-        data: []
-      };
-    }
-
-    usage.forEach(ud => {
-      datagroups[0].data.push(ud.KwHours);
-    });
-
-    this.barChartColors[0].backgroundColor = [];
-
-    for (let i = 0; i < usage.length; i++) {
-      if (i < usage.length-1) {
-        this.barChartColors[0].backgroundColor.push(this.defaultBarBackground);
-      } else {
-        // Make last bar active color
-        this.barChartColors[0].backgroundColor.push(this.activeBarBackground);
-      }
-    }
-
-    this.populateChart(takeRight(values(datagroups)));
-
-    this.chartLabels = usage.map(ud => new Date(ud.UsageDate).toLocaleDateString('us-EN', { month: 'numeric', day: 'numeric', year: 'numeric' }));
-    this.showDailyView();
-  }
-
-  private processHourlyUsage(usage: [HourlyProfiledBill]) {
-    let datagroups = {};
-
-    if (!datagroups[0]) {
-      datagroups[0] = {
-        data: []
-      };
-    }
-
-    this.barChartColors[0].backgroundColor = [];
-
-    // Cycle through hours to find match
-    for (let h = 0; h < 24; h++) {
-      let hoursUsage = 0;
-      usage.forEach(uh => {
-        if (uh.Hour === h) {
-          hoursUsage = uh.KwHours;
-        }
-      });
-      datagroups[0].data.push(hoursUsage);
-      
-      if (h < 23) {
-        this.barChartColors[0].backgroundColor.push(this.defaultBarBackground);
-      } else {
-        // Make last bar active color
-        this.barChartColors[0].backgroundColor.push(this.activeBarBackground);
-      }
-    }
-
-    this.populateChart(takeRight(values(datagroups)));
-
-    this.chartLabels = usage.map(uh => uh.Hour);
-    this.showHourlyView();
-  }
-
-  private populateChart(dataToDisplay: any) {
-    while (this.barChartData.length) {
-      this.barChartData.pop();
-    }
-
-    if (dataToDisplay && dataToDisplay.length > 0) {
-      this.barChartData.push(dataToDisplay);
-    }
-
-    if (this.chart !== undefined) {
-      this.chart.chart.destroy();
-      this.chart.ngOnInit();
-    }
-
-    this.isDataAvailable = true;
-  }
-
-  private setUsageInfo(usageToShow: MonthlyProfiledBill | DailyProfiledBill | HourlyProfiledBill) {
-    this.usageInfo = {
-      kwh: Math.round(10*usageToShow.KwHours)/10, 
-      avgPrice: (usageToShow.TotalCharge / usageToShow.KwHours) * 100,
-      totalCostDollars:  Math.trunc(usageToShow.TotalCharge),
-      totalCostCents: usageToShow.TotalCharge.toString().split(".")[1] ? this.getTotalCostCents(usageToShow.TotalCharge) : usageToShow.TotalCharge.toString()
-    };
   }
 
   private getTotalCostCents(usageCost: Number) {
@@ -454,5 +217,345 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     } else {
       return cents;
     }
+  }
+
+  private showUsageOnUI(kwh: number, cost: number, allIn: number) {
+    this.usageInfo = {
+      kwh: Math.round(10*kwh)/10,
+      avgPrice: (cost/kwh) * 100,
+      avgPriceAllIn: (allIn/kwh) * 100,
+      costDollars: Math.trunc(cost),
+      costCents: cost.toString().split(".")[1] ? this.getTotalCostCents(cost) : cost.toString(),
+      allInDollars: Math.trunc(allIn),
+      allInCents: allIn.toString().split(".")[1] ? this.getTotalCostCents(allIn) : allIn.toString()
+    };
+  }
+
+  private createMonthlyChart() {
+    d3.select('svg').remove();
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    const element = this.chartContainer.nativeElement;
+    const data = this.padMonthlyUsage(this.monthlyUsageData);
+
+    const margin = { top: 20, right: 20, bottom: 20, left: 70 };
+
+    const svg = d3.select(element).append('svg')
+      .attr('width', 700)
+      .attr('height', 350);
+    
+    const contentWidth = 700 - margin.left - margin.right;
+    const contentHeight = 350 - margin.top - margin.bottom;
+
+    const x = d3
+      .scaleBand()
+      .rangeRound([0, contentWidth])
+      .padding(0.25)
+      .domain(data.map(d => d.UsageMonth.toString()));
+    
+    const y = d3
+      .scaleLinear()
+      .rangeRound([contentHeight, 0])
+      .domain([0, d3.max(data, d => d.KwHours)]);
+    
+    const xAxis = d3.axisBottom(x)
+      .tickFormat((d, i) => monthNames[i]);
+
+    const yAxis = d3.axisRight(y)
+      .tickSize(contentWidth);
+    
+    const g = svg.append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+    
+    g.append('g')
+      .attr('class', 'axis axis--x')
+      .attr('transform', `translate(0, ${contentHeight})`)
+      .call(customXAxis);
+
+    g.append('g')
+      .attr('class', 'axis axis--y')
+      .call(customYAxis);
+
+    g.selectAll('.bar')
+      .data(data)
+      .enter().append('rect')
+      .attr('class', 'bar')
+      .attr('x', d => x(d.UsageMonth.toString()))
+      .attr('y', d => contentHeight)
+      .attr('width', x.bandwidth())
+      .attr('height', 0)
+      .attr('fill', 'rgba(10, 10, 10, 0.1)')
+      .attr('stroke', 'rgba(10, 10, 10, 0.3)')
+      .on('click', (d, i, g) => {
+        this.showUsageOnUI(d.KwHours, d.EnergyCharge, d.TotalCharge);
+        d3.selectAll('.bar').classed('active', false);
+        d3.select(g[i]).classed('active', true);
+      })
+      .style('margin-left', "10px")
+      .style('margin-left', "10px")
+      .transition()
+      .duration(500)
+      .delay((d, i) => i * 10)
+      .attr('y', d => {
+        if (d.KwHours !== 0) {
+          return y(d.KwHours)
+        } else {
+          return contentHeight;
+        }
+      })
+      .attr('height', d => {
+        if (d.KwHours !== 0) {
+          return contentHeight - y(d.KwHours)
+        } else {
+          return 0;
+        }
+      });;
+
+    g.selectAll('.bar:last-child').attr('class', 'bar active');
+
+    let lastUsage;
+    data.forEach(d => {
+      if (d.KwHours > 0)
+        lastUsage = d;
+    })
+    if (lastUsage)
+      this.showUsageOnUI(lastUsage.KwHours, lastUsage.EnergyCharge, lastUsage.TotalCharge);
+
+    function customXAxis(g) {
+      g.call(xAxis);
+      g.selectAll('.tick text')
+        .attr('x', -3)
+        .attr('font-size', '12px')
+        .attr('font-family', 'Open Sans');
+    }
+
+    function customYAxis(g) {
+      g.call(yAxis);
+      g.select('.domain').remove();
+      g.selectAll('.tick:not(:first-of-type) line')
+        .attr('stroke', 'lightgrey')
+      g.selectAll('.tick text')
+        .attr('font-size', '12px')
+        .attr('font-family', 'Open Sans')
+        .attr('x', -35);
+    }
+  }
+
+  private createDailyChart() {
+    d3.select('svg').remove();
+
+    const element = this.chartContainer.nativeElement;
+    const data = this.dailyUsageData;
+
+    const margin = { top: 20, right: 20, bottom: 40, left: 30 };
+
+    const svg = d3.select(element).append('svg')
+      .attr('width', 800)
+      .attr('height', 350);
+    
+    const contentWidth = 800 - margin.left - margin.right;
+    const contentHeight = 350 - margin.top - margin.bottom;
+
+    const x = d3
+      .scaleBand()
+      .rangeRound([0, contentWidth])
+      .padding(0.25)
+      .domain(data.map(d => d.UsageDate.toString()));
+    
+    const y = d3
+      .scaleLinear()
+      .rangeRound([contentHeight, 0])
+      .domain([0, d3.max(data, d => d.KwHours)]);
+    
+    const xAxis = d3.axisBottom(x)
+      .tickFormat((d, i) => new Date(d).toLocaleDateString("en-US", { month: 'numeric', day: 'numeric' }));
+
+    const yAxis = d3.axisRight(y)
+      .tickSize(contentWidth);
+    
+    const g = svg.append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+    
+    g.append('g')
+      .attr('class', 'axis axis--x')
+      .attr('transform', `translate(0, ${contentHeight})`)
+      .call(customXAxis);
+
+    g.append('g')
+      .attr('class', 'axis axis--y')
+      .call(customYAxis);
+
+    g.selectAll('.bar')
+      .data(data)
+      .enter().append('rect')
+      .attr('class', 'bar')
+      .attr('x', d => x(d.UsageDate.toString()))
+      .attr('y', d => contentHeight)
+      .attr('width', x.bandwidth())
+      .attr('height', 0)
+      .attr('fill', 'rgba(10, 10, 10, 0.1)')
+      .attr('stroke', 'rgba(10, 10, 10, 0.3)')
+      .on('click', (d, i, g) => {
+        this.showUsageOnUI(d.KwHours, d.EnergyCharge, d.TotalCharge);
+        d3.selectAll('.bar').classed('active', false);
+        d3.select(g[i]).classed('active', true);
+      })
+      .style('margin-left', "10px")
+      .transition()
+      .duration(500)
+      .delay((d, i) => i * 10)
+      .attr('y', d => y(d.KwHours))
+      .attr('height', d => contentHeight - y(d.KwHours));
+
+    g.selectAll('.bar:last-child').attr('class', 'bar active');
+
+    const lastUsage = data[data.length-1];
+    this.showUsageOnUI(lastUsage.KwHours, lastUsage.EnergyCharge, lastUsage.TotalCharge);
+
+    function customXAxis(g) {
+      g.call(xAxis);
+      g.selectAll('.tick text')
+        .attr('x', -3)
+        .attr('font-size', '12px')
+        .attr('font-family', 'Open Sans')
+        .attr('transform', 'rotate(-45)')
+        .style('text-anchor', 'end')
+    }
+
+    function customYAxis(g) {
+      g.call(yAxis);
+      g.select('.domain').remove();
+      g.selectAll('.tick:not(:first-of-type) line')
+        .attr('stroke', 'lightgrey')
+      g.selectAll('.tick text')
+        .attr('font-size', '12px')
+        .attr('font-family', 'Open Sans')
+        .attr('x', -25);
+    }
+  }
+
+  private createHourlyChart() {
+    d3.select('svg').remove();
+
+    const element = this.chartContainer.nativeElement;
+    const data = this.hourlyUsageData;
+
+    const margin = { top: 20, right: 20, bottom: 40, left: 40 };
+
+    const svg = d3.select(element).append('svg')
+      .attr('width', 700)
+      .attr('height', 350);
+    
+    const contentWidth = 700 - margin.left - margin.right;
+    const contentHeight = 350 - margin.top - margin.bottom;
+
+    const x = d3
+      .scaleBand()
+      .rangeRound([0, contentWidth])
+      .padding(0.25)
+      .domain(data.map(d => d.Hour.toString()));
+    
+    const y = d3
+      .scaleLinear()
+      .rangeRound([contentHeight, 0])
+      .domain([0, d3.max(data, d => d.KwHours)]);
+    
+    const xAxis = d3.axisBottom(x)
+      .tickFormat((d, i) => {
+        if (d == 0) {
+          return '12am';
+        } else if(d < 12) {
+          return `${d}pm`;
+        } else if (d == 12) {
+          return `12pm`;
+        } else if (d > 12) {
+          return `${d-12}pm`;
+        }
+      });
+
+    const yAxis = d3.axisRight(y)
+      .tickSize(contentWidth);
+    
+    const g = svg.append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+    
+    g.append('g')
+      .attr('class', 'axis axis--x')
+      .attr('transform', `translate(0, ${contentHeight})`)
+      .call(customXAxis);
+
+    g.append('g')
+      .attr('class', 'axis axis--y')
+      .call(customYAxis);
+
+    g.selectAll('.bar')
+      .data(data)
+      .enter().append('rect')
+      .attr('class', 'bar')
+      .attr('x', d => x(d.Hour.toString()))
+      .attr('y', contentHeight)
+      .attr('width', x.bandwidth())
+      .attr('height', 0)
+      .attr('fill', 'rgba(10, 10, 10, 0.1)')
+      .attr('stroke', 'rgba(10, 10, 10, 0.3)')
+      .on('click', (d, i, g) => {
+        this.showUsageOnUI(d.KwHours, d.EnergyCharge, d.TotalCharge);
+        d3.selectAll('.bar').classed('active', false);
+        d3.select(g[i]).classed('active', true);
+      })
+      .style('margin-left', "10px")
+      .transition()
+      .duration(600)
+      .delay((d, i) => i * 10)
+      .attr('y', d => y(d.KwHours))
+      .attr('height', d => contentHeight - y(d.KwHours));
+
+    g.selectAll('.bar:last-child').attr('class', 'bar active');
+
+    const lastUsage = data[data.length-1];
+    this.showUsageOnUI(lastUsage.KwHours, lastUsage.EnergyCharge, lastUsage.TotalCharge);
+
+    function customXAxis(g) {
+      g.call(xAxis);
+      g.selectAll('.tick text')
+        .attr('x', -3)
+        .attr('font-size', '12px')
+        .attr('font-family', 'Open Sans')
+        .attr('transform', 'rotate(-45)')
+        .style('text-anchor', 'end')
+    }
+
+    function customYAxis(g) {
+      g.call(yAxis);
+      g.select('.domain').remove();
+      g.selectAll('.tick:not(:first-of-type) line')
+        .attr('stroke', 'lightgrey')
+      g.selectAll('.tick text')
+        .attr('font-size', '12px')
+        .attr('font-family', 'Open Sans')
+        .attr('x', -25);
+    }
+  }
+
+  private padMonthlyUsage(usage: MonthlyProfiledBill[]): MonthlyProfiledBill[] {
+    let paddedUsage = [];
+    for (let i = 0; i < 12; i++) {
+      let monthlyUsage: MonthlyProfiledBill = {
+        UsageMonth: moment(this.currentMonthlyStartMonth).add(i, 'months').toDate(),
+        StartDate: new Date(),
+        EndDate: new Date(),
+        KwHours: 0,
+        TotalCharge: 0,
+        EnergyCharge: 0
+      };
+      let u = usage.find(um => moment(um.UsageMonth).isSame(monthlyUsage.UsageMonth, "month"));
+      if (u) {
+        paddedUsage.push(u);
+      } else {
+        paddedUsage.push(monthlyUsage);
+      }
+    }
+    return paddedUsage;
   }
 }

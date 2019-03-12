@@ -469,3 +469,27 @@ footer.fixedToBottom {
     background-color: none!important;
     position: inherit!important;
 }
+
+#rtp-usage-chart {
+  svg {
+    min-width: 700px;
+    min-height: 350px;
+  }
+
+  .bar.active {
+    fill: rgba(46, 177, 52,0.9);
+    stroke: rgba(46, 177, 52,0.9);
+  }
+
+  .bar:hover {
+      fill: rgba(46, 177, 52,0.9);
+  }
+
+  .axis .domain {
+      stroke: grey;
+  }
+
+  .axis .tick {
+      color: grey;
+  }
+}

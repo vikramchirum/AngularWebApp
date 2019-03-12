@@ -45,9 +45,9 @@ $alpha5: 0.5;
 	width: 45px;
 	height: 150px;
 	background-color: rgba($dark-base, $alpha);
-  background-image: radial-gradient(circle, #aaa 10%, transparent 10%), radial-gradient(circle, #ccc 10%, transparent 10%);
-  background-size: 45px 15px;
-  background-position: 0 0, 0 0;
+	background-image: radial-gradient(circle, #aaa 10%, transparent 10%), radial-gradient(circle, #ccc 10%, transparent 10%);
+	background-size: 45px 15px;
+	background-position: 0 0, 0 0;
 
 	&.ui-active {
 		background-color: rgba($payment-base, $alpha);
@@ -120,11 +120,6 @@ $alpha5: 0.5;
 
 #canvasWrapper {
 	overflow-x: auto;
-
-	canvas {
-		min-width: 500px;
-		min-height: 300px;
-	}
 }
 
 .usage-label {
@@ -132,5 +127,29 @@ $alpha5: 0.5;
 
 	span {
 		color: #1b8dcd;
+	}
+}
+
+.y-label {
+	width: 300px;
+	transform: translateX(-45%) translateY(650%) rotate(-90deg);
+}
+
+@media (min-width: 768px) {
+	.y-label {
+		transform: translateX(-10%) translateY(-1100%) rotate(-90deg);
+	}
+}
+
+@media (max-width: 1199px) and (min-width: 769px) {
+	.y-label {
+		transform: translateX(-20%) translateY(-1100%) rotate(-90deg);
+	}
+}
+
+@media (max-width: 375px) {
+	.y-label {
+		min-height: 50px;
+		transform: translateX(-46%) translateY(400%) rotate(-90deg);
 	}
 }
