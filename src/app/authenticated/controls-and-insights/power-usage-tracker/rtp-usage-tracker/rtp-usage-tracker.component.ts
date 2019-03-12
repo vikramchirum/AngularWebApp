@@ -463,13 +463,13 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     
     const xAxis = d3.axisBottom(x)
       .tickFormat((d, i) => {
-        if (d == 0) {
+        if (Number(d) == 0) {
           return '12am';
-        } else if(d < 12) {
+        } else if(Number(d) < 12) {
           return `${d}pm`;
-        } else if (d == 12) {
+        } else if (Number(d) == 12) {
           return `12pm`;
-        } else if (d > 12) {
+        } else if (Number(d) > 12) {
           return `${d-12}pm`;
         }
       });
