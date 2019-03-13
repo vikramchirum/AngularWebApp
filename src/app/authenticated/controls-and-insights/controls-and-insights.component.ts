@@ -17,6 +17,7 @@ export class ControlsAndInsightsComponent implements OnDestroy {
 
   @ViewChild("baseChart") chart: BaseChartDirective;
 
+  public isRTP: boolean;
   public startsWith = startsWith;
   private activeServiceAccount: ServiceAccount = null;
   private ServiceAccountsSubscription: Subscription = null;
@@ -28,6 +29,7 @@ export class ControlsAndInsightsComponent implements OnDestroy {
     this.ServiceAccountsSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       activeServiceAccount => {
         this.activeServiceAccount = activeServiceAccount;
+        this.isRTP = this.activeServiceAccount.Current_Offer.Is_RTP;
       }
     );
   }

@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import * as moment from 'moment';
 import * as d3 from 'd3';
+import { UsageComparison, MeterReadCycle } from 'app/core/models/usage/usage-comparison.model';
 
 @Component({
   selector: 'mygexa-rtp-usage-tracker',
@@ -30,6 +31,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   private monthlyUsageSubscription: Subscription = null;
   private dailyUsageSubscription: Subscription = null;
   private hourlyUsageSubscription: Subscription = null;
+  private currentUsageSubscription: Subscription = null;
 
   private currentMonthlyStartMonth: Date = moment().startOf("year").toDate();
   private currentMonthlyEndMonth: Date = moment().endOf("year").toDate();
@@ -80,6 +82,9 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     if (this.hourlyUsageSubscription) {
       this.hourlyUsageSubscription.unsubscribe();
     }
+    if (this.currentUsageSubscription) {
+      this.currentUsageSubscription.unsubscribe();
+    }
   }
 
   getMonthlyUsage() {
@@ -103,7 +108,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       this.showDailyView();
     },
     (error) => {
-      this.showCurrentIntervalUsage();
+      this.getCurrentDailyUsage();
       this.isDataAvailable = true;
     });
   }
@@ -120,6 +125,13 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     (error) => {
       this.showCurrentIntervalUsage();
       this.isDataAvailable = true;
+    });
+  }
+
+  getCurrentDailyUsage() {
+    this.usageInfo = null;
+    this.currentUsageSubscription = this.UsageHistoryService.getUsageComparison(this.activeServiceAccount.UAN).subscribe(usage => {
+      this.showCurrentDailyUsageChart(usage);
     });
   }
 
@@ -441,7 +453,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     const element = this.chartContainer.nativeElement;
     const data = this.hourlyUsageData;
 
-    const margin = { top: 20, right: 20, bottom: 40, left: 40 };
+    const margin = { top: 20, right: 20, bottom: 50, left: 40 };
 
     const svg = d3.select(element).append('svg')
       .attr('width', 700)
@@ -536,6 +548,158 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         .attr('font-family', 'Open Sans')
         .attr('x', -25);
     }
+  }
+
+  private showCurrentDailyUsageChart(usage: UsageComparison) {
+    d3.select('svg').remove();
+
+    const element = this.chartContainer.nativeElement;
+
+    const currentCycle = usage.Meter_Read_Cycles[1].Usage > 0 ? usage.Meter_Read_Cycles[1] : usage.Meter_Read_Cycles[0];
+    const data = usage.Daily_Usage_List.filter(u => {
+      if (moment(u.Date).isBetween(moment(currentCycle.Start_Date), moment(currentCycle.End_Date), 'days', '[]')) {
+        return u;
+      }
+    });
+
+    this.usageIntervalLabel = moment(currentCycle.End_Date).format("MMMM");
+    this.usageIntervalTotal = Math.round(data.map(u => u.Usage).reduce((curr, prev) => curr + prev));
+
+    const margin = { top: 20, right: 20, bottom: 40, left: 40 };
+
+    const svg = d3.select(element).append('svg')
+      .attr('width', 700)
+      .attr('height', 350);
+    
+    const contentWidth = 700 - margin.left - margin.right;
+    const contentHeight = 350 - margin.top - margin.bottom;
+    
+    const x = d3
+      .scaleTime()
+      .rangeRound([0, contentWidth])
+      .domain([new Date(currentCycle.Start_Date), new Date(currentCycle.End_Date)]);
+
+    const y = d3
+      .scaleLinear()
+      .rangeRound([contentHeight, 0])
+      .domain([0, d3.max(data, d => d.Usage)]);
+
+    const xAxis = d3.axisBottom(x)
+      .ticks(d3.timeDay.every(1))
+      .tickFormat((d, i) => moment(d).format("M/DD"));
+
+    const yAxis = d3.axisRight(y)
+      .tickSize(contentWidth);
+
+    const line = d3.line()
+      .x(d => x(new Date(d.Date)))
+      .y(d => y(d.Usage))
+      .curve(d3.curveMonotoneX);
+
+    const g = svg.append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+    
+    g.append('g')
+      .attr('class', 'axis axis--x')
+      .attr('transform', `translate(0, ${contentHeight})`)
+      .call(customXAxis);
+
+    g.append('g')
+      .attr('class', 'axis axis--y')
+      .call(customYAxis);
+    
+    g.append('path')
+      .datum(data)
+      .attr('class', 'line')
+      .attr('d', line);
+
+    g.selectAll('.dot')
+      .data(data)
+      .enter().append('circle')
+        .attr('class', 'dot')
+        .attr('cx', d => x(new Date(d.Date)))
+        .attr('cy', d => y(d.Usage))
+        .attr('r', 4);
+
+    const focus = g.append('g')
+      .attr('class', 'focus')
+      .style('display', 'none');
+
+    focus.append('circle')
+      .attr('radius', 5);
+    
+    focus.append('line')
+      .classed('y', true);
+    
+    focus.append('text')
+      .attr('x', 9)
+      .attr('dy', '.35em');
+
+    g.append('rect')
+      .attr('class', 'overlay')
+      .attr('width', contentWidth)
+      .attr('height', contentHeight)
+      .on('mouseover', () => focus.style('display', null))
+      .on('mouseout', () => focus.style('display', 'none'))
+      .on('mousemove', () => {
+        const x0 = moment(x.invert(d3.mouse(element)[0])).subtract(1, 'day').toDate().getTime();
+        const i = data.indexOf(data.find(d => moment(d.Date).isSame(moment(x0), 'day')));
+        const d = data[i];
+        
+        focus.attr('transform', `translate(${x(new Date(d.Date))}, ${y(d.Usage)})`);
+        
+        focus.select('line.y')
+          .attr('x1', 0)
+          .attr('x2', 0)
+          .attr('y1', 0)
+          .attr('y2', contentHeight - y(d.Usage));
+
+        focus.select('text')
+          .text(`${moment(d.Date).format('M/DD')} ${Math.round(d.Usage*10)/10} kWh`)
+          .style('font-family', 'Open Sans')
+          .style('font-size', '14px');
+      });
+
+    d3.select('.overlay')
+      .style('fill', 'none')
+      .style('pointer-events', 'all');
+
+    d3.selectAll('.focus')
+      .style('opacity', 0.7);
+
+    d3.selectAll('.focus circle')
+      .style('fill', 'none')
+      .style('stroke', 'black');
+
+    d3.selectAll('.focus line')
+      .style('fill', 'none')
+      .style('stroke', 'black')
+      .style('stroke-width', '1.5px')
+      .style('stroke-dasharray', '3.3');
+
+    function customXAxis(g) {
+      g.call(xAxis);
+      g.selectAll('.tick text')
+        .attr('x', -3)
+        .attr('font-size', '12px')
+        .attr('font-family', 'Open Sans')
+        .attr('transform', 'rotate(-45)')
+        .style('text-anchor', 'end')
+    }
+
+    function customYAxis(g) {
+      g.call(yAxis);
+      g.select('.domain').remove();
+      g.selectAll('.tick:not(:first-of-type) line')
+        .attr('stroke', 'lightgrey')
+      g.selectAll('.tick text')
+        .attr('font-size', '12px')
+        .attr('font-family', 'Open Sans')
+        .attr('x', -25);
+    }
+    this.isMonthlyView = false;
+    this.isDailyView = true;
+    this.isHourlyView = false;
   }
 
   private padMonthlyUsage(usage: MonthlyProfiledBill[]): MonthlyProfiledBill[] {
