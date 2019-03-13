@@ -631,9 +631,13 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     focus.append('line')
       .classed('y', true);
     
-    focus.append('text')
+    focus.append('rect')
       .attr('x', 9)
       .attr('dy', '.35em');
+    
+    focus.append('text')
+      .attr('x', 18)
+      .attr('dy', '20px');
 
     g.append('rect')
       .attr('class', 'overlay')
@@ -646,18 +650,27 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         const i = data.indexOf(data.find(d => moment(d.Date).isSame(moment(x0), 'day')));
         const d = data[i];
         
-        focus.attr('transform', `translate(${x(new Date(d.Date))}, ${y(d.Usage)})`);
+        if (d) {
+          focus.attr('transform', `translate(${x(new Date(d.Date))}, ${y(d.Usage)})`);
         
-        focus.select('line.y')
-          .attr('x1', 0)
-          .attr('x2', 0)
-          .attr('y1', 0)
-          .attr('y2', contentHeight - y(d.Usage));
+          focus.select('line.y')
+            .attr('x1', 0)
+            .attr('x2', 0)
+            .attr('y1', 0)
+            .attr('y2', contentHeight - y(d.Usage));
 
-        focus.select('text')
-          .text(`${moment(d.Date).format('M/DD')} ${Math.round(d.Usage*10)/10} kWh`)
-          .style('font-family', 'Open Sans')
-          .style('font-size', '14px');
+          focus.select('rect')
+            .style('rx', '5')
+            .style('ry', '5')
+            .style('height', '30px')
+            .style('width', '125px')
+            
+          focus.select('text')
+              .text(`${moment(d.Date).format('M/DD')} - ${Math.round(d.Usage*10)/10} kWh`)
+              .style('font-family', 'Open Sans')
+              .style('font-size', '14px')
+              .style('fill', 'white');
+          }
       });
 
     d3.select('.overlay')
