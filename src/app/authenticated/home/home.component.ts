@@ -80,15 +80,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     if ( this.ActiveServiceAccount && (this.Paperless_Billing != null) ) {
       this.ShowAutoBillPay = this.Is_Auto_Bill_Pay ? false : true;
       this.ShowPaperlessBilling = (this.Is_Auto_Bill_Pay && !this.Paperless_Billing) ? true : false;
-      this.ShowBudgetBilling = (this.Is_Auto_Bill_Pay && this.Paperless_Billing && !this.Budget_Billing) ? true : false;
       this.ShowEnergySavingTips = (this.Is_Auto_Bill_Pay  && this.Paperless_Billing && this.Budget_Billing) ? true : false;
 
       if (this.ShowAutoBillPay) {
         this.currentView = 'ShowAutoBillPay';
       } else if (this.ShowPaperlessBilling) {
         this.currentView = 'ShowPaperlessBilling';
-      } else if (this.ShowBudgetBilling) {
-        this.currentView = 'ShowBudgetBilling';
       } else {
         this.currentView = 'ShowEnergySavingTips';
       }
