@@ -32,7 +32,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   SearchNotificationOptions = null;
   currentView: string = null;
 
-
   constructor( private ServiceAccountService: ServiceAccountService,
                private OfferStore: OffersStore,
                private renewalStore: RenewalStore,
