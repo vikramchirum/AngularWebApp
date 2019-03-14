@@ -471,11 +471,6 @@ footer.fixedToBottom {
 }
 
 #rtp-usage-chart {
-  svg {
-    min-width: 700px;
-    min-height: 350px;
-  }
-
   .bar.active {
     fill: rgba(46, 177, 52,0.9);
     stroke: rgba(46, 177, 52,0.9);
@@ -491,20 +486,5 @@ footer.fixedToBottom {
 
   .axis .tick {
       color: grey;
-  }
-  
-  .line {
-    fill: none;
-    stroke: #1b8dcd;
-    stroke-width: 3;
-  }
-
-  .area {
-    fill: #1b8dcd;
-  }
-
-  .dot {
-    fill: #1b8dcd;
-    stroke: #1b8dcd;
   }
 }

@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import * as moment from 'moment';
 import * as d3 from 'd3';
-import { UsageComparison, MeterReadCycle } from 'app/core/models/usage/usage-comparison.model';
+import { UsageComparison } from 'app/core/models/usage/usage-comparison.model';
 
 @Component({
   selector: 'mygexa-rtp-usage-tracker',
@@ -37,6 +37,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   private currentMonthlyEndMonth: Date = moment().endOf("year").toDate();
   private currentDailyUsageMonth: Date = moment().subtract(1, "month").startOf("month").toDate();
   private currentHourlyDate: Date;
+
+  private monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   isDataAvailable = false;
   isWholesalePricing = true;
@@ -190,36 +192,29 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   private showMonthlyView() {
     this.usageIntervalLabel = moment(this.currentMonthlyStartMonth).format("YYYY");
     this.usageIntervalTotal = Math.round(this.monthlyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0)); 
-
-    this.createMonthlyChart();
-
     this.isMonthlyView = true;
     this.isDailyView = false;
     this.isHourlyView = false;
+    this.createChart();
   }
 
   private showDailyView() {
     this.usageIntervalLabel = moment(this.currentDailyUsageMonth).format("MMMM");
     this.usageIntervalTotal = Math.round(this.dailyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0));
-
-    this.createDailyChart();
-
     this.isMonthlyView = false;
     this.isDailyView = true;
     this.isHourlyView = false;
-
+    this.createChart();
     this.isDataAvailable = true;
   }
 
   private showHourlyView() {
     this.usageIntervalLabel = moment(this.currentHourlyDate).format("M/DD");
     this.usageIntervalTotal = Math.round(this.hourlyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0));
-
-    this.createHourlyChart();
-
     this.isMonthlyView = false;
     this.isDailyView = false;
     this.isHourlyView = true;
+    this.createChart();
   }
 
   private getTotalCostCents(usageCost: Number) {
@@ -243,238 +238,73 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     };
   }
 
-  private createMonthlyChart() {
+  private createChart() {
+    // Remove existing SVG
     d3.select('svg').remove();
 
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
+    // Get chartContainer element in DOM
     const element = this.chartContainer.nativeElement;
-    const data = this.padMonthlyUsage(this.monthlyUsageData);
 
-    const margin = { top: 20, right: 20, bottom: 20, left: 70 };
+    // Set chart data and margins
+    let data; let margin = { top: 0, right: 0, bottom: 0, left: 0 };
+    if (this.isMonthlyView) {
+      data = this.padMonthlyUsage(this.monthlyUsageData);
+      margin = { top: 20, right: 20, bottom: 40, left: 70 };
+    } else if (this.isDailyView) {
+      data = this.dailyUsageData;
+      margin = { top: 20, right: 20, bottom: 40, left: 40 };
+    } else if (this.isHourlyView) {
+      data = this.hourlyUsageData;
+      margin = { top: 20, right: 20, bottom: 50, left: 40 };
+    }
 
+    // Append chart SVG to chartContainer element
+    const height = 350;
+    const width = this.isDailyView ? 800 : 700;
     const svg = d3.select(element).append('svg')
-      .attr('width', 700)
-      .attr('height', 350);
-    
-    const contentWidth = 700 - margin.left - margin.right;
-    const contentHeight = 350 - margin.top - margin.bottom;
+      .attr('width', width)
+      .attr('height', height);
 
-    const x = d3
+    // Set contentWidth and contentHeight
+    const contentWidth = width - margin.left - margin.right;
+    const contentHeight = height - margin.top - margin.bottom;
+
+    // Create x scale and y scale
+    let xDomain = []; 
+    const xRange = [0, contentWidth];
+    const yDomain = [0, d3.max(data, d => d.KwHours)]; 
+    const yRange = [contentHeight, 0];
+
+    if (this.isMonthlyView) {
+      xDomain = data.map(d => d.UsageMonth.toString());
+    } else if (this.isDailyView) {
+      xDomain = data.map(d => d.UsageDate.toString());
+    } else if (this.isHourlyView) {
+      xDomain = data.map(d => d.Hour.toString());
+    }
+
+    const xScale = d3
       .scaleBand()
-      .rangeRound([0, contentWidth])
+      .rangeRound(xRange)
       .padding(0.25)
-      .domain(data.map(d => d.UsageMonth.toString()));
+      .domain(xDomain);
     
-    const y = d3
+    const yScale = d3
       .scaleLinear()
-      .rangeRound([contentHeight, 0])
-      .domain([0, d3.max(data, d => d.KwHours)]);
+      .rangeRound(yRange)
+      .domain(yDomain);
     
-    const xAxis = d3.axisBottom(x)
-      .tickFormat((d, i) => monthNames[i]);
-
-    const yAxis = d3.axisRight(y)
+    // Create x axis (based on view) and y axis
+    const yAxis = d3.axisRight(yScale)
       .tickSize(contentWidth);
-    
-    const g = svg.append('g')
-      .attr('transform', `translate(${margin.left}, ${margin.top})`);
-    
-    g.append('g')
-      .attr('class', 'axis axis--x')
-      .attr('transform', `translate(0, ${contentHeight})`)
-      .call(customXAxis);
 
-    g.append('g')
-      .attr('class', 'axis axis--y')
-      .call(customYAxis);
-
-    g.selectAll('.bar')
-      .data(data)
-      .enter().append('rect')
-      .attr('class', 'bar')
-      .attr('x', d => x(d.UsageMonth.toString()))
-      .attr('y', d => contentHeight)
-      .attr('width', x.bandwidth())
-      .attr('height', 0)
-      .attr('fill', 'rgba(10, 10, 10, 0.1)')
-      .attr('stroke', 'rgba(10, 10, 10, 0.3)')
-      .on('click', (d, i, g) => {
-        this.showUsageOnUI(d.KwHours, d.EnergyCharge, d.TotalCharge);
-        d3.selectAll('.bar').classed('active', false);
-        d3.select(g[i]).classed('active', true);
-      })
-      .style('margin-left', "10px")
-      .style('margin-left', "10px")
-      .transition()
-      .duration(500)
-      .delay((d, i) => i * 10)
-      .attr('y', d => {
-        if (d.KwHours !== 0) {
-          return y(d.KwHours)
-        } else {
-          return contentHeight;
-        }
-      })
-      .attr('height', d => {
-        if (d.KwHours !== 0) {
-          return contentHeight - y(d.KwHours)
-        } else {
-          return 0;
-        }
-      });;
-
-    g.selectAll('.bar:last-child').attr('class', 'bar active');
-
-    let lastUsage;
-    data.forEach(d => {
-      if (d.KwHours > 0)
-        lastUsage = d;
-    })
-    if (lastUsage)
-      this.showUsageOnUI(lastUsage.KwHours, lastUsage.EnergyCharge, lastUsage.TotalCharge);
-
-    function customXAxis(g) {
-      g.call(xAxis);
-      g.selectAll('.tick text')
-        .attr('x', -3)
-        .attr('font-size', '12px')
-        .attr('font-family', 'Open Sans');
-    }
-
-    function customYAxis(g) {
-      g.call(yAxis);
-      g.select('.domain').remove();
-      g.selectAll('.tick:not(:first-of-type) line')
-        .attr('stroke', 'lightgrey')
-      g.selectAll('.tick text')
-        .attr('font-size', '12px')
-        .attr('font-family', 'Open Sans')
-        .attr('x', -35);
-    }
-  }
-
-  private createDailyChart() {
-    d3.select('svg').remove();
-
-    const element = this.chartContainer.nativeElement;
-    const data = this.dailyUsageData;
-
-    const margin = { top: 20, right: 20, bottom: 40, left: 30 };
-
-    const svg = d3.select(element).append('svg')
-      .attr('width', 800)
-      .attr('height', 350);
-    
-    const contentWidth = 800 - margin.left - margin.right;
-    const contentHeight = 350 - margin.top - margin.bottom;
-
-    const x = d3
-      .scaleBand()
-      .rangeRound([0, contentWidth])
-      .padding(0.25)
-      .domain(data.map(d => d.UsageDate.toString()));
-    
-    const y = d3
-      .scaleLinear()
-      .rangeRound([contentHeight, 0])
-      .domain([0, d3.max(data, d => d.KwHours)]);
-    
-    const xAxis = d3.axisBottom(x)
-      .tickFormat((d, i) => new Date(d).toLocaleDateString("en-US", { month: 'numeric', day: 'numeric' }));
-
-    const yAxis = d3.axisRight(y)
-      .tickSize(contentWidth);
-    
-    const g = svg.append('g')
-      .attr('transform', `translate(${margin.left}, ${margin.top})`);
-    
-    g.append('g')
-      .attr('class', 'axis axis--x')
-      .attr('transform', `translate(0, ${contentHeight})`)
-      .call(customXAxis);
-
-    g.append('g')
-      .attr('class', 'axis axis--y')
-      .call(customYAxis);
-
-    g.selectAll('.bar')
-      .data(data)
-      .enter().append('rect')
-      .attr('class', 'bar')
-      .attr('x', d => x(d.UsageDate.toString()))
-      .attr('y', d => contentHeight)
-      .attr('width', x.bandwidth())
-      .attr('height', 0)
-      .attr('fill', 'rgba(10, 10, 10, 0.1)')
-      .attr('stroke', 'rgba(10, 10, 10, 0.3)')
-      .on('click', (d, i, g) => {
-        this.showUsageOnUI(d.KwHours, d.EnergyCharge, d.TotalCharge);
-        d3.selectAll('.bar').classed('active', false);
-        d3.select(g[i]).classed('active', true);
-      })
-      .style('margin-left', "10px")
-      .transition()
-      .duration(500)
-      .delay((d, i) => i * 10)
-      .attr('y', d => y(d.KwHours))
-      .attr('height', d => contentHeight - y(d.KwHours));
-
-    g.selectAll('.bar:last-child').attr('class', 'bar active');
-
-    const lastUsage = data[data.length-1];
-    this.showUsageOnUI(lastUsage.KwHours, lastUsage.EnergyCharge, lastUsage.TotalCharge);
-
-    function customXAxis(g) {
-      g.call(xAxis);
-      g.selectAll('.tick text')
-        .attr('x', -3)
-        .attr('font-size', '12px')
-        .attr('font-family', 'Open Sans')
-        .attr('transform', 'rotate(-45)')
-        .style('text-anchor', 'end')
-    }
-
-    function customYAxis(g) {
-      g.call(yAxis);
-      g.select('.domain').remove();
-      g.selectAll('.tick:not(:first-of-type) line')
-        .attr('stroke', 'lightgrey')
-      g.selectAll('.tick text')
-        .attr('font-size', '12px')
-        .attr('font-family', 'Open Sans')
-        .attr('x', -25);
-    }
-  }
-
-  private createHourlyChart() {
-    d3.select('svg').remove();
-
-    const element = this.chartContainer.nativeElement;
-    const data = this.hourlyUsageData;
-
-    const margin = { top: 20, right: 20, bottom: 50, left: 40 };
-
-    const svg = d3.select(element).append('svg')
-      .attr('width', 700)
-      .attr('height', 350);
-    
-    const contentWidth = 700 - margin.left - margin.right;
-    const contentHeight = 350 - margin.top - margin.bottom;
-
-    const x = d3
-      .scaleBand()
-      .rangeRound([0, contentWidth])
-      .padding(0.25)
-      .domain(data.map(d => d.Hour.toString()));
-    
-    const y = d3
-      .scaleLinear()
-      .rangeRound([contentHeight, 0])
-      .domain([0, d3.max(data, d => d.KwHours)]);
-    
-    const xAxis = d3.axisBottom(x)
-      .tickFormat((d, i) => {
+    let xAxis;
+    if (this.isMonthlyView) {
+      xAxis = d3.axisBottom(xScale).tickFormat((d, i) => this.monthNames[i]);
+    } else if (this.isDailyView) {
+      xAxis = d3.axisBottom(xScale).tickFormat((d, i) => moment(d).format("M/DD"));
+    } else if (this.isHourlyView) {
+      xAxis = d3.axisBottom(xScale).tickFormat((d, i) => {
         if (Number(d) == 0) {
           return '12am';
         } else if(Number(d) < 12) {
@@ -485,13 +315,13 @@ export class RtpUsageTrackerComponent implements OnDestroy {
           return `${d-12}pm`;
         }
       });
+    }
 
-    const yAxis = d3.axisRight(y)
-      .tickSize(contentWidth);
-    
+    // Append new group to SVG
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
-    
+
+    // Append x axis and y axis
     g.append('g')
       .attr('class', 'axis axis--x')
       .attr('transform', `translate(0, ${contentHeight})`)
@@ -501,13 +331,22 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       .attr('class', 'axis axis--y')
       .call(customYAxis);
 
+    // Create and append bars with animation
     g.selectAll('.bar')
       .data(data)
       .enter().append('rect')
       .attr('class', 'bar')
-      .attr('x', d => x(d.Hour.toString()))
-      .attr('y', contentHeight)
-      .attr('width', x.bandwidth())
+      .attr('x', d => {
+        if (this.isMonthlyView) {
+          return xScale(d.UsageMonth.toString());
+        } else if (this.isDailyView) {
+          return xScale(d.UsageDate.toString());
+        } else if (this.isHourlyView) {
+          return xScale(d.Hour.toString());
+        }
+      })
+      .attr('y', d => contentHeight)
+      .attr('width', xScale.bandwidth())
       .attr('height', 0)
       .attr('fill', 'rgba(10, 10, 10, 0.1)')
       .attr('stroke', 'rgba(10, 10, 10, 0.3)')
@@ -517,17 +356,38 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         d3.select(g[i]).classed('active', true);
       })
       .style('margin-left', "10px")
+      .style('margin-left', "10px")
+      // Animate bars
       .transition()
-      .duration(600)
+      .duration(500)
       .delay((d, i) => i * 10)
-      .attr('y', d => y(d.KwHours))
-      .attr('height', d => contentHeight - y(d.KwHours));
+      .attr('y', d => {
+        if (d.KwHours !== 0) {
+          return yScale(d.KwHours)
+        } else {
+          return contentHeight;
+        }
+      })
+      .attr('height', d => {
+        if (d.KwHours !== 0) {
+          return contentHeight - yScale(d.KwHours)
+        } else {
+          return 0;
+        }
+      });;
 
+    // Set last bar as active and show usage
     g.selectAll('.bar:last-child').attr('class', 'bar active');
 
-    const lastUsage = data[data.length-1];
-    this.showUsageOnUI(lastUsage.KwHours, lastUsage.EnergyCharge, lastUsage.TotalCharge);
+    let lastUsage;
+    data.forEach(d => {
+      if (d.KwHours > 0)
+        lastUsage = d;
+    })
+    if (lastUsage)
+      this.showUsageOnUI(lastUsage.KwHours, lastUsage.EnergyCharge, lastUsage.TotalCharge);
 
+    // Utility functions for axis styling and formatting
     function customXAxis(g) {
       g.call(xAxis);
       g.selectAll('.tick text')
@@ -535,7 +395,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         .attr('font-size', '12px')
         .attr('font-family', 'Open Sans')
         .attr('transform', 'rotate(-45)')
-        .style('text-anchor', 'end')
+        .style('text-anchor', 'end');
     }
 
     function customYAxis(g) {
@@ -546,7 +406,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       g.selectAll('.tick text')
         .attr('font-size', '12px')
         .attr('font-family', 'Open Sans')
-        .attr('x', -25);
+        .attr('x', -30);
     }
   }
 
@@ -608,10 +468,23 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       .attr('class', 'axis axis--y')
       .call(customYAxis);
     
-    g.append('path')
+    const path = g.append('path')
       .datum(data)
       .attr('class', 'line')
-      .attr('d', line);
+      .attr('d', line)
+      .attr('fill', 'none')
+      .attr('stroke', '#1b8dcd')
+      .attr('stroke-width', 3);
+
+    const totalLength = path.node().getTotalLength();
+
+    path
+      .attr('stroke-dasharray', `${totalLength} ${totalLength}`)
+      .attr('stroke-dashoffset', totalLength)
+      .transition()
+        .duration(2000)
+        .ease(d3.easeLinear)
+        .attr('stroke-dashoffset', 0);
 
     g.selectAll('.dot')
       .data(data)
@@ -619,14 +492,18 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         .attr('class', 'dot')
         .attr('cx', d => x(new Date(d.Date)))
         .attr('cy', d => y(d.Usage))
-        .attr('r', 4);
+        .attr('r', 4)
+        .attr('fill', '#1b8dcd')
+        .attr('stroke', '#1b8dcd')
+        .attr('opacity', 0)
+        .transition()
+          .duration(400)
+          .delay(2000)
+          .attr('opacity', 1);
 
     const focus = g.append('g')
       .attr('class', 'focus')
       .style('display', 'none');
-
-    focus.append('circle')
-      .attr('radius', 5);
     
     focus.append('line')
       .classed('y', true);
@@ -649,7 +526,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         const x0 = moment(x.invert(d3.mouse(element)[0])).subtract(1, 'day').toDate().getTime();
         const i = data.indexOf(data.find(d => moment(d.Date).isSame(moment(x0), 'day')));
         const d = data[i];
-        
+        // Show tooltip
         if (d) {
           focus.attr('transform', `translate(${x(new Date(d.Date))}, ${y(d.Usage)})`);
         
@@ -673,6 +550,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
           }
       });
 
+    // Show dropline on chart hover
     d3.select('.overlay')
       .style('fill', 'none')
       .style('pointer-events', 'all');
