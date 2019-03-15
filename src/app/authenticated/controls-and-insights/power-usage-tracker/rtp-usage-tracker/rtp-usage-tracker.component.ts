@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import * as moment from 'moment';
 import * as d3 from 'd3';
-import { UsageComparison } from 'app/core/models/usage/usage-comparison.model';
+import { UsageComparison, DailyUsage, MeterReadCycle } from 'app/core/models/usage/usage-comparison.model';
 
 @Component({
   selector: 'mygexa-rtp-usage-tracker',
@@ -20,6 +20,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
 
   @ViewChild('chart')
   private chartContainer: ElementRef;
+  @ViewChild('chartWrapper')
+  private chartWrapper: ElementRef;
   
   private activeServiceAccount: ServiceAccount = null;
   private ServiceAccountsSubscription: Subscription = null;
@@ -27,6 +29,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   private monthlyUsageData: [MonthlyProfiledBill];
   private dailyUsageData: [DailyProfiledBill];
   private hourlyUsageData: [HourlyProfiledBill];
+  private nonBilledUsageData: DailyUsage[];
 
   private monthlyUsageSubscription: Subscription = null;
   private dailyUsageSubscription: Subscription = null;
@@ -37,6 +40,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   private currentMonthlyEndMonth: Date = moment().endOf("year").toDate();
   private currentDailyUsageMonth: Date = moment().subtract(1, "month").startOf("month").toDate();
   private currentHourlyDate: Date;
+  private currentCycle: MeterReadCycle;
+  private currentNonBilledUsage: UsageComparison;
 
   private monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -46,6 +51,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   isMonthlyView: boolean;
   isDailyView: boolean;
   isHourlyView: boolean;
+  isNonBilledView: boolean;
 
   usageIntervalLabel: string;
   usageIntervalTotal: number;
@@ -132,9 +138,15 @@ export class RtpUsageTrackerComponent implements OnDestroy {
 
   getCurrentDailyUsage() {
     this.usageInfo = null;
-    this.currentUsageSubscription = this.UsageHistoryService.getUsageComparison(this.activeServiceAccount.UAN).subscribe(usage => {
-      this.showCurrentDailyUsageChart(usage);
-    });
+    if (!this.nonBilledUsageData) {
+      this.currentUsageSubscription = this.UsageHistoryService.getUsageComparison(this.activeServiceAccount.UAN).subscribe(usage => {
+        this.currentNonBilledUsage = usage;
+        this.showNonBilledView();
+      });
+    } else {
+      this.currentDailyUsageMonth = moment(this.currentDailyUsageMonth).subtract(1, "month").toDate();
+      this.showNonBilledView();
+    }
   }
 
   showPrevIntervalUsage() {
@@ -142,7 +154,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       this.currentMonthlyStartMonth = moment(this.currentMonthlyStartMonth).subtract(1, "year").toDate();
       this.currentMonthlyEndMonth = moment(this.currentMonthlyEndMonth).subtract(1, "year").toDate();
       this.getMonthlyUsage();
-    } else if (this.isDailyView) {
+    } else if (this.isDailyView || this.isNonBilledView) {
       this.currentDailyUsageMonth = moment(this.currentDailyUsageMonth).subtract(1, "month").toDate();
       this.getDailyUsage();
     } else if (this.isHourlyView) {
@@ -156,7 +168,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       this.currentMonthlyStartMonth = moment().startOf("year").toDate();
       this.currentMonthlyEndMonth = moment().endOf("year").toDate();
       this.getMonthlyUsage();
-    } else if (this.isDailyView) {
+    } else if (this.isDailyView || this.isNonBilledView) {
       this.currentDailyUsageMonth = moment().subtract(1, "month").startOf("month").toDate();
       this.getDailyUsage();
     } else if (this.isHourlyView) {
@@ -170,7 +182,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       this.currentMonthlyStartMonth = moment(this.currentMonthlyStartMonth).add(1, "year").toDate();
       this.currentMonthlyEndMonth = moment(this.currentMonthlyEndMonth).add(1, "year").toDate();
       this.getMonthlyUsage();
-    } else if (this.isDailyView) {
+    } else if (this.isDailyView || this.isNonBilledView) {
       this.currentDailyUsageMonth = moment(this.currentDailyUsageMonth).add(1, "month").toDate();
       this.getDailyUsage();
     } else if (this.isHourlyView) {
@@ -195,6 +207,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isMonthlyView = true;
     this.isDailyView = false;
     this.isHourlyView = false;
+    this.isNonBilledView = false;
     this.createChart();
   }
 
@@ -204,6 +217,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isMonthlyView = false;
     this.isDailyView = true;
     this.isHourlyView = false;
+    this.isNonBilledView = false;
     this.createChart();
     this.isDataAvailable = true;
   }
@@ -214,6 +228,24 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isMonthlyView = false;
     this.isDailyView = false;
     this.isHourlyView = true;
+    this.isNonBilledView = false;
+    this.createChart();
+  }
+
+  private showNonBilledView() {
+    this.currentCycle = this.currentNonBilledUsage.Meter_Read_Cycles[1].Usage > 0 ? this.currentNonBilledUsage.Meter_Read_Cycles[1] : this.currentNonBilledUsage.Meter_Read_Cycles[0];
+    const currentCycleUsage = this.currentNonBilledUsage.Daily_Usage_List.filter(u => {
+      if (moment(u.Date).isBetween(moment(this.currentCycle.Start_Date), moment(this.currentCycle.End_Date), 'days', '[]')) {
+        return u;
+      }
+    });
+    this.usageIntervalLabel = moment(this.currentCycle.End_Date).format("MMMM");
+    this.usageIntervalTotal = Math.round(currentCycleUsage.map(u => u.Usage).reduce((curr, prev) => curr + prev));
+    this.nonBilledUsageData = currentCycleUsage;
+    this.isMonthlyView = false;
+    this.isDailyView = false;
+    this.isHourlyView = false;
+    this.isNonBilledView = true;
     this.createChart();
   }
 
@@ -256,11 +288,14 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     } else if (this.isHourlyView) {
       data = this.hourlyUsageData;
       margin = { top: 20, right: 20, bottom: 50, left: 40 };
+    } else if (this.isNonBilledView) {
+      data = this.processCurrentUsage(this.nonBilledUsageData);
+      margin = { top: 20, right: 20, bottom: 40, left: 40 };
     }
 
     // Append chart SVG to chartContainer element
     const height = 350;
-    const width = this.isDailyView ? 800 : 700;
+    const width = this.isDailyView || this.isNonBilledView ? 800 : 700;
     const svg = d3.select(element).append('svg')
       .attr('width', width)
       .attr('height', height);
@@ -272,7 +307,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     // Create x scale and y scale
     let xDomain = []; 
     const xRange = [0, contentWidth];
-    const yDomain = [0, d3.max(data, d => d.KwHours)]; 
+    let yDomain = [0, d3.max(data, d => d.KwHours)]; 
     const yRange = [contentHeight, 0];
 
     if (this.isMonthlyView) {
@@ -281,8 +316,11 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       xDomain = data.map(d => d.UsageDate.toString());
     } else if (this.isHourlyView) {
       xDomain = data.map(d => d.Hour.toString());
+    } else if (this.isNonBilledView) {
+      yDomain = [0, d3.max(data, d => d.Usage)];
+      xDomain = data.map(d => d.Date.toString());
     }
-
+    
     const xScale = d3
       .scaleBand()
       .rangeRound(xRange)
@@ -315,6 +353,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
           return `${d-12}pm`;
         }
       });
+    } else if (this.isNonBilledView) {
+      xAxis = d3.axisBottom(xScale).ticks(d3.timeDay.every(1)).tickFormat((d, i) => moment(d).format("M/DD"));
     }
 
     // Append new group to SVG
@@ -343,15 +383,21 @@ export class RtpUsageTrackerComponent implements OnDestroy {
           return xScale(d.UsageDate.toString());
         } else if (this.isHourlyView) {
           return xScale(d.Hour.toString());
+        } else if (this.isNonBilledView) {
+          return xScale(d.Date.toString());
         }
       })
-      .attr('y', d => contentHeight)
+      .attr('y', contentHeight)
       .attr('width', xScale.bandwidth())
       .attr('height', 0)
       .attr('fill', 'rgba(10, 10, 10, 0.1)')
       .attr('stroke', 'rgba(10, 10, 10, 0.3)')
       .on('click', (d, i, g) => {
-        this.showUsageOnUI(d.KwHours, d.EnergyCharge, d.TotalCharge);
+        if (!this.isNonBilledView) {
+          this.showUsageOnUI(d.KwHours, d.EnergyCharge, d.TotalCharge);
+        } else {
+          this.showUsageOnUI(d.Usage, 0, 0);
+        }
         d3.selectAll('.bar').classed('active', false);
         d3.select(g[i]).classed('active', true);
       })
@@ -362,30 +408,37 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       .duration(500)
       .delay((d, i) => i * 10)
       .attr('y', d => {
-        if (d.KwHours !== 0) {
-          return yScale(d.KwHours)
+        if (this.isNonBilledView) {
+          return yScale(d.Usage);
+        } else if (d.KwHours !== 0) {
+          return yScale(d.KwHours);
         } else {
           return contentHeight;
         }
       })
       .attr('height', d => {
-        if (d.KwHours !== 0) {
-          return contentHeight - yScale(d.KwHours)
+        if (this.isNonBilledView) {
+          return contentHeight - yScale(d.Usage);
+        } else if (d.KwHours !== 0) {
+          return contentHeight - yScale(d.KwHours);
         } else {
           return 0;
         }
-      });;
+      });
 
     // Set last bar as active and show usage
     g.selectAll('.bar:last-child').attr('class', 'bar active');
 
-    let lastUsage;
     data.forEach(d => {
-      if (d.KwHours > 0)
-        lastUsage = d;
-    })
-    if (lastUsage)
-      this.showUsageOnUI(lastUsage.KwHours, lastUsage.EnergyCharge, lastUsage.TotalCharge);
+      if (this.isNonBilledView && d.Usage > 0) {
+        this.showUsageOnUI(d.Usage, 0, 0);
+      } else if (d.KwHours > 0) {
+        this.showUsageOnUI(d.KwHours, d.EnergyCharge, d.TotalCharge);
+      }
+    });
+
+    // Scroll chart to see last day
+    this.chartWrapper.nativeElement.scrollTo({ left: contentWidth, behavior: 'smooth' });
 
     // Utility functions for axis styling and formatting
     function customXAxis(g) {
@@ -410,189 +463,6 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     }
   }
 
-  private showCurrentDailyUsageChart(usage: UsageComparison) {
-    d3.select('svg').remove();
-
-    const element = this.chartContainer.nativeElement;
-
-    const currentCycle = usage.Meter_Read_Cycles[1].Usage > 0 ? usage.Meter_Read_Cycles[1] : usage.Meter_Read_Cycles[0];
-    const data = usage.Daily_Usage_List.filter(u => {
-      if (moment(u.Date).isBetween(moment(currentCycle.Start_Date), moment(currentCycle.End_Date), 'days', '[]')) {
-        return u;
-      }
-    });
-
-    this.usageIntervalLabel = moment(currentCycle.End_Date).format("MMMM");
-    this.usageIntervalTotal = Math.round(data.map(u => u.Usage).reduce((curr, prev) => curr + prev));
-
-    const margin = { top: 20, right: 20, bottom: 40, left: 40 };
-
-    const svg = d3.select(element).append('svg')
-      .attr('width', 700)
-      .attr('height', 350);
-    
-    const contentWidth = 700 - margin.left - margin.right;
-    const contentHeight = 350 - margin.top - margin.bottom;
-    
-    const x = d3
-      .scaleTime()
-      .rangeRound([0, contentWidth])
-      .domain([new Date(currentCycle.Start_Date), new Date(currentCycle.End_Date)]);
-
-    const y = d3
-      .scaleLinear()
-      .rangeRound([contentHeight, 0])
-      .domain([0, d3.max(data, d => d.Usage)]);
-
-    const xAxis = d3.axisBottom(x)
-      .ticks(d3.timeDay.every(1))
-      .tickFormat((d, i) => moment(d).format("M/DD"));
-
-    const yAxis = d3.axisRight(y)
-      .tickSize(contentWidth);
-
-    const line = d3.line()
-      .x(d => x(new Date(d.Date)))
-      .y(d => y(d.Usage))
-      .curve(d3.curveMonotoneX);
-
-    const g = svg.append('g')
-      .attr('transform', `translate(${margin.left}, ${margin.top})`);
-    
-    g.append('g')
-      .attr('class', 'axis axis--x')
-      .attr('transform', `translate(0, ${contentHeight})`)
-      .call(customXAxis);
-
-    g.append('g')
-      .attr('class', 'axis axis--y')
-      .call(customYAxis);
-    
-    const path = g.append('path')
-      .datum(data)
-      .attr('class', 'line')
-      .attr('d', line)
-      .attr('fill', 'none')
-      .attr('stroke', '#1b8dcd')
-      .attr('stroke-width', 3);
-
-    const totalLength = path.node().getTotalLength();
-
-    path
-      .attr('stroke-dasharray', `${totalLength} ${totalLength}`)
-      .attr('stroke-dashoffset', totalLength)
-      .transition()
-        .duration(2000)
-        .ease(d3.easeLinear)
-        .attr('stroke-dashoffset', 0);
-
-    g.selectAll('.dot')
-      .data(data)
-      .enter().append('circle')
-        .attr('class', 'dot')
-        .attr('cx', d => x(new Date(d.Date)))
-        .attr('cy', d => y(d.Usage))
-        .attr('r', 4)
-        .attr('fill', '#1b8dcd')
-        .attr('stroke', '#1b8dcd')
-        .attr('opacity', 0)
-        .transition()
-          .duration(400)
-          .delay(2000)
-          .attr('opacity', 1);
-
-    const focus = g.append('g')
-      .attr('class', 'focus')
-      .style('display', 'none');
-    
-    focus.append('line')
-      .classed('y', true);
-    
-    focus.append('rect')
-      .attr('x', 9)
-      .attr('dy', '.35em');
-    
-    focus.append('text')
-      .attr('x', 18)
-      .attr('dy', '20px');
-
-    g.append('rect')
-      .attr('class', 'overlay')
-      .attr('width', contentWidth)
-      .attr('height', contentHeight)
-      .on('mouseover', () => focus.style('display', null))
-      .on('mouseout', () => focus.style('display', 'none'))
-      .on('mousemove', () => {
-        const x0 = moment(x.invert(d3.mouse(element)[0])).subtract(1, 'day').toDate().getTime();
-        const i = data.indexOf(data.find(d => moment(d.Date).isSame(moment(x0), 'day')));
-        const d = data[i];
-        // Show tooltip
-        if (d) {
-          focus.attr('transform', `translate(${x(new Date(d.Date))}, ${y(d.Usage)})`);
-        
-          focus.select('line.y')
-            .attr('x1', 0)
-            .attr('x2', 0)
-            .attr('y1', 0)
-            .attr('y2', contentHeight - y(d.Usage));
-
-          focus.select('rect')
-            .style('rx', '5')
-            .style('ry', '5')
-            .style('height', '30px')
-            .style('width', '125px')
-            
-          focus.select('text')
-              .text(`${moment(d.Date).format('M/DD')} - ${Math.round(d.Usage*10)/10} kWh`)
-              .style('font-family', 'Open Sans')
-              .style('font-size', '14px')
-              .style('fill', 'white');
-          }
-      });
-
-    // Show dropline on chart hover
-    d3.select('.overlay')
-      .style('fill', 'none')
-      .style('pointer-events', 'all');
-
-    d3.selectAll('.focus')
-      .style('opacity', 0.7);
-
-    d3.selectAll('.focus circle')
-      .style('fill', 'none')
-      .style('stroke', 'black');
-
-    d3.selectAll('.focus line')
-      .style('fill', 'none')
-      .style('stroke', 'black')
-      .style('stroke-width', '1.5px')
-      .style('stroke-dasharray', '3.3');
-
-    function customXAxis(g) {
-      g.call(xAxis);
-      g.selectAll('.tick text')
-        .attr('x', -3)
-        .attr('font-size', '12px')
-        .attr('font-family', 'Open Sans')
-        .attr('transform', 'rotate(-45)')
-        .style('text-anchor', 'end')
-    }
-
-    function customYAxis(g) {
-      g.call(yAxis);
-      g.select('.domain').remove();
-      g.selectAll('.tick:not(:first-of-type) line')
-        .attr('stroke', 'lightgrey')
-      g.selectAll('.tick text')
-        .attr('font-size', '12px')
-        .attr('font-family', 'Open Sans')
-        .attr('x', -25);
-    }
-    this.isMonthlyView = false;
-    this.isDailyView = true;
-    this.isHourlyView = false;
-  }
-
   private padMonthlyUsage(usage: MonthlyProfiledBill[]): MonthlyProfiledBill[] {
     let paddedUsage = [];
     for (let i = 0; i < 12; i++) {
@@ -612,5 +482,26 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       }
     }
     return paddedUsage;
+  }
+
+  private processCurrentUsage(usage: DailyUsage[]): DailyUsage[] {
+    let processedUsage = [];
+    const cycleDays = moment(this.currentCycle.End_Date).add(1, 'day')
+      .diff(this.currentCycle.Start_Date, "days", true);
+    for (let i = 0; i < cycleDays; i++) {
+      const cycleDate = moment(this.currentCycle.Start_Date).add(i, 'days');
+      let cycleDateUsage = usage.find(u => cycleDate.isSame(moment(u.Date), 'day'));
+      if (cycleDateUsage) {
+        processedUsage.push(cycleDateUsage);
+      } else {
+        let zeroUsage: DailyUsage = {
+          Date: cycleDate.toDate(),
+          Usage: 0,
+          Source: "" 
+        };
+        processedUsage.push(zeroUsage);
+      }
+    }
+    return processedUsage;
   }
 }

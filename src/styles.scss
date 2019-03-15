@@ -488,3 +488,16 @@ footer.fixedToBottom {
       color: grey;
   }
 }
+
+@media (max-width: 769px) {
+  #rtp-usage-chart {
+    .bar:hover {
+      fill: rgba(10, 10, 10, 0.1);
+    }
+    
+    .bar.active {
+      fill: rgba(46, 177, 52,0.9);
+      stroke: rgba(46, 177, 52,0.9);
+    }
+  }
+}
