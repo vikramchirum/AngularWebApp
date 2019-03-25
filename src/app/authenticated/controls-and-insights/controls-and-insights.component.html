@@ -22,93 +22,15 @@
 </div>
 
 <div class="container-fluid container-breakout bg-info"  *ngIf="startsWith(Router.url, '/controls-and-insights/usage-history')">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3 hidden-xs  hidden-sm">
-        <!--<button-->
-          <!--class="btn btn-primary btn-block btn-round"-->
-        <!--&gt;<i class="fa fa-fw fa-3x fa-file-excel-o"></i><br/>Insight History <span class="boxed">Download</span>-->
-        <!--</button>-->
-      </div>
-      <div class="col-sm-12 col-md-8 col-md-offset-1" style="margin-bottom: 10px;">
-        <ng-container *ngIf="isDataAvailable && tableData && tableData.length > 0">
-          <h1>Energy Usage Table</h1>
-          <table class="table table-responsive table-condensed">
-            <tr>
-              <th class='month'>Month</th>
-              <th class='year'>Year</th>
-              <th class='usage'>kWh</th>
-            </tr>
-            <tr *ngFor='let index of currentPage'>
-              <td class='month'>{{ index.date | date:'MMMM' }}</td>
-              <td class='year'>{{ index.date | date:'y' }}</td>
-              <td class='usage'>{{ index.usage }}</td>
-            </tr>
-          </table>
-          <pagination
-            (pageChanged)="pageChanged($event)"
-            [boundaryLinks]="true"
-            [totalItems]="totalItems"
-            class="pagination-sm"
-            previousText="&lsaquo;"
-            nextText="&rsaquo;"
-            firstText="&laquo;"
-            lastText="&raquo;"
-          ></pagination>
-        </ng-container>
-      </div>
-    </div>
-  </div>
+  <mygexa-energy-usage-table></mygexa-energy-usage-table>
 </div>
 
 
 <div class="container-fluid container-breakout bg-info"  *ngIf="startsWith(Router.url, '/controls-and-insights/power-usage-tracker')">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-3 hidden-xs  hidden-sm">
-      </div>
-      <div class="col-sm-12 col-md-9 col-md-offset-3" style="margin-bottom: 10px;">
-        <div *ngIf="!isDataAvailable">
-          <div class="alert alert-info"> <strong>Thank you for choosing Gexa Energy!</strong> <br />Your daily usage will display here as soon as your usage data is available for this cycle. </div>
-        </div>
-        <ng-container *ngIf="isDataAvailable && lineChartData">
-          <div class="line-chart">
-            <br/>
-            <h1>
-              Daily Usage Tracker 
-              <small *ngIf="dailyUsage && currentDailyUsage"> {{ dailyUsage.Meter_Read_Cycles[dailyUsage.Meter_Read_Cycles.length-1].Usage_Month | date:'LLLL' }} cycle 
-                <span *ngIf="dailyUsage.Meter_Read_Cycles.length > 1" style="color: #2eb134;"> {{ usageThisCycle | number:'1.0-0' }} kWh</span>
-                <span *ngIf="dailyUsage.Meter_Read_Cycles.length == 1" style="color: #2eb134;">
-                  <span *ngIf="dailyUsage.Meter_Read_Cycles[0].Usage_Month != currentDailyUsage.Meter_Read_Cycles[0].Usage_Month">{{ dailyUsage.Meter_Read_Cycles[0].Usage | number:'1.0-0' }} kWh</span>
-                  <span *ngIf="dailyUsage.Meter_Read_Cycles[0].Usage_Month == currentDailyUsage.Meter_Read_Cycles[0].Usage_Month">{{ currentDailyUsage.Meter_Read_Cycles[0].Usage | number:'1.0-0' }} kWh</span>
-                </span>
-              </small>
-            </h1><br />
-            <div *ngFor='let index of lineChartData'>
-              <canvas
-                baseChart
-                chartType="line"
-                height="150px"
-                [datasets]="index"
-                [labels]="cycleDates"
-                [options]="lineChartOptions"
-                [colors]="lineChartColors"
-                (chartHover)="chartHovered($event)"
-                (chartClick)="chartClicked($event)"
-              ></canvas>
-            </div>
-          </div>
-          <br />
-          <div class="chart-controls text-center">
-            <div class="btn-group">
-              <button (click)="showPrevCycleDailyUsage()" type="button" class="btn btn-info"><i class="fa fa-arrow-left"></i> Prev</button>
-              <button (click)="showCurrentDailyUsage()" type="button" class="btn btn-info">Current</button>
-              <button (click)="showNextCycleDailyUsage()" type="button" class="btn btn-info">Next <i class="fa fa-arrow-right"></i></button>
-            </div>
-          </div>
-          <br /><br />
-        </ng-container>
-      </div>
-    </div>
+  <div *ngIf="isRTP">
+    <mygexa-rtp-usage-tracker></mygexa-rtp-usage-tracker>
+  </div>
+  <div *ngIf="!isRTP">
+    <mygexa-daily-usage-tracker></mygexa-daily-usage-tracker>
   </div>
 </div>
