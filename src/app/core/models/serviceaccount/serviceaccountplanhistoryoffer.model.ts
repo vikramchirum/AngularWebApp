@@ -32,4 +32,5 @@ export interface IServiceAccountPlanHistoryOffer {
   IsHoldOverRate: boolean;
   IsLegacyOffer: boolean;
   IsFixed: boolean;
+  Is_RTP: boolean;
 }

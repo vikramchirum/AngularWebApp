@@ -9,6 +9,7 @@ import { UsageComparison } from './models/usage/usage-comparison.model';
 import { ServiceAccount } from './models/serviceaccount/serviceaccount.model';
 import { ServiceAccountService } from './serviceaccount.service';
 import * as moment from 'moment';
+import { MonthlyProfiledBill, DailyProfiledBill, HourlyProfiledBill } from './models/profiledbills/profiled-bills.model';
 
 @Injectable()
 export class UsageHistoryService {
@@ -46,6 +47,27 @@ export class UsageHistoryService {
   getPastUsageHistory(UAN: string, cycleMonth: number, cycleYear: number): Observable<UsageComparison> {
     return this.HttpClient
       .get(`/usage/ercot_metercycle_daily_usage`, { params: { uan: UAN, month: cycleMonth, year: cycleYear } })
+      .map(res => res.json())
+      .catch(error => this.HttpClient.handleHttpError(error));
+  }
+
+  getMonthlyProfiledBill(UAN: string, startMonth: Date, endMonth: Date): Observable<[MonthlyProfiledBill]> {
+    return this.HttpClient
+      .get(`/ProfiledBills/monthy`, { params: { uan: UAN, usageMonthStart: startMonth.toLocaleDateString(), usageMonthEnd: endMonth.toLocaleDateString() } })
+      .map(res => res.json())
+      .catch(error => this.HttpClient.handleHttpError(error));
+  }
+
+  getDailyProfiledBill(UAN: string, usageMonth: Date): Observable<[DailyProfiledBill]> {
+    return this.HttpClient
+      .get(`/profiledbills/daily`, { params: { uan: UAN, usageMonth: usageMonth.toLocaleDateString() } })
+      .map(res => res.json())
+      .catch(error => this.HttpClient.handleHttpError(error));
+  }
+
+  getHourlyProfiledBill(UAN: string, date: Date): Observable<[HourlyProfiledBill]> {
+    return this.HttpClient
+      .get(`/profiledbills/days`, { params: { uan: UAN, date: date.toLocaleDateString() } })
       .map(res => res.json())
       .catch(error => this.HttpClient.handleHttpError(error));
   }
