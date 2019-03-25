@@ -666,7 +666,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   }
 
   private showPaymentDateErrorMessage() {
-    const errorMessage = `You must use a saved payment account in order to select a different payment date.`;
+    const errorMessage = `You must use a saved payment account in order to select a different payment date.`; 
     this.paymentConfirmationModal.showConfirmationMessageModal(errorMessage, true);
   }
 }
