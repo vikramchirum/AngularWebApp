@@ -52,7 +52,7 @@
           </p>
           <div *ngIf="usageInfo" class="ui-pricing-summary">
             <div class="ui-price-inline-block">
-              <h1>{{usageInfo.kwh | number}}</h1>
+              <h1>{{usageInfo.kwh | number:'1.0-1'}}</h1>
                 <div class="ui-price-caption">
                   kWh
                 </div>
