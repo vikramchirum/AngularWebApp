@@ -52,7 +52,7 @@
           </p>
           <div *ngIf="usageInfo" class="ui-pricing-summary">
             <div class="ui-price-inline-block">
-              <h1>{{usageInfo.kwh | number:'1.0-1'}}</h1>
+              <h1>{{usageInfo.kwh}}</h1>
                 <div class="ui-price-caption">
                   kWh
                 </div>
@@ -61,8 +61,8 @@
               <h1><sup>@</sup></h1>
             </div>
             <div [hidden]="isNonBilledView" class="ui-price-inline-block">
-              <h1 [hidden]="!isAllInPricing">{{usageInfo.avgPriceAllIn | number}}<sup>¢</sup></h1>
-              <h1 [hidden]="!isWholesalePricing">{{usageInfo.avgPrice | number}}<sup>¢</sup></h1>
+              <h1 [hidden]="!isAllInPricing">{{usageInfo.avgPriceAllIn | number:'1.0-1'}}<sup>¢</sup></h1>
+              <h1 [hidden]="!isWholesalePricing">{{usageInfo.avgPrice | number:'1.0-1'}}<sup>¢</sup></h1>
             <div class="ui-price-caption">
               Avg Price
             </div>
