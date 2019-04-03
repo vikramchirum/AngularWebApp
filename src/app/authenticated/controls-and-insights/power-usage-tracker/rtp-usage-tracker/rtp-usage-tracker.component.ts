@@ -346,7 +346,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
         if (Number(d) == 0) {
           return '12am';
         } else if(Number(d) < 12) {
-          return `${d}pm`;
+          return `${d}am`;
         } else if (Number(d) == 12) {
           return `12pm`;
         } else if (Number(d) > 12) {
@@ -395,6 +395,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       .on('click', (d, i, g) => {
         if (!this.isNonBilledView) {
           this.showUsageOnUI(d.KwHours, d.EnergyCharge, d.TotalCharge);
+          if (this.isDailyView) this.currentHourlyDate = moment(d.UsageDate).toDate();
         } else {
           this.showUsageOnUI(d.Usage, 0, 0);
         }
@@ -438,7 +439,9 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     });
 
     // Scroll chart to see last day
-    this.chartWrapper.nativeElement.scrollTo({ left: contentWidth, behavior: 'smooth' });
+    if (this.isDailyView && (this.dailyUsageData.length > (data.length / 2))) {
+      this.chartWrapper.nativeElement.scrollTo({ left: contentWidth, behavior: 'smooth' });
+    }
 
     // Utility functions for axis styling and formatting
     function customXAxis(g) {
