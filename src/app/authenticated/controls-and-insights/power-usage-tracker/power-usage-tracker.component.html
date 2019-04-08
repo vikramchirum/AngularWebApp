@@ -3,17 +3,17 @@
 </div>
 
 <div class="current-trends">
-  <h1 *ngIf="usageThisCycle != 0">
+  <h1 *ngIf="usageThisCycle != 0 && !noPreviousUsage">
     Current Trends 
     <span *ngIf="usageComparison" [style.color]="getPercentStyle(percentageIncrease)">
       <i *ngIf="percentageIncrease > 0" class="fa fa-arrow-up"></i><i *ngIf="percentageIncrease < 0" class="fa fa-arrow-down"></i>{{ absolutePercentage | number:'1.0-0' }}%
     </span> <small>Compared to Previous Cycle</small>
   </h1>
-  <h1 *ngIf="usageThisCycle == 0">
+  <h1 *ngIf="usageThisCycle == 0 || noPreviousUsage">
     <span style="color: #2eb134;">Sorry!</span>
     <small class="no_usage_data">We haven't received any electricity usage data for your current cycle.</small>
   </h1>
-  <p *ngIf="usageThisCycle == 0">We'll have your current trend and usage estimate as soon as your usage data is available, typically within a few days.</p>
+  <p *ngIf="usageThisCycle == 0 || noPreviousUsage">We'll have your current trend and usage estimate as soon as your usage data is available, typically within a few days.</p>
 </div>
 <br />
 <div class="row current-cycle-usage">

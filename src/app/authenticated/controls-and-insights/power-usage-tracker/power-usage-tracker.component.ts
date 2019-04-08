@@ -1,12 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
-import { takeRight, values } from 'lodash';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { UsageHistoryService } from '../../../core/usage-history.service';
-import { UsageComparison, DailyUsage } from '../../../core/models/usage/usage-comparison.model';
-import { ValueTransformer } from '@angular/compiler/src/util';
+import { UsageComparison } from '../../../core/models/usage/usage-comparison.model';
 
 import * as moment from 'moment';
 
@@ -32,6 +30,7 @@ export class PowerUsageTrackerComponent implements OnDestroy {
   public lastUsageDay: Date;
   public TDU_Name: String;
   public lastReadDate: Date;
+  public noPreviousUsage: boolean;
   
   constructor(
     private ServiceAccountService: ServiceAccountService,
@@ -144,10 +143,17 @@ export class PowerUsageTrackerComponent implements OnDestroy {
       if (date >= startDate && date < endDate)
         return day;
     });
+    
     const previousUsageInComparisonTotal = previousUsageWithinComparisonRange.map(day => {
       return day.Usage;
     }).reduce((a, b) => a + b, 0);
-;
+
+    if (previousUsageInComparisonTotal === 0) {
+      this.noPreviousUsage = true;
+    } else  {
+      this.noPreviousUsage = false;
+    }
+
     const increase = this.usageThisCycle - previousUsageInComparisonTotal;
     const increaseRatio = increase / previousUsageInComparisonTotal;
 
