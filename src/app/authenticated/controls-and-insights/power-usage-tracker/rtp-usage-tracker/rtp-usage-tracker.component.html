@@ -39,10 +39,13 @@
             </small>
           </h2>
           <div *ngIf="!isDataAvailable">
-            <br />
-            <div class="alert alert-info"> 
-              <strong>Thank you for choosing Gexa Energy!</strong> <br />Your usage will display here as soon as your usage data is available for this cycle. 
-            </div><br/><br/><br/><br/><br/><br/><br/><br/>
+            <br><br><br><br><br><br><br>
+            <p class="text-center"><i class='fa fa-circle-o-notch fa-spin'></i> Loading...</p>
+            <br><br><br><br><br><br><br>
+          </div>
+          <div *ngIf="showNoHourlyUsageMessage">
+            <br><div class="alert alert-info">Hourly data will be available as soon as your meter is read.</div>
+            <br><br><br><br><br><br><br><br><br><br><br>
           </div>
           <div #chartWrapper id="canvasWrapper">
             <div #chart id="rtp-usage-chart"></div>
