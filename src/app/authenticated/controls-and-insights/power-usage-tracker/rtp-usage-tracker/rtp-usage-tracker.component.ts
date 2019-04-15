@@ -126,7 +126,8 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isHourlyView = false;
     this.isNonBilledView = false;
     this.isDataAvailable = false;
-    if (this.chartWrapper.nativeElement) this.chartWrapper.nativeElement.hidden = true;
+    if (this.chartWrapper) 
+      this.chartWrapper.nativeElement.hidden = true;
     this.showNoHourlyUsageMessage = false;
     this.usageIntervalLabel = moment(this.currentDailyUsageMonth).format("MMMM");
     this.usageIntervalTotal = 0;
