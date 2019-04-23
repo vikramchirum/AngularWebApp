@@ -259,24 +259,15 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isAllInPricing = true;
   }
 
-  private getTotalCostCents(usageCost: Number) {
-    let cents = usageCost.toString().split(".")[1].substring(0, 2);
-    if (cents.length == 1) {
-      return `${cents}0`;
-    } else {
-      return cents;
-    }
-  }
-
   private showUsageOnUI(kwh: number, cost: number, allIn: number) {
     this.usageInfo = {
       kwh: Math.round(10*kwh)/10,
       avgPrice: (cost/kwh) * 100,
       avgPriceAllIn: (allIn/kwh) * 100,
       costDollars: Math.trunc(cost),
-      costCents: cost.toString().split(".")[1] ? this.getTotalCostCents(cost) : cost.toString(),
+      costCents: Math.round(cost * 100).toString(),
       allInDollars: Math.trunc(allIn),
-      allInCents: allIn.toString().split(".")[1] ? this.getTotalCostCents(allIn) : allIn.toString()
+      allInCents: Math.round(cost * 100).toString()
     };
   }
 
