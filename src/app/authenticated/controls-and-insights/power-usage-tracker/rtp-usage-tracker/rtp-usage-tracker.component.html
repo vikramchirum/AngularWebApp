@@ -98,6 +98,10 @@
             <button (click)="showNextIntervalUsage()" type="button" class="btn btn-info">Next <i class="fa fa-arrow-right"></i></button>
           </div>
         </div>
+        <br *ngIf="isAllInPricing || isNonBilledView" /><br *ngIf="isAllInPricing || isNonBilledView" />
+        <p *ngIf="isWholesalePricing && !isNonBilledView" class="text-muted text-center" style="font-size: 12px; margin-top: 15px;">
+          <em>The wholesale cost above includes real-time pricing for energy only, and excludes costs from ERCOT for ancillary services.</em>
+        </p>
       </div>
     </div>
   </div>
