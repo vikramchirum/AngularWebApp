@@ -163,7 +163,7 @@
                       </div>
                     </div>
                     <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Security_Question_Answer'].valid
-                  && formSubmitted}">
+                  && formSubmitted}" data-private>
                       <label class="control-label">Security Answer</label>
                       <input name="Security_Question_Answer" type="text" class="form-control "
                              [formControl]="registerForm.controls['Security_Question_Answer']"
