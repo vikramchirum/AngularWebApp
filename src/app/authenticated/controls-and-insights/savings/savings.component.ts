@@ -84,6 +84,7 @@ export class SavingsComponent implements OnDestroy {
         this.monthlySavings.push({
           usageMonth: month.UsageMonth,
           yourPrice: month.TotalCharge,
+          averagePrice: averageCost,
           savings: averageCost - month.TotalCharge
         });
       }
@@ -102,8 +103,7 @@ export class SavingsComponent implements OnDestroy {
 
     // Set chart data and margins
     const data = this.monthlySavings;
-    console.log(data);
-    const margin = { top: 20, right: 20, bottom: 40, left: 70 };
+    const margin = { top: 20, right: 20, bottom: 20, left: 40 };
 
     // Append chart SVG to chartContainer element
     const width = 800;
@@ -119,7 +119,7 @@ export class SavingsComponent implements OnDestroy {
     // Create x scale and y scale
     const xDomain = data.map(d => d.usageMonth);
     const xRange = [0, contentWidth];
-    const yDomain = [0, d3.max(data, d => d.yourPrice + d.savings)];
+    const yDomain = [0, d3.max(data, d => d.averagePrice)];
     const yRange = [contentHeight, 0];
 
     const xScale = d3
@@ -138,10 +138,11 @@ export class SavingsComponent implements OnDestroy {
       .tickSize(contentWidth);
 
     const xAxis = d3.axisBottom(xScale)
-      .tickFormat((d, i) => this.monthNames[moment(d.usageMonth).month()]);
+      .tickFormat((d, i) => this.monthNames[i]);
 
-    // Set colors
-    const colors = ['#000', '#333'];
+    const z = d3.scaleOrdinal()
+      .range(['rgba(46, 177, 52, .7)', 'rgba(10, 10, 1, .1)'])
+      .domain(['yourPrice', 'savings']);
 
     // Append new group to SVG
     const g = svg.append('g')
@@ -158,19 +159,27 @@ export class SavingsComponent implements OnDestroy {
       .call(customYAxis);
     
     // Create groups for each series
-    const groups = g.selectAll('g.cost')
-      .data(data)
-      .enter().append('g')
-      .attr('class', 'cost');
+    const group = g.selectAll('g.layer')
+      .data(d3.stack().keys(['yourPrice', 'savings'])(data), d => d.UsageMonth);
+    
+    group.exit().remove();
+    
+    group.enter().append('g')
+      .classed('layer', true)
+      .attr('fill', d => z(d.key));
 
-    // Create and append bars with animation
-    const rect = groups.selectAll('rect')
-      .data(d => d)
-      .enter().append('rect')
-      .attr('x', d => xScale(d.usageMonth))
-      .attr('y', d => yScale(d.yourPrice + d.savings))
-      .attr('height', d => yScale(d.savings))
+    const bars = svg.selectAll('g.layer')
+      .selectAll('rect')
+      .data(d => d, e => e.data.UsageMonth);
+
+    bars.exit().remove();
+
+    bars.enter().append('rect')
       .attr('width', xScale.bandwidth())
+      .merge(bars)
+      .attr('y', d => yScale(d[1]))
+      .attr('x', d => xScale(d.data.usageMonth))
+      .attr('height', d => yScale(d[0]) - yScale(d[1]))
       // .on('mouseover', () => tooltip.style('display', null))
       // .on('mouseout', () => tooltip.style('display', 'none'))
       // .on('mousemove', d => {
@@ -181,7 +190,7 @@ export class SavingsComponent implements OnDestroy {
       // });
     
     // Prepare tooltips with initial hidden display
-    const tooltip = svg.append('g')
+    const tooltip = g.append('g')
       .attr('class', 'tooltip')
       .style('display', 'none');
     
@@ -202,11 +211,9 @@ export class SavingsComponent implements OnDestroy {
     function customXAxis(g) {
       g.call(xAxis);
       g.selectAll('.tick text')
-        .attr('x', -3)
         .attr('font-size', '12px')
         .attr('font-family', 'Open Sans')
-        .attr('transform', 'rotate(-45)')
-        .style('text-anchor', 'end');
+        .style('text-anchor', 'middle');
     }
 
     function customYAxis(g) {

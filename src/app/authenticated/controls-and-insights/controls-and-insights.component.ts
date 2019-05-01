@@ -39,8 +39,7 @@ export class ControlsAndInsightsComponent implements OnDestroy {
       activeServiceAccount => {
         this.activeServiceAccount = activeServiceAccount;
         this.isRTP = this.activeServiceAccount.Current_Offer.Is_RTP;
-        // TODO if isRTP
-        this.sideNavData.items.splice(2, 0, { 'title': 'Savings', 'navUrl': 'savings' });
+        if (this.isRTP) this.sideNavData.items.splice(2, 0, { 'title': 'Savings', 'navUrl': 'savings' });
       }
     );
   }
