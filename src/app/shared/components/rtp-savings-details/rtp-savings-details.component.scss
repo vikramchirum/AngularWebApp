@@ -1,0 +1,42 @@
+h3.blue {
+  color: #1b8dcd;
+}
+
+h2.green {
+  color: #2eb134;
+}
+
+h2 {
+  margin-top: 10px;
+
+  sup {
+    font-size: 18px;
+  }
+}
+
+h4 {
+  sup {
+    font-size: 11px;
+  }
+}
+
+.versus,
+.equals {
+  padding: 5px;
+  border: solid 1px #1b8dcd;
+  border-radius: 50px;
+  background: #1b8dcd;
+  font-size: 22px;
+  color: #fff;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  max-width: 45px;
+  text-align: center;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.text-semibold {
+  font-weight: 600;
+  font-style: italic;
+}

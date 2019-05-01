@@ -3,7 +3,34 @@
     <div class="col-md-3 hidden-xs  hidden-sm">
     </div>
     <div class="col-sm-12 col-md-9 col-md-offset-3" style="margin-bottom: 10px;">
-      rtp-savings-details-works    
+      <div *ngIf="savingsDetails" class="text-center">
+        <div class="row">
+          <div class="col-sm-3">
+            <h3 class="blue">Gexa Wholesale</h3>
+            <h4 class="text-semibold">{{savingsDetails.kWh}}kW @ {{wholesaleAverageWholeCents}}<sup> .{{wholesaleAverageDecimalCents}}&cent;</sup> kWh</h4>
+            <h2 class="text-semibold"><sup>$</sup>{{wholesalePriceWhole}}<sup> .{{wholesalePriceDecimal}}</sup></h2>
+          </div>
+          <div class="col-sm-1">
+            <div class="versus">
+              vs
+            </div>
+          </div>
+          <div class="col-sm-3 text-muted">
+            <h3>Texas Average</h3>
+            <h4 class="text-semibold">{{savingsDetails.kWh}}kW @ {{txAverageWholeCents}}<sup> .{{txAverageDecimalCents}}&cent;</sup> kWh</h4>
+            <h2 class="text-semibold"><sup>$</sup>{{txAveragePriceWhole}}<sup> .{{txAveragePriceDecimal}}</sup></h2>
+          </div>
+          <div class="col-sm-1">
+            <div class="equals">
+              =
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <h3 class="blue">Your Savings</h3>
+            <h2 class="green text-semibold"><sup>$</sup>{{savingsWhole}}<sup> .{{savingsCents}}</sup></h2>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

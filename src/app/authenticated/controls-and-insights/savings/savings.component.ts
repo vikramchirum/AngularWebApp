@@ -4,13 +4,13 @@ import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.mo
 import { IRTPMonthlySavings } from 'app/core/models/savings/rtpmonthlysavings.model';
 import { UsageHistoryService } from 'app/core/usage-history.service';
 import { MonthlyProfiledBill } from 'app/core/models/profiledbills/profiled-bills.model';
+import { RtpsavingsdetailsService } from 'app/core/rtpsavingsdetails.service';
 import { environment } from 'environments/environment';
 
 import { Subscription } from 'rxjs';
 
 import * as moment from 'moment';
 import * as d3 from 'd3';
-
 @Component({
   selector: 'mygexa-savings',
   templateUrl: './savings.component.html',
@@ -32,16 +32,18 @@ export class SavingsComponent implements OnDestroy {
   private currentMonthlyStartMonth: Date = moment().startOf("year").toDate();
   private currentMonthlyEndMonth: Date = moment().endOf("year").toDate();
 
-  private monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
   public monthlySavings: IRTPMonthlySavings[] = [];
   public totalSavings: number = 0;
+  public totalSavingsWhole: number = 0;
+  public totalSavingsCents: string = '00';
 
-  private apiAttempts: number = 0;
+  public isDataAvailable: boolean = false;
+  public isEmptyResponse: boolean = false;
 
   constructor(
     private ServiceAccountService: ServiceAccountService,
     private UsageHistoryService: UsageHistoryService,
+    private RtpsavingsdetailsService: RtpsavingsdetailsService
   ) {
     this.ServiceAccountSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       activeServiceAccount => {
@@ -66,29 +68,26 @@ export class SavingsComponent implements OnDestroy {
     this.monthlyUsageSubscription = this.UsageHistoryService.getMonthlyProfiledBill(this.activeServiceAccount.UAN, this.currentMonthlyStartMonth, this.currentMonthlyEndMonth).subscribe(monthlyUsage => {
       let usage: [MonthlyProfiledBill] = monthlyUsage;
       this.monthlyUsageData = usage;
+      if (this.monthlyUsageData.length < 1) this.isEmptyResponse = true;
+      this.isDataAvailable = true;
       this.calculateMonthlySavings();
-      this.apiAttempts = 0;
-    },
-    (error) => {
-      this.apiAttempts++;
-      if (this.apiAttempts < 3) this.getMonthlyProfiledUsage();
     });
   }
 
   private calculateMonthlySavings() {
     this.monthlyUsageData.forEach(month => {
       const averageCost = month.KwHours * (environment.RTP_EIA_average_rate/100);
-      if (averageCost > month.EnergyCharge) {
-        const savings = averageCost - month.TotalCharge;
-        this.totalSavings = this.totalSavings + savings;
-        this.monthlySavings.push({
-          usageMonth: month.UsageMonth,
-          yourPrice: month.TotalCharge,
-          averagePrice: averageCost,
-          savings: averageCost - month.TotalCharge
-        });
-      }
+      const savings = averageCost - month.TotalCharge;
+      this.totalSavings = this.totalSavings + savings;
+      this.monthlySavings.push({
+        usageMonth: month.UsageMonth,
+        yourPrice: month.TotalCharge,
+        averagePrice: averageCost,
+        savings: averageCost - month.TotalCharge,
+        kWh: month.KwHours
+      });
     });
+    this.calculateSavingsforUI(this.totalSavings);
     if (this.monthlySavings.length > 0) {
       this.createChart();
     }
@@ -135,13 +134,14 @@ export class SavingsComponent implements OnDestroy {
 
     // Create x axis and y axis
     const yAxis = d3.axisRight(yScale)
-      .tickSize(contentWidth);
+      .tickSize(contentWidth)
+      .tickFormat((d, i) => `$${d}`);
 
     const xAxis = d3.axisBottom(xScale)
-      .tickFormat((d, i) => this.monthNames[i]);
+      .tickFormat((d, i) => moment(d).format("MMM"));
 
     const z = d3.scaleOrdinal()
-      .range(['rgba(46, 177, 52, .7)', 'rgba(10, 10, 1, .1)'])
+      .range(['rgba(46, 177, 52, .7)', 'rgba(10, 10, 1, .2)'])
       .domain(['yourPrice', 'savings']);
 
     // Append new group to SVG
@@ -175,37 +175,74 @@ export class SavingsComponent implements OnDestroy {
     bars.exit().remove();
 
     bars.enter().append('rect')
+      .attr('class', 'bar')
       .attr('width', xScale.bandwidth())
       .merge(bars)
       .attr('y', d => yScale(d[1]))
       .attr('x', d => xScale(d.data.usageMonth))
-      .attr('height', d => yScale(d[0]) - yScale(d[1]))
-      // .on('mouseover', () => tooltip.style('display', null))
-      // .on('mouseout', () => tooltip.style('display', 'none'))
-      // .on('mousemove', d => {
-      //   const xPosition = d3.mouse(this)[0] - 15;
-      //   const yPosition = d3.mouse(this)[1] - 25;
-      //   tooltip.attr('transform', `translate(${xPosition}, ${yPosition})`);
-      //   tooltip.select('text').text(d.yourPrice);
-      // });
+      .attr('height', d => {
+        if (d[1] > d[0]) {
+          return yScale(d[0]) - yScale(d[1]);
+        } else {
+          return 0;
+        }
+      })
+      .on('click', (d, i, g) => {
+        this.RtpsavingsdetailsService.SavingsInfo.next(d.data);
+      })
+      .on('mouseover', () => tooltip.style('display', null))
+      .on('mouseout', () => tooltip.style('display', 'none'))
+      .on('mousemove', (d, i, g) => {
+        const xPosition = d3.mouse(this.chartContainer.nativeElement)[0] - 15;
+        const yPosition = d3.mouse(this.chartContainer.nativeElement)[1] - 25;
+        tooltip.attr('transform', `translate(${xPosition}, ${yPosition})`);
+        tooltip.select('text.rtp-tt-heading').text(moment(d.data.usageMonth).format("MMM YYYY").toUpperCase());
+        tooltip.select('text.rtp-tt-subheading').text('YOU SAVED');
+        tooltip.select('text.rtp-tt-savings').text(`$${Number(Math.round(d.data.savings*100)/100).toFixed(2)}`);
+      });
     
     // Prepare tooltips with initial hidden display
     const tooltip = g.append('g')
-      .attr('class', 'tooltip')
+      .attr('class', 'savings-chart-tooltip')
       .style('display', 'none');
     
     tooltip.append('rect')
-      .attr('width', 30)
-      .attr('height', 20)
-      .attr('fill', 'white')
+      .attr('rx', '15')
+      .attr('ry', '15')
+      .attr('width', 130)
+      .attr('height', 100)
+      .attr('fill', 'black')
       .style('opacity', 0.5);
     
     tooltip.append('text')
-      .attr('x', 15)
-      .attr('dy', '1.2em')
-      .style('text-anchor', 'middle')
-      .attr('font-size', '12px')
-      .attr('font-weight', 'bold');
+      .attr('class', 'rtp-tt-heading')
+      .attr('x', 16)
+      .attr('dy', '1.5em')
+      .style('text-anchor', 'start')
+      .attr('font-size', '18px')
+      .attr('font-weight', '600')
+      .attr('fill', 'white');
+    
+    tooltip.append('text')
+      .attr('class', 'rtp-tt-subheading')
+      .attr('x', 16)
+      .attr('dy', '3.7em')
+      .style('text-anchor', 'start')
+      .attr('font-size', '14px')
+      .attr('font-weight', '600')
+      .attr('fill', 'white');
+
+    tooltip.append('text')
+      .attr('class', 'rtp-tt-savings')
+      .attr('x', 18)
+      .attr('dy', '2.9em')
+      .style('text-anchor', 'start')
+      .attr('font-size', '28px')
+      .attr('font-weight', '600')
+      .attr('fill', 'white');
+
+    // Show savings details for last month
+    this.RtpsavingsdetailsService.SavingsInfo.next(data[data.length-1]);
 
     // Utility functions for axis styling and formatting
     function customXAxis(g) {
@@ -224,7 +261,13 @@ export class SavingsComponent implements OnDestroy {
       g.selectAll('.tick text')
         .attr('font-size', '12px')
         .attr('font-family', 'Open Sans')
-        .attr('x', -30);
+        .attr('x', -33);
     }
+  }
+
+  private calculateSavingsforUI(savings: Number): void {
+    const roundedSavings = Number(savings.toFixed(2));
+    this.totalSavingsWhole = Math.trunc(roundedSavings);
+    this.totalSavingsCents = Number(roundedSavings % 1).toFixed(2).split('.')[1];
   }
 }

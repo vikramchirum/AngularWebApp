@@ -1,9 +1,19 @@
 <h1>Savings</h1>
 <h1 class="wholesale-savings">
   <i class="fa fa-caret-right"></i>
-  Total Wholesale Savings <sup>$</sup>{{totalSavings | number:'1.0-2'}}
+  Total Wholesale Savings <sup>$</sup>{{totalSavingsWhole}}<sup> .{{totalSavingsCents}}</sup>
 </h1>
-<p>Check out what you've saved compared to the Average Texas Energy Price*</p>
+<p>Check out what you've saved compared to the Average Texas Energy Price</p>
+<div *ngIf="!isDataAvailable">
+  <br><br><br><br><br><br><br>
+  <p class="text-center"><i class='fa fa-circle-o-notch fa-spin'></i> Loading...</p>
+  <br><br><br><br><br><br><br>
+</div>
+<div *ngIf="isEmptyResponse">
+  <br>
+  <div class="alert alert-info"> <strong>Thank you for choosing Gexa Energy!</strong> <br />Your monthly savings will display here as soon as your billed usage data is available. </div>
+  <br><br><br><br><br><br><br>
+</div>
 <div #chartWrapper id="canvasWrapper">
-  <div #chart id="rtp-usage-chart"></div>
+  <div #chart id="rtp-savings-chart"></div>
 </div>

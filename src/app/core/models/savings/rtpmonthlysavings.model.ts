@@ -3,4 +3,5 @@ export interface IRTPMonthlySavings {
   yourPrice: number;
   averagePrice: number;
   savings: number;
+  kWh: number;
 }
