@@ -76,7 +76,7 @@ export class SavingsComponent implements OnDestroy {
 
   private calculateMonthlySavings() {
     this.monthlyUsageData.forEach(month => {
-      const averageCost = month.KwHours * (environment.RTP_EIA_average_rate / 100);
+      const averageCost = Number(month.KwHours) * (environment.RTP_EIA_average_rate / 100);
       const savings = averageCost - month.TotalCharge;
       this.totalSavings = this.totalSavings + savings;
       this.monthlySavings.push({
