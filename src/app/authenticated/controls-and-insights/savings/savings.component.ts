@@ -189,9 +189,11 @@ export class SavingsComponent implements OnDestroy {
       })
       .on('click', (d, i, g) => {
         this.RtpsavingsdetailsService.SavingsInfo.next(d.data);
+        d3.selectAll('.bar').classed('active', false);
+        d3.select(g[i]).classed('active', true);
       })
-      .on('mouseover', () => tooltip.style('display', null))
-      .on('mouseout', () => tooltip.style('display', 'none'))
+      .on('mouseover', (d, i, g) => tooltip.style('display', null))
+      .on('mouseout', (d, g, i) => tooltip.style('display', 'none'))
       .on('mousemove', (d, i, g) => {
         const xPosition = d3.mouse(this.chartContainer.nativeElement)[0] - 15;
         const yPosition = d3.mouse(this.chartContainer.nativeElement)[1] - 25;
