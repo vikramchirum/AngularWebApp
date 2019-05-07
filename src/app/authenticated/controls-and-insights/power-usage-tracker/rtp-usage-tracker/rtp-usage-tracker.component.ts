@@ -1,7 +1,6 @@
 import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { UsageComparison, DailyUsage, MeterReadCycle } from 'app/core/models/usage/usage-comparison.model';
 import { MonthlyProfiledBill, DailyProfiledBill, HourlyProfiledBill } from '../../../../core/models/profiledbills/profiled-bills.model';
-import { UsageComparison, DailyUsage, MeterReadCycle } from 'app/core/models/usage/usage-comparison.model';
 import { UsageHistoryService } from 'app/core/usage-history.service';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
