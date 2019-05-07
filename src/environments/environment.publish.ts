@@ -15,5 +15,6 @@ export const environment = {
   forte_api_url: '#{forte_api_url}',
   crypto_key: '#{Crypto_Key}',
   crypto_iv: '#{Crypto_IV}',
-  payment_extension_days: '#{payment_extension_days}'
+  payment_extension_days: '#{payment_extension_days}',
+  RTP_EIA_average_rate: '#{RTP_EIA_average_rate}'
 };

@@ -470,6 +470,11 @@ footer.fixedToBottom {
     position: inherit!important;
 }
 
+
+.bar.active {
+  fill: rgba(46, 177, 52,0.3);
+}
+
 #rtp-usage-chart {
   .bar.active {
     fill: rgba(46, 177, 52,0.9);

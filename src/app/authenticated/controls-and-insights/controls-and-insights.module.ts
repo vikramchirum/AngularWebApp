@@ -12,6 +12,7 @@ import { PowerUsageTrackerComponent } from './power-usage-tracker/power-usage-tr
 import { DailyUsageTrackerComponent } from './power-usage-tracker/daily-usage-tracker/daily-usage-tracker.component';
 import { RtpUsageTrackerComponent } from './power-usage-tracker/rtp-usage-tracker/rtp-usage-tracker.component';
 import { EnergyUsageTableComponent } from './usage-history/energy-usage-table/energy-usage-table.component';
+import { SavingsComponent } from './savings/savings.component';
 
 
 
@@ -30,7 +31,8 @@ import { EnergyUsageTableComponent } from './usage-history/energy-usage-table/en
     PowerUsageTrackerComponent,
     DailyUsageTrackerComponent,
     RtpUsageTrackerComponent,
-    EnergyUsageTableComponent
+    EnergyUsageTableComponent,
+    SavingsComponent
   ]
 })
 export class ControlsAndInsightsModule { }
