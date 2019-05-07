@@ -40,3 +40,50 @@ h4 {
   font-weight: 600;
   font-style: italic;
 }
+
+
+@media (max-width: 500px) {
+  .wholesale-price-info,
+  .average-price-info{
+    h3 {
+      font-size: 18px!important;
+    }
+
+    h4 {
+      font-size: 13px!important;
+
+      sup {
+        font-size: 8px!important;
+      }
+    }
+
+    h2 {
+      font-size: 20px!important;
+
+      sup {
+        font-size: 12px!important;
+      }
+    }
+  }
+
+  .savings-info {
+    h3 {
+      font-size: 24px!important;
+    }
+
+    h2 {
+      font-size: 26px!important;
+
+      sup {
+        font-size: 14px!important;
+      }
+    }
+  }
+}
+
+@media (max-width: 420px) {
+  .versus {
+    padding: 3px;
+    font-size: 18px;
+  }
+}

@@ -3,6 +3,7 @@ import { RtpsavingsdetailsService } from 'app/core/rtpsavingsdetails.service';
 import { Subscription } from 'rxjs';
 import { IRTPMonthlySavings } from 'app/core/models/savings/rtpmonthlysavings.model';
 import { environment } from 'environments/environment';
+import * as moment from 'moment';
 
 @Component({
   selector: 'mygexa-rtp-savings-details',
@@ -27,6 +28,8 @@ export class RtpSavingsDetailsComponent implements OnInit, OnDestroy {
   public savingsWhole: number;
   public savingsCents: string;
 
+  public averagePriceYear: number = moment().subtract(1, "year").toDate().getFullYear();
+
   constructor(
     private RtpsavingsdetailsService: RtpsavingsdetailsService
   ) { }
@@ -41,6 +44,7 @@ export class RtpSavingsDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.RtpsavingsdetailsService.SavingsInfo.next(null);
     this.savingsDetailsSubscription.unsubscribe();
   }
 

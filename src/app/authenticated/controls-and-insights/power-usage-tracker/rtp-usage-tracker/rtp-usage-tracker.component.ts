@@ -438,8 +438,32 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       }
     });
 
-    // Scroll chart to see last day
-    if (this.isDailyView && (this.dailyUsageData.length > (data.length / 2))) {
+    // Scroll chart if necessary
+    if (this.isMonthlyView) {
+      if (this.monthlyUsageData.length > 4 && this.monthlyUsageData.length < 9) {
+        this.chartWrapper.nativeElement.scrollTo({ left: contentWidth/3, behavior: 'smooth' });
+      } else if (this.monthlyUsageData.length > 8) {
+        this.chartWrapper.nativeElement.scrollTo({ left: contentWidth, behavior: 'smooth' });
+      } else {
+        this.chartWrapper.nativeElement.scrollTo({ right: 0, behavior: 'smooth' });
+      }
+    } else if (this.isDailyView) {
+      if (this.dailyUsageData.length > 11 && this.dailyUsageData.length < 22) {
+        this.chartWrapper.nativeElement.scrollTo({ left: contentWidth/3, behavior: 'smooth' });
+      } else if (this.dailyUsageData.length > 21) {
+        this.chartWrapper.nativeElement.scrollTo({ left: contentWidth, behavior: 'smooth' });
+      } else {
+        this.chartWrapper.nativeElement.scrollTo({ right: 0, behavior: 'smooth' });
+      }
+    } else if (this.isNonBilledView) {
+      if (this.nonBilledUsageData.length > 11 && this.nonBilledUsageData.length < 22) {
+        this.chartWrapper.nativeElement.scrollTo({ left: contentWidth/3, behavior: 'smooth' });
+      } else if (this.nonBilledUsageData.length > 21) {
+        this.chartWrapper.nativeElement.scrollTo({ left: contentWidth, behavior: 'smooth' });
+      } else {
+        this.chartWrapper.nativeElement.scrollTo({ right: 0, behavior: 'smooth' });
+      }
+    } else if (this.isHourlyView) {
       this.chartWrapper.nativeElement.scrollTo({ left: contentWidth, behavior: 'smooth' });
     }
 

@@ -1,4 +1,5 @@
 import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
 import { ServiceAccount } from 'app/core/models/serviceaccount/serviceaccount.model';
 import { IRTPMonthlySavings } from 'app/core/models/savings/rtpmonthlysavings.model';
@@ -27,10 +28,12 @@ export class SavingsComponent implements OnDestroy {
   private ServiceAccountSubscription: Subscription = null;
 
   private monthlyUsageData: [MonthlyProfiledBill];
+  private paddedMonthlyUsageData: [MonthlyProfiledBill];
   private monthlyUsageSubscription: Subscription = null;
 
   private currentMonthlyStartMonth: Date = moment().startOf("year").toDate();
   private currentMonthlyEndMonth: Date = moment().endOf("year").toDate();
+  public averagePriceYear: number = moment().subtract(1, "year").toDate().getFullYear();
 
   public monthlySavings: IRTPMonthlySavings[] = [];
   public totalSavings: number = 0;
@@ -41,6 +44,7 @@ export class SavingsComponent implements OnDestroy {
   public isEmptyResponse: boolean = false;
 
   constructor(
+    private router: Router,
     private ServiceAccountService: ServiceAccountService,
     private UsageHistoryService: UsageHistoryService,
     private RtpsavingsdetailsService: RtpsavingsdetailsService
@@ -49,7 +53,7 @@ export class SavingsComponent implements OnDestroy {
       activeServiceAccount => {
         this.activeServiceAccount = activeServiceAccount;
         if (!this.activeServiceAccount.Current_Offer.Is_RTP) {
-          // TODO redirect
+          this.router.navigate(['/controls-and-insights']);
         } else {
           this.getMonthlyProfiledUsage();
         }
@@ -75,7 +79,8 @@ export class SavingsComponent implements OnDestroy {
   }
 
   private calculateMonthlySavings() {
-    this.monthlyUsageData.forEach(month => {
+    this.padMonthlyUsage(this.monthlyUsageData);
+    this.paddedMonthlyUsageData.forEach(month => {
       const averageCost = +month.KwHours * (+environment.RTP_EIA_average_rate / 100);
       const savings = averageCost - month.TotalCharge;
       this.totalSavings = this.totalSavings + savings;
@@ -88,7 +93,7 @@ export class SavingsComponent implements OnDestroy {
       });
     });
     this.calculateSavingsforUI(this.totalSavings);
-    if (this.monthlySavings.length > 0) {
+    if (this.monthlyUsageData.length > 0) {
       this.createChart();
     }
   }
@@ -192,9 +197,9 @@ export class SavingsComponent implements OnDestroy {
         d3.selectAll('.bar').classed('active', false);
         d3.select(g[i]).classed('active', true);
       })
-      .on('mouseover', (d, i, g) => tooltip.style('display', null))
-      .on('mouseout', (d, g, i) => tooltip.style('display', 'none'))
-      .on('mousemove', (d, i, g) => {
+      .on('mouseover', () => tooltip.style('display', null))
+      .on('mouseout', () => tooltip.style('display', 'none'))
+      .on('mousemove', d => {
         const xPosition = d3.mouse(this.chartContainer.nativeElement)[0] - 15;
         const yPosition = d3.mouse(this.chartContainer.nativeElement)[1] - 25;
         tooltip.attr('transform', `translate(${xPosition}, ${yPosition})`);
@@ -211,8 +216,8 @@ export class SavingsComponent implements OnDestroy {
     tooltip.append('rect')
       .attr('rx', '15')
       .attr('ry', '15')
-      .attr('width', 130)
-      .attr('height', 100)
+      .attr('width', 100)
+      .attr('height', 80)
       .attr('fill', 'black')
       .style('opacity', 0.5);
     
@@ -221,7 +226,7 @@ export class SavingsComponent implements OnDestroy {
       .attr('x', 16)
       .attr('dy', '1.5em')
       .style('text-anchor', 'start')
-      .attr('font-size', '18px')
+      .attr('font-size', '16px')
       .attr('font-weight', '600')
       .attr('fill', 'white');
     
@@ -230,27 +235,35 @@ export class SavingsComponent implements OnDestroy {
       .attr('x', 16)
       .attr('dy', '3.7em')
       .style('text-anchor', 'start')
-      .attr('font-size', '14px')
+      .attr('font-size', '12px')
       .attr('font-weight', '600')
       .attr('fill', 'white');
 
     tooltip.append('text')
       .attr('class', 'rtp-tt-savings')
       .attr('x', 18)
-      .attr('dy', '2.9em')
+      .attr('dy', '3.6em')
       .style('text-anchor', 'start')
-      .attr('font-size', '28px')
+      .attr('font-size', '18px')
       .attr('font-weight', '600')
       .attr('fill', 'white');
 
     // Show savings details for last month
-    this.RtpsavingsdetailsService.SavingsInfo.next(data[data.length-1]);
+    this.RtpsavingsdetailsService.SavingsInfo.next(this.monthlySavings[this.monthlyUsageData.length-1]);
+
+    // Scroll chart to see last day
+    
+    if (this.monthlyUsageData.length > 4 && this.monthlyUsageData.length < 9) {
+      this.chartWrapper.nativeElement.scrollTo({ left: contentWidth/3, behavior: 'smooth' });
+    } else if (this.monthlyUsageData.length > 8) {
+      this.chartWrapper.nativeElement.scrollTo({ left: contentWidth, behavior: 'smooth' });
+    }
 
     // Utility functions for axis styling and formatting
     function customXAxis(g) {
       g.call(xAxis);
       g.selectAll('.tick text')
-        .attr('font-size', '12px')
+        .attr('font-size', '14px')
         .attr('font-family', 'Open Sans')
         .style('text-anchor', 'middle');
     }
@@ -271,5 +284,26 @@ export class SavingsComponent implements OnDestroy {
     const roundedSavings = Number(savings.toFixed(2));
     this.totalSavingsWhole = Math.trunc(roundedSavings);
     this.totalSavingsCents = Number(roundedSavings % 1).toFixed(2).split('.')[1];
+  }
+
+  private padMonthlyUsage(usage: MonthlyProfiledBill[]): void {
+    let paddedUsage = [];
+    for (let i = 0; i < 12; i++) {
+      let monthlyUsage: MonthlyProfiledBill = {
+        UsageMonth: moment(this.currentMonthlyStartMonth).add(i, 'months').toDate(),
+        StartDate: new Date(),
+        EndDate: new Date(),
+        KwHours: 0,
+        TotalCharge: 0,
+        EnergyCharge: 0
+      };
+      let u = usage.find(um => moment(um.UsageMonth).isSame(monthlyUsage.UsageMonth, "month"));
+      if (u) {
+        paddedUsage.push(u);
+      } else {
+        paddedUsage.push(monthlyUsage);
+      }
+    }
+    this.paddedMonthlyUsageData = paddedUsage as [MonthlyProfiledBill];
   }
 }

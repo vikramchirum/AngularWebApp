@@ -16,3 +16,13 @@
 #canvasWrapper {
 	overflow-x: auto;
 }
+
+@media (max-width: 444px) {
+  .wholesale-savings {
+    font-size: 22px;
+
+    sup {
+      font-size: 13px;
+    }
+  }
+}
