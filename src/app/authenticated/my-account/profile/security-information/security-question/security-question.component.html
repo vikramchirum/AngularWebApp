@@ -23,7 +23,7 @@
           (ngSubmit) = "updateSecQuesResponse(securityQuestionForm.controls['question1'].value, securityQuestionForm.valid)"
           [formGroup]="securityQuestionForm"
         >
-          <div class="form-group" [ngClass]="{'has-error':!securityQuestionForm.controls['question1'].valid && submitAttempt}">
+          <div class="form-group" [ngClass]="{'has-error':!securityQuestionForm.controls['question1'].valid && submitAttempt}" data-private>
             <p>Answer Questions to Continue</p>
             <label class="control-label">{{securityQuestion}}</label>
             <input
