@@ -203,8 +203,8 @@ export class SavingsComponent implements OnDestroy {
       .on('mouseover', () => tooltip.style('display', null))
       .on('mouseout', () => tooltip.style('display', 'none'))
       .on('mousemove', d => {
-        const xPosition = d3.mouse(this.chartContainer.nativeElement)[0] - 15;
-        const yPosition = d3.mouse(this.chartContainer.nativeElement)[1] - 25;
+        const xPosition = d3.mouse(this.chartContainer.nativeElement)[0] - 80;
+        const yPosition = d3.mouse(this.chartContainer.nativeElement)[1] - 5;
         tooltip.attr('transform', `translate(${xPosition}, ${yPosition})`);
         tooltip.select('text.rtp-tt-heading').text(moment(d.data.usageMonth).format("MMM YYYY").toUpperCase());
         tooltip.select('text.rtp-tt-subheading').text('YOU SAVED');
