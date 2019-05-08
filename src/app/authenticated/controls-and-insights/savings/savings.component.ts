@@ -75,6 +75,9 @@ export class SavingsComponent implements OnDestroy {
       if (this.monthlyUsageData.length < 1) this.isEmptyResponse = true;
       this.isDataAvailable = true;
       this.calculateMonthlySavings();
+    },
+    (error) => {
+      this.getMonthlyProfiledUsage();
     });
   }
 
