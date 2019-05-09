@@ -49,9 +49,9 @@ export class RtpSavingsDetailsComponent implements OnInit, OnDestroy {
   }
 
   private processDetailsForUI(): void {
-    const averageCentsPerKwh = (this.savingsDetails.yourPrice / this.savingsDetails.kWh * 100).toFixed(1);
+    const averageCentsPerKwh = (this.savingsDetails.yourPrice / this.savingsDetails.kWh * 100).toFixed(2);
     this.wholesaleAverageWholeCents = Math.trunc(Number(averageCentsPerKwh));
-    this.wholesaleAverageDecimalCents = Number(Number(averageCentsPerKwh) % 1).toFixed(1).toString().split('.')[1];
+    this.wholesaleAverageDecimalCents = Number(Number(averageCentsPerKwh) % 1).toFixed(2).toString().split('.')[1];
 
     const wholesalePrice = this.savingsDetails.yourPrice.toFixed(2);
     this.wholesalePriceWhole = Math.trunc(Number(wholesalePrice));
@@ -59,7 +59,7 @@ export class RtpSavingsDetailsComponent implements OnInit, OnDestroy {
 
     const txAverageCentsPerKwh = environment.RTP_EIA_average_rate;
     this.txAverageWholeCents = Math.trunc(Number(txAverageCentsPerKwh));
-    this.txAverageDecimalCents = Number(Number(txAverageCentsPerKwh) % 1).toFixed(1).toString().split('.')[1];
+    this.txAverageDecimalCents = Number(Number(txAverageCentsPerKwh) % 1).toFixed(2).toString().split('.')[1];
 
     const txAveragePrice = this.savingsDetails.averagePrice.toFixed(2);
     this.txAveragePriceWhole = Math.trunc(Number(txAveragePrice));
