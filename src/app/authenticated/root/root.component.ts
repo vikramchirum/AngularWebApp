@@ -31,6 +31,7 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
   service_account_length: number = null;
   env = environment.Name;
   username: string = null;
+  isRTP: boolean = null;
   accordionVisible: boolean = null;
   hoverMenu: string = null;
   customerDetails: CustomerAccount = null;
@@ -89,6 +90,7 @@ export class RootComponent implements OnInit, AfterViewInit, OnDestroy {
             result => {
               this.announcements = result;
             });
+          this.isRTP = ActiveServiceAccount.Current_Offer.Is_RTP;
         }
       }
     );

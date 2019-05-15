@@ -22,6 +22,15 @@ export class ControlsAndInsightsComponent implements OnDestroy {
   private activeServiceAccount: ServiceAccount = null;
   private ServiceAccountsSubscription: Subscription = null;
 
+  public sideNavData = {
+    'panelTitle': 'Energy Insights',
+    'items': [
+      { 'title': 'Power Usage Tracker', 'navUrl': 'power-usage-tracker'},
+      { 'title': 'Usage History', 'navUrl': 'usage-history'},
+      { 'title': 'Energy Savings Tips', 'navUrl': 'energy-savings-tips'}
+    ]
+  };
+
   constructor(
     private ServiceAccountService: ServiceAccountService,
     public Router: Router
@@ -30,6 +39,7 @@ export class ControlsAndInsightsComponent implements OnDestroy {
       activeServiceAccount => {
         this.activeServiceAccount = activeServiceAccount;
         this.isRTP = this.activeServiceAccount.Current_Offer.Is_RTP;
+        if (this.isRTP) this.sideNavData.items.splice(2, 0, { 'title': 'Savings', 'navUrl': 'savings' });
       }
     );
   }

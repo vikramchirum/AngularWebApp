@@ -1,0 +1,28 @@
+.wholesale-savings {
+  color: #2eb134;
+  font-size: 28px;
+  font-style: italic;
+  font-weight: 600;
+
+  sup {
+    font-size: 16px;
+  }
+}
+
+.savings-disclaimer {
+  font-size: 12px;
+}
+
+#canvasWrapper {
+	overflow-x: auto;
+}
+
+@media (max-width: 444px) {
+  .wholesale-savings {
+    font-size: 22px;
+
+    sup {
+      font-size: 13px;
+    }
+  }
+}

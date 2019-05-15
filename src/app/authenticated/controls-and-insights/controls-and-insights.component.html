@@ -1,19 +1,11 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-3 hidden-xs control-side-panel">
-      <mygexa-left-nav-panel [sideNavData] = "{
-        'panelTitle': 'Energy Insights',
-        'items': [
-          { 'title': 'Power Usage Tracker', 'navUrl': 'power-usage-tracker'},
-          { 'title': 'Usage History', 'navUrl': 'usage-history'},
-          { 'title': 'Energy Savings Tips', 'navUrl': 'energy-savings-tips'}
-
-        ]
-      }" ></mygexa-left-nav-panel>
+      <mygexa-left-nav-panel [sideNavData]="sideNavData"></mygexa-left-nav-panel>
     </div>
     <div class="col-sm-9 control-profile">
       <mygexa-service-account-selector
-        [setActiveServiceAccount]="true" *ngIf="startsWith(Router.url, '/controls-and-insights/usage-history') || startsWith(Router.url, '/controls-and-insights/power-usage-tracker')"
+        [setActiveServiceAccount]="true" *ngIf="startsWith(Router.url, '/controls-and-insights/usage-history') || startsWith(Router.url, '/controls-and-insights/power-usage-tracker') || startsWith(Router.url, '/controls-and-insights/savings')"
       ></mygexa-service-account-selector>
       <mygexa-status-bar></mygexa-status-bar>
       <router-outlet></router-outlet>
@@ -33,4 +25,8 @@
   <div *ngIf="!isRTP">
     <mygexa-daily-usage-tracker></mygexa-daily-usage-tracker>
   </div>
+</div>
+
+<div class="container-fluid container-breakout bg-info"  *ngIf="startsWith(Router.url, '/controls-and-insights/savings')">
+  <mygexa-rtp-savings-details></mygexa-rtp-savings-details>
 </div>

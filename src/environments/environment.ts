@@ -17,5 +17,6 @@ export const environment = {
   forte_api_url: 'https://sandbox.forte.net/api/js/v1',
   crypto_key: '6REr6UFXjjmw0+W0NhMP7asI9y54FDrJdE/LlIz/YME=',
   crypto_iv: 'hDRokaLfaRzJSaivlL7KlQ==',
-  payment_extension_days: 7
+  payment_extension_days: 7,
+  RTP_EIA_average_rate: 11.43
 };

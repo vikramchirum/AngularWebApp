@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-
+import { UsageComparison, DailyUsage, MeterReadCycle } from 'app/core/models/usage/usage-comparison.model';
 import { MonthlyProfiledBill, DailyProfiledBill, HourlyProfiledBill } from '../../../../core/models/profiledbills/profiled-bills.model';
 import { UsageHistoryService } from 'app/core/usage-history.service';
 import { ServiceAccountService } from 'app/core/serviceaccount.service';
@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs/Subscription';
 
 import * as moment from 'moment';
 import * as d3 from 'd3';
-import { UsageComparison, DailyUsage, MeterReadCycle } from 'app/core/models/usage/usage-comparison.model';
 
 @Component({
   selector: 'mygexa-rtp-usage-tracker',
@@ -52,6 +51,7 @@ export class RtpUsageTrackerComponent implements OnDestroy {
   isDailyView: boolean;
   isHourlyView: boolean;
   isNonBilledView: boolean;
+  showNoHourlyUsageMessage: boolean;
 
   usageIntervalLabel: string;
   usageIntervalTotal: number;
@@ -97,55 +97,113 @@ export class RtpUsageTrackerComponent implements OnDestroy {
 
   getMonthlyUsage() {
     this.usageInfo = null;
+    this.isMonthlyView = true;
+    this.isDailyView = false;
+    this.isHourlyView = false;
+    this.isNonBilledView = false;
+    this.isDataAvailable = false;
+    this.chartWrapper.nativeElement.hidden = true;
+    this.showNoHourlyUsageMessage = false;
+    this.usageIntervalLabel = moment(this.currentMonthlyStartMonth).format("YYYY");
+    this.usageIntervalTotal = 0;
     this.monthlyUsageSubscription = this.UsageHistoryService.getMonthlyProfiledBill(this.activeServiceAccount.UAN, this.currentMonthlyStartMonth, this.currentMonthlyEndMonth).subscribe(monthlyUsage => {
       let usage: [MonthlyProfiledBill] = monthlyUsage;
       this.monthlyUsageData = usage;
-      this.showMonthlyView();
+      this.usageIntervalTotal = Math.round(this.monthlyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0)); 
+      this.chartWrapper.nativeElement.hidden = false;
+      this.isDataAvailable = true;
+      this.createChart();
     },
     (error) => {
       this.showCurrentIntervalUsage();
-      this.isDataAvailable = true;
     });
   }
 
   getDailyUsage() {
     this.usageInfo = null;
+    this.isMonthlyView = false;
+    this.isDailyView = true;
+    this.isHourlyView = false;
+    this.isNonBilledView = false;
+    this.isDataAvailable = false;
+    if (this.chartWrapper) 
+      this.chartWrapper.nativeElement.hidden = true;
+    this.showNoHourlyUsageMessage = false;
+    this.usageIntervalLabel = moment(this.currentDailyUsageMonth).format("MMMM");
+    this.usageIntervalTotal = 0;
     this.dailyUsageSubscription = this.UsageHistoryService.getDailyProfiledBill(this.activeServiceAccount.UAN, this.currentDailyUsageMonth).subscribe(dailyUsage => {
       let usage: [DailyProfiledBill] = dailyUsage;
       this.dailyUsageData = usage;
-      this.showDailyView();
+      this.usageIntervalTotal = Math.round(this.dailyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0));
+      this.isDataAvailable = true;
+      this.chartWrapper.nativeElement.hidden = false;
+      this.createChart();
     },
     (error) => {
       this.getCurrentDailyUsage();
-      this.isDataAvailable = true;
     });
   }
 
   getHourlyUsage() {
     this.usageInfo = null;
-    if (!this.currentHourlyDate)
+    this.isMonthlyView = false;
+    this.isDailyView = false;
+    this.isHourlyView = true;
+    this.isNonBilledView = false;
+    this.isDataAvailable = false;
+    this.chartWrapper.nativeElement.hidden = true;
+    this.showNoHourlyUsageMessage = false;
+    this.usageIntervalTotal = 0;
+    if (!this.currentHourlyDate) {
       this.currentHourlyDate = new Date(this.dailyUsageData[this.dailyUsageData.length-1].UsageDate);
+    }
+    this.usageIntervalLabel = moment(this.currentHourlyDate).format("M/DD");
     this.hourlyUsageSubscription = this.UsageHistoryService.getHourlyProfiledBill(this.activeServiceAccount.UAN, this.currentHourlyDate).subscribe(hourlyUsage => {
       let usage: [HourlyProfiledBill] = hourlyUsage;
       this.hourlyUsageData = usage;
-      this.showHourlyView();
+      this.usageIntervalTotal = Math.round(this.hourlyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0));
+      this.isDataAvailable = true;
+      this.chartWrapper.nativeElement.hidden = false;
+      this.createChart();
     },
     (error) => {
-      this.showCurrentIntervalUsage();
       this.isDataAvailable = true;
+      this.showNoHourlyUsageMessage = true;
     });
   }
 
   getCurrentDailyUsage() {
     this.usageInfo = null;
-    if (!this.nonBilledUsageData) {
+    this.isMonthlyView = false;
+    this.isDailyView = false;
+    this.isHourlyView = false;
+    this.isNonBilledView = true;
+    this.isDataAvailable = false;
+    this.chartWrapper.nativeElement.hidden = true;
+    this.showNoHourlyUsageMessage = false;
+    this.usageIntervalTotal = 0;
+    if (!this.currentNonBilledUsage) {
       this.currentUsageSubscription = this.UsageHistoryService.getUsageComparison(this.activeServiceAccount.UAN).subscribe(usage => {
         this.currentNonBilledUsage = usage;
-        this.showNonBilledView();
+        this.currentCycle = usage.Meter_Read_Cycles[1].Usage > 0 ? usage.Meter_Read_Cycles[1] : usage.Meter_Read_Cycles[0];
+        const currentCycleUsage = usage.Daily_Usage_List.filter(u => {
+          if (moment(u.Date).isBetween(moment(this.currentCycle.Start_Date), moment(this.currentCycle.End_Date), 'days', '[]')) {
+            return u;
+          }
+        });
+        this.usageIntervalLabel = moment(this.currentCycle.End_Date).format("MMMM");
+        this.usageIntervalTotal = Math.round(currentCycleUsage.map(u => u.Usage).reduce((curr, prev) => curr + prev));
+        this.nonBilledUsageData = currentCycleUsage;
+        this.isDataAvailable = true;
+        this.chartWrapper.nativeElement.hidden = false;
+        this.createChart();
       });
     } else {
-      this.currentDailyUsageMonth = moment(this.currentDailyUsageMonth).subtract(1, "month").toDate();
-      this.showNonBilledView();
+      this.usageIntervalLabel = moment(this.currentCycle.End_Date).format("MMMM");
+      this.usageIntervalTotal = Math.round(this.nonBilledUsageData.map(u => u.Usage).reduce((curr, prev) => curr + prev));
+      this.isDataAvailable = true;
+      this.chartWrapper.nativeElement.hidden = false;
+      this.createChart();
     }
   }
 
@@ -201,61 +259,9 @@ export class RtpUsageTrackerComponent implements OnDestroy {
     this.isAllInPricing = true;
   }
 
-  private showMonthlyView() {
-    this.usageIntervalLabel = moment(this.currentMonthlyStartMonth).format("YYYY");
-    this.usageIntervalTotal = Math.round(this.monthlyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0)); 
-    this.isMonthlyView = true;
-    this.isDailyView = false;
-    this.isHourlyView = false;
-    this.isNonBilledView = false;
-    this.createChart();
-  }
-
-  private showDailyView() {
-    this.usageIntervalLabel = moment(this.currentDailyUsageMonth).format("MMMM");
-    this.usageIntervalTotal = Math.round(this.dailyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0));
-    this.isMonthlyView = false;
-    this.isDailyView = true;
-    this.isHourlyView = false;
-    this.isNonBilledView = false;
-    this.createChart();
-    this.isDataAvailable = true;
-  }
-
-  private showHourlyView() {
-    this.usageIntervalLabel = moment(this.currentHourlyDate).format("M/DD");
-    this.usageIntervalTotal = Math.round(this.hourlyUsageData.map(u => u.KwHours).reduce((a, b) => a + b, 0));
-    this.isMonthlyView = false;
-    this.isDailyView = false;
-    this.isHourlyView = true;
-    this.isNonBilledView = false;
-    this.createChart();
-  }
-
-  private showNonBilledView() {
-    this.currentCycle = this.currentNonBilledUsage.Meter_Read_Cycles[1].Usage > 0 ? this.currentNonBilledUsage.Meter_Read_Cycles[1] : this.currentNonBilledUsage.Meter_Read_Cycles[0];
-    const currentCycleUsage = this.currentNonBilledUsage.Daily_Usage_List.filter(u => {
-      if (moment(u.Date).isBetween(moment(this.currentCycle.Start_Date), moment(this.currentCycle.End_Date), 'days', '[]')) {
-        return u;
-      }
-    });
-    this.usageIntervalLabel = moment(this.currentCycle.End_Date).format("MMMM");
-    this.usageIntervalTotal = Math.round(currentCycleUsage.map(u => u.Usage).reduce((curr, prev) => curr + prev));
-    this.nonBilledUsageData = currentCycleUsage;
-    this.isMonthlyView = false;
-    this.isDailyView = false;
-    this.isHourlyView = false;
-    this.isNonBilledView = true;
-    this.createChart();
-  }
-
-  private getTotalCostCents(usageCost: Number) {
-    let cents = usageCost.toString().split(".")[1].substring(0, 2);
-    if (cents.length == 1) {
-      return `${cents}0`;
-    } else {
-      return cents;
-    }
+  private getTotalCostCents(usageCost: number) {
+    let cents = usageCost % 1;
+    return cents.toFixed(2).split(".")[1];
   }
 
   private showUsageOnUI(kwh: number, cost: number, allIn: number) {
@@ -264,9 +270,9 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       avgPrice: (cost/kwh) * 100,
       avgPriceAllIn: (allIn/kwh) * 100,
       costDollars: Math.trunc(cost),
-      costCents: cost.toString().split(".")[1] ? this.getTotalCostCents(cost) : cost.toString(),
+      costCents: this.getTotalCostCents(cost),
       allInDollars: Math.trunc(allIn),
-      allInCents: allIn.toString().split(".")[1] ? this.getTotalCostCents(allIn) : allIn.toString()
+      allInCents: this.getTotalCostCents(allIn)
     };
   }
 
@@ -395,8 +401,11 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       .on('click', (d, i, g) => {
         if (!this.isNonBilledView) {
           this.showUsageOnUI(d.KwHours, d.EnergyCharge, d.TotalCharge);
-          if (this.isDailyView) this.currentHourlyDate = moment(d.UsageDate).toDate();
+          if (this.isDailyView) {
+            this.currentHourlyDate = moment(d.UsageDate).toDate();
+          }
         } else {
+          this.currentHourlyDate = moment(d.Date).toDate();
           this.showUsageOnUI(d.Usage, 0, 0);
         }
         d3.selectAll('.bar').classed('active', false);
@@ -438,8 +447,32 @@ export class RtpUsageTrackerComponent implements OnDestroy {
       }
     });
 
-    // Scroll chart to see last day
-    if (this.isDailyView && (this.dailyUsageData.length > (data.length / 2))) {
+    // Scroll chart if necessary
+    if (this.isMonthlyView) {
+      if (this.monthlyUsageData.length > 4 && this.monthlyUsageData.length < 9) {
+        this.chartWrapper.nativeElement.scrollTo({ left: contentWidth/3, behavior: 'smooth' });
+      } else if (this.monthlyUsageData.length > 8) {
+        this.chartWrapper.nativeElement.scrollTo({ left: contentWidth, behavior: 'smooth' });
+      } else {
+        this.chartWrapper.nativeElement.scrollTo({ right: 0, behavior: 'smooth' });
+      }
+    } else if (this.isDailyView) {
+      if (this.dailyUsageData.length > 11 && this.dailyUsageData.length < 22) {
+        this.chartWrapper.nativeElement.scrollTo({ left: contentWidth/3, behavior: 'smooth' });
+      } else if (this.dailyUsageData.length > 21) {
+        this.chartWrapper.nativeElement.scrollTo({ left: contentWidth, behavior: 'smooth' });
+      } else {
+        this.chartWrapper.nativeElement.scrollTo({ right: 0, behavior: 'smooth' });
+      }
+    } else if (this.isNonBilledView) {
+      if (this.nonBilledUsageData.length > 11 && this.nonBilledUsageData.length < 22) {
+        this.chartWrapper.nativeElement.scrollTo({ left: contentWidth/3, behavior: 'smooth' });
+      } else if (this.nonBilledUsageData.length > 21) {
+        this.chartWrapper.nativeElement.scrollTo({ left: contentWidth, behavior: 'smooth' });
+      } else {
+        this.chartWrapper.nativeElement.scrollTo({ right: 0, behavior: 'smooth' });
+      }
+    } else if (this.isHourlyView) {
       this.chartWrapper.nativeElement.scrollTo({ left: contentWidth, behavior: 'smooth' });
     }
 
