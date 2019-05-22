@@ -5,6 +5,7 @@ import { IPaymentExtension } from './models/paymentextension/payment-extension.m
 import { IPaymentExtensionV1 } from './models/paymentextension/payment-extension-v1.model';
 import { IPaymentExtensionGrantRequest } from './models/paymentextension/payment-extention-grant-request.model';
 import { IPaymentExtensionGrantResponse } from './models/paymentextension/payment-extention-grant-response.model';
+import { IPaymentExtensionIneligibleNote } from './models/paymentextension/payment-extension-ineligible-note.model';
 
 @Injectable()
 export class PaymentExtensionService {
@@ -27,5 +28,14 @@ export class PaymentExtensionService {
       .map(data => { return data.json(); })
       .map(data => <IPaymentExtensionV1>data)
       .catch(error => this.http.handleHttpError(error));
+  }
+
+  savePaymentExtensionIneligibleNote(ineligibleNote: IPaymentExtensionIneligibleNote): Observable<String> {
+    const body = ineligibleNote;
+    const relativePath = `/PaymentExtension/IneligiblePaymentExtension`;
+    console.log(body);
+    return this.http.post(relativePath, body)
+    .map(data => data.toString())
+    .catch(error => this.http.handleHttpError(error));
   }
 }

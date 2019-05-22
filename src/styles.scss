@@ -469,3 +469,40 @@ footer.fixedToBottom {
     background-color: none!important;
     position: inherit!important;
 }
+
+
+.bar.active {
+  fill: rgba(46, 177, 52,0.3);
+}
+
+#rtp-usage-chart {
+  .bar.active {
+    fill: rgba(46, 177, 52,0.9);
+    stroke: rgba(46, 177, 52,0.9);
+  }
+
+  .bar:hover {
+      fill: rgba(46, 177, 52,0.9);
+  }
+
+  .axis .domain {
+      stroke: grey;
+  }
+
+  .axis .tick {
+      color: grey;
+  }
+}
+
+@media (max-width: 769px) {
+  #rtp-usage-chart {
+    .bar:hover {
+      fill: rgba(10, 10, 10, 0.1);
+    }
+    
+    .bar.active {
+      fill: rgba(46, 177, 52,0.9);
+      stroke: rgba(46, 177, 52,0.9);
+    }
+  }
+}

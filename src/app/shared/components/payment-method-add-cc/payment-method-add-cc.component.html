@@ -25,7 +25,7 @@
       <!--<small class="text-danger" *ngIf="formGroup.controls?.cc_name.hasError('validateCardName')"><i class="fa fa-fw fa-asterisk"></i> Invalid card name</small> <small class="text-success" *ngIf="formGroup.controls?.cc_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>-->
 
     </div>
-    <div class="form-group">
+    <div class="form-group" data-private>
       <label for="payment-horizontal-cc-number" class="col-md-4 control-label">Number</label>
       <div class="col-md-8">
         <input
@@ -39,7 +39,7 @@
         <small class="text-danger" *ngIf="formGroup.controls?.cc_number.errors && !formGroup.controls?.cc_number.pristine"><i class="fa fa-fw fa-asterisk"></i> requires a valid credit card number</small>
         <small class="text-success" *ngIf="formGroup.controls?.cc_number.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" data-private>
       <label for="payment-horizontal-cc-month" class="col-md-4 control-label">Expiration</label>
       <div class="col-md-4 col-lg-4">
         <select
@@ -62,7 +62,7 @@
         <small class="text-danger" *ngIf="formGroup.controls?.cc_year.errors"><i class="fa fa-fw fa-asterisk"></i> required</small>
         <small class="text-success" *ngIf="formGroup.controls?.cc_year.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" data-private>
       <label for="payment-horizontal-cc-cvv" class="col-md-4 control-label">CVV</label>
       <div class="col-md-8">
         <input
@@ -96,7 +96,7 @@
           <!--<small class="text-danger" *ngIf="formGroup.controls?.cc_name.errors"><i class="fa fa-fw fa-asterisk"></i> required</small> <small class="text-success" *ngIf="formGroup.controls?.cc_name.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>-->
       </div>
       <div class="col-md-6 col-lg-3">
-        <div class="form-group">
+        <div class="form-group" data-private>
           <label for="payment-normal-cc-number">Card Number</label>
           <input
             type="text"
@@ -108,7 +108,7 @@
           <small class="text-danger" *ngIf="formGroup.controls?.cc_number.pristine"><i class="fa fa-fw fa-asterisk"></i> required</small> <small class="text-danger" *ngIf="formGroup.controls?.cc_number.errors && !formGroup.controls?.cc_number.pristine"><i class="fa fa-fw fa-asterisk"></i> requires a valid credit card number</small> <small class="text-success" *ngIf="formGroup.controls?.cc_number.valid"><i class="fa fa-fw fa-check"></i> Ok</small> </div>
       </div>
       <div class="col-xs-6 col-md-2">
-        <div class="form-group">
+        <div class="form-group" data-private>
           <label for="payment-normal-cc-month">Expiration</label>
           <select
             class="form-control "
@@ -120,7 +120,7 @@
         </div>
       </div>
       <div class="col-xs-6 col-md-2">
-        <div class="form-group">
+        <div class="form-group" data-private>
           <label for="payment-normal-cc-year">&nbsp;</label>
           <select
             class="form-control "
@@ -132,8 +132,8 @@
         </div>
       </div>
       <div class="col-xs-4 col-xs-offset-9 col-sm-4 col-sm-offset-8 col-md-3 col-md-offset-0 col-lg-1">
-        <div class="form-group">
-          <label for="payment-normal-cc-ccv">CCV</label>
+        <div class="form-group" data-private>
+          <label for="payment-normal-cc-ccv">CVV</label>
           <input
             type="text"
             class="form-control ccvWidth"

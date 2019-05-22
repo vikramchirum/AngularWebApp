@@ -11,6 +11,8 @@ import { PaymentsHistoryStore } from '../../core/store/paymentsstore';
 import { AccountType } from '../../core/models/enums/accounttype';
 import { NotificationType } from '../../core/models/enums/notificationtype';
 import { RenewalStore } from '../../core/store/renewalstore';
+import LogRocket from 'logrocket'
+import { UserService } from '../../core/user.service';
 
 @Component({
   selector: 'mygexa-home',
@@ -31,17 +33,25 @@ export class HomeComponent implements OnInit, OnDestroy {
   NotificationOptions: INotificationOption = null;
   SearchNotificationOptions = null;
   currentView: string = null;
-
+  username: string = null;
+  private UserServiceSubscription: Subscription = null;
 
   constructor( private ServiceAccountService: ServiceAccountService,
                private OfferStore: OffersStore,
                private renewalStore: RenewalStore,
                private NotificationOptionsStore: NotificationOptionsStore,
                private InvoiceStore: InvoiceStore,
-               private PaymentStore: PaymentsHistoryStore
+               private PaymentStore: PaymentsHistoryStore,
+               private UserService: UserService
   ) { }
 
   ngOnInit() {
+    this.UserServiceSubscription = this.UserService.UserObservable.subscribe(
+      result => {
+        this.username = result.Profile.Username;
+      }
+    );
+
     this.serviceAccountServiceSubscription = this.ServiceAccountService.ActiveServiceAccountObservable.subscribe(
       ActiveServiceAccount => {
         if (ActiveServiceAccount) {
@@ -72,6 +82,14 @@ export class HomeComponent implements OnInit, OnDestroy {
             }
           );
           this.OfferStore.LoadLyricOfferDetails(this.ActiveServiceAccount.TDU_DUNS_Number);
+
+          if (this.ActiveServiceAccount.Current_Offer.Is_RTP === true) {
+            LogRocket.init('okkqqj/mygexapoc');
+
+            LogRocket.identify(this.ActiveServiceAccount.Customer_Account_Id, {
+              email: this.username
+            });
+          }
         }
       });
   }
@@ -80,15 +98,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     if ( this.ActiveServiceAccount && (this.Paperless_Billing != null) ) {
       this.ShowAutoBillPay = this.Is_Auto_Bill_Pay ? false : true;
       this.ShowPaperlessBilling = (this.Is_Auto_Bill_Pay && !this.Paperless_Billing) ? true : false;
-      this.ShowBudgetBilling = (this.Is_Auto_Bill_Pay && this.Paperless_Billing && !this.Budget_Billing) ? true : false;
       this.ShowEnergySavingTips = (this.Is_Auto_Bill_Pay  && this.Paperless_Billing && this.Budget_Billing) ? true : false;
 
       if (this.ShowAutoBillPay) {
         this.currentView = 'ShowAutoBillPay';
       } else if (this.ShowPaperlessBilling) {
         this.currentView = 'ShowPaperlessBilling';
-      } else if (this.ShowBudgetBilling) {
-        this.currentView = 'ShowBudgetBilling';
       } else {
         this.currentView = 'ShowEnergySavingTips';
       }

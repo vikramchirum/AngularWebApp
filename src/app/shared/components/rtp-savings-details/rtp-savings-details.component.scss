@@ -1,0 +1,89 @@
+h3.blue {
+  color: #1b8dcd;
+}
+
+h2.green {
+  color: #2eb134;
+}
+
+h2 {
+  margin-top: 10px;
+
+  sup {
+    font-size: 18px;
+  }
+}
+
+h4 {
+  sup {
+    font-size: 11px;
+  }
+}
+
+.versus,
+.equals {
+  padding: 5px;
+  border: solid 1px #1b8dcd;
+  border-radius: 50px;
+  background: #1b8dcd;
+  font-size: 22px;
+  color: #fff;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  max-width: 45px;
+  text-align: center;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.text-semibold {
+  font-weight: 600;
+  font-style: italic;
+}
+
+
+@media (max-width: 500px) {
+  .wholesale-price-info,
+  .average-price-info{
+    h3 {
+      font-size: 18px!important;
+    }
+
+    h4 {
+      font-size: 13px!important;
+
+      sup {
+        font-size: 8px!important;
+      }
+    }
+
+    h2 {
+      font-size: 20px!important;
+
+      sup {
+        font-size: 12px!important;
+      }
+    }
+  }
+
+  .savings-info {
+    h3 {
+      font-size: 24px!important;
+    }
+
+    h2 {
+      font-size: 26px!important;
+
+      sup {
+        font-size: 14px!important;
+      }
+    }
+  }
+}
+
+@media (max-width: 420px) {
+  .versus {
+    padding: 3px;
+    font-size: 18px;
+  }
+}

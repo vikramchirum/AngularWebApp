@@ -37,6 +37,7 @@ import { ViewBillDetailsComponent } from './components/view-bill-details/view-bi
 import { PlayCardComponent } from './components/play-card/play-card.component';
 import { PaymentConfirmationModalComponent } from './components/payment-confirmation-modal/payment-confirmation-modal.component';
 import { PaymentMethodEditCcComponent } from './components/payment-method-edit-cc/payment-method-edit-cc.component';
+import { RtpSavingsDetailsComponent } from './components/rtp-savings-details/rtp-savings-details.component';
 
 @NgModule({
   imports: [
@@ -77,7 +78,8 @@ import { PaymentMethodEditCcComponent } from './components/payment-method-edit-c
     ViewBillDetailsComponent,
     PaymentConfirmationModalComponent,
     PlayCardComponent,
-    PaymentMethodEditCcComponent
+    PaymentMethodEditCcComponent,
+    RtpSavingsDetailsComponent
   ],
   exports: [
     ChangeUserNameComponent,
@@ -106,7 +108,8 @@ import { PaymentMethodEditCcComponent } from './components/payment-method-edit-c
     ViewBillDetailsComponent,
     PaymentConfirmationModalComponent,
     PlayCardComponent,
-    PaymentMethodEditCcComponent
+    PaymentMethodEditCcComponent,
+    RtpSavingsDetailsComponent
   ]
 })
 export class SharedModule { }
