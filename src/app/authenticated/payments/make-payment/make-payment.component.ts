@@ -32,6 +32,7 @@ import {
 } from 'app/core/models/enums/googleanalyticscategorytype';
 import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
 import * as moment from 'moment';
+import { PaymentExtensionService } from 'app/core/payment-extension.service';
 
 @Component({
   selector: 'mygexa-make-payment',
@@ -73,6 +74,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   private CustomerAccountSubscription: Subscription = null;
   private PaymentHistorySubscription: Subscription = null;
   private LatestInvoiceDetailsSubscription: Subscription = null;
+  private DisconnectLetterInfoSubscription: Subscription = null;
   private CustomerAccount: CustomerAccount = null;
   private CustomerAccountId: string = null;
 
@@ -158,6 +160,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
               private PaymentsHistoryStore: PaymentsHistoryStore,
               private PaymentsService: PaymentsService,
               private PaymethodService: PaymethodService,
+              private PaymentExtensionService: PaymentExtensionService,
               private FormBuilder: FormBuilder,
               private ServiceAccountService: ServiceAccountService,
               private InvoiceService: InvoiceService,
@@ -191,12 +194,13 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                 this.LatestInvoiceDetailsSubscription = this.InvoiceStore.LatestInvoiceDetails.subscribe(
                   latestInvoice => {
                     if (!latestInvoice) {
+                      // Disable scheduled payment dates since no latest invoice
                       this.disableDraftDateSince(new Date());
                       return;
                     }
-                    this.dueDate = new Date(latestInvoice.Due_Date);
+                    this.dueDate = new Date(latestInvoice.Due_Date);;
                     this.dueDate.setDate(this.dueDate.getDate() + 1);
-                    this.disableDraftDateSince(this.dueDate);
+                    this.setAllowedScheduledPaymentDates();
                     this.exceededDueDate = (this.dueDate < new Date()) ? true : false;
                     this.PaymentHistorySubscription = this.PaymentsHistoryStore.PaymentHistory.subscribe(
                       PaymentsHistoryItems => {
@@ -251,6 +255,9 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     }
     if (this.UserCustomerAccountSubscription) {
       this.UserCustomerAccountSubscription.unsubscribe();
+    }
+    if (this.DisconnectLetterInfoSubscription) {
+      this.DisconnectLetterInfoSubscription.unsubscribe();
     }
   }
 
@@ -612,12 +619,29 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     }
   }
 
+  private setAllowedScheduledPaymentDates() {
+    if (this.pastDueExists) {
+      // Only allow scheduled payments 10 days after due date
+      this.disableDraftDateSince(moment(this.dueDate).add(10, "days").toDate());
+      this.DisconnectLetterInfoSubscription = this.PaymentExtensionService.checkPaymentExtensionStatus(this.ActiveServiceAccount.Id)
+        .subscribe(status => {
+          if (status.DisconnectletterInfo) {
+            // If disconnect letter, only allow immediate payment
+            this.disableDraftDateSince(new Date());
+          }
+        });
+    } else {
+      // Only allow scheduled payments 10 days after due date
+      this.disableDraftDateSince(moment(this.dueDate).add(10, "days").toDate());
+    }
+  }
+
   private disableDraftDateSince(dueDate: Date) {
     let optionsCopy = JSON.parse(JSON.stringify(this.paymentDraftDateOptions));
     optionsCopy.disableSince = {
       year: dueDate.getFullYear(),
       month: dueDate.getMonth() + 1,
-      day: dueDate.getDate() + 1 + 10 // Only allow scheduled payment 10 days past due date
+      day: dueDate.getDate() + 1
     };
     this.paymentDraftDateOptions = optionsCopy;
   }
@@ -642,7 +666,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   }
 
   private showPaymentDateErrorMessage() {
-    const errorMessage = `You must use a saved payment account in order to select a different payment date.`;
+    const errorMessage = `You must use a saved payment account in order to select a different payment date.`; 
     this.paymentConfirmationModal.showConfirmationMessageModal(errorMessage, true);
   }
 }
