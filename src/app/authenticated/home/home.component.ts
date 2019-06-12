@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   SearchNotificationOptions = null;
   currentView: string = null;
   username: string = null;
+  showSuspendedMessage: boolean = false;
   private UserServiceSubscription: Subscription = null;
 
   constructor( private ServiceAccountService: ServiceAccountService,
@@ -89,6 +90,10 @@ export class HomeComponent implements OnInit, OnDestroy {
             LogRocket.identify(this.ActiveServiceAccount.Customer_Account_Id, {
               email: this.username
             });
+          }
+
+          if (this.ActiveServiceAccount.Status === "Suspended") {
+            this.showSuspendedMessage = true;
           }
         }
       });

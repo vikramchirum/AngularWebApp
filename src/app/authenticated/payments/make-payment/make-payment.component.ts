@@ -32,6 +32,8 @@ import {
 } from 'app/core/models/enums/googleanalyticscategorytype';
 import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
 import * as moment from 'moment';
+import { SuspensionService } from 'app/core/suspension.service';
+import { ISuspensionStatusResponse, SuspensionStatusEnum } from 'app/core/models/serviceaccount/suspensionstatus.model';
 import { PaymentExtensionService } from 'app/core/payment-extension.service';
 
 @Component({
@@ -65,6 +67,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   PaymethodSelected: Paymethod = null;
   paymentDraftDate: Date = new Date();
   ScheduledPaymentAmount: number = null;
+  SuspensionStatusMessage: string = null;
 
   @ViewChild(PaymethodAddCcComponent) private addCreditCardComponent: PaymethodAddCcComponent;
   @ViewChild(PaymethodAddEcheckComponent) private addEcheckComponent: PaymethodAddEcheckComponent;
@@ -74,6 +77,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   private CustomerAccountSubscription: Subscription = null;
   private PaymentHistorySubscription: Subscription = null;
   private LatestInvoiceDetailsSubscription: Subscription = null;
+  private AccountSuspensionStatusSubscription: Subscription = null;
   private DisconnectLetterInfoSubscription: Subscription = null;
   private CustomerAccount: CustomerAccount = null;
   private CustomerAccountId: string = null;
@@ -166,7 +170,8 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
               private InvoiceService: InvoiceService,
               private InvoiceStore: InvoiceStore,
               private UserService: UserService,
-              private googleAnalyticsService: GoogleAnalyticsService) {
+              private googleAnalyticsService: GoogleAnalyticsService,
+              private suspensionService: SuspensionService) {
     this.formGroup = FormBuilder.group({
       payment_now: ['', Validators.compose([Validators.required, validMoneyAmount])],
       payment_save: [''],
@@ -217,7 +222,14 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                       });
                   }
                 );
-                            }});
+                if (ActiveServiceAccount.Status === 'Suspended') {
+                  this.AccountSuspensionStatusSubscription = this.suspensionService.getSuspensionStatus(ActiveServiceAccount.Id)
+                    .subscribe(status => {
+                      this.setSuspensionStatusMessage(status);
+                    });
+                }
+              }
+            });
     this.UserCustomerAccountSubscription = this.UserService.UserCustomerAccountObservable.subscribe(
       CustomerAccountId => this.CustomerAccountId = CustomerAccountId
     );
@@ -255,6 +267,9 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
     }
     if (this.UserCustomerAccountSubscription) {
       this.UserCustomerAccountSubscription.unsubscribe();
+    }
+    if (this.AccountSuspensionStatusSubscription) {
+      this.AccountSuspensionStatusSubscription.unsubscribe();
     }
     if (this.DisconnectLetterInfoSubscription) {
       this.DisconnectLetterInfoSubscription.unsubscribe();
@@ -668,5 +683,21 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   private showPaymentDateErrorMessage() {
     const errorMessage = `You must use a saved payment account in order to select a different payment date.`; 
     this.paymentConfirmationModal.showConfirmationMessageModal(errorMessage, true);
+  }
+
+  private setSuspensionStatusMessage(status: ISuspensionStatusResponse) {
+    switch (status.status_code) {
+      case SuspensionStatusEnum.PendingDisconnect:
+        this.SuspensionStatusMessage = 'Your account is pending disconnection. To prevent service interruption, make a payment now.';
+        break;
+      case SuspensionStatusEnum.Disconnected:
+        this.SuspensionStatusMessage = 'Service to your account is currently disconnected. To restore service, make a payment now.';
+        break;
+      case SuspensionStatusEnum.PendingReconnect:
+        this.SuspensionStatusMessage = 'A payment for the past due amount was received. A reconnection order was sent to the transmission and distribution utility provider.';
+        break;
+      default:
+        break;
+    }
   }
 }

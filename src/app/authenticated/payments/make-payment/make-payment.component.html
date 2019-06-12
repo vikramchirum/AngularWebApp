@@ -273,6 +273,8 @@
           </div>
         </div>
 
+        <!-- TODO ADD SUSPENSION STATUS TEXT -->
+
         <!--<div class="form-group" *ngIf="paymentSubmittedWithoutError != true">-->
         <!--<div class="col-lg-8">-->
         <!--<button-->
@@ -285,6 +287,9 @@
         <!--</button>-->
         <!--</div>-->
         <!--</div>-->
+        <div *ngIf="SuspensionStatusMessage" class="alert alert-danger" style="width: 100%;">
+          {{SuspensionStatusMessage}}
+        </div>
         <br/><br/><br/>
       </form>
     </div>

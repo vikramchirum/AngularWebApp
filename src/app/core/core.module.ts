@@ -46,6 +46,7 @@ import { TDUStore } from './store/tdustore';
 import { GoogleAnalyticsService } from './googleanalytics.service';
 import { AnnouncementsService } from './announcementservice.service';
 import { RtpsavingsdetailsService} from './rtpsavingsdetails.service';
+import { SuspensionService } from './suspension.service';
 
 @NgModule({
   imports: [
@@ -94,7 +95,8 @@ import { RtpsavingsdetailsService} from './rtpsavingsdetails.service';
     TDUStore,
     GoogleAnalyticsService,
     AnnouncementsService,
-    RtpsavingsdetailsService
+    RtpsavingsdetailsService,
+    SuspensionService
   ]
 })
 export class CoreModule { }
