@@ -31,11 +31,7 @@ export class ServiceAccountSelectorComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.ServiceAccountsSubscription = this.ServiceAccountService.ServiceAccountsObservable.subscribe(
       ServiceAccounts => {
-        this.ServiceAccounts = ServiceAccounts.filter(s => {
-          if (s.Status == "Active" || s.Status == "Disconnected" || s.Status == "Suspended") {
-            return s;
-          }
-        });
+        this.ServiceAccounts = ServiceAccounts;
         this.ChangeDetectorRef.detectChanges();
       }
     );
