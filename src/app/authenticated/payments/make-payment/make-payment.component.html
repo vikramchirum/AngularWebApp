@@ -1,6 +1,9 @@
 <section class="section-container">
   <div class="row">
     <div class="col-lg-8 clearfix">
+      <div *ngIf="SuspensionStatusMessage" class="alert alert-danger" style="width: 100%; clear: both;">
+        {{SuspensionStatusMessage}}
+      </div>
       <h2>Make A Payment</h2>
       <p *ngIf="paymentSubmittedWithoutError == null">Let's get this over quickly.</p>
       <div class="alert alert-danger visible-xs visible-sm visible-md" *ngIf="pastDue > 0 || totalDue > 0">Due Date: {{ dueDate | date:'MM/dd/yyyy' }}</div>
@@ -273,8 +276,6 @@
           </div>
         </div>
 
-        <!-- TODO ADD SUSPENSION STATUS TEXT -->
-
         <!--<div class="form-group" *ngIf="paymentSubmittedWithoutError != true">-->
         <!--<div class="col-lg-8">-->
         <!--<button-->
@@ -287,10 +288,6 @@
         <!--</button>-->
         <!--</div>-->
         <!--</div>-->
-        <div *ngIf="SuspensionStatusMessage" class="alert alert-danger" style="width: 100%;">
-          {{SuspensionStatusMessage}}
-        </div>
-        <br/><br/><br/>
       </form>
     </div>
     <br class="visible-xs"/>

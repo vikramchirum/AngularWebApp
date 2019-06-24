@@ -18,7 +18,7 @@ export class SuspensionService {
 
   getSuspensionStatus(serviceAccountId: string): Observable<ISuspensionStatusResponse> {
     return this.HttpClient
-      .get(`/service_accounts/${serviceAccountId}/suspension`)
+      .get(`/service_accounts/${serviceAccountId}/suspended`)
       .map(res => res.json())
       .catch(error => this.HttpClient.handleHttpError(error));
   }

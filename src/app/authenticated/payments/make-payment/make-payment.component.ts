@@ -222,7 +222,7 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
                       });
                   }
                 );
-                if (ActiveServiceAccount.Status === 'Suspended') {
+                if (this.ActiveServiceAccount.Status === "Suspended") {
                   this.AccountSuspensionStatusSubscription = this.suspensionService.getSuspensionStatus(ActiveServiceAccount.Id)
                     .subscribe(status => {
                       this.setSuspensionStatusMessage(status);

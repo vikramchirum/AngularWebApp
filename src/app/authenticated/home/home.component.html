@@ -8,12 +8,10 @@
     </div>
     <!--My Bill Section -->
     <div class="col-md-4">
+      <div *ngIf="showSuspendedMessage" style="clear: both;">
+        <div class="alert alert-danger"><span style="font-weight: bold;">Urgent alert about your account.</span> <a [routerLink]="['/payments/make-payment']">Click here</a></div>
+      </div>
       <mygexa-my-bill [parentComponent]="'Home'" ></mygexa-my-bill>
-    </div>
-    <div *ngIf="showSuspendedMessage" class="col-md-4">
-      <br/>
-      <span class="text-danger">Important message about your account. <a [routerLink]="['/payments/make-payment']">Click here</a></span><br/>
-      <br/>
     </div>
   </div>
 </div>
