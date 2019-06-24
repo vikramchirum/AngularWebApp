@@ -688,13 +688,13 @@ export class MakePaymentComponent implements OnInit, OnDestroy {
   private setSuspensionStatusMessage(status: ISuspensionStatusResponse) {
     switch (status.status_code) {
       case SuspensionStatusEnum.PendingDisconnect:
-        this.SuspensionStatusMessage = 'Your account is pending disconnection. To prevent service interruption, make a payment now.';
+        this.SuspensionStatusMessage = `Your account is pending disconnection due to a past due balance of $${this.pastDue}. To prevent service interruption, make a payment now.`;
         break;
       case SuspensionStatusEnum.Disconnected:
-        this.SuspensionStatusMessage = 'Service to your account is currently disconnected. To restore service, make a payment now.';
+        this.SuspensionStatusMessage = `Service to your account is currently disconnected due to a past due amount of $${this.pastDue}. To restore service, make a payment now. `;
         break;
       case SuspensionStatusEnum.PendingReconnect:
-        this.SuspensionStatusMessage = 'A payment for the past due amount was received. A reconnection order was sent to the transmission and distribution utility provider.';
+        this.SuspensionStatusMessage = `A payment for the past due amount on your account was received. A reconnection order is being sent to the transmission and distribution utility provider.`;
         break;
       default:
         break;
