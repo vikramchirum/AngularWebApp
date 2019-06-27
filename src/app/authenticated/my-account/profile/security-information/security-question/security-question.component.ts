@@ -10,6 +10,7 @@ import {
   GoogleAnalyticsEventAction
 } from 'app/core/models/enums/googleanalyticscategorytype';
 import { GoogleAnalyticsService } from 'app/core/googleanalytics.service';
+import { IUserSecurityQuestions } from 'app/core/models/user/User.model';
 
 @Component({
   selector: 'mygexa-security-question',
@@ -20,12 +21,14 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
 
   editing: boolean = null;
   securityQuestion: string = null;
+  securityQuestions: IUserSecurityQuestions[] = [];
   username: string = null;
   securityQuestionForm: FormGroup = null;
   submitAttempt: boolean = null;
   errorOccured: boolean = null;
   errorMessage: string = null;
   UserServiceSubscription: Subscription = null;
+  SecurityQuestionsSubscription: Subscription = null;
 
   constructor(
     private FormBuilder: FormBuilder,
@@ -37,6 +40,7 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
 
   securityQuestionFormInit(): FormGroup {
     return this.FormBuilder.group({
+      newQuestion: ['', Validators.required],
       question1: ['', Validators.required]
     });
   }
@@ -52,6 +56,11 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
         }
       }
     );
+    this.SecurityQuestionsSubscription = this.UserService.getSecurityQuestions().subscribe(
+      questions => {
+        this.securityQuestions = questions;
+      }
+    );
   }
 
   getSecurityQuestion(username: string) {
@@ -63,28 +72,30 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
       }
     );
   }
-  updateSecQuesResponse(Sec_Answer: string, isValid: boolean ) {
+
+  updateSecQuestionAndAnswer(Sec_Question: number, Sec_Answer: string, isValid: boolean) {
     this.submitAttempt = true;
 
     this.googleAnalyticsService.postEvent(GoogleAnalyticsCategoryType[GoogleAnalyticsCategoryType.ProfilePreferences], GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UpdateSecurityQuestion]
       , GoogleAnalyticsEventAction[GoogleAnalyticsEventAction.UpdateSecurityQuestion]);
 
-
-    if (isValid) {
-      this.UserService.updateSecurityAnswer(Sec_Answer).subscribe(
-        res => {
-          console.log( 'response', res);
-          if (res === true) {
-            this.resetForm();
-          } else {
-            this.errorOccured = true;
-            this.errorMessage = res;
-          }
-        },
-        error => { console.log('Error', error); }
-      );
-    }
+      if (isValid) {
+        this.UserService.updateSecurityQuestion(Sec_Question, Sec_Answer).subscribe(
+          res => {
+            console.log( 'response', res);
+            if (res === true) {
+              this.resetForm();
+              this.getSecurityQuestion(this.username);
+            } else {
+              this.errorOccured = true;
+              this.errorMessage = res;
+            }
+          },
+          error => { console.log('Error', error); }
+        );
+      }
   }
+
   resetForm() {
     this.errorOccured = null;
     this.errorMessage = null;
@@ -95,5 +106,6 @@ export class SecurityQuestionComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     localStorage.removeItem('security_Question_Cache');
     result(this.UserServiceSubscription, 'unsubscribe');
+    result(this.SecurityQuestionsSubscription, 'unsubscribe');
   }
 }
