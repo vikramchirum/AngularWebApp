@@ -37,15 +37,15 @@
                     
                     <div class="form-group" [ngClass]="{'has-error':!registerForm.controls['Service_Account_Id'].valid
                   && formSubmitted}">
-                      <label class="control-label">Service Number</label>
+                      <label class="control-label">Account Number</label>
                       <input name="Service_Account_Id" type="text" class="form-control "
                              [formControl]="registerForm.controls['Service_Account_Id']"
-                             placeholder="Enter your Service Number">
+                             placeholder="Enter your Account Number">
                       <div class="has-error" *ngIf="registerForm.controls['Service_Account_Id'].hasError('required') && formSubmitted
                        || registerForm.controls['Service_Account_Id'].touched || registerForm.controls['Service_Account_Id'].hasError('incorrect')">
                         <div class="help-block">
                      <span *ngIf="registerForm.controls['Service_Account_Id'].hasError('required')
-                    && formSubmitted"> Service number is required. </span>
+                    && formSubmitted"> Account number is required. </span>
                           <span *ngIf="registerForm.controls['Service_Account_Id'].hasError('incorrect')
                     && formSubmitted"> We are having trouble finding this service account number. Please check the number, or call 866-961-9399 for assistance. </span>
                         </div>
