@@ -159,11 +159,27 @@ export class UserService implements CanActivate {
     // The user is logged in so yes, they can activate.
     if (this.user_logged_in) {
       return true;
-    }
+    } else if (route.queryParams["if_auth"]) {
+      // Wind Logics sent token from mobile app
+      const token = route.queryParams["if_auth"];
+      if (localStorage.getItem('gexa_auth_token') !== token) {
 
-    // Otherwise, save their state and navigate to the login prompt.
-    this.UserState = this.UserState || state.url;
-    this.router.navigate(['/login'], {queryParams: {returnUrl: state.url}});
+        localStorage.setItem('gexa_auth_token', token);
+	      localStorage.setItem('gexa_auth_token_expire', (new Date().getTime() + 1000 * 60 * 60 * 12).toString());
+        
+        this.httpClient.get(this.getUserFromMongo)
+          .map(res => res.json())
+          .catch(error => this.httpClient.handleHttpError(error))
+          .subscribe(res => {
+            const user = this.ApplyUserData(res);
+            this.router.navigate([state.url.split("?")[0]]);
+          });
+      }
+    } else {
+      // Otherwise, save their state and navigate to the login prompt.
+      this.UserState = this.UserState || state.url;
+      this.router.navigate(['/login'], {queryParams: {returnUrl: state.url}});
+    }
 
   }
 
