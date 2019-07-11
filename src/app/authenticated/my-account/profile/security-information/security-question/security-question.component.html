@@ -20,17 +20,24 @@
       <div class="col-md-6">
         <form
           id="changeForm"
-          (ngSubmit) = "updateSecQuesResponse(securityQuestionForm.controls['question1'].value, securityQuestionForm.valid)"
+          (ngSubmit) = "updateSecQuestionAndAnswer(securityQuestionForm.controls['newQuestion'].value, securityQuestionForm.controls['question1'].value, securityQuestionForm.valid)"
           [formGroup]="securityQuestionForm"
         >
+          <div class="form-group">
+            <p>Select your new security question</p>
+            <select 
+              name="newQuestion" 
+              class="form-control"
+              [formControl]="securityQuestionForm.controls['newQuestion']">
+              <option *ngFor="let sq of securityQuestions" [ngValue]="sq.Id">{{sq.Question}}</option>
+            </select>
+          </div>
           <div class="form-group" [ngClass]="{'has-error':!securityQuestionForm.controls['question1'].valid && submitAttempt}" data-private>
-            <p>Answer Questions to Continue</p>
-            <label class="control-label">{{securityQuestion}}</label>
             <input
               type="text"
               name="question1"
               class="form-control"
-              [formControl]="securityQuestionForm.controls['question1']" placeholder=""
+              [formControl]="securityQuestionForm.controls['question1']" placeholder="New answer"
             />
             <div class="has-error" *ngIf="securityQuestionForm.controls['question1'].hasError('required') && submitAttempt">
               <span class="help-block">Required</span>
@@ -40,7 +47,7 @@
             </div>
           </div>
           <div class="text-right">
-            <button class="btn btn-primary" [disabled]="" type="submit">Continue</button>
+            <button class="btn btn-primary" [disabled]="!securityQuestionForm.valid || submitAttempt" type="submit">Continue</button>
             <button class="btn btn-default" type="button" (click)= resetForm()>Cancel</button>
           </div>
         </form>
