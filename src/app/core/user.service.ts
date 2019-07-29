@@ -155,15 +155,32 @@ export class UserService implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    // Wind Logics sent token from mobile app
+    if (route.queryParams["if_auth"]) {
+      localStorage.removeItem('gexa_auth_token');
+      localStorage.removeItem('gexa_auth_token_expire');
+      localStorage.removeItem('gexa_active_Service_account_id');
+      localStorage.removeItem('user_email_address');
 
-    // The user is logged in so yes, they can activate.
-    if (this.user_logged_in) {
+      const token = route.queryParams["if_auth"];
+      localStorage.setItem('gexa_auth_token', token);
+      localStorage.setItem('gexa_auth_token_expire', (new Date().getTime() + 1000 * 60 * 60 * 12).toString());
+      
+      this.httpClient.get(this.getUserFromMongo)
+        .map(res => res.json())
+        .catch(error => this.httpClient.handleHttpError(error))
+        .subscribe(res => {
+          this.ApplyUserData(res);
+          this.router.navigate([state.url.split("?")[0]]);
+        });
+    } else if (this.user_logged_in) {
+      // The user is logged in so yes, they can activate.
       return true;
+    } else {
+      // Otherwise, save their state and navigate to the login prompt.
+      this.UserState = this.UserState || state.url;
+      this.router.navigate(['/login'], {queryParams: {returnUrl: state.url}});
     }
-
-    // Otherwise, save their state and navigate to the login prompt.
-    this.UserState = this.UserState || state.url;
-    this.router.navigate(['/login'], {queryParams: {returnUrl: state.url}});
 
   }
 
