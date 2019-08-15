@@ -18,5 +18,5 @@ export const environment = {
   crypto_key: '6REr6UFXjjmw0+W0NhMP7asI9y54FDrJdE/LlIz/YME=',
   crypto_iv: 'hDRokaLfaRzJSaivlL7KlQ==',
   payment_extension_days: 7,
-  RTP_EIA_average_rate: 11.43
+  RTP_EIA_average_rate: 11.39
 };
