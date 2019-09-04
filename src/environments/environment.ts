@@ -11,7 +11,7 @@ export const environment = {
   Forte_Api_Key: 'GwnI15Vj36',
   DollarAmountFormatter: '1.2-2',
   Documents_Url: 'http://azureapidev/api/documents',
-  GexaShare_Url: 'https://webauthoring.gexa.gexaenergy.com/OEF/RefereeEnrollment.aspx?ReferralId=',
+  GexaShare_Url: 'https://signupdev.gexaenergy.com/?ReferralId=',
   Client_Email_Addresses: 'mygexa.azure@gexaenergy.com',
   kWhAmountFormatter: '1.4-4',
   forte_api_url: 'https://sandbox.forte.net/api/js/v1',
