@@ -5,8 +5,9 @@ import { RedirectLoggedInUserToHome } from 'app/core/user.service';
 import { LoginComponent } from './login/login.component';
 import { RecoverPasswordComponent } from './recover-password/recover-password.component';
 import { RecoverUsernameComponent } from './recover-username/recover-username.component';
-import {AutoLoginComponent } from './auto-login/auto-login.component';
-import { TduChargesComponent } from "./tdu_charges/tdu_charges.component";
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { AutoLoginComponent } from './auto-login/auto-login.component';
+import { TduChargesComponent } from './tdu_charges/tdu_charges.component';
 
 const routes: Route[] = [
   {
@@ -19,6 +20,9 @@ const routes: Route[] = [
   {
     path: 'login/recover-password', component: RecoverPasswordComponent,
     canActivate: [RedirectLoggedInUserToHome]
+  },
+  {
+    path: 'login/reset-password', component: ResetPasswordComponent
   },
   {
     path: 'login/recover-username', component: RecoverUsernameComponent,

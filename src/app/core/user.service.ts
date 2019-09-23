@@ -322,8 +322,13 @@ export class UserService implements CanActivate {
       .catch(error => this.httpClient.handleHttpError(error));
   }
 
-  resetPassword(user_name: string, password: string) {
-    const token = localStorage.getItem('reset_password_token');
+  resetPassword(user_name: string, password: string, reset_password_token: string = null) {
+    let token = null;
+    if (reset_password_token) {
+      token = reset_password_token;
+    } else {
+      token = localStorage.getItem('reset_password_token');
+    }
     const body = {
       creds: {
         Username: user_name,
